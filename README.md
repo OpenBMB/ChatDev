@@ -24,7 +24,9 @@
 
 
 
-https://github.com/OpenBMB/ChatDev/assets/11889052/acb0bc7c-31f0-4c34-bab1-48c3863c8d7e
+
+https://github.com/OpenBMB/ChatDev/assets/11889052/80d01d2f-677b-4399-ad8b-f7af9bb62b72
+
 
 
 
