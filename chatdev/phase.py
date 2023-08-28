@@ -146,7 +146,7 @@ class Phase(ABC):
                 # here is the result of the second interaction, which may be used to start the next chat turn
                 log_and_print_online(role_play_session.user_agent.role_name,
                                      conversation_meta + "[" + role_play_session.assistant_agent.system_message.content + "]\n\n" + user_response.msg.content)
-                if role_play_session.user_agent:
+                if role_play_session.user_agent.info:
                     seminar_conclusion = user_response.msg.content
                     break
                 if user_response.terminated:

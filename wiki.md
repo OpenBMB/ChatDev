@@ -2,7 +2,7 @@
 
 ## Quick Start Step By Step
 
-### 1. Install `ChatDev`🛸:
+### 1. Install `ChatDev`:
 
 - **Clone the GitHub Repository:** Begin by cloning the repository using the command:
    ```

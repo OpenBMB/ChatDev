@@ -3,13 +3,13 @@
     {
       "phase": "DemandAnalysis",
       "phaseType": "SimplePhase",
-      "max_turn_step": 2,
+      "max_turn_step": -1,
       "need_reflect": "True"
     },
     {
       "phase": "LanguageChoose",
       "phaseType": "SimplePhase",
-      "max_turn_step": 2,
+      "max_turn_step": -1,
       "need_reflect": "True"
     },
     {
@@ -21,7 +21,7 @@
     {
       "phase": "CodeCompleteAll",
       "phaseType": "ComposedPhase",
-      "cycleNum": 3,
+      "cycleNum": 10,
       "Composition": [
         {
           "phase": "CodeComplete",
@@ -39,13 +39,13 @@
         {
           "phase": "CodeReviewComment",
           "phaseType": "SimplePhase",
-          "max_turn_step": -1,
+          "max_turn_step": 1,
           "need_reflect": "False"
         },
         {
           "phase": "CodeReviewModification",
           "phaseType": "SimplePhase",
-          "max_turn_step": -1,
+          "max_turn_step": 1,
           "need_reflect": "False"
         }
       ]
@@ -58,13 +58,13 @@
         {
           "phase": "TestErrorSummary",
           "phaseType": "SimplePhase",
-          "max_turn_step": -1,
+          "max_turn_step": 1,
           "need_reflect": "False"
         },
         {
           "phase": "TestModification",
           "phaseType": "SimplePhase",
-          "max_turn_step": -1,
+          "max_turn_step": 1,
           "need_reflect": "False"
         }
       ]
