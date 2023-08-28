@@ -240,7 +240,7 @@ then go to [Local Demo Website](http://127.0.0.1:8000/) to see an online visuali
   engineer to improve the user input prompt. **⚠️ Attention** Model generated prompts contains uncertainty and there may
   be a deviation from the requirement meaning contained in the original prompt.
 - params in SimplePhase:
-    - max_turn_step: Max number of chatting turn.
+    - max_turn_step: Max number of chatting turn. You can increase max_turn_step for better performance but it will take longer time to finish the phase.
     - need_reflect: Flag for reflection. Reflection is a special phase that automatically executes after a phase. It
       will start a chatting between counselor and CEO to refine the conclusion of phase chatting.
 - params in ComposedPhase

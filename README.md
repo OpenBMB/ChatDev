@@ -12,7 +12,7 @@
 ## 📰 News
 
 * August 28, 2023: the system is publicly available.
-* August 17, 2023: The alpha-0.1.0 version was ready for release.
+* August 17, 2023: The V1.0.0 version was ready for release.
 * July 30, 2023: users can customize ChatChain, Phase, and Role settings. Additionally, both online Log mode and replay mode are now supported.
 * July 16, 2023: the [preprint paper](https://arxiv.org/abs/2307.07924) associated with this project was published.
 * June 30, 2023: The initial version of the `ChatDev` repository was released.
