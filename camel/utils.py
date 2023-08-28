@@ -108,7 +108,7 @@ def get_model_token_limit(model: ModelType) -> int:
         int: The maximum token limit for the given model.
     """
     if model == ModelType.GPT_3_5_TURBO:
-        return 4096
+        return 16384
     elif model == ModelType.GPT_4:
         return 8192
     elif model == ModelType.GPT_4_32k:
