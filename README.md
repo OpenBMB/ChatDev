@@ -81,7 +81,7 @@ For more detailed information, please refer to our [Wiki](wiki.md), where you ca
 
 ## 🤗 Share Your Software!
 
-**Code**: We are enthusiastic about your interest in participating in our open-source project. If you come across any problems, don't hesitate to report them, or if you have any improvements to suggest, please submit pull requests. Feel free to [contact us](https://github.com/OpenBMB/ChatDev#-contact) if you have any inquiries or if you're prepared to share your work with us by creating a pull request! Your contributions are highly valued.Please let me know if there's anything else you need assistance with!
+**Code**: We are enthusiastic about your interest in participating in our open-source project. If you come across any problems, don't hesitate to report them. Feel free to create a pull request if you have any inquiries or if you are prepared to share your work with us! Your contributions are highly valued. Please let me know if there's anything else you need assistance!
 
 **Company**: Creating your own customized "ChatDev Company" is a breeze. This personalized setup involves three simple configuration JSON files. Check out the example provided in the ``CompanyConfig/Default`` directory. For detailed instructions on customization, refer to our [Wiki](wiki.md).
 
@@ -314,7 +314,3 @@ Here are some examples created by ChatDev:
 - The purpose of ChatDev is exclusively for research purposes.
 - The source code is licensed under Apache 2.0.
 - The datasets are licensed under CC BY NC 4.0, which allows for non-commercial use only. It is important to note that any models trained using these datasets should not be employed for purposes other than research.
-
-## 📮 Contact
-
-- For additional information, please reach out via email at qianc62@gmail.com.
