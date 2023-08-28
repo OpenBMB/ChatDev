@@ -22,7 +22,10 @@
 
 ![intro](misc/intro.png)
 
-https://github.com/qianc62/ChatDev/assets/11889052/a739edc8-c299-4578-9b85-dabdff820b63
+
+
+https://github.com/OpenBMB/ChatDev/assets/11889052/acb0bc7c-31f0-4c34-bab1-48c3863c8d7e
+
 
 
 ## ⚡️ Quickstart
