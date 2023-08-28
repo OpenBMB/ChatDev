@@ -62,11 +62,9 @@ parser.add_argument('--config', type=str, default="Default",
                     help="Name of config, which is used to load configuration under CompanyConfig/")
 parser.add_argument('--org', type=str, default="DefaultOrganization",
                     help="Name of organization, your software will be generated in WareHouse/name_org_timestamp")
-parser.add_argument('--task', type=str, default="Design a Fictactoe game.\
-                                                              Implement AI opponent for a Fictactoe game.\
-                                                              Ensure the AI makes strategic moves, evaluates the game state, and adapts its strategy based on gameplay.",
+parser.add_argument('--task', type=str, default="Develop a basic Gomoku game.",
                     help="Prompt of software")
-parser.add_argument('--name', type=str, default="MyFirstSoftware",
+parser.add_argument('--name', type=str, default="Gomoku",
                     help="Name of software, your software will be generated in WareHouse/name_org_timestamp")
 parser.add_argument('--model', type=str, default="GPT_3_5_TURBO",
                     help="GPT Model, choose from {'GPT_3_5_TURBO','GPT_4','GPT_4_32K'}")

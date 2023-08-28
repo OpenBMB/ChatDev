@@ -13,6 +13,7 @@
 # =========== Copyright 2023 @ CAMEL-AI.org. All Rights Reserved. ===========
 from enum import Enum
 
+
 class TaskType(Enum):
     AI_SOCIETY = "ai_society"
     CODE = "code"
@@ -22,6 +23,7 @@ class TaskType(Enum):
     SOLUTION_EXTRACTION = "solution_extraction"
     CHATDEV = "chat_dev"
     DEFAULT = "default"
+
 
 class RoleType(Enum):
     ASSISTANT = "assistant"
@@ -40,18 +42,20 @@ class RoleType(Enum):
     CHATDEV_TESTER = "software test engineer"
     CHATDEV_CCO = "chief creative officer (CCO)"
 
+
 class ModelType(Enum):
-    GPT_3_5_TURBO = "gpt-3.5-turbo-16k"
+    GPT_3_5_TURBO = "gpt-3.5-turbo-16k-0613"
     GPT_4 = "gpt-4"
     GPT_4_32k = "gpt-4-32k"
     STUB = "stub"
 
     @property
     def value_for_tiktoken(self):
-        return self.value if self.name != "STUB" else "gpt-3.5-turbo"
+        return self.value if self.name != "STUB" else "gpt-3.5-turbo-16k-0613"
+
 
 class PhaseType(Enum):
-    RELFECTION = "reflection"
+    REFLECTION = "reflection"
     RECRUITING_CHRO = "recruiting CHRO"
     RECRUITING_CPO = "recruiting CPO"
     RECRUITING_CTO = "recruiting CTO"
@@ -73,5 +77,6 @@ class PhaseType(Enum):
     ART_ELEMENT_INTEGRATION = "art element integration"
     CREATING_ENVIRONMENT_DOCUMENT = "environment document"
     CREATING_USER_MANUAL = "user manual"
+
 
 __all__ = ["TaskType", "RoleType", "ModelType", "PhaseType"]

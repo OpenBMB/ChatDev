@@ -15,6 +15,7 @@ from abc import ABC, abstractmethod
 from typing import Any, Dict
 
 import openai
+import tiktoken
 
 from camel.typing import ModelType
 from chatdev.utils import log_and_print_online
@@ -47,6 +48,24 @@ class OpenAIModel(ModelBackend):
         self.model_config_dict = model_config_dict
 
     def run(self, *args, **kwargs) -> Dict[str, Any]:
+        string = "\n".join([message["content"] for message in kwargs["messages"]])
+        encoding = tiktoken.encoding_for_model(self.model_type.value)
+        num_prompt_tokens = len(encoding.encode(string))
+        gap_between_send_receive = 50  # known issue
+        num_prompt_tokens += gap_between_send_receive
+
+        num_max_token_map = {
+            "gpt-3.5-turbo": 4096,
+            "gpt-3.5-turbo-16k": 16384,
+            "gpt-3.5-turbo-0613": 4096,
+            "gpt-3.5-turbo-16k-0613": 16384,
+            "gpt-4": 8192,
+            "gpt-4-0613": 8192,
+            "gpt-4-32k": 32768,
+        }
+        num_max_token = num_max_token_map[self.model_type.value]
+        num_max_completion_tokens = num_max_token - num_prompt_tokens
+        self.model_config_dict['max_tokens'] = num_max_completion_tokens
         response = openai.ChatCompletion.create(*args, **kwargs,
                                                 model=self.model_type.value,
                                                 **self.model_config_dict)
