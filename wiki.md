@@ -6,7 +6,7 @@
 
 - **Clone the GitHub Repository:** Begin by cloning the repository using the command:
    ```
-   git clone https://github.com/OpenBMB/ChatDev
+   git clone https://github.com/OpenBMB/ChatDev.git
    ```
 - **Set Up Python Environment:** Ensure you have a Python environment of version 3.9 or higher. You can create and
   activate this environment using the following commands, replacing `ChatDev_conda_env` with your preferred environment
