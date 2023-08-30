@@ -60,6 +60,12 @@ coordSet["Counselor"] = {
     "top": "-360px",
     "left": "420px"
 }
+coordSet["Prompt Engineer"] = {
+    "character": "Prompt Engineer",
+    "imgid": "right",
+    "top": "-320px",
+    "left": "20px"
+}
 const Softwareinfo = {
     "duration": "-1",
     "cost": "-1",
@@ -221,6 +227,7 @@ function extraction(contents) {
     }
     const regex_assistant = /(.*):([.\r\n\s\S\t\d\D]*)<->([.\r\n\s\S\t\d\D]*?)\]([.\r\n\s\S\t\d\D]*)/g;
     const regex_user = /(.*):(.*)(\[Start Chat\])([.\r\n\s\S\t\d\D]*?)\]([.\r\n\s\S\t\d\D]*)/g;
+    const regex_prompt = /(Prompt Engineer): "([.\s\S\d\D]*)"/g
 
     const regex_end = /(AgentTech Ends|ChatDev Ends)/g;
     const regex_start = /(ChatDev Starts)([\D\s])*(\d*)/g;
@@ -229,6 +236,7 @@ function extraction(contents) {
     const regex_info = /Software Info([\r\n\s\S\t\d\D]*)/g;
 
     const regex_system = /System/g;
+    const regex_debug = /DEBUG/g;
 
     var dialog = [];
     var count = 0;
@@ -236,12 +244,34 @@ function extraction(contents) {
     for (let i = 0; i < matches.length; ++i) {
         var if_break = false;
         console.log(i);
+        if (i == 159 || i == 198 || i == 223 || i == 260 || i == 416 || i == 537) {
+            //console.log(matches[i]);
+        }
+        while ((match = regex_debug.exec(matches[i].timestamp)) !== null) {
+            if_break = true;
+        }
         while ((match = regex_system.exec(matches[i].text)) !== null) {
+            if_break = true;
+        }
+        while (((match = regex_prompt.exec(matches[i].text)) !== null)) {
+            const type = "assitant";
+            const character = match[1];
+            const command = match[2];
+            const len = match[2].length;
+            count += 1;
+            dialog.push({
+                type,
+                character,
+                command,
+                len,
+                count
+            });
             if_break = true;
         }
         if (if_break) {
             continue;
         }
+
         while ((match = regex_assistant.exec(matches[i].text)) !== null) {
             const type = "assitant";
             const character = match[1];
@@ -298,22 +328,49 @@ function extraction(contents) {
         }
         while ((match = regex_info.exec(matches[i].text)) !== null) {
             const info = match[1];
-            Softwareinfo.code_lines = (/code_lines(?:[\t\n\r\s\D]*?)=(-?(\d*))/g).exec(info)[1];
-            Softwareinfo.num_code_files = (/num_code_files(?:[\t\n\r\s\D]*?)=(-?(\d*))/g).exec(info)[1];
-            Softwareinfo.num_png_files = (/num_png_files(?:[\t\n\r\s\D]*?)=(-?(\d*))/g).exec(info)[1];
-            Softwareinfo.num_doc_files = (/num_doc_files(?:[\t\n\r\s\D]*?)=(-?(\d*))/g).exec(info)[1];
-            Softwareinfo.env_lines = (/env_lines(?:[\t\n\r\s\D]*?)=(-?(\d*))/g).exec(info)[1];
-            Softwareinfo.manual_lines = (/manual_lines(?:[\t\n\r\s\D]*?)=(-?(\d*))/g).exec(info)[1];
+            if ((/code_lines(?:[\t\n\r\s\D]*?)=(-?(\d*))/g).exec(info) != null) {
+                Softwareinfo.code_lines = (/code_lines(?:[\t\n\r\s\D]*?)=(-?(\d*))/g).exec(info)[1];
+            }
+            if ((/num_code_files(?:[\t\n\r\s\D]*?)=(-?(\d*))/g).exec(info) != null) {
+                Softwareinfo.num_code_files = (/num_code_files(?:[\t\n\r\s\D]*?)=(-?(\d*))/g).exec(info)[1];
+            }
+            if ((/num_png_files(?:[\t\n\r\s\D]*?)=(-?(\d*))/g).exec(info) != null) {
+                Softwareinfo.num_png_files = (/num_png_files(?:[\t\n\r\s\D]*?)=(-?(\d*))/g).exec(info)[1];
+            }
+            if ((/num_doc_files(?:[\t\n\r\s\D]*?)=(-?(\d*))/g).exec(info) != null) {
+                Softwareinfo.num_doc_files = (/num_doc_files(?:[\t\n\r\s\D]*?)=(-?(\d*))/g).exec(info)[1];
+            }
+            if ((/env_lines(?:[\t\n\r\s\D]*?)=(-?(\d*))/g).exec(info) != null) {
+                Softwareinfo.env_lines = (/env_lines(?:[\t\n\r\s\D]*?)=(-?(\d*))/g).exec(info)[1];
+            }
+            if ((/manual_lines(?:[\t\n\r\s\D]*?)=(-?(\d*))/g).exec(info) != null) {
+                Softwareinfo.manual_lines = (/manual_lines(?:[\t\n\r\s\D]*?)=(-?(\d*))/g).exec(info)[1];
+            }
             if ((/duration(?:[\t\n\r\s\D]*?)=(-?(\d*)(.(\d)*)?s)/g).exec(info) != null) {
                 Softwareinfo.duration = (/duration(?:[\t\n\r\s\D]*?)=(-?(\d*)(.(\d)*)?s)/g).exec(info)[1];
             }
-            Softwareinfo.num_utterances = (/num_utterances(?:[\t\n\r\s\D]*?)=(-?(\d*))/g).exec(info)[1];
-            Softwareinfo.num_self_reflections = (/num_self_reflections(?:[\t\n\r\s\D]*?)=(-?(\d*))/g).exec(info)[1];
-            Softwareinfo.num_prompt_tokens = (/num_prompt_tokens(?:[\t\n\r\s\D]*?)=(-?(\d*))/g).exec(info)[1];
-            Softwareinfo.num_completion_tokens = (/num_completion_tokens(?:[\t\n\r\s\D]*?)=(-?(\d*))/g).exec(info)[1];
-            Softwareinfo.num_total_tokens = (/num_total_tokens(?:[\t\n\r\s\D]*?)=(-?(\d*))/g).exec(info)[1];
-            Softwareinfo.cost = (/cost(?:[\t\n\r\s\D]*?)=(.((\d)*\.(\d)*))/g).exec(info)[1];
-            Softwareinfo.version_updates = (/version_updates(?:[\t\n\r\s\D]*?)=(-?\d*)/g).exec(info)[1];
+            if ((/num_utterances(?:[\t\n\r\s\D]*?)=(-?(\d*))/g).exec(info) != null) {
+                Softwareinfo.num_utterances = (/num_utterances(?:[\t\n\r\s\D]*?)=(-?(\d*))/g).exec(info)[1];
+            }
+            if ((/num_self_reflections(?:[\t\n\r\s\D]*?)=(-?(\d*))/g).exec(info) != null) {
+                Softwareinfo.num_self_reflections = (/num_self_reflections(?:[\t\n\r\s\D]*?)=(-?(\d*))/g).exec(info)[1];
+            }
+            if ((/num_prompt_tokens(?:[\t\n\r\s\D]*?)=(-?(\d*))/g).exec(info) != null) {
+                Softwareinfo.num_prompt_tokens = (/num_prompt_tokens(?:[\t\n\r\s\D]*?)=(-?(\d*))/g).exec(info)[1];
+            }
+            if ((/num_completion_tokens(?:[\t\n\r\s\D]*?)=(-?(\d*))/g).exec(info) != null) {
+                Softwareinfo.num_completion_tokens = (/num_completion_tokens(?:[\t\n\r\s\D]*?)=(-?(\d*))/g).exec(info)[1];
+            }
+            if ((/num_total_tokens(?:[\t\n\r\s\D]*?)=(-?(\d*))/g).exec(info) != null) {
+                Softwareinfo.num_total_tokens = (/num_total_tokens(?:[\t\n\r\s\D]*?)=(-?(\d*))/g).exec(info)[1];
+            }
+            if ((/cost(?:[\t\n\r\s\D]*?)=(.((\d)*\.(\d)*))/g).exec(info) != null) {
+                Softwareinfo.cost = (/cost(?:[\t\n\r\s\D]*?)=(.((\d)*\.(\d)*))/g).exec(info)[1];
+            }
+            if ((/version_updates(?:[\t\n\r\s\D]*?)=(-?\d*)/g).exec(info) != null) {
+                Softwareinfo.version_updates = (/version_updates(?:[\t\n\r\s\D]*?)=(-?\d*)/g).exec(info)[1];
+            }
+
             dialog.push({
                 info,
                 Softwareinfo
@@ -377,6 +434,8 @@ function createPara(d, i) {
             characterimg.src = "figures/user.png";
         } else if (d.character == "Counselor") {
             characterimg.src = "figures/counselor.png";
+        } else if (d.character == "Prompt Engineer") {
+            characterimg.src = "figures/pe.png";
         }
 
         characterimg.style.height = "40px";

@@ -79,6 +79,9 @@ class ChatChain:
         for role in self.config_role:
             self.role_prompts[role] = "\n".join(self.config_role[role])
 
+        # init log
+        self.start_time, self.log_filepath = self.get_logfilepath()
+
         # init SimplePhase instances
         # import all used phases in PhaseConfig.json from chatdev.phase
         # note that in PhaseConfig.json there only exist SimplePhases
@@ -96,11 +99,11 @@ class ChatChain:
                                          phase_prompt=phase_prompt,
                                          role_prompts=self.role_prompts,
                                          phase_name=phase,
-                                         model_type=self.model_type)
+                                         model_type=self.model_type,
+                                         log_filepath=self.log_filepath)
             self.phases[phase] = phase_instance
 
-        # init log
-        self.start_time, self.log_filepath = self.get_logfilepath()
+
 
     def make_recruitment(self):
         """
@@ -145,7 +148,8 @@ class ChatChain:
                                                          composition=composition,
                                                          config_phase=self.config_phase,
                                                          config_role=self.config_role,
-                                                         model_type=self.model_type)
+                                                         model_type=self.model_type,
+                                                         log_filepath=self.log_filepath)
             self.chat_env = compose_phase_instance.execute(self.chat_env)
         else:
             raise RuntimeError(f"PhaseType '{phase_type}' is not yet implemented.")
@@ -248,7 +252,7 @@ class ChatChain:
         duration = (datetime2 - datetime1).total_seconds()
 
         post_info += "Software Info: {}".format(
-            get_info(self.chat_env.env_dict['directory']) + "\n\n🕑**duration**={:.2f}s\n\n".format(duration))
+            get_info(self.chat_env.env_dict['directory'], self.log_filepath) + "\n\n🕑**duration**={:.2f}s\n\n".format(duration))
 
         post_info += "ChatDev Starts ({})".format(self.start_time) + "\n\n"
         post_info += "ChatDev Ends ({})".format(now_time) + "\n\n"

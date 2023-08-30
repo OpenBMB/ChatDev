@@ -1,10 +1,9 @@
-import datetime
 import os
 
 import numpy as np
 
 
-def get_info(dir):
+def get_info(dir, log_filepath):
     print("dir:", dir)
 
     version_updates = -1
@@ -23,13 +22,13 @@ def get_info(dir):
 
     if os.path.exists(dir):
         filenames = os.listdir(dir)
-        print(filenames)
+        # print(filenames)
 
         num_code_files = len([filename for filename in filenames if filename.endswith(".py")])
-        print("num_code_files:", num_code_files)
+        # print("num_code_files:", num_code_files)
 
         num_png_files = len([filename for filename in filenames if filename.endswith(".png")])
-        print("num_png_files:", num_png_files)
+        # print("num_png_files:", num_png_files)
 
         num_doc_files = 0
         for filename in filenames:
@@ -38,28 +37,28 @@ def get_info(dir):
             if os.path.isfile(os.path.join(dir, filename)):
                 # print(filename)
                 num_doc_files += 1
-        print("num_doc_files:", num_doc_files)
+        # print("num_doc_files:", num_doc_files)
 
         if "meta.txt" in filenames:
             lines = open(os.path.join(dir, "meta.txt"), "r", encoding="utf8").read().split("\n")
             version_updates = float([lines[i + 1] for i, line in enumerate(lines) if "Code_Version" in line][0]) + 1
         else:
             version_updates = -1
-        print("version_updates: ", version_updates)
+        # print("version_updates: ", version_updates)
 
         if "requirements.txt" in filenames:
             lines = open(os.path.join(dir, "requirements.txt"), "r", encoding="utf8").read().split("\n")
             env_lines = len([line for line in lines if len(line.strip()) > 0])
         else:
             env_lines = -1
-        print("env_lines:", env_lines)
+        # print("env_lines:", env_lines)
 
         if "manual.md" in filenames:
             lines = open(os.path.join(dir, "manual.md"), "r", encoding="utf8").read().split("\n")
             manual_lines = len([line for line in lines if len(line.strip()) > 0])
         else:
             manual_lines = -1
-        print("manual_lines:", manual_lines)
+        # print("manual_lines:", manual_lines)
 
         code_lines = 0
         for filename in filenames:
@@ -67,53 +66,43 @@ def get_info(dir):
                 # print("......filename:", filename)
                 lines = open(os.path.join(dir, filename), "r", encoding="utf8").read().split("\n")
                 code_lines += len([line for line in lines if len(line.strip()) > 0])
-        print("code_lines:", code_lines)
+        # print("code_lines:", code_lines)
 
-        log_filename = sorted([filename for filename in filenames if filename.endswith(".log")])
-        if len(log_filename) > 0:
-            log_filename = log_filename[-1]
+        lines = open(log_filepath, "r", encoding="utf8").read().split("\n")
+        start_lines = [line for line in lines if "**[Start Chat]**" in line]
+        chat_lines = [line for line in lines if "<->" in line]
+        num_utterance = len(start_lines) + len(chat_lines)
+        # print("num_utterance:", num_utterance)
 
-            lines = open(os.path.join(dir, log_filename), "r", encoding="utf8").read().split("\n")
-            assistant_lines = [line for line in lines if "AI Assistant (" in line and line.endswith("):")]
-            instructor_lines = [line for line in lines if "AI User (" in line and line.endswith("):")]
-            num_utterance = len(assistant_lines) + len(instructor_lines)
-            print("num_utterance:", num_utterance)
+        lines = open(log_filepath, "r", encoding="utf8").read().split("\n")
+        sublines = [line for line in lines if line.startswith("prompt_tokens:")]
+        if len(sublines) > 0:
+            nums = [int(line.split(": ")[-1]) for line in sublines]
+            num_prompt_tokens = np.sum(nums)
+            # print("num_prompt_tokens:", num_prompt_tokens)
 
-            lines = open(os.path.join(dir, log_filename), "r", encoding="utf8").read().split("\n")
-            sublines = [line for line in lines if "prompt_tokens:" in line]
-            if len(sublines) > 0:
-                nums = [int(line.split(":")[-1]) for line in sublines]
-                num_prompt_tokens = np.sum(nums)
-                print("num_prompt_tokens:", num_prompt_tokens)
+        lines = open(log_filepath, "r", encoding="utf8").read().split("\n")
+        sublines = [line for line in lines if line.startswith("completion_tokens:")]
+        if len(sublines) > 0:
+            nums = [int(line.split(": ")[-1]) for line in sublines]
+            num_completion_tokens = np.sum(nums)
+            # print("num_completion_tokens:", num_completion_tokens)
 
-            lines = open(os.path.join(dir, log_filename), "r", encoding="utf8").read().split("\n")
-            sublines = [line for line in lines if "completion_tokens:" in line]
-            if len(sublines) > 0:
-                nums = [int(line.split(":")[-1]) for line in sublines]
-                num_completion_tokens = np.sum(nums)
-                print("num_completion_tokens:", num_completion_tokens)
+        lines = open(log_filepath, "r", encoding="utf8").read().split("\n")
+        sublines = [line for line in lines if line.startswith("total_tokens:")]
+        if len(sublines) > 0:
+            nums = [int(line.split(": ")[-1]) for line in sublines]
+            num_total_tokens = np.sum(nums)
+            # print("num_total_tokens:", num_total_tokens)
 
-            lines = open(os.path.join(dir, log_filename), "r", encoding="utf8").read().split("\n")
-            sublines = [line for line in lines if "total_tokens:" in line]
-            if len(sublines) > 0:
-                nums = [int(line.split(":")[-1]) for line in sublines]
-                num_total_tokens = np.sum(nums)
-                print("num_total_tokens:", num_total_tokens)
+        lines = open(log_filepath, "r", encoding="utf8").read().split("\n")
 
-            lines = open(os.path.join(dir, log_filename), "r", encoding="utf8").read().split("\n")
-
-            keywords = ["Answer their final discussed conclusion (Yes or No) in the discussion without any other words",
-                        "Answer their final product modality in the discussion without any other words",
-                        "Conclude three most creative and imaginative brainstorm ideas from the whole discussion, in the format",
-                        "Conclude the programming language being discussed for software development, in the format",
-                        "According to the codes and file format listed above, write a requirements.txt file to specify the dependencies or packages required for the project to run properly"]
-            lines = open(os.path.join(dir, log_filename), "r", encoding="utf8").read().split("\n")
-            num_reflection = 0
-            for line in lines:
-                for keyword in keywords:
-                    if keyword in line and "DEBUG]" not in line:
-                        num_reflection += 1
-            print("num_reflection:", num_reflection)
+        lines = open(log_filepath, "r", encoding="utf8").read().split("\n")
+        num_reflection = 0
+        for line in lines:
+            if "on : Reflection" in line:
+                num_reflection += 1
+        # print("num_reflection:", num_reflection)
 
     cost = 0.0
     if num_png_files != -1:

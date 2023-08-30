@@ -18,7 +18,8 @@ class Phase(ABC):
                  phase_prompt,
                  role_prompts,
                  phase_name,
-                 model_type):
+                 model_type,
+                 log_filepath):
         """
 
         Args:
@@ -42,6 +43,7 @@ class Phase(ABC):
         self.max_retries = 3
         self.reflection_prompt = """Here is a conversation between two roles: {conversations} {question}"""
         self.model_type = model_type
+        self.log_filepath = log_filepath
 
     @log_arguments
     def chatting(
@@ -355,7 +357,7 @@ class Coding(Phase):
         if len(chat_env.codes.codebooks.keys()) == 0:
             raise ValueError("No Valid Codes.")
         chat_env.rewrite_codes()
-        log_and_print_online("**[Software Info]**:\n\n {}".format(get_info(chat_env.env_dict['directory'])))
+        log_and_print_online("**[Software Info]**:\n\n {}".format(get_info(chat_env.env_dict['directory'],self.log_filepath)))
         return chat_env
 
 
@@ -370,7 +372,7 @@ class ArtDesign(Phase):
 
     def update_chat_env(self, chat_env) -> ChatEnv:
         chat_env.proposed_images = chat_env.get_images_from_message(self.seminar_conclusion)
-        log_and_print_online("**[Software Info]**:\n\n {}".format(get_info(chat_env.env_dict['directory'])))
+        log_and_print_online("**[Software Info]**:\n\n {}".format(get_info(chat_env.env_dict['directory'],self.log_filepath)))
         return chat_env
 
 
@@ -390,7 +392,7 @@ class ArtIntegration(Phase):
         chat_env.update_codes(self.seminar_conclusion)
         chat_env.rewrite_codes()
         chat_env.generate_images_from_codes()
-        log_and_print_online("**[Software Info]**:\n\n {}".format(get_info(chat_env.env_dict['directory'])))
+        log_and_print_online("**[Software Info]**:\n\n {}".format(get_info(chat_env.env_dict['directory'],self.log_filepath)))
         chat_env.generate_images_from_codes()
         return chat_env
 
@@ -422,7 +424,7 @@ class CodeComplete(Phase):
             raise ValueError("No Valid Codes.")
         chat_env.rewrite_codes()
         chat_env.generate_images_from_codes()
-        log_and_print_online("**[Software Info]**:\n\n {}".format(get_info(chat_env.env_dict['directory'])))
+        log_and_print_online("**[Software Info]**:\n\n {}".format(get_info(chat_env.env_dict['directory'],self.log_filepath)))
         return chat_env
 
 
@@ -460,7 +462,7 @@ class CodeReviewModification(Phase):
         if "```".lower() in self.seminar_conclusion.lower():
             chat_env.update_codes(self.seminar_conclusion)
             chat_env.rewrite_codes()
-            log_and_print_online("**[Software Info]**:\n\n {}".format(get_info(chat_env.env_dict['directory'])))
+            log_and_print_online("**[Software Info]**:\n\n {}".format(get_info(chat_env.env_dict['directory'],self.log_filepath)))
         self.phase_env['modification_conclusion'] = self.seminar_conclusion
         return chat_env
 
@@ -484,7 +486,7 @@ class CodeReviewHuman(Phase):
         if "```".lower() in self.seminar_conclusion.lower():
             chat_env.update_codes(self.seminar_conclusion)
             chat_env.rewrite_codes()
-            log_and_print_online("**[Software Info]**:\n\n {}".format(get_info(chat_env.env_dict['directory'])))
+            log_and_print_online("**[Software Info]**:\n\n {}".format(get_info(chat_env.env_dict['directory'],self.log_filepath)))
         return chat_env
 
 
@@ -556,7 +558,7 @@ class TestModification(Phase):
         if "```".lower() in self.seminar_conclusion.lower():
             chat_env.update_codes(self.seminar_conclusion)
             chat_env.rewrite_codes()
-            log_and_print_online("**[Software Info]**:\n\n {}".format(get_info(chat_env.env_dict['directory'])))
+            log_and_print_online("**[Software Info]**:\n\n {}".format(get_info(chat_env.env_dict['directory'],self.log_filepath)))
         return chat_env
 
 
@@ -574,7 +576,7 @@ class EnvironmentDoc(Phase):
     def update_chat_env(self, chat_env) -> ChatEnv:
         chat_env._update_requirements(self.seminar_conclusion)
         chat_env.rewrite_requirements()
-        log_and_print_online("**[Software Info]**:\n\n {}".format(get_info(chat_env.env_dict['directory'])))
+        log_and_print_online("**[Software Info]**:\n\n {}".format(get_info(chat_env.env_dict['directory'],self.log_filepath)))
         return chat_env
 
 

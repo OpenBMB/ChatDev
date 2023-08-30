@@ -19,7 +19,8 @@ class ComposedPhase(ABC):
                  composition: list = None,
                  config_phase: dict = None,
                  config_role: dict = None,
-                 model_type: ModelType = ModelType.GPT_3_5_TURBO
+                 model_type: ModelType = ModelType.GPT_3_5_TURBO,
+                 log_filepath: str = ""
                  ):
         """
 
@@ -35,6 +36,7 @@ class ComposedPhase(ABC):
         self.cycle_num = cycle_num
         self.composition = composition
         self.model_type = model_type
+        self.log_filepath = log_filepath
 
         self.config_phase = config_phase
         self.config_role = config_role
@@ -62,7 +64,8 @@ class ComposedPhase(ABC):
                                          phase_prompt=phase_prompt,
                                          role_prompts=self.role_prompts,
                                          phase_name=phase,
-                                         model_type=self.model_type)
+                                         model_type=self.model_type,
+                                         log_filepath=self.log_filepath)
             self.phases[phase] = phase_instance
 
     @abstractmethod
