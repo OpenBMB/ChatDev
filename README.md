@@ -6,14 +6,14 @@
 
 ## 📖 Overview
 
-- **ChatDev** stands as a **virtual software company** that operates through a variety of **intelligent agents** holding different roles, including Chief Executive Officer, Chief Technology Officer, Programmer, Tester, and more. These agents form a multi-agent organizational structure and are united by a mission to "revolutionize the digital world through programming." The agents within ChatDev **collaborate** by participating in specialized functional seminars, including tasks such as designing, coding, testing, and documenting.
-- The primary objective of ChatDev is to offer an **easy-to-use**, **highly-customizable** and **extendable** framework, which is based on large language models (LLMs) and serves as an ideal scenario for studying collective intelligence.
+- **ChatDev** stands as a **virtual software company** that operates through various **intelligent agents** holding different roles, including Chief Executive Officer, Chief Technology Officer, Programmer, Tester, and more. These agents form a multi-agent organizational structure and are united by a mission to "revolutionize the digital world through programming." The agents within ChatDev **collaborate** by participating in specialized functional seminars, including tasks such as designing, coding, testing, and documenting.
+- The primary objective of ChatDev is to offer an **easy-to-use**, **highly customizable** and **extendable** framework, which is based on large language models (LLMs) and serves as an ideal scenario for studying collective intelligence.
 
 ## 📰 News
 
-* August 28, 2023: the system is publicly available.
+* August 28, 2023: The system is publicly available.
 * August 17, 2023: The V1.0.0 version was ready for release.
-* July 30, 2023: users can customize ChatChain, Phase, and Role settings. Additionally, both online Log mode and replay mode are now supported.
+* July 30, 2023: Users can customize ChatChain, Phase, and Role settings. Additionally, both online Log mode and replay mode are now supported.
 * July 16, 2023: the [preprint paper](https://arxiv.org/abs/2307.07924) associated with this project was published.
 * June 30, 2023: The initial version of the `ChatDev` repository was released.
 
@@ -38,7 +38,7 @@ To get started, follow these steps:
    ```
    git clone https://github.com/OpenBMB/ChatDev.git
    ```
-2. **Set Up Python Environment:** Ensure you have a Python environment of version 3.9 or higher. You can create and activate this environment using the following commands, replacing `ChatDev_conda_env` with your preferred environment name:
+2. **Set Up Python Environment:** Ensure you have a version 3.9 or higher Python environment. You can create and activate this environment using the following commands, replacing `ChatDev_conda_env` with your preferred environment name:
    ```
    conda create -n ChatDev_conda_env python=3.9 -y
    conda activate ChatDev_conda_env
@@ -48,7 +48,7 @@ To get started, follow these steps:
    cd ChatDev
    pip3 install -r requirements.txt
    ```
-4. **Set OpenAI API Key:** Export your OpenAI API key as an environment variable. Replace `"your_OpenAI_API_key"` with your actual API key. Remember that this environment variable is session-specific, so you'll need to set it again if you open a new terminal session.
+4. **Set OpenAI API Key:** Export your OpenAI API key as an environment variable. Replace `"your_OpenAI_API_key"` with your actual API key. Remember that this environment variable is session-specific, so you need to set it again if you open a new terminal session.
    On Unix/Linux:
    ```
    export OPENAI_API_KEY="your_OpenAI_API_key"
@@ -72,8 +72,8 @@ To get started, follow these steps:
 For more detailed information, please refer to our [Wiki](wiki.md), where you can find:
 
 - An introduction to all command run parameters.
-- A straightforward guide for setting up a local web demo, which includes enhanced visualized logs, replay demo, and a simple ChatChain Visualizer.
-- An overview of ChatDev framework.
+- A straightforward guide for setting up a local web demo, which includes enhanced visualized logs, a replay demo, and a simple ChatChain Visualizer.
+- An overview of the ChatDev framework.
 - A comprehensive introduction to all advanced parameters in ChatChain configuration.
 - Guides for customizing ChatDev, including:
     - ChatChain: Design your own software development process (or any other process), such as ``DemandAnalysis -> Coding -> Testing -> Manual``.
@@ -90,7 +90,7 @@ For more detailed information, please refer to our [Wiki](wiki.md), where you ca
 **Software**: Whenever you develop software using ChatDev, a corresponding folder is generated containing all the essential information. Sharing your work with us is as simple as making a pull request. Here's an example: execute the command ``python3 run.py --task "design a 2048 game" --name "2048"  --org "THUNLP" --config "Default"``. This will create a software package and generate a folder named ``/WareHouse/2048_THUNLP_timestamp``. Inside, you'll find:
 - All the files and documents related to the 2048 game software
 - Configuration files of the company responsible for this software, including the three JSON config files from ``CompanyConfig/Default``
-- A comprehensive log detailing the software's building process and can be used to replay (``timestamp.log``)
+- A comprehensive log detailing the software's building process that can be used to replay (``timestamp.log``)
 - The initial prompt used to create this software (``2048.prompt``)
 
 Here are some examples created by ChatDev:
@@ -302,12 +302,13 @@ Here are some examples created by ChatDev:
 ## 📑 Citation
 
 ```
-@article{qian2023communicative,
-    title={Communicative Agents for Software Development}, 
-    author={Chen Qian and Xin Cong and Cheng Yang and Weize Chen and Yusheng Su and Juyuan Xu and Zhiyuan Liu and Maosong Sun},
-    year={2023},
-    eprint={2307.07924},
-    archivePrefix={arXiv}
+@misc{qian2023communicative,
+      title={Communicative Agents for Software Development}, 
+      author={Chen Qian and Xin Cong and Wei Liu and Cheng Yang and Weize Chen and Yusheng Su and Yufan Dang and Jiahao Li and Juyuan Xu and Dahai Li and Zhiyuan Liu and Maosong Sun},
+      year={2023},
+      eprint={2307.07924},
+      archivePrefix={arXiv},
+      primaryClass={cs.SE}
 }
 ```
 
