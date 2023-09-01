@@ -371,7 +371,7 @@ class ArtDesign(Phase):
                           "codes": chat_env.get_codes()}
 
     def update_chat_env(self, chat_env) -> ChatEnv:
-        chat_env.proposed_images = chat_env.get_images_from_message(self.seminar_conclusion)
+        chat_env.proposed_images = chat_env.get_proposed_images_from_message(self.seminar_conclusion)
         log_and_print_online("**[Software Info]**:\n\n {}".format(get_info(chat_env.env_dict['directory'],self.log_filepath)))
         return chat_env
 
@@ -391,9 +391,8 @@ class ArtIntegration(Phase):
     def update_chat_env(self, chat_env) -> ChatEnv:
         chat_env.update_codes(self.seminar_conclusion)
         chat_env.rewrite_codes()
-        chat_env.generate_images_from_codes()
+        # chat_env.generate_images_from_codes()
         log_and_print_online("**[Software Info]**:\n\n {}".format(get_info(chat_env.env_dict['directory'],self.log_filepath)))
-        chat_env.generate_images_from_codes()
         return chat_env
 
 
@@ -423,7 +422,6 @@ class CodeComplete(Phase):
         if len(chat_env.codes.codebooks.keys()) == 0:
             raise ValueError("No Valid Codes.")
         chat_env.rewrite_codes()
-        chat_env.generate_images_from_codes()
         log_and_print_online("**[Software Info]**:\n\n {}".format(get_info(chat_env.env_dict['directory'],self.log_filepath)))
         return chat_env
 
@@ -495,6 +493,7 @@ class TestErrorSummary(Phase):
         super().__init__(**kwargs)
 
     def update_phase_env(self, chat_env):
+        chat_env.generate_images_from_codes()
         (exist_bugs_flag, test_reports) = chat_env.exist_bugs()
         self.phase_env.update({"task": chat_env.env_dict['task_prompt'],
                                "modality": chat_env.env_dict['modality'],

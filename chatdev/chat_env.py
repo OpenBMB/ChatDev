@@ -200,7 +200,7 @@ class ChatEnv:
                 image_url = response['data'][0]['url']
                 download(image_url, filename)
 
-    def get_images_from_message(self, messages):
+    def get_proposed_images_from_message(self, messages):
         def download(img_url, file_name):
             r = requests.get(img_url)
             filepath = os.path.join(self.env_dict['directory'], file_name)
@@ -220,12 +220,26 @@ class ChatEnv:
 
         if len(images.keys()) == 0:
             regex = r"(\w+.png)"
-            matches = re.finditer(regex, matches, re.DOTALL)
+            matches = re.finditer(regex, messages, re.DOTALL)
             images = {}
             for match in matches:
                 filename = match.group(1).strip()
                 desc = " ".join(filename.replace(".png", "").split("_"))
                 images[filename] = desc
                 print("{}: {}".format(filename, images[filename]))
+
+        for filename in images.keys():
+            if not os.path.exists(os.path.join(self.env_dict['directory'], filename)):
+                desc = images[filename]
+                if desc.endswith(".png"):
+                    desc = desc.replace(".png", "")
+                print("{}: {}".format(filename, desc))
+                response = openai.Image.create(
+                    prompt=desc,
+                    n=1,
+                    size="256x256"
+                )
+                image_url = response['data'][0]['url']
+                download(image_url, filename)
 
         return images
