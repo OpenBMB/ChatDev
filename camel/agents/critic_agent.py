@@ -48,13 +48,14 @@ class CriticAgent(ChatAgent):
         self,
         system_message: SystemMessage,
         model: ModelType = ModelType.GPT_3_5_TURBO,
+        endpoint: Optional[str] = None,
         model_config: Optional[Any] = None,
         message_window_size: int = 6,
         retry_attempts: int = 2,
         verbose: bool = False,
         logger_color: Any = Fore.MAGENTA,
     ) -> None:
-        super().__init__(system_message, model, model_config,
+        super().__init__(system_message, model, endpoint, model_config,
                          message_window_size)
         self.options_dict: Dict[str, str] = dict()
         self.retry_attempts = retry_attempts

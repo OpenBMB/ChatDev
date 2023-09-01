@@ -42,10 +42,11 @@ class ModelBackend(ABC):
 class OpenAIModel(ModelBackend):
     r"""OpenAI API in a unified ModelBackend interface."""
 
-    def __init__(self, model_type: ModelType, model_config_dict: Dict) -> None:
+    def __init__(self, model_type: ModelType, endpoint: str, model_config_dict: Dict) -> None:
         super().__init__()
         self.model_type = model_type
         self.model_config_dict = model_config_dict
+        self.endpoint = endpoint
 
     def run(self, *args, **kwargs) -> Dict[str, Any]:
         string = "\n".join([message["content"] for message in kwargs["messages"]])
@@ -66,6 +67,13 @@ class OpenAIModel(ModelBackend):
         num_max_token = num_max_token_map[self.model_type.value]
         num_max_completion_tokens = num_max_token - num_prompt_tokens
         self.model_config_dict['max_tokens'] = num_max_completion_tokens
+        
+        if self.endpoint is not None:
+            openai.api_base = self.endpoint
+            openai.api_key = ''
+            openai.api_version = '2019-05-06'
+            
+            
         response = openai.ChatCompletion.create(*args, **kwargs,
                                                 model=self.model_type.value,
                                                 **self.model_config_dict)
@@ -106,14 +114,15 @@ class ModelFactory:
     """
 
     @staticmethod
-    def create(model_type: ModelType, model_config_dict: Dict) -> ModelBackend:
+    def create(model_type: ModelType, endpoint: str, model_config_dict: Dict) -> ModelBackend:
         default_model_type = ModelType.GPT_3_5_TURBO
 
         if model_type in {
-            ModelType.GPT_3_5_TURBO, ModelType.GPT_4, ModelType.GPT_4_32k,
+            ModelType.GPT_3_5_TURBO, ModelType.GPT_4, ModelType.GPT_4_32k, ModelType.LOCAL,
             None
         }:
             model_class = OpenAIModel
+            
         elif model_type == ModelType.STUB:
             model_class = StubModel
         else:
@@ -123,5 +132,5 @@ class ModelFactory:
             model_type = default_model_type
 
         # log_and_print_online("Model Type: {}".format(model_type))
-        inst = model_class(model_type, model_config_dict)
+        inst = model_class(model_type, endpoint, model_config_dict)
         return inst

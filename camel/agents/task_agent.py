@@ -46,6 +46,7 @@ class TaskSpecifyAgent(ChatAgent):
         self,
         model: Optional[ModelType] = None,
         task_type: TaskType = TaskType.AI_SOCIETY,
+        endpoint: Optional[str] = None,
         model_config: Optional[Any] = None,
         task_specify_prompt: Optional[Union[str, TextPrompt]] = None,
         word_limit: int = DEFAULT_WORD_LIMIT,
@@ -71,6 +72,7 @@ class TaskSpecifyAgent(ChatAgent):
 
     def step(
         self,
+        endpoint,
         original_task_prompt: Union[str, TextPrompt],
         meta_dict: Optional[Dict[str, Any]] = None,
     ) -> TextPrompt:
@@ -126,6 +128,7 @@ class TaskPlannerAgent(ChatAgent):
     def __init__(
         self,
         model: Optional[ModelType] = None,
+        endpoint: Optional[str] = None,
         model_config: Any = None,
     ) -> None:
 
@@ -137,7 +140,7 @@ class TaskPlannerAgent(ChatAgent):
             role_type=RoleType.ASSISTANT,
             content="You are a helpful task planner.",
         )
-        super().__init__(system_message, model, model_config)
+        super().__init__(system_message, model, endpoint, model_config)
 
     def step(
         self,

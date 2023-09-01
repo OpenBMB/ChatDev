@@ -19,6 +19,7 @@ class Phase(ABC):
                  role_prompts,
                  phase_name,
                  model_type,
+                 endpoint,
                  log_filepath):
         """
 
@@ -43,6 +44,7 @@ class Phase(ABC):
         self.max_retries = 3
         self.reflection_prompt = """Here is a conversation between two roles: {conversations} {question}"""
         self.model_type = model_type
+        self.endpoint=endpoint
         self.log_filepath = log_filepath
 
     @log_arguments
@@ -60,6 +62,7 @@ class Phase(ABC):
             need_reflect=False,
             with_task_specify=False,
             model_type=ModelType.GPT_3_5_TURBO,
+            endpoint=None,
             placeholders=None,
             chat_turn_limit=10
     ) -> str:
@@ -104,6 +107,7 @@ class Phase(ABC):
             task_type=task_type,
             with_task_specify=with_task_specify,
             model_type=model_type,
+            endpoint=endpoint,
         )
 
         # log_and_print_online("System", role_play_session.assistant_sys_msg)
@@ -184,6 +188,7 @@ class Phase(ABC):
                         task_prompt: str,
                         role_play_session: RolePlaying,
                         phase_name: str,
+                        endpoint,
                         chat_env: ChatEnv) -> str:
         """
 
@@ -230,6 +235,7 @@ class Phase(ABC):
                           placeholders={"conversations": messages, "question": question},
                           need_reflect=False,
                           chat_turn_limit=1,
+                          endpoint=endpoint,
                           model_type=self.model_type)
 
         if "recruiting" in phase_name:
@@ -302,6 +308,7 @@ class Phase(ABC):
                           user_role_prompt=self.user_role_prompt,
                           chat_turn_limit=chat_turn_limit,
                           placeholders=self.phase_env,
+                          endpoint=self.endpoint,
                           model_type=self.model_type)
         chat_env = self.update_chat_env(chat_env)
         return chat_env

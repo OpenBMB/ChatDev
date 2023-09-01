@@ -44,6 +44,7 @@ class EmbodiedAgent(ChatAgent):
         self,
         system_message: SystemMessage,
         model: ModelType = ModelType.GPT_4,
+        endpoint: Optional[str] = None,
         model_config: Optional[Any] = None,
         message_window_size: Optional[int] = None,
         action_space: Optional[List[BaseToolAgent]] = None,
@@ -62,6 +63,7 @@ class EmbodiedAgent(ChatAgent):
         super().__init__(
             system_message=system_message,
             model=model,
+            endpoint=endpoint,
             model_config=model_config,
             message_window_size=message_window_size,
         )

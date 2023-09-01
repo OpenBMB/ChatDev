@@ -27,7 +27,8 @@ class ChatChain:
                  task_prompt: str = None,
                  project_name: str = None,
                  org_name: str = None,
-                 model_type: ModelType = ModelType.GPT_3_5_TURBO) -> None:
+                 model_type: ModelType = ModelType.GPT_3_5_TURBO,
+                 endpoint: str = None) -> None:
         """
 
         Args:
@@ -37,6 +38,7 @@ class ChatChain:
             task_prompt: the user input prompt for software
             project_name: the user input name for software
             org_name: the organization name of the human user
+            endpoint: 
         """
 
         # load config file
@@ -46,6 +48,7 @@ class ChatChain:
         self.project_name = project_name
         self.org_name = org_name
         self.model_type = model_type
+        self.endpoint = endpoint
 
         with open(self.config_path, 'r', encoding="utf8") as file:
             self.config = json.load(file)
@@ -100,6 +103,7 @@ class ChatChain:
                                          role_prompts=self.role_prompts,
                                          phase_name=phase,
                                          model_type=self.model_type,
+                                         endpoint = self.endpoint,
                                          log_filepath=self.log_filepath)
             self.phases[phase] = phase_instance
 

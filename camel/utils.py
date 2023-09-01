@@ -83,7 +83,7 @@ def num_tokens_from_messages(
         encoding = tiktoken.get_encoding("cl100k_base")
 
     if model in {
-        ModelType.GPT_3_5_TURBO, ModelType.GPT_4, ModelType.GPT_4_32k,
+        ModelType.GPT_3_5_TURBO, ModelType.GPT_4, ModelType.GPT_4_32k, ModelType.LOCAL,
         ModelType.STUB
     }:
         return count_tokens_openai_chat_models(messages, encoding)
@@ -115,6 +115,8 @@ def get_model_token_limit(model: ModelType) -> int:
         return 32768
     elif model == ModelType.STUB:
         return 4096
+    elif model == ModelType.LOCAL:
+        return 100000
     else:
         raise ValueError("Unknown model type")
 
@@ -140,6 +142,8 @@ def openai_api_key_required(func: F) -> F:
         if not isinstance(self, ChatAgent):
             raise ValueError("Expected ChatAgent")
         if self.model == ModelType.STUB:
+            return func(self, *args, **kwargs)
+        if self.model == ModelType.LOCAL:
             return func(self, *args, **kwargs)
         elif 'OPENAI_API_KEY' in os.environ:
             return func(self, *args, **kwargs)
