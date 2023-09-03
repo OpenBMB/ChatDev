@@ -9,6 +9,8 @@
 - **ChatDev** stands as a **virtual software company** that operates through various **intelligent agents** holding different roles, including Chief Executive Officer, Chief Technology Officer, Programmer, Tester, and more. These agents form a multi-agent organizational structure and are united by a mission to "revolutionize the digital world through programming." The agents within ChatDev **collaborate** by participating in specialized functional seminars, including tasks such as designing, coding, testing, and documenting.
 - The primary objective of ChatDev is to offer an **easy-to-use**, **highly customizable** and **extendable** framework, which is based on large language models (LLMs) and serves as an ideal scenario for studying collective intelligence.
 
+*Read this in [中文](README-Chinese.md).*
+
 ## 📰 News
 
 * **September 1, 2023: The Art mode is available now! You can use agent to generate images used in the software, try ``python3 run.py --config "Art"``.** See [example](WareHouse/gomokugameArtExample_THUNLP_20230831122822) here.
