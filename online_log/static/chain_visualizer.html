@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>ChatChain Visualizer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        
+        #visualization {
+            display: flex;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            max-width: 1800px;
+            margin: 20px;
+        }
+        
+        .card {
+            margin-right: 10px;
+            background-color: #f0f0f0;
+            display: inline-block;
+            min-width: 350px;
+            vertical-align: top;
+        }
+        
+        .card-content {
+            padding: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2>ChatChain Visualizer</h2>
+        <p>Select your ChatChainConfig.json to visualize</p>
+        <input type="file" id="fileInput">
+        <div id="visualization"></div>
+    </div>
+
+    <script>
+        document.getElementById('fileInput').addEventListener('change', handleFileSelect, false);
+
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                try {
+                    const jsonContent = JSON.parse(event.target.result);
+                    visualizeChain(jsonContent.chain);
+                } catch (error) {
+                    alert('Error parsing JSON file.');
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        function createCard(element) {
+            const card = document.createElement('div');
+            card.className = 'card';
+
+            const cardContent = document.createElement('div');
+            cardContent.className = 'card-content';
+
+            // Assuming "element" is a dictionary with some fields to visualize
+            // Customize this part based on the actual structure of your elements
+
+            if (element.phaseType === "ComposedPhase") {
+                delete element.Composition;
+            }
+
+            const phase = document.createElement('span');
+            phase.innerHTML = `<strong>PhaseName: </strong>${element.phase || 'No PhaseName'}`;
+
+
+            const phaseType = document.createElement('p');
+            phaseType.innerHTML = `<strong>PhaseType: </strong>${element.phaseType || 'No phaseType'}`;
+
+            // Display the JSON content on the card
+            delete element.phase;
+            delete element.phaseType;
+            const jsonContent = document.createElement('pre');
+            jsonContent.innerText = JSON.stringify(element, null, 2);
+
+            cardContent.appendChild(phase);
+            cardContent.appendChild(phaseType);
+            cardContent.appendChild(jsonContent);
+
+            card.appendChild(cardContent);
+
+            return card;
+        }
+
+        function visualizeChain(chain) {
+            const visualization = document.getElementById('visualization');
+            visualization.innerHTML = '';
+
+            chain.forEach(element => {
+                if (element.phaseType === "ComposedPhase") {
+                    const composition = element.Composition || [];
+                    const card = createCard(element);
+
+                    const nestedCards = composition.map(composedElement => {
+                        return createCard(composedElement);
+                    });
+
+                    const nestedCardWrapper = document.createElement('div');
+                    nestedCardWrapper.style.marginTop = '10px';
+
+                    nestedCards.forEach(nestedCard => {
+                        nestedCardWrapper.appendChild(nestedCard);
+                    });
+
+                    card.appendChild(nestedCardWrapper);
+                    visualization.appendChild(card);
+                } else {
+                    const card = createCard(element);
+                    visualization.appendChild(card);
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>
