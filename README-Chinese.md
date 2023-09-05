@@ -13,7 +13,7 @@
 
 ## 📰 新闻
 
-- **2023年9月1日：Art模式现已可用！您可以使用智能体生成软件中使用的图像，尝试 `python3 run.py --config "Art"`。** 请参见此处的[示例](https://chat.openai.com/WareHouse/gomokugameArtExample_THUNLP_20230831122822)。
+- **2023年9月1日：Art模式现已可用！您可以使用智能体生成软件中使用的图像，尝试 `python3 run.py --config "Art"`。** 请参见此处的[示例](/WareHouse/gomokugameArtExample_THUNLP_20230831122822)。
 - 2023年8月28日：系统已公开提供使用。
 - 2023年8月17日：V1.0.0版本已准备好发布。
 - 2023年7月30日：用户可以自定义ChatChain、Phase和Role设置。此外，现在支持在线Log模式和重放模式。
@@ -79,7 +79,7 @@ https://github.com/OpenBMB/ChatDev/assets/11889052/80d01d2f-677b-4399-ad8b-f7af9
 
 ## ✨️ 进阶技能
 
-有关更详细的信息，请参阅我们的[Wiki](https://chat.openai.com/wiki.md)，您可以在其中找到：
+有关更详细的信息，请参阅我们的[Wiki](wiki.md)，您可以在其中找到：
 
 - 所有命令运行参数的介绍。
 - 一个简单的设置本地Web演示的指南，其中包括增强可视化日志、重放演示和简单的ChatChain可视化工具。
@@ -94,7 +94,7 @@ https://github.com/OpenBMB/ChatDev/assets/11889052/80d01d2f-677b-4399-ad8b-f7af9
 
 **代码：** 我们对您参与我们的开源项目表示热情欢迎。如果您遇到任何问题，请不要犹豫报告它们。如果您准备与我们分享您的工作，随时创建pull request！您的贡献非常宝贵。如果您需要帮助，请联系我们！
 
-**公司：** 创建自己定制的“ChatDev公司”非常简单。此个性化设置涉及三个简单的配置JSON文件。请查看`CompanyConfig/Default`目录中提供的示例。有关自定义的详细说明，请参阅我们的[Wiki](https://chat.openai.com/wiki.md)。
+**公司：** 创建自己定制的“ChatDev公司”非常简单。此个性化设置涉及三个简单的配置JSON文件。请查看`CompanyConfig/Default`目录中提供的示例。有关自定义的详细说明，请参阅我们的[Wiki](wiki.md)。
 
 **软件：** 每当您使用ChatDev开发软件时，都会生成一个包含所有必要信息的相应文件夹。与我们分享您的工作就像创建一个pull request一样简单。这是一个示例：执行命令`python3 run.py --task "design a 2048 game" --name "2048" --org "THUNLP" --config "Default"`。这将创建一个软件包并生成一个名为`/WareHouse/2048_THUNLP_timestamp`的文件夹。其中包括：
 
