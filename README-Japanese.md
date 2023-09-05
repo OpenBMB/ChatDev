@@ -5,26 +5,26 @@
 </p>
 
 <p align="center">
-    【English | <a href="README-Chinese.md">Chinese</a> | <a href="README-Japanese.md">Japanese</a>】
+    【<a href="README.md">English</a> | <a href="README-Chinese.md">Chinese</a> | Japanese】
 </p>
 
-## 📖 Overview
+## 📖 概要
 
-- **ChatDev** stands as a **virtual software company** that operates through various **intelligent agents** holding different roles, including Chief Executive Officer, Chief Technology Officer, Programmer, Tester, and more. These agents form a multi-agent organizational structure and are united by a mission to "revolutionize the digital world through programming." The agents within ChatDev **collaborate** by participating in specialized functional seminars, including tasks such as designing, coding, testing, and documenting.
-- The primary objective of ChatDev is to offer an **easy-to-use**, **highly customizable** and **extendable** framework, which is based on large language models (LLMs) and serves as an ideal scenario for studying collective intelligence.
-
-
-## 📰 News
-
-* **September 1, 2023: The Art mode is available now! You can use agent to generate images used in the software, try ``python3 run.py --config "Art"``.** See [example](WareHouse/gomokugameArtExample_THUNLP_20230831122822) here.
-* August 28, 2023: The system is publicly available.
-* August 17, 2023: The V1.0.0 version was ready for release.
-* July 30, 2023: Users can customize ChatChain, Phase, and Role settings. Additionally, both online Log mode and replay mode are now supported.
-* July 16, 2023: The [preprint paper](https://arxiv.org/abs/2307.07924) associated with this project was published.
-* June 30, 2023: The initial version of the `ChatDev` repository was released.
+- **ChatDev** は、最高経営責任者（CEO）、最高技術責任者（CTO）、プログラマー、テスターなど、さまざまな役割を持つ**インテリジェントエージェント**によって運営される**バーチャルソフトウェア企業**です。これらのエージェントは、マルチエージェントの組織構造を形成し、"プログラミングを通じてデジタル世界に革命を起こす"というミッションで団結しています。ChatDev 内のエージェントは、設計、コーディング、テスト、ドキュメント作成などのタスクを含む専門的な機能セミナーに参加することで、**共同作業** を行います。
+- ChatDev の主な目的は、**使いやすく**、**高度にカスタマイズ可能**で**拡張可能**なフレームワークを提供することであり、これは大規模言語モデル（LLM）に基づいており、集合知を研究するための理想的なシナリオとして機能します。
 
 
-## ❓ What Can ChatDev Do?
+## 📰 ニュース
+
+* **2023年9月1日: Art モードが利用可能になりました！``python3 run.py --config "Art"``。** こちら[example](WareHouse/gomokugameArtExample_THUNLP_20230831122822)を参照してください。
+* 2023年8月28日: システムは一般公開されました。
+* 2023年8月17日: V1.0.0 のリリース準備が整いました。
+* 2023年7月30日: ユーザーは、ChatChain、Phase、Role の設定をカスタマイズすることができます。さらに、オンラインログモードとリプレイモードの両方がサポートされました。
+* 2023年7月16日: このプロジェクトに関連した[プレプリント論文](https://arxiv.org/abs/2307.07924)が発表された。
+* 2023年6月30日: `ChatDev` リポジトリの初期バージョンがリリースされました。
+
+
+## ❓ ChatDev は何ができるのか？
 
 ![intro](misc/intro.png)
 
@@ -36,79 +36,79 @@ https://github.com/OpenBMB/ChatDev/assets/11889052/80d01d2f-677b-4399-ad8b-f7af9
 
 
 
-## ⚡️ Quickstart
+## ⚡️ クイックスタート
 
-To get started, follow these steps:
+開始するには、以下の手順に従ってください:
 
-1. **Clone the GitHub Repository:** Begin by cloning the repository using the command:
+1. **GitHub リポジトリのクローン:** コマンドを使ってリポジトリのクローンを作成する:
    ```
    git clone https://github.com/OpenBMB/ChatDev.git
    ```
-2. **Set Up Python Environment:** Ensure you have a version 3.9 or higher Python environment. You can create and activate this environment using the following commands, replacing `ChatDev_conda_env` with your preferred environment name:
+2. **Python 環境のセットアップ:** バージョン 3.9 以上の Python 環境があることを確認してください。`ChatDev_conda_env` をお好みの環境名に置き換え、以下のコマンドを使用してこの環境を作成し、有効化することができます:
    ```
    conda create -n ChatDev_conda_env python=3.9 -y
    conda activate ChatDev_conda_env
    ```
-3. **Install Dependencies:** Move into the `ChatDev` directory and install the necessary dependencies by running:
+3. **依存関係のインストール:** `ChatDev` ディレクトリに移動し、以下のコマンドを実行して必要な依存関係をインストールする:
    ```
    cd ChatDev
    pip3 install -r requirements.txt
    ```
-4. **Set OpenAI API Key:** Export your OpenAI API key as an environment variable. Replace `"your_OpenAI_API_key"` with your actual API key. Remember that this environment variable is session-specific, so you need to set it again if you open a new terminal session.
-   On Unix/Linux:
+4. **OpenAI API キーの設定:** OpenAI API key を環境変数としてエクスポートします。`"your_OpenAI_API_key"` を実際の API キーに置き換えてください。この環境変数はセッション固有なので、新しいターミナルセッションを開くときに再度設定する必要があることを覚えておいてください。
+   Unix/Linux 上では:
    ```
    export OPENAI_API_KEY="your_OpenAI_API_key"
    ```
-   On Windows:
+   Windows 上では:
    ```
    $env:OPENAI_API_KEY="your_OpenAI_API_key"
    ```
-5. **Build Your Software:** Use the following command to initiate the building of your software, replacing `[description_of_your_idea]` with your idea's description and `[project_name]` with your desired project name:
+5. **ソフトウェアの構築:** 次のコマンドを使用して、ソフトウェアのビルドを開始する。`[description_of_your_idea]` をあなたのアイデアの説明に、`[project_name]` を希望するプロジェクト名に置き換える:
    ```
    python3 run.py --task "[description_of_your_idea]" --name "[project_name]"
    ```
-6. **Run Your Software:** Once generated, you can find your software in the `WareHouse` directory under a specific project folder, such as `project_name_DefaultOrganization_timestamp`. Run your software using the following command within that directory:
+6. **ソフトウェアの実行:** 生成されたソフトウェアは、`Project_name_DefaultOrganization_timestamp` のような特定のプロジェクトフォルダの下の `WareHouse` ディレクトリにあります。そのディレクトリで以下のコマンドを使ってソフトウェアを実行してください:
    ```
    cd WareHouse/project_name_DefaultOrganization_timestamp
    python3 main.py
    ```
 
-## ✨️ Advanced Skills
+## ✨️ 高度なスキル
 
-For more detailed information, please refer to our [Wiki](wiki.md), where you can find:
+より詳細な情報については、私たちの [Wiki](wiki.md) を参照してください:
 
-- An introduction to all command run parameters.
-- A straightforward guide for setting up a local web demo, which includes enhanced visualized logs, a replay demo, and a simple ChatChain Visualizer.
-- An overview of the ChatDev framework.
-- A comprehensive introduction to all advanced parameters in ChatChain configuration.
-- Guides for customizing ChatDev, including:
-    - ChatChain: Design your own software development process (or any other process), such as ``DemandAnalysis -> Coding -> Testing -> Manual``.
-    - Phase: Design your own phase within ChatChain, like ``DemandAnalysis``.
-    - Role: Defining the various agents in your company, such as the ``Chief Executive Officer``.
+- すべてのコマンド実行パラメータの紹介
+- 強化されたビジュアライズされたログ、リプレイデモ、シンプルな ChatChain ビジュアライザを含む、ローカルウェブデモをセットアップするための簡単なガイド。
+- ChatDev フレームワークの概要
+- ChatChain 設定の高度なパラメータの包括的な紹介。
+- ChatDev をカスタマイズするためのガイドです:
+    - ChatChain: 独自のソフトウェア開発プロセス（または他のプロセス）を設計します。例えば ``DemandAnalysis -> Coding -> Testing -> Manual`` などです。
+    - Phase: ``DemandAnalysis``のように、ChatChain 内で独自のフェーズを設計する。
+    - Role: 最高経営責任者 ``Chief Executive Officer`` のように、社内の様々なエージェントを定義する。
 
 
-## 🤗 Share Your Software!
+## 🤗 ソフトウェアを共有する！
 
-**Code**: We are enthusiastic about your interest in participating in our open-source project. If you come across any problems, don't hesitate to report them. Feel free to create a pull request if you have any inquiries or if you are prepared to share your work with us! Your contributions are highly valued. Please let me know if there's anything else you need assistance!
+**コード**: 私たちは、あなたが私たちのオープンソースプロジェクトに参加してくださることに熱意をもっています。もし何か問題があれば、遠慮なく報告してください。問い合わせがある場合、または私たちと仕事を共有する用意がある場合は、遠慮なくプルリクエストを作成してください！あなたのコントリビュートは高く評価されます。また、何かありましたらお知らせください！
 
-**Company**: Creating your own customized "ChatDev Company" is a breeze. This personalized setup involves three simple configuration JSON files. Check out the example provided in the ``CompanyConfig/Default`` directory. For detailed instructions on customization, refer to our [Wiki](wiki.md).
+**カンパニー**: カスタマイズした "ChatDev Company" の作成は簡単です。このパーソナライズされたセットアップには、3つの簡単な設定JSONファイルが必要です。``CompanyConfig/Default`` ディレクトリで提供されている例をチェックしてください。カスタマイズの詳細については [Wiki](wiki.md) を参照してください。
 
-**Software**: Whenever you develop software using ChatDev, a corresponding folder is generated containing all the essential information. Sharing your work with us is as simple as making a pull request. Here's an example: execute the command ``python3 run.py --task "design a 2048 game" --name "2048"  --org "THUNLP" --config "Default"``. This will create a software package and generate a folder named ``/WareHouse/2048_THUNLP_timestamp``. Inside, you'll find:
-- All the files and documents related to the 2048 game software
-- Configuration files of the company responsible for this software, including the three JSON config files from ``CompanyConfig/Default``
-- A comprehensive log detailing the software's building process that can be used to replay (``timestamp.log``)
-- The initial prompt used to create this software (``2048.prompt``)
+**ソフトウェア**: ChatDev を使ってソフトウェアを開発すると、必要な情報を含むフォルダが作成されます。プルリクエストを行うだけで、あなたの作品を共有することができます。コマンド ``python3 run.py --task "design a 2048 game" --name "2048" --org "THUNLP" --config "Default"`` を実行してください。これでソフトウェアパッケージが作成され、``/WareHouse/2048_THUNLP_timestamp`` という名前のフォルダが生成されます。内部には:
+- 2048 ゲームソフトウェアに関連するすべてのファイルとドキュメント
+- ``CompanyConfig/Default`` にある 3 つの JSON 設定ファイルを含む、このソフトウェアを開発した会社の設定ファイル
+- リプレイに使用できる、このソフトウェアのビルドプロセスの詳細なログ（``timestamp.log``）
+- このソフトウェアを作成するために使用された最初のプロンプト (``2048.prompt``)
 
-Here are some examples created by ChatDev:
+ChatDev によって作成された例をいくつか紹介します:
 
 <table style="width:100%">
 <thead>
   <tr>
-    <th>Contributor</th>
-    <th>Software</th>
-    <th>ScreenShot</th>
-    <th>Status</th>
-    <th>LLM</th>
+    <th>コントリビューター</th>
+    <th>ソフトウェア</th>
+    <th>スクリーンショット</th>
+    <th>ステータス</th>
+    <th>大規模言語モデル</th>
   </tr>
 </thead>
 <tbody>
@@ -127,7 +127,7 @@ Here are some examples created by ChatDev:
   </tr>
   <tr>
     <td><a href="WareHouse/Gomoku_THUNLP_20230625201030" target="_blank" rel="noopener noreferrer">A Gomoku Game</a></td>
-    <td><img src="misc/gomoku.png" width="200px"></td>  
+    <td><img src="misc/gomoku.png" width="200px"></td>
     <td>Perfect</td>
     <td>GPT3.5</td>
   </tr>
@@ -249,7 +249,7 @@ Here are some examples created by ChatDev:
   </tr>
   <tr>
     <td><a href="WareHouse/Gomoku_THUNLP_20230625201030" target="_blank" rel="noopener noreferrer">A Gomoku Game with assets generated by Agent</a></td>
-    <td><img src="misc/gomoku_art.png" width="200px"></td>  
+    <td><img src="misc/gomoku_art.png" width="200px"></td>
     <td>Perfect</td>
     <td>GPT4</td>
   </tr>
@@ -311,11 +311,11 @@ Here are some examples created by ChatDev:
 </tbody>
 </table>
 
-## 📑 Citation
+## 📑 引用
 
 ```
 @misc{qian2023communicative,
-      title={Communicative Agents for Software Development}, 
+      title={Communicative Agents for Software Development},
       author={Chen Qian and Xin Cong and Wei Liu and Cheng Yang and Weize Chen and Yusheng Su and Yufan Dang and Jiahao Li and Juyuan Xu and Dahai Li and Zhiyuan Liu and Maosong Sun},
       year={2023},
       eprint={2307.07924},
@@ -324,8 +324,8 @@ Here are some examples created by ChatDev:
 }
 ```
 
-## ⚖️ License
+## ⚖️ ライセンス
 
-- The purpose of ChatDev is exclusively for research purposes.
-- The source code is licensed under Apache 2.0.
-- The datasets are licensed under CC BY NC 4.0, which allows for non-commercial use only. It is important to note that any models trained using these datasets should not be employed for purposes other than research.
+- ChatDev の目的は研究目的のみです。
+- ソースコードは Apache 2.0 でライセンスされています。
+- データセットのライセンスは CC BY NC 4.0 であり、非商用目的でのみ使用できる。これらのデータセットを使用して学習されたモデルは、研究以外の目的で使用されないようご注意ください。
