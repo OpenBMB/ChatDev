@@ -1,4 +1,4 @@
-# ソフトウェア開発のためのコミュニケーションエージェント
+# Communicative Agents for Software Development
 
 <p align="center">
   <img src='./misc/logo1.png' width=600>
