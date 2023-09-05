@@ -13,7 +13,7 @@
 
 ## 📰 新闻
 
-- **2023年9月1日：Art模式现已可用！您可以使用智能体生成软件中使用的图像，尝试 `python3 run.py --config "Art"`。** 请参见此处的[示例](https://chat.openai.com/WareHouse/gomokugameArtExample_THUNLP_20230831122822)。
+- **2023年9月1日：Art模式现已可用！您可以使用智能体生成软件中使用的图像，尝试 `python3 run.py --config "Art"`。** 请参见此处的[示例](https://github.com/OpenBMB/ChatDev/tree/main/WareHouse/gomokugameArtExample_THUNLP_20230831122822)。
 - 2023年8月28日：系统已公开提供使用。
 - 2023年8月17日：V1.0.0版本已准备好发布。
 - 2023年7月30日：用户可以自定义ChatChain、Phase和Role设置。此外，现在支持在线Log模式和重放模式。
