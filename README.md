@@ -38,7 +38,29 @@ https://github.com/OpenBMB/ChatDev/assets/11889052/80d01d2f-677b-4399-ad8b-f7af9
 
 ## ⚡️ Quickstart
 
-To get started, follow these steps:
+To get started safely, follow these steps:
+1. **Clone the GitHub Repository:** Begin by cloning the repository using the command:
+   ```
+   git clone https://github.com/OpenBMB/ChatDev.git
+   ```
+2. **Edit the .env file:** Create a .env with your OpenAI API key ()
+   ```
+   OPENAI_API_KEY="YOUR-OPENAI-SECRET-KEY-HERE"
+   ```
+3. **Launch the DevContainer:** Open the directory in VSCode with the DevContainer Extension and create/run the container.
+If you are not using VSCode, run the Docker in the .devcontainer folder.
+
+4. **Build Your Software:** Use the following command to initiate the building of your software, replacing `[description_of_your_idea]` with your idea's description and `[project_name]` with your desired project name in the VS Code Terminal:
+   ```
+   python3 run.py --task "[description_of_your_idea]" --name "[project_name]"
+   ```
+5. **Run Your Software:** Once generated, you can find your software in the `WareHouse` directory under a specific project folder, such as `project_name_DefaultOrganization_timestamp`. Run your software using the following command within that directory after reviewing it for saftey:
+   ```
+   cd WareHouse/project_name_DefaultOrganization_timestamp
+   python3 main.py
+   ```
+
+To get started UNSAFELY, follow these steps:
 
 1. **Clone the GitHub Repository:** Begin by cloning the repository using the command:
    ```
