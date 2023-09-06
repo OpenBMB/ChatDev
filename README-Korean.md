@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-    【English | <a href="README-Chinese.md">Chinese</a> | <a href="README-Japanese.md">Japanese</a> | <a href="README-Korean.md">Korean</a>】
+    【<a href="README.md">English</a> | <a href="README-Chinese.md">Chinese</a> | <a href="README-Japanese.md">Japanese</a> | Korean】
 </p>
 
 ## 📖 개요
@@ -77,8 +77,6 @@ https://github.com/OpenBMB/ChatDev/assets/11889052/80d01d2f-677b-4399-ad8b-f7af9
     - ChatChain: ``DemandAnalysis (수요분석) -> Coding (코딩) -> Testing (테스트) -> Manual (매뉴얼)``과 같은 소프트웨어 개발 프로세스(또는 다른 프로세스)를 직접 설계하세요.
     - Phase: ChatChain 내에서 ``수요분석``과 같은 자신만의 단계를 설계하세요.
     - Role: ``Chief Executive Officier (최고 경영자)``와 같이 회사 내 다양한 에이전트를 정의합니다.
-
-## 🤗 소프트웨어를 공유하세요!
 
 ## 🤗 소프트웨어를 공유하세요!
 
