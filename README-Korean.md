@@ -1,4 +1,4 @@
-# 소프트웨어 개발을 위한 소통형 에이전트
+# Communicative Agents for Software Development
 
 <p align="center">
   <img src='./misc/logo1.png' width=600>
