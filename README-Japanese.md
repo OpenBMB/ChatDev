@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-    【<a href="README.md">English</a> | <a href="README-Chinese.md">Chinese</a> | Japanese】
+    【<a href="README.md">English</a> | <a href="README-Chinese.md">Chinese</a> | Japanese | <a href="README-Korean.md">Korean</a>】
 </p>
 
 ## 📖 概要
