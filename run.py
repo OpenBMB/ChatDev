@@ -15,6 +15,8 @@ import argparse
 import logging
 import os
 import sys
+from dotenv import load_dotenv
+load_dotenv()
 
 from camel.typing import ModelType
 

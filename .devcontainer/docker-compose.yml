@@ -1,0 +1,12 @@
+# To boot the app run the following:
+# docker-compose run chatdev
+version: '3.9'
+
+services:
+  chatdev:
+    build:
+      dockerfile: .devcontainer/Dockerfile
+      context: ../
+    tty: true
+    volumes:
+      - ../:/workspace/chatdev
