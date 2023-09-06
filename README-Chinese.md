@@ -112,7 +112,7 @@ request一样简单。这是一个示例：执行命令`python3 run.py --task "d
 - 描述软件构建过程的详细日志，可用于重播（`timestamp.log`）
 - 用于创建此软件的初始提示（`2048.prompt`）
 
-**参观社区制造分享的[软件](contribution.md)!**
+**参观社区制造分享的[软件](Contribution.md)!**
 
 ### 软件分享者
 

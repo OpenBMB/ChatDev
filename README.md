@@ -117,7 +117,7 @@ create a software package and generate a folder named ``/WareHouse/2048_THUNLP_t
 - A comprehensive log detailing the software's building process that can be used to replay (``timestamp.log``)
 - The initial prompt used to create this software (``2048.prompt``)
 
-**See Community contributed software [here](contribution.md)!**
+**See Community contributed software [here](Contribution.md)!**
 
 ### Software Contributors
 
