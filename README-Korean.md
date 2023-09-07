@@ -126,4 +126,4 @@ https://github.com/OpenBMB/ChatDev/assets/11889052/80d01d2f-677b-4399-ad8b-f7af9
 
 ## 연락처
 
-질문, 피드백 또는 저희와 연락을 원하시면 언제든지 이메일로 연락 주십시오: [chatdev.openbmb@gmail.com](mailto:chatdev.openbmb@gmail.com)
+질문, 피드백 또는 저희와 연락을 원하시면 언제든지 이메일로 연락 주십시오: [chatdev.openbmb@outlook.com](mailto:chatdev.openbmb@outlook.com)
