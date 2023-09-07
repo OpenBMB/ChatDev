@@ -153,4 +153,4 @@ create a software package and generate a folder named ``/WareHouse/2048_THUNLP_t
 
 ## Contact
 
-If you have any questions, feedback, or would like to get in touch, please feel free to reach out to us via email at [chatdev.openbmb@gmail.com](mailto:chatdev.openbmb@gmail.com)
+If you have any questions, feedback, or would like to get in touch, please feel free to reach out to us via email at [chatdev.openbmb@outlook.com](mailto:chatdev.openbmb@outlook.com)
