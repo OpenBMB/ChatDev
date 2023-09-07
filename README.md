@@ -150,3 +150,7 @@ create a software package and generate a folder named ``/WareHouse/2048_THUNLP_t
 ## Star History
 
 [![Star History Chart](https://api.star-history.com/svg?repos=openbmb/chatdev&type=Date)](https://star-history.com/#openbmb/chatdev&Date)
+
+## Contact
+
+If you have any questions, feedback, or would like to get in touch, please feel free to reach out to us via email at [chatdev.openbmb@gmail.com](mailto:chatdev.openbmb@gmail.com)

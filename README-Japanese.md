@@ -142,3 +142,7 @@ https://github.com/OpenBMB/ChatDev/assets/11889052/80d01d2f-677b-4399-ad8b-f7af9
 ## Star History
 
 [![Star History Chart](https://api.star-history.com/svg?repos=openbmb/chatdev&type=Date)](https://star-history.com/#openbmb/chatdev&Date)
+
+## お問い合わせ
+
+ご質問、フィードバック、またはお問い合わせがある場合は、どうぞお気軽にメールでお問い合わせください：[chatdev.openbmb@gmail.com](mailto:chatdev.openbmb@gmail.com)

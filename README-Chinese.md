@@ -144,3 +144,7 @@ request一样简单。这是一个示例：执行命令`python3 run.py --task "d
 ## 星标历史
 
 [![Star History Chart](https://api.star-history.com/svg?repos=openbmb/chatdev&type=Date)](https://star-history.com/#openbmb/chatdev&Date)
+
+## 联系方式
+
+如果您有任何问题、反馈意见或想要联系我们，欢迎随时通过电子邮件与我们联系： [chatdev.openbmb@gmail.com](mailto:chatdev.openbmb@gmail.com)
