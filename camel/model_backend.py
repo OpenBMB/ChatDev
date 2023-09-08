@@ -51,7 +51,7 @@ class OpenAIModel(ModelBackend):
         string = "\n".join([message["content"] for message in kwargs["messages"]])
         encoding = tiktoken.encoding_for_model(self.model_type.value)
         num_prompt_tokens = len(encoding.encode(string))
-        gap_between_send_receive = 50  # known issue
+        gap_between_send_receive = 15 * len(kwargs["messages"])
         num_prompt_tokens += gap_between_send_receive
 
         num_max_token_map = {
