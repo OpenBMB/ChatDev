@@ -52,7 +52,6 @@ class ChatChain:
         with open(self.config_phase_path, 'r', encoding="utf8") as file:
             self.config_phase = json.load(file)
         with open(self.config_role_path, 'r', encoding="utf8") as file:
-
             self.config_role = json.load(file)
 
         # init chatchain config and recruitments
