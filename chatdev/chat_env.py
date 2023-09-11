@@ -84,14 +84,34 @@ class ChatEnv:
 
         success_info = "The software run successfully without errors."
         try:
-            command = "cd {}; ls -l; python3 main.py;".format(directory)
-            process = subprocess.Popen(command, shell=True, preexec_fn=os.setsid,
-                                       stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+            # check if we are on windows or linux
+            if os.name == 'nt':
+                command = "cd {} && dir && python main.py".format(directory)
+                process = subprocess.Popen(
+                    command,
+                    shell=True,
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.PIPE,
+                    creationflags=subprocess.CREATE_NEW_PROCESS_GROUP
+                )
+            else:
+                command = "cd {}; ls -l; python3 main.py;".format(directory)
+                process = subprocess.Popen(command,
+                                           shell=True,
+                                           preexec_fn=os.setsid,
+                                           stdout=subprocess.PIPE,
+                                           stderr=subprocess.PIPE
+                                           )
             time.sleep(3)
             return_code = process.returncode
             # Check if the software is still running
             if process.poll() is None:
-                os.killpg(os.getpgid(process.pid), signal.SIGTERM)
+                if "killpg" in dir(os):
+                    os.killpg(os.getpgid(process.pid), signal.SIGTERM)
+                else:
+                    os.kill(process.pid, signal.SIGTERM)
+
             if return_code == 0:
                 return False, success_info
             else:
