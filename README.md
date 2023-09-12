@@ -69,15 +69,26 @@ To get started, follow these steps:
 5. **Build Your Software:** Use the following command to initiate the building of your software,
    replacing `[description_of_your_idea]` with your idea's description and `[project_name]` with your desired project
    name:
+   On Unix/Linux:
    ```
    python3 run.py --task "[description_of_your_idea]" --name "[project_name]"
+   ```
+   On Windows:
+   ```
+   python run.py --task "[description_of_your_idea]" --name "[project_name]"
    ```
 6. **Run Your Software:** Once generated, you can find your software in the `WareHouse` directory under a specific
    project folder, such as `project_name_DefaultOrganization_timestamp`. Run your software using the following command
    within that directory:
+   On Unix/Linux:
    ```
    cd WareHouse/project_name_DefaultOrganization_timestamp
    python3 main.py
+   ```
+   On Windows:
+    ```
+   cd WareHouse/project_name_DefaultOrganization_timestamp
+   python main.py
    ```
 
 ## ✨️ Advanced Skills
