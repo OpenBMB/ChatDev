@@ -68,20 +68,34 @@ https://github.com/OpenBMB/ChatDev/assets/11889052/80d01d2f-677b-4399-ad8b-f7af9
    ```
 
 5. **构建您的软件：** 使用以下命令启动生成您的软件，将`[description_of_your_idea]`替换为您的想法描述，将`[project_name]`
-   替换为您想要的项目名称：
+   替换为您想要的项目名称。 在Unix/Linux系统上：
 
    ```
    python3 run.py --task "[description_of_your_idea]" --name "[project_name]"
    ```
 
+   在Windows系统上：
+   
+   ```
+   python run.py --task "[description_of_your_idea]" --name "[project_name]"
+   ```
+   
 6. **运行您的软件：** 生成后，您可以在`WareHouse`
    目录下的特定项目文件夹中找到您的软件，例如`project_name_DefaultOrganization_timestamp`。在该目录中运行以下命令来运行您的软件：
-
+   在Unix/Linux系统上：
+   
    ```
    cd WareHouse/project_name_DefaultOrganization_timestamp
    python3 main.py
    ```
+   
+   在Windows系统上：
 
+   ```
+   cd WareHouse/project_name_DefaultOrganization_timestamp
+   python main.py
+   ```
+   
 ## ✨️ 进阶技能
 
 有关更详细的信息，请参阅我们的[Wiki](wiki.md)，您可以在其中找到：
