@@ -11,23 +11,36 @@
             align-items: center;
             height: 100vh;
         }
-        
+
         #visualization {
             display: flex;
             flex-wrap: nowrap;
             overflow-x: auto;
             max-width: 1800px;
+            max-height: 1600px;
             margin: 20px;
         }
-        
+
         .card {
             margin-right: 10px;
-            background-color: #f0f0f0;
             display: inline-block;
-            min-width: 350px;
+            min-width: 300px; /* Reduced card width */
             vertical-align: top;
+            font-size: 14px; /* Reduced font size */
         }
-        
+
+        .simple-phase {
+            background-color: #E8ECEB; /* Light Blue for SimplePhase */
+        }
+
+        .composed-phase {
+            background-color: #A3B4C8; /* Light Red for ComposedPhase */
+        }
+
+        .nested-simple-phase {
+            background-color: #E3DCD2; /* Light Yellow for SimplePhase within ComposedPhase */
+        }
+
         .card-content {
             padding: 10px;
         }
@@ -78,7 +91,6 @@
             const phase = document.createElement('span');
             phase.innerHTML = `<strong>PhaseName: </strong>${element.phase || 'No PhaseName'}`;
 
-
             const phaseType = document.createElement('p');
             phaseType.innerHTML = `<strong>PhaseType: </strong>${element.phaseType || 'No phaseType'}`;
 
@@ -114,13 +126,16 @@
                     nestedCardWrapper.style.marginTop = '10px';
 
                     nestedCards.forEach(nestedCard => {
+                        nestedCard.classList.add('nested-simple-phase'); // Apply the color for nested SimplePhase
                         nestedCardWrapper.appendChild(nestedCard);
                     });
 
+                    card.classList.add('composed-phase'); // Apply the color for ComposedPhase
                     card.appendChild(nestedCardWrapper);
                     visualization.appendChild(card);
                 } else {
                     const card = createCard(element);
+                    card.classList.add('simple-phase'); // Apply the color for SimplePhase
                     visualization.appendChild(card);
                 }
             });
