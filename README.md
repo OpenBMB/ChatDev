@@ -73,16 +73,22 @@ To get started, follow these steps:
    ```
    python3 run.py --task "[description_of_your_idea]" --name "[project_name]"
    ```
-   On Windows
+   On Windows:
    ```
    python run.py --task "[description_of_your_idea]" --name "[project_name]"
    ```
-7. **Run Your Software:** Once generated, you can find your software in the `WareHouse` directory under a specific
+6. **Run Your Software:** Once generated, you can find your software in the `WareHouse` directory under a specific
    project folder, such as `project_name_DefaultOrganization_timestamp`. Run your software using the following command
    within that directory:
+   On Unix/Linux:
    ```
    cd WareHouse/project_name_DefaultOrganization_timestamp
    python3 main.py
+   ```
+   On Windows:
+   ```
+   cd WareHouse/project_name_DefaultOrganization_timestamp
+   python main.py
    ```
 
 ## ✨️ Advanced Skills

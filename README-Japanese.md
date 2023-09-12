@@ -65,17 +65,28 @@ https://github.com/OpenBMB/ChatDev/assets/11889052/80d01d2f-677b-4399-ad8b-f7af9
    ```
 5. **ソフトウェアの構築:** 次のコマンドを使用して、ソフトウェアのビルドを開始する。`[description_of_your_idea]`
    をあなたのアイデアの説明に、`[project_name]` を希望するプロジェクト名に置き換える:
+   Unix/Linux 上では:
    ```
    python3 run.py --task "[description_of_your_idea]" --name "[project_name]"
+   ```
+   Windows 上では:
+    ```
+   python run.py --task "[description_of_your_idea]" --name "[project_name]"
    ```
 6. **ソフトウェアの実行:** 生成されたソフトウェアは、`Project_name_DefaultOrganization_timestamp`
    のような特定のプロジェクトフォルダの下の `WareHouse`
    ディレクトリにあります。そのディレクトリで以下のコマンドを使ってソフトウェアを実行してください:
+   Unix/Linux 上では:
    ```
    cd WareHouse/project_name_DefaultOrganization_timestamp
    python3 main.py
    ```
-
+   Windows 上では:
+   ```
+   cd WareHouse/project_name_DefaultOrganization_timestamp
+   python main.py
+   ```
+   
 ## ✨️ 高度なスキル
 
 より詳細な情報については、私たちの [Wiki](wiki.md) を参照してください:

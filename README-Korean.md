@@ -51,20 +51,31 @@ https://github.com/OpenBMB/ChatDev/assets/11889052/80d01d2f-677b-4399-ad8b-f7af9
    ```
    export OPENAI_API_KEY="your_OpenAI_API_key"
    ```
-   Windows의 경우
+   Windows의 경우:
    ```
    $env:OPENAI_API_KEY="your_OpenAI_API_key"
    ```
 5. **소프트웨어 빌드하기:** 소프트웨어 빌드를 시작하기 위해 `[description_of_your_idea]`를 아이디어의 설명으로, `[project_name]`을 원하는 프로젝트 이름으로 바꾸세요:
+   유닉스/리눅스의 경우:
    ```
    python3 run.py --task "[description_of_your_idea]" --name "[project_name]"
    ```
+   Windows의 경우:
+   ```
+   python run.py --task "[description_of_your_idea]" --name "[project_name]"
+   ```
 6. **소프트웨어 실행하기:** `project_name_DefaultOrganization_timestamp`와 같은 특정 프로젝트 폴더 아래의 `WareHouse` 디렉토리에서 생성된 소프트웨어를 찾을 수 있습니다. 해당 디렉토리 내에서 다음과 같이 소프트웨어를 실행하세요:
+   유닉스/리눅스의 경우:
    ```
    cd WareHouse/project_name_DefaultOrganization_timestamp
    python3 main.py
    ```
-
+   Windows의 경우:
+   ```
+   cd WareHouse/project_name_DefaultOrganization_timestamp
+   python main.py
+   ```
+   
 ## ✨️ 심화 스킬
 
 [위키](wiki.md)에서 아래 더 자세한 정보를 확인할 수 있습니다:
