@@ -86,7 +86,7 @@ To get started, follow these steps:
    python3 main.py
    ```
    On Windows:
-    ```
+   ```
    cd WareHouse/project_name_DefaultOrganization_timestamp
    python main.py
    ```
