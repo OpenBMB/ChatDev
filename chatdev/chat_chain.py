@@ -56,6 +56,7 @@ class ChatChain:
 
         # init chatchain config and recruitments
         self.chain = self.config["chain"]
+        self.executed_steps = 0
         self.recruitments = self.config["recruitments"]
 
         # init default max chat turn
@@ -110,8 +111,11 @@ class ChatChain:
         Returns: None
 
         """
+        recruitment_msg = "**[Recruitment]**\n\n"
         for employee in self.recruitments:
+            recruitment_msg += f"**Recruited {employee}**\n"
             self.chat_env.recruit(agent_name=employee)
+        log_and_print_online(recruitment_msg)
 
     def execute_step(self, phase_item: dict):
         """
@@ -152,6 +156,7 @@ class ChatChain:
             self.chat_env = compose_phase_instance.execute(self.chat_env)
         else:
             raise RuntimeError(f"PhaseType '{phase_type}' is not yet implemented.")
+        log_and_print_online("Chief Executive Officer", "Dear God, what do you think about the current progress? Please give your feedback or say LGTM if you want us to proceed further.")
 
     def execute_chain(self):
         """
@@ -159,8 +164,27 @@ class ChatChain:
         Returns: None
 
         """
-        for phase_item in self.chain:
-            self.execute_step(phase_item)
+        if self.executed_steps >= len(self.chain):
+            raise RuntimeError(f"Chain is already fully executed.")
+
+         # My custom code starts here:
+        if self.chat_env.env_dict['latest_god_feedback'] not in [None, ""]:
+            god_feedback = self.chat_env.env_dict['latest_god_feedback']
+            print(f"Received customer's feedback: {god_feedback}")
+            if "LGTM" in god_feedback or "LGTM".lower() in god_feedback or self.executed_steps == 0:
+                # Move on to the next step, clear the god's feedback
+                self.chat_env.env_dict['latest_god_feedback'] = ""
+                self.executed_steps = self.executed_steps + 1
+            else:
+                # Re-execute the current step with the feedback incorporated
+                pass
+
+        next_step_idx = min(self.executed_steps, len(self.chain) - 1)
+        next_phase_item = self.chain[next_step_idx]
+        self.execute_step(next_phase_item)
+
+    def update_god_message(self, text: str):
+        self.chat_env.env_dict['latest_god_feedback'] = text
 
     def get_logfilepath(self):
         """
@@ -213,7 +237,7 @@ class ChatChain:
         preprocess_msg = "**[Preprocessing]**\n\n"
         chat_gpt_config = ChatGPTConfig()
 
-        preprocess_msg += "**ChatDev Starts** ({})\n\n".format(self.start_time)
+        preprocess_msg += "**AutoM8 Starts** ({})\n\n".format(self.start_time)
         preprocess_msg += "**Timestamp**: {}\n\n".format(self.start_time)
         preprocess_msg += "**config_path**: {}\n\n".format(self.config_path)
         preprocess_msg += "**config_phase_path**: {}\n\n".format(self.config_phase_path)
@@ -253,8 +277,8 @@ class ChatChain:
         post_info += "Software Info: {}".format(
             get_info(self.chat_env.env_dict['directory'], self.log_filepath) + "\n\n🕑**duration**={:.2f}s\n\n".format(duration))
 
-        post_info += "ChatDev Starts ({})".format(self.start_time) + "\n\n"
-        post_info += "ChatDev Ends ({})".format(now_time) + "\n\n"
+        post_info += "AutoM8 Starts ({})".format(self.start_time) + "\n\n"
+        post_info += "AutoM8 Ends ({})".format(now_time) + "\n\n"
 
         if self.chat_env.config.clear_structure:
             directory = self.chat_env.env_dict['directory']
@@ -284,12 +308,12 @@ class ChatChain:
             revised_task_prompt: revised prompt from the prompt engineer agent
 
         """
-        self_task_improve_prompt = """I will give you a short description of a software design requirement, 
+        self_task_improve_prompt = """I will give you a short description of a software design requirement,
 please rewrite it into a detailed prompt that can make large language model know how to make this software better based this prompt,
 the prompt should ensure LLMs build a software that can be run correctly, which is the most import part you need to consider.
-remember that the revised prompt should not contain more than 200 words, 
-here is the short description:\"{}\". 
-If the revised prompt is revised_version_of_the_description, 
+remember that the revised prompt should not contain more than 200 words,
+here is the short description:\"{}\".
+If the revised prompt is revised_version_of_the_description,
 then you should return a message in a format like \"<INFO> revised_version_of_the_description\", do not return messages in other formats.""".format(
             task_prompt)
         role_play_session = RolePlaying(

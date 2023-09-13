@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked@3.0.7/marked.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-markup.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-javascript.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.8/clipboard.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.2.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.8/clipboard.min.js"></script>
+<link rel="stylesheet" href="replay/css/use.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/themes/prism-okaidia.min.css">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.2.0/styles/monokai-sublime.min.css">
+
+<head>
+    <title>chatdev demo </title>
+    <link rel="icon" type="image/png" href="figures/ceo.png">
+</head>
+
+<body style="display: flex;flex: auto; ">
+
+    <div id="operation">
+        <div id="title" style="display: block;position: relative;height: 100px;">
+            <p style="color:aliceblue; font-size: larger;font-weight: bolder;position: relative;top:20px;left:10px;text-shadow: 0px 0px 0px rgb(252, 252, 252);">
+                AutoM8 - Your Personal Software Development Company</p>
+        </div>
+        <div id="imgShow">
+            <img src="figures/autom8.png" alt="chatdev-company" id="chatdev-company">
+        </div>
+        <div style="position: relative;top:50px;display: flex;">
+            <div><button id="lgtm" class="button">LGTM!</button></div>
+            <div><button id="resume" class="button">💰Keep Working</button></div>
+        </div>
+        <div class="markdown-body"><label for="filebutton" id="successupload">
+            </label>
+        </div>
+    </div>
+    <div id="show" style="display: grid;">
+
+        <div id="humanRequest" style="position: relative; overflow: auto;">
+            <p id="Requesttext" style=" color:aliceblue; display: block;font-weight: 900; max-height: 18px; max-width: 800px;">Task: </p>
+        </div>
+        <div class="container d-flex flex-column" id="dialogBody" style="top:20px;display: flex;flex-direction: column;">
+        </div>
+        <div id="input-container">
+            <form id="message-input-form" action="/send_message" method="post" enctype="multipart/form-data">
+                <input type="text" id="message-input" name="god-message" placeholder="Type your message...">
+                <button id="submit-button">Send</button>
+            </form>
+        </div>
+        <div id="dialogStatistic" style="display: flex;flex-direction: column;">
+            <div style="display: flex;width: 2800px;flex-direction: row;height: 60px;">
+
+                <div class="info">
+                    <label for="version_updates" style="position: relative;">🔨version_updates</label>
+                    <p id="version_updates"></p>
+                </div>
+                <div class="info">
+                    <label for="num_code_files" style="position: relative;">📃num_code_files</label>
+                    <p id="num_code_files"></p>
+                </div>
+
+                <div class="info">
+                    <label for="num_png_files" style="position: relative;"> 🏞num_png_files</label>
+                    <p id="num_png_files"></p>
+                </div>
+                <div class="info">
+                    <label for="num_doc_files" style="position: relative;">📚num_doc_files</label>
+                    <p id="num_doc_files"></p>
+                </div>
+                <div class="info">
+                    <label for="code_lines" style="position: relative;">📃code_lines</label>
+                    <p id="code_lines"></p>
+                </div>
+                <div class="info">
+                    <label for="env_lines" style="position: relative;">📋env_lines</label>
+                    <p id="env_lines"></p>
+                </div>
+                <div class="info">
+                    <label for="manual_lines" style="position: relative;">📒manual_lines</label>
+                    <p id="manual_lines"></p>
+                </div>
+                <div class="info">
+                    <label for="num_utterances" style="position: relative;">🗣num_utterances</label>
+                    <p id="num_utterances"></p>
+                </div>
+
+                <div class="info">
+                    <label for="num_self_reflections" style="position: relative;">🤔num_self_reflections</label>
+                    <p id="num_self_reflections"></p>
+                </div>
+                <div class="info">
+                    <label for="num_prompt_tokens" style="position: relative;">❓num_prompt_tokens</label>
+                    <p id="num_prompt_tokens"></p>
+                </div>
+                <div class="info">
+                    <label for="num_completion_tokens" style="position: relative;">❗num_completion_tokens</label>
+                    <p id="num_completion_tokens"></p>
+                </div>
+                <div class="info">
+                    <label for="num_total_tokens" style="position: relative;">⁉️num_total_tokens</label>
+                    <p id="num_total_tokens"></p>
+                </div>
+                <div class="info">
+                    <label for="cost" style="position: relative;">💰cost</label>
+                    <p id="cost"></p>
+                </div>
+                <div class="info">
+                    <label for="duration" style="position: relative;">🕑duration</label>
+                    <p id="duration"></p>
+                </div>
+
+            </div>
+
+        </div>
+        <div class="modal" id="new-request-modal">
+            <div class="modal-content">
+                <button id="close-button" onclick="closeModal()">&times;</button>
+                <h2>God, what I can do for you today?</h2>
+                <form id="modal-form">
+                    <input type="text" name="project-name" placeholder="Project Name">
+                    <input type="text" name="project-description" placeholder="Project Description">
+                    <button type="submit">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="js/god_mode.js"></script>
+    <!--<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>-->
+</body>
+
+</html>

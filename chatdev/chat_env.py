@@ -47,6 +47,7 @@ class ChatEnv:
             "modality": "",
             "ideas": "",
             "language": "",
+            "latest_god_feedback": "",
             "review_comments": "",
             "error_summary": "",
             "test_reports": ""

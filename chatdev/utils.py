@@ -2,12 +2,22 @@ import html
 import logging
 import re
 import time
+import requests
 
 import markdown
 import inspect
 from camel.messages.system_messages import SystemMessage
-from online_log.app import send_msg
 
+def send_msg(role, text):
+    try:
+        data = {"role": role, "text": text}
+        response = requests.post("http://127.0.0.1:8000/send_message", json=data)
+        if response.status_code == 200:
+            print("Message sent successfully!")
+        else:
+            print("Failed to send message.")
+    except:
+        logging.info("flask app.py did not start for online log")
 
 def now():
     return time.strftime("%Y%m%d%H%M%S", time.localtime())

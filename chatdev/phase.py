@@ -290,6 +290,7 @@ class Phase(ABC):
 
         """
         self.update_phase_env(chat_env)
+        self.phase_env.update({"requirements": chat_env.env_dict['latest_god_feedback']})
         self.seminar_conclusion = \
             self.chatting(chat_env=chat_env,
                           task_prompt=chat_env.env_dict['task_prompt'],

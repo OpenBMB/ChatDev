@@ -68,41 +68,42 @@ def get_info(dir, log_filepath):
                 code_lines += len([line for line in lines if len(line.strip()) > 0])
         # print("code_lines:", code_lines)
 
-        lines = open(log_filepath, "r", encoding="utf8").read().split("\n")
-        start_lines = [line for line in lines if "**[Start Chat]**" in line]
-        chat_lines = [line for line in lines if "<->" in line]
-        num_utterance = len(start_lines) + len(chat_lines)
-        # print("num_utterance:", num_utterance)
+        if os.path.exists(log_filepath):
+            lines = open(log_filepath, "r", encoding="utf8").read().split("\n")
+            start_lines = [line for line in lines if "**[Start Chat]**" in line]
+            chat_lines = [line for line in lines if "<->" in line]
+            num_utterance = len(start_lines) + len(chat_lines)
+            # print("num_utterance:", num_utterance)
 
-        lines = open(log_filepath, "r", encoding="utf8").read().split("\n")
-        sublines = [line for line in lines if line.startswith("prompt_tokens:")]
-        if len(sublines) > 0:
-            nums = [int(line.split(": ")[-1]) for line in sublines]
-            num_prompt_tokens = np.sum(nums)
-            # print("num_prompt_tokens:", num_prompt_tokens)
+            lines = open(log_filepath, "r", encoding="utf8").read().split("\n")
+            sublines = [line for line in lines if line.startswith("prompt_tokens:")]
+            if len(sublines) > 0:
+                nums = [int(line.split(": ")[-1]) for line in sublines]
+                num_prompt_tokens = np.sum(nums)
+                # print("num_prompt_tokens:", num_prompt_tokens)
 
-        lines = open(log_filepath, "r", encoding="utf8").read().split("\n")
-        sublines = [line for line in lines if line.startswith("completion_tokens:")]
-        if len(sublines) > 0:
-            nums = [int(line.split(": ")[-1]) for line in sublines]
-            num_completion_tokens = np.sum(nums)
-            # print("num_completion_tokens:", num_completion_tokens)
+            lines = open(log_filepath, "r", encoding="utf8").read().split("\n")
+            sublines = [line for line in lines if line.startswith("completion_tokens:")]
+            if len(sublines) > 0:
+                nums = [int(line.split(": ")[-1]) for line in sublines]
+                num_completion_tokens = np.sum(nums)
+                # print("num_completion_tokens:", num_completion_tokens)
 
-        lines = open(log_filepath, "r", encoding="utf8").read().split("\n")
-        sublines = [line for line in lines if line.startswith("total_tokens:")]
-        if len(sublines) > 0:
-            nums = [int(line.split(": ")[-1]) for line in sublines]
-            num_total_tokens = np.sum(nums)
-            # print("num_total_tokens:", num_total_tokens)
+            lines = open(log_filepath, "r", encoding="utf8").read().split("\n")
+            sublines = [line for line in lines if line.startswith("total_tokens:")]
+            if len(sublines) > 0:
+                nums = [int(line.split(": ")[-1]) for line in sublines]
+                num_total_tokens = np.sum(nums)
+                # print("num_total_tokens:", num_total_tokens)
 
-        lines = open(log_filepath, "r", encoding="utf8").read().split("\n")
+            lines = open(log_filepath, "r", encoding="utf8").read().split("\n")
 
-        lines = open(log_filepath, "r", encoding="utf8").read().split("\n")
-        num_reflection = 0
-        for line in lines:
-            if "on : Reflection" in line:
-                num_reflection += 1
-        # print("num_reflection:", num_reflection)
+            lines = open(log_filepath, "r", encoding="utf8").read().split("\n")
+            num_reflection = 0
+            for line in lines:
+                if "on : Reflection" in line:
+                    num_reflection += 1
+            # print("num_reflection:", num_reflection)
 
     cost = 0.0
     if num_png_files != -1:

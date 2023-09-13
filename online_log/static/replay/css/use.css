@@ -37,9 +37,12 @@ body {
     }
 }
 
-#filebutton {
+#lgtm {
+    background-color: darkcyan;
+    color: white;
     position: relative;
-    left: 50px;
+    left: 5px;
+    width: 200px;
 }
 
 #title>p {
@@ -48,10 +51,12 @@ body {
     text-shadow: 0 0 0.5em #0ae642, 0 0 0.2em #5c5c5c;
 }
 
-#replay {
+#resume {
+    background-color: darkolivegreen;
+    color: white;
     position: relative;
-    left: 340px;
-    width: 100px;
+    left: 200px;
+    width: 200px;
 }
 
 #successupload {
@@ -76,11 +81,13 @@ body {
     border: 1px solid #ffffff;
     border-radius: 10px;
     box-shadow: 3px 3px 4px black;
+    padding-left: 20px;
+    padding-bottom: 20px;
 }
 
 #dialogBody,
 #dialogStatistic {
-    width: 790px;
+    width: 1000px;
     height: 570px;
     background-color: rgb(255, 255, 255);
     border: 1px solid #ccc;
@@ -95,16 +102,15 @@ body {
 }
 
 #speed {
-    position: relative;
+    display: flex;
     width: 600px;
-    top: 35px;
-    right: -150px;
+    margin-top: 35px;
+    margin-right: -150px;
 }
 
 #speedcontrol>label {
-    display: block;
-    position: relative;
-    top: 15px;
+    display: flex;;
+    margin-top: 15px;
     width: 200px;
     color: aliceblue;
     font-size: medium;
@@ -168,10 +174,8 @@ img {
 }
 
 #imgShow {
-    height: 450px;
+    height: 550px;
     width: 600px;
-    position: relative;
-    top: 120px;
 }
 
 #successupload {
@@ -213,6 +217,98 @@ img {
     font-weight: 900;
 }
 
+#input-container {
+    display: flex;
+    margin-top: 35px;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color: #f0f0f0;
+}
+
+#message-input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-right: 10px;
+}
+
+#message-input-form {
+    display: flex;
+    flex-wrap: wrap;
+    flex: 1;
+}
+
+#submit-button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#submit-button:hover {
+    background-color: #0056b3;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+}
+
+.modal-content {
+    position: fixed;
+    top: 30%;
+    left: 30%;
+    width: 800px;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.modal-content input {
+    width: 600px;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+/* Add styles for the modal submit button */
+.modal-content button {
+    background-color: #007bff;
+    color: #fff;
+    font-size: medium;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+}
+
+.modal-content #close-button {
+    color: black;
+    position: absolute;
+    top: -150px;
+    right: 10px;
+    font-size: 20px;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    margin: 0;
+}
 
 /* Optional styles for the text container */
 

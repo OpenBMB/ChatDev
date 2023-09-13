@@ -207,7 +207,7 @@ function watchfileInput(files) {
     }
 }
 
-//extract information 
+//extract information
 function extraction(contents) {
     const regex = /\[(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2} \w+)\] ([.\s\S\n\r\d\D\t]*?)(?=\n\[\d|$)/g;
 
@@ -381,7 +381,7 @@ function extraction(contents) {
     return dialog;
 }
 
-//show dailog 
+//show dailog
 function createPara(d, i) {
     const singleDialog = document.createElement("div");
     singleDialog.style.position = "relative";
