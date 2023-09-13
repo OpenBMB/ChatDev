@@ -15,6 +15,7 @@ from abc import ABC, abstractmethod
 from typing import Any, Dict
 
 import openai
+import litellm
 import tiktoken
 
 from camel.typing import ModelType
@@ -66,7 +67,7 @@ class OpenAIModel(ModelBackend):
         num_max_token = num_max_token_map[self.model_type.value]
         num_max_completion_tokens = num_max_token - num_prompt_tokens
         self.model_config_dict['max_tokens'] = num_max_completion_tokens
-        response = openai.ChatCompletion.create(*args, **kwargs,
+        response = litellm.completion(*args, **kwargs,
                                                 model=self.model_type.value,
                                                 **self.model_config_dict)
 
