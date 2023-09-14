@@ -111,6 +111,8 @@ class ChatEnv:
                     os.killpg(os.getpgid(process.pid), signal.SIGTERM)
                 else:
                     os.kill(process.pid, signal.SIGTERM)
+                    if process.poll() is None:
+                        os.kill(process.pid,signal.CTRL_BREAK_EVENT)
 
             if return_code == 0:
                 return False, success_info
