@@ -42,6 +42,7 @@ class ComposedPhase(ABC):
         self.config_role = config_role
 
         self.phase_env = dict()
+        self.phase_env["cycle_num"] = cycle_num
 
         # init chat turn
         self.chat_turn_limit_default = 10
@@ -140,6 +141,7 @@ class ComposedPhase(ABC):
                 phase = phase_item['phase']
                 max_turn_step = phase_item['max_turn_step']
                 need_reflect = check_bool(phase_item['need_reflect'])
+                self.phase_env["cycle_index"] = cycle_index
                 log_and_print_online(
                     f"**[Execute Detail]**\n\nexecute SimplePhase:[{phase}] in ComposedPhase:[{self.phase_name}], cycle {cycle_index}")
                 if phase in self.phases:
@@ -182,11 +184,11 @@ class CodeCompleteAll(ComposedPhase):
         pyfiles = [filename for filename in os.listdir(chat_env.env_dict['directory']) if filename.endswith(".py")]
         num_tried = defaultdict(int)
         num_tried.update({filename: 0 for filename in pyfiles})
-        self.phase_env = {
+        self.phase_env.update({
             "max_num_implement": 5,
             "pyfiles": pyfiles,
             "num_tried": num_tried
-        }
+        })
 
     def update_chat_env(self, chat_env):
         return chat_env
@@ -203,7 +205,7 @@ class CodeReview(ComposedPhase):
         super().__init__(**kwargs)
 
     def update_phase_env(self, chat_env):
-        self.phase_env = {"modification_conclusion": ""}
+        self.phase_env.update({"modification_conclusion": ""})
 
     def update_chat_env(self, chat_env):
         return chat_env
@@ -215,12 +217,29 @@ class CodeReview(ComposedPhase):
             return False
 
 
+class HumanAgentInteraction(ComposedPhase):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+    def update_phase_env(self, chat_env):
+        self.phase_env.update({"modification_conclusion": "", "comments": ""})
+
+    def update_chat_env(self, chat_env):
+        return chat_env
+
+    def break_cycle(self, phase_env) -> bool:
+        if "<INFO> Finished".lower() in phase_env['modification_conclusion'].lower() or phase_env["comments"].lower() == "end":
+            return True
+        else:
+            return False
+
+
 class Test(ComposedPhase):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
     def update_phase_env(self, chat_env):
-        self.phase_env = dict()
+        pass
 
     def update_chat_env(self, chat_env):
         return chat_env

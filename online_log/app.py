@@ -1,27 +1,20 @@
 import logging
-
 import requests
 import os
 from flask import Flask, send_from_directory, request, jsonify
+import argparse
 
 app = Flask(__name__, static_folder='static')
-
 app.logger.setLevel(logging.ERROR)
-
 log = logging.getLogger('werkzeug')
 log.setLevel(logging.ERROR)
-
 messages = []
-
+port = [8000]
 
 def send_msg(role, text):
     try:
         data = {"role": role, "text": text}
-        response = requests.post("http://127.0.0.1:8000/send_message", json=data)
-        if response.status_code == 200:
-            print("Message sent successfully!")
-        else:
-            print("Failed to send message.")
+        response = requests.post(f"http://127.0.0.1:{port[-1]}/send_message", json=data)
     except:
         logging.info("flask app.py did not start for online log")
 
@@ -35,9 +28,11 @@ def index():
 def chain_visualizer():
     return send_from_directory("static", "chain_visualizer.html")
 
+
 @app.route("/replay")
 def replay():
     return send_from_directory("static", "replay.html")
+
 
 @app.route("/get_messages")
 def get_messages():
@@ -65,5 +60,9 @@ def find_avatar_url(role):
 
 
 if __name__ == "__main__":
-    print("please visit http://127.0.0.1:8000/ for demo")
-    app.run(debug=False, port=8000)
+    parser = argparse.ArgumentParser(description='argparse')
+    parser.add_argument('--port', type=int, default=8000, help="port")
+    args = parser.parse_args()
+    port.append(args.port)
+    print(f"Please visit http://127.0.0.1:{port[-1]}/ for the front-end display page. \nIn the event of a port conflict, please modify the port argument (e.g., python3 app.py --port 8012).")
+    app.run(debug=False, port=port[-1])
