@@ -13,9 +13,27 @@ function append_message(role, text, avatarUrl) {
   message_container.append(role_element);
   message_container.append(avatar_element);
 
+
   var parsedText = role === 'System' ? parseSystemMessage(text) : parseCodeBlocks(text, role);
 
   message_container.append(parsedText);
+
+  var copyButton = $("<button></button>")
+    .addClass("copy-button")
+    .text("Copy")
+    .click(function () {
+      copyToClipboard(parsedText); // Call the copyToClipboard function
+    });
+
+  copyButton.click(function () {
+    copyToClipboard(parsedText);
+    copyButton.text("Copied"); 
+    setTimeout(function () {
+      copyButton.text("Copy"); 
+    }, 5000); 
+  });
+
+  message_container.append(copyButton); // Append the copy button
 
   $("#chat-box").append(message_container);
 }
@@ -95,6 +113,21 @@ function parseSystemMessage(text) {
   return message;
 }
 
+function copyToClipboard(element) {
+  // Create a temporary textarea element to hold the text
+  var tempTextArea = document.createElement("textarea");
+  tempTextArea.value = element.text();
+  document.body.appendChild(tempTextArea);
+
+  // Select and copy the text from the textarea
+  tempTextArea.select();
+  document.execCommand("copy");
+
+  // Remove the temporary textarea
+  document.body.removeChild(tempTextArea);
+}
+
+
 
 $(document).ready(function () {
   get_new_messages();
@@ -102,4 +135,5 @@ $(document).ready(function () {
     get_new_messages();
   }, 1000);
 });
+
 

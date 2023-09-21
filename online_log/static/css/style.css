@@ -20,7 +20,7 @@
 
 
 .message-text {
-    background-color: lightgray;
+    background-color: #D2D4D3;
     border-radius: 10px;
     padding: 8px;
     margin-left: 40px;
@@ -63,18 +63,6 @@
     display: block; /* Add this to ensure line numbers are displayed */
 }
 
-.copy-button {
-    position: absolute;
-    top: 1px;
-    right: 0px;
-    background-color: #7a7c7f;
-    color: #f8f8f2;
-    border: none;
-    padding: 5px 10px;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
 .code-block-header {
     background-color: #5b5656;
     color: #ffffff;
@@ -107,14 +95,43 @@ th, td {
 
 .expand-button {
   position: absolute;
-  top: 2px;
-  right: 2px;
+  top: 3px;
+  right: 65px;
   border-radius: 4px;
-  background-color: transparent;
+  background-color: #95A1A1;
+  color: #f8f8f2;
   border: none;
   padding: 5px;
   cursor: pointer;
   font-size: 8px;
+  width: 50px;
+  height: 20px;
+  line-height: 10px;
   font-weight: bold;
-  color: rgb(108, 99, 99);
+}
+
+.expand-button:hover {
+  background-color: #6B9297; 
+}
+
+.copy-button {
+    position: absolute;
+    top: 3px;
+    right: 3px;
+    background-color: #A9A9A7;
+    color: #f8f8f2;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 55px;
+    height: 20px;
+    line-height: 10px;
+    font-size: 8px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.copy-button:hover {
+  background-color: #866753; 
 }

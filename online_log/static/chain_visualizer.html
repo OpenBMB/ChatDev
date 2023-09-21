@@ -11,23 +11,37 @@
             align-items: center;
             height: 100vh;
         }
-        
+
         #visualization {
             display: flex;
             flex-wrap: nowrap;
-            overflow-x: auto;
+            overflow-x: visible;
+            overflow-y: visible;
             max-width: 1800px;
+            max-height: 1600px;
             margin: 20px;
         }
-        
+
         .card {
             margin-right: 10px;
-            background-color: #f0f0f0;
             display: inline-block;
-            min-width: 350px;
+            min-width: 300px;
             vertical-align: top;
+            font-size: 14px;
         }
-        
+
+        .simple-phase {
+            background-color: #E8ECEB; /* Light Blue for SimplePhase */
+        }
+
+        .composed-phase {
+            background-color: #A3B4C8; /* Light Red for ComposedPhase */
+        }
+
+        .nested-simple-phase {
+            background-color: #E3DCD2; /* Light Yellow for SimplePhase within ComposedPhase */
+        }
+
         .card-content {
             padding: 10px;
         }
@@ -37,13 +51,16 @@
 <body>
     <div class="container">
         <h2>ChatChain Visualizer</h2>
-        <p>Select your ChatChainConfig.json to visualize</p>
-        <input type="file" id="fileInput">
+        <p>Select your ChatChainConfig.json under CompanyConfig/ to visualize</p>
+        <input type="file" id="fileInput" accept=".json">
+        <button id="exportButton">Export as Image</button>
         <div id="visualization"></div>
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.5.0-beta4/html2canvas.min.js"></script>
     <script>
         document.getElementById('fileInput').addEventListener('change', handleFileSelect, false);
+        document.getElementById('exportButton').addEventListener('click', exportAsImage, false);
 
         function handleFileSelect(event) {
             const file = event.target.files[0];
@@ -68,9 +85,6 @@
             const cardContent = document.createElement('div');
             cardContent.className = 'card-content';
 
-            // Assuming "element" is a dictionary with some fields to visualize
-            // Customize this part based on the actual structure of your elements
-
             if (element.phaseType === "ComposedPhase") {
                 delete element.Composition;
             }
@@ -78,11 +92,9 @@
             const phase = document.createElement('span');
             phase.innerHTML = `<strong>PhaseName: </strong>${element.phase || 'No PhaseName'}`;
 
-
             const phaseType = document.createElement('p');
             phaseType.innerHTML = `<strong>PhaseType: </strong>${element.phaseType || 'No phaseType'}`;
 
-            // Display the JSON content on the card
             delete element.phase;
             delete element.phaseType;
             const jsonContent = document.createElement('pre');
@@ -114,15 +126,37 @@
                     nestedCardWrapper.style.marginTop = '10px';
 
                     nestedCards.forEach(nestedCard => {
+                        nestedCard.classList.add('nested-simple-phase');
                         nestedCardWrapper.appendChild(nestedCard);
                     });
 
+                    card.classList.add('composed-phase');
                     card.appendChild(nestedCardWrapper);
                     visualization.appendChild(card);
                 } else {
                     const card = createCard(element);
+                    card.classList.add('simple-phase');
                     visualization.appendChild(card);
                 }
+            });
+        }
+
+        function exportAsImage() {
+            const visualization = document.getElementById('visualization');
+            const totalWidth = visualization.scrollWidth;
+            const totalHeight = visualization.scrollHeight;
+
+            console.log(totalWidth, totalHeight)
+
+            const canvas = document.createElement('canvas');
+            canvas.width = totalWidth + 100;
+            canvas.height = totalHeight + 100;
+
+            html2canvas(visualization, { scrollX: 0, scrollY: 0, width: totalWidth, height: totalHeight, useCORS: true }).then(canvas => {
+                const link = document.createElement('a');
+                link.href = canvas.toDataURL();
+                link.download = 'ChatChain_Visualization.png';
+                link.click();
             });
         }
     </script>

@@ -11,21 +11,21 @@
 ## 📖 概要
 
 - **ChatDev** は、最高経営責任者（CEO）、最高技術責任者（CTO）、プログラマー、テスターなど、さまざまな役割を持つ**インテリジェントエージェント
-  **によって運営される**バーチャルソフトウェア企業**です。これらのエージェントは、マルチエージェントの組織構造を形成し、"
-  プログラミングを通じてデジタル世界に革命を起こす"というミッションで団結しています。ChatDev
-  内のエージェントは、設計、コーディング、テスト、ドキュメント作成などのタスクを含む専門的な機能セミナーに参加することで、*
-  *共同作業** を行います。
+  **によって運営される**バーチャルソフトウェア企業**です。これらのエージェントは、マルチエージェントの組織構造を形成し、
+  "プログラミングを通じてデジタル世界に革命を起こす"というミッションで団結しています。ChatDev
+  内のエージェントは、設計、コーディング、テスト、ドキュメント作成などのタスクを含む専門的な機能セミナーに参加することで、
+  **共同作業**を行います。
 - ChatDev の主な目的は、**使いやすく**、**高度にカスタマイズ可能**で**拡張可能**
   なフレームワークを提供することであり、これは大規模言語モデル（LLM）に基づいており、集合知を研究するための理想的なシナリオとして機能します。
 
 ## 📰 ニュース
 
 * **2023年9月1日: Art モードが利用可能になりました！``python3 run.py --config "Art"``。**
-  こちら[example](WareHouse/gomokugameArtExample_THUNLP_20230831122822)を参照してください。
-* 2023年8月28日: システムは一般公開されました。
+  こちらの [example](WareHouse/gomokugameArtExample_THUNLP_20230831122822) を参照してください。
+* 2023年8月28日: システムが一般公開されました。
 * 2023年8月17日: V1.0.0 のリリース準備が整いました。
 * 2023年7月30日: ユーザーは、ChatChain、Phase、Role の設定をカスタマイズすることができます。さらに、オンラインログモードとリプレイモードの両方がサポートされました。
-* 2023年7月16日: このプロジェクトに関連した[プレプリント論文](https://arxiv.org/abs/2307.07924)が発表された。
+* 2023年7月16日: このプロジェクトに関連した[プレプリント論文](https://arxiv.org/abs/2307.07924)が発表されました。
 * 2023年6月30日: `ChatDev` リポジトリの初期バージョンがリリースされました。
 
 ## ❓ ChatDev は何ができるのか？
@@ -65,17 +65,28 @@ https://github.com/OpenBMB/ChatDev/assets/11889052/80d01d2f-677b-4399-ad8b-f7af9
    ```
 5. **ソフトウェアの構築:** 次のコマンドを使用して、ソフトウェアのビルドを開始する。`[description_of_your_idea]`
    をあなたのアイデアの説明に、`[project_name]` を希望するプロジェクト名に置き換える:
+   Unix/Linux 上では:
    ```
    python3 run.py --task "[description_of_your_idea]" --name "[project_name]"
+   ```
+   Windows 上では:
+    ```
+   python run.py --task "[description_of_your_idea]" --name "[project_name]"
    ```
 6. **ソフトウェアの実行:** 生成されたソフトウェアは、`Project_name_DefaultOrganization_timestamp`
    のような特定のプロジェクトフォルダの下の `WareHouse`
    ディレクトリにあります。そのディレクトリで以下のコマンドを使ってソフトウェアを実行してください:
+   Unix/Linux 上では:
    ```
    cd WareHouse/project_name_DefaultOrganization_timestamp
    python3 main.py
    ```
-
+   Windows 上では:
+   ```
+   cd WareHouse/project_name_DefaultOrganization_timestamp
+   python main.py
+   ```
+   
 ## ✨️ 高度なスキル
 
 より詳細な情報については、私たちの [Wiki](wiki.md) を参照してください:
@@ -110,7 +121,7 @@ https://github.com/OpenBMB/ChatDev/assets/11889052/80d01d2f-677b-4399-ad8b-f7af9
 - リプレイに使用できる、このソフトウェアのビルドプロセスの詳細なログ（``timestamp.log``）
 - このソフトウェアを作成するために使用された最初のプロンプト (``2048.prompt``)
 
-**[ソフトウェア](Contribution.md)をコミュニティ製作物を訪れて共有しましょう！**
+**コミュニティによって投稿されたソフトウェアは[こちら](Contribution.md)を参照してください！**
 
 ### ソフトウェア共有者
 
@@ -145,4 +156,4 @@ https://github.com/OpenBMB/ChatDev/assets/11889052/80d01d2f-677b-4399-ad8b-f7af9
 
 ## お問い合わせ
 
-ご質問、フィードバック、またはお問い合わせがある場合は、どうぞお気軽にメールでお問い合わせください：[chatdev.openbmb@outlook.com](mailto:chatdev.openbmb@outlook.com)
+ご質問、フィードバック、またはお問い合わせがある場合は、[chatdev.openbmb@outlook.com](mailto:chatdev.openbmb@outlook.com) までお気軽にご連絡ください
