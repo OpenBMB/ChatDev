@@ -15,7 +15,7 @@
 ## 📖 概要
 
 - **ChatDev** は、最高経営責任者 <img src='online_log/static/figures/ceo.png' height=20>、
-  最高製品責任者<img src='online_log/static/figures/cpo.png' height=20>、最高技術責任者 <img src='online_log/static/figures/cto.png' height=20>、プログラマー <img src='online_log/static/figures/programmer.png' height=20>、レビュアー <img src='online_log/static/figures/reviewer.png' height=20>、テスター <img src='online_log/static/figures/tester.png' height=20>、アートデザイナー <img src='online_log/static/figures/designer.png' height=20>などさまざまな役割を持つさまざまな**インテリジェントエージェント**を擁する**バーチャルソフトウェア企業**である。これらのエージェントはマルチエージェントの組織構造を形成し、
+  最高製品責任者 <img src='online_log/static/figures/cpo.png' height=20>、最高技術責任者 <img src='online_log/static/figures/cto.png' height=20>、プログラマー <img src='online_log/static/figures/programmer.png' height=20>、レビュアー <img src='online_log/static/figures/reviewer.png' height=20>、テスター <img src='online_log/static/figures/tester.png' height=20>、アートデザイナー <img src='online_log/static/figures/designer.png' height=20>などさまざまな役割を持つさまざまな**インテリジェントエージェント**を擁する**バーチャルソフトウェア企業**である。これらのエージェントはマルチエージェントの組織構造を形成し、
   "プログラミングを通じてデジタル世界に革命を起こす"というミッションで
   結束しています。ChatDev 内のエージェントは、設計、コーディング、テスト、ドキュメント作成などのタスクを含む専門的な機能セミナーに参加することで、
   **共同作業** を行います。
@@ -27,7 +27,7 @@
 * **2023年9月20日: *Human-Agent-Interaction* モードが利用可能になりました！レビュアー <img src='online_log/static/figures/reviewer.png' height=20>になってプログラマー <img src='online_log/static/figures/programmer.png' height=20>に提案することで、ChatDev チームに参加することができます；
   ``python3 run.py --task [description_of_your_idea] --config "Human"`` を試してみてください。** また、[guide](wiki.md#human-agent-interaction) と [example](WareHouse/Gomoku_HumanAgentInteraction_20230920135038) を参照してください。
   <img src='misc/Human_intro.png' width=800>
-* 2023年9月1日: *Art* モードが利用可能になりました！デザイナーエージェント<img src='online_log/static/figures/designer.png' height=20>を有効にすると、ソフトウェアで使用する画像を生成できます;
+* 2023年9月1日: *Art* モードが利用可能になりました！デザイナーエージェント <img src='online_log/static/figures/designer.png' height=20>を有効にすると、ソフトウェアで使用する画像を生成できます;
   ``python3 run.py --task [description_of_your_idea] --config "Art"`` を試してみてください。また、[guide](wiki.md#art) と [example](WareHouse/gomokugameArtExample_THUNLP_20230831122822) を参照してください。
 * 2023年8月28日: システムが一般公開されました。
 * 2023年8月17日: V1.0.0 のリリース準備が整いました。
