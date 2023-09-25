@@ -17,18 +17,17 @@ from chatdev.utils import log_and_print_online
 
 class ChatEnvConfig:
     def __init__(self, clear_structure,
-                 brainstorming,
                  gui_design,
                  git_management):
         self.clear_structure = clear_structure
-        self.brainstorming = brainstorming
         self.gui_design = gui_design
         self.git_management = git_management
 
     def __str__(self):
         string = ""
         string += "ChatEnvConfig.clear_structure: {}\n".format(self.clear_structure)
-        string += "ChatEnvConfig.brainstorming: {}\n".format(self.brainstorming)
+        string += "ChatEnvConfig.git_management: {}\n".format(self.git_management)
+        string += "ChatEnvConfig.gui_design: {}\n".format(self.gui_design)
         return string
 
 
@@ -112,7 +111,7 @@ class ChatEnv:
                 else:
                     os.kill(process.pid, signal.SIGTERM)
                     if process.poll() is None:
-                        os.kill(process.pid,signal.CTRL_BREAK_EVENT)
+                        os.kill(process.pid, signal.CTRL_BREAK_EVENT)
 
             if return_code == 0:
                 return False, success_info
@@ -143,8 +142,8 @@ class ChatEnv:
     def update_codes(self, generated_content):
         self.codes._update_codes(generated_content)
 
-    def rewrite_codes(self) -> None:
-        self.codes._rewrite_codes(self.config.git_management)
+    def rewrite_codes(self, phase_info=None) -> None:
+        self.codes._rewrite_codes(self.config.git_management, phase_info)
 
     def get_codes(self) -> str:
         return self.codes._get_codes()

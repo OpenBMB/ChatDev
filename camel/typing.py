@@ -60,7 +60,6 @@ class PhaseType(Enum):
     RECRUITING_CPO = "recruiting CPO"
     RECRUITING_CTO = "recruiting CTO"
     DEMAND_ANALYSIS = "demand analysis"
-    BRAINSTORMING = "brainstorming"
     CHOOSING_LANGUAGE = "choosing language"
     RECRUITING_PROGRAMMER = "recruiting programmer"
     RECRUITING_REVIEWER = "recruiting reviewer"

@@ -1,10 +1,10 @@
 import importlib
 import json
+import logging
 import os
 import shutil
-from datetime import datetime
-import logging
 import time
+from datetime import datetime
 
 from camel.agents import RolePlaying
 from camel.configs import ChatGPTConfig
@@ -63,7 +63,6 @@ class ChatChain:
 
         # init ChatEnv
         self.chat_env_config = ChatEnvConfig(clear_structure=check_bool(self.config["clear_structure"]),
-                                             brainstorming=check_bool(self.config["brainstorming"]),
                                              gui_design=check_bool(self.config["gui_design"]),
                                              git_management=check_bool(self.config["git_management"]))
         self.chat_env = ChatEnv(self.chat_env_config)
@@ -101,8 +100,6 @@ class ChatChain:
                                          model_type=self.model_type,
                                          log_filepath=self.log_filepath)
             self.phases[phase] = phase_instance
-
-
 
     def make_recruitment(self):
         """
@@ -176,7 +173,8 @@ class ChatChain:
         root = os.path.dirname(filepath)
         # directory = root + "/WareHouse/"
         directory = os.path.join(root, "WareHouse")
-        log_filepath = os.path.join(directory, "{}.log".format("_".join([self.project_name, self.org_name,start_time])))
+        log_filepath = os.path.join(directory,
+                                    "{}.log".format("_".join([self.project_name, self.org_name, start_time])))
         return start_time, log_filepath
 
     def pre_processing(self):
@@ -187,9 +185,7 @@ class ChatChain:
         """
         if self.chat_env.config.clear_structure:
             filepath = os.path.dirname(__file__)
-            # root = "/".join(filepath.split("/")[:-1])
             root = os.path.dirname(filepath)
-            # directory = root + "/WareHouse"
             directory = os.path.join(root, "WareHouse")
             for filename in os.listdir(directory):
                 file_path = os.path.join(directory, filename)
@@ -221,8 +217,8 @@ class ChatChain:
         preprocess_msg += "**task_prompt**: {}\n\n".format(self.task_prompt_raw)
         preprocess_msg += "**project_name**: {}\n\n".format(self.project_name)
         preprocess_msg += "**Log File**: {}\n\n".format(self.log_filepath)
-        preprocess_msg += "**ChatDevConfig**:\n {}\n\n".format(self.chat_env.config.__str__())
-        preprocess_msg += "**ChatGPTConfig**:\n {}\n\n".format(chat_gpt_config)
+        preprocess_msg += "**ChatDevConfig**:\n{}\n\n".format(self.chat_env.config.__str__())
+        preprocess_msg += "**ChatGPTConfig**:\n{}\n\n".format(chat_gpt_config)
         log_and_print_online(preprocess_msg)
 
         # init task prompt
@@ -240,8 +236,32 @@ class ChatChain:
 
         self.chat_env.write_meta()
         filepath = os.path.dirname(__file__)
-        # root = "/".join(filepath.split("/")[:-1])
         root = os.path.dirname(filepath)
+
+        if self.chat_env_config.git_management:
+            git_online_log = "**[Git Information]**\n\n"
+
+            self.chat_env.codes.version += 1
+            os.system("cd {}; git add .".format(self.chat_env.env_dict["directory"]))
+            git_online_log += "cd {}; git add .\n".format(self.chat_env.env_dict["directory"])
+            os.system("cd {}; git commit -m \"v{} Final Version\"".format(self.chat_env.env_dict["directory"], self.chat_env.codes.version))
+            git_online_log += "cd {}; git commit -m \"v{} Final Version\"\n".format(self.chat_env.env_dict["directory"], self.chat_env.codes.version)
+            log_and_print_online(git_online_log)
+
+            git_info = "**[Git Log]**\n\n"
+            import subprocess
+
+            # 执行git log命令
+            command = "cd {}; git log".format(self.chat_env.env_dict["directory"])
+            completed_process = subprocess.run(command, shell=True, text=True, stdout=subprocess.PIPE)
+
+            if completed_process.returncode == 0:
+                log_output = completed_process.stdout
+            else:
+                log_output = "Error when executing " + command
+
+            git_info += log_output
+            log_and_print_online(git_info)
 
         post_info = "**[Post Info]**\n\n"
         now_time = now()
@@ -251,7 +271,8 @@ class ChatChain:
         duration = (datetime2 - datetime1).total_seconds()
 
         post_info += "Software Info: {}".format(
-            get_info(self.chat_env.env_dict['directory'], self.log_filepath) + "\n\n🕑**duration**={:.2f}s\n\n".format(duration))
+            get_info(self.chat_env.env_dict['directory'], self.log_filepath) + "\n\n🕑**duration**={:.2f}s\n\n".format(
+                duration))
 
         post_info += "ChatDev Starts ({})".format(self.start_time) + "\n\n"
         post_info += "ChatDev Ends ({})".format(now_time) + "\n\n"

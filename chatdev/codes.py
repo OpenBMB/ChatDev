@@ -1,13 +1,15 @@
+import difflib
 import os
 import re
+import subprocess
 
 from chatdev.utils import log_and_print_online
-import difflib
+
 
 class Codes:
     def __init__(self, generated_content=""):
         self.directory: str = None
-        self.version: float = 1.0
+        self.version: float = 0.0
         self.generated_content: str = generated_content
         self.codebooks = {}
 
@@ -71,7 +73,7 @@ class Codes:
                 log_and_print_online(update_codes_content)
                 self.codebooks[key] = new_codes.codebooks[key]
 
-    def _rewrite_codes(self, git_management) -> None:
+    def _rewrite_codes(self, git_management, phase_info=None) -> None:
         directory = self.directory
         rewrite_codes_content = "**[Rewrite Codes]**\n\n"
         if os.path.exists(directory) and len(os.listdir(directory)) > 0:
@@ -87,12 +89,35 @@ class Codes:
                 rewrite_codes_content += os.path.join(directory, filename) + " Wrote\n"
 
         if git_management:
+            if not phase_info:
+                phase_info = ""
+            git_online_log = "**[Git Information]**\n\n"
             if self.version == 1.0:
                 os.system("cd {}; git init".format(self.directory))
+                git_online_log += "cd {}; git init\n".format(self.directory)
             os.system("cd {}; git add .".format(self.directory))
-            os.system("cd {}; git commit -m \"{}\"".format(self.directory, self.version))
+            git_online_log += "cd {}; git add .\n".format(self.directory)
 
-        log_and_print_online(rewrite_codes_content)
+            # check if there exist diff
+            completed_process = subprocess.run("cd {}; git status".format(self.directory), shell=True, text=True,
+                                               stdout=subprocess.PIPE)
+            if "nothing to commit" in completed_process.stdout:
+                self.version -= 1.0
+                return
+
+            os.system("cd {}; git commit -m \"v{}\"".format(self.directory, str(self.version) + " " + phase_info))
+            git_online_log += "cd {}; git commit -m \"v{}\"\n".format(self.directory,
+                                                                      str(self.version) + " " + phase_info)
+            if self.version == 1.0:
+                os.system("cd {}; git submodule add ./{} {}".format(os.path.dirname(os.path.dirname(self.directory)),
+                                                                    "WareHouse/" + os.path.basename(self.directory),
+                                                                    "WareHouse/" + os.path.basename(self.directory)))
+                git_online_log += "cd {}; git submodule add ./{} {}\n".format(
+                    os.path.dirname(os.path.dirname(self.directory)),
+                    "WareHouse/" + os.path.basename(self.directory),
+                    "WareHouse/" + os.path.basename(self.directory))
+                log_and_print_online(rewrite_codes_content)
+            log_and_print_online(git_online_log)
 
     def _get_codes(self) -> str:
         content = ""

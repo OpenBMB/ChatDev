@@ -135,7 +135,7 @@ class ComposedPhase(ABC):
 
         """
         self.update_phase_env(chat_env)
-        for cycle_index in range(self.cycle_num):
+        for cycle_index in range(1, self.cycle_num + 1):
             for phase_item in self.composition:
                 assert phase_item["phaseType"] == "SimplePhase"  # right now we do not support nested composition
                 phase = phase_item['phase']
