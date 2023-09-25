@@ -14,17 +14,17 @@
 
 ## 📖 概要
 
-- **ChatDev** は、最高経営責任者<img src='online_log/static/figures/ceo.png' height=20>、
-  最高製品責任者<img src='online_log/static/figures/cpo.png' height=20>、最高技術責任者<img src='online_log/static/figures/cto.png' height=20>、プログラマー<img src='online_log/static/figures/programmer.png' height=20>、レビュアー<img src='online_log/static/figures/reviewer.png' height=20>、テスター<img src='online_log/static/figures/tester.png' height=20>、アートデザイナー<img src='online_log/static/figures/designer.png' height=20>などさまざまな役割を持つさまざまな**インテリジェントエージェント**を擁する**バーチャルソフトウェア起業**である。これらのエージェントはマルチエージェントの組織構造を形成し、
+- **ChatDev** は、最高経営責任者 <img src='online_log/static/figures/ceo.png' height=20>、
+  最高製品責任者<img src='online_log/static/figures/cpo.png' height=20>、最高技術責任者 <img src='online_log/static/figures/cto.png' height=20>、プログラマー <img src='online_log/static/figures/programmer.png' height=20>、レビュアー <img src='online_log/static/figures/reviewer.png' height=20>、テスター <img src='online_log/static/figures/tester.png' height=20>、アートデザイナー <img src='online_log/static/figures/designer.png' height=20>などさまざまな役割を持つさまざまな**インテリジェントエージェント**を擁する**バーチャルソフトウェア企業**である。これらのエージェントはマルチエージェントの組織構造を形成し、
   "プログラミングを通じてデジタル世界に革命を起こす"というミッションで
-  結束しています。"ChatDev 内のエージェントは、設計、コーディング、テスト、ドキュメント作成などのタスクを含む専門的な機能セミナーに参加することで、
+  結束しています。ChatDev 内のエージェントは、設計、コーディング、テスト、ドキュメント作成などのタスクを含む専門的な機能セミナーに参加することで、
   **共同作業** を行います。
 - ChatDev の主な目的は、**使いやす**く**高度にカスタマイズ可能**で**拡張可能**なフレームワークを提供することであり、
   これは大規模言語モデル（LLM）に基づいており、集合知を研究するための理想的なシナリオとして機能します。
 
 ## 📰 ニュース
 
-* **2023年9月20日: *Human-Agent-Interaction* モードが利用可能になりました！レビュアー役<img src='online_log/static/figures/reviewer.png' height=20>になってプログラマー<img src='online_log/static/figures/programmer.png' height=20>に提案することで、ChatDev チームに参加することができます；
+* **2023年9月20日: *Human-Agent-Interaction* モードが利用可能になりました！レビュアー <img src='online_log/static/figures/reviewer.png' height=20>になってプログラマー <img src='online_log/static/figures/programmer.png' height=20>に提案することで、ChatDev チームに参加することができます；
   ``python3 run.py --task [description_of_your_idea] --config "Human"`` を試してみてください。** また、[guide](wiki.md#human-agent-interaction) と [example](WareHouse/Gomoku_HumanAgentInteraction_20230920135038) を参照してください。
   <img src='misc/Human_intro.png' width=800>
 * 2023年9月1日: *Art* モードが利用可能になりました！デザイナーエージェント<img src='online_log/static/figures/designer.png' height=20>を有効にすると、ソフトウェアで使用する画像を生成できます;
@@ -109,7 +109,7 @@ https://github.com/OpenBMB/ChatDev/assets/11889052/80d01d2f-677b-4399-ad8b-f7af9
     - Phase: ``DemandAnalysis``のように、ChatChain 内で独自のフェーズを設計する。
     - Role: 最高経営責任者 ``Chief Executive Officer`` のように、社内の様々なエージェントを定義する。
 
-## 🤗 ソフトウェアを共有する！
+## 🤗 ソフトウェアをシェア！
 
 **コード**:
 私たちは、あなたが私たちのオープンソースプロジェクトに参加してくださることに熱意をもっています。もし何か問題があれば、遠慮なく報告してください。問い合わせがある場合、または私たちと仕事を共有する用意がある場合は、遠慮なくプルリクエストを作成してください！あなたのコントリビュートは高く評価されます。また、何かありましたらお知らせください！
