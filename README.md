@@ -27,7 +27,7 @@
 
 ## 📰 News
 
-* **September 25th, 2023: The **Git** feature is now available**, enabling the programmer < img src='online_log/static/figures/programmer.png' height=20> to utilize GitHub for version control. To enable this feature, simply set ``"git_management"`` to ``"True"`` in ``ChatChainConfig.json``.
+* **September 25th, 2023: The **Git** feature is now available**, enabling the programmer <img src='online_log/static/figures/programmer.png' height=20> to utilize GitHub for version control. To enable this feature, simply set ``"git_management"`` to ``"True"`` in ``ChatChainConfig.json``.
   <p align="center">
   <img src='./misc/github.png' width=600>
   </p>
