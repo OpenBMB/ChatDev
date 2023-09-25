@@ -1,7 +1,7 @@
 # Communicative Agents for Software Development
 
 <p align="center">
-  <img src='./misc/logo1.png' width=600>
+  <img src='./misc/logo1.png' width=550>
 </p>
 
 <p align="center">
@@ -21,20 +21,23 @@
   including tasks such as designing, coding, testing, and documenting.
 - The primary objective of ChatDev is to offer an **easy-to-use**, **highly customizable** and **extendable** framework,
   which is based on large language models (LLMs) and serves as an ideal scenario for studying collective intelligence.
+<p align="center">
+  <img src='./misc/company.png' width=600>
+</p>
 
 ## 📰 News
 
-* **September 20th, 2023: The *Human-Agent-Interaction* mode is now available! You can get involved with the ChatDev team by playing the role of reviewer <img src='online_log/static/figures/reviewer.png' height=20> and making suggestions to the programmer <img src='online_log/static/figures/programmer.png' height=20>;
-  try ``python3 run.py --task [description_of_your_idea] --config "Human"``.** See [guide](wiki.md#human-agent-interaction) and [example](WareHouse/Gomoku_HumanAgentInteraction_20230920135038).
-  <img src='misc/Human_intro.png' width=800>
-* September 1st, 2023: The *Art* mode is available now! You can activate the designer agent <img src='online_log/static/figures/designer.png' height=20> to generate images used in the software;
+* September 20th, 2023: The **Human-Agent-Interaction** mode is now available! You can get involved with the ChatDev team by playing the role of reviewer <img src='online_log/static/figures/reviewer.png' height=20> and making suggestions to the programmer <img src='online_log/static/figures/programmer.png' height=20>;
+  try ``python3 run.py --task [description_of_your_idea] --config "Human"``. See [guide](wiki.md#human-agent-interaction) and [example](WareHouse/Gomoku_HumanAgentInteraction_20230920135038).
+  <center><img src='misc/Human_intro.png' width=800></center>
+* September 1st, 2023: The **Art** mode is available now! You can activate the designer agent <img src='online_log/static/figures/designer.png' height=20> to generate images used in the software;
   try ``python3 run.py --task [description_of_your_idea] --config "Art"``. See [guide](wiki.md#art) and [example](WareHouse/gomokugameArtExample_THUNLP_20230831122822).
 * August 28th, 2023: The system is publicly available.
-* August 17th, 2023: The V1.0.0 version was ready for release.
+* August 17th, 2023: The v1.0.0 version was ready for release.
 * July 30th, 2023: Users can customize ChatChain, Phase, and Role settings. Additionally, both online Log mode and replay
   mode are now supported.
 * July 16th, 2023: The [preprint paper](https://arxiv.org/abs/2307.07924) associated with this project was published.
-* June 30th, 2023: The initial version of the `ChatDev` repository was released.
+* June 30th, 2023: The initial version of the ChatDev repository was released.
 
 ## ❓ What Can ChatDev Do?
 
