@@ -7,21 +7,28 @@
 <p align="center">
     【<a href="README.md">English</a> | <a href="README-Chinese.md">Chinese</a> | Japanese | <a href="README-Korean.md">Korean</a>】
 </p>
+<p align="center">
+    【📚 <a href="wiki.md">Wiki</a> | 🚀 <a href="wiki.md#local-demo">ローカルデモ</a> | 👥 <a href="Contribution.md">コミュニティにより作られたソフト</a> | 🔧 <a href="wiki.md#customization">カスタマイズ</a>】
+</p>
+
 
 ## 📖 概要
 
-- **ChatDev** は、最高経営責任者（CEO）、最高技術責任者（CTO）、プログラマー、テスターなど、さまざまな役割を持つ**インテリジェントエージェント
-  **によって運営される**バーチャルソフトウェア企業**です。これらのエージェントは、マルチエージェントの組織構造を形成し、
-  "プログラミングを通じてデジタル世界に革命を起こす"というミッションで団結しています。ChatDev
-  内のエージェントは、設計、コーディング、テスト、ドキュメント作成などのタスクを含む専門的な機能セミナーに参加することで、
-  **共同作業**を行います。
-- ChatDev の主な目的は、**使いやすく**、**高度にカスタマイズ可能**で**拡張可能**
-  なフレームワークを提供することであり、これは大規模言語モデル（LLM）に基づいており、集合知を研究するための理想的なシナリオとして機能します。
+- **ChatDev** は、最高経営責任者<img src='online_log/static/figures/ceo.png' height=20>、
+  最高製品責任者<img src='online_log/static/figures/cpo.png' height=20>、最高技術責任者<img src='online_log/static/figures/cto.png' height=20>、プログラマー<img src='online_log/static/figures/programmer.png' height=20>、レビュアー<img src='online_log/static/figures/reviewer.png' height=20>、テスター<img src='online_log/static/figures/tester.png' height=20>、アートデザイナー<img src='online_log/static/figures/designer.png' height=20>などさまざまな役割を持つさまざまな**インテリジェントエージェント**を擁する**バーチャルソフトウェア起業**である。これらのエージェントはマルチエージェントの組織構造を形成し、
+  "プログラミングを通じてデジタル世界に革命を起こす"というミッションで
+  結束しています。"ChatDev 内のエージェントは、設計、コーディング、テスト、ドキュメント作成などのタスクを含む専門的な機能セミナーに参加することで、
+  **共同作業** を行います。
+- ChatDev の主な目的は、**使いやす**く**高度にカスタマイズ可能**で**拡張可能**なフレームワークを提供することであり、
+  これは大規模言語モデル（LLM）に基づいており、集合知を研究するための理想的なシナリオとして機能します。
 
 ## 📰 ニュース
 
-* **2023年9月1日: Art モードが利用可能になりました！``python3 run.py --config "Art"``。**
-  こちらの [example](WareHouse/gomokugameArtExample_THUNLP_20230831122822) を参照してください。
+* **2023年9月20日: *Human-Agent-Interaction* モードが利用可能になりました！レビュアー役<img src='online_log/static/figures/reviewer.png' height=20>になってプログラマー<img src='online_log/static/figures/programmer.png' height=20>に提案することで、ChatDev チームに参加することができます；
+  ``python3 run.py --task [description_of_your_idea] --config "Human"`` を試してみてください。** また、[guide](wiki.md#human-agent-interaction) と [example](WareHouse/Gomoku_HumanAgentInteraction_20230920135038) を参照してください。
+  <img src='misc/Human_intro.png' width=800>
+* 2023年9月1日: *Art* モードが利用可能になりました！デザイナーエージェント<img src='online_log/static/figures/designer.png' height=20>を有効にすると、ソフトウェアで使用する画像を生成できます;
+  ``python3 run.py --task [description_of_your_idea] --config "Art"`` を試してみてください。また、[guide](wiki.md#art) と [example](WareHouse/gomokugameArtExample_THUNLP_20230831122822) を参照してください。
 * 2023年8月28日: システムが一般公開されました。
 * 2023年8月17日: V1.0.0 のリリース準備が整いました。
 * 2023年7月30日: ユーザーは、ChatChain、Phase、Role の設定をカスタマイズすることができます。さらに、オンラインログモードとリプレイモードの両方がサポートされました。
@@ -86,12 +93,12 @@ https://github.com/OpenBMB/ChatDev/assets/11889052/80d01d2f-677b-4399-ad8b-f7af9
    cd WareHouse/project_name_DefaultOrganization_timestamp
    python main.py
    ```
-   
+
 ## ✨️ 高度なスキル
 
 より詳細な情報については、私たちの [Wiki](wiki.md) を参照してください:
 
-- すべてのコマンド実行パラメータの紹介
+- すべてのコマンド実行パラメータの紹介。
 - 強化されたビジュアライズされたログ、リプレイデモ、シンプルな ChatChain ビジュアライザを含む、ローカルウェブデモをセットアップするための簡単なガイド。
 - ChatDev フレームワークの概要
 - ChatChain 設定の高度なパラメータの包括的な紹介。
@@ -130,6 +137,7 @@ https://github.com/OpenBMB/ChatDev/assets/11889052/80d01d2f-677b-4399-ad8b-f7af9
 <a href="https://github.com/NA-Wen"><img src="https://avatars.githubusercontent.com/u/92134380?v=4" alt="Contributor" style="width:5%; border-radius: 50%;"/></a>
 <a href="https://github.com/lijiahao2022"><img src="https://avatars.githubusercontent.com/u/111221887?v=4" alt="Contributor" style="width:5%; border-radius: 50%;"/></a>
 <a href="https://github.com/GeekyWizKid"><img src="https://avatars.githubusercontent.com/u/133981481?v=4" alt="Contributor" style="width:5%; border-radius: 50%;"/></a>
+<a href="https://github.com/Munsif-Raza-T"><img src="https://avatars.githubusercontent.com/u/76085202?v=4" alt="Contributor" style="width:5%; border-radius: 50%;"/></a>
 
 ## 📑 引用
 
