@@ -2,13 +2,14 @@ import logging
 import requests
 import os
 from flask import Flask, send_from_directory, request, jsonify
+from flask_socketio import SocketIO
 import argparse
 
 app = Flask(__name__, static_folder='static')
 app.logger.setLevel(logging.ERROR)
 log = logging.getLogger('werkzeug')
 log.setLevel(logging.ERROR)
-messages = []
+socketio = SocketIO(app)
 port = [8000]
 
 def send_msg(role, text):
@@ -34,11 +35,6 @@ def replay():
     return send_from_directory("static", "replay.html")
 
 
-@app.route("/get_messages")
-def get_messages():
-    return jsonify(messages)
-
-
 @app.route("/send_message", methods=["POST"])
 def send_message():
     data = request.get_json()
@@ -48,7 +44,7 @@ def send_message():
     avatarUrl = find_avatar_url(role)
 
     message = {"role": role, "text": text, "avatarUrl": avatarUrl}
-    messages.append(message)
+    socketio.emit("message", message)
     return jsonify(message)
 
 
@@ -65,4 +61,4 @@ if __name__ == "__main__":
     args = parser.parse_args()
     port.append(args.port)
     print(f"Please visit http://127.0.0.1:{port[-1]}/ for the front-end display page. \nIn the event of a port conflict, please modify the port argument (e.g., python3 app.py --port 8012).")
-    app.run(debug=False, port=port[-1])
+    socketio.run(app, debug=False, port=port[-1])

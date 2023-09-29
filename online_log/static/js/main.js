@@ -64,19 +64,12 @@ function parseCodeBlocks(text, role) {
 }
 
 
-function get_new_messages() {
-
-  $.getJSON("/get_messages", function (data) {
-    var lastDisplayedMessageIndex = $("#chat-box .message-container").length;
-
-    for (var i = lastDisplayedMessageIndex; i < data.length; i++) {
-      var role = data[i].role;
-      var text = data[i].text;
-      var avatarUrl = data[i].avatarUrl;
-
-      append_message(role, text, avatarUrl);
-
-    }
+function get_messages() {
+  const socket = io.connect(`${location.hostname}:${location.port}`);
+  socket.on("connect", function () {
+    socket.on("message", function(data) {
+      append_message(data.role, data.text, data.avatarUrl);
+    });
   });
 }
 
@@ -130,10 +123,5 @@ function copyToClipboard(element) {
 
 
 $(document).ready(function () {
-  get_new_messages();
-  setInterval(function () {
-    get_new_messages();
-  }, 1000);
+  get_messages();
 });
-
-
