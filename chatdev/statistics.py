@@ -100,6 +100,7 @@ def get_info(dir, log_filepath):
         sublines = [line for line in lines if "| **model_type** |" in line]
         if len(sublines) > 0:
             model_type = sublines[0].split("| **model_type** | ModelType.")[-1].split(" | ")[0]
+            model_type = model_type[:-2]
             if model_type == "GPT_3_5_TURBO":
                 model_type = "gpt-3.5-turbo"
             elif model_type == "GPT_4":
