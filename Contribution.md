@@ -215,7 +215,7 @@
     <td>GPT3.5</td>
   </tr>
   <tr>
-    <td rowspan="20"><a href="https://github.com/Munsif-Raza-T" target="_blank" rel="noopener noreferrer">https://github.com/Munsif-Raza-T</a></td>
+    <td rowspan="2"><a href="https://github.com/Munsif-Raza-T" target="_blank" rel="noopener noreferrer">https://github.com/Munsif-Raza-T</a></td>
     <td><a href="WareHouse/Notebook Application_DefaultOrganization_20230918090434" target="_blank" rel="noopener noreferrer">Notebook Application</a></td>
     <td><img src="misc/Notebook.PNG" width="200px"></td>
     <td>Perfect</td>
@@ -224,6 +224,20 @@
   <tr>
     <td><a href="WareHouse/BMI Calculator_DefaultOrganization_20230918110521" target="_blank" rel="noopener noreferrer">BMI Calculator</a></td>
     <td><img src="misc/BMI.PNG" width="200px"></td>
+    <td>Perfect</td>
+    <td>GPT3.5</td>
+  </tr>
+  <tr>
+    <td rowspan="1"><a href="https://github.com/djbritt" target="_blank" rel="noopener noreferrer">https://github.com/djbritt</a></td>
+    <td><a href="WareHouse/trippy_avoid_game_DefaultOrganization_20231006224623" target="_blank" rel="noopener noreferrer">Avoid Game</a></td>
+    <td><img src="misc/avoid_game.png" width="200px"></td>
+    <td>Perfect</td>
+    <td>GPT3.5</td>
+  </tr>
+  <tr>
+    <td rowspan="1"><a href="https://github.com/Classified3939" target="_blank" rel="noopener noreferrer">https://github.com/Classified3939</a></td>
+    <td><a href="WareHouse/Space_Invasion_Classified39_20231006210047" target="_blank" rel="noopener noreferrer">Space Invasion Game</a></td>
+    <td><img src="misc/space_invasion.png" width="200px"></td>
     <td>Perfect</td>
     <td>GPT3.5</td>
   </tr>
