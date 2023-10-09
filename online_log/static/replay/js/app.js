@@ -401,7 +401,6 @@ function createPara(d, i) {
         character.style.width = "fit-content";
         character.style.padding = "5px 20px";
         character.style.marginBottom = "5px";
-        character.style.width = "fit-content";
         character.style.fontSize = "13px ";
         character.style.border = "1px solid rgba(11, 20, 150, .3)";
         character.style.borderRadius = "10px";
