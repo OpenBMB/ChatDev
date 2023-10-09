@@ -444,7 +444,7 @@ function createPara(d, i) {
         characterimg.style.height = "40px";
         characterimg.style.width = "30px";
         characterimg.style.position = "relative";
-		characterimg.style.marginLeft = "10px";
+        characterimg.style.marginLeft = "10px";
         character.appendChild(characterimg);
         character.style.width = "fit-content";
 
