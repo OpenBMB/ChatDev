@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-    【<a href="README.md">English</a> | <a href="README-Chinese.md">Chinese</a> | <a href="README-Japanese.md">Japanese</a> | <a href="README-Korean.md">Korean</a> | Filipino | <a href="README-French.md">French</a>】
+    【<a href="README.md">English</a> | <a href="README-Chinese.md">Chinese</a> | <a href="README-Japanese.md">Japanese</a> | <a href="README-Korean.md">Korean</a> | Filipino | <a href="README-French.md">French</a> | <a href="README-Portuguese.md">Portuguese</a>】
 </p>
 
 <p align="center">

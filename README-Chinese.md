@@ -3,7 +3,7 @@
 <p align="center">   <img src='./misc/logo1.png' width=600> </p>
 
 <p align="center">
-    【<a href="README.md">English</a> | Chinese | <a href="README-Japanese.md">Japanese</a> | <a href="README-Korean.md">Korean</a> | <a href="README-Filipino.md">Filipino</a> | <a href="README-French.md">French</a>】
+    【<a href="README.md">English</a> | Chinese | <a href="README-Japanese.md">Japanese</a> | <a href="README-Korean.md">Korean</a> | <a href="README-Filipino.md">Filipino</a> | <a href="README-French.md">French</a> | <a href="README-Portuguese.md">Portuguese</a>】
 </p>
 
 ## 📖 概述
