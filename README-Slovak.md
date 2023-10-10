@@ -5,46 +5,46 @@
 </p>
 
 <p align="center">
-    【English | <a href="README-Chinese.md">Chinese</a> | <a href="README-Japanese.md">Japanese</a> | <a href="README-Korean.md">Korean</a> | <a href="README-Filipino.md">Filipino</a> | <a href="README-French.md">French</a> | <a href="README-Slovak.md">French</a>】
+    【English | <a href="README-Chinese.md">Chinese</a> | <a href="README-Japanese.md">Japanese</a> | <a href="README-Korean.md">Korean</a> | <a href="README-Filipino.md">Filipino</a> | <a href="README-French.md">French</a> | <a href="README-Slovak.md">Slovak</a>】
 </p>
 <p align="center">
     【📚 <a href="wiki.md">Wiki</a> | 🚀 <a href="wiki.md#local-demo">Local Demo</a> | 👥 <a href="Contribution.md">Community Built Software</a> | 🔧 <a href="wiki.md#customization">Customization</a>】
 </p>
 
-## 📖 Overview
+## 📖 Prehľad
 
-- **ChatDev** stands as a **virtual software company** that operates through various **intelligent agents** holding
-  different roles, including Chief Executive Officer <img src='online_log/static/figures/ceo.png' height=20>, Chief Product Officer <img src='online_log/static/figures/cpo.png' height=20>, Chief Technology Officer <img src='online_log/static/figures/cto.png' height=20>, programmer <img src='online_log/static/figures/programmer.png' height=20>, reviewer <img src='online_log/static/figures/reviewer.png' height=20>, tester <img src='online_log/static/figures/tester.png' height=20>, art designer <img src='online_log/static/figures/designer.png' height=20>. These
-  agents form a multi-agent organizational structure and are united by a mission to "revolutionize the digital world
-  through programming." The agents within ChatDev **collaborate** by participating in specialized functional seminars,
-  including tasks such as designing, coding, testing, and documenting.
-- The primary objective of ChatDev is to offer an **easy-to-use**, **highly customizable** and **extendable** framework,
-  which is based on large language models (LLMs) and serves as an ideal scenario for studying collective intelligence.
+- **ChatDev** je **virtuálna softvérová spoločnosť**, ktorá pôsobí prostredníctvom rôznych **inteligentných agentov**.
+  rôznych funkcií, vrátane výkonného riaditeľa <img src='online_log/static/figures/ceo.png' height=20>, produktového riaditeľa <img src='online_log/static/figures/cpo.png' height=20>, technologického riaditeľa <img src='online_log/static/figures/cto. png" height=20>, programátor <img src='online_log/static/figures/programmer.png' height=20>, recenzent <img src='online_log/static/figures/reviewer.png' height=20>, tester <img src='online_log/static/figures/tester.png' height=20>, výtvarník <img src='online_log/static/figures/designer.png' height=20>. Tieto
+  agenti tvoria multiagentovú organizačnú štruktúru a spája ich poslanie "revolučne zmeniť digitálny svet".
+  prostredníctvom programovania." Agenti v rámci ChatDev **spolupracujú** účasťou na špecializovaných funkčných seminároch,
+  vrátane úloh, ako je navrhovanie, kódovanie, testovanie a dokumentovanie.
+- Hlavným cieľom ChatDev je ponúknuť **jednoduchý**, **vysoko prispôsobiteľný** a **rozšíriteľný** rámec,
+  ktorý je založený na veľkých jazykových modeloch (LLM) a slúži ako ideálny scenár na štúdium kolektívnej inteligencie.
 <p align="center">
   <img src='./misc/company.png' width=600>
 </p>
 
-## 🎉 News
+## 🎉 Novinky
 
-* **September 25th, 2023: The **Git** feature is now available**, enabling the programmer <img src='online_log/static/figures/programmer.png' height=20> to utilize GitHub for version control. To enable this feature, simply set ``"git_management"`` to ``"True"`` in ``ChatChainConfig.json``.
+* ** 25. septembra 2023: Teraz je k dispozícii funkcia **Git**, ktorá umožňuje programátorovi <img src='online_log/static/figures/programmer.png' height=20> využívať GitHub na kontrolu verzií. Ak chcete túto funkciu povoliť, jednoducho nastavte ``"git_management"`` na ``"True"`` v súbore ``ChatChainConfig.json``.
   <p align="center">
   <img src='./misc/github.png' width=600>
   </p>
-* September 20th, 2023: The **Human-Agent-Interaction** mode is now available! You can get involved with the ChatDev team by playing the role of reviewer <img src='online_log/static/figures/reviewer.png' height=20> and making suggestions to the programmer <img src='online_log/static/figures/programmer.png' height=20>;
-  try ``python3 run.py --task [description_of_your_idea] --config "Human"``. See [guide](wiki.md#human-agent-interaction) and [example](WareHouse/Gomoku_HumanAgentInteraction_20230920135038).
+* 20. septembra 2023: Režim **Human-Agent-Interaction** je teraz k dispozícii! Môžete sa zapojiť do tímu ChatDev tým, že budete hrať úlohu recenzenta <img src='online_log/static/figures/reviewer.png' height=20> a predkladať návrhy programátorovi <img src='online_log/static/figures/programmer.png' height=20>;
+  skúste ``python3 run.py --task [description_of_your_idea] --config "Human"``. Pozri [návod](wiki.md#human-agent-interaction) a [príklad](WareHouse/Gomoku_HumanAgentInteraction_20230920135038).
   <p align="center">
   <img src='./misc/Human_intro.png' width=600>
   </p>
-* September 1st, 2023: The **Art** mode is available now! You can activate the designer agent <img src='online_log/static/figures/designer.png' height=20> to generate images used in the software;
-  try ``python3 run.py --task [description_of_your_idea] --config "Art"``. See [guide](wiki.md#art) and [example](WareHouse/gomokugameArtExample_THUNLP_20230831122822).
-* August 28th, 2023: The system is publicly available.
-* August 17th, 2023: The v1.0.0 version was ready for release.
-* July 30th, 2023: Users can customize ChatChain, Phase, and Role settings. Additionally, both online Log mode and replay
-  mode are now supported.
-* July 16th, 2023: The [preprint paper](https://arxiv.org/abs/2307.07924) associated with this project was published.
-* June 30th, 2023: The initial version of the ChatDev repository was released.
+* 1. septembra 2023: Režim **Art** je už k dispozícii! Môžete si aktivovať agenta dizajnéra <img src='online_log/static/figures/designer.png' height=20> na generovanie obrázkov používaných v programe;
+  skúste ``python3 run.py --task [description_of_your_idea] --config "Art"``. Pozri [návod](wiki.md#art) a [príklad](WareHouse/gomokugameArtExample_THUNLP_20230831122822).
+* 28. august 2023: Systém je verejne dostupný.
+* 17. augusta 2023: Verzia v1.0.0 bola pripravená na vydanie.
+* 30. júla 2023: Používatelia si môžu prispôsobiť nastavenia ChatChain, Phase a Role. Okrem toho je k dispozícii režim online záznamu aj replay
+  režim sú teraz podporované.
+* 16. júla 2023: Bol uverejnený článok [preprint paper](https://arxiv.org/abs/2307.07924) súvisiaci s týmto projektom.
+* 30. júna 2023: Bola vydaná počiatočná verzia repozitára ChatDev.
 
-## ❓ What Can ChatDev Do?
+## ❓ Čo dokáže ChatDev?
 
 ![intro](misc/intro.png)
 
@@ -52,55 +52,55 @@ https://github.com/OpenBMB/ChatDev/assets/11889052/80d01d2f-677b-4399-ad8b-f7af9
 
 ## ⚡️ Quickstart
 
-To get started, follow these steps:
+Ak chcete začať, postupujte podľa týchto krokov:
 
-1. **Clone the GitHub Repository:** Begin by cloning the repository using the command:
+1. **Klonovanie úložiska GitHub:** Začnite klonovaním úložiska pomocou príkazu:
    ```
    git clone https://github.com/OpenBMB/ChatDev.git
    ```
-2. **Set Up Python Environment:** Ensure you have a version 3.9 or higher Python environment. You can create and
-   activate this environment using the following commands, replacing `ChatDev_conda_env` with your preferred environment
-   name:
+2. **Nastavenie prostredia Python:** Uistite sa, že máte prostredie Python vo verzii 3.9 alebo vyššej. Môžete vytvoriť a
+   toto prostredie aktivovať pomocou nasledujúcich príkazov, pričom `ChatDev_conda_env` nahradíte preferovaným prostredím
+   name (názov):
    ```
    conda create -n ChatDev_conda_env python=3.9 -y
    conda activate ChatDev_conda_env
    ```
-3. **Install Dependencies:** Move into the `ChatDev` directory and install the necessary dependencies by running:
+3. **Inštalácia závislostí:** Presuňte sa do adresára `ChatDev` a nainštalujte potrebné závislosti spustením:
    ```
    cd ChatDev
    pip3 install -r requirements.txt
    ```
-4. **Set OpenAI API Key:** Export your OpenAI API key as an environment variable. Replace `"your_OpenAI_API_key"` with
-   your actual API key. Remember that this environment variable is session-specific, so you need to set it again if you
-   open a new terminal session.
-   On Unix/Linux:
+4. **Nastavenie kľúča API OpenAI:** Exportujte svoj kľúč API OpenAI ako premennú prostredia. Nahraďte `"your_OpenAI_API_key"`
+   svojím skutočným kľúčom API. Nezabudnite, že táto premenná prostredia je špecifická pre reláciu, takže ju musíte nastaviť znova, ak
+   otvoríte novú reláciu terminálu.
+   V systéme Unix/Linux:
    ```
    export OPENAI_API_KEY="your_OpenAI_API_key"
    ```
-   On Windows:
+   V systéme Windows:
    ```
    $env:OPENAI_API_KEY="your_OpenAI_API_key"
    ```
-5. **Build Your Software:** Use the following command to initiate the building of your software,
-   replacing `[description_of_your_idea]` with your idea's description and `[project_name]` with your desired project
+5. **Zostavenie softvéru:** Na spustenie zostavovania softvéru použite nasledujúci príkaz,
+   pričom `[description_of_your_idea]` nahradíte opisom svojho nápadu a `[project_name]` požadovaným projektom
    name:
-   On Unix/Linux:
+   V systéme Unix/Linux:
    ```
    python3 run.py --task "[description_of_your_idea]" --name "[project_name]"
    ```
-   On Windows:
+   V systéme Windows:
    ```
    python run.py --task "[description_of_your_idea]" --name "[project_name]"
    ```
-6. **Run Your Software:** Once generated, you can find your software in the `WareHouse` directory under a specific
-   project folder, such as `project_name_DefaultOrganization_timestamp`. Run your software using the following command
-   within that directory:
-   On Unix/Linux:
+6. **Spustenie softvéru:** Po vygenerovaní nájdete svoj softvér v adresári `WareHouse` pod konkrétnym
+   priečinku projektu, napríklad `názov_projektu_Východisková_organizácia_časová značka`. Spustite svoj softvér pomocou nasledujúceho príkazu
+   v tomto adresári:
+   V systéme Unix/Linux:
    ```
    cd WareHouse/project_name_DefaultOrganization_timestamp
    python3 main.py
    ```
-   On Windows:
+   Na Windowse
    ```
    cd WareHouse/project_name_DefaultOrganization_timestamp
    python main.py
