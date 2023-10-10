@@ -1,5 +1,9 @@
 # Wiki
 
+<p align="center">
+    【English | <a href="wiki-es.md">Spanish</a>】
+</p>
+
 ## Quick Start Step By Step
 
 ### 1. Install `ChatDev`:

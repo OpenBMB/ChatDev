@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-    【<a href="README.md">English</a> | <a href="README-Chinese.md">Chinese</a> | <a href="README-Japanese.md">Japanese</a> | Korean | <a href="README-Filipino.md">Filipino</a> | <a href="README-French.md">French</a>】
+    【<a href="README.md">English</a> | <a href="README-Chinese.md">Chinese</a> | <a href="README-Japanese.md">Japanese</a> | Korean | <a href="README-Filipino.md">Filipino</a> | <a href="README-French.md">French</a> | <a href="README-Spanish.md">Spanish</a>】
 </p>
 
 ## 📖 개요
