@@ -493,16 +493,25 @@ class CodeReviewHuman(Phase):
             f"**[Human-Agent-Interaction]**\n\n"
             f"Now you can participate in the development of the software!\n"
             f"The task is:  {chat_env.env_dict['task_prompt']}\n"
-            f"Please input your feedback (in one line). It can be bug report or new feature requirement.\n"
+            f"Please input your feedback (in multiple lines). It can be bug report or new feature requirement.\n"
             f"You are currently in the #{self.phase_env['cycle_index']} human feedback with a total of {self.phase_env['cycle_num']} feedbacks\n"
-            f"Press [Enter] to submit.\n"
-            f"You can type \"End\" to quit this mode at any time.\n"
+            f"Type 'end' on a separate line to submit.\n"
+            f"You can type \"Exit\" to quit this mode at any time.\n"
         )
-        provided_comments = input(">>> ")
-        self.phase_env["comments"] = provided_comments
+        provided_comments = []
+        while True:
+            user_input = input(">>>>>>")
+            if user_input.strip().lower() == "end":
+                break
+            if user_input.strip().lower() == "exit":
+                provided_comments = ["exit"]
+                break
+            provided_comments.append(user_input)
+        self.phase_env["comments"] = '\n'.join(provided_comments)
         log_and_print_online(
-            f"**[User Provided Comments]**\n\n In the #{self.phase_env['cycle_index']} of total {self.phase_env['cycle_num']} comments: \n\n" + provided_comments)
-        if provided_comments.lower() == "end":
+            f"**[User Provided Comments]**\n\n In the #{self.phase_env['cycle_index']} of total {self.phase_env['cycle_num']} comments: \n\n" +
+            self.phase_env["comments"])
+        if self.phase_env["comments"].strip().lower() == "exit":
             return chat_env
 
         self.seminar_conclusion = \
