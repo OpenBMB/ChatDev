@@ -18,7 +18,7 @@
   agenti tvoria multiagentovú organizačnú štruktúru a spája ich poslanie "revolučne zmeniť digitálny svet
   prostredníctvom programovania." Agenti v rámci ChatDev **spolupracujú** účasťou na špecializovaných funkčných seminároch,
   vrátane úloh, ako je navrhovanie, kódovanie, testovanie a dokumentovanie.
-- Hlavným cieľom ChatDev je ponúknuť **jednoduchý**, **vysoko prispôsobiteľný** a **rozšíriteľný** rámec,
+- Hlavným cieľom ChatDev je ponúknuť **jednoduchý**, **vysoko prispôsobiteľný** a **rozšíriteľný** framework,
   ktorý je založený na veľkých jazykových modeloch (LLM) a slúži ako ideálny scenár na štúdium kolektívnej inteligencie.
 <p align="center">
   <img src='./misc/company.png' width=600>
@@ -50,8 +50,7 @@
 
 https://github.com/OpenBMB/ChatDev/assets/11889052/80d01d2f-677b-4399-ad8b-f7af9bb62b72
 
-## ⚡️ Quickstart
-
+## ⚡️ Rýchly štart
 Ak chcete začať, postupujte podľa týchto krokov:
 
 1. **Naklonovať GitHub repozitár:** Začnite klonovaním repozitára pomocou príkazu:
