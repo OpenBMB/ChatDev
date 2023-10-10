@@ -14,8 +14,8 @@
 ## 📖 Prehľad
 
 - **ChatDev** je **virtuálna softvérová spoločnosť**, ktorá pôsobí prostredníctvom rôznych **inteligentných agentov**.
-  rôznych funkcií, vrátane výkonného riaditeľa <img src='online_log/static/figures/ceo.png' height=20>, produktového riaditeľa <img src='online_log/static/figures/cpo.png' height=20>, technologického riaditeľa <img src='online_log/static/figures/cto. png" height=20>, programátor <img src='online_log/static/figures/programmer.png' height=20>, recenzent <img src='online_log/static/figures/reviewer.png' height=20>, tester <img src='online_log/static/figures/tester.png' height=20>, výtvarník <img src='online_log/static/figures/designer.png' height=20>. Tieto
-  agenti tvoria multiagentovú organizačnú štruktúru a spája ich poslanie "revolučne zmeniť digitálny svet".
+  rôznych funkcií, vrátane riaditeľa <img src='online_log/static/figures/ceo.png' height=20>, produktového riaditeľa <img src='online_log/static/figures/cpo.png' height=20>, technologického riaditeľa <img src="online_log/static/figures/cto.png" height=20>, programátor <img src='online_log/static/figures/programmer.png' height=20>, recenzent <img src='online_log/static/figures/reviewer.png' height=20>, tester <img src='online_log/static/figures/tester.png' height=20>, výtvarník <img src='online_log/static/figures/designer.png' height=20>. Týto
+  agenti tvoria multiagentovú organizačnú štruktúru a spája ich poslanie "revolučne zmeniť digitálny svet
   prostredníctvom programovania." Agenti v rámci ChatDev **spolupracujú** účasťou na špecializovaných funkčných seminároch,
   vrátane úloh, ako je navrhovanie, kódovanie, testovanie a dokumentovanie.
 - Hlavným cieľom ChatDev je ponúknuť **jednoduchý**, **vysoko prispôsobiteľný** a **rozšíriteľný** rámec,
@@ -26,7 +26,7 @@
 
 ## 🎉 Novinky
 
-* ** 25. septembra 2023: Teraz je k dispozícii funkcia **Git**, ktorá umožňuje programátorovi <img src='online_log/static/figures/programmer.png' height=20> využívať GitHub na kontrolu verzií. Ak chcete túto funkciu povoliť, jednoducho nastavte ``"git_management"`` na ``"True"`` v súbore ``ChatChainConfig.json``.
+* 25. septembra 2023: Teraz je k dispozícii funkcia **Git**, ktorá umožňuje programátorovi <img src='online_log/static/figures/programmer.png' height=20> využívať GitHub na version control. Ak chcete túto funkciu povoliť, jednoducho nastavte ``"git_management"`` na ``"True"`` v súbore ``ChatChainConfig.json``.
   <p align="center">
   <img src='./misc/github.png' width=600>
   </p>
