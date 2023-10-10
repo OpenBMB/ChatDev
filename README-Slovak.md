@@ -26,23 +26,23 @@
 
 ## 🎉 Novinky
 
-* 25. septembra 2023: Teraz je k dispozícii funkcia **Git**, ktorá umožňuje programátorovi <img src='online_log/static/figures/programmer.png' height=20> využívať GitHub na version control. Ak chcete túto funkciu povoliť, jednoducho nastavte ``"git_management"`` na ``"True"`` v súbore ``ChatChainConfig.json``.
+* september 25. 2023: Teraz je k dispozícii funkcia **Git**, ktorá umožňuje programátorovi <img src='online_log/static/figures/programmer.png' height=20> využívať GitHub na version control. Ak chcete túto funkciu povoliť, jednoducho nastavte ``"git_management"`` na ``"True"`` v súbore ``ChatChainConfig.json``.
   <p align="center">
   <img src='./misc/github.png' width=600>
   </p>
-* 20. septembra 2023: Režim **Human-Agent-Interaction** je teraz k dispozícii! Môžete sa zapojiť do tímu ChatDev tým, že budete hrať úlohu recenzenta <img src='online_log/static/figures/reviewer.png' height=20> a predkladať návrhy programátorovi <img src='online_log/static/figures/programmer.png' height=20>;
+* september 20. 2023: Režim **Human-Agent-Interaction** je teraz k dispozícii! Môžete sa zapojiť do tímu ChatDev tým, že budete hrať úlohu recenzenta <img src='online_log/static/figures/reviewer.png' height=20> a predkladať návrhy programátorovi <img src='online_log/static/figures/programmer.png' height=20>;
   skúste ``python3 run.py --task [description_of_your_idea] --config "Human"``. Pozri [návod](wiki.md#human-agent-interaction) a [príklad](WareHouse/Gomoku_HumanAgentInteraction_20230920135038).
   <p align="center">
   <img src='./misc/Human_intro.png' width=600>
   </p>
-* 1. septembra 2023: Režim **Art** je už k dispozícii! Môžete si aktivovať agenta dizajnéra <img src='online_log/static/figures/designer.png' height=20> na generovanie obrázkov používaných v programe;
+* september 1. 2023: Režim **Art** je už k dispozícii! Môžete si aktivovať agenta dizajnéra <img src='online_log/static/figures/designer.png' height=20> na generovanie obrázkov používaných v programe;
   skúste ``python3 run.py --task [description_of_your_idea] --config "Art"``. Pozri [návod](wiki.md#art) a [príklad](WareHouse/gomokugameArtExample_THUNLP_20230831122822).
-* 28. august 2023: Systém je verejne dostupný.
-* 17. augusta 2023: Verzia v1.0.0 bola pripravená na vydanie.
-* 30. júla 2023: Používatelia si môžu prispôsobiť nastavenia ChatChain, Phase a Role. Okrem toho je k dispozícii režim online záznamu aj replay
+* august 28. 2023: Systém je verejne dostupný.
+* august 17. 2023: Verzia v1.0.0 bola pripravená na vydanie.
+* júl 30. 2023: Používatelia si môžu prispôsobiť nastavenia ChatChain, Phase a Role. Okrem toho je k dispozícii režim online záznamu aj replay
   režim sú teraz podporované.
-* 16. júla 2023: Bol uverejnený článok [preprint paper](https://arxiv.org/abs/2307.07924) súvisiaci s týmto projektom.
-* 30. júna 2023: Bola vydaná počiatočná verzia repozitára ChatDev.
+* júl 16. 2023: Bol uverejnený článok [preprint paper](https://arxiv.org/abs/2307.07924) súvisiaci s týmto projektom.
+* jún 30. 2023: Bola vydaná počiatočná verzia repozitára ChatDev.
 
 ## ❓ Čo dokáže ChatDev?
 
