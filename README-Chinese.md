@@ -1,11 +1,15 @@
 # Communicative Agents for Software Development
 
-<p align="center">   <img src='./misc/logo1.png' width=600> </p>
-
 <p align="center">
-    【<a href="README.md">English</a> | Chinese | <a href="README-Japanese.md">Japanese</a> | <a href="README-Korean.md">Korean</a> | <a href="README-Filipino.md">Filipino</a> | <a href="README-French.md">French</a>】
+  <img src='./misc/logo1.png' width=600>
 </p>
 
+<p align="center">
+    【<a href="README.md">English</a> | Chinese | <a href="README-Japanese.md">Japanese</a> | <a href="README-Korean.md">Korean</a> | <a href="README-Filipino.md">Filipino</a> | <a href="README-French.md">French</a> | <a href="README-Slovak.md">Slovak</a> | <a href="README-Portuguese.md">Portuguese</a> | <a href="README-Spanish.md">Spanish</a>】
+</p>
+<p align="center">
+    【📚 <a href="wiki.md">Wiki</a> | 🚀 <a href="wiki.md#local-demo">Local Demo</a> | 👥 <a href="Contribution.md">Community Built Software</a> | 🔧 <a href="wiki.md#customization">Customization</a>】
+</p>
 ## 📖 概述
 
 - **ChatDev** 是一家**虚拟软件公司**，通过各种不同角色的**智能体**
