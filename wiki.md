@@ -38,23 +38,23 @@
   replacing `[description_of_your_idea]` with your idea's description and `[project_name]` with your desired project
   name:
    ```
-   python3 run.py --task "[description_of_your_idea]" --name "[project_name]"
+   inv start --task "[description_of_your_idea]" --name "[project_name]"
    ```
 
-- here is the full params of run.py
+- here is the full params of `inv start --help`
 
-    ```commandline
-    usage: run.py [-h] [--config CONFIG] [--org ORG] [--task TASK] [--name NAME] [--model MODEL]
-    
-    argparse
-    
-    optional arguments:
-      -h, --help       show this help message and exit
-      --config CONFIG  Name of config, which is used to load configuration under CompanyConfig/; Please see CompanyConfig Section below
-      --org ORG        Name of organization, your software will be generated in WareHouse/name_org_timestamp
-      --task TASK      Prompt of your idea
-      --name NAME      Name of software, your software will be generated in WareHouse/name_org_timestamp
-      --model MODEL    GPT Model, choose from {'GPT_3_5_TURBO','GPT_4','GPT_4_32K'}
+    ```
+    Usage: inv[oke] [--core-opts] start [--options] [other tasks here ...]
+
+  Docstring:
+    none
+
+  Options:
+    -c STRING, --config=STRING   Name of config, which is used to load configuration under CompanyConfig/
+    -m STRING, --model=STRING    GPT Model, choose from {'GPT_4', 'GPT_3_5_TURBO', 'GPT_4_32K'}
+    -n STRING, --name=STRING     Name of software, your software will be generated in WareHouse/name_org_timestamp
+    -o STRING, --org=STRING      Name of organization, your software will be generated in WareHouse/name_org_timestamp
+    -p STRING, --prompt=STRING   Prompt of software
     ```
 
 ### 3. Check your software
@@ -265,7 +265,7 @@ then go to [Local Demo Website](http://127.0.0.1:8000/) to see an online visuali
 ├── chatdev # ChatDev core code
 ├── misc # assets of example and demo
 ├── online_log # Demo Folder
-├── run.py # Entry of ChatDev
+├── tasks.py # Entry of ChatDev
 ├── requirements.txt
 ├── README.md
 └── wiki.md
@@ -284,19 +284,19 @@ then go to [Local Demo Website](http://127.0.0.1:8000/) to see an online visuali
   - Test: run the software and modify the code based on the test report
   - EnvironmentDoc: write the environment doc
   - Manual: write the manual
-- You can use default setting using ``python3 run.py --config "Default"``.
+- You can use default setting using ``inv start --config "Default"``.
 
 ### Art
 ![demo](misc/ChatChain_Visualization_Art.png)
 - Compared to Default, Art setting add a phase before CodeCompleteAll called Art
 - The Art phase will first discuss the name and description of the images assets, then use ``openai.Image.create`` to generate the images based on description.
-- You can use default setting using ``python3 run.py --config "Art"`` or just ignore the config parameter.
+- You can use default setting using ``inv start --config "Art"`` or just ignore the config parameter.
 
 ### Human-Agent Interaction
 ![demo](misc/ChatChain_Visualization_Human.png)
 - Compared to Default, in ***Human-Agent-Interaction*** mode you can play as reviewer and asks programmer agent to modify the code based on your comments.
 - It adds a Phase called HumanAgentInteraction after the CodeReview Phase.
-- You can use ***Human-Agent-Interaction*** setting using ``python3 run.py --config "Human"``.
+- You can use ***Human-Agent-Interaction*** setting using ``inv start --config "Human"``.
 - When chatdev executes to this Phase, on the command interface you will see a hint that ask for input.
 - You can run your software in the ``WareHouse/`` and see if it satisfies your need. Then you can type anything you want (bug fix or new feature) in the command interface, then press Enter:
 ![Human_command](misc/Human_command.png)
