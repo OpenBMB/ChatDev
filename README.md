@@ -86,11 +86,11 @@ To get started, follow these steps:
    name:
    On Unix/Linux:
    ```
-   python3 run.py --task "[description_of_your_idea]" --name "[project_name]"
+   inv start --task "[description_of_your_idea]" --name "[project_name]"
    ```
    On Windows:
    ```
-   python run.py --task "[description_of_your_idea]" --name "[project_name]"
+   inv start --task "[description_of_your_idea]" --name "[project_name]"
    ```
 6. **Run Your Software:** Once generated, you can find your software in the `WareHouse` directory under a specific
    project folder, such as `project_name_DefaultOrganization_timestamp`. Run your software using the following command
@@ -164,7 +164,7 @@ create a software package and generate a folder named ``/WareHouse/2048_THUNLP_t
 
 ```
 @misc{qian2023communicative,
-      title={Communicative Agents for Software Development}, 
+      title={Communicative Agents for Software Development},
       author={Chen Qian and Xin Cong and Wei Liu and Cheng Yang and Weize Chen and Yusheng Su and Yufan Dang and Jiahao Li and Juyuan Xu and Dahai Li and Zhiyuan Liu and Maosong Sun},
       year={2023},
       eprint={2307.07924},
