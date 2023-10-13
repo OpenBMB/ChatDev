@@ -106,6 +106,20 @@ To get started, follow these steps:
    python main.py
    ```
 
+## 🛠️ Development Setup
+**Code Quality**: We use [Pre-commit](https://pre-commit.com/) to ensure code quality:
+
+```bash
+# Install pre-commit hooks. They will trigger on every commit.
+pre-commit install
+
+# Run pre-commit hooks on all files.
+pre-commit run --all-files
+
+# Run pre-commit hooks on staged files.
+pre-commit
+```
+
 ## ✨️ Advanced Skills
 
 For more detailed information, please refer to our [Wiki](wiki.md), where you can find:
@@ -164,7 +178,7 @@ create a software package and generate a folder named ``/WareHouse/2048_THUNLP_t
 
 ```
 @misc{qian2023communicative,
-      title={Communicative Agents for Software Development}, 
+      title={Communicative Agents for Software Development},
       author={Chen Qian and Xin Cong and Wei Liu and Cheng Yang and Weize Chen and Yusheng Su and Yufan Dang and Jiahao Li and Juyuan Xu and Dahai Li and Zhiyuan Liu and Maosong Sun},
       year={2023},
       eprint={2307.07924},
