@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-    【<a href="README.md">English</a> | <a href="README-Chinese.md">Chinese</a> | <a href="README-Japanese.md">Japanese</a> | <a href="README-Korean.md">Korean</a> | <a href="README-Filipino.md">Filipino</a> | <a href="README-French.md">French</a> | <a href="README-Slovak.md">Slovak</a> | Portuguese | <a href="README-Spanish.md">Spanish</a>】
+    【<a href="README.md">English</a> | <a href="README-Chinese.md">Chinese</a> | <a href="README-Japanese.md">Japanese</a> | <a href="README-Korean.md">Korean</a> | <a href="README-Filipino.md">Filipino</a> | <a href="README-French.md">French</a> | <a href="README-Slovak.md">Slovak</a> | Portuguese | <a href="README-Spanish.md">Spanish</a> | <a href="README-Dutch.md">Dutch</a>】
 </p>
 <p align="center">
     【📚 <a href="wiki.md">Wiki</a> | 🚀 <a href="wiki.md#local-demo">Demo Local</a> | 👥 <a href="Contribution.md">Software Construído pela Comunidade</a> | 🔧 <a href="wiki.md#customization">Personalização</a>】
