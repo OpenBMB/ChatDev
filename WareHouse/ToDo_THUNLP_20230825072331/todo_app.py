@@ -2,7 +2,7 @@
 This file contains the TodoApp class which represents the todo list application.
 It handles the GUI and manages the tasks.
 '''
-from tkinter import Tk, Label, Entry, Button, Listbox, Scrollbar, StringVar, END, SINGLE
+from tkinter import Tk, Entry, Button, Listbox, Scrollbar, StringVar, END, SINGLE
 class TodoApp:
     def __init__(self):
         self.tasks = []
@@ -34,7 +34,7 @@ class TodoApp:
     def edit_task(self):
         selected_index = self.task_listbox.curselection()
         if selected_index:
-            selected_task = self.task_listbox.get(selected_index)
+            self.task_listbox.get(selected_index)
             edited_task = self.task_var.get()
             if edited_task:
                 self.tasks[selected_index[0]] = edited_task

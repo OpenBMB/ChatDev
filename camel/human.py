@@ -11,7 +11,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # =========== Copyright 2023 @ CAMEL-AI.org. All Rights Reserved. ===========
-from typing import Any, Dict, Sequence
+from collections.abc import Sequence
+from typing import Any
 
 from colorama import Fore
 
@@ -38,13 +39,14 @@ class Human:
             displayed to the user.
     """
 
-    def __init__(self, name: str = "Kill Switch Engineer",
-                 logger_color: Any = Fore.MAGENTA) -> None:
+    def __init__(
+        self, name: str = "Kill Switch Engineer", logger_color: Any = Fore.MAGENTA
+    ) -> None:
         self.name = name
         self.logger_color = logger_color
         self.input_button = f"Input by {self.name}."
         self.kill_button = "Stop!!!"
-        self.options_dict: Dict[str, str] = dict()
+        self.options_dict: dict[str, str] = dict()
 
     def display_options(self, messages: Sequence[ChatMessage]) -> None:
         r"""Displays the options to the user.
@@ -61,11 +63,12 @@ class Human:
         print_text_animated(
             self.logger_color + "\n> Proposals from "
             f"{messages[0].role_name} ({messages[0].role_type}). "
-            "Please choose an option:\n")
+            "Please choose an option:\n"
+        )
         for index, option in enumerate(options):
             print_text_animated(
-                self.logger_color +
-                f"\x1b[3mOption {index + 1}:\n{option}\x1b[0m\n")
+                self.logger_color + f"\x1b[3mOption {index + 1}:\n{option}\x1b[0m\n"
+            )
             self.options_dict[str(index + 1)] = option
 
     def get_input(self) -> str:
@@ -76,18 +79,21 @@ class Human:
         """
         while True:
             human_input = input(
-                self.logger_color +
-                f"Please enter your choice ([1-{len(self.options_dict)}]): ")
+                self.logger_color
+                + f"Please enter your choice ([1-{len(self.options_dict)}]): "
+            )
             print("\n")
             if human_input in self.options_dict:
                 break
-            print_text_animated(self.logger_color +
-                                "\n> Invalid choice. Please try again.\n")
+            print_text_animated(
+                self.logger_color + "\n> Invalid choice. Please try again.\n"
+            )
 
         return human_input
 
-    def parse_input(self, human_input: str,
-                    meta_chat_message: ChatMessage) -> ChatMessage:
+    def parse_input(
+        self, human_input: str, meta_chat_message: ChatMessage
+    ) -> ChatMessage:
         r"""Parses the user's input and returns a `ChatMessage` object.
 
         Args:
@@ -98,8 +104,9 @@ class Human:
             ChatMessage: A `ChatMessage` object.
         """
         if self.options_dict[human_input] == self.input_button:
-            meta_chat_message.content = input(self.logger_color +
-                                              "Please enter your message: ")
+            meta_chat_message.content = input(
+                self.logger_color + "Please enter your message: "
+            )
             return meta_chat_message
         elif self.options_dict[human_input] == self.kill_button:
             exit(self.logger_color + f"Killed by {self.name}.")

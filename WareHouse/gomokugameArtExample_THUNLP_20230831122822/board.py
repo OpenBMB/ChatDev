@@ -1,7 +1,6 @@
 '''
 This file handles the game logic for the Gomoku game.
 '''
-import pygame
 class Board:
     def __init__(self, rows, cols, player_1_icon, player_2_icon, width, height):
         self.rows = rows

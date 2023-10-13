@@ -3,10 +3,10 @@ This is the main file for the Music Player application. It uses the tkinter libr
 '''
 import os
 import pygame
-from tkinter import *
+from tkinter import ACTIVE, BOTH, Button, DoubleVar, END, GROOVE, HORIZONTAL, Label, LabelFrame, Listbox, RIGHT, SINGLE, Scale, Scrollbar, StringVar, Tk, VERTICAL, Y
 from tkinter import filedialog
 from mutagen.mp3 import MP3
-from mutagen.id3 import ID3, TIT2
+from mutagen.id3 import ID3
 class MusicPlayer:
     def __init__(self, root):
         self.root = root

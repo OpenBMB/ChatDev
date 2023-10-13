@@ -11,8 +11,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # =========== Copyright 2023 @ CAMEL-AI.org. All Rights Reserved. ===========
+from collections.abc import Sequence
 from dataclasses import dataclass, field
-from typing import Dict, Optional, Sequence, Union
+from typing import Optional, Union
 
 
 @dataclass(frozen=True)
@@ -72,5 +73,5 @@ class ChatGPTConfig:
     max_tokens: Optional[int] = None
     presence_penalty: float = 0.0
     frequency_penalty: float = 0.0
-    logit_bias: Dict = field(default_factory=dict)
+    logit_bias: dict = field(default_factory=dict)
     user: str = ""

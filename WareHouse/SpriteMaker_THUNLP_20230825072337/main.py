@@ -6,7 +6,7 @@ import tkinter as tk
 from editor import Editor
 def main():
     root = tk.Tk()
-    editor = Editor(root)
+    Editor(root)
     root.mainloop()
 if __name__ == "__main__":
     main()

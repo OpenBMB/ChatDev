@@ -13,41 +13,50 @@
 # =========== Copyright 2023 @ CAMEL-AI.org. All Rights Reserved. ===========
 from typing import Dict, Union
 
-OpenAISystemMessage = Dict[str, str]
-OpenAIAssistantMessage = Dict[str, str]
-OpenAIUserMessage = Dict[str, str]
+OpenAISystemMessage = dict[str, str]
+OpenAIAssistantMessage = dict[str, str]
+OpenAIUserMessage = dict[str, str]
 OpenAIChatMessage = Union[OpenAIUserMessage, OpenAIAssistantMessage]
 OpenAIMessage = Union[OpenAISystemMessage, OpenAIChatMessage]
 
-from .base import BaseMessage  # noqa: E402
-from .system_messages import (  # noqa: E402
-    SystemMessage, AssistantSystemMessage, UserSystemMessage,
+from camel.messages.base import BaseMessage  # noqa: E402
+from camel.messages.chat_messages import (  # noqa: E402
+    AssistantChatMessage,
+    ChatMessage,
+    UserChatMessage,
 )
-from .chat_messages import (  # noqa: E402
-    ChatMessage, AssistantChatMessage, UserChatMessage,
+from camel.messages.system_messages import (  # noqa: E402
+    AssistantSystemMessage,
+    SystemMessage,
+    UserSystemMessage,
 )
 
-MessageType = Union[BaseMessage, SystemMessage, AssistantSystemMessage,
-                    UserSystemMessage, ChatMessage, AssistantChatMessage,
-                    UserChatMessage]
-SystemMessageType = Union[SystemMessage, AssistantSystemMessage,
-                          UserSystemMessage]
+MessageType = Union[
+    BaseMessage,
+    SystemMessage,
+    AssistantSystemMessage,
+    UserSystemMessage,
+    ChatMessage,
+    AssistantChatMessage,
+    UserChatMessage,
+]
+SystemMessageType = Union[SystemMessage, AssistantSystemMessage, UserSystemMessage]
 ChatMessageType = Union[ChatMessage, AssistantChatMessage, UserChatMessage]
 
 __all__ = [
-    'OpenAISystemMessage',
-    'OpenAIAssistantMessage',
-    'OpenAIUserMessage',
-    'OpenAIChatMessage',
-    'OpenAIMessage',
-    'BaseMessage',
-    'SystemMessage',
-    'AssistantSystemMessage',
-    'UserSystemMessage',
-    'ChatMessage',
-    'AssistantChatMessage',
-    'UserChatMessage',
-    'MessageType',
-    'SystemMessageType',
-    'ChatMessageType',
+    "OpenAISystemMessage",
+    "OpenAIAssistantMessage",
+    "OpenAIUserMessage",
+    "OpenAIChatMessage",
+    "OpenAIMessage",
+    "BaseMessage",
+    "SystemMessage",
+    "AssistantSystemMessage",
+    "UserSystemMessage",
+    "ChatMessage",
+    "AssistantChatMessage",
+    "UserChatMessage",
+    "MessageType",
+    "SystemMessageType",
+    "ChatMessageType",
 ]

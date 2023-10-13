@@ -1,15 +1,16 @@
-import logging
-import requests
-import os
-from flask import Flask, send_from_directory, request, jsonify
 import argparse
+import logging
 
-app = Flask(__name__, static_folder='static')
+import requests
+from flask import Flask, jsonify, request, send_from_directory
+
+app = Flask(__name__, static_folder="static")
 app.logger.setLevel(logging.ERROR)
-log = logging.getLogger('werkzeug')
+log = logging.getLogger("werkzeug")
 log.setLevel(logging.ERROR)
 messages = []
 port = [8000]
+
 
 def send_msg(role, text):
     try:
@@ -60,9 +61,11 @@ def find_avatar_url(role):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description='argparse')
-    parser.add_argument('--port', type=int, default=8000, help="port")
+    parser = argparse.ArgumentParser(description="argparse")
+    parser.add_argument("--port", type=int, default=8000, help="port")
     args = parser.parse_args()
     port.append(args.port)
-    print(f"Please visit http://127.0.0.1:{port[-1]}/ for the front-end display page. \nIn the event of a port conflict, please modify the port argument (e.g., python3 app.py --port 8012).")
+    print(
+        f"Please visit http://127.0.0.1:{port[-1]}/ for the front-end display page. \nIn the event of a port conflict, please modify the port argument (e.g., python3 app.py --port 8012)."
+    )
     app.run(debug=False, port=port[-1])

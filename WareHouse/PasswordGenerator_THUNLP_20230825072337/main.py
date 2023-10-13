@@ -3,8 +3,6 @@ This is the main file for the random password generator app.
 '''
 import tkinter as tk
 from tkinter import messagebox
-import string
-import random
 from password_generator import PasswordGenerator
 from password_strength_checker import PasswordStrengthChecker
 class RandomPasswordGeneratorApp:

@@ -2,7 +2,6 @@
 This file contains the Maze class that represents the maze.
 '''
 import random
-import tkinter as tk
 class Cell:
     def __init__(self, row, col):
         self.row = row

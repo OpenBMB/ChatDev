@@ -14,7 +14,8 @@
 import copy
 import random
 import warnings
-from typing import Any, Dict, Optional, Sequence
+from collections.abc import Sequence
+from typing import Any, Optional
 
 from colorama import Fore
 
@@ -54,9 +55,8 @@ class CriticAgent(ChatAgent):
         verbose: bool = False,
         logger_color: Any = Fore.MAGENTA,
     ) -> None:
-        super().__init__(system_message, model, model_config,
-                         message_window_size)
-        self.options_dict: Dict[str, str] = dict()
+        super().__init__(system_message, model, model_config, message_window_size)
+        self.options_dict: dict[str, str] = dict()
         self.retry_attempts = retry_attempts
         self.verbose = verbose
         self.logger_color = logger_color
@@ -74,13 +74,15 @@ class CriticAgent(ChatAgent):
         flatten_options = (
             f"> Proposals from "
             f"{messages[0].role_name} ({messages[0].role_type}). "
-            "Please choose an option:\n")
+            "Please choose an option:\n"
+        )
         for index, option in enumerate(options):
             flatten_options += f"Option {index + 1}:\n{option}\n\n"
             self.options_dict[str(index + 1)] = option
         format = (
             f"Please first enter your choice ([1-{len(self.options_dict)}]) "
-            "and then your explanation and comparison: ")
+            "and then your explanation and comparison: "
+        )
         return flatten_options + format
 
     def get_option(self, input_message: ChatMessage) -> str:
@@ -107,8 +109,10 @@ class CriticAgent(ChatAgent):
             critic_msg = critic_response.msgs[0]
             self.update_messages(critic_msg)
             if self.verbose:
-                print_text_animated(self.logger_color + "\n> Critic response: "
-                                    f"\x1b[3m{critic_msg.content}\x1b[0m\n")
+                print_text_animated(
+                    self.logger_color + "\n> Critic response: "
+                    f"\x1b[3m{critic_msg.content}\x1b[0m\n"
+                )
             choice = self.parse_critic(critic_msg)
 
             if choice in self.options_dict:
@@ -119,13 +123,14 @@ class CriticAgent(ChatAgent):
                     role_type=input_message.role_type,
                     meta_dict=input_message.meta_dict,
                     role=input_message.role,
-                    content="> Invalid choice. Please choose again.\n" +
-                    msg_content,
+                    content="> Invalid choice. Please choose again.\n" + msg_content,
                 )
                 i += 1
-        warnings.warn("Critic failed to get a valid option. "
-                      f"After {self.retry_attempts} attempts. "
-                      "Returning a random option.")
+        warnings.warn(
+            "Critic failed to get a valid option. "
+            f"After {self.retry_attempts} attempts. "
+            "Returning a random option."
+        )
         return random.choice(list(self.options_dict.values()))
 
     def parse_critic(self, critic_msg: ChatMessage) -> Optional[str]:
@@ -163,8 +168,9 @@ class CriticAgent(ChatAgent):
 
         flatten_options = self.flatten_options(messages)
         if self.verbose:
-            print_text_animated(self.logger_color +
-                                f"\x1b[3m{flatten_options}\x1b[0m\n")
+            print_text_animated(
+                self.logger_color + f"\x1b[3m{flatten_options}\x1b[0m\n"
+            )
         input_msg = copy.deepcopy(meta_chat_message)
         input_msg.content = flatten_options
 

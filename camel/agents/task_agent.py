@@ -11,7 +11,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # =========== Copyright 2023 @ CAMEL-AI.org. All Rights Reserved. ===========
-from typing import Any, Dict, Optional, Union
+from typing import Any, Optional, Union
 
 from camel.agents import ChatAgent
 from camel.configs import ChatGPTConfig
@@ -50,13 +50,14 @@ class TaskSpecifyAgent(ChatAgent):
         task_specify_prompt: Optional[Union[str, TextPrompt]] = None,
         word_limit: int = DEFAULT_WORD_LIMIT,
     ) -> None:
-
         if task_specify_prompt is None:
-            task_specify_prompt_template = PromptTemplateGenerator(
-            ).get_task_specify_prompt(task_type)
+            task_specify_prompt_template = (
+                PromptTemplateGenerator().get_task_specify_prompt(task_type)
+            )
 
             self.task_specify_prompt = task_specify_prompt_template.format(
-                word_limit=word_limit)
+                word_limit=word_limit
+            )
         else:
             self.task_specify_prompt = task_specify_prompt
 
@@ -72,7 +73,7 @@ class TaskSpecifyAgent(ChatAgent):
     def step(
         self,
         original_task_prompt: Union[str, TextPrompt],
-        meta_dict: Optional[Dict[str, Any]] = None,
+        meta_dict: Optional[dict[str, Any]] = None,
     ) -> TextPrompt:
         r"""Specify the given task prompt by providing more details.
 
@@ -88,17 +89,17 @@ class TaskSpecifyAgent(ChatAgent):
         """
         self.reset()
         self.task_specify_prompt = self.task_specify_prompt.format(
-            task=original_task_prompt)
+            task=original_task_prompt
+        )
 
         if meta_dict is not None:
-            self.task_specify_prompt = (self.task_specify_prompt.format(
-                **meta_dict))
+            self.task_specify_prompt = self.task_specify_prompt.format(**meta_dict)
 
-        task_msg = UserChatMessage(role_name="Task Specifier",
-                                   content=self.task_specify_prompt)
+        task_msg = UserChatMessage(
+            role_name="Task Specifier", content=self.task_specify_prompt
+        )
         specifier_response = super().step(task_msg)
-        if (specifier_response.msgs is None
-                or len(specifier_response.msgs) == 0):
+        if specifier_response.msgs is None or len(specifier_response.msgs) == 0:
             raise RuntimeError("Task specification failed.")
         specified_task_msg = specifier_response.msgs[0]
 
@@ -128,9 +129,9 @@ class TaskPlannerAgent(ChatAgent):
         model: Optional[ModelType] = None,
         model_config: Any = None,
     ) -> None:
-
         self.task_planner_prompt = TextPrompt(
-            "Divide this task into subtasks: {task}. Be concise.")
+            "Divide this task into subtasks: {task}. Be concise."
+        )
 
         system_message = SystemMessage(
             role_name="Task Planner",
@@ -154,11 +155,11 @@ class TaskPlannerAgent(ChatAgent):
         """
         # TODO: Maybe include roles information.
         self.reset()
-        self.task_planner_prompt = self.task_planner_prompt.format(
-            task=task_prompt)
+        self.task_planner_prompt = self.task_planner_prompt.format(task=task_prompt)
 
-        task_msg = UserChatMessage(role_name="Task Planner",
-                                   content=self.task_planner_prompt)
+        task_msg = UserChatMessage(
+            role_name="Task Planner", content=self.task_planner_prompt
+        )
         # sub_tasks_msgs, terminated, _
         task_tesponse = super().step(task_msg)
 

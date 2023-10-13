@@ -1,4 +1,4 @@
-class Roster():
+class Roster:
     def __init__(self) -> None:
         self.agents = list()
 
@@ -17,4 +17,4 @@ class Roster():
     def _print_employees(self):
         names = self.agents
         names = [name.lower().strip() for name in names]
-        print("Employees: {}".format(names))
+        print(f"Employees: {names}")

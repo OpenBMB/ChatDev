@@ -3,7 +3,6 @@ This is the main file for the Gomoku game. It handles the game loop and user int
 '''
 import pygame
 import board
-import os
 from pygame import image, font
 # Initialize Pygame
 pygame.init()
