@@ -58,19 +58,15 @@ To get started, follow these steps:
    ```
    git clone https://github.com/OpenBMB/ChatDev.git
    ```
-2. **Set Up Python Environment:** Ensure you have a version 3.9 or higher Python environment. You can create and
-   activate this environment using the following commands, replacing `ChatDev_conda_env` with your preferred environment
-   name:
+**0**. **Set Up Python Environment:** Ensure you have a version 3.9 or higher Python environment. Once you have [Poetry](https://python-poetry.org/docs/) installed, simply run:
+    ```bash
+    poetry install
+    ```
+0. **Activate Python Environment:** Spawn a shell within the Poetry environment by running:
    ```
-   conda create -n ChatDev_conda_env python=3.9 -y
-   conda activate ChatDev_conda_env
+   poetry shell
    ```
-3. **Install Dependencies:** Move into the `ChatDev` directory and install the necessary dependencies by running:
-   ```
-   cd ChatDev
-   pip3 install -r requirements.txt
-   ```
-4. **Set OpenAI API Key:** Export your OpenAI API key as an environment variable. Replace `"your_OpenAI_API_key"` with
+0. **Set OpenAI API Key:** Export your OpenAI API key as an environment variable. Replace `"your_OpenAI_API_key"` with
    your actual API key. Remember that this environment variable is session-specific, so you need to set it again if you
    open a new terminal session.
    On Unix/Linux:
@@ -81,7 +77,7 @@ To get started, follow these steps:
    ```
    $env:OPENAI_API_KEY="your_OpenAI_API_key"
    ```
-5. **Build Your Software:** Use the following command to initiate the building of your software,
+0. **Build Your Software:** Use the following command to initiate the building of your software,
    replacing `[description_of_your_idea]` with your idea's description and `[project_name]` with your desired project
    name:
    On Unix/Linux:
@@ -92,7 +88,7 @@ To get started, follow these steps:
    ```
    python run.py --task "[description_of_your_idea]" --name "[project_name]"
    ```
-6. **Run Your Software:** Once generated, you can find your software in the `WareHouse` directory under a specific
+0. **Run Your Software:** Once generated, you can find your software in the `WareHouse` directory under a specific
    project folder, such as `project_name_DefaultOrganization_timestamp`. Run your software using the following command
    within that directory:
    On Unix/Linux:
@@ -164,7 +160,7 @@ create a software package and generate a folder named ``/WareHouse/2048_THUNLP_t
 
 ```
 @misc{qian2023communicative,
-      title={Communicative Agents for Software Development}, 
+      title={Communicative Agents for Software Development},
       author={Chen Qian and Xin Cong and Wei Liu and Cheng Yang and Weize Chen and Yusheng Su and Yufan Dang and Jiahao Li and Juyuan Xu and Dahai Li and Zhiyuan Liu and Maosong Sun},
       year={2023},
       eprint={2307.07924},
