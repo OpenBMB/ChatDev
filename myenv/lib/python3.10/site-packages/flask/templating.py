@@ -17,8 +17,7 @@ from .signals import template_rendered
 
 if t.TYPE_CHECKING:  # pragma: no cover
     from .app import Flask
-    from .sansio.app import App
-    from .sansio.scaffold import Scaffold
+    from .scaffold import Scaffold
 
 
 def _default_template_ctx_processor() -> dict[str, t.Any]:
@@ -42,7 +41,7 @@ class Environment(BaseEnvironment):
     name of the blueprint to referenced templates if necessary.
     """
 
-    def __init__(self, app: App, **options: t.Any) -> None:
+    def __init__(self, app: Flask, **options: t.Any) -> None:
         if "loader" not in options:
             options["loader"] = app.create_global_jinja_loader()
         BaseEnvironment.__init__(self, **options)
@@ -54,7 +53,7 @@ class DispatchingJinjaLoader(BaseLoader):
     the blueprint folders.
     """
 
-    def __init__(self, app: App) -> None:
+    def __init__(self, app: Flask) -> None:
         self.app = app
 
     def get_source(  # type: ignore
