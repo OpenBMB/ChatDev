@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Making Games With Pygame &#8212; pygame v2.5.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygame.css?v=71ee6cc2" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=ba44479e"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <link rel="icon" href="../_static/pygame.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Revision: Pygame fundamentals" href="tom_games2.html" />
+    <link rel="prev" title="Pygame Tutorials - Import and Initialize" href="ImportInit.html" /> 
+  </head><body>  
+
+    <div class="document">
+
+  <div class="header">
+	<div class="flex-container">
+	<div class="logo">
+	  <a href="https://www.pygame.org/">
+	    <img src="../_static/pygame_tiny.png"/>
+	  </a>
+	  <h5>pygame documentation</h5>
+	</div>
+	<div class="pagelinks">
+	  <div class="top">
+	    <a href="https://www.pygame.org/">Pygame Home</a> ||
+	    <a href="../index.html">Help Contents</a> ||
+	    <a href="../genindex.html">Reference Index</a>
+
+        <form action="../search.html" method="get" style="display:inline;float:right;">
+          <input name="q" value="" type="text">
+          <input value="search" type="submit">
+        </form>
+	  </div>
+	  <hr style="color:black;border-bottom:none;border-style: dotted;border-bottom-style:none;">
+	  <p class="bottom"><b>Most useful stuff</b>:
+	    <a href="../ref/color.html">Color</a> | 
+	    <a href="../ref/display.html">display</a> | 
+	    <a href="../ref/draw.html">draw</a> | 
+	    <a href="../ref/event.html">event</a> | 
+	    <a href="../ref/font.html">font</a> | 
+	    <a href="../ref/image.html">image</a> | 
+	    <a href="../ref/key.html">key</a> | 
+	    <a href="../ref/locals.html">locals</a> | 
+	    <a href="../ref/mixer.html">mixer</a> | 
+	    <a href="../ref/mouse.html">mouse</a> | 
+	    <a href="../ref/rect.html">Rect</a> | 
+	    <a href="../ref/surface.html">Surface</a> | 
+	    <a href="../ref/time.html">time</a> | 
+	    <a href="../ref/music.html">music</a> | 
+	    <a href="../ref/pygame.html">pygame</a>
+	  </p>
+
+	  <p class="bottom"><b>Advanced stuff</b>:
+	    <a href="../ref/cursors.html">cursors</a> | 
+	    <a href="../ref/joystick.html">joystick</a> | 
+	    <a href="../ref/mask.html">mask</a> | 
+	    <a href="../ref/sprite.html">sprite</a> | 
+	    <a href="../ref/transform.html">transform</a> | 
+	    <a href="../ref/bufferproxy.html">BufferProxy</a> | 
+	    <a href="../ref/freetype.html">freetype</a> | 
+	    <a href="../ref/gfxdraw.html">gfxdraw</a> | 
+	    <a href="../ref/midi.html">midi</a> | 
+	    <a href="../ref/pixelarray.html">PixelArray</a> | 
+	    <a href="../ref/pixelcopy.html">pixelcopy</a> | 
+	    <a href="../ref/sndarray.html">sndarray</a> | 
+	    <a href="../ref/surfarray.html">surfarray</a> | 
+	    <a href="../ref/math.html">math</a>
+	  </p>
+
+	  <p class="bottom"><b>Other</b>:
+	    <a href="../ref/camera.html">camera</a> | 
+	    <a href="../ref/sdl2_controller.html#module-pygame._sdl2.controller">controller</a> | 
+	    <a href="../ref/examples.html">examples</a> | 
+	    <a href="../ref/fastevent.html">fastevent</a> | 
+	    <a href="../ref/scrap.html">scrap</a> | 
+	    <a href="../ref/tests.html">tests</a> | 
+	    <a href="../ref/touch.html">touch</a> | 
+	    <a href="../ref/pygame.html#module-pygame.version">version</a>
+	  </p>
+</div>
+</div>
+  </div>
+
+      <div class="documentwrapper">
+          <div class="body" role="main">
+            
+<section id="making-games-with-pygame">
+<section id="id1">
+<h2>Making Games With Pygame<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h2>
+<div class="toctree-wrapper compound">
+</div>
+<section id="table-of-contents">
+<h3>Table of Contents<a class="headerlink" href="#table-of-contents" title="Permalink to this heading">¶</a></h3>
+<p>1. <a class="reference internal" href="#makegames-1"><span class="std std-ref">Introduction</span></a></p>
+<blockquote>
+<div><p>1.1. <a class="reference internal" href="#makegames-1-1"><span class="std std-ref">A note on coding styles</span></a></p>
+</div></blockquote>
+<p>2. <a class="reference internal" href="tom_games2.html#makegames-2"><span class="std std-ref">Revision: Pygame fundamentals</span></a></p>
+<blockquote>
+<div><p>2.1. <a class="reference internal" href="tom_games2.html#makegames-2-1"><span class="std std-ref">The basic pygame game</span></a></p>
+<p>2.2. <a class="reference internal" href="tom_games2.html#makegames-2-2"><span class="std std-ref">Basic pygame objects</span></a></p>
+<p>2.3. <a class="reference internal" href="tom_games2.html#makegames-2-3"><span class="std std-ref">Blitting</span></a></p>
+<p>2.4. <a class="reference internal" href="tom_games2.html#makegames-2-4"><span class="std std-ref">The event loop</span></a></p>
+<p>2.5. <a class="reference internal" href="tom_games2.html#makegames-2-5"><span class="std std-ref">Ta-da!</span></a></p>
+</div></blockquote>
+<p>3. <a class="reference internal" href="tom_games3.html#makegames-3"><span class="std std-ref">Kicking things off</span></a></p>
+<blockquote>
+<div><p>3.1. <a class="reference internal" href="tom_games3.html#makegames-3-1"><span class="std std-ref">The first lines, and loading modules</span></a></p>
+<p>3.2. <a class="reference internal" href="tom_games3.html#makegames-3-2"><span class="std std-ref">Resource handling functions</span></a></p>
+</div></blockquote>
+<p>4. <a class="reference internal" href="tom_games4.html#makegames-4"><span class="std std-ref">Game object classes</span></a></p>
+<blockquote>
+<div><p>4.1. <a class="reference internal" href="tom_games4.html#makegames-4-1"><span class="std std-ref">A simple ball class</span></a></p>
+<blockquote>
+<div><p>4.1.1. <a class="reference internal" href="tom_games4.html#makegames-4-1-1"><span class="std std-ref">Diversion 1: Sprites</span></a></p>
+<p>4.1.2. <a class="reference internal" href="tom_games4.html#makegames-4-1-2"><span class="std std-ref">Diversion 2: Vector physics</span></a></p>
+</div></blockquote>
+</div></blockquote>
+<p>5. <a class="reference internal" href="tom_games5.html#makegames-5"><span class="std std-ref">User-controllable objects</span></a></p>
+<blockquote>
+<div><p>5.1. <a class="reference internal" href="tom_games5.html#makegames-5-1"><span class="std std-ref">A simple bat class</span></a></p>
+<blockquote>
+<div><p>5.1.1. <a class="reference internal" href="tom_games5.html#makegames-5-1-1"><span class="std std-ref">Diversion 3: Pygame events</span></a></p>
+</div></blockquote>
+</div></blockquote>
+<p>6. <a class="reference internal" href="tom_games6.html#makegames-6"><span class="std std-ref">Putting it all together</span></a></p>
+<blockquote>
+<div><p>6.1. <a class="reference internal" href="tom_games6.html#makegames-6-1"><span class="std std-ref">Let the ball hit sides</span></a></p>
+<p>6.2. <a class="reference internal" href="tom_games6.html#makegames-6-2"><span class="std std-ref">Let the ball hit bats</span></a></p>
+<p>6.3. <a class="reference internal" href="tom_games6.html#makegames-6-3"><span class="std std-ref">The Finished product</span></a></p>
+</div></blockquote>
+</section>
+<section id="introduction">
+<span id="makegames-1"></span><h3>1. Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading">¶</a></h3>
+<p>First of all, I will assume you have read the <a class="reference internal" href="ChimpLineByLine.html"><span class="doc">Line By Line Chimp</span></a>
+tutorial, which introduces the basics of Python and pygame. Give it a read before reading this
+tutorial, as I won't bother repeating what that tutorial says (or at least not in as much detail). This tutorial is aimed at those
+who understand how to make a ridiculously simple little &quot;game&quot;, and who would like to make a relatively simple game like Pong.
+It introduces you to some concepts of game design, some simple mathematics to work out ball physics, and some ways to keep your
+game easy to maintain and expand.</p>
+<p>All the code in this tutorial works toward implementing <a class="reference external" href="http://tomchance.org.uk/projects/pong">TomPong</a>,
+a game I've written. By the end of the tutorial, you should not only have a firmer grasp of pygame, but
+you should also understand how TomPong works, and how to make your own version.</p>
+<p>Now, for a brief recap of the basics of pygame. A common method of organising the code for a game is to divide it into the following
+six sections:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><strong>Load modules</strong> which are required in the game. Standard stuff, except that you should
+remember to import the pygame local names as well as the pygame module itself</p></li>
+<li><p><strong>Resource handling classes</strong>; define some classes to handle your most basic resources,
+which will be loading images and sounds, as well as connecting and disconnecting to and from networks, loading save game
+files, and any other resources you might have.</p></li>
+<li><p><strong>Game object classes</strong>; define the classes for your game object. In the pong example,
+these will be one for the player's bat (which you can initialise multiple times, one for each player in the game), and one
+for the ball (which can again have multiple instances). If you're going to have a nice in-game menu, it's also a good idea to make a
+menu class.</p></li>
+<li><p><strong>Any other game functions</strong>; define other necessary functions, such as scoreboards, menu
+handling, etc. Any code that you could put into the main game logic, but that would make understanding said logic harder, should
+be put into its own function. So as plotting a scoreboard isn't game logic, it should be moved into a function.</p></li>
+<li><p><strong>Initialise the game</strong>, including the pygame objects themselves, the background, the game
+objects (initialising instances of the classes) and any other little bits of code you might want to add in.</p></li>
+<li><p><strong>The main loop</strong>, into which you put any input handling (i.e. watching for users hitting
+keys/mouse buttons), the code for updating the game objects, and finally for updating the screen.</p></li>
+</ul>
+</div></blockquote>
+<p>Every game you make will have some or all of those sections, possibly with more of your own. For the purposes of this tutorial, I will
+write about how TomPong is laid out, and the ideas I write about can be transferred to almost any kind of game you might make. I will
+also assume that you want to keep all of the code in a single file, but if you're making a reasonably large game, it's often a good
+idea to source certain sections into module files. Putting the game object classes into a file called <code class="docutils literal notranslate"><span class="pre">objects.py</span></code>, for
+example, can help you keep game logic separate from game objects. If you have a lot of resource handling code, it can also be handy
+to put that into <code class="docutils literal notranslate"><span class="pre">resources.py</span></code>. You can then <code class="code docutils literal notranslate"><span class="pre">from</span> <span class="pre">objects,resources</span> <span class="pre">import</span> <span class="pre">*</span></code> to import all of the
+classes and functions.</p>
+</section>
+<section id="a-note-on-coding-styles">
+<span id="makegames-1-1"></span><h3>1.1. A note on coding styles<a class="headerlink" href="#a-note-on-coding-styles" title="Permalink to this heading">¶</a></h3>
+<p>The first thing to remember when approaching any programming project is to decide on a coding style, and stay consistent. Python
+solves a lot of the problems because of its strict interpretation of whitespace and indentation, but you can still choose the size
+of your indentations, whether you put each module import on a new line, how you comment code, etc. You'll see how I do all of this
+in the code examples; you needn't use my style, but whatever style you adopt, use it all the way through the program code. Also try
+to document all of your classes, and comment on any bits of code that seem obscure, though don't start commenting the obvious. I've
+seen plenty of people do the following:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">player1</span><span class="o">.</span><span class="n">score</span> <span class="o">+=</span> <span class="n">scoreup</span>        <span class="c1"># Add scoreup to player1 score</span>
+</pre></div>
+</div>
+<p>The worst code is poorly laid out, with seemingly random changes in style, and poor documentation. Poor code is not only annoying
+for other people, but it also makes it difficult for you to maintain.</p>
+</section>
+</section>
+</section>
+
+
+<br /><br />
+<hr />
+<a href="https://github.com/pygame/pygame/edit/main/docs/reST/tut/MakeGames.rst" rel="nofollow">Edit on GitHub</a>
+            <div class="clearer"></div>
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="tom_games2.html" title="Revision: Pygame fundamentals"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="ImportInit.html" title="Pygame Tutorials - Import and Initialize"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">pygame v2.5.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Making Games With Pygame</a></li>
+    <script type="text/javascript" src="https://www.pygame.org/comment/jquery.plugin.docscomments.js"></script>
+
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2000-2023, pygame developers.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>pygame.mouse &#8212; pygame v2.5.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygame.css?v=71ee6cc2" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=ba44479e"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <link rel="icon" href="../_static/pygame.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="pygame.mixer.music" href="music.html" />
+    <link rel="prev" title="pygame.mixer" href="mixer.html" /> 
+  </head><body>  
+
+    <div class="document">
+
+  <div class="header">
+	<div class="flex-container">
+	<div class="logo">
+	  <a href="https://www.pygame.org/">
+	    <img src="../_static/pygame_tiny.png"/>
+	  </a>
+	  <h5>pygame documentation</h5>
+	</div>
+	<div class="pagelinks">
+	  <div class="top">
+	    <a href="https://www.pygame.org/">Pygame Home</a> ||
+	    <a href="../index.html">Help Contents</a> ||
+	    <a href="../genindex.html">Reference Index</a>
+
+        <form action="../search.html" method="get" style="display:inline;float:right;">
+          <input name="q" value="" type="text">
+          <input value="search" type="submit">
+        </form>
+	  </div>
+	  <hr style="color:black;border-bottom:none;border-style: dotted;border-bottom-style:none;">
+	  <p class="bottom"><b>Most useful stuff</b>:
+	    <a href="color.html">Color</a> | 
+	    <a href="display.html">display</a> | 
+	    <a href="draw.html">draw</a> | 
+	    <a href="event.html">event</a> | 
+	    <a href="font.html">font</a> | 
+	    <a href="image.html">image</a> | 
+	    <a href="key.html">key</a> | 
+	    <a href="locals.html">locals</a> | 
+	    <a href="mixer.html">mixer</a> | 
+	    <a href="mouse.html">mouse</a> | 
+	    <a href="rect.html">Rect</a> | 
+	    <a href="surface.html">Surface</a> | 
+	    <a href="time.html">time</a> | 
+	    <a href="music.html">music</a> | 
+	    <a href="pygame.html">pygame</a>
+	  </p>
+
+	  <p class="bottom"><b>Advanced stuff</b>:
+	    <a href="cursors.html">cursors</a> | 
+	    <a href="joystick.html">joystick</a> | 
+	    <a href="mask.html">mask</a> | 
+	    <a href="sprite.html">sprite</a> | 
+	    <a href="transform.html">transform</a> | 
+	    <a href="bufferproxy.html">BufferProxy</a> | 
+	    <a href="freetype.html">freetype</a> | 
+	    <a href="gfxdraw.html">gfxdraw</a> | 
+	    <a href="midi.html">midi</a> | 
+	    <a href="pixelarray.html">PixelArray</a> | 
+	    <a href="pixelcopy.html">pixelcopy</a> | 
+	    <a href="sndarray.html">sndarray</a> | 
+	    <a href="surfarray.html">surfarray</a> | 
+	    <a href="math.html">math</a>
+	  </p>
+
+	  <p class="bottom"><b>Other</b>:
+	    <a href="camera.html">camera</a> | 
+	    <a href="sdl2_controller.html#module-pygame._sdl2.controller">controller</a> | 
+	    <a href="examples.html">examples</a> | 
+	    <a href="fastevent.html">fastevent</a> | 
+	    <a href="scrap.html">scrap</a> | 
+	    <a href="tests.html">tests</a> | 
+	    <a href="touch.html">touch</a> | 
+	    <a href="pygame.html#module-pygame.version">version</a>
+	  </p>
+</div>
+</div>
+  </div>
+
+      <div class="documentwrapper">
+          <div class="body" role="main">
+            
+<section id="module-pygame.mouse">
+<span id="pygame-mouse"></span><dl class="definition">
+<dt class="title module sig sig-object">
+<code class="docutils literal notranslate"><span class="pre">pygame.mouse</span></code></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">pygame module to work with the mouse</span></div>
+</div>
+<table class="toc docutils align-default">
+<tbody>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="mouse.html#pygame.mouse.get_pressed">pygame.mouse.get_pressed</a></div>
+</td>
+<td>—</td>
+<td>get the state of the mouse buttons</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="mouse.html#pygame.mouse.get_pos">pygame.mouse.get_pos</a></div>
+</td>
+<td>—</td>
+<td>get the mouse cursor position</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="mouse.html#pygame.mouse.get_rel">pygame.mouse.get_rel</a></div>
+</td>
+<td>—</td>
+<td>get the amount of mouse movement</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="mouse.html#pygame.mouse.set_pos">pygame.mouse.set_pos</a></div>
+</td>
+<td>—</td>
+<td>set the mouse cursor position</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="mouse.html#pygame.mouse.set_visible">pygame.mouse.set_visible</a></div>
+</td>
+<td>—</td>
+<td>hide or show the mouse cursor</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="mouse.html#pygame.mouse.get_visible">pygame.mouse.get_visible</a></div>
+</td>
+<td>—</td>
+<td>get the current visibility state of the mouse cursor</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="mouse.html#pygame.mouse.get_focused">pygame.mouse.get_focused</a></div>
+</td>
+<td>—</td>
+<td>check if the display is receiving mouse input</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="mouse.html#pygame.mouse.set_cursor">pygame.mouse.set_cursor</a></div>
+</td>
+<td>—</td>
+<td>set the mouse cursor to a new cursor</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="mouse.html#pygame.mouse.get_cursor">pygame.mouse.get_cursor</a></div>
+</td>
+<td>—</td>
+<td>get the current mouse cursor</td>
+</tr>
+</tbody>
+</table>
+<p>The mouse functions can be used to get the current state of the mouse device.
+These functions can also alter the system cursor for the mouse.</p>
+<p>When the display mode is set, the event queue will start receiving mouse
+events. The mouse buttons generate <code class="docutils literal notranslate"><span class="pre">pygame.MOUSEBUTTONDOWN</span></code> and
+<code class="docutils literal notranslate"><span class="pre">pygame.MOUSEBUTTONUP</span></code> events when they are pressed and released. These
+events contain a button attribute representing which button was pressed. The
+mouse wheel will generate <code class="docutils literal notranslate"><span class="pre">pygame.MOUSEBUTTONDOWN</span></code> and
+<code class="docutils literal notranslate"><span class="pre">pygame.MOUSEBUTTONUP</span></code> events when rolled. The button will be set to 4
+when the wheel is rolled up, and to button 5 when the wheel is rolled down.
+Whenever the mouse is moved it generates a <code class="docutils literal notranslate"><span class="pre">pygame.MOUSEMOTION</span></code> event. The
+mouse movement is broken into small and accurate motion events. As the mouse
+is moving many motion events will be placed on the queue. Mouse motion events
+that are not properly cleaned from the event queue are the primary reason the
+event queue fills up.</p>
+<p>If the mouse cursor is hidden, and input is grabbed to the current display the
+mouse will enter a virtual input mode, where the relative movements of the
+mouse will never be stopped by the borders of the screen. See the functions
+<code class="docutils literal notranslate"><span class="pre">pygame.mouse.set_visible()</span></code> and <code class="docutils literal notranslate"><span class="pre">pygame.event.set_grab()</span></code> to get this
+configured.</p>
+<p><strong>Mouse Wheel Behavior in pygame 2</strong></p>
+<p>There is proper functionality for mouse wheel behaviour with pygame 2 supporting
+<code class="docutils literal notranslate"><span class="pre">pygame.MOUSEWHEEL</span></code> events.  The new events support horizontal and vertical
+scroll movements, with signed integer values representing the amount scrolled
+(<code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code>), as well as <code class="docutils literal notranslate"><span class="pre">flipped</span></code> direction (the set positive and
+negative values for each axis is flipped). Read more about SDL2
+input-related changes here <a class="reference external" href="https://wiki.libsdl.org/MigrationGuide#input">https://wiki.libsdl.org/MigrationGuide#input</a></p>
+<p>In pygame 2, the mouse wheel functionality can be used by listening for the
+<code class="docutils literal notranslate"><span class="pre">pygame.MOUSEWHEEL</span></code> type of an event (Bear in mind they still emit
+<code class="docutils literal notranslate"><span class="pre">pygame.MOUSEBUTTONDOWN</span></code> events like in pygame 1.x, as well).
+When this event is triggered, a developer can access the appropriate <code class="docutils literal notranslate"><span class="pre">Event</span></code> object
+with <code class="docutils literal notranslate"><span class="pre">pygame.event.get()</span></code>. The object can be used to access data about the mouse
+scroll, such as <code class="docutils literal notranslate"><span class="pre">which</span></code> (it will tell you what exact mouse device trigger the event).</p>
+<div class="literal-block-wrapper docutils container" id="test-py">
+<div class="code-block-caption"><span class="caption-text">Code example of mouse scroll (tested on 2.0.0.dev7)</span><a class="headerlink" href="#test-py" title="Permalink to this code">¶</a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Taken from husano896&#39;s PR thread (slightly modified)</span>
+<span class="kn">import</span> <span class="nn">pygame</span>
+<span class="kn">from</span> <span class="nn">pygame.locals</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="n">pygame</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+<span class="n">screen</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">set_mode</span><span class="p">((</span><span class="mi">640</span><span class="p">,</span> <span class="mi">480</span><span class="p">))</span>
+<span class="n">clock</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">Clock</span><span class="p">()</span>
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+   <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+      <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">pygame</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">get</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">QUIT</span><span class="p">:</span>
+               <span class="n">pygame</span><span class="o">.</span><span class="n">quit</span><span class="p">()</span>
+               <span class="k">return</span>
+            <span class="k">elif</span> <span class="n">event</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">MOUSEWHEEL</span><span class="p">:</span>
+               <span class="nb">print</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+               <span class="nb">print</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">event</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+               <span class="nb">print</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">flipped</span><span class="p">)</span>
+               <span class="nb">print</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">which</span><span class="p">)</span>
+               <span class="c1"># can access properties with</span>
+               <span class="c1"># proper notation(ex: event.y)</span>
+      <span class="n">clock</span><span class="o">.</span><span class="n">tick</span><span class="p">(</span><span class="mi">60</span><span class="p">)</span>
+
+<span class="c1"># Execute game:</span>
+<span class="n">main</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.mouse.get_pressed">
+<span class="sig-prename descclassname"><span class="pre">pygame.mouse.</span></span><span class="sig-name descname"><span class="pre">get_pressed</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.mouse.get_pressed" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">get the state of the mouse buttons</span></div>
+<div class="line"><span class="signature">get_pressed(num_buttons=3) -&gt; (button1, button2, button3)</span></div>
+<div class="line"><span class="signature">get_pressed(num_buttons=5) -&gt; (button1, button2, button3, button4, button5)</span></div>
+</div>
+<p>Returns a sequence of booleans representing the state of all the mouse
+buttons. A true value means the mouse is currently being pressed at the time
+of the call.</p>
+<p>Note, to get all of the mouse events it is better to use either
+<code class="docutils literal notranslate"><span class="pre">pygame.event.wait()</span></code> or <code class="docutils literal notranslate"><span class="pre">pygame.event.get()</span></code> and check all of those
+events to see if they are <code class="docutils literal notranslate"><span class="pre">MOUSEBUTTONDOWN</span></code>, <code class="docutils literal notranslate"><span class="pre">MOUSEBUTTONUP</span></code>, or
+<code class="docutils literal notranslate"><span class="pre">MOUSEMOTION</span></code>.</p>
+<p>Note, that on <code class="docutils literal notranslate"><span class="pre">X11</span></code> some X servers use middle button emulation. When you
+click both buttons <code class="docutils literal notranslate"><span class="pre">1</span></code> and <code class="docutils literal notranslate"><span class="pre">3</span></code> at the same time a <code class="docutils literal notranslate"><span class="pre">2</span></code> button event
+can be emitted.</p>
+<p>Note, remember to call <code class="docutils literal notranslate"><span class="pre">pygame.event.get()</span></code> before this function.
+Otherwise it will not work as expected.</p>
+<p>To support five button mice, an optional parameter <code class="docutils literal notranslate"><span class="pre">num_buttons</span></code> has been
+added in pygame 2. When this is set to <code class="docutils literal notranslate"><span class="pre">5</span></code>, <code class="docutils literal notranslate"><span class="pre">button4</span></code> and <code class="docutils literal notranslate"><span class="pre">button5</span></code>
+are added to the returned tuple. Only <code class="docutils literal notranslate"><span class="pre">3</span></code> and <code class="docutils literal notranslate"><span class="pre">5</span></code> are valid values
+for this parameter.</p>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in pygame 2.0.0: </span><code class="docutils literal notranslate"><span class="pre">num_buttons</span></code> argument added</p>
+</div>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.mouse.get_pos">
+<span class="sig-prename descclassname"><span class="pre">pygame.mouse.</span></span><span class="sig-name descname"><span class="pre">get_pos</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.mouse.get_pos" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">get the mouse cursor position</span></div>
+<div class="line"><span class="signature">get_pos() -&gt; (x, y)</span></div>
+</div>
+<p>Returns the <code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code> position of the mouse cursor. The position is
+relative to the top-left corner of the display. The cursor position can be
+located outside of the display window, but is always constrained to the
+screen.</p>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.mouse.get_rel">
+<span class="sig-prename descclassname"><span class="pre">pygame.mouse.</span></span><span class="sig-name descname"><span class="pre">get_rel</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.mouse.get_rel" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">get the amount of mouse movement</span></div>
+<div class="line"><span class="signature">get_rel() -&gt; (x, y)</span></div>
+</div>
+<p>Returns the amount of movement in <code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code> since the previous call to
+this function. The relative movement of the mouse cursor is constrained to
+the edges of the screen, but see the virtual input mouse mode for a way
+around this. Virtual input mode is described at the top of the page.</p>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.mouse.set_pos">
+<span class="sig-prename descclassname"><span class="pre">pygame.mouse.</span></span><span class="sig-name descname"><span class="pre">set_pos</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.mouse.set_pos" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">set the mouse cursor position</span></div>
+<div class="line"><span class="signature">set_pos([x, y]) -&gt; None</span></div>
+</div>
+<p>Set the current mouse position to arguments given. If the mouse cursor is
+visible it will jump to the new coordinates. Moving the mouse will generate
+a new <code class="docutils literal notranslate"><span class="pre">pygame.MOUSEMOTION</span></code> event.</p>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.mouse.set_visible">
+<span class="sig-prename descclassname"><span class="pre">pygame.mouse.</span></span><span class="sig-name descname"><span class="pre">set_visible</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.mouse.set_visible" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">hide or show the mouse cursor</span></div>
+<div class="line"><span class="signature">set_visible(bool) -&gt; bool</span></div>
+</div>
+<p>If the bool argument is true, the mouse cursor will be visible. This will
+return the previous visible state of the cursor.</p>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.mouse.get_visible">
+<span class="sig-prename descclassname"><span class="pre">pygame.mouse.</span></span><span class="sig-name descname"><span class="pre">get_visible</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.mouse.get_visible" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">get the current visibility state of the mouse cursor</span></div>
+<div class="line"><span class="signature">get_visible() -&gt; bool</span></div>
+</div>
+<p>Get the current visibility state of the mouse cursor. <code class="docutils literal notranslate"><span class="pre">True</span></code> if the mouse is
+visible, <code class="docutils literal notranslate"><span class="pre">False</span></code> otherwise.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 2.0.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.mouse.get_focused">
+<span class="sig-prename descclassname"><span class="pre">pygame.mouse.</span></span><span class="sig-name descname"><span class="pre">get_focused</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.mouse.get_focused" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">check if the display is receiving mouse input</span></div>
+<div class="line"><span class="signature">get_focused() -&gt; bool</span></div>
+</div>
+<p>Returns true when pygame is receiving mouse input events (or, in windowing
+terminology, is &quot;active&quot; or has the &quot;focus&quot;).</p>
+<p>This method is most useful when working in a window. By contrast, in
+full-screen mode, this method always returns true.</p>
+<p>Note: under <code class="docutils literal notranslate"><span class="pre">MS</span></code> Windows, the window that has the mouse focus also has the
+keyboard focus. But under X-Windows, one window can receive mouse events and
+another receive keyboard events. <code class="docutils literal notranslate"><span class="pre">pygame.mouse.get_focused()</span></code> indicates
+whether the pygame window receives mouse events.</p>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.mouse.set_cursor">
+<span class="sig-prename descclassname"><span class="pre">pygame.mouse.</span></span><span class="sig-name descname"><span class="pre">set_cursor</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.mouse.set_cursor" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">set the mouse cursor to a new cursor</span></div>
+<div class="line"><span class="signature">set_cursor(pygame.cursors.Cursor) -&gt; None</span></div>
+<div class="line"><span class="signature">set_cursor(size, hotspot, xormasks, andmasks) -&gt; None</span></div>
+<div class="line"><span class="signature">set_cursor(hotspot, surface) -&gt; None</span></div>
+<div class="line"><span class="signature">set_cursor(constant) -&gt; None</span></div>
+</div>
+<p>Set the mouse cursor to something new. This function accepts either an explicit
+<code class="docutils literal notranslate"><span class="pre">Cursor</span></code> object or arguments to create a <code class="docutils literal notranslate"><span class="pre">Cursor</span></code> object.</p>
+<p>See <a class="tooltip reference internal" href="cursors.html#pygame.cursors.Cursor" title=""><code class="xref py py-class docutils literal notranslate"><span class="pre">pygame.cursors.Cursor</span></code><span class="tooltip-content">pygame object representing a cursor</span></a> for help creating cursors and for examples.</p>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in pygame 2.0.1.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.mouse.get_cursor">
+<span class="sig-prename descclassname"><span class="pre">pygame.mouse.</span></span><span class="sig-name descname"><span class="pre">get_cursor</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.mouse.get_cursor" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">get the current mouse cursor</span></div>
+<div class="line"><span class="signature">get_cursor() -&gt; pygame.cursors.Cursor</span></div>
+</div>
+<p>Get the information about the mouse system cursor. The return value contains
+the same data as the arguments passed into <a class="tooltip reference internal" href="#pygame.mouse.set_cursor" title=""><code class="xref py py-func docutils literal notranslate"><span class="pre">pygame.mouse.set_cursor()</span></code><span class="tooltip-content">set the mouse cursor to a new cursor</span></a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Code that unpacked a get_cursor() call into
+<code class="docutils literal notranslate"><span class="pre">size,</span> <span class="pre">hotspot,</span> <span class="pre">xormasks,</span> <span class="pre">andmasks</span></code> will still work,
+assuming the call returns an old school type cursor.</p>
+</div>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in pygame 2.0.1.</span></p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+<br /><br />
+<hr />
+<a href="https://github.com/pygame/pygame/edit/main/docs/reST/ref/mouse.rst" rel="nofollow">Edit on GitHub</a>
+            <div class="clearer"></div>
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="music.html" title="pygame.mixer.music"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="mixer.html" title="pygame.mixer"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">pygame v2.5.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href=""><code class="xref py py-mod docutils literal notranslate"><span class="pre">pygame.mouse</span></code></a></li>
+    <script type="text/javascript" src="https://www.pygame.org/comment/jquery.plugin.docscomments.js"></script>
+
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2000-2023, pygame developers.
+    </div>
+  </body>
+</html>

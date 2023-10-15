@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>User-controllable objects &#8212; pygame v2.5.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygame.css?v=71ee6cc2" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=ba44479e"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <link rel="icon" href="../_static/pygame.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Putting it all together" href="tom_games6.html" />
+    <link rel="prev" title="Game object classes" href="tom_games4.html" /> 
+  </head><body>  
+
+    <div class="document">
+
+  <div class="header">
+	<div class="flex-container">
+	<div class="logo">
+	  <a href="https://www.pygame.org/">
+	    <img src="../_static/pygame_tiny.png"/>
+	  </a>
+	  <h5>pygame documentation</h5>
+	</div>
+	<div class="pagelinks">
+	  <div class="top">
+	    <a href="https://www.pygame.org/">Pygame Home</a> ||
+	    <a href="../index.html">Help Contents</a> ||
+	    <a href="../genindex.html">Reference Index</a>
+
+        <form action="../search.html" method="get" style="display:inline;float:right;">
+          <input name="q" value="" type="text">
+          <input value="search" type="submit">
+        </form>
+	  </div>
+	  <hr style="color:black;border-bottom:none;border-style: dotted;border-bottom-style:none;">
+	  <p class="bottom"><b>Most useful stuff</b>:
+	    <a href="../ref/color.html">Color</a> | 
+	    <a href="../ref/display.html">display</a> | 
+	    <a href="../ref/draw.html">draw</a> | 
+	    <a href="../ref/event.html">event</a> | 
+	    <a href="../ref/font.html">font</a> | 
+	    <a href="../ref/image.html">image</a> | 
+	    <a href="../ref/key.html">key</a> | 
+	    <a href="../ref/locals.html">locals</a> | 
+	    <a href="../ref/mixer.html">mixer</a> | 
+	    <a href="../ref/mouse.html">mouse</a> | 
+	    <a href="../ref/rect.html">Rect</a> | 
+	    <a href="../ref/surface.html">Surface</a> | 
+	    <a href="../ref/time.html">time</a> | 
+	    <a href="../ref/music.html">music</a> | 
+	    <a href="../ref/pygame.html">pygame</a>
+	  </p>
+
+	  <p class="bottom"><b>Advanced stuff</b>:
+	    <a href="../ref/cursors.html">cursors</a> | 
+	    <a href="../ref/joystick.html">joystick</a> | 
+	    <a href="../ref/mask.html">mask</a> | 
+	    <a href="../ref/sprite.html">sprite</a> | 
+	    <a href="../ref/transform.html">transform</a> | 
+	    <a href="../ref/bufferproxy.html">BufferProxy</a> | 
+	    <a href="../ref/freetype.html">freetype</a> | 
+	    <a href="../ref/gfxdraw.html">gfxdraw</a> | 
+	    <a href="../ref/midi.html">midi</a> | 
+	    <a href="../ref/pixelarray.html">PixelArray</a> | 
+	    <a href="../ref/pixelcopy.html">pixelcopy</a> | 
+	    <a href="../ref/sndarray.html">sndarray</a> | 
+	    <a href="../ref/surfarray.html">surfarray</a> | 
+	    <a href="../ref/math.html">math</a>
+	  </p>
+
+	  <p class="bottom"><b>Other</b>:
+	    <a href="../ref/camera.html">camera</a> | 
+	    <a href="../ref/sdl2_controller.html#module-pygame._sdl2.controller">controller</a> | 
+	    <a href="../ref/examples.html">examples</a> | 
+	    <a href="../ref/fastevent.html">fastevent</a> | 
+	    <a href="../ref/scrap.html">scrap</a> | 
+	    <a href="../ref/tests.html">tests</a> | 
+	    <a href="../ref/touch.html">touch</a> | 
+	    <a href="../ref/pygame.html#module-pygame.version">version</a>
+	  </p>
+</div>
+</div>
+  </div>
+
+      <div class="documentwrapper">
+          <div class="body" role="main">
+            
+<section id="user-controllable-objects">
+<section id="makegames-5">
+<span id="id1"></span><h2>5. User-controllable objects<a class="headerlink" href="#makegames-5" title="Permalink to this heading">¶</a></h2>
+<p>So far you can create a Pygame window, and render a ball that will fly across the screen. The next step is to make some bats which
+the user can control. This is potentially far more simple than the ball, because it requires no physics (unless your user-controlled
+object will move in ways more complex than up and down, e.g. a platform character like Mario, in which case you'll need more physics).
+User-controllable objects are pretty easy to create, thanks to Pygame's event queue system, as you'll see.</p>
+<section id="a-simple-bat-class">
+<span id="makegames-5-1"></span><h3>5.1. A simple bat class<a class="headerlink" href="#a-simple-bat-class" title="Permalink to this heading">¶</a></h3>
+<p>The principle behind the bat class is similar to that of the ball class. You need an <code class="docutils literal notranslate"><span class="pre">__init__</span></code> function to initialise the
+ball (so you can create object instances for each bat), an <code class="docutils literal notranslate"><span class="pre">update</span></code> function to perform per-frame changes on the bat before
+it is blitted the bat to the screen, and the functions that will define what this class will actually do. Here's some sample code:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Bat</span><span class="p">(</span><span class="n">pygame</span><span class="o">.</span><span class="n">sprite</span><span class="o">.</span><span class="n">Sprite</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Movable tennis &#39;bat&#39; with which one hits the ball</span>
+<span class="sd">    Returns: bat object</span>
+<span class="sd">    Functions: reinit, update, moveup, movedown</span>
+<span class="sd">    Attributes: which, speed&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">side</span><span class="p">):</span>
+        <span class="n">pygame</span><span class="o">.</span><span class="n">sprite</span><span class="o">.</span><span class="n">Sprite</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rect</span> <span class="o">=</span> <span class="n">load_png</span><span class="p">(</span><span class="s2">&quot;bat.png&quot;</span><span class="p">)</span>
+        <span class="n">screen</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">get_surface</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">area</span> <span class="o">=</span> <span class="n">screen</span><span class="o">.</span><span class="n">get_rect</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">side</span> <span class="o">=</span> <span class="n">side</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">speed</span> <span class="o">=</span> <span class="mi">10</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="s2">&quot;still&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reinit</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">reinit</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="s2">&quot;still&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">movepos</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">side</span> <span class="o">==</span> <span class="s2">&quot;left&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rect</span><span class="o">.</span><span class="n">midleft</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">area</span><span class="o">.</span><span class="n">midleft</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">side</span> <span class="o">==</span> <span class="s2">&quot;right&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rect</span><span class="o">.</span><span class="n">midright</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">area</span><span class="o">.</span><span class="n">midright</span>
+
+    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">newpos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rect</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">movepos</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">area</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="n">newpos</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rect</span> <span class="o">=</span> <span class="n">newpos</span>
+        <span class="n">pygame</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">pump</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">moveup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">movepos</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">movepos</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">speed</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="s2">&quot;moveup&quot;</span>
+
+    <span class="k">def</span> <span class="nf">movedown</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">movepos</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">movepos</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">speed</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="s2">&quot;movedown&quot;</span>
+</pre></div>
+</div>
+<p>As you can see, this class is very similar to the ball class in its structure. But there are differences in what each function does.
+First of all, there is a reinit function, which is used when a round ends, and the bat needs to be set back in its starting place,
+with any attributes set back to their necessary values. Next, the way in which the bat is moved is a little more complex than with the
+ball, because here its movement is simple (up/down), but it relies on the user telling it to move, unlike the ball which just keeps
+moving in every frame. To make sense of how the bat moves, it is helpful to look at a quick diagram to show the sequence of events:</p>
+<img alt="../_images/tom_event-flowchart.png" src="../_images/tom_event-flowchart.png" />
+<p>What happens here is that the person controlling the bat pushes down on the key that moves the bat up. For each iteration of the main
+game loop (for every frame), if the key is still held down, then the <code class="docutils literal notranslate"><span class="pre">state</span></code> attribute of that bat object will be set to
+&quot;moving&quot;, and the <code class="docutils literal notranslate"><span class="pre">moveup</span></code> function will be called, causing the ball's y position to be reduced by the value of the
+<code class="docutils literal notranslate"><span class="pre">speed</span></code> attribute (in this example, 10). In other words, so long as the key is held down, the bat will move up the screen
+by 10 pixels per frame. The <code class="docutils literal notranslate"><span class="pre">state</span></code> attribute isn't used here yet, but it's useful to know if you're dealing with spin, or
+would like some useful debugging output.</p>
+<p>As soon as the player lets go of that key, the second set of boxes is invoked, and the <code class="docutils literal notranslate"><span class="pre">state</span></code> attribute of the bat object
+will be set back to &quot;still&quot;, and the <code class="docutils literal notranslate"><span class="pre">movepos</span></code> attribute will be set back to [0,0], meaning that when the <code class="docutils literal notranslate"><span class="pre">update</span></code> function is called, it won't move the bat any more. So when the player lets go of the key, the bat stops moving. Simple!</p>
+<section id="diversion-3-pygame-events">
+<span id="makegames-5-1-1"></span><h4>5.1.1. Diversion 3: Pygame events<a class="headerlink" href="#diversion-3-pygame-events" title="Permalink to this heading">¶</a></h4>
+<p>So how do we know when the player is pushing keys down, and then releasing them? With the Pygame event queue system, dummy! It's a
+really easy system to use and understand, so this shouldn't take long :) You've already seen the event queue in action in the basic
+Pygame program, where it was used to check if the user was quitting the application. The code for moving the bat is about as simple
+as that:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">pygame</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">get</span><span class="p">():</span>
+    <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">QUIT</span><span class="p">:</span>
+        <span class="k">return</span>
+    <span class="k">elif</span> <span class="n">event</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">KEYDOWN</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">key</span> <span class="o">==</span> <span class="n">K_UP</span><span class="p">:</span>
+            <span class="n">player</span><span class="o">.</span><span class="n">moveup</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">key</span> <span class="o">==</span> <span class="n">K_DOWN</span><span class="p">:</span>
+            <span class="n">player</span><span class="o">.</span><span class="n">movedown</span><span class="p">()</span>
+    <span class="k">elif</span> <span class="n">event</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">KEYUP</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">key</span> <span class="o">==</span> <span class="n">K_UP</span> <span class="ow">or</span> <span class="n">event</span><span class="o">.</span><span class="n">key</span> <span class="o">==</span> <span class="n">K_DOWN</span><span class="p">:</span>
+            <span class="n">player</span><span class="o">.</span><span class="n">movepos</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">player</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="s2">&quot;still&quot;</span>
+</pre></div>
+</div>
+<p>Here assume that you've already created an instance of a bat, and called the object <code class="docutils literal notranslate"><span class="pre">player</span></code>. You can see the familiar
+layout of the <code class="docutils literal notranslate"><span class="pre">for</span></code> structure, which iterates through each event found in the Pygame event queue, which is retrieved with
+the <a class="reference internal" href="../ref/event.html#pygame.event.get" title="pygame.event.get"><code class="xref py py-mod docutils literal notranslate"><span class="pre">event.get()</span></code></a> function. As the user hits keys, pushes mouse buttons and moves the joystick about, those actions are
+pumped into the Pygame event queue, and left there until dealt with. So in each iteration of the main game loop, you go through
+these events, checking if they're ones you want to deal with, and then dealing with them appropriately. The <a class="reference internal" href="../ref/event.html#pygame.event.pump" title="pygame.event.pump"><code class="xref py py-func docutils literal notranslate"><span class="pre">event.pump()</span></code></a>
+function that was in the <code class="docutils literal notranslate"><span class="pre">Bat.update</span></code> function is then called in every iteration to pump out old events, and keep the queue
+current.</p>
+<p>First we check if the user is quitting the program, and quit it if they are. Then we check if any keys are being pushed down, and if
+they are, we check if they're the designated keys for moving the bat up and down. If they are, then we call the appropriate moving
+function, and set the player state appropriately (though the states moveup and movedown and changed in the <code class="docutils literal notranslate"><span class="pre">moveup()</span></code> and
+<code class="docutils literal notranslate"><span class="pre">movedown()</span></code> functions, which makes for neater code, and doesn't break <em>encapsulation</em>, which means that you
+assign attributes to the object itself, without referring to the name of the instance of that object). Notice here we have three
+states: still, moveup, and movedown. Again, these come in handy if you want to debug or calculate spin. We also check if any keys have
+been &quot;let go&quot; (i.e. are no longer being held down), and again if they're the right keys, we stop the bat from moving.</p>
+</section>
+</section>
+</section>
+</section>
+
+
+<br /><br />
+<hr />
+<a href="https://github.com/pygame/pygame/edit/main/docs/reST/tut/tom_games5.rst" rel="nofollow">Edit on GitHub</a>
+            <div class="clearer"></div>
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="tom_games6.html" title="Putting it all together"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="tom_games4.html" title="Game object classes"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">pygame v2.5.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="MakeGames.html" accesskey="U">Making Games With Pygame</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">User-controllable objects</a></li>
+    <script type="text/javascript" src="https://www.pygame.org/comment/jquery.plugin.docscomments.js"></script>
+
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2000-2023, pygame developers.
+    </div>
+  </body>
+</html>

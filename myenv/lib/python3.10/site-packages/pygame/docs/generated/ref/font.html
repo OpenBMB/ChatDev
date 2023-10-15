@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>pygame.font &#8212; pygame v2.5.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygame.css?v=71ee6cc2" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=ba44479e"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <link rel="icon" href="../_static/pygame.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="pygame.freetype" href="freetype.html" />
+    <link rel="prev" title="pygame.fastevent" href="fastevent.html" /> 
+  </head><body>  
+
+    <div class="document">
+
+  <div class="header">
+	<div class="flex-container">
+	<div class="logo">
+	  <a href="https://www.pygame.org/">
+	    <img src="../_static/pygame_tiny.png"/>
+	  </a>
+	  <h5>pygame documentation</h5>
+	</div>
+	<div class="pagelinks">
+	  <div class="top">
+	    <a href="https://www.pygame.org/">Pygame Home</a> ||
+	    <a href="../index.html">Help Contents</a> ||
+	    <a href="../genindex.html">Reference Index</a>
+
+        <form action="../search.html" method="get" style="display:inline;float:right;">
+          <input name="q" value="" type="text">
+          <input value="search" type="submit">
+        </form>
+	  </div>
+	  <hr style="color:black;border-bottom:none;border-style: dotted;border-bottom-style:none;">
+	  <p class="bottom"><b>Most useful stuff</b>:
+	    <a href="color.html">Color</a> | 
+	    <a href="display.html">display</a> | 
+	    <a href="draw.html">draw</a> | 
+	    <a href="event.html">event</a> | 
+	    <a href="font.html">font</a> | 
+	    <a href="image.html">image</a> | 
+	    <a href="key.html">key</a> | 
+	    <a href="locals.html">locals</a> | 
+	    <a href="mixer.html">mixer</a> | 
+	    <a href="mouse.html">mouse</a> | 
+	    <a href="rect.html">Rect</a> | 
+	    <a href="surface.html">Surface</a> | 
+	    <a href="time.html">time</a> | 
+	    <a href="music.html">music</a> | 
+	    <a href="pygame.html">pygame</a>
+	  </p>
+
+	  <p class="bottom"><b>Advanced stuff</b>:
+	    <a href="cursors.html">cursors</a> | 
+	    <a href="joystick.html">joystick</a> | 
+	    <a href="mask.html">mask</a> | 
+	    <a href="sprite.html">sprite</a> | 
+	    <a href="transform.html">transform</a> | 
+	    <a href="bufferproxy.html">BufferProxy</a> | 
+	    <a href="freetype.html">freetype</a> | 
+	    <a href="gfxdraw.html">gfxdraw</a> | 
+	    <a href="midi.html">midi</a> | 
+	    <a href="pixelarray.html">PixelArray</a> | 
+	    <a href="pixelcopy.html">pixelcopy</a> | 
+	    <a href="sndarray.html">sndarray</a> | 
+	    <a href="surfarray.html">surfarray</a> | 
+	    <a href="math.html">math</a>
+	  </p>
+
+	  <p class="bottom"><b>Other</b>:
+	    <a href="camera.html">camera</a> | 
+	    <a href="sdl2_controller.html#module-pygame._sdl2.controller">controller</a> | 
+	    <a href="examples.html">examples</a> | 
+	    <a href="fastevent.html">fastevent</a> | 
+	    <a href="scrap.html">scrap</a> | 
+	    <a href="tests.html">tests</a> | 
+	    <a href="touch.html">touch</a> | 
+	    <a href="pygame.html#module-pygame.version">version</a>
+	  </p>
+</div>
+</div>
+  </div>
+
+      <div class="documentwrapper">
+          <div class="body" role="main">
+            
+<section id="module-pygame.font">
+<span id="pygame-font"></span><dl class="definition">
+<dt class="title module sig sig-object">
+<code class="docutils literal notranslate"><span class="pre">pygame.font</span></code></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">pygame module for loading and rendering fonts</span></div>
+</div>
+<table class="toc docutils align-default">
+<tbody>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="font.html#pygame.font.init">pygame.font.init</a></div>
+</td>
+<td>—</td>
+<td>initialize the font module</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="font.html#pygame.font.quit">pygame.font.quit</a></div>
+</td>
+<td>—</td>
+<td>uninitialize the font module</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="font.html#pygame.font.get_init">pygame.font.get_init</a></div>
+</td>
+<td>—</td>
+<td>true if the font module is initialized</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="font.html#pygame.font.get_default_font">pygame.font.get_default_font</a></div>
+</td>
+<td>—</td>
+<td>get the filename of the default font</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="font.html#pygame.font.get_sdl_ttf_version">pygame.font.get_sdl_ttf_version</a></div>
+</td>
+<td>—</td>
+<td>gets SDL_ttf version</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="font.html#pygame.font.get_fonts">pygame.font.get_fonts</a></div>
+</td>
+<td>—</td>
+<td>get all available fonts</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="font.html#pygame.font.match_font">pygame.font.match_font</a></div>
+</td>
+<td>—</td>
+<td>find a specific font on the system</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="font.html#pygame.font.SysFont">pygame.font.SysFont</a></div>
+</td>
+<td>—</td>
+<td>create a Font object from the system fonts</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="font.html#pygame.font.Font">pygame.font.Font</a></div>
+</td>
+<td>—</td>
+<td>create a new Font object from a file</td>
+</tr>
+</tbody>
+</table>
+<p>The font module allows for rendering TrueType fonts into Surface objects.
+This module is built on top of the SDL_ttf library, which comes with all
+normal pygame installations.</p>
+<p>Most of the work done with fonts are done by using the actual Font objects.
+The module by itself only has routines to support the creation of Font objects
+with <a class="tooltip reference internal" href="#pygame.font.Font" title=""><code class="xref py py-func docutils literal notranslate"><span class="pre">pygame.font.Font()</span></code><span class="tooltip-content">create a new Font object from a file</span></a>.</p>
+<p>You can load fonts from the system by using the <a class="tooltip reference internal" href="#pygame.font.SysFont" title=""><code class="xref py py-func docutils literal notranslate"><span class="pre">pygame.font.SysFont()</span></code><span class="tooltip-content">create a Font object from the system fonts</span></a>
+function. There are a few other functions to help look up the system fonts.</p>
+<p>Pygame comes with a builtin default font, freesansbold. This can always be
+accessed by passing <code class="docutils literal notranslate"><span class="pre">None</span></code> as the font name.</p>
+<p>Before pygame 2.0.3, pygame.font accepts any UCS-2 / UTF-16 character
+('\u0001' to '\uFFFF'). After 2.0.3, pygame.font built with SDL_ttf
+2.0.15 accepts any valid UCS-4 / UTF-32 character
+(like emojis, if the font has them) ('\U00000001' to '\U0010FFFF')).
+More about this in <a class="reference internal" href="#pygame.font.Font.render" title="pygame.font.Font.render"><code class="xref py py-func docutils literal notranslate"><span class="pre">Font.render()</span></code></a>.</p>
+<p>Before pygame 2.0.3, this character space restriction can be avoided by
+using the  <a class="tooltip reference internal" href="freetype.html#module-pygame.freetype" title=""><code class="xref py py-mod docutils literal notranslate"><span class="pre">pygame.freetype</span></code><span class="tooltip-content">Enhanced pygame module for loading and rendering computer fonts</span></a> based <code class="docutils literal notranslate"><span class="pre">pygame.ftfont</span></code> to emulate the Font
+module. This can be used by defining the environment variable PYGAME_FREETYPE
+before the first import of <a class="tooltip reference internal" href="pygame.html#module-pygame" title=""><code class="xref py py-mod docutils literal notranslate"><span class="pre">pygame</span></code><span class="tooltip-content">the top level pygame package</span></a>. Since the problem <code class="docutils literal notranslate"><span class="pre">pygame.ftfont</span></code>
+solves no longer exists, it will likely be removed in the future.</p>
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.font.init">
+<span class="sig-prename descclassname"><span class="pre">pygame.font.</span></span><span class="sig-name descname"><span class="pre">init</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.font.init" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">initialize the font module</span></div>
+<div class="line"><span class="signature">init() -&gt; None</span></div>
+</div>
+<p>This method is called automatically by <code class="docutils literal notranslate"><span class="pre">pygame.init()</span></code>. It initializes the
+font module. The module must be initialized before any other functions will
+work.</p>
+<p>It is safe to call this function more than once.</p>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.font.quit">
+<span class="sig-prename descclassname"><span class="pre">pygame.font.</span></span><span class="sig-name descname"><span class="pre">quit</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.font.quit" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">uninitialize the font module</span></div>
+<div class="line"><span class="signature">quit() -&gt; None</span></div>
+</div>
+<p>Manually uninitialize SDL_ttf's font system. This is called automatically by
+<code class="docutils literal notranslate"><span class="pre">pygame.quit()</span></code>.</p>
+<p>It is safe to call this function even if font is currently not initialized.</p>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.font.get_init">
+<span class="sig-prename descclassname"><span class="pre">pygame.font.</span></span><span class="sig-name descname"><span class="pre">get_init</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.font.get_init" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">true if the font module is initialized</span></div>
+<div class="line"><span class="signature">get_init() -&gt; bool</span></div>
+</div>
+<p>Test if the font module is initialized or not.</p>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.font.get_default_font">
+<span class="sig-prename descclassname"><span class="pre">pygame.font.</span></span><span class="sig-name descname"><span class="pre">get_default_font</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.font.get_default_font" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">get the filename of the default font</span></div>
+<div class="line"><span class="signature">get_default_font() -&gt; string</span></div>
+</div>
+<p>Return the filename of the system font. This is not the full path to the
+file. This file can usually be found in the same directory as the font
+module, but it can also be bundled in separate archives.</p>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.font.get_sdl_ttf_version">
+<span class="sig-prename descclassname"><span class="pre">pygame.font.</span></span><span class="sig-name descname"><span class="pre">get_sdl_ttf_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.font.get_sdl_ttf_version" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">gets SDL_ttf version</span></div>
+<div class="line"><span class="signature">get_sdl_ttf_version(linked=True) -&gt; (major, minor, patch)</span></div>
+</div>
+<p><strong>Experimental:</strong> feature still in development available for testing and feedback. It may change.
+<a class="reference external" href="https://github.com/pygame/pygame/pull/3095">Please leave get_sdl_ttf_version feedback with authors</a></p>
+<p>Returns a tuple of integers that identify SDL_ttf's version.
+SDL_ttf is the underlying font rendering library, written in C,
+on which pygame's font module depends. If 'linked' is True (the default),
+the function returns the version of the linked TTF library.
+Otherwise this function returns the version of TTF pygame was compiled with</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 2.1.3.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.font.get_fonts">
+<span class="sig-prename descclassname"><span class="pre">pygame.font.</span></span><span class="sig-name descname"><span class="pre">get_fonts</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.font.get_fonts" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">get all available fonts</span></div>
+<div class="line"><span class="signature">get_fonts() -&gt; list of strings</span></div>
+</div>
+<p>Returns a list of all the fonts available on the system. The names of the
+fonts will be set to lowercase with all spaces and punctuation removed. This
+works on most systems, but some will return an empty list if they cannot
+find fonts.</p>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in pygame 2.1.3: </span>Checks through user fonts instead of just global fonts for Windows.</p>
+</div>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.font.match_font">
+<span class="sig-prename descclassname"><span class="pre">pygame.font.</span></span><span class="sig-name descname"><span class="pre">match_font</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.font.match_font" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">find a specific font on the system</span></div>
+<div class="line"><span class="signature">match_font(name, bold=False, italic=False) -&gt; path</span></div>
+</div>
+<p>Returns the full path to a font file on the system. If bold or italic are
+set to true, this will attempt to find the correct family of font.</p>
+<p>The font name can also be an iterable of font names, a string of
+comma-separated font names, or a bytes of comma-separated font names, in
+which case the set of names will be searched in order.
+If none of the given names are found, None is returned.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 2.0.1: </span>Accept an iterable of font names.</p>
+</div>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in pygame 2.1.3: </span>Checks through user fonts instead of just global fonts for Windows.</p>
+</div>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span> <span class="n">pygame</span><span class="o">.</span><span class="n">font</span><span class="o">.</span><span class="n">match_font</span><span class="p">(</span><span class="s1">&#39;bitstreamverasans&#39;</span><span class="p">)</span>
+<span class="c1"># output is: /usr/share/fonts/truetype/ttf-bitstream-vera/Vera.ttf</span>
+<span class="c1"># (but only if you have Vera on your system)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.font.SysFont">
+<span class="sig-prename descclassname"><span class="pre">pygame.font.</span></span><span class="sig-name descname"><span class="pre">SysFont</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.font.SysFont" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">create a Font object from the system fonts</span></div>
+<div class="line"><span class="signature">SysFont(name, size, bold=False, italic=False) -&gt; Font</span></div>
+</div>
+<p>Return a new Font object that is loaded from the system fonts. The font will
+match the requested bold and italic flags. Pygame uses a small set of common
+font aliases. If the specific font you ask for is not available, a reasonable
+alternative may be used. If a suitable system font is not found this will
+fall back on loading the default pygame font.</p>
+<p>The font name can also be an iterable of font names, a string of
+comma-separated font names, or a bytes of comma-separated font names, in
+which case the set of names will be searched in order.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 2.0.1: </span>Accept an iterable of font names.</p>
+</div>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in pygame 2.1.3: </span>Checks through user fonts instead of just global fonts for Windows.</p>
+</div>
+</dd></dl>
+
+<dl class="py class definition">
+<dt class="sig sig-object py title" id="pygame.font.Font">
+<span class="sig-prename descclassname"><span class="pre">pygame.font.</span></span><span class="sig-name descname"><span class="pre">Font</span></span><a class="headerlink" href="#pygame.font.Font" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">create a new Font object from a file</span></div>
+<div class="line"><span class="signature">Font(file_path=None, size=12) -&gt; Font</span></div>
+<div class="line"><span class="signature">Font(file_path, size) -&gt; Font</span></div>
+<div class="line"><span class="signature">Font(pathlib.Path, size) -&gt; Font</span></div>
+<div class="line"><span class="signature">Font(object, size) -&gt; Font</span></div>
+</div>
+<table class="toc docutils align-default">
+<tbody>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="font.html#pygame.font.Font.bold">pygame.font.Font.bold</a></div>
+</td>
+<td>—</td>
+<td>Gets or sets whether the font should be rendered in (faked) bold.</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="font.html#pygame.font.Font.italic">pygame.font.Font.italic</a></div>
+</td>
+<td>—</td>
+<td>Gets or sets whether the font should be rendered in (faked) italics.</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="font.html#pygame.font.Font.underline">pygame.font.Font.underline</a></div>
+</td>
+<td>—</td>
+<td>Gets or sets whether the font should be rendered with an underline.</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="font.html#pygame.font.Font.strikethrough">pygame.font.Font.strikethrough</a></div>
+</td>
+<td>—</td>
+<td>Gets or sets whether the font should be rendered with a strikethrough.</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="font.html#pygame.font.Font.render">pygame.font.Font.render</a></div>
+</td>
+<td>—</td>
+<td>draw text on a new Surface</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="font.html#pygame.font.Font.size">pygame.font.Font.size</a></div>
+</td>
+<td>—</td>
+<td>determine the amount of space needed to render text</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="font.html#pygame.font.Font.set_underline">pygame.font.Font.set_underline</a></div>
+</td>
+<td>—</td>
+<td>control if text is rendered with an underline</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="font.html#pygame.font.Font.get_underline">pygame.font.Font.get_underline</a></div>
+</td>
+<td>—</td>
+<td>check if text will be rendered with an underline</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="font.html#pygame.font.Font.set_strikethrough">pygame.font.Font.set_strikethrough</a></div>
+</td>
+<td>—</td>
+<td>control if text is rendered with a strikethrough</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="font.html#pygame.font.Font.get_strikethrough">pygame.font.Font.get_strikethrough</a></div>
+</td>
+<td>—</td>
+<td>check if text will be rendered with a strikethrough</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="font.html#pygame.font.Font.set_bold">pygame.font.Font.set_bold</a></div>
+</td>
+<td>—</td>
+<td>enable fake rendering of bold text</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="font.html#pygame.font.Font.get_bold">pygame.font.Font.get_bold</a></div>
+</td>
+<td>—</td>
+<td>check if text will be rendered bold</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="font.html#pygame.font.Font.set_italic">pygame.font.Font.set_italic</a></div>
+</td>
+<td>—</td>
+<td>enable fake rendering of italic text</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="font.html#pygame.font.Font.metrics">pygame.font.Font.metrics</a></div>
+</td>
+<td>—</td>
+<td>gets the metrics for each character in the passed string</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="font.html#pygame.font.Font.get_italic">pygame.font.Font.get_italic</a></div>
+</td>
+<td>—</td>
+<td>check if the text will be rendered italic</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="font.html#pygame.font.Font.get_linesize">pygame.font.Font.get_linesize</a></div>
+</td>
+<td>—</td>
+<td>get the line space of the font text</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="font.html#pygame.font.Font.get_height">pygame.font.Font.get_height</a></div>
+</td>
+<td>—</td>
+<td>get the height of the font</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="font.html#pygame.font.Font.get_ascent">pygame.font.Font.get_ascent</a></div>
+</td>
+<td>—</td>
+<td>get the ascent of the font</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="font.html#pygame.font.Font.get_descent">pygame.font.Font.get_descent</a></div>
+</td>
+<td>—</td>
+<td>get the descent of the font</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="font.html#pygame.font.Font.set_script">pygame.font.Font.set_script</a></div>
+</td>
+<td>—</td>
+<td>set the script code for text shaping</td>
+</tr>
+</tbody>
+</table>
+<p>Load a new font from a given filename or a python file object. The size is
+the height of the font in pixels. If the filename is <code class="docutils literal notranslate"><span class="pre">None</span></code> the pygame
+default font will be loaded. If a font cannot be loaded from the arguments
+given an exception will be raised. Once the font is created the size cannot
+be changed. If no arguments are given then the default font will be used and
+a font size of 12 is used.</p>
+<p>Font objects are mainly used to render text into new Surface objects. The
+render can emulate bold or italic features, but it is better to load from a
+font with actual italic or bold glyphs.</p>
+<dl class="py attribute definition">
+<dt class="sig sig-object py title" id="pygame.font.Font.bold">
+<span class="sig-name descname"><span class="pre">bold</span></span><a class="headerlink" href="#pygame.font.Font.bold" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Gets or sets whether the font should be rendered in (faked) bold.</span></div>
+<div class="line"><span class="signature">bold -&gt; bool</span></div>
+</div>
+<p>Whether the font should be rendered in bold.</p>
+<p>When set to True, this enables the bold rendering of text. This
+is a fake stretching of the font that doesn't look good on many
+font types. If possible load the font from a real bold font
+file. While bold, the font will have a different width than when
+normal. This can be mixed with the italic, underline and
+strikethrough modes.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 2.0.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py attribute definition">
+<dt class="sig sig-object py title" id="pygame.font.Font.italic">
+<span class="sig-name descname"><span class="pre">italic</span></span><a class="headerlink" href="#pygame.font.Font.italic" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Gets or sets whether the font should be rendered in (faked) italics.</span></div>
+<div class="line"><span class="signature">italic -&gt; bool</span></div>
+</div>
+<p>Whether the font should be rendered in italic.</p>
+<p>When set to True, this enables fake rendering of italic
+text. This is a fake skewing of the font that doesn't look good
+on many font types. If possible load the font from a real italic
+font file. While italic the font will have a different width
+than when normal. This can be mixed with the bold, underline and
+strikethrough modes.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 2.0.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py attribute definition">
+<dt class="sig sig-object py title" id="pygame.font.Font.underline">
+<span class="sig-name descname"><span class="pre">underline</span></span><a class="headerlink" href="#pygame.font.Font.underline" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Gets or sets whether the font should be rendered with an underline.</span></div>
+<div class="line"><span class="signature">underline -&gt; bool</span></div>
+</div>
+<p>Whether the font should be rendered in underline.</p>
+<p>When set to True, all rendered fonts will include an
+underline. The underline is always one pixel thick, regardless
+of font size. This can be mixed with the bold, italic and
+strikethrough modes.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 2.0.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py attribute definition">
+<dt class="sig sig-object py title" id="pygame.font.Font.strikethrough">
+<span class="sig-name descname"><span class="pre">strikethrough</span></span><a class="headerlink" href="#pygame.font.Font.strikethrough" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Gets or sets whether the font should be rendered with a strikethrough.</span></div>
+<div class="line"><span class="signature">strikethrough -&gt; bool</span></div>
+</div>
+<p>Whether the font should be rendered with a strikethrough.</p>
+<p>When set to True, all rendered fonts will include an
+strikethrough. The strikethrough is always one pixel thick,
+regardless of font size. This can be mixed with the bold,
+italic and underline modes.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 2.1.3.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.font.Font.render">
+<span class="sig-name descname"><span class="pre">render</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.font.Font.render" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">draw text on a new Surface</span></div>
+<div class="line"><span class="signature">render(text, antialias, color, background=None) -&gt; Surface</span></div>
+</div>
+<p>This creates a new Surface with the specified text rendered on it.
+<a class="tooltip reference internal" href="#module-pygame.font" title=""><code class="xref py py-mod docutils literal notranslate"><span class="pre">pygame.font</span></code><span class="tooltip-content">pygame module for loading and rendering fonts</span></a> provides no way to directly draw text on an existing
+Surface: instead you must use <a class="reference internal" href="#pygame.font.Font.render" title="pygame.font.Font.render"><code class="xref py py-func docutils literal notranslate"><span class="pre">Font.render()</span></code></a> to create an image
+(Surface) of the text, then blit this image onto another Surface.</p>
+<p>The text can only be a single line: newline characters are not rendered.
+Null characters ('x00') raise a TypeError. Both Unicode and char (byte)
+strings are accepted. For Unicode strings only UCS-2 characters
+('\u0001' to '\uFFFF') were previously supported and any greater
+unicode codepoint would raise a UnicodeError. Now, characters in the
+UCS-4 range are supported. For char strings a <code class="docutils literal notranslate"><span class="pre">LATIN1</span></code> encoding is
+assumed. The antialias argument is a boolean: if True the characters
+will have smooth edges. The color argument is the color of the text
+[e.g.: (0,0,255) for blue]. The optional background argument is a color
+to use for the text background. If no background is passed the area
+outside the text will be transparent.</p>
+<p>The Surface returned will be of the dimensions required to hold the text.
+(the same as those returned by <a class="reference internal" href="#pygame.font.Font.size" title="pygame.font.Font.size"><code class="xref py py-func docutils literal notranslate"><span class="pre">Font.size()</span></code></a>). If an empty string is passed
+for the text, a blank surface will be returned that is zero pixel wide and
+the height of the font.</p>
+<p>Depending on the type of background and antialiasing used, this returns
+different types of Surfaces. For performance reasons, it is good to know
+what type of image will be used. If antialiasing is not used, the return
+image will always be an 8-bit image with a two-color palette. If the
+background is transparent a colorkey will be set. Antialiased images are
+rendered to 24-bit <code class="docutils literal notranslate"><span class="pre">RGB</span></code> images. If the background is transparent a
+pixel alpha will be included.</p>
+<p>Optimization: if you know that the final destination for the text (on the
+screen) will always have a solid background, and the text is antialiased,
+you can improve performance by specifying the background color. This will
+cause the resulting image to maintain transparency information by
+colorkey rather than (much less efficient) alpha values.</p>
+<p>If you render '\n' an unknown char will be rendered. Usually a
+rectangle. Instead you need to handle newlines yourself.</p>
+<p>Font rendering is not thread safe: only a single thread can render text
+at any time.</p>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in pygame 2.0.3: </span>Rendering UCS4 unicode works and does not
+raise an exception. Use <cite>if hasattr(pygame.font, &quot;UCS4&quot;):</cite> to see if
+pygame supports rendering UCS4 unicode including more languages and
+emoji.</p>
+</div>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.font.Font.size">
+<span class="sig-name descname"><span class="pre">size</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.font.Font.size" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">determine the amount of space needed to render text</span></div>
+<div class="line"><span class="signature">size(text) -&gt; (width, height)</span></div>
+</div>
+<p>Returns the dimensions needed to render the text. This can be used to
+help determine the positioning needed for text before it is rendered. It
+can also be used for word wrapping and other layout effects.</p>
+<p>Be aware that most fonts use kerning which adjusts the widths for
+specific letter pairs. For example, the width for &quot;ae&quot; will not always
+match the width for &quot;a&quot; + &quot;e&quot;.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.font.Font.set_underline">
+<span class="sig-name descname"><span class="pre">set_underline</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.font.Font.set_underline" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">control if text is rendered with an underline</span></div>
+<div class="line"><span class="signature">set_underline(bool) -&gt; None</span></div>
+</div>
+<p>When enabled, all rendered fonts will include an underline. The underline
+is always one pixel thick, regardless of font size. This can be mixed
+with the bold, italic and strikethrough modes.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This is the same as the <a class="reference internal" href="#pygame.font.Font.underline" title="pygame.font.Font.underline"><code class="xref py py-attr docutils literal notranslate"><span class="pre">underline</span></code></a> attribute.</p>
+</div>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.font.Font.get_underline">
+<span class="sig-name descname"><span class="pre">get_underline</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.font.Font.get_underline" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">check if text will be rendered with an underline</span></div>
+<div class="line"><span class="signature">get_underline() -&gt; bool</span></div>
+</div>
+<p>Return True when the font underline is enabled.</p>
+<blockquote>
+<div><div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This is the same as the <a class="reference internal" href="#pygame.font.Font.underline" title="pygame.font.Font.underline"><code class="xref py py-attr docutils literal notranslate"><span class="pre">underline</span></code></a> attribute.</p>
+</div>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.font.Font.set_strikethrough">
+<span class="sig-name descname"><span class="pre">set_strikethrough</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.font.Font.set_strikethrough" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">control if text is rendered with a strikethrough</span></div>
+<div class="line"><span class="signature">set_strikethrough(bool) -&gt; None</span></div>
+</div>
+<p>When enabled, all rendered fonts will include a strikethrough. The
+strikethrough is always one pixel thick, regardless of font size.
+This can be mixed with the bold, italic and underline modes.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This is the same as the <a class="reference internal" href="#pygame.font.Font.strikethrough" title="pygame.font.Font.strikethrough"><code class="xref py py-attr docutils literal notranslate"><span class="pre">strikethrough</span></code></a> attribute.</p>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 2.1.3.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.font.Font.get_strikethrough">
+<span class="sig-name descname"><span class="pre">get_strikethrough</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.font.Font.get_strikethrough" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">check if text will be rendered with a strikethrough</span></div>
+<div class="line"><span class="signature">get_strikethrough() -&gt; bool</span></div>
+</div>
+<p>Return True when the font strikethrough is enabled.</p>
+<blockquote>
+<div><div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This is the same as the <a class="reference internal" href="#pygame.font.Font.strikethrough" title="pygame.font.Font.strikethrough"><code class="xref py py-attr docutils literal notranslate"><span class="pre">strikethrough</span></code></a> attribute.</p>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 2.1.3.</span></p>
+</div>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.font.Font.set_bold">
+<span class="sig-name descname"><span class="pre">set_bold</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.font.Font.set_bold" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">enable fake rendering of bold text</span></div>
+<div class="line"><span class="signature">set_bold(bool) -&gt; None</span></div>
+</div>
+<p>Enables the bold rendering of text. This is a fake stretching of the font
+that doesn't look good on many font types. If possible load the font from
+a real bold font file. While bold, the font will have a different width
+than when normal. This can be mixed with the italic, underline and
+strikethrough modes.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This is the same as the <a class="reference internal" href="#pygame.font.Font.bold" title="pygame.font.Font.bold"><code class="xref py py-attr docutils literal notranslate"><span class="pre">bold</span></code></a> attribute.</p>
+</div>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.font.Font.get_bold">
+<span class="sig-name descname"><span class="pre">get_bold</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.font.Font.get_bold" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">check if text will be rendered bold</span></div>
+<div class="line"><span class="signature">get_bold() -&gt; bool</span></div>
+</div>
+<p>Return True when the font bold rendering mode is enabled.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This is the same as the <a class="reference internal" href="#pygame.font.Font.bold" title="pygame.font.Font.bold"><code class="xref py py-attr docutils literal notranslate"><span class="pre">bold</span></code></a> attribute.</p>
+</div>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.font.Font.set_italic">
+<span class="sig-name descname"><span class="pre">set_italic</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.font.Font.set_italic" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">enable fake rendering of italic text</span></div>
+<div class="line"><span class="signature">set_italic(bool) -&gt; None</span></div>
+</div>
+<p>Enables fake rendering of italic text. This is a fake skewing of the font
+that doesn't look good on many font types. If possible load the font from
+a real italic font file. While italic the font will have a different
+width than when normal. This can be mixed with the bold, underline and
+strikethrough modes.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This is the same as the <a class="reference internal" href="#pygame.font.Font.italic" title="pygame.font.Font.italic"><code class="xref py py-attr docutils literal notranslate"><span class="pre">italic</span></code></a> attribute.</p>
+</div>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.font.Font.metrics">
+<span class="sig-name descname"><span class="pre">metrics</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.font.Font.metrics" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">gets the metrics for each character in the passed string</span></div>
+<div class="line"><span class="signature">metrics(text) -&gt; list</span></div>
+</div>
+<p>The list contains tuples for each character, which contain the minimum
+<code class="docutils literal notranslate"><span class="pre">X</span></code> offset, the maximum <code class="docutils literal notranslate"><span class="pre">X</span></code> offset, the minimum <code class="docutils literal notranslate"><span class="pre">Y</span></code> offset, the
+maximum <code class="docutils literal notranslate"><span class="pre">Y</span></code> offset and the advance offset (bearing plus width) of the
+character. [(minx, maxx, miny, maxy, advance), (minx, maxx, miny, maxy,
+advance), ...]. None is entered in the list for each unrecognized
+character.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.font.Font.get_italic">
+<span class="sig-name descname"><span class="pre">get_italic</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.font.Font.get_italic" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">check if the text will be rendered italic</span></div>
+<div class="line"><span class="signature">get_italic() -&gt; bool</span></div>
+</div>
+<p>Return True when the font italic rendering mode is enabled.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This is the same as the <a class="reference internal" href="#pygame.font.Font.italic" title="pygame.font.Font.italic"><code class="xref py py-attr docutils literal notranslate"><span class="pre">italic</span></code></a> attribute.</p>
+</div>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.font.Font.get_linesize">
+<span class="sig-name descname"><span class="pre">get_linesize</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.font.Font.get_linesize" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">get the line space of the font text</span></div>
+<div class="line"><span class="signature">get_linesize() -&gt; int</span></div>
+</div>
+<p>Return the height in pixels for a line of text with the font. When
+rendering multiple lines of text this is the recommended amount of space
+between lines.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.font.Font.get_height">
+<span class="sig-name descname"><span class="pre">get_height</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.font.Font.get_height" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">get the height of the font</span></div>
+<div class="line"><span class="signature">get_height() -&gt; int</span></div>
+</div>
+<p>Return the height in pixels of the actual rendered text. This is the
+average size for each glyph in the font.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.font.Font.get_ascent">
+<span class="sig-name descname"><span class="pre">get_ascent</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.font.Font.get_ascent" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">get the ascent of the font</span></div>
+<div class="line"><span class="signature">get_ascent() -&gt; int</span></div>
+</div>
+<p>Return the height in pixels for the font ascent. The ascent is the number
+of pixels from the font baseline to the top of the font.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.font.Font.get_descent">
+<span class="sig-name descname"><span class="pre">get_descent</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.font.Font.get_descent" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">get the descent of the font</span></div>
+<div class="line"><span class="signature">get_descent() -&gt; int</span></div>
+</div>
+<p>Return the height in pixels for the font descent. The descent is the
+number of pixels from the font baseline to the bottom of the font.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.font.Font.set_script">
+<span class="sig-name descname"><span class="pre">set_script</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.font.Font.set_script" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">set the script code for text shaping</span></div>
+<div class="line"><span class="signature">set_script(str) -&gt; None</span></div>
+</div>
+<p><strong>Experimental:</strong> feature still in development available for testing and feedback. It may change.
+<a class="reference external" href="https://github.com/pygame/pygame/pull/3330">Please leave feedback with authors</a></p>
+<p>Sets the script used by harfbuzz text shaping, taking a 4 character
+script code as input. For example, Hindi is written in the Devanagari
+script, for which the script code is <cite>&quot;Deva&quot;</cite>. See the full list of
+script codes in <a class="reference external" href="https://www.unicode.org/iso15924/iso15924-codes.html">ISO 15924</a>.</p>
+<p>This method requires pygame built with SDL_ttf 2.20.0 or above. Otherwise the
+method will raise a pygame.error.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 2.2.0.</span></p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+<br /><br />
+<hr />
+<a href="https://github.com/pygame/pygame/edit/main/docs/reST/ref/font.rst" rel="nofollow">Edit on GitHub</a>
+            <div class="clearer"></div>
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="freetype.html" title="pygame.freetype"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="fastevent.html" title="pygame.fastevent"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">pygame v2.5.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href=""><code class="xref py py-mod docutils literal notranslate"><span class="pre">pygame.font</span></code></a></li>
+    <script type="text/javascript" src="https://www.pygame.org/comment/jquery.plugin.docscomments.js"></script>
+
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2000-2023, pygame developers.
+    </div>
+  </body>
+</html>

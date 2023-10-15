@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Pygame Tutorials - Line By Line Chimp Example &#8212; pygame v2.5.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygame.css?v=71ee6cc2" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=ba44479e"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <link rel="icon" href="../_static/pygame.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="pygame/examples/chimp.py" href="chimp.py.html" />
+    <link rel="prev" title="Pygame Tutorials - Camera Module Introduction" href="CameraIntro.html" /> 
+  </head><body>  
+
+    <div class="document">
+
+  <div class="header">
+	<div class="flex-container">
+	<div class="logo">
+	  <a href="https://www.pygame.org/">
+	    <img src="../_static/pygame_tiny.png"/>
+	  </a>
+	  <h5>pygame documentation</h5>
+	</div>
+	<div class="pagelinks">
+	  <div class="top">
+	    <a href="https://www.pygame.org/">Pygame Home</a> ||
+	    <a href="../index.html">Help Contents</a> ||
+	    <a href="../genindex.html">Reference Index</a>
+
+        <form action="../search.html" method="get" style="display:inline;float:right;">
+          <input name="q" value="" type="text">
+          <input value="search" type="submit">
+        </form>
+	  </div>
+	  <hr style="color:black;border-bottom:none;border-style: dotted;border-bottom-style:none;">
+	  <p class="bottom"><b>Most useful stuff</b>:
+	    <a href="../ref/color.html">Color</a> | 
+	    <a href="../ref/display.html">display</a> | 
+	    <a href="../ref/draw.html">draw</a> | 
+	    <a href="../ref/event.html">event</a> | 
+	    <a href="../ref/font.html">font</a> | 
+	    <a href="../ref/image.html">image</a> | 
+	    <a href="../ref/key.html">key</a> | 
+	    <a href="../ref/locals.html">locals</a> | 
+	    <a href="../ref/mixer.html">mixer</a> | 
+	    <a href="../ref/mouse.html">mouse</a> | 
+	    <a href="../ref/rect.html">Rect</a> | 
+	    <a href="../ref/surface.html">Surface</a> | 
+	    <a href="../ref/time.html">time</a> | 
+	    <a href="../ref/music.html">music</a> | 
+	    <a href="../ref/pygame.html">pygame</a>
+	  </p>
+
+	  <p class="bottom"><b>Advanced stuff</b>:
+	    <a href="../ref/cursors.html">cursors</a> | 
+	    <a href="../ref/joystick.html">joystick</a> | 
+	    <a href="../ref/mask.html">mask</a> | 
+	    <a href="../ref/sprite.html">sprite</a> | 
+	    <a href="../ref/transform.html">transform</a> | 
+	    <a href="../ref/bufferproxy.html">BufferProxy</a> | 
+	    <a href="../ref/freetype.html">freetype</a> | 
+	    <a href="../ref/gfxdraw.html">gfxdraw</a> | 
+	    <a href="../ref/midi.html">midi</a> | 
+	    <a href="../ref/pixelarray.html">PixelArray</a> | 
+	    <a href="../ref/pixelcopy.html">pixelcopy</a> | 
+	    <a href="../ref/sndarray.html">sndarray</a> | 
+	    <a href="../ref/surfarray.html">surfarray</a> | 
+	    <a href="../ref/math.html">math</a>
+	  </p>
+
+	  <p class="bottom"><b>Other</b>:
+	    <a href="../ref/camera.html">camera</a> | 
+	    <a href="../ref/sdl2_controller.html#module-pygame._sdl2.controller">controller</a> | 
+	    <a href="../ref/examples.html">examples</a> | 
+	    <a href="../ref/fastevent.html">fastevent</a> | 
+	    <a href="../ref/scrap.html">scrap</a> | 
+	    <a href="../ref/tests.html">tests</a> | 
+	    <a href="../ref/touch.html">touch</a> | 
+	    <a href="../ref/pygame.html#module-pygame.version">version</a>
+	  </p>
+</div>
+</div>
+  </div>
+
+      <div class="documentwrapper">
+          <div class="body" role="main">
+            
+<section id="pygame-tutorials-line-by-line-chimp-example">
+<section id="line-by-line-chimp">
+<h2>Line By Line Chimp<a class="headerlink" href="#line-by-line-chimp" title="Permalink to this heading">¶</a></h2>
+<dl class="docinfo field-list simple">
+<dt class="field-odd">Author<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Pete Shinners</p>
+</dd>
+<dt class="field-even">Contact<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="mailto:pete&#37;&#52;&#48;shinners&#46;org">pete<span>&#64;</span>shinners<span>&#46;</span>org</a></p>
+</dd>
+</dl>
+<div class="toctree-wrapper compound">
+</div>
+<section id="introduction">
+<h3>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading">¶</a></h3>
+<p>In the <em>pygame</em> examples there is a simple example named &quot;chimp&quot;.
+This example simulates a punchable monkey moving around the screen with
+promises of riches and reward. The example itself is very simple, and a
+bit thin on error-checking code. This example program demonstrates many of
+pygame's abilities, like creating a window, loading images and sounds,
+rendering text, and basic event and mouse handling.</p>
+<p>The program and images can be found inside the standard source distribution
+of pygame. You can run it by running <cite>python -m pygame.examples.chimp</cite> in
+your terminal.</p>
+<p>This tutorial will go through the code block by block. Explaining how
+the code works. There will also be mention of how the code could be improved
+and what error checking could help out.</p>
+<p>This is an excellent tutorial for people getting their first look at
+the <em>pygame</em> code. Once <em>pygame</em> is fully installed, you can find
+and run the chimp demo for yourself in the examples directory.</p>
+<div class="fullwidth leading trailing docutils container">
+<p class="small-heading">(no, this is not a banner ad, it's the screenshot)</p>
+<img alt="chimp game banner" src="../_images/chimpshot.gif" />
+<p><a class="reference internal" href="chimp.py.html"><span class="doc">Full Source</span></a></p>
+</div>
+</section>
+<section id="import-modules">
+<h3>Import Modules<a class="headerlink" href="#import-modules" title="Permalink to this heading">¶</a></h3>
+<p>This is the code that imports all the needed modules into your program.
+It also checks for the availability of some of the optional pygame modules.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import Modules</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">pygame</span> <span class="k">as</span> <span class="nn">pg</span>
+
+<span class="k">if</span> <span class="ow">not</span> <span class="n">pg</span><span class="o">.</span><span class="n">font</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Warning, fonts disabled&quot;</span><span class="p">)</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">pg</span><span class="o">.</span><span class="n">mixer</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Warning, sound disabled&quot;</span><span class="p">)</span>
+
+<span class="n">main_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">data_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">main_dir</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>First, we import the standard &quot;os&quot; python module. This allow
+us to do things like create platform independent file paths.</p>
+<p>In the next line, we import the pygame package. In our case, we import
+pygame as <code class="docutils literal notranslate"><span class="pre">pg</span></code>, so that all of the functionality of pygame is able to
+be referenced from the namespace <code class="docutils literal notranslate"><span class="pre">pg</span></code>.</p>
+<p>Some pygame modules are optional, and if they aren't found,
+they evaluate to <code class="docutils literal notranslate"><span class="pre">False</span></code>. Because of that, we decide to print
+a nice warning message if the <a class="reference internal" href="../ref/font.html#module-pygame.font" title="pygame.font: pygame module for loading and rendering fonts"><code class="xref py py-mod docutils literal notranslate"><span class="pre">font</span></code></a> or
+<a class="reference internal" href="../ref/mixer.html#module-pygame.mixer" title="pygame.mixer: pygame module for loading and playing sounds"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mixer</span></code></a> modules in pygame are not available.
+(Although they will only be unavailable in very uncommon situations).</p>
+<p>Lastly, we prepare two paths for the rest of the code to use.
+<code class="docutils literal notranslate"><span class="pre">main_dir</span></code> uses the <cite>os.path</cite> module and the <cite>__file__</cite> variable provided
+by Python to locate the game's python file, and extract the folder from
+that path. It then prepares the variable <code class="docutils literal notranslate"><span class="pre">data_dir</span></code> to tell the
+loading functions exactly where to look.</p>
+</section>
+<section id="loading-resources">
+<h3>Loading Resources<a class="headerlink" href="#loading-resources" title="Permalink to this heading">¶</a></h3>
+<p>Here we have two functions we can use to load images and sounds. We will
+look at each function individually in this section.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">load_image</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">colorkey</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="n">fullname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_dir</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+    <span class="n">image</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">fullname</span><span class="p">)</span>
+
+    <span class="n">size</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">get_size</span><span class="p">()</span>
+    <span class="n">size</span> <span class="o">=</span> <span class="p">(</span><span class="n">size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">scale</span><span class="p">,</span> <span class="n">size</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">scale</span><span class="p">)</span>
+    <span class="n">image</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span>
+
+    <span class="n">image</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">convert</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">colorkey</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">colorkey</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="n">colorkey</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">get_at</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+        <span class="n">image</span><span class="o">.</span><span class="n">set_colorkey</span><span class="p">(</span><span class="n">colorkey</span><span class="p">,</span> <span class="n">pg</span><span class="o">.</span><span class="n">RLEACCEL</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">image</span><span class="p">,</span> <span class="n">image</span><span class="o">.</span><span class="n">get_rect</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>This function takes the name of an image to load. It also optionally
+takes an argument it can use to set a colorkey for the image, and an argument
+to scale the image. A colorkey is used in graphics to represent a color of the
+image that is transparent.</p>
+<p>The first thing this function does is create a full pathname to the file.
+In this example all the resources are in a &quot;data&quot; subdirectory. By using
+the <cite>os.path.join</cite> function, a pathname will be created that works for whatever
+platform the game is running on.</p>
+<p>Next we load the image using the <a class="tooltip reference internal" href="../ref/image.html#pygame.image.load" title=""><code class="xref py py-func docutils literal notranslate"><span class="pre">pygame.image.load()</span></code><span class="tooltip-content">load new image from a file (or file-like object)</span></a> function.
+After the image is loaded, we make an important
+call to the <cite>convert()</cite> function. This makes a new copy of a Surface and converts
+its color format and depth to match the display. This means blitting the
+image to the screen will happen as quickly as possible.</p>
+<p>We then scale the image, using the <a class="tooltip reference internal" href="../ref/transform.html#pygame.transform.scale" title=""><code class="xref py py-func docutils literal notranslate"><span class="pre">pygame.transform.scale()</span></code><span class="tooltip-content">resize to new resolution</span></a> function.
+This function takes a Surface and the size it should be scaled to. To scale
+by a scalar, we can get the size and scale the x and y by the scalar.</p>
+<p>Last, we set the colorkey for the image. If the user supplied an argument
+for the colorkey argument we use that value as the colorkey for the image.
+This would usually just be a color RGB value, like (255, 255, 255) for
+white.  You can also pass a value of -1 as the colorkey. In this case the
+function will lookup the color at the topleft pixel of the image, and use
+that color for the colorkey.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">load_sound</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+    <span class="k">class</span> <span class="nc">NoneSound</span><span class="p">:</span>
+        <span class="k">def</span> <span class="nf">play</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">pass</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">pg</span><span class="o">.</span><span class="n">mixer</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">pg</span><span class="o">.</span><span class="n">mixer</span><span class="o">.</span><span class="n">get_init</span><span class="p">():</span>
+        <span class="k">return</span> <span class="n">NoneSound</span><span class="p">()</span>
+
+    <span class="n">fullname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_dir</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+    <span class="n">sound</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">mixer</span><span class="o">.</span><span class="n">Sound</span><span class="p">(</span><span class="n">fullname</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">sound</span>
+</pre></div>
+</div>
+<p>Next is the function to load a sound file. The first thing this function
+does is check to see if the <a class="tooltip reference internal" href="../ref/mixer.html#module-pygame.mixer" title=""><code class="xref py py-mod docutils literal notranslate"><span class="pre">pygame.mixer</span></code><span class="tooltip-content">pygame module for loading and playing sounds</span></a> module was imported correctly.
+If not, it returns a small class instance that has a dummy play method.
+This will act enough like a normal Sound object for this game to run without
+any extra error checking.</p>
+<p>This function is similar to the image loading function, but handles some
+different problems. First we create a full path to the sound image, and
+load the sound file. Then we simply return the loaded Sound object.</p>
+</section>
+<section id="game-object-classes">
+<h3>Game Object Classes<a class="headerlink" href="#game-object-classes" title="Permalink to this heading">¶</a></h3>
+<p>Here we create two classes to represent the objects in our game. Almost
+all the logic for the game goes into these two classes. We will look over
+them one at a time here.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Fist</span><span class="p">(</span><span class="n">pg</span><span class="o">.</span><span class="n">sprite</span><span class="o">.</span><span class="n">Sprite</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;moves a clenched fist on the screen, following the mouse&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">pg</span><span class="o">.</span><span class="n">sprite</span><span class="o">.</span><span class="n">Sprite</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>  <span class="c1"># call Sprite initializer</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rect</span> <span class="o">=</span> <span class="n">load_image</span><span class="p">(</span><span class="s2">&quot;fist.png&quot;</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fist_offset</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mi">235</span><span class="p">,</span> <span class="o">-</span><span class="mi">80</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">punching</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;move the fist based on the mouse position&quot;&quot;&quot;</span>
+        <span class="n">pos</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">mouse</span><span class="o">.</span><span class="n">get_pos</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rect</span><span class="o">.</span><span class="n">topleft</span> <span class="o">=</span> <span class="n">pos</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rect</span><span class="o">.</span><span class="n">move_ip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fist_offset</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">punching</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rect</span><span class="o">.</span><span class="n">move_ip</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">25</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">punch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;returns true if the fist collides with the target&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">punching</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">punching</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">hitbox</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rect</span><span class="o">.</span><span class="n">inflate</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="o">-</span><span class="mi">5</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">hitbox</span><span class="o">.</span><span class="n">colliderect</span><span class="p">(</span><span class="n">target</span><span class="o">.</span><span class="n">rect</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">unpunch</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;called to pull the fist back&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">punching</span> <span class="o">=</span> <span class="kc">False</span>
+</pre></div>
+</div>
+<p>Here we create a class to represent the players fist. It is derived from
+the <cite>Sprite</cite> class included in the <a class="tooltip reference internal" href="../ref/sprite.html#module-pygame.sprite" title=""><code class="xref py py-mod docutils literal notranslate"><span class="pre">pygame.sprite</span></code><span class="tooltip-content">pygame module with basic game object classes</span></a> module. The <cite>__init__</cite> function
+is called when new instances of this class are created. The first thing
+we do is be sure to call the <cite>__init__</cite> function for our base class. This
+allows the Sprite's <cite>__init__</cite> function to prepare our object for use as a
+sprite.  This game uses one of the sprite drawing Group classes. These classes
+can draw sprites that have an &quot;image&quot; and &quot;rect&quot; attribute. By simply changing
+these two attributes, the renderer will draw the current image at the current
+position.</p>
+<p>All sprites have an <cite>update()</cite> method. This function is typically called
+once per frame. It is where you should put code that moves and updates
+the variables for the sprite. The <cite>update()</cite> method for the fist moves the
+fist to the location of the mouse pointer. It also offsets the fist position
+slightly if the fist is in the &quot;punching&quot; state.</p>
+<p>The following two functions <cite>punch()</cite> and <cite>unpunch()</cite> change the punching
+state for the fist. The <cite>punch()</cite> method also returns a true value if the fist
+is colliding with the given target sprite.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Chimp</span><span class="p">(</span><span class="n">pg</span><span class="o">.</span><span class="n">sprite</span><span class="o">.</span><span class="n">Sprite</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;moves a monkey critter across the screen. it can spin the</span>
+<span class="sd">    monkey when it is punched.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">pg</span><span class="o">.</span><span class="n">sprite</span><span class="o">.</span><span class="n">Sprite</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>  <span class="c1"># call Sprite initializer</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rect</span> <span class="o">=</span> <span class="n">load_image</span><span class="p">(</span><span class="s2">&quot;chimp.png&quot;</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+        <span class="n">screen</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">get_surface</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">area</span> <span class="o">=</span> <span class="n">screen</span><span class="o">.</span><span class="n">get_rect</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rect</span><span class="o">.</span><span class="n">topleft</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">90</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">move</span> <span class="o">=</span> <span class="mi">18</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dizzy</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;walk or spin, depending on the monkeys state&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dizzy</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_spin</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_walk</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_walk</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;move the monkey across the screen, and turn at the ends&quot;&quot;&quot;</span>
+        <span class="n">newpos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rect</span><span class="o">.</span><span class="n">move</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">move</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">area</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="n">newpos</span><span class="p">):</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">rect</span><span class="o">.</span><span class="n">left</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">area</span><span class="o">.</span><span class="n">left</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">rect</span><span class="o">.</span><span class="n">right</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">area</span><span class="o">.</span><span class="n">right</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">move</span> <span class="o">=</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">move</span>
+                <span class="n">newpos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rect</span><span class="o">.</span><span class="n">move</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">move</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">flip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rect</span> <span class="o">=</span> <span class="n">newpos</span>
+
+    <span class="k">def</span> <span class="nf">_spin</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;spin the monkey image&quot;&quot;&quot;</span>
+        <span class="n">center</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rect</span><span class="o">.</span><span class="n">center</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dizzy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dizzy</span> <span class="o">+</span> <span class="mi">12</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dizzy</span> <span class="o">&gt;=</span> <span class="mi">360</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dizzy</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">original</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">rotate</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">rotate</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="n">rotate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">original</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dizzy</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rect</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">get_rect</span><span class="p">(</span><span class="n">center</span><span class="o">=</span><span class="n">center</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">punched</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;this will cause the monkey to start spinning&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">dizzy</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dizzy</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">original</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">image</span>
+</pre></div>
+</div>
+<p>The <cite>Chimp</cite> class is doing a little more work than the fist, but nothing
+more complex. This class will move the chimp back and forth across the
+screen.  When the monkey is punched, he will spin around to exciting effect.
+This class is also derived from the base <a class="reference internal" href="../ref/sprite.html#pygame.sprite.Sprite" title="pygame.sprite.Sprite"><code class="xref py py-class docutils literal notranslate"><span class="pre">Sprite</span></code></a>
+class, and is initialized the same as the fist. While initializing, the class
+also sets the attribute &quot;area&quot; to be the size of the display screen.</p>
+<p>The <cite>update</cite> function for the chimp simply looks at the current &quot;dizzy&quot;
+state, which is true when the monkey is spinning from a punch. It calls either
+the <cite>_spin</cite> or <cite>_walk</cite> method. These functions are prefixed with an underscore.
+This is just a standard python idiom which suggests these methods should
+only be used by the <cite>Chimp</cite> class. We could go so far as to give them a double
+underscore, which would tell python to really try to make them private
+methods, but we don't need such protection. :)</p>
+<p>The <cite>_walk</cite> method creates a new position for the monkey by moving the current
+rect by a given offset. If this new position crosses outside the display
+area of the screen, it reverses the movement offset. It also mirrors the
+image using the <a class="tooltip reference internal" href="../ref/transform.html#pygame.transform.flip" title=""><code class="xref py py-func docutils literal notranslate"><span class="pre">pygame.transform.flip()</span></code><span class="tooltip-content">flip vertically and horizontally</span></a> function. This is a crude effect
+that makes the monkey look like he's turning the direction he is moving.</p>
+<p>The <cite>_spin</cite> method is called when the monkey is currently &quot;dizzy&quot;. The dizzy
+attribute is used to store the current amount of rotation. When the monkey
+has rotated all the way around (360 degrees) it resets the monkey image
+back to the original, non-rotated version. Before calling the
+<a class="tooltip reference internal" href="../ref/transform.html#pygame.transform.rotate" title=""><code class="xref py py-func docutils literal notranslate"><span class="pre">pygame.transform.rotate()</span></code><span class="tooltip-content">rotate an image</span></a> function, you'll see the code makes a local
+reference to the function simply named &quot;rotate&quot;. There is no need to do that
+for this example, it is just done here to keep the following line's length a
+little shorter. Note that when calling the <cite>rotate</cite> function, we are always
+rotating from the original monkey image. When rotating, there is a slight loss
+of quality. Repeatedly rotating the same image and the quality would get worse
+each time. Also, when rotating an image, the size of the image will actually
+change. This is because the corners of the image will be rotated out, making
+the image bigger. We make sure the center of the new image matches the center
+of the old image, so it rotates without moving.</p>
+<p>The last method is <cite>punched()</cite> which tells the sprite to enter its dizzy
+state.  This will cause the image to start spinning. It also makes a copy
+of the current image named &quot;original&quot;.</p>
+</section>
+<section id="initialize-everything">
+<h3>Initialize Everything<a class="headerlink" href="#initialize-everything" title="Permalink to this heading">¶</a></h3>
+<p>Before we can do much with pygame, we need to make sure its modules
+are initialized. In this case we will also open a simple graphics window.
+Now we are in the <cite>main()</cite> function of the program, which actually runs everything.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pg</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+<span class="n">screen</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">set_mode</span><span class="p">((</span><span class="mi">1280</span><span class="p">,</span> <span class="mi">480</span><span class="p">),</span> <span class="n">pg</span><span class="o">.</span><span class="n">SCALED</span><span class="p">)</span>
+<span class="n">pg</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">set_caption</span><span class="p">(</span><span class="s2">&quot;Monkey Fever&quot;</span><span class="p">)</span>
+<span class="n">pg</span><span class="o">.</span><span class="n">mouse</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The first line to initialize <em>pygame</em> takes care of a bit of
+work for us. It checks through the imported <em>pygame</em> modules and attempts
+to initialize each one of them. It is possible to go back and check if modules
+failed to initialize, but we won't bother here. It is also possible to
+take a lot more control and initialize each specific module by hand. That
+type of control is generally not needed, but is available if you desire.</p>
+<p>Next we set up the display graphics mode. Note that the <a class="tooltip reference internal" href="../ref/display.html#module-pygame.display" title=""><code class="xref py py-mod docutils literal notranslate"><span class="pre">pygame.display</span></code><span class="tooltip-content">pygame module to control the display window and screen</span></a>
+module is used to control all the display settings. In this case we are
+asking for a 1280 by 480 window, with the <code class="docutils literal notranslate"><span class="pre">SCALED</span></code> display flag.
+This automatically scales up the window for displays much larger than the
+window.</p>
+<p>Last we set the window title and turn off the mouse cursor for our
+window. Very basic to do, and now we have a small black window ready to
+do our bidding. Usually the cursor defaults to visible, so there is no need
+to really set the state unless we want to hide it.</p>
+</section>
+<section id="create-the-background">
+<h3>Create The Background<a class="headerlink" href="#create-the-background" title="Permalink to this heading">¶</a></h3>
+<p>Our program is going to have text message in the background. It would
+be nice for us to create a single surface to represent the background and
+repeatedly use that. The first step is to create the surface.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">background</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">Surface</span><span class="p">(</span><span class="n">screen</span><span class="o">.</span><span class="n">get_size</span><span class="p">())</span>
+<span class="n">background</span> <span class="o">=</span> <span class="n">background</span><span class="o">.</span><span class="n">convert</span><span class="p">()</span>
+<span class="n">background</span><span class="o">.</span><span class="n">fill</span><span class="p">((</span><span class="mi">170</span><span class="p">,</span> <span class="mi">238</span><span class="p">,</span> <span class="mi">187</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>This creates a new surface for us that is the same size as the display
+window. Note the extra call to <cite>convert()</cite> after creating the Surface. The
+convert with no arguments will make sure our background is the same format
+as the display window, which will give us the fastest results.</p>
+<p>We also fill the entire background with a certain green color. The fill()
+function usually takes an RGB triplet as arguments, but supports many
+input formats. See the <a class="tooltip reference internal" href="../ref/color.html#pygame.Color" title=""><code class="xref py py-mod docutils literal notranslate"><span class="pre">pygame.Color</span></code><span class="tooltip-content">pygame object for color representations</span></a> for all the color formats.</p>
+</section>
+<section id="put-text-on-the-background-centered">
+<h3>Put Text On The Background, Centered<a class="headerlink" href="#put-text-on-the-background-centered" title="Permalink to this heading">¶</a></h3>
+<p>Now that we have a background surface, lets get the text rendered to it. We
+only do this if we see the <a class="tooltip reference internal" href="../ref/font.html#module-pygame.font" title=""><code class="xref py py-mod docutils literal notranslate"><span class="pre">pygame.font</span></code><span class="tooltip-content">pygame module for loading and rendering fonts</span></a> module has imported properly.
+If not, we just skip this section.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">pg</span><span class="o">.</span><span class="n">font</span><span class="p">:</span>
+    <span class="n">font</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">font</span><span class="o">.</span><span class="n">Font</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="mi">64</span><span class="p">)</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">font</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="s2">&quot;Pummel The Chimp, And Win $$$&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+    <span class="n">textpos</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">get_rect</span><span class="p">(</span><span class="n">centerx</span><span class="o">=</span><span class="n">background</span><span class="o">.</span><span class="n">get_width</span><span class="p">()</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+    <span class="n">background</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">textpos</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>As you see, there are a couple steps to getting this done. First we
+must create the font object and render it into a new surface. We then find
+the center of that new surface and blit (paste) it onto the background.</p>
+<p>The font is created with the <cite>font</cite> module's <cite>Font()</cite> constructor. Usually
+you will pass the name of a TrueType font file to this function, but we
+can also pass <cite>None</cite>, which will use a default font. The <cite>Font</cite> constructor
+also needs to know the size of font we want to create.</p>
+<p>We then render that font into a new surface. The <cite>render</cite> function creates
+a new surface that is the appropriate size for our text. In this case
+we are also telling render to create antialiased text (for a nice smooth
+look) and to use a dark grey color.</p>
+<p>Next we need to find the centered position of the text on our display.
+We create a &quot;Rect&quot; object from the text dimensions, which allows us to
+easily assign it to the screen center.</p>
+<p>Finally we blit (blit is like a copy or paste) the text onto the background
+image.</p>
+</section>
+<section id="display-the-background-while-setup-finishes">
+<h3>Display The Background While Setup Finishes<a class="headerlink" href="#display-the-background-while-setup-finishes" title="Permalink to this heading">¶</a></h3>
+<p>We still have a black window on the screen. Lets show our background
+while we wait for the other resources to load.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="n">background</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+<span class="n">pg</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">flip</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>This will blit our entire background onto the display window. The
+blit is self explanatory, but what about this flip routine?</p>
+<p>In pygame, changes to the display surface are not immediately visible.
+Normally, a display must be updated in areas that have changed for them
+to be visible to the user. In this case the <cite>flip()</cite> function works nicely
+because it simply handles the entire window area.</p>
+</section>
+<section id="prepare-game-object">
+<h3>Prepare Game Object<a class="headerlink" href="#prepare-game-object" title="Permalink to this heading">¶</a></h3>
+<p>Here we create all the objects that the game is going to need.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">whiff_sound</span> <span class="o">=</span> <span class="n">load_sound</span><span class="p">(</span><span class="s2">&quot;whiff.wav&quot;</span><span class="p">)</span>
+<span class="n">punch_sound</span> <span class="o">=</span> <span class="n">load_sound</span><span class="p">(</span><span class="s2">&quot;punch.wav&quot;</span><span class="p">)</span>
+<span class="n">chimp</span> <span class="o">=</span> <span class="n">Chimp</span><span class="p">()</span>
+<span class="n">fist</span> <span class="o">=</span> <span class="n">Fist</span><span class="p">()</span>
+<span class="n">allsprites</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">sprite</span><span class="o">.</span><span class="n">RenderPlain</span><span class="p">((</span><span class="n">chimp</span><span class="p">,</span> <span class="n">fist</span><span class="p">))</span>
+<span class="n">clock</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">Clock</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>First we load two sound effects using the <cite>load_sound</cite> function we defined
+above. Then we create an instance of each of our sprite classes. And lastly
+we create a sprite <a class="reference internal" href="../ref/sprite.html#pygame.sprite.Group" title="pygame.sprite.Group"><code class="xref py py-class docutils literal notranslate"><span class="pre">Group</span></code></a> which will contain all
+our sprites.</p>
+<p>We actually use a special sprite group named <a class="reference internal" href="../ref/sprite.html#pygame.sprite.RenderPlain" title="pygame.sprite.RenderPlain"><code class="xref py py-class docutils literal notranslate"><span class="pre">RenderPlain</span></code></a>. This sprite group can draw all the sprites it
+contains to the screen. It is called <cite>RenderPlain</cite> because there are actually
+more advanced Render groups. But for our game, we just need simple drawing. We
+create the group named &quot;allsprites&quot; by passing a list with all the sprites that
+should belong in the group. We could later on add or remove sprites from this
+group, but in this game we won't need to.</p>
+<p>The <cite>clock</cite> object we create will be used to help control our game's framerate.
+we will use it in the main loop of our game to make sure it doesn't run too fast.</p>
+</section>
+<section id="main-loop">
+<h3>Main Loop<a class="headerlink" href="#main-loop" title="Permalink to this heading">¶</a></h3>
+<p>Nothing much here, just an infinite loop.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">going</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="k">while</span> <span class="n">going</span><span class="p">:</span>
+    <span class="n">clock</span><span class="o">.</span><span class="n">tick</span><span class="p">(</span><span class="mi">60</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>All games run in some sort of loop. The usual order of things is to
+check on the state of the computer and user input, move and update the
+state of all the objects, and then draw them to the screen. You'll see
+that this example is no different.</p>
+<p>We also make a call to our <cite>clock</cite> object, which will make sure our game
+doesn't run faster than 60 frames per second.</p>
+</section>
+<section id="handle-all-input-events">
+<h3>Handle All Input Events<a class="headerlink" href="#handle-all-input-events" title="Permalink to this heading">¶</a></h3>
+<p>This is an extremely simple case of working the event queue.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">pg</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">get</span><span class="p">():</span>
+    <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">pg</span><span class="o">.</span><span class="n">QUIT</span><span class="p">:</span>
+        <span class="n">going</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">elif</span> <span class="n">event</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">pg</span><span class="o">.</span><span class="n">KEYDOWN</span> <span class="ow">and</span> <span class="n">event</span><span class="o">.</span><span class="n">key</span> <span class="o">==</span> <span class="n">pg</span><span class="o">.</span><span class="n">K_ESCAPE</span><span class="p">:</span>
+        <span class="n">going</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">elif</span> <span class="n">event</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">pg</span><span class="o">.</span><span class="n">MOUSEBUTTONDOWN</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">fist</span><span class="o">.</span><span class="n">punch</span><span class="p">(</span><span class="n">chimp</span><span class="p">):</span>
+            <span class="n">punch_sound</span><span class="o">.</span><span class="n">play</span><span class="p">()</span>  <span class="c1"># punch</span>
+            <span class="n">chimp</span><span class="o">.</span><span class="n">punched</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">whiff_sound</span><span class="o">.</span><span class="n">play</span><span class="p">()</span>  <span class="c1"># miss</span>
+    <span class="k">elif</span> <span class="n">event</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">pg</span><span class="o">.</span><span class="n">MOUSEBUTTONUP</span><span class="p">:</span>
+        <span class="n">fist</span><span class="o">.</span><span class="n">unpunch</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>First we get all the available Events from pygame and loop through each
+of them. The first two tests see if the user has quit our game, or pressed
+the escape key. In these cases we just set <code class="docutils literal notranslate"><span class="pre">going</span></code> to <code class="docutils literal notranslate"><span class="pre">False</span></code>, allowing
+us out of the infinite loop.</p>
+<p>Next we just check to see if the mouse button was pressed or released.
+If the button was pressed, we ask the fist object if it has collided with
+the chimp. We play the appropriate sound effect, and if the monkey was hit,
+we tell him to start spinning (by calling his <cite>punched()</cite> method).</p>
+</section>
+<section id="update-the-sprites">
+<h3>Update the Sprites<a class="headerlink" href="#update-the-sprites" title="Permalink to this heading">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">allsprites</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Sprite groups have an <cite>update()</cite> method, which simply calls the update method
+for all the sprites it contains. Each of the objects will move around, depending
+on which state they are in. This is where the chimp will move one step side
+to side, or spin a little farther if he was recently punched.</p>
+</section>
+<section id="draw-the-entire-scene">
+<h3>Draw The Entire Scene<a class="headerlink" href="#draw-the-entire-scene" title="Permalink to this heading">¶</a></h3>
+<p>Now that all the objects are in the right place, time to draw them.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="n">background</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+<span class="n">allsprites</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">screen</span><span class="p">)</span>
+<span class="n">pg</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">flip</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>The first blit call will draw the background onto the entire screen. This
+erases everything we saw from the previous frame (slightly inefficient, but
+good enough for this game). Next we call the <cite>draw()</cite> method of the sprite
+container. Since this sprite container is really an instance of the &quot;RenderPlain&quot;
+sprite group, it knows how to draw our sprites. Lastly, we <cite>flip()</cite> the contents
+of pygame's software double buffer to the screen. This makes everything we've
+drawn visible all at once.</p>
+</section>
+<section id="game-over">
+<h3>Game Over<a class="headerlink" href="#game-over" title="Permalink to this heading">¶</a></h3>
+<p>User has quit, time to clean up.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pg</span><span class="o">.</span><span class="n">quit</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Cleaning up the running game in <em>pygame</em> is extremely simple.
+Since all variables are automatically destructed, we don't really have to do
+anything, but calling <cite>pg.quit()</cite> explicitly cleans up pygame's internals.</p>
+</section>
+</section>
+</section>
+
+
+<br /><br />
+<hr />
+<a href="https://github.com/pygame/pygame/edit/main/docs/reST/tut/ChimpLineByLine.rst" rel="nofollow">Edit on GitHub</a>
+            <div class="clearer"></div>
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="chimp.py.html" title="pygame/examples/chimp.py"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="CameraIntro.html" title="Pygame Tutorials - Camera Module Introduction"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">pygame v2.5.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Pygame Tutorials - Line By Line Chimp Example</a></li>
+    <script type="text/javascript" src="https://www.pygame.org/comment/jquery.plugin.docscomments.js"></script>
+
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2000-2023, pygame developers.
+    </div>
+  </body>
+</html>

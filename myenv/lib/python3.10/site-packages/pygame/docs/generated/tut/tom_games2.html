@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Revision: Pygame fundamentals &#8212; pygame v2.5.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygame.css?v=71ee6cc2" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=ba44479e"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <link rel="icon" href="../_static/pygame.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Kicking things off" href="tom_games3.html" />
+    <link rel="prev" title="Making Games With Pygame" href="MakeGames.html" /> 
+  </head><body>  
+
+    <div class="document">
+
+  <div class="header">
+	<div class="flex-container">
+	<div class="logo">
+	  <a href="https://www.pygame.org/">
+	    <img src="../_static/pygame_tiny.png"/>
+	  </a>
+	  <h5>pygame documentation</h5>
+	</div>
+	<div class="pagelinks">
+	  <div class="top">
+	    <a href="https://www.pygame.org/">Pygame Home</a> ||
+	    <a href="../index.html">Help Contents</a> ||
+	    <a href="../genindex.html">Reference Index</a>
+
+        <form action="../search.html" method="get" style="display:inline;float:right;">
+          <input name="q" value="" type="text">
+          <input value="search" type="submit">
+        </form>
+	  </div>
+	  <hr style="color:black;border-bottom:none;border-style: dotted;border-bottom-style:none;">
+	  <p class="bottom"><b>Most useful stuff</b>:
+	    <a href="../ref/color.html">Color</a> | 
+	    <a href="../ref/display.html">display</a> | 
+	    <a href="../ref/draw.html">draw</a> | 
+	    <a href="../ref/event.html">event</a> | 
+	    <a href="../ref/font.html">font</a> | 
+	    <a href="../ref/image.html">image</a> | 
+	    <a href="../ref/key.html">key</a> | 
+	    <a href="../ref/locals.html">locals</a> | 
+	    <a href="../ref/mixer.html">mixer</a> | 
+	    <a href="../ref/mouse.html">mouse</a> | 
+	    <a href="../ref/rect.html">Rect</a> | 
+	    <a href="../ref/surface.html">Surface</a> | 
+	    <a href="../ref/time.html">time</a> | 
+	    <a href="../ref/music.html">music</a> | 
+	    <a href="../ref/pygame.html">pygame</a>
+	  </p>
+
+	  <p class="bottom"><b>Advanced stuff</b>:
+	    <a href="../ref/cursors.html">cursors</a> | 
+	    <a href="../ref/joystick.html">joystick</a> | 
+	    <a href="../ref/mask.html">mask</a> | 
+	    <a href="../ref/sprite.html">sprite</a> | 
+	    <a href="../ref/transform.html">transform</a> | 
+	    <a href="../ref/bufferproxy.html">BufferProxy</a> | 
+	    <a href="../ref/freetype.html">freetype</a> | 
+	    <a href="../ref/gfxdraw.html">gfxdraw</a> | 
+	    <a href="../ref/midi.html">midi</a> | 
+	    <a href="../ref/pixelarray.html">PixelArray</a> | 
+	    <a href="../ref/pixelcopy.html">pixelcopy</a> | 
+	    <a href="../ref/sndarray.html">sndarray</a> | 
+	    <a href="../ref/surfarray.html">surfarray</a> | 
+	    <a href="../ref/math.html">math</a>
+	  </p>
+
+	  <p class="bottom"><b>Other</b>:
+	    <a href="../ref/camera.html">camera</a> | 
+	    <a href="../ref/sdl2_controller.html#module-pygame._sdl2.controller">controller</a> | 
+	    <a href="../ref/examples.html">examples</a> | 
+	    <a href="../ref/fastevent.html">fastevent</a> | 
+	    <a href="../ref/scrap.html">scrap</a> | 
+	    <a href="../ref/tests.html">tests</a> | 
+	    <a href="../ref/touch.html">touch</a> | 
+	    <a href="../ref/pygame.html#module-pygame.version">version</a>
+	  </p>
+</div>
+</div>
+  </div>
+
+      <div class="documentwrapper">
+          <div class="body" role="main">
+            
+<section id="revision-pygame-fundamentals">
+<section id="makegames-2">
+<span id="id1"></span><h2>2. Revision: Pygame fundamentals<a class="headerlink" href="#makegames-2" title="Permalink to this heading">¶</a></h2>
+<section id="the-basic-pygame-game">
+<span id="makegames-2-1"></span><h3>2.1. The basic Pygame game<a class="headerlink" href="#the-basic-pygame-game" title="Permalink to this heading">¶</a></h3>
+<p>For the sake of revision, and to ensure that you are familiar with the basic structure of a Pygame program, I'll briefly run through
+a basic Pygame program, which will display no more than a window with some text in it, that should, by the end, look something like
+this (though of course the window decoration will probably be different on your system):</p>
+<img alt="../_images/tom_basic.png" src="../_images/tom_basic.png" />
+<p>The full code for this example looks like this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/usr/bin/python</span>
+
+<span class="kn">import</span> <span class="nn">pygame</span>
+<span class="kn">from</span> <span class="nn">pygame.locals</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="c1"># Initialise screen</span>
+    <span class="n">pygame</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+    <span class="n">screen</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">set_mode</span><span class="p">((</span><span class="mi">150</span><span class="p">,</span> <span class="mi">50</span><span class="p">))</span>
+    <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">set_caption</span><span class="p">(</span><span class="s1">&#39;Basic Pygame program&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Fill background</span>
+    <span class="n">background</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Surface</span><span class="p">(</span><span class="n">screen</span><span class="o">.</span><span class="n">get_size</span><span class="p">())</span>
+    <span class="n">background</span> <span class="o">=</span> <span class="n">background</span><span class="o">.</span><span class="n">convert</span><span class="p">()</span>
+    <span class="n">background</span><span class="o">.</span><span class="n">fill</span><span class="p">((</span><span class="mi">250</span><span class="p">,</span> <span class="mi">250</span><span class="p">,</span> <span class="mi">250</span><span class="p">))</span>
+
+    <span class="c1"># Display some text</span>
+    <span class="n">font</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">font</span><span class="o">.</span><span class="n">Font</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="mi">36</span><span class="p">)</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">font</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="s2">&quot;Hello There&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+    <span class="n">textpos</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">get_rect</span><span class="p">()</span>
+    <span class="n">textpos</span><span class="o">.</span><span class="n">centerx</span> <span class="o">=</span> <span class="n">background</span><span class="o">.</span><span class="n">get_rect</span><span class="p">()</span><span class="o">.</span><span class="n">centerx</span>
+    <span class="n">background</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">textpos</span><span class="p">)</span>
+
+    <span class="c1"># Blit everything to the screen</span>
+    <span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="n">background</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+    <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">flip</span><span class="p">()</span>
+
+    <span class="c1"># Event loop</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">pygame</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">get</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">QUIT</span><span class="p">:</span>
+                <span class="k">return</span>
+
+        <span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="n">background</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+        <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">flip</span><span class="p">()</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span> <span class="n">main</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="basic-pygame-objects">
+<span id="makegames-2-2"></span><h3>2.2. Basic Pygame objects<a class="headerlink" href="#basic-pygame-objects" title="Permalink to this heading">¶</a></h3>
+<p>As you can see, the code consists of three main objects: the screen, the background, and the text. Each of these objects is created
+by first calling an instance of an in-built Pygame object, and then modifying it to fit our needs. The screen is a slightly special
+case, because we still modify the display through Pygame calls, rather than calling methods belonging to the screen object. But for
+all other Pygame objects, we first create the object as a copy of a Pygame object, giving it some attributes, and build our game
+objects from them.</p>
+<p>With the background, we first create a Pygame Surface object, and make it the size of the screen. We then perform the convert()
+operation to convert the Surface to a single pixel format. This is more obviously necessary when we have several images and surfaces,
+all of different pixel formats, which makes rendering them quite slow. By converting all the surfaces, we can drastically speed up
+rendering times. Finally, we fill the background surface with white (255, 255, 255). These values are <em class="firstterm">RGB</em> (Red Green
+Blue), and can be worked out from any good paint program.</p>
+<p>With the text, we require more than one object. First, we create a font object, which defines which font to use, and the size of the
+font. Then we create a text object, by using the <code class="docutils literal notranslate"><span class="pre">render</span></code> method that belongs to our font object, supplying three arguments:
+the text to be rendered, whether or not it should be anti-aliased (1=yes, 0=no), and the color of the text (again in RGB format). Next
+we create a third text object, which gets the rectangle for the text. The easiest way to understand this is to imagine drawing a
+rectangle that will surround all of the text; you can then use this rectangle to get/set the position of the text on the screen. So
+in this example we get the rectangle, set its <code class="docutils literal notranslate"><span class="pre">centerx</span></code> attribute to be the <code class="docutils literal notranslate"><span class="pre">centerx</span></code> attribute of the
+background (so the text's center will be the same as the background's center, i.e. the text will be centered on the screen on the x
+axis). We could also set the y coordinate, but it's not any different so I left the text at the top of the screen. As the screen is
+small anyway, it didn't seem necessary.</p>
+</section>
+<section id="blitting">
+<span id="makegames-2-3"></span><h3>2.3. Blitting<a class="headerlink" href="#blitting" title="Permalink to this heading">¶</a></h3>
+<p>Now we have created our game objects, we need to actually render them. If we didn't and we ran the program, we'd just see a
+blank window, and the objects would remain invisible. The term used for rendering objects is <em class="firstterm">blitting</em>, which is where
+you copy the pixels belonging to said object onto the destination object. So to render the background object, you blit it onto the
+screen. In this example, to make things simple, we blit the text onto the background (so the background will now have a copy of the
+text on it), and then blit the background onto the screen.</p>
+<p>Blitting is one of the slowest operations in any game, so you need to be careful not to blit too much onto the screen in every frame.
+If you have a background image, and a ball flying around the screen, then you could blit the background and then the ball in every
+frame, which would cover up the ball's previous position and render the new ball, but this would be pretty slow. A better solution is
+to blit the background onto the area that the ball previously occupied, which can be found by the ball's previous rectangle, and then
+blitting the ball, so that you are only blitting two small areas.</p>
+</section>
+<section id="the-event-loop">
+<span id="makegames-2-4"></span><h3>2.4. The event loop<a class="headerlink" href="#the-event-loop" title="Permalink to this heading">¶</a></h3>
+<p>Once you've set the game up, you need to put it into a loop so that it will continuously run until the user signals that he/she wants
+to exit. So you start an open <code class="docutils literal notranslate"><span class="pre">while</span></code> loop, and then for each iteration of the loop, which will be each frame of the game,
+update the game. The first thing is to check for any Pygame events, which will be the user hitting the keyboard, clicking a mouse
+button, moving a joystick, resizing the window, or trying to close it. In this case, we simply want to watch out for for user trying
+to quit the game by closing the window, in which case the game should <code class="docutils literal notranslate"><span class="pre">return</span></code>, which will end the <code class="docutils literal notranslate"><span class="pre">while</span></code> loop.
+Then we simply need to re-blit the background, and flip (update) the display to have everything drawn. OK, as nothing moves or happens
+in this example, we don't strictly speaking need to re-blit the background in every iteration, but I put it in because when things are
+moving around on the screen, you will need to do all your blitting here.</p>
+</section>
+<section id="ta-da">
+<span id="makegames-2-5"></span><h3>2.5. Ta-da!<a class="headerlink" href="#ta-da" title="Permalink to this heading">¶</a></h3>
+<p>And that's it - your most basic Pygame game! All games will take a form similar to this, but with lots more code for the actual game
+functions themselves, which are more to do your with programming, and less guided in structure by the workings of Pygame. This is what
+this tutorial is really about, and will now go onto.</p>
+</section>
+</section>
+</section>
+
+
+<br /><br />
+<hr />
+<a href="https://github.com/pygame/pygame/edit/main/docs/reST/tut/tom_games2.rst" rel="nofollow">Edit on GitHub</a>
+            <div class="clearer"></div>
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="tom_games3.html" title="Kicking things off"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="MakeGames.html" title="Making Games With Pygame"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">pygame v2.5.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="MakeGames.html" accesskey="U">Making Games With Pygame</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Revision: Pygame fundamentals</a></li>
+    <script type="text/javascript" src="https://www.pygame.org/comment/jquery.plugin.docscomments.js"></script>
+
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2000-2023, pygame developers.
+    </div>
+  </body>
+</html>

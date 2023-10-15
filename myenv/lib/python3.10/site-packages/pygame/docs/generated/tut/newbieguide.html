@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>A Newbie Guide to pygame &#8212; pygame v2.5.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygame.css?v=71ee6cc2" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=ba44479e"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <link rel="icon" href="../_static/pygame.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Author: Youngwook Kim (Korean)" href="en/Red_or_Black/1.Prolog/introduction.html" />
+    <link rel="prev" title="Pygame Tutorials - Surfarray Introduction" href="SurfarrayIntro.html" /> 
+  </head><body>  
+
+    <div class="document">
+
+  <div class="header">
+	<div class="flex-container">
+	<div class="logo">
+	  <a href="https://www.pygame.org/">
+	    <img src="../_static/pygame_tiny.png"/>
+	  </a>
+	  <h5>pygame documentation</h5>
+	</div>
+	<div class="pagelinks">
+	  <div class="top">
+	    <a href="https://www.pygame.org/">Pygame Home</a> ||
+	    <a href="../index.html">Help Contents</a> ||
+	    <a href="../genindex.html">Reference Index</a>
+
+        <form action="../search.html" method="get" style="display:inline;float:right;">
+          <input name="q" value="" type="text">
+          <input value="search" type="submit">
+        </form>
+	  </div>
+	  <hr style="color:black;border-bottom:none;border-style: dotted;border-bottom-style:none;">
+	  <p class="bottom"><b>Most useful stuff</b>:
+	    <a href="../ref/color.html">Color</a> | 
+	    <a href="../ref/display.html">display</a> | 
+	    <a href="../ref/draw.html">draw</a> | 
+	    <a href="../ref/event.html">event</a> | 
+	    <a href="../ref/font.html">font</a> | 
+	    <a href="../ref/image.html">image</a> | 
+	    <a href="../ref/key.html">key</a> | 
+	    <a href="../ref/locals.html">locals</a> | 
+	    <a href="../ref/mixer.html">mixer</a> | 
+	    <a href="../ref/mouse.html">mouse</a> | 
+	    <a href="../ref/rect.html">Rect</a> | 
+	    <a href="../ref/surface.html">Surface</a> | 
+	    <a href="../ref/time.html">time</a> | 
+	    <a href="../ref/music.html">music</a> | 
+	    <a href="../ref/pygame.html">pygame</a>
+	  </p>
+
+	  <p class="bottom"><b>Advanced stuff</b>:
+	    <a href="../ref/cursors.html">cursors</a> | 
+	    <a href="../ref/joystick.html">joystick</a> | 
+	    <a href="../ref/mask.html">mask</a> | 
+	    <a href="../ref/sprite.html">sprite</a> | 
+	    <a href="../ref/transform.html">transform</a> | 
+	    <a href="../ref/bufferproxy.html">BufferProxy</a> | 
+	    <a href="../ref/freetype.html">freetype</a> | 
+	    <a href="../ref/gfxdraw.html">gfxdraw</a> | 
+	    <a href="../ref/midi.html">midi</a> | 
+	    <a href="../ref/pixelarray.html">PixelArray</a> | 
+	    <a href="../ref/pixelcopy.html">pixelcopy</a> | 
+	    <a href="../ref/sndarray.html">sndarray</a> | 
+	    <a href="../ref/surfarray.html">surfarray</a> | 
+	    <a href="../ref/math.html">math</a>
+	  </p>
+
+	  <p class="bottom"><b>Other</b>:
+	    <a href="../ref/camera.html">camera</a> | 
+	    <a href="../ref/sdl2_controller.html#module-pygame._sdl2.controller">controller</a> | 
+	    <a href="../ref/examples.html">examples</a> | 
+	    <a href="../ref/fastevent.html">fastevent</a> | 
+	    <a href="../ref/scrap.html">scrap</a> | 
+	    <a href="../ref/tests.html">tests</a> | 
+	    <a href="../ref/touch.html">touch</a> | 
+	    <a href="../ref/pygame.html#module-pygame.version">version</a>
+	  </p>
+</div>
+</div>
+  </div>
+
+      <div class="documentwrapper">
+          <div class="body" role="main">
+            
+<section id="newbie-guide-to-pygame">
+<section id="a-newbie-guide-to-pygame">
+<h2>A Newbie Guide to pygame<a class="headerlink" href="#a-newbie-guide-to-pygame" title="Permalink to this heading">¶</a></h2>
+<p>or <strong>Things I learned by trial and error so you don't have to,</strong></p>
+<p>or <strong>How I learned to stop worrying and love the blit.</strong></p>
+<p><a class="reference external" href="https://www.pygame.org/">Pygame</a> is a python wrapper for <a class="reference external" href="http://libsdl.org">SDL</a>, written by Pete Shinners.  What this
+means is that, using pygame, you can write games or other multimedia
+applications in Python that will run unaltered on any of SDL's supported
+platforms (Windows, Linux, Mac, and others).</p>
+<p>Pygame may be easy to learn, but the world of graphics programming can be
+pretty confusing to the newcomer.  I wrote this to try to distill the practical
+knowledge I've gained over the past year or so of working with pygame, and its
+predecessor, PySDL.  I've tried to rank these suggestions in order of
+importance, but how relevant any particular hint is will depend on your own
+background and the details of your project.</p>
+<section id="get-comfortable-working-in-python">
+<h3>Get comfortable working in Python.<a class="headerlink" href="#get-comfortable-working-in-python" title="Permalink to this heading">¶</a></h3>
+<p>The most important thing is to feel confident using python. Learning something
+as potentially complicated as graphics programming will be a real chore if
+you're also unfamiliar with the language you're using. Write a few sizable
+non-graphical programs in python -- parse some text files, write a guessing
+game or a journal-entry program or something. Get comfortable with string and
+list manipulation -- know how to split, slice and combine strings and lists.
+Know how <code class="docutils literal notranslate"><span class="pre">import</span></code> works -- try writing a program that is spread across
+several source files.  Write your own functions, and practice manipulating
+numbers and characters; know how to convert between the two.  Get to the point
+where the syntax for using lists and dictionaries is second-nature -- you don't
+want to have to run to the documentation every time you need to slice a list or
+sort a set of keys.  Get comfortable using file paths -- this will come in handy
+later when you start loading assets and creating save files.</p>
+<p>Resist the temptation to ask for direct help online when
+you run into trouble.  Instead, fire up the interpreter and play with the
+problem for a few hours, or use print statements and debugging tools to find out
+what's going wrong in your code.  Get into the habit of looking things up in the
+official <a class="reference external" href="https://docs.python.org/3/">Python documentation</a>, and Googling error messages to figure out what
+they mean.</p>
+<p>This may sound incredibly dull, but the confidence you'll gain through your
+familiarity with python will work wonders when it comes time to write your
+game.  The time you spend making python code second-nature will be nothing
+compared to the time you'll save when you're writing real code.</p>
+</section>
+<section id="recognize-which-parts-of-pygame-you-really-need">
+<h3>Recognize which parts of pygame you really need.<a class="headerlink" href="#recognize-which-parts-of-pygame-you-really-need" title="Permalink to this heading">¶</a></h3>
+<p>Looking at the jumble of classes at the top of the pygame documentation index
+may be confusing.  The important thing is to realize that you can do a great
+deal with only a tiny subset of functions.  Many classes you'll probably never
+use -- in a year, I haven't touched the <code class="docutils literal notranslate"><span class="pre">Channel</span></code>, <code class="docutils literal notranslate"><span class="pre">Joystick</span></code>, <code class="docutils literal notranslate"><span class="pre">cursors</span></code>,
+<code class="docutils literal notranslate"><span class="pre">surfarray</span></code> or <code class="docutils literal notranslate"><span class="pre">version</span></code> functions.</p>
+</section>
+<section id="know-what-a-surface-is">
+<h3>Know what a surface is.<a class="headerlink" href="#know-what-a-surface-is" title="Permalink to this heading">¶</a></h3>
+<p>The most important part of pygame is the surface.  Just think of a surface as a
+blank piece of paper.  You can do a lot of things with a surface -- you can
+draw lines on it, fill parts of it with color, copy images to and from it, and
+set or read individual pixel colors on it.  A surface can be any size (within
+reason) and you can have as many of them as you like (again, within reason).
+One surface is special -- the one you create with
+<a class="tooltip reference internal" href="../ref/display.html#pygame.display.set_mode" title=""><code class="xref py py-func docutils literal notranslate"><span class="pre">pygame.display.set_mode()</span></code><span class="tooltip-content">Initialize a window or screen for display</span></a>.  This 'display surface' represents the screen;
+whatever you do to it will appear on the user's screen.</p>
+<p>So how do you create surfaces?  As mentioned above, you create the special
+'display surface' with <code class="docutils literal notranslate"><span class="pre">pygame.display.set_mode()</span></code>.  You can create a surface
+that contains an image by using <a class="tooltip reference internal" href="../ref/image.html#pygame.image.load" title=""><code class="xref py py-func docutils literal notranslate"><span class="pre">pygame.image.load()</span></code><span class="tooltip-content">load new image from a file (or file-like object)</span></a>, or you can make a surface
+that contains text with <a class="tooltip reference internal" href="../ref/font.html#pygame.font.Font.render" title=""><code class="xref py py-func docutils literal notranslate"><span class="pre">pygame.font.Font.render()</span></code><span class="tooltip-content">draw text on a new Surface</span></a>.  You can even create a surface that
+contains nothing at all with <a class="tooltip reference internal" href="../ref/surface.html#pygame.Surface" title=""><code class="xref py py-func docutils literal notranslate"><span class="pre">pygame.Surface()</span></code><span class="tooltip-content">pygame object for representing images</span></a>.</p>
+<p>Most of the surface functions are not critical. Just learn <a class="reference internal" href="../ref/surface.html#pygame.Surface.blit" title="pygame.Surface.blit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Surface.blit()</span></code></a>,
+<a class="reference internal" href="../ref/surface.html#pygame.Surface.fill" title="pygame.Surface.fill"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Surface.fill()</span></code></a>, <a class="reference internal" href="../ref/surface.html#pygame.Surface.set_at" title="pygame.Surface.set_at"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Surface.set_at()</span></code></a> and <a class="reference internal" href="../ref/surface.html#pygame.Surface.get_at" title="pygame.Surface.get_at"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Surface.get_at()</span></code></a>, and you'll be fine.</p>
+</section>
+<section id="use-surface-convert">
+<h3>Use Surface.convert().<a class="headerlink" href="#use-surface-convert" title="Permalink to this heading">¶</a></h3>
+<p>When I first read the documentation for <a class="reference internal" href="../ref/surface.html#pygame.Surface.convert" title="pygame.Surface.convert"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Surface.convert()</span></code></a>, I didn't think
+it was something I had to worry about. 'I only use PNGs, therefore everything I
+do will be in the same format. So I don't need <code class="docutils literal notranslate"><span class="pre">convert()</span></code>';. It turns out I
+was very, very wrong.</p>
+<p>The 'format' that <code class="docutils literal notranslate"><span class="pre">convert()</span></code> refers to isn't the <em>file</em> format (i.e. PNG,
+JPEG, GIF), it's what's called the 'pixel format'.  This refers to the
+particular way that a surface records individual colors in a specific pixel.
+If the surface format isn't the same as the display format, SDL will have to
+convert it on-the-fly for every blit -- a fairly time-consuming process.  Don't
+worry too much about the explanation; just note that <code class="docutils literal notranslate"><span class="pre">convert()</span></code> is necessary
+if you want to get any kind of speed out of your blits.</p>
+<p>How do you use convert? Just call it after creating a surface with the
+<a class="reference internal" href="../ref/image.html#pygame.image.load" title="pygame.image.load"><code class="xref py py-func docutils literal notranslate"><span class="pre">image.load()</span></code></a> function. Instead of just doing:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">surface</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;foo.png&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Do:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">surface</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;foo.png&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">convert</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>It's that easy. You just need to call it once per surface, when you load an
+image off the disk.  You'll be pleased with the results; I see about a 6x
+increase in blitting speed by calling <code class="docutils literal notranslate"><span class="pre">convert()</span></code>.</p>
+<p>The only times you don't want to use <code class="docutils literal notranslate"><span class="pre">convert()</span></code> is when you really need to
+have absolute control over an image's internal format -- say you were writing
+an image conversion program or something, and you needed to ensure that the
+output file had the same pixel format as the input file.  If you're writing a
+game, you need speed.  Use <code class="docutils literal notranslate"><span class="pre">convert()</span></code>.</p>
+</section>
+<section id="be-wary-of-outdated-obsolete-and-optional-advice">
+<h3>Be wary of outdated, obsolete, and optional advice.<a class="headerlink" href="#be-wary-of-outdated-obsolete-and-optional-advice" title="Permalink to this heading">¶</a></h3>
+<p>Pygame has been around since the early 2000s, and a lot has changed since then --
+both within the framework itself and within the broader computing landscape as a
+whole. Make sure to check the dates on materials you read (including this guide!),
+and take older advice with a grain of salt. Here are some common things that
+stick out to me:</p>
+<p><strong>Dirty Rects &amp; performance 'tricks'</strong></p>
+<p>When you read older bits of pygame documentation or guides online, you may see
+some emphasis on only updating portions of the screen that are dirty, for the
+sake of performance (in this context, &quot;dirty&quot; means the region has changed since
+the previous frame was drawn).</p>
+<p>Generally this entails calling <a class="tooltip reference internal" href="../ref/display.html#pygame.display.update" title=""><code class="xref py py-func docutils literal notranslate"><span class="pre">pygame.display.update()</span></code><span class="tooltip-content">Update portions of the screen for software displays</span></a> (with a list of
+rects) instead of <a class="tooltip reference internal" href="../ref/display.html#pygame.display.flip" title=""><code class="xref py py-func docutils literal notranslate"><span class="pre">pygame.display.flip()</span></code><span class="tooltip-content">Update the full display Surface to the screen</span></a>, not having scrolling backgrounds,
+or even not filling the screen with a background color every frame because pygame
+supposedly can't handle it.  Some of pygame's API is designed to support this
+paradigm as well (e.g. <a class="tooltip reference internal" href="../ref/sprite.html#pygame.sprite.RenderUpdates" title=""><code class="xref py py-func docutils literal notranslate"><span class="pre">pygame.sprite.RenderUpdates()</span></code><span class="tooltip-content">Group sub-class that tracks dirty updates.</span></a>), which made a lot of
+sense in the early years of pygame.</p>
+<p>In the present day (2022) though, most modest desktop computers are powerful enough to
+refresh the entire display once per frame at 60 FPS and beyond.  You can have a moving
+camera, or dynamic backgrounds and your game should run totally fine at 60 FPS.  CPUs are
+more powerful nowadays, and you can use <code class="docutils literal notranslate"><span class="pre">display.flip()</span></code> without fear.</p>
+<p>That being said there are still some times when this old technique is still useful
+for squeezing out a few extra FPS. For example, with a single screen game like
+an Asteroids or Space Invaders. Here is the rough process for how it works:</p>
+<p>Instead of updating the whole screen every frame, only the parts that changed since
+the last frame are updated.  You do this by keeping track of those rectangles in a list,
+then calling <code class="docutils literal notranslate"><span class="pre">update(the_dirty_rectangles)</span></code> at the end of the frame.  In detail
+for a moving sprite:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Blit a piece of the background over the sprite's current location, erasing it.</p></li>
+<li><p>Append the sprite's current location rectangle to a list called dirty_rects.</p></li>
+<li><p>Move the sprite.</p></li>
+<li><p>Draw the sprite at its new location.</p></li>
+<li><p>Append the sprite's new location to my dirty_rects list.</p></li>
+<li><p>Call <code class="docutils literal notranslate"><span class="pre">display.update(dirty_rects)</span></code></p></li>
+</ul>
+</div></blockquote>
+<p>Even though this technique is not required for making performant 2D games with
+modern CPUs, it is still useful to be aware of. There are also still plenty of other ways
+to accidentally tank your game's performance with poorly optimized rendering logic.
+For example, even on modern hardware it's probably too slow to call <code class="docutils literal notranslate"><span class="pre">set_at</span></code> once per pixel
+on the display surface. Being mindful of performance is still something you'll have to
+do.</p>
+<p>There just aren't that many 'one neat trick to fix your code performance' tips. Every game
+is different and there are different problems and different algorithms to solve them
+efficiently in each type of game. Pretty much every time your 2D game code is failing to hit a
+reasonable frame rate the underlying cause turns out to be bad algorithm or a misunderstanding
+of fundamental game design patterns.</p>
+<p>If you are having performance problems, first make sure you aren't loading files repeatedly in your
+game loop, then use one of the many options for profiling your code to find out what is taking up the
+most time. Once you are armed with at least some knowledge on why your game is slow, try asking the
+internet (via google), or the pygame community if they've got some better algorithms to help you out.</p>
+<p><strong>HWSURFACE and DOUBLEBUF</strong></p>
+<p>The HWSURFACE <a class="reference internal" href="../ref/display.html#pygame.display.set_mode" title="pygame.display.set_mode"><code class="xref py py-func docutils literal notranslate"><span class="pre">display.set_mode()</span></code></a> flag does nothing in pygame versions 2.0.0 and
+later (you can check the docs if you don't believe me)!  There's no reason to
+use it anymore.  Even in pygame 1, its effect is pretty nuanced and
+generally misunderstood by most pygame users.  It was never a magic speed-up
+flag, unfortunately.</p>
+<p>DOUBLEBUF still has some use, but is also not a magic speed up flag.</p>
+<p><strong>The Sprite class</strong></p>
+<p>You don't need to use the built-in <a class="reference internal" href="../ref/sprite.html#pygame.sprite.Sprite" title="pygame.sprite.Sprite"><code class="xref py py-class docutils literal notranslate"><span class="pre">Sprite</span></code></a> or <a class="reference internal" href="../ref/sprite.html#pygame.sprite.Group" title="pygame.sprite.Group"><code class="xref py py-class docutils literal notranslate"><span class="pre">Group</span></code></a> classes
+if you don't want to.  In a lot of tutorials, it may seem like <code class="docutils literal notranslate"><span class="pre">Sprite</span></code> is the
+fundamental &quot;GameObject&quot; of pygame, from which all other objects must derive,
+but in reality it's pretty much just a wrapper around a <code class="docutils literal notranslate"><span class="pre">Rect</span></code> and a
+<code class="docutils literal notranslate"><span class="pre">Surface</span></code>, with some additional convenience methods.  You may find it
+more intuitive (and fun) to write your game's core logic and classes from
+scratch.</p>
+</section>
+<section id="there-is-no-rule-six">
+<h3>There is NO rule six.<a class="headerlink" href="#there-is-no-rule-six" title="Permalink to this heading">¶</a></h3>
+</section>
+<section id="don-t-get-distracted-by-side-issues">
+<h3>Don't get distracted by side issues.<a class="headerlink" href="#don-t-get-distracted-by-side-issues" title="Permalink to this heading">¶</a></h3>
+<p>Sometimes, new game programmers spend too much time worrying about issues that
+aren't really critical to their game's success.  The desire to get secondary
+issues 'right' is understandable, but early in the process of creating a game,
+you cannot even know what the important questions are, let alone what answers
+you should choose.  The result can be a lot of needless prevarication.</p>
+<p>For example, consider the question of how to organize your graphics files.
+Should each frame have its own graphics file, or each sprite?  Perhaps all the
+graphics should be zipped up into one archive?  A great deal of time has been
+wasted on a lot of projects, asking these questions on mailing lists, debating
+the answers, profiling, etc, etc.  This is a secondary issue; any time spent
+discussing it should have been spent coding the actual game.</p>
+<p>The insight here is that it is far better to have a 'pretty good' solution that
+was actually implemented, than a perfect solution that you never got around to
+writing.</p>
+</section>
+<section id="rects-are-your-friends">
+<h3>Rects are your friends.<a class="headerlink" href="#rects-are-your-friends" title="Permalink to this heading">¶</a></h3>
+<p>Pete Shinners' wrapper may have cool alpha effects and fast blitting speeds,
+but I have to admit my favorite part of pygame is the lowly <a class="reference internal" href="../ref/rect.html#pygame.Rect" title="pygame.Rect"><code class="xref py py-class docutils literal notranslate"><span class="pre">Rect</span></code></a> class.
+A rect is simply a rectangle -- defined only by the position of its top left
+corner, its width, and its height.  Many pygame functions take rects as
+arguments, and they also take 'rectstyles', a sequence that has the same values
+as a rect. So if I need a rectangle that defines the area between 10, 20 and
+40, 50, I can do any of the following:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">rect</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Rect</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>
+<span class="n">rect</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Rect</span><span class="p">((</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">30</span><span class="p">))</span>
+<span class="n">rect</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Rect</span><span class="p">((</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">),</span> <span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">30</span><span class="p">))</span>
+<span class="n">rect</span> <span class="o">=</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>
+<span class="n">rect</span> <span class="o">=</span> <span class="p">((</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">30</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>If you use any of the first three versions, however, you get access to Rect's
+utility functions.  These include functions to move, shrink and inflate rects,
+find the union of two rects, and a variety of collision-detection functions.</p>
+<p>For example, suppose I'd like to get a list of all the sprites that contain a
+point (x, y) -- maybe the player clicked there, or maybe that's the current
+location of a bullet. It's simple if each sprite has a .rect member -- I just
+do:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sprites_clicked</span> <span class="o">=</span> <span class="p">[</span><span class="n">sprite</span> <span class="k">for</span> <span class="n">sprite</span> <span class="ow">in</span> <span class="n">all_my_sprites_list</span> <span class="k">if</span> <span class="n">sprite</span><span class="o">.</span><span class="n">rect</span><span class="o">.</span><span class="n">collidepoint</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)]</span>
+</pre></div>
+</div>
+<p>Rects have no other relation to surfaces or graphics functions, other than the
+fact that you can use them as arguments.  You can also use them in places that
+have nothing to do with graphics, but still need to be defined as rectangles.
+Every project I discover a few new places to use rects where I never thought
+I'd need them.</p>
+</section>
+<section id="don-t-bother-with-pixel-perfect-collision-detection">
+<h3>Don't bother with pixel-perfect collision detection.<a class="headerlink" href="#don-t-bother-with-pixel-perfect-collision-detection" title="Permalink to this heading">¶</a></h3>
+<p>So you've got your sprites moving around, and you need to know whether or not
+they're bumping into one another. It's tempting to write something like the
+following:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Check to see if the rects are in collision. If they aren't, ignore them.</p></li>
+<li><p>For each pixel in the overlapping area, see if the corresponding pixels from both sprites are opaque. If so, there's a collision.</p></li>
+</ul>
+</div></blockquote>
+<p>There are other ways to do this, with ANDing sprite masks and so on, but any
+way you do it in pygame, it's probably going to be too slow. For most games,
+it's probably better just to do 'sub-rect collision' -- create a rect for each
+sprite that's a little smaller than the actual image, and use that for
+collisions instead. It will be much faster, and in most cases the player won't
+notice the imprecision.</p>
+</section>
+<section id="managing-the-event-subsystem">
+<h3>Managing the event subsystem.<a class="headerlink" href="#managing-the-event-subsystem" title="Permalink to this heading">¶</a></h3>
+<p>Pygame's event system is kind of tricky.  There are actually two different ways
+to find out what an input device (keyboard, mouse or joystick) is doing.</p>
+<p>The first is by directly checking the state of the device.  You do this by
+calling, say, <a class="tooltip reference internal" href="../ref/mouse.html#pygame.mouse.get_pos" title=""><code class="xref py py-func docutils literal notranslate"><span class="pre">pygame.mouse.get_pos()</span></code><span class="tooltip-content">get the mouse cursor position</span></a> or <a class="tooltip reference internal" href="../ref/key.html#pygame.key.get_pressed" title=""><code class="xref py py-func docutils literal notranslate"><span class="pre">pygame.key.get_pressed()</span></code><span class="tooltip-content">get the state of all keyboard buttons</span></a>.
+This will tell you the state of that device <em>at the moment you call the
+function.</em></p>
+<p>The second method uses the SDL event queue.  This queue is a list of events --
+events are added to the list as they're detected, and they're deleted from the
+queue as they're read off.</p>
+<p>There are advantages and disadvantages to each system.  State-checking (system
+1) gives you precision -- you know exactly when a given input was made -- if
+<code class="docutils literal notranslate"><span class="pre">mouse.get_pressed([0])</span></code> is 1, that means that the left mouse button is
+down <em>right at this moment</em>.  The event queue merely reports that the
+mouse was down at some time in the past; if you check the queue fairly often,
+that can be ok, but if you're delayed from checking it by other code, input
+latency can grow.  Another advantage of the state-checking system is that it
+detects &quot;chording&quot; easily; that is, several states at the same time.  If you
+want to know whether the <code class="docutils literal notranslate"><span class="pre">t</span></code> and <code class="docutils literal notranslate"><span class="pre">f</span></code> keys are down at the same time, just
+check:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">key</span><span class="o">.</span><span class="n">get_pressed</span><span class="p">[</span><span class="n">K_t</span><span class="p">]</span> <span class="ow">and</span> <span class="n">key</span><span class="o">.</span><span class="n">get_pressed</span><span class="p">[</span><span class="n">K_f</span><span class="p">]:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Yup!&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>In the queue system, however, each keypress arrives in the queue as a
+completely separate event, so you'd need to remember that the <code class="docutils literal notranslate"><span class="pre">t</span></code> key was
+down, and hadn't come up yet, while checking for the <code class="docutils literal notranslate"><span class="pre">f</span></code> key.  A little more
+complicated.</p>
+<p>The state system has one great weakness, however. It only reports what the
+state of the device is at the moment it's called; if the user hits a mouse
+button then releases it just before a call to <code class="docutils literal notranslate"><span class="pre">mouse.get_pressed()</span></code>, the
+mouse button will return 0 -- <code class="docutils literal notranslate"><span class="pre">get_pressed()</span></code> missed the mouse button press
+completely.  The two events, <code class="docutils literal notranslate"><span class="pre">MOUSEBUTTONDOWN</span></code> and <code class="docutils literal notranslate"><span class="pre">MOUSEBUTTONUP</span></code>, will
+still be sitting in the event queue, however, waiting to be retrieved and
+processed.</p>
+<p>The lesson is: choose the system that meets your requirements.  If you don't
+have much going on in your loop -- say you're just sitting in a <code class="docutils literal notranslate"><span class="pre">while</span> <span class="pre">True</span></code>
+loop, waiting for input, use <code class="docutils literal notranslate"><span class="pre">get_pressed()</span></code> or another state function; the
+latency will be lower.  On the other hand, if every keypress is crucial, but
+latency isn't as important -- say your user is typing something in an editbox,
+use the event queue.  Some key presses may be slightly late, but at least you'll
+get them all.</p>
+<p>A note about <code class="docutils literal notranslate"><span class="pre">event.poll()</span></code> vs. <code class="docutils literal notranslate"><span class="pre">wait()</span></code> -- <code class="docutils literal notranslate"><span class="pre">poll()</span></code> may seem better,
+since it doesn't block your program from doing anything while it's waiting for
+input -- <code class="docutils literal notranslate"><span class="pre">wait()</span></code> suspends the program until an event is received.
+However, <code class="docutils literal notranslate"><span class="pre">poll()</span></code> will consume 100% of available CPU time while it runs,
+and it will fill the event queue with <code class="docutils literal notranslate"><span class="pre">NOEVENTS</span></code>.  Use <code class="docutils literal notranslate"><span class="pre">set_blocked()</span></code> to
+select just those event types you're interested in -- your queue will be much
+more manageable.</p>
+<p>Another note about the event queue -- even if you don't want to use it, you must
+still clear it periodically because it's still going to be filling up with events
+in the background as the user presses keys and mouses over the window. On Windows,
+if your game goes too long without clearing the queue, the operating system will
+think it has frozen and show a &quot;The application is not responding&quot; message.
+Iterating over <code class="docutils literal notranslate"><span class="pre">event.get()</span></code> or simply calling <code class="docutils literal notranslate"><span class="pre">event.clear()</span></code> once per frame
+will avoid this.</p>
+</section>
+<section id="colorkey-vs-alpha">
+<h3>Colorkey vs. Alpha.<a class="headerlink" href="#colorkey-vs-alpha" title="Permalink to this heading">¶</a></h3>
+<p>There's a lot of confusion around these two techniques, and much of it comes
+from the terminology used.</p>
+<p>'Colorkey blitting' involves telling pygame that all pixels of a certain color
+in a certain image are transparent instead of whatever color they happen to be.
+These transparent pixels are not blitted when the rest of the image is blitted,
+and so don't obscure the background.  This is how we make sprites that aren't
+rectangular in shape.  Simply call <a class="reference internal" href="../ref/surface.html#pygame.Surface.set_colorkey" title="pygame.Surface.set_colorkey"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Surface.set_colorkey()</span></code></a>, and pass in
+an RGB tuple -- say (0,0,0). This would make every pixel in the source image
+transparent instead of black.</p>
+<p>'Alpha' is different, and it comes in two flavors. 'Image alpha' applies to the
+whole image, and is probably what you want.  Properly known as 'translucency',
+alpha causes each pixel in the source image to be only <em>partially</em> opaque.
+For example, if you set a surface's alpha to 192 and then blitted it onto a
+background, 3/4 of each pixel's color would come from the source image, and 1/4
+from the background.  Alpha is measured from 255 to 0, where 0 is completely
+transparent, and 255 is completely opaque.  Note that colorkey and alpha
+blitting can be combined -- this produces an image that is fully transparent in
+some spots, and semi-transparent in others.</p>
+<p>'Per-pixel alpha' is the other flavor of alpha, and it's more complicated.
+Basically, each pixel in the source image has its own alpha value, from 0 to
+255.  Each pixel, therefore, can have a different opacity when blitted onto a
+background.  This type of alpha can't be mixed with colorkey blitting,
+and it overrides per-image alpha.  Per-pixel alpha is rarely used in
+games, and to use it you have to save your source image in a graphic
+editor with a special <em>alpha channel</em>.  It's complicated -- don't use it
+yet.</p>
+</section>
+<section id="software-architecture-design-patterns-and-games">
+<h3>Software architecture, design patterns, and games.<a class="headerlink" href="#software-architecture-design-patterns-and-games" title="Permalink to this heading">¶</a></h3>
+<p>You may reach a point where you're comfortable writing code, you're able to solve
+complex problems without assistance, you understand how to use most of pygame's
+modules, and yet, as you work on larger projects they always seem to get messier
+and harder to maintain as time goes on.  This can manifest in many ways -- for
+example, fixing bugs in one place might always seem to create new bugs elsewhere,
+figuring out <em>where</em> code should go might become a challenge, adding new
+things might frequently require you to rewrite many other things, and so on.
+Finally, you decide to cut your losses and start fresh on something new.</p>
+<p>This is a common issue and it can be frustrating -- on the one hand, your
+programming skills are improving, and yet you aren't able to finish the games
+you start due to somewhat nebulous organizational problems.</p>
+<p>This brings us to the concept of software architecture and design patterns. You
+may be familiar with pygame's &quot;standard&quot; base template (there are many equivalent
+variations of this, so don't stress about the small details too much):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pygame</span>
+
+<span class="n">pygame</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+
+<span class="n">screen</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">set_mode</span><span class="p">((</span><span class="mi">1280</span><span class="p">,</span><span class="mi">720</span><span class="p">))</span>
+
+<span class="n">clock</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">Clock</span><span class="p">()</span>
+
+<span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+    <span class="c1"># Process player inputs.</span>
+    <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">pygame</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">get</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">pygame</span><span class="o">.</span><span class="n">QUIT</span><span class="p">:</span>
+            <span class="n">pygame</span><span class="o">.</span><span class="n">quit</span><span class="p">()</span>
+            <span class="k">raise</span> <span class="ne">SystemExit</span>
+
+    <span class="c1"># Do logical updates here.</span>
+    <span class="c1"># ...</span>
+
+    <span class="n">screen</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="s2">&quot;purple&quot;</span><span class="p">)</span>  <span class="c1"># Fill the display with a solid color</span>
+
+    <span class="c1"># Render the graphics here.</span>
+    <span class="c1"># ...</span>
+
+    <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">flip</span><span class="p">()</span>  <span class="c1"># Refresh on-screen display</span>
+    <span class="n">clock</span><span class="o">.</span><span class="n">tick</span><span class="p">(</span><span class="mi">60</span><span class="p">)</span>         <span class="c1"># wait until next frame (at 60 FPS)</span>
+</pre></div>
+</div>
+<p>It does some initial setup, starts a loop, and then proceeds to repeatedly
+collect input, handle the game's logic, and draw the current frame forever until
+the program ends.  The update, render, wait loop shown here is actually a design
+pattern that serves as the skeleton of most games -- it's prolific because it's
+clean, it's organized, and it works.  (There's also an important but easy-to-miss
+design feature here in the form of a strict division between the game's logic
+and rendering routines.  This decision alone prevents a whole category of potential
+bugs related to objects updating and rendering concurrently, which is nice).</p>
+<p>It turns out that there are many design patterns like this that are used frequently
+in games and in software development at large.  For a great resource on this
+specifically for games, I highly recommend <a class="reference external" href="https://gameprogrammingpatterns.com/contents.html">Game Programming Patterns</a>, a short
+free, e-book on the topic.  It covers a bunch of useful patterns and concrete situations
+where you might want to employ them.  It won't instantly make you a better coder,
+but learning some theory about software architecture can go a long way towards
+helping you escape plateaus and tackle larger projects more confidently.</p>
+</section>
+<section id="do-things-the-pythony-way">
+<h3>Do things the pythony way.<a class="headerlink" href="#do-things-the-pythony-way" title="Permalink to this heading">¶</a></h3>
+<p>A final note (this isn't the least important one; it just comes at the end).
+Pygame is a pretty lightweight wrapper around SDL, which is in turn a pretty
+lightweight wrapper around your native OS graphics calls.  Chances are pretty
+good that if your code is still slow, and you've done the things I've mentioned
+above, then the problem lies in the way you're addressing your data in python.
+Certain idioms are just going to be slow in python no matter what you do.
+Luckily, python is a very clear language -- if a piece of code looks awkward or
+unwieldy, chances are its speed can be improved, too.  Read over <a class="reference external" href="https://blubberquark.tumblr.com/post/630054903238262784/why-pygame-is-slow">Why Pygame is
+Slow</a> for some deeper insight into why pygame might be considered slower than
+other frameworks/engines, and what that actually means in practice.
+And if you're truly stumped by performance problems, profilers like <a class="reference external" href="https://docs.python.org/3/library/profile.html">cProfile</a>
+(or <a class="reference external" href="https://jiffyclub.github.io/snakeviz/">SnakeViz</a>, a visualizer for cProfile) can help identify bottlenecks (they'll
+tell you which parts of the code are taking the longest to execute). That said,
+premature optimisation is the root of all evil; if it's already fast enough,
+don't torture the code trying to make it faster.  If it's fast enough, let it
+be :)</p>
+<p>There you go. Now you know practically everything I know about using pygame.
+Now, go write that game!</p>
+<hr class="docutils" />
+<p><em>David Clark is an avid pygame user and the editor of the Pygame Code
+Repository, a showcase for community-submitted python game code.  He is also
+the author of Twitch, an entirely average pygame arcade game.</em></p>
+<p><em>This guide was substantially updated in 2022.</em></p>
+</section>
+</section>
+</section>
+
+
+<br /><br />
+<hr />
+<a href="https://github.com/pygame/pygame/edit/main/docs/reST/tut/newbieguide.rst" rel="nofollow">Edit on GitHub</a>
+            <div class="clearer"></div>
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="en/Red_or_Black/1.Prolog/introduction.html" title="Author: Youngwook Kim (Korean)"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="SurfarrayIntro.html" title="Pygame Tutorials - Surfarray Introduction"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">pygame v2.5.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">A Newbie Guide to pygame</a></li>
+    <script type="text/javascript" src="https://www.pygame.org/comment/jquery.plugin.docscomments.js"></script>
+
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2000-2023, pygame developers.
+    </div>
+  </body>
+</html>

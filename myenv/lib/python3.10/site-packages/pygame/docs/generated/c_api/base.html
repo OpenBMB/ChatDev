@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>High level API exported by pygame.base &#8212; pygame v2.5.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygame.css?v=71ee6cc2" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=ba44479e"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <link rel="icon" href="../_static/pygame.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Class BufferProxy API exported by pygame.bufferproxy" href="bufferproxy.html" />
+    <link rel="prev" title="Slots and c_api - Making functions and data available from other modules" href="slots.html" /> 
+  </head><body>  
+
+    <div class="document">
+
+  <div class="header">
+	<div class="flex-container">
+	<div class="logo">
+	  <a href="https://www.pygame.org/">
+	    <img src="../_static/pygame_tiny.png"/>
+	  </a>
+	  <h5>pygame documentation</h5>
+	</div>
+	<div class="pagelinks">
+	  <div class="top">
+	    <a href="https://www.pygame.org/">Pygame Home</a> ||
+	    <a href="../index.html">Help Contents</a> ||
+	    <a href="../genindex.html">Reference Index</a>
+
+        <form action="../search.html" method="get" style="display:inline;float:right;">
+          <input name="q" value="" type="text">
+          <input value="search" type="submit">
+        </form>
+	  </div>
+	  <hr style="color:black;border-bottom:none;border-style: dotted;border-bottom-style:none;">
+	  <p class="bottom"><b>Most useful stuff</b>:
+	    <a href="../ref/color.html">Color</a> | 
+	    <a href="../ref/display.html">display</a> | 
+	    <a href="../ref/draw.html">draw</a> | 
+	    <a href="../ref/event.html">event</a> | 
+	    <a href="../ref/font.html">font</a> | 
+	    <a href="../ref/image.html">image</a> | 
+	    <a href="../ref/key.html">key</a> | 
+	    <a href="../ref/locals.html">locals</a> | 
+	    <a href="../ref/mixer.html">mixer</a> | 
+	    <a href="../ref/mouse.html">mouse</a> | 
+	    <a href="../ref/rect.html">Rect</a> | 
+	    <a href="../ref/surface.html">Surface</a> | 
+	    <a href="../ref/time.html">time</a> | 
+	    <a href="../ref/music.html">music</a> | 
+	    <a href="../ref/pygame.html">pygame</a>
+	  </p>
+
+	  <p class="bottom"><b>Advanced stuff</b>:
+	    <a href="../ref/cursors.html">cursors</a> | 
+	    <a href="../ref/joystick.html">joystick</a> | 
+	    <a href="../ref/mask.html">mask</a> | 
+	    <a href="../ref/sprite.html">sprite</a> | 
+	    <a href="../ref/transform.html">transform</a> | 
+	    <a href="../ref/bufferproxy.html">BufferProxy</a> | 
+	    <a href="../ref/freetype.html">freetype</a> | 
+	    <a href="../ref/gfxdraw.html">gfxdraw</a> | 
+	    <a href="../ref/midi.html">midi</a> | 
+	    <a href="../ref/pixelarray.html">PixelArray</a> | 
+	    <a href="../ref/pixelcopy.html">pixelcopy</a> | 
+	    <a href="../ref/sndarray.html">sndarray</a> | 
+	    <a href="../ref/surfarray.html">surfarray</a> | 
+	    <a href="../ref/math.html">math</a>
+	  </p>
+
+	  <p class="bottom"><b>Other</b>:
+	    <a href="../ref/camera.html">camera</a> | 
+	    <a href="../ref/sdl2_controller.html#module-pygame._sdl2.controller">controller</a> | 
+	    <a href="../ref/examples.html">examples</a> | 
+	    <a href="../ref/fastevent.html">fastevent</a> | 
+	    <a href="../ref/scrap.html">scrap</a> | 
+	    <a href="../ref/tests.html">tests</a> | 
+	    <a href="../ref/touch.html">touch</a> | 
+	    <a href="../ref/pygame.html#module-pygame.version">version</a>
+	  </p>
+</div>
+</div>
+  </div>
+
+      <div class="documentwrapper">
+          <div class="body" role="main">
+            
+<section id="high-level-api-exported-by-pygame-base">
+<section id="src-c-base-c">
+<h2>src_c/base.c<a class="headerlink" href="#src-c-base-c" title="Permalink to this heading">¶</a></h2>
+<p>This extension module defines general purpose routines for starting and stopping
+SDL as well as various conversion routines uses elsewhere in pygame.</p>
+<p>C header: src_c/include/pygame.h</p>
+<dl class="c var">
+<dt class="sig sig-object c" id="c.pgExc_SDLError">
+<span class="n"><span class="pre">PyObject</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">pgExc_SDLError</span></span></span><a class="headerlink" href="#c.pgExc_SDLError" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>This is <a class="reference internal" href="../ref/pygame.html#pygame.error" title="pygame.error"><code class="xref py py-exc docutils literal notranslate"><span class="pre">pygame.error</span></code></a>, the exception type used to raise SDL errors.</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.pg_mod_autoinit">
+<span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">pg_mod_autoinit</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">modname</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.pg_mod_autoinit" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Inits a pygame module, which has the name <code class="docutils literal notranslate"><span class="pre">modname</span></code>
+Return <code class="docutils literal notranslate"><span class="pre">1</span></code> on success, <code class="docutils literal notranslate"><span class="pre">0</span></code> on error, with python
+error set.</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.pg_mod_autoquit">
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">pg_mod_autoquit</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">modname</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.pg_mod_autoquit" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Quits a pygame module, which has the name <code class="docutils literal notranslate"><span class="pre">modname</span></code></p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.pg_RegisterQuit">
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">pg_RegisterQuit</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">f</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.pg_RegisterQuit" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Register function <em>f</em> as a callback on Pygame termination.
+Multiple functions can be registered.
+Functions are called in the reverse order they were registered.</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.pg_IntFromObj">
+<span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">pg_IntFromObj</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">PyObject</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">obj</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">val</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.pg_IntFromObj" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Convert number like object <em>obj</em> to C int and place in argument <em>val</em>.
+Return <code class="docutils literal notranslate"><span class="pre">1</span></code> on success, else <code class="docutils literal notranslate"><span class="pre">0</span></code>.
+No Python exceptions are raised.</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.pg_IntFromObjIndex">
+<span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">pg_IntFromObjIndex</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">PyObject</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">obj</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n"><span class="pre">index</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">val</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.pg_IntFromObjIndex" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Convert number like object at position <em>i</em> in sequence <em>obj</em>
+to C int and place in argument <em>val</em>.
+Return <code class="docutils literal notranslate"><span class="pre">1</span></code> on success, <code class="docutils literal notranslate"><span class="pre">0</span></code> on failure.
+No Python exceptions are raised.</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.pg_TwoIntsFromObj">
+<span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">pg_TwoIntsFromObj</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">PyObject</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">obj</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">val1</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">v2</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.pg_TwoIntsFromObj" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Convert the two number like objects in length 2 sequence <em>obj</em>
+to C int and place in arguments <em>val1</em> and <em>val2</em> respectively.
+Return <code class="docutils literal notranslate"><span class="pre">1</span></code> on success, <code class="docutils literal notranslate"><span class="pre">0</span></code> on failure.
+No Python exceptions are raised.</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.pg_FloatFromObj">
+<span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">pg_FloatFromObj</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">PyObject</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">obj</span></span>, <span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">val</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.pg_FloatFromObj" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Convert number like object <em>obj</em> to C float and place in argument <em>val</em>.
+Returns <code class="docutils literal notranslate"><span class="pre">1</span></code> on success, <code class="docutils literal notranslate"><span class="pre">0</span></code> on failure.
+No Python exceptions are raised.</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.pg_FloatFromObjIndex">
+<span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">pg_FloatFromObjIndex</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">PyObject</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">obj</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n"><span class="pre">index</span></span>, <span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">val</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.pg_FloatFromObjIndex" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Convert number like object at position <em>i</em> in sequence <em>obj</em>
+to C float and place in argument <em>val</em>.
+Return <code class="docutils literal notranslate"><span class="pre">1</span></code> on success, else <code class="docutils literal notranslate"><span class="pre">0</span></code>.
+No Python exceptions are raised.</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.pg_TwoFloatsFromObj">
+<span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">pg_TwoFloatsFromObj</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">PyObject</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">obj</span></span>, <span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">val1</span></span>, <span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">val2</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.pg_TwoFloatsFromObj" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Convert the two number like objects in length 2 sequence <em>obj</em>
+to C float and place in arguments <em>val1</em> and <em>val2</em> respectively.
+Return <code class="docutils literal notranslate"><span class="pre">1</span></code> on success, else <code class="docutils literal notranslate"><span class="pre">0</span></code>.
+No Python exceptions are raised.</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.pg_UintFromObj">
+<span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">pg_UintFromObj</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">PyObject</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">obj</span></span>, <span class="n"><span class="pre">Uint32</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">val</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.pg_UintFromObj" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Convert number like object <em>obj</em> to unsigned 32 bit integer and place
+in argument <em>val</em>.
+Return <code class="docutils literal notranslate"><span class="pre">1</span></code> on success, else <code class="docutils literal notranslate"><span class="pre">0</span></code>.
+No Python exceptions are raised.</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.pg_UintFromObjIndex">
+<span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">pg_UintFromObjIndex</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">PyObject</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">obj</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n"><span class="pre">_index</span></span>, <span class="n"><span class="pre">Uint32</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">val</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.pg_UintFromObjIndex" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Convert number like object at position <em>i</em> in sequence <em>obj</em>
+to unsigned 32 bit integer and place in argument <em>val</em>.
+Return <code class="docutils literal notranslate"><span class="pre">1</span></code> on success, else <code class="docutils literal notranslate"><span class="pre">0</span></code>.
+No Python exceptions are raised.</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.pg_RGBAFromObj">
+<span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">pg_RGBAFromObj</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">PyObject</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">obj</span></span>, <span class="n"><span class="pre">Uint8</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">RGBA</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.pg_RGBAFromObj" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Convert the color represented by object <em>obj</em> into a red, green, blue, alpha
+length 4 C array <em>RGBA</em>.
+The object must be a length 3 or 4 sequence of numbers having values
+between 0 and 255 inclusive.
+For a length 3 sequence an alpha value of 255 is assumed.
+Return <code class="docutils literal notranslate"><span class="pre">1</span></code> on success, <code class="docutils literal notranslate"><span class="pre">0</span></code> otherwise.
+No Python exceptions are raised.</p>
+</dd></dl>
+
+<dl class="c type">
+<dt class="sig sig-object c" id="c.pg_buffer">
+<span class="k"><span class="pre">type</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">pg_buffer</span></span></span><a class="headerlink" href="#c.pg_buffer" title="Permalink to this definition">¶</a><br /></dt>
+<dd><dl class="c member">
+<dt class="sig sig-object c" id="c.pg_buffer.view">
+<span class="n"><span class="pre">Py_buffer</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">view</span></span></span><a class="headerlink" href="#c.pg_buffer.view" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>A standard buffer description</p>
+</dd></dl>
+
+<dl class="c member">
+<dt class="sig sig-object c" id="c.pg_buffer.consumer">
+<span class="n"><span class="pre">PyObject</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">consumer</span></span></span><a class="headerlink" href="#c.pg_buffer.consumer" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The object holding the buffer</p>
+</dd></dl>
+
+<dl class="c member">
+<dt class="sig sig-object c" id="c.pg_buffer.release_buffer">
+<span class="n"><span class="pre">pybuffer_releaseproc</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">release_buffer</span></span></span><a class="headerlink" href="#c.pg_buffer.release_buffer" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>A buffer release callback.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="c var">
+<dt class="sig sig-object c" id="c.pgExc_BufferError">
+<span class="n"><span class="pre">PyObject</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">pgExc_BufferError</span></span></span><a class="headerlink" href="#c.pgExc_BufferError" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Python exception type raised for any pg_buffer related errors.</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.pgBuffer_AsArrayInterface">
+<span class="n"><span class="pre">PyObject</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">pgBuffer_AsArrayInterface</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">Py_buffer</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">view_p</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.pgBuffer_AsArrayInterface" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return a Python array interface object representation of buffer <em>view_p</em>.
+On failure raise a Python exception and return <em>NULL</em>.</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.pgBuffer_AsArrayStruct">
+<span class="n"><span class="pre">PyObject</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">pgBuffer_AsArrayStruct</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">Py_buffer</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">view_p</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.pgBuffer_AsArrayStruct" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return a Python array struct object representation of buffer <em>view_p</em>.
+On failure raise a Python exception and return <em>NULL</em>.</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.pgObject_GetBuffer">
+<span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">pgObject_GetBuffer</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">PyObject</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">obj</span></span>, <a class="reference internal" href="#c.pg_buffer" title="pg_buffer"><span class="n"><span class="pre">pg_buffer</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">pg_view_p</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n"><span class="pre">flags</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.pgObject_GetBuffer" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Request a buffer for object <em>obj</em>.
+Argument <em>flags</em> are PyBUF options.
+Return the buffer description in <em>pg_view_p</em>.
+An object may support the Python buffer interface, the NumPy array interface,
+or the NumPy array struct interface.
+Return <code class="docutils literal notranslate"><span class="pre">0</span></code> on success, raise a Python exception and return <code class="docutils literal notranslate"><span class="pre">-1</span></code> on failure.</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.pgBuffer_Release">
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">pgBuffer_Release</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">Pg_buffer</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">pg_view_p</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.pgBuffer_Release" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Release the Pygame <em>pg_view_p</em> buffer.</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.pgDict_AsBuffer">
+<span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">pgDict_AsBuffer</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">Pg_buffer</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">pg_view_p</span></span>, <span class="n"><span class="pre">PyObject</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">dict</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n"><span class="pre">flags</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.pgDict_AsBuffer" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Write the array interface dictionary buffer description <em>dict</em> into a Pygame
+buffer description struct <em>pg_view_p</em>.
+The <em>flags</em> PyBUF options describe the view type requested.
+Return <code class="docutils literal notranslate"><span class="pre">0</span></code> on success, or raise a Python exception and return <code class="docutils literal notranslate"><span class="pre">-1</span></code> on failure.</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.import_pygame_base">
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">import_pygame_base</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#c.import_pygame_base" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Import the pygame.base module C API into an extension module.
+On failure raise a Python exception.</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.pg_GetDefaultWindow">
+<span class="n"><span class="pre">SDL_Window</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">pg_GetDefaultWindow</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">void</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.pg_GetDefaultWindow" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return the Pygame default SDL window created by a
+pygame.display.set_mode() call, or <em>NULL</em>.</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.pg_SetDefaultWindow">
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">pg_SetDefaultWindow</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">SDL_Window</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">win</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.pg_SetDefaultWindow" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Replace the Pygame default window with <em>win</em>.
+The previous window, if any, is destroyed.
+Argument <em>win</em> may be <em>NULL</em>.
+This function is called by pygame.display.set_mode().</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.pg_GetDefaultWindowSurface">
+<a class="reference internal" href="surface.html#c.pgSurfaceObject" title="pgSurfaceObject"><span class="n"><span class="pre">pgSurfaceObject</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">pg_GetDefaultWindowSurface</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">void</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.pg_GetDefaultWindowSurface" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return a borrowed reference to the Pygame default window display surface,
+or <em>NULL</em> if no default window is open.</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.pg_SetDefaultWindowSurface">
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">pg_SetDefaultWindowSurface</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="surface.html#c.pgSurfaceObject" title="pgSurfaceObject"><span class="n"><span class="pre">pgSurfaceObject</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">screen</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.pg_SetDefaultWindowSurface" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Replace the Pygame default display surface with object <em>screen</em>.
+The previous surface object, if any, is invalidated.
+Argument <em>screen</em> may be <em>NULL</em>.
+This functions is called by pygame.display.set_mode().</p>
+</dd></dl>
+
+</section>
+</section>
+
+
+<br /><br />
+<hr />
+<a href="https://github.com/pygame/pygame/edit/main/docs/reST/c_api/base.rst" rel="nofollow">Edit on GitHub</a>
+            <div class="clearer"></div>
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="bufferproxy.html" title="Class BufferProxy API exported by pygame.bufferproxy"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="slots.html" title="Slots and c_api - Making functions and data available from other modules"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">pygame v2.5.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../c_api.html" accesskey="U">pygame C API</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">High level API exported by pygame.base</a></li>
+    <script type="text/javascript" src="https://www.pygame.org/comment/jquery.plugin.docscomments.js"></script>
+
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2000-2023, pygame developers.
+    </div>
+  </body>
+</html>

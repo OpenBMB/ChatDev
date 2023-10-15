@@ -1,0 +1,25 @@
+[console_scripts]
+pylsp = pylsp.__main__:main
+
+[pylsp]
+autopep8 = pylsp.plugins.autopep8_format
+flake8 = pylsp.plugins.flake8_lint
+folding = pylsp.plugins.folding
+jedi_completion = pylsp.plugins.jedi_completion
+jedi_definition = pylsp.plugins.definition
+jedi_highlight = pylsp.plugins.highlight
+jedi_hover = pylsp.plugins.hover
+jedi_references = pylsp.plugins.references
+jedi_rename = pylsp.plugins.jedi_rename
+jedi_signature_help = pylsp.plugins.signature
+jedi_symbols = pylsp.plugins.symbols
+mccabe = pylsp.plugins.mccabe_lint
+preload = pylsp.plugins.preload_imports
+pycodestyle = pylsp.plugins.pycodestyle_lint
+pydocstyle = pylsp.plugins.pydocstyle_lint
+pyflakes = pylsp.plugins.pyflakes_lint
+pylint = pylsp.plugins.pylint_lint
+rope_autoimport = pylsp.plugins.rope_autoimport
+rope_completion = pylsp.plugins.rope_completion
+rope_rename = pylsp.plugins.rope_rename
+yapf = pylsp.plugins.yapf_format

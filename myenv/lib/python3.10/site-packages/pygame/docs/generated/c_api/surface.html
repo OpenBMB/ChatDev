@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Class Surface API exported by pygame.surface &#8212; pygame v2.5.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygame.css?v=71ee6cc2" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=ba44479e"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <link rel="icon" href="../_static/pygame.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="API exported by pygame.surflock" href="surflock.html" />
+    <link rel="prev" title="API exported by pygame.rwobject" href="rwobject.html" /> 
+  </head><body>  
+
+    <div class="document">
+
+  <div class="header">
+	<div class="flex-container">
+	<div class="logo">
+	  <a href="https://www.pygame.org/">
+	    <img src="../_static/pygame_tiny.png"/>
+	  </a>
+	  <h5>pygame documentation</h5>
+	</div>
+	<div class="pagelinks">
+	  <div class="top">
+	    <a href="https://www.pygame.org/">Pygame Home</a> ||
+	    <a href="../index.html">Help Contents</a> ||
+	    <a href="../genindex.html">Reference Index</a>
+
+        <form action="../search.html" method="get" style="display:inline;float:right;">
+          <input name="q" value="" type="text">
+          <input value="search" type="submit">
+        </form>
+	  </div>
+	  <hr style="color:black;border-bottom:none;border-style: dotted;border-bottom-style:none;">
+	  <p class="bottom"><b>Most useful stuff</b>:
+	    <a href="../ref/color.html">Color</a> | 
+	    <a href="../ref/display.html">display</a> | 
+	    <a href="../ref/draw.html">draw</a> | 
+	    <a href="../ref/event.html">event</a> | 
+	    <a href="../ref/font.html">font</a> | 
+	    <a href="../ref/image.html">image</a> | 
+	    <a href="../ref/key.html">key</a> | 
+	    <a href="../ref/locals.html">locals</a> | 
+	    <a href="../ref/mixer.html">mixer</a> | 
+	    <a href="../ref/mouse.html">mouse</a> | 
+	    <a href="../ref/rect.html">Rect</a> | 
+	    <a href="../ref/surface.html">Surface</a> | 
+	    <a href="../ref/time.html">time</a> | 
+	    <a href="../ref/music.html">music</a> | 
+	    <a href="../ref/pygame.html">pygame</a>
+	  </p>
+
+	  <p class="bottom"><b>Advanced stuff</b>:
+	    <a href="../ref/cursors.html">cursors</a> | 
+	    <a href="../ref/joystick.html">joystick</a> | 
+	    <a href="../ref/mask.html">mask</a> | 
+	    <a href="../ref/sprite.html">sprite</a> | 
+	    <a href="../ref/transform.html">transform</a> | 
+	    <a href="../ref/bufferproxy.html">BufferProxy</a> | 
+	    <a href="../ref/freetype.html">freetype</a> | 
+	    <a href="../ref/gfxdraw.html">gfxdraw</a> | 
+	    <a href="../ref/midi.html">midi</a> | 
+	    <a href="../ref/pixelarray.html">PixelArray</a> | 
+	    <a href="../ref/pixelcopy.html">pixelcopy</a> | 
+	    <a href="../ref/sndarray.html">sndarray</a> | 
+	    <a href="../ref/surfarray.html">surfarray</a> | 
+	    <a href="../ref/math.html">math</a>
+	  </p>
+
+	  <p class="bottom"><b>Other</b>:
+	    <a href="../ref/camera.html">camera</a> | 
+	    <a href="../ref/sdl2_controller.html#module-pygame._sdl2.controller">controller</a> | 
+	    <a href="../ref/examples.html">examples</a> | 
+	    <a href="../ref/fastevent.html">fastevent</a> | 
+	    <a href="../ref/scrap.html">scrap</a> | 
+	    <a href="../ref/tests.html">tests</a> | 
+	    <a href="../ref/touch.html">touch</a> | 
+	    <a href="../ref/pygame.html#module-pygame.version">version</a>
+	  </p>
+</div>
+</div>
+  </div>
+
+      <div class="documentwrapper">
+          <div class="body" role="main">
+            
+<section id="class-surface-api-exported-by-pygame-surface">
+<section id="src-c-surface-c">
+<h2>src_c/surface.c<a class="headerlink" href="#src-c-surface-c" title="Permalink to this heading">¶</a></h2>
+<p>This extension module defines Python type <a class="tooltip reference internal" href="../ref/surface.html#pygame.Surface" title=""><code class="xref py py-class docutils literal notranslate"><span class="pre">pygame.Surface</span></code><span class="tooltip-content">pygame object for representing images</span></a>.</p>
+<p>Header file: src_c/include/pygame.h</p>
+<dl class="c type">
+<dt class="sig sig-object c" id="c.pgSurfaceObject">
+<span class="k"><span class="pre">type</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">pgSurfaceObject</span></span></span><a class="headerlink" href="#c.pgSurfaceObject" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>A <a class="reference internal" href="../ref/surface.html#pygame.Surface" title="pygame.Surface"><code class="xref py py-class docutils literal notranslate"><span class="pre">pygame.Surface</span></code></a> instance.</p>
+</dd></dl>
+
+<dl class="c var">
+<dt class="sig sig-object c" id="c.pgSurface_Type">
+<span class="n"><span class="pre">PyTypeObject</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">pgSurface_Type</span></span></span><a class="headerlink" href="#c.pgSurface_Type" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The <a class="reference internal" href="../ref/surface.html#pygame.Surface" title="pygame.Surface"><code class="xref py py-class docutils literal notranslate"><span class="pre">pygame.Surface</span></code></a> Python type.</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.pgSurface_Check">
+<span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">pgSurface_Check</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">PyObject</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">x</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.pgSurface_Check" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return true if <em>x</em> is a <a class="reference internal" href="../ref/surface.html#pygame.Surface" title="pygame.Surface"><code class="xref py py-class docutils literal notranslate"><span class="pre">pygame.Surface</span></code></a> instance</p>
+<p>Will return false if <em>x</em> is a subclass of <cite>Surface</cite>.
+This is a macro. No check is made that <em>x</em> is not <em>NULL</em>.</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.pgSurface_New">
+<a class="reference internal" href="#c.pgSurfaceObject" title="pgSurfaceObject"><span class="n"><span class="pre">pgSurfaceObject</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">pgSurface_New</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">SDL_Surface</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">s</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.pgSurface_New" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return a new new pygame surface instance for SDL surface <em>s</em>.
+Return <em>NULL</em> on error.</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.pgSurface_New2">
+<a class="reference internal" href="#c.pgSurfaceObject" title="pgSurfaceObject"><span class="n"><span class="pre">pgSurfaceObject</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">pgSurface_New2</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">SDL_Surface</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">s</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n"><span class="pre">owner</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.pgSurface_New2" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return a new new pygame surface instance for SDL surface <em>s</em>.
+If owner is true, the surface will be freed when the python object is destroyed.
+Return <em>NULL</em> on error.</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.pgSurface_AsSurface">
+<span class="n"><span class="pre">SDL_Surface</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">pgSurface_AsSurface</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">PyObject</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">x</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.pgSurface_AsSurface" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return a pointer the SDL surface represented by the pygame Surface instance
+<em>x</em>.</p>
+<p>This is a macro. Argument <em>x</em> is assumed to be a Surface, or subclass of
+Surface, instance.</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.pgSurface_Blit">
+<span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">pgSurface_Blit</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">PyObject</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">dstobj</span></span>, <span class="n"><span class="pre">PyObject</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">srcobj</span></span>, <span class="n"><span class="pre">SDL_Rect</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">dstrect</span></span>, <span class="n"><span class="pre">SDL_Rect</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">srcrect</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n"><span class="pre">the_args</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.pgSurface_Blit" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Blit the <em>srcrect</em> portion of Surface <em>srcobj</em> onto Surface <em>dstobj</em> at <em>srcobj</em></p>
+<p>Argument <em>the_args</em> indicates the type of blit to perform:
+Normal blit (<code class="docutils literal notranslate"><span class="pre">0</span></code>), <code class="docutils literal notranslate"><span class="pre">PYGAME_BLEND_ADD</span></code>, <code class="docutils literal notranslate"><span class="pre">PYGAME_BLEND_SUB</span></code>,
+<code class="docutils literal notranslate"><span class="pre">PYGAME_BLEND_SUB</span></code>, <code class="docutils literal notranslate"><span class="pre">PYGAME_BLEND_MULT</span></code>, <code class="docutils literal notranslate"><span class="pre">PYGAME_BLEND_MIN</span></code>,
+<code class="docutils literal notranslate"><span class="pre">PYGAME_BLEND_MAX</span></code>, <code class="docutils literal notranslate"><span class="pre">PYGAME_BLEND_RGBA_ADD</span></code>, <code class="docutils literal notranslate"><span class="pre">PYGAME_BLEND_RGBA_SUB</span></code>,
+<code class="docutils literal notranslate"><span class="pre">PYGAME_BLEND_RGBA_MULT</span></code>, <code class="docutils literal notranslate"><span class="pre">PYGAME_BLEND_RGBA_MIN</span></code>,
+<code class="docutils literal notranslate"><span class="pre">PYGAME_BLEND_RGBA_MAX</span></code>, <code class="docutils literal notranslate"><span class="pre">PYGAME_BLEND_ALPHA_SDL2</span></code> and <code class="docutils literal notranslate"><span class="pre">PYGAME_BLEND_PREMULTIPLIED</span></code>.
+Argument <em>dstrect</em> is updated to the actual area on <em>dstobj</em> affected
+by the blit.</p>
+<p>The C version of the <a class="reference internal" href="../ref/surface.html#pygame.Surface.blit" title="pygame.Surface.blit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">pygame.Surface.blit()</span></code></a> method.
+Return <code class="docutils literal notranslate"><span class="pre">0</span></code> on success, <code class="docutils literal notranslate"><span class="pre">-1</span></code> or <code class="docutils literal notranslate"><span class="pre">-2`</span></code> on an exception.</p>
+</dd></dl>
+
+</section>
+</section>
+
+
+<br /><br />
+<hr />
+<a href="https://github.com/pygame/pygame/edit/main/docs/reST/c_api/surface.rst" rel="nofollow">Edit on GitHub</a>
+            <div class="clearer"></div>
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="surflock.html" title="API exported by pygame.surflock"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="rwobject.html" title="API exported by pygame.rwobject"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">pygame v2.5.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../c_api.html" accesskey="U">pygame C API</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Class Surface API exported by pygame.surface</a></li>
+    <script type="text/javascript" src="https://www.pygame.org/comment/jquery.plugin.docscomments.js"></script>
+
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2000-2023, pygame developers.
+    </div>
+  </body>
+</html>

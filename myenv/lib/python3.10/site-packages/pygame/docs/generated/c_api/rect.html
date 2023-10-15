@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Class Rect API exported by pygame.rect &#8212; pygame v2.5.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygame.css?v=71ee6cc2" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=ba44479e"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <link rel="icon" href="../_static/pygame.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="API exported by pygame.rwobject" href="rwobject.html" />
+    <link rel="prev" title="API exported by pygame.mixer" href="mixer.html" /> 
+  </head><body>  
+
+    <div class="document">
+
+  <div class="header">
+	<div class="flex-container">
+	<div class="logo">
+	  <a href="https://www.pygame.org/">
+	    <img src="../_static/pygame_tiny.png"/>
+	  </a>
+	  <h5>pygame documentation</h5>
+	</div>
+	<div class="pagelinks">
+	  <div class="top">
+	    <a href="https://www.pygame.org/">Pygame Home</a> ||
+	    <a href="../index.html">Help Contents</a> ||
+	    <a href="../genindex.html">Reference Index</a>
+
+        <form action="../search.html" method="get" style="display:inline;float:right;">
+          <input name="q" value="" type="text">
+          <input value="search" type="submit">
+        </form>
+	  </div>
+	  <hr style="color:black;border-bottom:none;border-style: dotted;border-bottom-style:none;">
+	  <p class="bottom"><b>Most useful stuff</b>:
+	    <a href="../ref/color.html">Color</a> | 
+	    <a href="../ref/display.html">display</a> | 
+	    <a href="../ref/draw.html">draw</a> | 
+	    <a href="../ref/event.html">event</a> | 
+	    <a href="../ref/font.html">font</a> | 
+	    <a href="../ref/image.html">image</a> | 
+	    <a href="../ref/key.html">key</a> | 
+	    <a href="../ref/locals.html">locals</a> | 
+	    <a href="../ref/mixer.html">mixer</a> | 
+	    <a href="../ref/mouse.html">mouse</a> | 
+	    <a href="../ref/rect.html">Rect</a> | 
+	    <a href="../ref/surface.html">Surface</a> | 
+	    <a href="../ref/time.html">time</a> | 
+	    <a href="../ref/music.html">music</a> | 
+	    <a href="../ref/pygame.html">pygame</a>
+	  </p>
+
+	  <p class="bottom"><b>Advanced stuff</b>:
+	    <a href="../ref/cursors.html">cursors</a> | 
+	    <a href="../ref/joystick.html">joystick</a> | 
+	    <a href="../ref/mask.html">mask</a> | 
+	    <a href="../ref/sprite.html">sprite</a> | 
+	    <a href="../ref/transform.html">transform</a> | 
+	    <a href="../ref/bufferproxy.html">BufferProxy</a> | 
+	    <a href="../ref/freetype.html">freetype</a> | 
+	    <a href="../ref/gfxdraw.html">gfxdraw</a> | 
+	    <a href="../ref/midi.html">midi</a> | 
+	    <a href="../ref/pixelarray.html">PixelArray</a> | 
+	    <a href="../ref/pixelcopy.html">pixelcopy</a> | 
+	    <a href="../ref/sndarray.html">sndarray</a> | 
+	    <a href="../ref/surfarray.html">surfarray</a> | 
+	    <a href="../ref/math.html">math</a>
+	  </p>
+
+	  <p class="bottom"><b>Other</b>:
+	    <a href="../ref/camera.html">camera</a> | 
+	    <a href="../ref/sdl2_controller.html#module-pygame._sdl2.controller">controller</a> | 
+	    <a href="../ref/examples.html">examples</a> | 
+	    <a href="../ref/fastevent.html">fastevent</a> | 
+	    <a href="../ref/scrap.html">scrap</a> | 
+	    <a href="../ref/tests.html">tests</a> | 
+	    <a href="../ref/touch.html">touch</a> | 
+	    <a href="../ref/pygame.html#module-pygame.version">version</a>
+	  </p>
+</div>
+</div>
+  </div>
+
+      <div class="documentwrapper">
+          <div class="body" role="main">
+            
+<section id="class-rect-api-exported-by-pygame-rect">
+<section id="src-c-rect-c">
+<h2>src_c/rect.c<a class="headerlink" href="#src-c-rect-c" title="Permalink to this heading">¶</a></h2>
+<p>This extension module defines Python type <a class="tooltip reference internal" href="../ref/rect.html#pygame.Rect" title=""><code class="xref py py-class docutils literal notranslate"><span class="pre">pygame.Rect</span></code><span class="tooltip-content">pygame object for storing rectangular coordinates</span></a>.</p>
+<p>Header file: src_c/include/pygame.h</p>
+<dl class="c type">
+<dt class="sig sig-object c" id="c.pgRectObject">
+<span class="k"><span class="pre">type</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">pgRectObject</span></span></span><a class="headerlink" href="#c.pgRectObject" title="Permalink to this definition">¶</a><br /></dt>
+<dd><dl class="c member">
+<dt class="sig sig-object c" id="c.pgRectObject.r">
+<span class="n"><span class="pre">SDL_Rect</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">r</span></span></span><a class="headerlink" href="#c.pgRectObject.r" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<p>The Pygame rectangle type instance.</p>
+</dd></dl>
+
+<dl class="c var">
+<dt class="sig sig-object c" id="c.pgRect_Type">
+<span class="n"><span class="pre">PyTypeObject</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">pgRect_Type</span></span></span><a class="headerlink" href="#c.pgRect_Type" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The Pygame rectangle object type pygame.Rect.</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.pgRect_AsRect">
+<span class="n"><span class="pre">SDL_Rect</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">pgRect_AsRect</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">PyObject</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">obj</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.pgRect_AsRect" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>A macro to access the SDL_Rect field of a <a class="reference internal" href="../ref/rect.html#pygame.Rect" title="pygame.Rect"><code class="xref py py-class docutils literal notranslate"><span class="pre">pygame.Rect</span></code></a> instance.</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.pgRect_New">
+<span class="n"><span class="pre">PyObject</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">pgRect_New</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">SDL_Rect</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">r</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.pgRect_New" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return a new <a class="reference internal" href="../ref/rect.html#pygame.Rect" title="pygame.Rect"><code class="xref py py-class docutils literal notranslate"><span class="pre">pygame.Rect</span></code></a> instance from the SDL_Rect <em>r</em>.
+On failure, raise a Python exception and return <em>NULL</em>.</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.pgRect_New4">
+<span class="n"><span class="pre">PyObject</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">pgRect_New4</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n"><span class="pre">x</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n"><span class="pre">y</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n"><span class="pre">w</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n"><span class="pre">h</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.pgRect_New4" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return a new pygame.Rect instance with position (<em>x</em>, <em>y</em>) and
+size (<em>w</em>, <em>h</em>).
+On failure raise a Python exception and return <em>NULL</em>.</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.pgRect_FromObject">
+<span class="n"><span class="pre">SDL_Rect</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">pgRect_FromObject</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">PyObject</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">obj</span></span>, <span class="n"><span class="pre">SDL_Rect</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">temp</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.pgRect_FromObject" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Translate a Python rectangle representation as a Pygame <code class="xref c c-type docutils literal notranslate"><span class="pre">SDL_Rect</span></code>.
+A rectangle can be a length 4 sequence integers (x, y, w, h),
+or a length 2 sequence of position (x, y) and size (w, h),
+or a length 1 tuple containing a rectangle representation,
+or have a method <em>rect</em> that returns a rectangle.
+Pass a pointer to a locally declared <code class="xref c c-type docutils literal notranslate"><span class="pre">SDL_Rect</span></code> as <em>temp</em>.
+Do not rely on this being filled in; use the function's return value instead.
+On success, return a pointer to a <code class="xref c c-type docutils literal notranslate"><span class="pre">SDL_Rect</span></code> representation
+of the rectangle, else return <em>NULL</em>.
+No Python exceptions are raised.</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.pgRect_Normalize">
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">pgRect_Normalize</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">SDL_Rect</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">rect</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.pgRect_Normalize" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Normalize the given rect. A rect with a negative size (negative width and/or
+height) will be adjusted to have a positive size.</p>
+</dd></dl>
+
+</section>
+</section>
+
+
+<br /><br />
+<hr />
+<a href="https://github.com/pygame/pygame/edit/main/docs/reST/c_api/rect.rst" rel="nofollow">Edit on GitHub</a>
+            <div class="clearer"></div>
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="rwobject.html" title="API exported by pygame.rwobject"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="mixer.html" title="API exported by pygame.mixer"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">pygame v2.5.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../c_api.html" accesskey="U">pygame C API</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Class Rect API exported by pygame.rect</a></li>
+    <script type="text/javascript" src="https://www.pygame.org/comment/jquery.plugin.docscomments.js"></script>
+
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2000-2023, pygame developers.
+    </div>
+  </body>
+</html>

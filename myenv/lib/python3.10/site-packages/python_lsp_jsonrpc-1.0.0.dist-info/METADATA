@@ -1,0 +1,37 @@
+Metadata-Version: 2.1
+Name: python-lsp-jsonrpc
+Version: 1.0.0
+Summary: JSON RPC 2.0 server library
+Home-page: https://github.com/python-lsp/python-lsp-jsonrpc
+Author: Python Language Server Contributors
+License: UNKNOWN
+Platform: UNKNOWN
+Description-Content-Type: text/markdown
+Requires-Dist: ujson (>=3.0.0)
+Provides-Extra: test
+Requires-Dist: pylint ; extra == 'test'
+Requires-Dist: pycodestyle ; extra == 'test'
+Requires-Dist: pyflakes ; extra == 'test'
+Requires-Dist: pytest ; extra == 'test'
+Requires-Dist: pytest-cov ; extra == 'test'
+Requires-Dist: coverage ; extra == 'test'
+
+# Python JSON RPC Server
+
+A Python 3.6+ server implementation of the [JSON RPC 2.0](http://www.jsonrpc.org/specification) protocol. This library has been pulled out of the [Python LSP Server](https://github.com/python-lsp/python-lsp-server) project.
+
+## Installation
+
+    pip install -U python-jsonrpc-server
+
+## Examples
+
+The examples directory contains two examples of running language servers over websockets. `examples/langserver.py` shows how to run a language server in-memory. `examples/langserver_ext.py` shows how to run a subprocess language server, in this case the Python LSP Server.
+
+Start by installing `tornado` and `python-language-server`
+
+    pip install python-lsp-server[all] tornado
+
+Then running `python examples/langserver.py` or `python examples/langserver_ext.py` will host a websocket on ``ws://localhost:3000/python``.
+
+

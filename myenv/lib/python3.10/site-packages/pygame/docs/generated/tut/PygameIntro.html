@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Pygame Intro &#8212; pygame v2.5.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygame.css?v=71ee6cc2" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=ba44479e"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <link rel="icon" href="../_static/pygame.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Pygame Tutorials - Sprite Module Introduction" href="SpriteIntro.html" />
+    <link rel="prev" title="Pygame Tutorials - Help! How Do I Move An Image?" href="MoveIt.html" /> 
+  </head><body>  
+
+    <div class="document">
+
+  <div class="header">
+	<div class="flex-container">
+	<div class="logo">
+	  <a href="https://www.pygame.org/">
+	    <img src="../_static/pygame_tiny.png"/>
+	  </a>
+	  <h5>pygame documentation</h5>
+	</div>
+	<div class="pagelinks">
+	  <div class="top">
+	    <a href="https://www.pygame.org/">Pygame Home</a> ||
+	    <a href="../index.html">Help Contents</a> ||
+	    <a href="../genindex.html">Reference Index</a>
+
+        <form action="../search.html" method="get" style="display:inline;float:right;">
+          <input name="q" value="" type="text">
+          <input value="search" type="submit">
+        </form>
+	  </div>
+	  <hr style="color:black;border-bottom:none;border-style: dotted;border-bottom-style:none;">
+	  <p class="bottom"><b>Most useful stuff</b>:
+	    <a href="../ref/color.html">Color</a> | 
+	    <a href="../ref/display.html">display</a> | 
+	    <a href="../ref/draw.html">draw</a> | 
+	    <a href="../ref/event.html">event</a> | 
+	    <a href="../ref/font.html">font</a> | 
+	    <a href="../ref/image.html">image</a> | 
+	    <a href="../ref/key.html">key</a> | 
+	    <a href="../ref/locals.html">locals</a> | 
+	    <a href="../ref/mixer.html">mixer</a> | 
+	    <a href="../ref/mouse.html">mouse</a> | 
+	    <a href="../ref/rect.html">Rect</a> | 
+	    <a href="../ref/surface.html">Surface</a> | 
+	    <a href="../ref/time.html">time</a> | 
+	    <a href="../ref/music.html">music</a> | 
+	    <a href="../ref/pygame.html">pygame</a>
+	  </p>
+
+	  <p class="bottom"><b>Advanced stuff</b>:
+	    <a href="../ref/cursors.html">cursors</a> | 
+	    <a href="../ref/joystick.html">joystick</a> | 
+	    <a href="../ref/mask.html">mask</a> | 
+	    <a href="../ref/sprite.html">sprite</a> | 
+	    <a href="../ref/transform.html">transform</a> | 
+	    <a href="../ref/bufferproxy.html">BufferProxy</a> | 
+	    <a href="../ref/freetype.html">freetype</a> | 
+	    <a href="../ref/gfxdraw.html">gfxdraw</a> | 
+	    <a href="../ref/midi.html">midi</a> | 
+	    <a href="../ref/pixelarray.html">PixelArray</a> | 
+	    <a href="../ref/pixelcopy.html">pixelcopy</a> | 
+	    <a href="../ref/sndarray.html">sndarray</a> | 
+	    <a href="../ref/surfarray.html">surfarray</a> | 
+	    <a href="../ref/math.html">math</a>
+	  </p>
+
+	  <p class="bottom"><b>Other</b>:
+	    <a href="../ref/camera.html">camera</a> | 
+	    <a href="../ref/sdl2_controller.html#module-pygame._sdl2.controller">controller</a> | 
+	    <a href="../ref/examples.html">examples</a> | 
+	    <a href="../ref/fastevent.html">fastevent</a> | 
+	    <a href="../ref/scrap.html">scrap</a> | 
+	    <a href="../ref/tests.html">tests</a> | 
+	    <a href="../ref/touch.html">touch</a> | 
+	    <a href="../ref/pygame.html#module-pygame.version">version</a>
+	  </p>
+</div>
+</div>
+  </div>
+
+      <div class="documentwrapper">
+          <div class="body" role="main">
+            
+<section id="pygame-intro">
+<section id="python-pygame-introduction">
+<h2>Python Pygame Introduction<a class="headerlink" href="#python-pygame-introduction" title="Permalink to this heading">¶</a></h2>
+<dl class="docinfo field-list simple">
+<dt class="field-odd">Author<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Pete Shinners</p>
+</dd>
+<dt class="field-even">Contact<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="mailto:pete&#37;&#52;&#48;shinners&#46;org">pete<span>&#64;</span>shinners<span>&#46;</span>org</a></p>
+</dd>
+</dl>
+<p>This article is an introduction to the <a class="reference external" href="http://www.pygame.org">pygame library</a>
+for <a class="reference external" href="https://www.python.org/">Python programmers</a>.
+The original version appeared in the <a class="reference external" href="https://web.archive.org/web/20030810011958/http://store.pyzine.com:80/article.phtml?a=2">PyZine volume 1 issue 3</a>.
+This version contains minor revisions, to
+create an all-around better article. Pygame is a Python extension
+library that wraps the <a class="reference external" href="http://www.libsdl.org">SDL</a> library
+and its helpers.</p>
+<section id="history">
+<h3>HISTORY<a class="headerlink" href="#history" title="Permalink to this heading">¶</a></h3>
+<p>Pygame started in the summer of 2000. Being a C programmer of many
+years, I discovered both Python and SDL at about the same time. You are
+already familiar with Python, which was at version 1.5.2. You may need
+an introduction to SDL, which is the Simple DirectMedia Layer.
+Created by Sam Lantinga, SDL is a cross-platform C library for
+controlling multimedia, comparable to DirectX. It has been used for
+hundreds of commercial and open source games. I was impressed at how clean
+and straightforward both projects were and it wasn't long before I
+realized mixing Python and SDL was an interesting proposal.</p>
+<p>I discovered a small project already under-way with exactly the same
+idea, PySDL. Created by Mark Baker, PySDL was a straightforward
+implementation of SDL as a Python extension. The interface was cleaner
+than a generic SWIG wrapping, but I felt it forced a &quot;C style&quot; of code.
+The sudden death of PySDL prompted me to take on a new project of my
+own.</p>
+<p>I wanted to put together a project that really took advantage of
+Python. My goal was to make it easy to do the simple things, and
+straightforward to do the difficult things. Pygame was started in
+October, 2000. Six months later pygame version 1.0 was released.</p>
+</section>
+<section id="taste">
+<h3>TASTE<a class="headerlink" href="#taste" title="Permalink to this heading">¶</a></h3>
+<p>I find the best way to understand a new library is to jump straight
+into an example. In the early days of pygame, I created a bouncing ball
+animation with 7 lines of code. Let's take a look at a friendlier
+version of that same thing. This should be simple enough to follow
+along, and a complete breakdown follows.</p>
+<img alt="../_images/intro_ball.gif" class="inlined-right" src="../_images/intro_ball.gif" />
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span><span class="o">,</span> <span class="nn">pygame</span>
+<span class="n">pygame</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+
+<span class="n">size</span> <span class="o">=</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="mi">320</span><span class="p">,</span> <span class="mi">240</span>
+<span class="n">speed</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+<span class="n">black</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
+
+<span class="n">screen</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">set_mode</span><span class="p">(</span><span class="n">size</span><span class="p">)</span>
+
+<span class="n">ball</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;intro_ball.gif&quot;</span><span class="p">)</span>
+<span class="n">ballrect</span> <span class="o">=</span> <span class="n">ball</span><span class="o">.</span><span class="n">get_rect</span><span class="p">()</span>
+
+<span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">pygame</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">get</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">pygame</span><span class="o">.</span><span class="n">QUIT</span><span class="p">:</span> <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
+
+    <span class="n">ballrect</span> <span class="o">=</span> <span class="n">ballrect</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="n">speed</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">ballrect</span><span class="o">.</span><span class="n">left</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">ballrect</span><span class="o">.</span><span class="n">right</span> <span class="o">&gt;</span> <span class="n">width</span><span class="p">:</span>
+        <span class="n">speed</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">speed</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">ballrect</span><span class="o">.</span><span class="n">top</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">ballrect</span><span class="o">.</span><span class="n">bottom</span> <span class="o">&gt;</span> <span class="n">height</span><span class="p">:</span>
+        <span class="n">speed</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">speed</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="n">screen</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="n">black</span><span class="p">)</span>
+    <span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="n">ball</span><span class="p">,</span> <span class="n">ballrect</span><span class="p">)</span>
+    <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">flip</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>This is as simple as you can get for a bouncing animation.
+First we see importing and initializing pygame is nothing noteworthy.
+The <code class="docutils literal notranslate"><span class="pre">import</span> <span class="pre">pygame</span></code> imports the package with all the available
+pygame modules.
+The call to <code class="docutils literal notranslate"><span class="pre">pygame.init()</span></code> initializes each of these modules.
+Make sure the gif file of the bouncing ball is in the same folder
+as the code block.
+On <span class="codelineref">line 4</span> we set the size of the display window, for best
+results you can change these numbers to match your own monitor's
+resolution.
+On <span class="codelineref">line 8</span> we create a
+graphical window with the call to <code class="docutils literal notranslate"><span class="pre">pygame.display.set_mode()</span></code>.
+Pygame and SDL make this easy by defaulting to the best graphics modes
+for the graphics hardware. You can override the mode and SDL will
+compensate for anything the hardware cannot do. Pygame represents
+images as <em>Surface</em> objects.
+The <code class="docutils literal notranslate"><span class="pre">display.set_mode()</span></code> function creates a new <em>Surface</em>
+object that represents the actual displayed graphics. Any drawing you
+do to this Surface will become visible on the monitor.</p>
+<p>At <span class="codelineref">line 10</span> we load
+our ball image. Pygame supports a variety of image formats through the
+SDL_image library, including BMP, JPG, PNG, TGA, and GIF.
+The <code class="docutils literal notranslate"><span class="pre">pygame.image.load()</span></code> function
+returns us a Surface with the ball data. The Surface will keep any
+colorkey or alpha transparency from the file. After loading the ball
+image we create a variable named ballrect. Pygame comes with a
+convenient utility object type named <a class="reference internal" href="../ref/rect.html#pygame.Rect" title="pygame.Rect"><code class="xref py py-class docutils literal notranslate"><span class="pre">Rect</span></code></a>,
+which represents a rectangular area. Later, in the animation part of
+the code, we will see what the <em>Rect</em> objects can do.</p>
+<p>At this point, <span class="codelineref">line 13</span>,
+our program is initialized and ready to run. Inside an infinite loop we
+check for user input, move the ball, and then draw the ball. If you are
+familiar with GUI programming, you have had experience with events and
+event loops. In pygame this is no different,
+we check if a <em>QUIT</em> event has happened. If so we
+simply exit the program, pygame will ensure everything is cleanly
+shutdown.</p>
+<p>It is time to update our position for the ball.
+<span class="codelineref">Lines 17</span> moves the ballrect variable by the current speed.
+<span class="codelineref">Lines 18 thru 21</span> reverse the speed if the ball has moved outside the screen.
+Not exactly Newtonian physics, but it is all we need.</p>
+<p>On <span class="codelineref">line 23</span> we erase
+the screen by filling it with a black RGB color. If you have never
+worked with animations this may seem strange. You may be asking &quot;Why do
+we need to erase anything, why don't we just move the ball on the
+screen?&quot; That is not quite the way computer animation works. Animation
+is nothing more than a series of single images, which when displayed in
+sequence do a very good job of fooling the human eye into seeing
+motion. The screen is just a single image that the user sees. If we did
+not take the time to erase the ball from the screen, we would actually
+see a &quot;trail&quot; of the ball as we continuously draw the ball in its new
+positions.</p>
+<p>On <span class="codelineref">line 24</span> we draw the ball image onto the screen.
+Drawing of images is handled by the
+<a class="reference internal" href="../ref/surface.html#pygame.Surface.blit" title="pygame.Surface.blit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Surface.blit()</span></code></a> method.
+A blit basically means copying pixel colors from one image to another.
+We pass the blit method a source <a class="reference internal" href="../ref/surface.html#pygame.Surface" title="pygame.Surface"><code class="xref py py-class docutils literal notranslate"><span class="pre">Surface</span></code></a>
+to copy from, and a position to place the source onto the destination.</p>
+<p>The last thing we need to do is actually update the visible display.
+Pygame manages the display with a double buffer. When we are finished
+drawing we call the <a class="tooltip reference internal" href="../ref/display.html#pygame.display.flip" title=""><code class="xref py py-func docutils literal notranslate"><span class="pre">pygame.display.flip()</span></code><span class="tooltip-content">Update the full display Surface to the screen</span></a> method.
+This makes everything we have drawn on the screen Surface
+become visible. This buffering makes sure we only see completely drawn
+frames on the screen. Without it, the user would see the half completed
+parts of the screen as they are being created.</p>
+<p>That concludes this short introduction to pygame. Pygame also has
+modules to do things like input handling for the keyboard, mouse, and
+joystick. It can mix audio and decode streaming music.
+With the <em>Surfaces</em> you can draw simple
+shapes, rotate and scale the picture, and even manipulate the pixels of
+an image in realtime as numpy arrays.
+Pygame also has the ability to act as a
+cross platform display layer for PyOpenGL. Most of the pygame modules
+are written in C, few are actually done in Python.</p>
+<p>The pygame website has full reference documentation for every pygame
+function and tutorials for all ranges of users. The pygame source comes
+with many examples of things like monkey punching and UFO shooting.</p>
+</section>
+<section id="python-and-gaming">
+<h3>PYTHON AND GAMING<a class="headerlink" href="#python-and-gaming" title="Permalink to this heading">¶</a></h3>
+<p>&quot;Is Python suitable for gaming?&quot; The answer is, &quot;It depends on the
+game.&quot;</p>
+<p>Python is actually quite capable at running games. It will likely even
+surprise you how much is possible in under 30 milliseconds. Still, it
+is not hard to reach the ceiling once your game begins to get more
+complex. Any game running in realtime will be making full use of the
+computer.</p>
+<img alt="../_images/intro_blade.jpg" class="inlined-right" src="../_images/intro_blade.jpg" />
+<p>Over the past several years there has been an interesting trend in game development,
+the move towards higher level languages. Usually a game is split into
+two major parts. The game engine, which must be as fast as possible,
+and the game logic, which makes the engine actually do something. It
+wasn't long ago when the engine of a game was written in assembly, with
+portions written in C. Nowadays, C has moved to the game engine, while
+often the game itself is written in higher level scripting languages.
+Games like Quake3 and Unreal run these scripts as portable bytecode.</p>
+<p>In early 2001, developer Rebel Act Studios finished their game,
+Severance: Blade of Darkness. Using their own custom 3D engine, the
+rest of the game is written with Python. The game is a bloody action
+3rd person perspective fighter. You control medieval warriors into
+intricate decapitating combination attacks while exploring dungeons and
+castles. You can download third party add-ons for this game, and find
+they are nothing more than Python source files.</p>
+<p>More recently, Python has been used in a variety of games like Freedom
+Force, and Humungous' Backyard Sports Series.</p>
+<img alt="../_images/intro_freedom.jpg" class="inlined-right" src="../_images/intro_freedom.jpg" />
+<p>Pygame and SDL serve as an excellent C engine for 2D games.
+Games will still find the largest part of their runtime is spent
+inside SDL handling the graphics.
+SDL can take advantage of graphics hardware acceleration.
+Enabling this can change a game from running around 40 frames per
+second to over 200 frames per second. When you see your Python game
+running at 200 frames per second, you realize that Python and games can
+work together.</p>
+<p>It is impressive how well both Python and SDL work on multiple
+platforms. For example, in May of 2001 I released my own full pygame
+project, SolarWolf, an arcade style action game. One thing that has
+surprised me is that one year later there has been no need for any
+patches, bug fixes, or updates. The game was developed entirely on
+windows, but runs on Linux, Mac OSX, and many Unixes without any extra
+work on my end.</p>
+<p>Still, there are very clear limitations. The best way to manage
+hardware accelerated graphics is not always the way to get fastest
+results from software rendering. Hardware support is not available on
+all platforms. When a game gets more complex, it often must commit to
+one or the other. SDL has some other design limitations, things like
+full screen scrolling graphics can quickly bring your game down to
+unplayable speeds. While SDL is not suitable for all types of games,
+remember companies like Loki have used SDL to run a wide variety of
+retail quality titles.</p>
+<p>Pygame is fairly low-level when it comes to writing games. You'll
+quickly find yourself needing to wrap common functions into your own
+game environment. The great thing about this is there is nothing inside
+pygame to get in your way. Your program is in full control of
+everything. The side effect of that is you will find yourself borrowing
+a lot of code to get a more advanced framework put together. You'll
+need a better understanding of what you are doing.</p>
+</section>
+<section id="closing">
+<h3>CLOSING<a class="headerlink" href="#closing" title="Permalink to this heading">¶</a></h3>
+<p>Developing games is very rewarding, there is something exciting about
+being able to see and interact with the code you've written. Pygame
+currently has almost 30 other projects using it. Several of them are
+ready to play now. You may be surprised to visit the pygame website,
+and see what other users have been able to do with Python.</p>
+<p>One thing that has caught my attention is the amount of people coming
+to Python for the first time to try game development. I can see why
+games are a draw for new programmers, but it can be difficult since
+creating games requires a firmer understanding of the language. I've
+tried to support this group of users by writing many examples and
+pygame tutorials for people new to these concepts.</p>
+<p>In the end, my advice is to keep it simple. I cannot stress this
+enough. If you are planning to create your first game, there is a
+lot to learn. Even a simpler game will challenge your designs, and
+complex games don't necessarily mean fun games. When you understand
+Python, you can use pygame to create a simple game in only one or two
+weeks. From there you'll need a surprising amount of time to add
+the polish to make that into a full presentable game.</p>
+<section id="pygame-modules-overview">
+<h4>Pygame Modules Overview<a class="headerlink" href="#pygame-modules-overview" title="Permalink to this heading">¶</a></h4>
+<table class="more-to-explore docutils align-default">
+<colgroup>
+<col style="width: 28.6%" />
+<col style="width: 71.4%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="../ref/cdrom.html#module-pygame.cdrom" title="pygame.cdrom: pygame module for audio cdrom control"><code class="xref py py-mod docutils literal notranslate"><span class="pre">cdrom</span></code></a></p></td>
+<td><p>playback</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../ref/cursors.html#module-pygame.cursors" title="pygame.cursors: pygame module for cursor resources"><code class="xref py py-mod docutils literal notranslate"><span class="pre">cursors</span></code></a></p></td>
+<td><p>load cursor images, includes standard cursors</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../ref/display.html#module-pygame.display" title="pygame.display: pygame module to control the display window and screen"><code class="xref py py-mod docutils literal notranslate"><span class="pre">display</span></code></a></p></td>
+<td><p>control the display window or screen</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../ref/draw.html#module-pygame.draw" title="pygame.draw: pygame module for drawing shapes"><code class="xref py py-mod docutils literal notranslate"><span class="pre">draw</span></code></a></p></td>
+<td><p>draw simple shapes onto a Surface</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../ref/event.html#module-pygame.event" title="pygame.event: pygame module for interacting with events and queues"><code class="xref py py-mod docutils literal notranslate"><span class="pre">event</span></code></a></p></td>
+<td><p>manage events and the event queue</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../ref/font.html#module-pygame.font" title="pygame.font: pygame module for loading and rendering fonts"><code class="xref py py-mod docutils literal notranslate"><span class="pre">font</span></code></a></p></td>
+<td><p>create and render TrueType fonts</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../ref/image.html#module-pygame.image" title="pygame.image: pygame module for loading and saving images"><code class="xref py py-mod docutils literal notranslate"><span class="pre">image</span></code></a></p></td>
+<td><p>save and load images</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../ref/joystick.html#module-pygame.joystick" title="pygame.joystick: Pygame module for interacting with joysticks, gamepads, and trackballs."><code class="xref py py-mod docutils literal notranslate"><span class="pre">joystick</span></code></a></p></td>
+<td><p>manage joystick devices</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../ref/key.html#module-pygame.key" title="pygame.key: pygame module to work with the keyboard"><code class="xref py py-mod docutils literal notranslate"><span class="pre">key</span></code></a></p></td>
+<td><p>manage the keyboard</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../ref/mouse.html#module-pygame.mouse" title="pygame.mouse: pygame module to work with the mouse"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mouse</span></code></a></p></td>
+<td><p>manage the mouse</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../ref/sndarray.html#module-pygame.sndarray" title="pygame.sndarray: pygame module for accessing sound sample data"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sndarray</span></code></a></p></td>
+<td><p>manipulate sounds with numpy</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../ref/surfarray.html#module-pygame.surfarray" title="pygame.surfarray: pygame module for accessing surface pixel data using array interfaces"><code class="xref py py-mod docutils literal notranslate"><span class="pre">surfarray</span></code></a></p></td>
+<td><p>manipulate images with numpy</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../ref/time.html#module-pygame.time" title="pygame.time: pygame module for monitoring time"><code class="xref py py-mod docutils literal notranslate"><span class="pre">time</span></code></a></p></td>
+<td><p>control timing</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../ref/transform.html#module-pygame.transform" title="pygame.transform: pygame module to transform surfaces"><code class="xref py py-mod docutils literal notranslate"><span class="pre">transform</span></code></a></p></td>
+<td><p>scale, rotate, and flip images</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+</section>
+</section>
+
+
+<br /><br />
+<hr />
+<a href="https://github.com/pygame/pygame/edit/main/docs/reST/tut/PygameIntro.rst" rel="nofollow">Edit on GitHub</a>
+            <div class="clearer"></div>
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="SpriteIntro.html" title="Pygame Tutorials - Sprite Module Introduction"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="MoveIt.html" title="Pygame Tutorials - Help! How Do I Move An Image?"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">pygame v2.5.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Pygame Intro</a></li>
+    <script type="text/javascript" src="https://www.pygame.org/comment/jquery.plugin.docscomments.js"></script>
+
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2000-2023, pygame developers.
+    </div>
+  </body>
+</html>

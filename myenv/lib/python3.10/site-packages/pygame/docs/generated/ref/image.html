@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>pygame.image &#8212; pygame v2.5.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygame.css?v=71ee6cc2" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=ba44479e"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <link rel="icon" href="../_static/pygame.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="pygame.joystick" href="joystick.html" />
+    <link rel="prev" title="pygame.gfxdraw" href="gfxdraw.html" /> 
+  </head><body>  
+
+    <div class="document">
+
+  <div class="header">
+	<div class="flex-container">
+	<div class="logo">
+	  <a href="https://www.pygame.org/">
+	    <img src="../_static/pygame_tiny.png"/>
+	  </a>
+	  <h5>pygame documentation</h5>
+	</div>
+	<div class="pagelinks">
+	  <div class="top">
+	    <a href="https://www.pygame.org/">Pygame Home</a> ||
+	    <a href="../index.html">Help Contents</a> ||
+	    <a href="../genindex.html">Reference Index</a>
+
+        <form action="../search.html" method="get" style="display:inline;float:right;">
+          <input name="q" value="" type="text">
+          <input value="search" type="submit">
+        </form>
+	  </div>
+	  <hr style="color:black;border-bottom:none;border-style: dotted;border-bottom-style:none;">
+	  <p class="bottom"><b>Most useful stuff</b>:
+	    <a href="color.html">Color</a> | 
+	    <a href="display.html">display</a> | 
+	    <a href="draw.html">draw</a> | 
+	    <a href="event.html">event</a> | 
+	    <a href="font.html">font</a> | 
+	    <a href="image.html">image</a> | 
+	    <a href="key.html">key</a> | 
+	    <a href="locals.html">locals</a> | 
+	    <a href="mixer.html">mixer</a> | 
+	    <a href="mouse.html">mouse</a> | 
+	    <a href="rect.html">Rect</a> | 
+	    <a href="surface.html">Surface</a> | 
+	    <a href="time.html">time</a> | 
+	    <a href="music.html">music</a> | 
+	    <a href="pygame.html">pygame</a>
+	  </p>
+
+	  <p class="bottom"><b>Advanced stuff</b>:
+	    <a href="cursors.html">cursors</a> | 
+	    <a href="joystick.html">joystick</a> | 
+	    <a href="mask.html">mask</a> | 
+	    <a href="sprite.html">sprite</a> | 
+	    <a href="transform.html">transform</a> | 
+	    <a href="bufferproxy.html">BufferProxy</a> | 
+	    <a href="freetype.html">freetype</a> | 
+	    <a href="gfxdraw.html">gfxdraw</a> | 
+	    <a href="midi.html">midi</a> | 
+	    <a href="pixelarray.html">PixelArray</a> | 
+	    <a href="pixelcopy.html">pixelcopy</a> | 
+	    <a href="sndarray.html">sndarray</a> | 
+	    <a href="surfarray.html">surfarray</a> | 
+	    <a href="math.html">math</a>
+	  </p>
+
+	  <p class="bottom"><b>Other</b>:
+	    <a href="camera.html">camera</a> | 
+	    <a href="sdl2_controller.html#module-pygame._sdl2.controller">controller</a> | 
+	    <a href="examples.html">examples</a> | 
+	    <a href="fastevent.html">fastevent</a> | 
+	    <a href="scrap.html">scrap</a> | 
+	    <a href="tests.html">tests</a> | 
+	    <a href="touch.html">touch</a> | 
+	    <a href="pygame.html#module-pygame.version">version</a>
+	  </p>
+</div>
+</div>
+  </div>
+
+      <div class="documentwrapper">
+          <div class="body" role="main">
+            
+<section id="module-pygame.image">
+<span id="pygame-image"></span><dl class="definition">
+<dt class="title module sig sig-object">
+<code class="docutils literal notranslate"><span class="pre">pygame.image</span></code></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">pygame module for image transfer</span></div>
+</div>
+<table class="toc docutils align-default">
+<tbody>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="image.html#pygame.image.load">pygame.image.load</a></div>
+</td>
+<td>—</td>
+<td>load new image from a file (or file-like object)</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="image.html#pygame.image.save">pygame.image.save</a></div>
+</td>
+<td>—</td>
+<td>save an image to file (or file-like object)</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="image.html#pygame.image.get_sdl_image_version">pygame.image.get_sdl_image_version</a></div>
+</td>
+<td>—</td>
+<td>get version number of the SDL_Image library being used</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="image.html#pygame.image.get_extended">pygame.image.get_extended</a></div>
+</td>
+<td>—</td>
+<td>test if extended image formats can be loaded</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="image.html#pygame.image.tostring">pygame.image.tostring</a></div>
+</td>
+<td>—</td>
+<td>transfer image to byte buffer</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="image.html#pygame.image.tobytes">pygame.image.tobytes</a></div>
+</td>
+<td>—</td>
+<td>transfer image to byte buffer</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="image.html#pygame.image.fromstring">pygame.image.fromstring</a></div>
+</td>
+<td>—</td>
+<td>create new Surface from a byte buffer</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="image.html#pygame.image.frombytes">pygame.image.frombytes</a></div>
+</td>
+<td>—</td>
+<td>create new Surface from a byte buffer</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="image.html#pygame.image.frombuffer">pygame.image.frombuffer</a></div>
+</td>
+<td>—</td>
+<td>create a new Surface that shares data inside a bytes buffer</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="image.html#pygame.image.load_basic">pygame.image.load_basic</a></div>
+</td>
+<td>—</td>
+<td>load new BMP image from a file (or file-like object)</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="image.html#pygame.image.load_extended">pygame.image.load_extended</a></div>
+</td>
+<td>—</td>
+<td>load an image from a file (or file-like object)</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="image.html#pygame.image.save_extended">pygame.image.save_extended</a></div>
+</td>
+<td>—</td>
+<td>save a png/jpg image to file (or file-like object)</td>
+</tr>
+</tbody>
+</table>
+<p>The image module contains functions for loading and saving pictures, as well as
+transferring Surfaces to formats usable by other packages.</p>
+<p>Note that there is no Image class; an image is loaded as a Surface object. The
+Surface class allows manipulation (drawing lines, setting pixels, capturing
+regions, etc.).</p>
+<p>In the vast majority of installations, pygame is built to support extended
+formats, using the SDL_Image library behind the scenes. However, some
+installations may only support uncompressed <code class="docutils literal notranslate"><span class="pre">BMP</span></code> images. With full image
+support, the <a class="tooltip reference internal" href="#pygame.image.load" title=""><code class="xref py py-func docutils literal notranslate"><span class="pre">pygame.image.load()</span></code><span class="tooltip-content">load new image from a file (or file-like object)</span></a> function can load the following
+formats.</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">BMP</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">GIF</span></code> (non-animated)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">JPEG</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">LBM</span></code> (and <code class="docutils literal notranslate"><span class="pre">PBM</span></code>, <code class="docutils literal notranslate"><span class="pre">PGM</span></code>, <code class="docutils literal notranslate"><span class="pre">PPM</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">PCX</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">PNG</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">PNM</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SVG</span></code> (limited support, using Nano SVG)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">TGA</span></code> (uncompressed)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">TIFF</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">WEBP</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">XPM</span></code></p></li>
+</ul>
+</div></blockquote>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 2.0: </span>Loading SVG, WebP, PNM</p>
+</div>
+<p>Saving images only supports a limited set of formats. You can save to the
+following formats.</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">BMP</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">JPEG</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">PNG</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">TGA</span></code></p></li>
+</ul>
+</div></blockquote>
+<p><code class="docutils literal notranslate"><span class="pre">JPEG</span></code> and <code class="docutils literal notranslate"><span class="pre">JPG</span></code>, as well as <code class="docutils literal notranslate"><span class="pre">TIF</span></code> and <code class="docutils literal notranslate"><span class="pre">TIFF</span></code> refer to the same file format</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 1.8: </span>Saving PNG and JPEG files.</p>
+</div>
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.image.load">
+<span class="sig-prename descclassname"><span class="pre">pygame.image.</span></span><span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.image.load" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">load new image from a file (or file-like object)</span></div>
+<div class="line"><span class="signature">load(filename) -&gt; Surface</span></div>
+<div class="line"><span class="signature">load(fileobj, namehint=&quot;&quot;) -&gt; Surface</span></div>
+</div>
+<p>Load an image from a file source. You can pass either a filename, a Python
+file-like object, or a pathlib.Path.</p>
+<p>Pygame will automatically determine the image type (e.g., <code class="docutils literal notranslate"><span class="pre">GIF</span></code> or bitmap)
+and create a new Surface object from the data. In some cases it will need to
+know the file extension (e.g., <code class="docutils literal notranslate"><span class="pre">GIF</span></code> images should end in &quot;.gif&quot;). If you
+pass a raw file-like object, you may also want to pass the original filename
+as the namehint argument.</p>
+<p>The returned Surface will contain the same color format, colorkey and alpha
+transparency as the file it came from. You will often want to call
+<a class="tooltip reference internal" href="surface.html#pygame.Surface.convert" title=""><code class="xref py py-func docutils literal notranslate"><span class="pre">pygame.Surface.convert()</span></code><span class="tooltip-content">change the pixel format of an image</span></a> with no arguments, to create a copy that
+will draw more quickly on the screen.</p>
+<p>For alpha transparency, like in .png images, use the
+<a class="tooltip reference internal" href="surface.html#pygame.Surface.convert_alpha" title=""><code class="xref py py-func docutils literal notranslate"><span class="pre">pygame.Surface.convert_alpha()</span></code><span class="tooltip-content">change the pixel format of an image including per pixel alphas</span></a> method after loading so that the
+image has per pixel transparency.</p>
+<p>Pygame may not always be built to support all image formats. At minimum it
+will support uncompressed <code class="docutils literal notranslate"><span class="pre">BMP</span></code>. If <a class="tooltip reference internal" href="#pygame.image.get_extended" title=""><code class="xref py py-func docutils literal notranslate"><span class="pre">pygame.image.get_extended()</span></code><span class="tooltip-content">test if extended image formats can be loaded</span></a>
+returns <code class="docutils literal notranslate"><span class="pre">True</span></code>, you should be able to load most images (including PNG, JPG
+and GIF).</p>
+<p>You should use <code class="xref py py-func docutils literal notranslate"><span class="pre">os.path.join()</span></code> for compatibility.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">eg</span><span class="o">.</span> <span class="n">asurf</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="s1">&#39;bla.png&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.image.save">
+<span class="sig-prename descclassname"><span class="pre">pygame.image.</span></span><span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.image.save" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">save an image to file (or file-like object)</span></div>
+<div class="line"><span class="signature">save(Surface, filename) -&gt; None</span></div>
+<div class="line"><span class="signature">save(Surface, fileobj, namehint=&quot;&quot;) -&gt; None</span></div>
+</div>
+<p>This will save your Surface as either a <code class="docutils literal notranslate"><span class="pre">BMP</span></code>, <code class="docutils literal notranslate"><span class="pre">TGA</span></code>, <code class="docutils literal notranslate"><span class="pre">PNG</span></code>, or
+<code class="docutils literal notranslate"><span class="pre">JPEG</span></code> image. If the filename extension is unrecognized it will default to
+<code class="docutils literal notranslate"><span class="pre">TGA</span></code>. Both <code class="docutils literal notranslate"><span class="pre">TGA</span></code>, and <code class="docutils literal notranslate"><span class="pre">BMP</span></code> file formats create uncompressed files.
+You can pass a filename, a pathlib.Path or a Python file-like object.
+For file-like object, the image is saved to <code class="docutils literal notranslate"><span class="pre">TGA</span></code> format unless
+a namehint with a recognizable extension is passed in.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>When saving to a file-like object, it seems that for most formats,
+the object needs to be flushed after saving to it to make loading
+from it possible.</p>
+</div>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in pygame 1.8: </span>Saving PNG and JPEG files.</p>
+</div>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in pygame 2.0.0: </span>The <code class="docutils literal notranslate"><span class="pre">namehint</span></code> parameter was added to make it possible
+to save other formats than <code class="docutils literal notranslate"><span class="pre">TGA</span></code> to a file-like object.
+Saving to a file-like object with JPEG is possible.</p>
+</div>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.image.get_sdl_image_version">
+<span class="sig-prename descclassname"><span class="pre">pygame.image.</span></span><span class="sig-name descname"><span class="pre">get_sdl_image_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.image.get_sdl_image_version" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">get version number of the SDL_Image library being used</span></div>
+<div class="line"><span class="signature">get_sdl_image_version(linked=True) -&gt; None</span></div>
+<div class="line"><span class="signature">get_sdl_image_version(linked=True) -&gt; (major, minor, patch)</span></div>
+</div>
+<p>If pygame is built with extended image formats, then this function will
+return the SDL_Image library's version number as a tuple of 3 integers
+<code class="docutils literal notranslate"><span class="pre">(major,</span> <span class="pre">minor,</span> <span class="pre">patch)</span></code>. If not, then it will return <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">linked=True</span></code> is the default behavior and the function will return the
+version of the library that Pygame is linked against, while <code class="docutils literal notranslate"><span class="pre">linked=False</span></code>
+will return the version of the library that Pygame is compiled against.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 2.0.0.</span></p>
+</div>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in pygame 2.2.0: </span><code class="docutils literal notranslate"><span class="pre">linked</span></code> keyword argument added and default behavior changed from returning compiled version to returning linked version</p>
+</div>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.image.get_extended">
+<span class="sig-prename descclassname"><span class="pre">pygame.image.</span></span><span class="sig-name descname"><span class="pre">get_extended</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.image.get_extended" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">test if extended image formats can be loaded</span></div>
+<div class="line"><span class="signature">get_extended() -&gt; bool</span></div>
+</div>
+<p>If pygame is built with extended image formats this function will return
+True. It is still not possible to determine which formats will be available,
+but generally you will be able to load them all.</p>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.image.tostring">
+<span class="sig-prename descclassname"><span class="pre">pygame.image.</span></span><span class="sig-name descname"><span class="pre">tostring</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.image.tostring" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">transfer image to byte buffer</span></div>
+<div class="line"><span class="signature">tostring(Surface, format, flipped=False) -&gt; bytes</span></div>
+</div>
+<p>Creates a string of bytes that can be transferred with the <code class="docutils literal notranslate"><span class="pre">fromstring</span></code>
+or <code class="docutils literal notranslate"><span class="pre">frombytes</span></code> methods in other Python imaging packages. Some Python
+image packages prefer their images in bottom-to-top format (PyOpenGL for
+example). If you pass <code class="docutils literal notranslate"><span class="pre">True</span></code> for the flipped argument, the byte buffer
+will be vertically flipped.</p>
+<p>The format argument is a string of one of the following values. Note that
+only 8-bit Surfaces can use the &quot;P&quot; format. The other formats will work for
+any Surface. Also note that other Python image packages support more formats
+than pygame.</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">P</span></code>, 8-bit palettized Surfaces</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">RGB</span></code>, 24-bit image</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">RGBX</span></code>, 32-bit image with unused space</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">RGBA</span></code>, 32-bit image with an alpha channel</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ARGB</span></code>, 32-bit image with alpha channel first</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">BGRA</span></code>, 32-bit image with alpha channel, red and blue channels swapped</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">RGBA_PREMULT</span></code>, 32-bit image with colors scaled by alpha channel</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ARGB_PREMULT</span></code>, 32-bit image with colors scaled by alpha channel, alpha channel first</p></li>
+</ul>
+</div></blockquote>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>it is preferred to use <a class="reference internal" href="#pygame.image.tobytes" title="pygame.image.tobytes"><code class="xref py py-func docutils literal notranslate"><span class="pre">tobytes()</span></code></a> as of pygame 2.1.3</p>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 2.1.3: </span>BGRA format</p>
+</div>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.image.tobytes">
+<span class="sig-prename descclassname"><span class="pre">pygame.image.</span></span><span class="sig-name descname"><span class="pre">tobytes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.image.tobytes" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">transfer image to byte buffer</span></div>
+<div class="line"><span class="signature">tobytes(Surface, format, flipped=False) -&gt; bytes</span></div>
+</div>
+<p>Creates a string of bytes that can be transferred with the <code class="docutils literal notranslate"><span class="pre">fromstring</span></code>
+or <code class="docutils literal notranslate"><span class="pre">frombytes</span></code> methods in other Python imaging packages. Some Python
+image packages prefer their images in bottom-to-top format (PyOpenGL for
+example). If you pass <code class="docutils literal notranslate"><span class="pre">True</span></code> for the flipped argument, the byte buffer
+will be vertically flipped.</p>
+<p>The format argument is a string of one of the following values. Note that
+only 8-bit Surfaces can use the &quot;P&quot; format. The other formats will work for
+any Surface. Also note that other Python image packages support more formats
+than pygame.</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">P</span></code>, 8-bit palettized Surfaces</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">RGB</span></code>, 24-bit image</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">RGBX</span></code>, 32-bit image with unused space</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">RGBA</span></code>, 32-bit image with an alpha channel</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ARGB</span></code>, 32-bit image with alpha channel first</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">BGRA</span></code>, 32-bit image with alpha channel, red and blue channels swapped</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">RGBA_PREMULT</span></code>, 32-bit image with colors scaled by alpha channel</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ARGB_PREMULT</span></code>, 32-bit image with colors scaled by alpha channel, alpha channel first</p></li>
+</ul>
+</div></blockquote>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>this function is an alias for <a class="reference internal" href="#pygame.image.tostring" title="pygame.image.tostring"><code class="xref py py-func docutils literal notranslate"><span class="pre">tostring()</span></code></a>. The use of this
+function is recommended over <a class="reference internal" href="#pygame.image.tostring" title="pygame.image.tostring"><code class="xref py py-func docutils literal notranslate"><span class="pre">tostring()</span></code></a> as of pygame 2.1.3.
+This function was introduced so it matches nicely with other
+libraries (PIL, numpy, etc), and with people's expectations.</p>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 2.1.3.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.image.fromstring">
+<span class="sig-prename descclassname"><span class="pre">pygame.image.</span></span><span class="sig-name descname"><span class="pre">fromstring</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.image.fromstring" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">create new Surface from a byte buffer</span></div>
+<div class="line"><span class="signature">fromstring(bytes, size, format, flipped=False) -&gt; Surface</span></div>
+</div>
+<p>This function takes arguments similar to <a class="tooltip reference internal" href="#pygame.image.tostring" title=""><code class="xref py py-func docutils literal notranslate"><span class="pre">pygame.image.tostring()</span></code><span class="tooltip-content">transfer image to byte buffer</span></a>.
+The size argument is a pair of numbers representing the width and height.
+Once the new Surface is created it is independent from the memory of the
+bytes passed in.</p>
+<p>The bytes and format passed must compute to the exact size of image
+specified. Otherwise a <code class="docutils literal notranslate"><span class="pre">ValueError</span></code> will be raised.</p>
+<p>See the <a class="tooltip reference internal" href="#pygame.image.frombuffer" title=""><code class="xref py py-func docutils literal notranslate"><span class="pre">pygame.image.frombuffer()</span></code><span class="tooltip-content">create a new Surface that shares data inside a bytes buffer</span></a> method for a potentially faster
+way to transfer images into pygame.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>it is preferred to use <a class="reference internal" href="#pygame.image.frombytes" title="pygame.image.frombytes"><code class="xref py py-func docutils literal notranslate"><span class="pre">frombytes()</span></code></a> as of pygame 2.1.3</p>
+</div>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.image.frombytes">
+<span class="sig-prename descclassname"><span class="pre">pygame.image.</span></span><span class="sig-name descname"><span class="pre">frombytes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.image.frombytes" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">create new Surface from a byte buffer</span></div>
+<div class="line"><span class="signature">frombytes(bytes, size, format, flipped=False) -&gt; Surface</span></div>
+</div>
+<p>This function takes arguments similar to <a class="tooltip reference internal" href="#pygame.image.tobytes" title=""><code class="xref py py-func docutils literal notranslate"><span class="pre">pygame.image.tobytes()</span></code><span class="tooltip-content">transfer image to byte buffer</span></a>.
+The size argument is a pair of numbers representing the width and height.
+Once the new Surface is created it is independent from the memory of the
+bytes passed in.</p>
+<p>The bytes and format passed must compute to the exact size of image
+specified. Otherwise a <code class="docutils literal notranslate"><span class="pre">ValueError</span></code> will be raised.</p>
+<p>See the <a class="tooltip reference internal" href="#pygame.image.frombuffer" title=""><code class="xref py py-func docutils literal notranslate"><span class="pre">pygame.image.frombuffer()</span></code><span class="tooltip-content">create a new Surface that shares data inside a bytes buffer</span></a> method for a potentially faster
+way to transfer images into pygame.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>this function is an alias for <a class="reference internal" href="#pygame.image.fromstring" title="pygame.image.fromstring"><code class="xref py py-func docutils literal notranslate"><span class="pre">fromstring()</span></code></a>. The use of this
+function is recommended over <a class="reference internal" href="#pygame.image.fromstring" title="pygame.image.fromstring"><code class="xref py py-func docutils literal notranslate"><span class="pre">fromstring()</span></code></a> as of pygame 2.1.3.
+This function was introduced so it matches nicely with other
+libraries (PIL, numpy, etc), and with people's expectations.</p>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 2.1.3.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.image.frombuffer">
+<span class="sig-prename descclassname"><span class="pre">pygame.image.</span></span><span class="sig-name descname"><span class="pre">frombuffer</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.image.frombuffer" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">create a new Surface that shares data inside a bytes buffer</span></div>
+<div class="line"><span class="signature">frombuffer(buffer, size, format) -&gt; Surface</span></div>
+</div>
+<p>Create a new Surface that shares pixel data directly from a buffer. This
+buffer can be bytes, a bytearray, a memoryview, a
+<a class="tooltip reference internal" href="bufferproxy.html#pygame.BufferProxy" title=""><code class="xref py py-class docutils literal notranslate"><span class="pre">pygame.BufferProxy</span></code><span class="tooltip-content">pygame object to export a surface buffer through an array protocol</span></a>, or any object that supports the buffer protocol.
+This method takes similar arguments to <a class="tooltip reference internal" href="#pygame.image.fromstring" title=""><code class="xref py py-func docutils literal notranslate"><span class="pre">pygame.image.fromstring()</span></code><span class="tooltip-content">create new Surface from a byte buffer</span></a>, but
+is unable to vertically flip the source data.</p>
+<p>This will run much faster than <a class="tooltip reference internal" href="#pygame.image.fromstring" title=""><code class="xref py py-func docutils literal notranslate"><span class="pre">pygame.image.fromstring()</span></code><span class="tooltip-content">create new Surface from a byte buffer</span></a>, since no
+pixel data must be allocated and copied.</p>
+<p>It accepts the following 'format' arguments:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">P</span></code>, 8-bit palettized Surfaces</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">RGB</span></code>, 24-bit image</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">BGR</span></code>, 24-bit image, red and blue channels swapped.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">RGBX</span></code>, 32-bit image with unused space</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">RGBA</span></code>, 32-bit image with an alpha channel</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ARGB</span></code>, 32-bit image with alpha channel first</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">BGRA</span></code>, 32-bit image with alpha channel, red and blue channels swapped</p></li>
+</ul>
+</div></blockquote>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 2.1.3: </span>BGRA format</p>
+</div>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.image.load_basic">
+<span class="sig-prename descclassname"><span class="pre">pygame.image.</span></span><span class="sig-name descname"><span class="pre">load_basic</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.image.load_basic" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">load new BMP image from a file (or file-like object)</span></div>
+<div class="line"><span class="signature">load_basic(file) -&gt; Surface</span></div>
+</div>
+<p>Load an image from a file source. You can pass either a filename or a Python
+file-like object, or a pathlib.Path.</p>
+<p>This function only supports loading &quot;basic&quot; image format, ie <code class="docutils literal notranslate"><span class="pre">BMP</span></code>
+format.
+This function is always available, no matter how pygame was built.</p>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.image.load_extended">
+<span class="sig-prename descclassname"><span class="pre">pygame.image.</span></span><span class="sig-name descname"><span class="pre">load_extended</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.image.load_extended" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">load an image from a file (or file-like object)</span></div>
+<div class="line"><span class="signature">load_extended(filename) -&gt; Surface</span></div>
+<div class="line"><span class="signature">load_extended(fileobj, namehint=&quot;&quot;) -&gt; Surface</span></div>
+</div>
+<p>This function is similar to <a class="tooltip reference internal" href="#pygame.image.load" title=""><code class="xref py py-func docutils literal notranslate"><span class="pre">pygame.image.load()</span></code><span class="tooltip-content">load new image from a file (or file-like object)</span></a>, except that this
+function can only be used if pygame was built with extended image format
+support.</p>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in pygame 2.0.1: </span>This function is always available, but raises an
+<code class="docutils literal notranslate"><span class="pre">NotImplementedError</span></code> if extended image formats are
+not supported.
+Previously, this function may or may not be
+available, depending on the state of extended image
+format support.</p>
+</div>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.image.save_extended">
+<span class="sig-prename descclassname"><span class="pre">pygame.image.</span></span><span class="sig-name descname"><span class="pre">save_extended</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.image.save_extended" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">save a png/jpg image to file (or file-like object)</span></div>
+<div class="line"><span class="signature">save_extended(Surface, filename) -&gt; None</span></div>
+<div class="line"><span class="signature">save_extended(Surface, fileobj, namehint=&quot;&quot;) -&gt; None</span></div>
+</div>
+<p>This will save your Surface as either a <code class="docutils literal notranslate"><span class="pre">PNG</span></code> or <code class="docutils literal notranslate"><span class="pre">JPEG</span></code> image.</p>
+<p>In case the image is being saved to a file-like object, this function
+uses the namehint argument to determine the format of the file being
+saved. Saves to <code class="docutils literal notranslate"><span class="pre">JPEG</span></code> in case the namehint was not specified while
+saving to a file-like object.</p>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in pygame 2.0.1: </span>This function is always available, but raises an
+<code class="docutils literal notranslate"><span class="pre">NotImplementedError</span></code> if extended image formats are
+not supported.
+Previously, this function may or may not be
+available, depending on the state of extended image
+format support.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+<br /><br />
+<hr />
+<a href="https://github.com/pygame/pygame/edit/main/docs/reST/ref/image.rst" rel="nofollow">Edit on GitHub</a>
+            <div class="clearer"></div>
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="joystick.html" title="pygame.joystick"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="gfxdraw.html" title="pygame.gfxdraw"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">pygame v2.5.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href=""><code class="xref py py-mod docutils literal notranslate"><span class="pre">pygame.image</span></code></a></li>
+    <script type="text/javascript" src="https://www.pygame.org/comment/jquery.plugin.docscomments.js"></script>
+
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2000-2023, pygame developers.
+    </div>
+  </body>
+</html>

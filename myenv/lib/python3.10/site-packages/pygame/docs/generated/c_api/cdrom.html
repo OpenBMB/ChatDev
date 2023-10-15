@@ -1,0 +1,178 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>API exported by pygame.cdrom &#8212; pygame v2.1.3 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygame.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/pygame.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Class Color API exported by pygame.color" href="color.html" />
+    <link rel="prev" title="Class BufferProxy API exported by pgyame.bufferproxy" href="bufferproxy.html" /> 
+  </head><body>  
+
+    <div class="document">
+
+  <div class="header">
+    <table>
+      <tr>
+	<td class="logo">
+	  <a href="https://www.pygame.org/">
+	    <img src="../_static/pygame_tiny.png"/>
+	  </a>
+	  <h5>pygame documentation</h5>
+	</td>
+	<td class="pagelinks">
+	  <div class="top">
+	    <a href="https://www.pygame.org/">Pygame Home</a> ||
+	    <a href="../index.html">Help Contents</a> ||
+	    <a href="../genindex.html">Reference Index</a>
+
+        <form action="../search.html" method="get" style="display:inline;float:right;">
+          <input name="q" value="" type="text">
+          <input value="search" type="submit">
+        </form>
+	  </div>
+	  <hr style="color:black;border-bottom:none;border-style: dotted;border-bottom-style:none;">
+	  <p class="bottom"><b>Most useful stuff</b>:
+	    <a href="../ref/color.html">Color</a> | 
+	    <a href="../ref/display.html">display</a> | 
+	    <a href="../ref/draw.html">draw</a> | 
+	    <a href="../ref/event.html">event</a> | 
+	    <a href="../ref/font.html">font</a> | 
+	    <a href="../ref/image.html">image</a> | 
+	    <a href="../ref/key.html">key</a> | 
+	    <a href="../ref/locals.html">locals</a> | 
+	    <a href="../ref/mixer.html">mixer</a> | 
+	    <a href="../ref/mouse.html">mouse</a> | 
+	    <a href="../ref/rect.html">Rect</a> | 
+	    <a href="../ref/surface.html">Surface</a> | 
+	    <a href="../ref/time.html">time</a> | 
+	    <a href="../ref/music.html">music</a> | 
+	    <a href="../ref/pygame.html">pygame</a>
+	  </p>
+
+	  <p class="bottom"><b>Advanced stuff</b>:
+	    <a href="../ref/cursors.html">cursors</a> | 
+	    <a href="../ref/joystick.html">joystick</a> | 
+	    <a href="../ref/mask.html">mask</a> | 
+	    <a href="../ref/sprite.html">sprite</a> | 
+	    <a href="../ref/transform.html">transform</a> | 
+	    <a href="../ref/bufferproxy.html">BufferProxy</a> | 
+	    <a href="../ref/freetype.html">freetype</a> | 
+	    <a href="../ref/gfxdraw.html">gfxdraw</a> | 
+	    <a href="../ref/midi.html">midi</a> | 
+	    <a href="../ref/pixelarray.html">PixelArray</a> | 
+	    <a href="../ref/pixelcopy.html">pixelcopy</a> | 
+	    <a href="../ref/sndarray.html">sndarray</a> | 
+	    <a href="../ref/surfarray.html">surfarray</a> | 
+	    <a href="../ref/math.html">math</a>
+	  </p>
+
+	  <p class="bottom"><b>Other</b>:
+	    <a href="../ref/camera.html">camera</a> | 
+	    <a href="../ref/sdl2_controller.html#module-pygame._sdl2.controller">controller</a> | 
+	    <a href="../ref/examples.html">examples</a> | 
+	    <a href="../ref/fastevent.html">fastevent</a> | 
+	    <a href="../ref/scrap.html">scrap</a> | 
+	    <a href="../ref/tests.html">tests</a> | 
+	    <a href="../ref/touch.html">touch</a> | 
+	    <a href="../ref/pygame.html#module-pygame.version">version</a>
+	  </p>
+	</td>
+      </tr>
+    </table>
+  </div>
+
+      <div class="documentwrapper">
+          <div class="body" role="main">
+            
+<section id="api-exported-by-pygame-cdrom">
+<section id="src-c-cdrom-c">
+<h2>src_c/cdrom.c<a class="headerlink" href="#src-c-cdrom-c" title="Permalink to this headline">¶</a></h2>
+<p>The <a class="tooltip reference internal" href="../ref/cdrom.html#module-pygame.cdrom" title=""><code class="xref py py-mod docutils literal notranslate"><span class="pre">pygame.cdrom</span></code><span class="tooltip-content">pygame module for audio cdrom control</span></a> extension module. Only available for SDL 1.</p>
+<p>Header file: src_c/include/pygame.h</p>
+<dl class="c type">
+<dt class="sig sig-object c" id="c.pgCDObject">
+<span class="k"><span class="pre">type</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">pgCDObject</span></span></span><a class="headerlink" href="#c.pgCDObject" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The <a class="reference internal" href="../ref/cdrom.html#pygame.cdrom.CD" title="pygame.cdrom.CD"><code class="xref py py-class docutils literal notranslate"><span class="pre">pygame.cdrom.CD</span></code></a> instance C struct.</p>
+</dd></dl>
+
+<dl class="c var">
+<dt class="sig sig-object c" id="c.pgCD_Type">
+<span class="n"><span class="pre">PyTypeObject</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">pgCD_Type</span></span></span><a class="headerlink" href="#c.pgCD_Type" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The <a class="reference internal" href="../ref/cdrom.html#pygame.cdrom.CD" title="pygame.cdrom.CD"><code class="xref py py-class docutils literal notranslate"><span class="pre">pygame.cdrom.CD</span></code></a> Python type.</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.pgCD_New">
+<span class="n"><span class="pre">PyObject</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">pgCD_New</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n"><span class="pre">id</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.pgCD_New" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return a new <a class="reference internal" href="../ref/cdrom.html#pygame.cdrom.CD" title="pygame.cdrom.CD"><code class="xref py py-class docutils literal notranslate"><span class="pre">pygame.cdrom.CD</span></code></a> instance for CD drive <em>id</em>.
+On error raise a Python exception and return <code class="docutils literal notranslate"><span class="pre">NULL</span></code>.</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.pgCD_Check">
+<span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">pgCD_Check</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">PyObject</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">x</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.pgCD_Check" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return true if <em>x</em> is a <a class="reference internal" href="../ref/cdrom.html#pygame.cdrom.CD" title="pygame.cdrom.CD"><code class="xref py py-class docutils literal notranslate"><span class="pre">pygame.cdrom.CD</span></code></a> instance.
+Will return false for a subclass of <code class="xref py py-class docutils literal notranslate"><span class="pre">CD</span></code>.
+This is a macro. No check is made that <em>x</em> is not <code class="docutils literal notranslate"><span class="pre">NULL</span></code>.</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.pgCD_AsID">
+<span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">pgCD_AsID</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">PyObject</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">x</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.pgCD_AsID" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return the CD identifier associated with the <a class="reference internal" href="../ref/cdrom.html#pygame.cdrom.CD" title="pygame.cdrom.CD"><code class="xref py py-class docutils literal notranslate"><span class="pre">pygame.cdrom.CD</span></code></a>
+instance <em>x</em>.
+This is a macro. No check is made that <em>x</em> is a <a class="reference internal" href="../ref/cdrom.html#pygame.cdrom.CD" title="pygame.cdrom.CD"><code class="xref py py-class docutils literal notranslate"><span class="pre">pygame.cdrom.CD</span></code></a>
+instance or is not <code class="docutils literal notranslate"><span class="pre">NULL</span></code>.</p>
+</dd></dl>
+
+</section>
+</section>
+
+
+<br /><br />
+<hr />
+<a href="https://github.com/pygame/pygame/edit/main/docs/reST/c_api/cdrom.rst" rel="nofollow">Edit on GitHub</a>
+            <div class="clearer"></div>
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="color.html" title="Class Color API exported by pygame.color"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="bufferproxy.html" title="Class BufferProxy API exported by pgyame.bufferproxy"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">pygame v2.1.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../c_api.html" accesskey="U">pygame C API</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">API exported by pygame.cdrom</a></li>
+    <script type="text/javascript" src="https://www.pygame.org/comment/jquery.plugin.docscomments.js"></script>
+
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2000-2021, pygame developers.
+    </div>
+  </body>
+</html>

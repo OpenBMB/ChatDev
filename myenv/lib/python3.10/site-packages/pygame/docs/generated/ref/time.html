@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>pygame.time &#8212; pygame v2.5.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygame.css?v=71ee6cc2" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=ba44479e"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <link rel="icon" href="../_static/pygame.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="pygame._sdl2.touch" href="touch.html" />
+    <link rel="prev" title="pygame.tests" href="tests.html" /> 
+  </head><body>  
+
+    <div class="document">
+
+  <div class="header">
+	<div class="flex-container">
+	<div class="logo">
+	  <a href="https://www.pygame.org/">
+	    <img src="../_static/pygame_tiny.png"/>
+	  </a>
+	  <h5>pygame documentation</h5>
+	</div>
+	<div class="pagelinks">
+	  <div class="top">
+	    <a href="https://www.pygame.org/">Pygame Home</a> ||
+	    <a href="../index.html">Help Contents</a> ||
+	    <a href="../genindex.html">Reference Index</a>
+
+        <form action="../search.html" method="get" style="display:inline;float:right;">
+          <input name="q" value="" type="text">
+          <input value="search" type="submit">
+        </form>
+	  </div>
+	  <hr style="color:black;border-bottom:none;border-style: dotted;border-bottom-style:none;">
+	  <p class="bottom"><b>Most useful stuff</b>:
+	    <a href="color.html">Color</a> | 
+	    <a href="display.html">display</a> | 
+	    <a href="draw.html">draw</a> | 
+	    <a href="event.html">event</a> | 
+	    <a href="font.html">font</a> | 
+	    <a href="image.html">image</a> | 
+	    <a href="key.html">key</a> | 
+	    <a href="locals.html">locals</a> | 
+	    <a href="mixer.html">mixer</a> | 
+	    <a href="mouse.html">mouse</a> | 
+	    <a href="rect.html">Rect</a> | 
+	    <a href="surface.html">Surface</a> | 
+	    <a href="time.html">time</a> | 
+	    <a href="music.html">music</a> | 
+	    <a href="pygame.html">pygame</a>
+	  </p>
+
+	  <p class="bottom"><b>Advanced stuff</b>:
+	    <a href="cursors.html">cursors</a> | 
+	    <a href="joystick.html">joystick</a> | 
+	    <a href="mask.html">mask</a> | 
+	    <a href="sprite.html">sprite</a> | 
+	    <a href="transform.html">transform</a> | 
+	    <a href="bufferproxy.html">BufferProxy</a> | 
+	    <a href="freetype.html">freetype</a> | 
+	    <a href="gfxdraw.html">gfxdraw</a> | 
+	    <a href="midi.html">midi</a> | 
+	    <a href="pixelarray.html">PixelArray</a> | 
+	    <a href="pixelcopy.html">pixelcopy</a> | 
+	    <a href="sndarray.html">sndarray</a> | 
+	    <a href="surfarray.html">surfarray</a> | 
+	    <a href="math.html">math</a>
+	  </p>
+
+	  <p class="bottom"><b>Other</b>:
+	    <a href="camera.html">camera</a> | 
+	    <a href="sdl2_controller.html#module-pygame._sdl2.controller">controller</a> | 
+	    <a href="examples.html">examples</a> | 
+	    <a href="fastevent.html">fastevent</a> | 
+	    <a href="scrap.html">scrap</a> | 
+	    <a href="tests.html">tests</a> | 
+	    <a href="touch.html">touch</a> | 
+	    <a href="pygame.html#module-pygame.version">version</a>
+	  </p>
+</div>
+</div>
+  </div>
+
+      <div class="documentwrapper">
+          <div class="body" role="main">
+            
+<section id="module-pygame.time">
+<span id="pygame-time"></span><dl class="definition">
+<dt class="title module sig sig-object">
+<code class="docutils literal notranslate"><span class="pre">pygame.time</span></code></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">pygame module for monitoring time</span></div>
+</div>
+<table class="toc docutils align-default">
+<tbody>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="time.html#pygame.time.get_ticks">pygame.time.get_ticks</a></div>
+</td>
+<td>—</td>
+<td>get the time in milliseconds</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="time.html#pygame.time.wait">pygame.time.wait</a></div>
+</td>
+<td>—</td>
+<td>pause the program for an amount of time</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="time.html#pygame.time.delay">pygame.time.delay</a></div>
+</td>
+<td>—</td>
+<td>pause the program for an amount of time</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="time.html#pygame.time.set_timer">pygame.time.set_timer</a></div>
+</td>
+<td>—</td>
+<td>repeatedly create an event on the event queue</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="time.html#pygame.time.Clock">pygame.time.Clock</a></div>
+</td>
+<td>—</td>
+<td>create an object to help track time</td>
+</tr>
+</tbody>
+</table>
+<p>Times in pygame are represented in milliseconds (1/1000 seconds). Most
+platforms have a limited time resolution of around 10 milliseconds. This
+resolution, in milliseconds, is given in the <code class="docutils literal notranslate"><span class="pre">TIMER_RESOLUTION</span></code> constant.</p>
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.time.get_ticks">
+<span class="sig-prename descclassname"><span class="pre">pygame.time.</span></span><span class="sig-name descname"><span class="pre">get_ticks</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.time.get_ticks" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">get the time in milliseconds</span></div>
+<div class="line"><span class="signature">get_ticks() -&gt; milliseconds</span></div>
+</div>
+<p>Return the number of milliseconds since <code class="docutils literal notranslate"><span class="pre">pygame.init()</span></code> was called. Before
+pygame is initialized this will always be 0.</p>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.time.wait">
+<span class="sig-prename descclassname"><span class="pre">pygame.time.</span></span><span class="sig-name descname"><span class="pre">wait</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.time.wait" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">pause the program for an amount of time</span></div>
+<div class="line"><span class="signature">wait(milliseconds) -&gt; time</span></div>
+</div>
+<p>Will pause for a given number of milliseconds. This function sleeps the
+process to share the processor with other programs. A program that waits for
+even a few milliseconds will consume very little processor time. It is
+slightly less accurate than the <code class="docutils literal notranslate"><span class="pre">pygame.time.delay()</span></code> function.</p>
+<p>This returns the actual number of milliseconds used.</p>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.time.delay">
+<span class="sig-prename descclassname"><span class="pre">pygame.time.</span></span><span class="sig-name descname"><span class="pre">delay</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.time.delay" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">pause the program for an amount of time</span></div>
+<div class="line"><span class="signature">delay(milliseconds) -&gt; time</span></div>
+</div>
+<p>Will pause for a given number of milliseconds. This function will use the
+processor (rather than sleeping) in order to make the delay more accurate
+than <code class="docutils literal notranslate"><span class="pre">pygame.time.wait()</span></code>.</p>
+<p>This returns the actual number of milliseconds used.</p>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.time.set_timer">
+<span class="sig-prename descclassname"><span class="pre">pygame.time.</span></span><span class="sig-name descname"><span class="pre">set_timer</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.time.set_timer" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">repeatedly create an event on the event queue</span></div>
+<div class="line"><span class="signature">set_timer(event, millis) -&gt; None</span></div>
+<div class="line"><span class="signature">set_timer(event, millis, loops=0) -&gt; None</span></div>
+</div>
+<p>Set an event to appear on the event queue every given number of milliseconds.
+The first event will not appear until the amount of time has passed.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">event</span></code> attribute can be a <code class="docutils literal notranslate"><span class="pre">pygame.event.Event</span></code> object or an integer
+type that denotes an event.</p>
+<p><code class="docutils literal notranslate"><span class="pre">loops</span></code> is an integer that denotes the number of events posted. If 0 (default)
+then the events will keep getting posted, unless explicitly stopped.</p>
+<p>To disable the timer for such an event, call the function again with the same
+event argument with <code class="docutils literal notranslate"><span class="pre">millis</span></code> argument set to 0.</p>
+<p>It is also worth mentioning that a particular event type can only be put on a
+timer once. In other words, there cannot be two timers for the same event type.
+Setting an event timer for a particular event discards the old one for that
+event type.</p>
+<p><code class="docutils literal notranslate"><span class="pre">loops</span></code> replaces the <code class="docutils literal notranslate"><span class="pre">once</span></code> argument, and this does not break backward
+compatibility</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 2.0.0.dev3: </span>once argument added.</p>
+</div>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in pygame 2.0.1: </span>event argument supports <code class="docutils literal notranslate"><span class="pre">pygame.event.Event</span></code> object</p>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 2.0.1: </span>added loops argument to replace once argument</p>
+</div>
+</dd></dl>
+
+<dl class="py class definition">
+<dt class="sig sig-object py title" id="pygame.time.Clock">
+<span class="sig-prename descclassname"><span class="pre">pygame.time.</span></span><span class="sig-name descname"><span class="pre">Clock</span></span><a class="headerlink" href="#pygame.time.Clock" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">create an object to help track time</span></div>
+<div class="line"><span class="signature">Clock() -&gt; Clock</span></div>
+</div>
+<table class="toc docutils align-default">
+<tbody>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="time.html#pygame.time.Clock.tick">pygame.time.Clock.tick</a></div>
+</td>
+<td>—</td>
+<td>update the clock</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="time.html#pygame.time.Clock.tick_busy_loop">pygame.time.Clock.tick_busy_loop</a></div>
+</td>
+<td>—</td>
+<td>update the clock</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="time.html#pygame.time.Clock.get_time">pygame.time.Clock.get_time</a></div>
+</td>
+<td>—</td>
+<td>time used in the previous tick</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="time.html#pygame.time.Clock.get_rawtime">pygame.time.Clock.get_rawtime</a></div>
+</td>
+<td>—</td>
+<td>actual time used in the previous tick</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="time.html#pygame.time.Clock.get_fps">pygame.time.Clock.get_fps</a></div>
+</td>
+<td>—</td>
+<td>compute the clock framerate</td>
+</tr>
+</tbody>
+</table>
+<p>Creates a new Clock object that can be used to track an amount of time. The
+clock also provides several functions to help control a game's framerate.</p>
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.time.Clock.tick">
+<span class="sig-name descname"><span class="pre">tick</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.time.Clock.tick" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">update the clock</span></div>
+<div class="line"><span class="signature">tick(framerate=0) -&gt; milliseconds</span></div>
+</div>
+<p>This method should be called once per frame. It will compute how many
+milliseconds have passed since the previous call.</p>
+<p>If you pass the optional framerate argument the function will delay to
+keep the game running slower than the given ticks per second. This can be
+used to help limit the runtime speed of a game. By calling
+<code class="docutils literal notranslate"><span class="pre">Clock.tick(40)</span></code> once per frame, the program will never run at more
+than 40 frames per second.</p>
+<p>Note that this function uses SDL_Delay function which is not accurate on
+every platform, but does not use much CPU. Use tick_busy_loop if you want
+an accurate timer, and don't mind chewing CPU.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.time.Clock.tick_busy_loop">
+<span class="sig-name descname"><span class="pre">tick_busy_loop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.time.Clock.tick_busy_loop" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">update the clock</span></div>
+<div class="line"><span class="signature">tick_busy_loop(framerate=0) -&gt; milliseconds</span></div>
+</div>
+<p>This method should be called once per frame. It will compute how many
+milliseconds have passed since the previous call.</p>
+<p>If you pass the optional framerate argument the function will delay to
+keep the game running slower than the given ticks per second. This can be
+used to help limit the runtime speed of a game. By calling
+<code class="docutils literal notranslate"><span class="pre">Clock.tick_busy_loop(40)</span></code> once per frame, the program will never run at
+more than 40 frames per second.</p>
+<p>Note that this function uses <a class="tooltip reference internal" href="#pygame.time.delay" title=""><code class="xref py py-func docutils literal notranslate"><span class="pre">pygame.time.delay()</span></code><span class="tooltip-content">pause the program for an amount of time</span></a>, which uses lots
+of CPU in a busy loop to make sure that timing is more accurate.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 1.8.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.time.Clock.get_time">
+<span class="sig-name descname"><span class="pre">get_time</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.time.Clock.get_time" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">time used in the previous tick</span></div>
+<div class="line"><span class="signature">get_time() -&gt; milliseconds</span></div>
+</div>
+<p>The number of milliseconds that passed between the previous two calls to
+<code class="docutils literal notranslate"><span class="pre">Clock.tick()</span></code>.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.time.Clock.get_rawtime">
+<span class="sig-name descname"><span class="pre">get_rawtime</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.time.Clock.get_rawtime" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">actual time used in the previous tick</span></div>
+<div class="line"><span class="signature">get_rawtime() -&gt; milliseconds</span></div>
+</div>
+<p>Similar to <code class="docutils literal notranslate"><span class="pre">Clock.get_time()</span></code>, but does not include any time used
+while <code class="docutils literal notranslate"><span class="pre">Clock.tick()</span></code> was delaying to limit the framerate.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.time.Clock.get_fps">
+<span class="sig-name descname"><span class="pre">get_fps</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.time.Clock.get_fps" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">compute the clock framerate</span></div>
+<div class="line"><span class="signature">get_fps() -&gt; float</span></div>
+</div>
+<p>Compute your game's framerate (in frames per second). It is computed by
+averaging the last ten calls to <code class="docutils literal notranslate"><span class="pre">Clock.tick()</span></code>.</p>
+</dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+<br /><br />
+<hr />
+<a href="https://github.com/pygame/pygame/edit/main/docs/reST/ref/time.rst" rel="nofollow">Edit on GitHub</a>
+            <div class="clearer"></div>
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="touch.html" title="pygame._sdl2.touch"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="tests.html" title="pygame.tests"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">pygame v2.5.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href=""><code class="xref py py-mod docutils literal notranslate"><span class="pre">pygame.time</span></code></a></li>
+    <script type="text/javascript" src="https://www.pygame.org/comment/jquery.plugin.docscomments.js"></script>
+
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2000-2023, pygame developers.
+    </div>
+  </body>
+</html>

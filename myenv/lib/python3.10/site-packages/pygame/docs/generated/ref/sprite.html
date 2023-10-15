@@ -1,0 +1,1381 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>pygame.sprite &#8212; pygame v2.5.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygame.css?v=71ee6cc2" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=ba44479e"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <link rel="icon" href="../_static/pygame.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="pygame.Surface" href="surface.html" />
+    <link rel="prev" title="pygame.sndarray" href="sndarray.html" /> 
+  </head><body>  
+
+    <div class="document">
+
+  <div class="header">
+	<div class="flex-container">
+	<div class="logo">
+	  <a href="https://www.pygame.org/">
+	    <img src="../_static/pygame_tiny.png"/>
+	  </a>
+	  <h5>pygame documentation</h5>
+	</div>
+	<div class="pagelinks">
+	  <div class="top">
+	    <a href="https://www.pygame.org/">Pygame Home</a> ||
+	    <a href="../index.html">Help Contents</a> ||
+	    <a href="../genindex.html">Reference Index</a>
+
+        <form action="../search.html" method="get" style="display:inline;float:right;">
+          <input name="q" value="" type="text">
+          <input value="search" type="submit">
+        </form>
+	  </div>
+	  <hr style="color:black;border-bottom:none;border-style: dotted;border-bottom-style:none;">
+	  <p class="bottom"><b>Most useful stuff</b>:
+	    <a href="color.html">Color</a> | 
+	    <a href="display.html">display</a> | 
+	    <a href="draw.html">draw</a> | 
+	    <a href="event.html">event</a> | 
+	    <a href="font.html">font</a> | 
+	    <a href="image.html">image</a> | 
+	    <a href="key.html">key</a> | 
+	    <a href="locals.html">locals</a> | 
+	    <a href="mixer.html">mixer</a> | 
+	    <a href="mouse.html">mouse</a> | 
+	    <a href="rect.html">Rect</a> | 
+	    <a href="surface.html">Surface</a> | 
+	    <a href="time.html">time</a> | 
+	    <a href="music.html">music</a> | 
+	    <a href="pygame.html">pygame</a>
+	  </p>
+
+	  <p class="bottom"><b>Advanced stuff</b>:
+	    <a href="cursors.html">cursors</a> | 
+	    <a href="joystick.html">joystick</a> | 
+	    <a href="mask.html">mask</a> | 
+	    <a href="sprite.html">sprite</a> | 
+	    <a href="transform.html">transform</a> | 
+	    <a href="bufferproxy.html">BufferProxy</a> | 
+	    <a href="freetype.html">freetype</a> | 
+	    <a href="gfxdraw.html">gfxdraw</a> | 
+	    <a href="midi.html">midi</a> | 
+	    <a href="pixelarray.html">PixelArray</a> | 
+	    <a href="pixelcopy.html">pixelcopy</a> | 
+	    <a href="sndarray.html">sndarray</a> | 
+	    <a href="surfarray.html">surfarray</a> | 
+	    <a href="math.html">math</a>
+	  </p>
+
+	  <p class="bottom"><b>Other</b>:
+	    <a href="camera.html">camera</a> | 
+	    <a href="sdl2_controller.html#module-pygame._sdl2.controller">controller</a> | 
+	    <a href="examples.html">examples</a> | 
+	    <a href="fastevent.html">fastevent</a> | 
+	    <a href="scrap.html">scrap</a> | 
+	    <a href="tests.html">tests</a> | 
+	    <a href="touch.html">touch</a> | 
+	    <a href="pygame.html#module-pygame.version">version</a>
+	  </p>
+</div>
+</div>
+  </div>
+
+      <div class="documentwrapper">
+          <div class="body" role="main">
+            
+<section id="module-pygame.sprite">
+<span id="pygame-sprite"></span><dl class="definition">
+<dt class="title module sig sig-object">
+<code class="docutils literal notranslate"><span class="pre">pygame.sprite</span></code></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">pygame module with basic game object classes</span></div>
+</div>
+<table class="toc docutils align-default">
+<tbody>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="sprite.html#pygame.sprite.Sprite">pygame.sprite.Sprite</a></div>
+</td>
+<td>—</td>
+<td>Simple base class for visible game objects.</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="sprite.html#pygame.sprite.WeakSprite">pygame.sprite.WeakSprite</a></div>
+</td>
+<td>—</td>
+<td>A subclass of Sprite that references its Groups weakly. This means that any group this belongs to that is not referenced anywhere else is garbage collected automatically.</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="sprite.html#pygame.sprite.DirtySprite">pygame.sprite.DirtySprite</a></div>
+</td>
+<td>—</td>
+<td>A subclass of Sprite with more attributes and features.</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="sprite.html#pygame.sprite.Group">pygame.sprite.Group</a></div>
+</td>
+<td>—</td>
+<td>A container class to hold and manage multiple Sprite objects.</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="sprite.html#pygame.sprite.WeakDirtySprite">pygame.sprite.WeakDirtySprite</a></div>
+</td>
+<td>—</td>
+<td>A subclass of WeakSprite and DirtySprite that combines the benefits of both classes.</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="sprite.html#pygame.sprite.RenderPlain">pygame.sprite.RenderPlain</a></div>
+</td>
+<td>—</td>
+<td>Same as pygame.sprite.Group</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="sprite.html#pygame.sprite.RenderClear">pygame.sprite.RenderClear</a></div>
+</td>
+<td>—</td>
+<td>Same as pygame.sprite.Group</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="sprite.html#pygame.sprite.RenderUpdates">pygame.sprite.RenderUpdates</a></div>
+</td>
+<td>—</td>
+<td>Group sub-class that tracks dirty updates.</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="sprite.html#pygame.sprite.OrderedUpdates">pygame.sprite.OrderedUpdates</a></div>
+</td>
+<td>—</td>
+<td>RenderUpdates sub-class that draws Sprites in order of addition.</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="sprite.html#pygame.sprite.LayeredUpdates">pygame.sprite.LayeredUpdates</a></div>
+</td>
+<td>—</td>
+<td>LayeredUpdates is a sprite group that handles layers and draws like OrderedUpdates.</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="sprite.html#pygame.sprite.LayeredDirty">pygame.sprite.LayeredDirty</a></div>
+</td>
+<td>—</td>
+<td>LayeredDirty group is for DirtySprite objects.  Subclasses LayeredUpdates.</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="sprite.html#pygame.sprite.GroupSingle">pygame.sprite.GroupSingle</a></div>
+</td>
+<td>—</td>
+<td>Group container that holds a single sprite.</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="sprite.html#pygame.sprite.spritecollide">pygame.sprite.spritecollide</a></div>
+</td>
+<td>—</td>
+<td>Find sprites in a group that intersect another sprite.</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="sprite.html#pygame.sprite.collide_rect">pygame.sprite.collide_rect</a></div>
+</td>
+<td>—</td>
+<td>Collision detection between two sprites, using rects.</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="sprite.html#pygame.sprite.collide_rect_ratio">pygame.sprite.collide_rect_ratio</a></div>
+</td>
+<td>—</td>
+<td>Collision detection between two sprites, using rects scaled to a ratio.</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="sprite.html#pygame.sprite.collide_circle">pygame.sprite.collide_circle</a></div>
+</td>
+<td>—</td>
+<td>Collision detection between two sprites, using circles.</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="sprite.html#pygame.sprite.collide_circle_ratio">pygame.sprite.collide_circle_ratio</a></div>
+</td>
+<td>—</td>
+<td>Collision detection between two sprites, using circles scaled to a ratio.</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="sprite.html#pygame.sprite.collide_mask">pygame.sprite.collide_mask</a></div>
+</td>
+<td>—</td>
+<td>Collision detection between two sprites, using masks.</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="sprite.html#pygame.sprite.groupcollide">pygame.sprite.groupcollide</a></div>
+</td>
+<td>—</td>
+<td>Find all sprites that collide between two groups.</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="sprite.html#pygame.sprite.spritecollideany">pygame.sprite.spritecollideany</a></div>
+</td>
+<td>—</td>
+<td>Simple test if a sprite intersects anything in a group.</td>
+</tr>
+</tbody>
+</table>
+<p>This module contains several simple classes to be used within games. There is
+the main Sprite class and several Group classes that contain Sprites. The use
+of these classes is entirely optional when using pygame. The classes are fairly
+lightweight and only provide a starting place for the code that is common to
+most games.</p>
+<p>The Sprite class is intended to be used as a base class for the different types
+of objects in the game. There is also a base Group class that simply stores
+sprites. A game could create new types of Group classes that operate on
+specially customized Sprite instances they contain.</p>
+<p>The basic Group class can draw the Sprites it contains to a Surface. The
+<code class="docutils literal notranslate"><span class="pre">Group.draw()</span></code> method requires that each Sprite have a <code class="docutils literal notranslate"><span class="pre">Surface.image</span></code>
+attribute and a <code class="docutils literal notranslate"><span class="pre">Surface.rect</span></code>. The <code class="docutils literal notranslate"><span class="pre">Group.clear()</span></code> method requires these
+same attributes, and can be used to erase all the Sprites with background.
+There are also more advanced Groups: <code class="docutils literal notranslate"><span class="pre">pygame.sprite.RenderUpdates()</span></code> and
+<code class="docutils literal notranslate"><span class="pre">pygame.sprite.OrderedUpdates()</span></code>.</p>
+<p>Lastly, this module contains several collision functions. These help find
+sprites inside multiple groups that have intersecting bounding rectangles. To
+find the collisions, the Sprites are required to have a <code class="docutils literal notranslate"><span class="pre">Surface.rect</span></code>
+attribute assigned.</p>
+<p>The groups are designed for high efficiency in removing and adding Sprites to
+them. They also allow cheap testing to see if a Sprite already exists in a
+Group. A given Sprite can exist in any number of groups. A game could use some
+groups to control object rendering, and a completely separate set of groups to
+control interaction or player movement. Instead of adding type attributes or
+bools to a derived Sprite class, consider keeping the Sprites inside organized
+Groups. This will allow for easier lookup later in the game.</p>
+<p>Sprites and Groups manage their relationships with the <code class="docutils literal notranslate"><span class="pre">add()</span></code> and
+<code class="docutils literal notranslate"><span class="pre">remove()</span></code> methods. These methods can accept a single or multiple targets for
+membership. The default initializers for these classes also takes a single or
+list of targets for initial membership. It is safe to repeatedly add and remove
+the same Sprite from a Group.</p>
+<p>While it is possible to design sprite and group classes that don't derive from
+the Sprite and AbstractGroup classes below, it is strongly recommended that you
+extend those when you add a Sprite or Group class.</p>
+<p>Sprites are not thread safe. So lock them yourself if using threads.</p>
+<dl class="py class definition">
+<dt class="sig sig-object py title" id="pygame.sprite.Sprite">
+<span class="sig-prename descclassname"><span class="pre">pygame.sprite.</span></span><span class="sig-name descname"><span class="pre">Sprite</span></span><a class="headerlink" href="#pygame.sprite.Sprite" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Simple base class for visible game objects.</span></div>
+<div class="line"><span class="signature">Sprite(*groups) -&gt; Sprite</span></div>
+</div>
+<table class="toc docutils align-default">
+<tbody>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="sprite.html#pygame.sprite.Sprite.update">pygame.sprite.Sprite.update</a></div>
+</td>
+<td>—</td>
+<td>method to control sprite behavior</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="sprite.html#pygame.sprite.Sprite.add">pygame.sprite.Sprite.add</a></div>
+</td>
+<td>—</td>
+<td>add the sprite to groups</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="sprite.html#pygame.sprite.Sprite.remove">pygame.sprite.Sprite.remove</a></div>
+</td>
+<td>—</td>
+<td>remove the sprite from groups</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="sprite.html#pygame.sprite.Sprite.kill">pygame.sprite.Sprite.kill</a></div>
+</td>
+<td>—</td>
+<td>remove the Sprite from all Groups</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="sprite.html#pygame.sprite.Sprite.alive">pygame.sprite.Sprite.alive</a></div>
+</td>
+<td>—</td>
+<td>does the sprite belong to any groups</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="sprite.html#pygame.sprite.Sprite.groups">pygame.sprite.Sprite.groups</a></div>
+</td>
+<td>—</td>
+<td>list of Groups that contain this Sprite</td>
+</tr>
+</tbody>
+</table>
+<p>The base class for visible game objects. Derived classes will want to
+override the <code class="docutils literal notranslate"><span class="pre">Sprite.update()</span></code> and assign a <code class="docutils literal notranslate"><span class="pre">Sprite.image</span></code> and
+<code class="docutils literal notranslate"><span class="pre">Sprite.rect</span></code> attributes. The initializer can accept any number of Group
+instances to be added to.</p>
+<p>When subclassing the Sprite, be sure to call the base initializer before
+adding the Sprite to Groups. For example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Block</span><span class="p">(</span><span class="n">pygame</span><span class="o">.</span><span class="n">sprite</span><span class="o">.</span><span class="n">Sprite</span><span class="p">):</span>
+
+    <span class="c1"># Constructor. Pass in the color of the block,</span>
+    <span class="c1"># and its x and y position</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">color</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">):</span>
+       <span class="c1"># Call the parent class (Sprite) constructor</span>
+       <span class="n">pygame</span><span class="o">.</span><span class="n">sprite</span><span class="o">.</span><span class="n">Sprite</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+       <span class="c1"># Create an image of the block, and fill it with a color.</span>
+       <span class="c1"># This could also be an image loaded from the disk.</span>
+       <span class="bp">self</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Surface</span><span class="p">([</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">])</span>
+       <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="n">color</span><span class="p">)</span>
+
+       <span class="c1"># Fetch the rectangle object that has the dimensions of the image</span>
+       <span class="c1"># Update the position of this object by setting the values of rect.x and rect.y</span>
+       <span class="bp">self</span><span class="o">.</span><span class="n">rect</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">get_rect</span><span class="p">()</span>
+</pre></div>
+</div>
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.sprite.Sprite.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.sprite.Sprite.update" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">method to control sprite behavior</span></div>
+<div class="line"><span class="signature">update(*args, **kwargs) -&gt; None</span></div>
+</div>
+<p>The default implementation of this method does nothing; it's just a
+convenient &quot;hook&quot; that you can override. This method is called by
+<code class="docutils literal notranslate"><span class="pre">Group.update()</span></code> with whatever arguments you give it.</p>
+<p>There is no need to use this method if not using the convenience method
+by the same name in the Group class.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.sprite.Sprite.add">
+<span class="sig-name descname"><span class="pre">add</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.sprite.Sprite.add" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">add the sprite to groups</span></div>
+<div class="line"><span class="signature">add(*groups) -&gt; None</span></div>
+</div>
+<p>Any number of Group instances can be passed as arguments. The Sprite will
+be added to the Groups it is not already a member of.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.sprite.Sprite.remove">
+<span class="sig-name descname"><span class="pre">remove</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.sprite.Sprite.remove" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">remove the sprite from groups</span></div>
+<div class="line"><span class="signature">remove(*groups) -&gt; None</span></div>
+</div>
+<p>Any number of Group instances can be passed as arguments. The Sprite will
+be removed from the Groups it is currently a member of.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.sprite.Sprite.kill">
+<span class="sig-name descname"><span class="pre">kill</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.sprite.Sprite.kill" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">remove the Sprite from all Groups</span></div>
+<div class="line"><span class="signature">kill() -&gt; None</span></div>
+</div>
+<p>The Sprite is removed from all the Groups that contain it. This won't
+change anything about the state of the Sprite. It is possible to continue
+to use the Sprite after this method has been called, including adding it
+to Groups.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.sprite.Sprite.alive">
+<span class="sig-name descname"><span class="pre">alive</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.sprite.Sprite.alive" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">does the sprite belong to any groups</span></div>
+<div class="line"><span class="signature">alive() -&gt; bool</span></div>
+</div>
+<p>Returns True when the Sprite belongs to one or more Groups.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.sprite.Sprite.groups">
+<span class="sig-name descname"><span class="pre">groups</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.sprite.Sprite.groups" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">list of Groups that contain this Sprite</span></div>
+<div class="line"><span class="signature">groups() -&gt; group_list</span></div>
+</div>
+<p>Return a list of all the Groups that contain this Sprite.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class definition">
+<dt class="sig sig-object py title" id="pygame.sprite.WeakSprite">
+<span class="sig-prename descclassname"><span class="pre">pygame.sprite.</span></span><span class="sig-name descname"><span class="pre">WeakSprite</span></span><a class="headerlink" href="#pygame.sprite.WeakSprite" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">A subclass of Sprite that references its Groups weakly. This means that any group this belongs to that is not referenced anywhere else is garbage collected automatically.</span></div>
+<div class="line"><span class="signature">WeakSprite(*groups) -&gt; WeakSprite</span></div>
+</div>
+</dd></dl>
+
+<dl class="py class definition">
+<dt class="sig sig-object py title" id="pygame.sprite.DirtySprite">
+<span class="sig-prename descclassname"><span class="pre">pygame.sprite.</span></span><span class="sig-name descname"><span class="pre">DirtySprite</span></span><a class="headerlink" href="#pygame.sprite.DirtySprite" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">A subclass of Sprite with more attributes and features.</span></div>
+<div class="line"><span class="signature">DirtySprite(*groups) -&gt; DirtySprite</span></div>
+</div>
+<p>Extra DirtySprite attributes with their default values:</p>
+<p>dirty = 1</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="nb">set</span> <span class="n">to</span> <span class="mi">1</span><span class="p">,</span> <span class="n">it</span> <span class="ow">is</span> <span class="n">repainted</span> <span class="ow">and</span> <span class="n">then</span> <span class="nb">set</span> <span class="n">to</span> <span class="mi">0</span> <span class="n">again</span>
+<span class="k">if</span> <span class="nb">set</span> <span class="n">to</span> <span class="mi">2</span> <span class="n">then</span> <span class="n">it</span> <span class="ow">is</span> <span class="n">always</span> <span class="n">dirty</span> <span class="p">(</span> <span class="n">repainted</span> <span class="n">each</span> <span class="n">frame</span><span class="p">,</span>
+<span class="n">flag</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">reset</span><span class="p">)</span>
+<span class="mi">0</span> <span class="n">means</span> <span class="n">that</span> <span class="n">it</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">dirty</span> <span class="ow">and</span> <span class="n">therefore</span> <span class="ow">not</span> <span class="n">repainted</span> <span class="n">again</span>
+</pre></div>
+</div>
+<p>blendmode = 0</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">its</span> <span class="n">the</span> <span class="n">special_flags</span> <span class="n">argument</span> <span class="n">of</span> <span class="n">blit</span><span class="p">,</span> <span class="n">blendmodes</span>
+</pre></div>
+</div>
+<p>source_rect = None</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">source</span> <span class="n">rect</span> <span class="n">to</span> <span class="n">use</span><span class="p">,</span> <span class="n">remember</span> <span class="n">that</span> <span class="n">it</span> <span class="ow">is</span> <span class="n">relative</span> <span class="n">to</span>
+<span class="n">topleft</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span> <span class="n">of</span> <span class="bp">self</span><span class="o">.</span><span class="n">image</span>
+</pre></div>
+</div>
+<p>visible = 1</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">normally</span> <span class="mi">1</span><span class="p">,</span> <span class="k">if</span> <span class="nb">set</span> <span class="n">to</span> <span class="mi">0</span> <span class="n">it</span> <span class="n">will</span> <span class="ow">not</span> <span class="n">be</span> <span class="n">repainted</span>
+<span class="p">(</span><span class="n">you</span> <span class="n">must</span> <span class="nb">set</span> <span class="n">it</span> <span class="n">dirty</span> <span class="n">too</span> <span class="n">to</span> <span class="n">be</span> <span class="n">erased</span> <span class="kn">from</span> <span class="nn">screen</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>layer = 0</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">READONLY</span> <span class="n">value</span><span class="p">,</span> <span class="n">it</span> <span class="ow">is</span> <span class="n">read</span> <span class="n">when</span> <span class="n">adding</span> <span class="n">it</span> <span class="n">to</span> <span class="n">the</span>
+<span class="n">LayeredDirty</span><span class="p">,</span> <span class="k">for</span> <span class="n">details</span> <span class="n">see</span> <span class="n">doc</span> <span class="n">of</span> <span class="n">LayeredDirty</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py class definition">
+<dt class="sig sig-object py title" id="pygame.sprite.Group">
+<span class="sig-prename descclassname"><span class="pre">pygame.sprite.</span></span><span class="sig-name descname"><span class="pre">Group</span></span><a class="headerlink" href="#pygame.sprite.Group" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">A container class to hold and manage multiple Sprite objects.</span></div>
+<div class="line"><span class="signature">Group(*sprites) -&gt; Group</span></div>
+</div>
+<table class="toc docutils align-default">
+<tbody>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="sprite.html#pygame.sprite.Group.sprites">pygame.sprite.Group.sprites</a></div>
+</td>
+<td>—</td>
+<td>list of the Sprites this Group contains</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="sprite.html#pygame.sprite.Group.copy">pygame.sprite.Group.copy</a></div>
+</td>
+<td>—</td>
+<td>duplicate the Group</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="sprite.html#pygame.sprite.Group.add">pygame.sprite.Group.add</a></div>
+</td>
+<td>—</td>
+<td>add Sprites to this Group</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="sprite.html#pygame.sprite.Group.remove">pygame.sprite.Group.remove</a></div>
+</td>
+<td>—</td>
+<td>remove Sprites from the Group</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="sprite.html#pygame.sprite.Group.has">pygame.sprite.Group.has</a></div>
+</td>
+<td>—</td>
+<td>test if a Group contains Sprites</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="sprite.html#pygame.sprite.Group.update">pygame.sprite.Group.update</a></div>
+</td>
+<td>—</td>
+<td>call the update method on contained Sprites</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="sprite.html#pygame.sprite.Group.draw">pygame.sprite.Group.draw</a></div>
+</td>
+<td>—</td>
+<td>blit the Sprite images</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="sprite.html#pygame.sprite.Group.clear">pygame.sprite.Group.clear</a></div>
+</td>
+<td>—</td>
+<td>draw a background over the Sprites</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="sprite.html#pygame.sprite.Group.empty">pygame.sprite.Group.empty</a></div>
+</td>
+<td>—</td>
+<td>remove all Sprites</td>
+</tr>
+</tbody>
+</table>
+<p>A simple container for Sprite objects. This class can be inherited to create
+containers with more specific behaviors. The constructor takes any number of
+Sprite arguments to add to the Group. The group supports the following
+standard Python operations:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="ow">in</span>      <span class="n">test</span> <span class="k">if</span> <span class="n">a</span> <span class="n">Sprite</span> <span class="ow">is</span> <span class="n">contained</span>
+<span class="nb">len</span>     <span class="n">the</span> <span class="n">number</span> <span class="n">of</span> <span class="n">Sprites</span> <span class="n">contained</span>
+<span class="nb">bool</span>    <span class="n">test</span> <span class="k">if</span> <span class="nb">any</span> <span class="n">Sprites</span> <span class="n">are</span> <span class="n">contained</span>
+<span class="nb">iter</span>    <span class="n">iterate</span> <span class="n">through</span> <span class="nb">all</span> <span class="n">the</span> <span class="n">Sprites</span>
+</pre></div>
+</div>
+<p>The Sprites in the Group are ordered only on python 3.6 and higher.
+Below python 3.6 drawing and iterating over the Sprites is in no particular order.</p>
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.sprite.Group.sprites">
+<span class="sig-name descname"><span class="pre">sprites</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.sprite.Group.sprites" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">list of the Sprites this Group contains</span></div>
+<div class="line"><span class="signature">sprites() -&gt; sprite_list</span></div>
+</div>
+<p>Return a list of all the Sprites this group contains. You can also get an
+iterator from the group, but you cannot iterate over a Group while
+modifying it.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.sprite.Group.copy">
+<span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.sprite.Group.copy" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">duplicate the Group</span></div>
+<div class="line"><span class="signature">copy() -&gt; Group</span></div>
+</div>
+<p>Creates a new Group with all the same Sprites as the original. If you
+have subclassed Group, the new object will have the same (sub-)class as
+the original. This only works if the derived class's constructor takes
+the same arguments as the Group class's.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.sprite.Group.add">
+<span class="sig-name descname"><span class="pre">add</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.sprite.Group.add" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">add Sprites to this Group</span></div>
+<div class="line"><span class="signature">add(*sprites) -&gt; None</span></div>
+</div>
+<p>Add any number of Sprites to this Group. This will only add Sprites that
+are not already members of the Group.</p>
+<p>Each sprite argument can also be a iterator containing Sprites.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.sprite.Group.remove">
+<span class="sig-name descname"><span class="pre">remove</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.sprite.Group.remove" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">remove Sprites from the Group</span></div>
+<div class="line"><span class="signature">remove(*sprites) -&gt; None</span></div>
+</div>
+<p>Remove any number of Sprites from the Group. This will only remove
+Sprites that are already members of the Group.</p>
+<p>Each sprite argument can also be a iterator containing Sprites.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.sprite.Group.has">
+<span class="sig-name descname"><span class="pre">has</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.sprite.Group.has" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">test if a Group contains Sprites</span></div>
+<div class="line"><span class="signature">has(*sprites) -&gt; bool</span></div>
+</div>
+<p>Return True if the Group contains all of the given sprites. This is
+similar to using the &quot;in&quot; operator on the Group (&quot;if sprite in group:
+...&quot;), which tests if a single Sprite belongs to a Group.</p>
+<p>Each sprite argument can also be a iterator containing Sprites.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.sprite.Group.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.sprite.Group.update" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">call the update method on contained Sprites</span></div>
+<div class="line"><span class="signature">update(*args, **kwargs) -&gt; None</span></div>
+</div>
+<p>Calls the <code class="docutils literal notranslate"><span class="pre">update()</span></code> method on all Sprites in the Group. The base
+Sprite class has an update method that takes any number of arguments and
+does nothing. The arguments passed to <code class="docutils literal notranslate"><span class="pre">Group.update()</span></code> will be passed
+to each Sprite.</p>
+<p>There is no way to get the return value from the <code class="docutils literal notranslate"><span class="pre">Sprite.update()</span></code>
+methods.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.sprite.Group.draw">
+<span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.sprite.Group.draw" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">blit the Sprite images</span></div>
+<div class="line"><span class="signature">draw(Surface, bgsurf=None, special_flags=0) -&gt; List[Rect]</span></div>
+</div>
+<p>Draws the contained Sprites to the Surface argument. This uses the
+<code class="docutils literal notranslate"><span class="pre">Sprite.image</span></code> attribute for the source surface, and <code class="docutils literal notranslate"><span class="pre">Sprite.rect</span></code>
+for the position. <code class="docutils literal notranslate"><span class="pre">special_flags</span></code> is passed to <code class="docutils literal notranslate"><span class="pre">Surface.blit()</span></code>.
+<code class="docutils literal notranslate"><span class="pre">bgsurf</span></code> is unused in this method but <code class="docutils literal notranslate"><span class="pre">LayeredDirty.draw()</span></code> uses
+it.</p>
+<p>The Group does not keep sprites in any order, so the draw order is
+arbitrary.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.sprite.Group.clear">
+<span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.sprite.Group.clear" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">draw a background over the Sprites</span></div>
+<div class="line"><span class="signature">clear(Surface_dest, background) -&gt; None</span></div>
+</div>
+<p>Erases the Sprites used in the last <code class="docutils literal notranslate"><span class="pre">Group.draw()</span></code> call. The
+destination Surface is cleared by filling the drawn Sprite positions with
+the background.</p>
+<p>The background is usually a Surface image the same dimensions as the
+destination Surface. However, it can also be a callback function that
+takes two arguments; the destination Surface and an area to clear. The
+background callback function will be called several times each clear.</p>
+<p>Here is an example callback that will clear the Sprites with solid red:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">clear_callback</span><span class="p">(</span><span class="n">surf</span><span class="p">,</span> <span class="n">rect</span><span class="p">):</span>
+    <span class="n">color</span> <span class="o">=</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
+    <span class="n">surf</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="n">color</span><span class="p">,</span> <span class="n">rect</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.sprite.Group.empty">
+<span class="sig-name descname"><span class="pre">empty</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.sprite.Group.empty" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">remove all Sprites</span></div>
+<div class="line"><span class="signature">empty() -&gt; None</span></div>
+</div>
+<p>Removes all Sprites from this Group.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class definition">
+<dt class="sig sig-object py title" id="pygame.sprite.WeakDirtySprite">
+<span class="sig-prename descclassname"><span class="pre">pygame.sprite.</span></span><span class="sig-name descname"><span class="pre">WeakDirtySprite</span></span><a class="headerlink" href="#pygame.sprite.WeakDirtySprite" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">A subclass of WeakSprite and DirtySprite that combines the benefits of both classes.</span></div>
+<div class="line"><span class="signature">WeakDirtySprite(*groups) -&gt; WeakDirtySprite</span></div>
+</div>
+</dd></dl>
+
+<dl class="py class definition">
+<dt class="sig sig-object py title" id="pygame.sprite.RenderPlain">
+<span class="sig-prename descclassname"><span class="pre">pygame.sprite.</span></span><span class="sig-name descname"><span class="pre">RenderPlain</span></span><a class="headerlink" href="#pygame.sprite.RenderPlain" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Same as pygame.sprite.Group</span></div>
+</div>
+<p>This class is an alias to <code class="docutils literal notranslate"><span class="pre">pygame.sprite.Group()</span></code>. It has no additional functionality.</p>
+</dd></dl>
+
+<dl class="py class definition">
+<dt class="sig sig-object py title" id="pygame.sprite.RenderClear">
+<span class="sig-prename descclassname"><span class="pre">pygame.sprite.</span></span><span class="sig-name descname"><span class="pre">RenderClear</span></span><a class="headerlink" href="#pygame.sprite.RenderClear" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Same as pygame.sprite.Group</span></div>
+</div>
+<p>This class is an alias to <code class="docutils literal notranslate"><span class="pre">pygame.sprite.Group()</span></code>. It has no additional functionality.</p>
+</dd></dl>
+
+<dl class="py class definition">
+<dt class="sig sig-object py title" id="pygame.sprite.RenderUpdates">
+<span class="sig-prename descclassname"><span class="pre">pygame.sprite.</span></span><span class="sig-name descname"><span class="pre">RenderUpdates</span></span><a class="headerlink" href="#pygame.sprite.RenderUpdates" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Group sub-class that tracks dirty updates.</span></div>
+<div class="line"><span class="signature">RenderUpdates(*sprites) -&gt; RenderUpdates</span></div>
+</div>
+<table class="toc docutils align-default">
+<tbody>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="sprite.html#pygame.sprite.RenderUpdates.draw">pygame.sprite.RenderUpdates.draw</a></div>
+</td>
+<td>—</td>
+<td>blit the Sprite images and track changed areas</td>
+</tr>
+</tbody>
+</table>
+<p>This class is derived from <code class="docutils literal notranslate"><span class="pre">pygame.sprite.Group()</span></code>. It has an extended
+<code class="docutils literal notranslate"><span class="pre">draw()</span></code> method that tracks the changed areas of the screen.</p>
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.sprite.RenderUpdates.draw">
+<span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.sprite.RenderUpdates.draw" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">blit the Sprite images and track changed areas</span></div>
+<div class="line"><span class="signature">draw(surface, bgsurf=None, special_flags=0) -&gt; Rect_list</span></div>
+</div>
+<p>Draws all the Sprites to the surface, the same as <code class="docutils literal notranslate"><span class="pre">Group.draw()</span></code>. This
+method also returns a list of Rectangular areas on the screen that have
+been changed. The returned changes include areas of the screen that have
+been affected by previous <code class="docutils literal notranslate"><span class="pre">Group.clear()</span></code> calls. <code class="docutils literal notranslate"><span class="pre">special_flags</span></code> is
+passed to <code class="docutils literal notranslate"><span class="pre">Surface.blit()</span></code>.</p>
+<p>The returned Rect list should be passed to <code class="docutils literal notranslate"><span class="pre">pygame.display.update()</span></code>.
+This will help performance on software driven display modes. This type of
+updating is usually only helpful on destinations with non-animating
+backgrounds.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.sprite.OrderedUpdates">
+<span class="sig-prename descclassname"><span class="pre">pygame.sprite.</span></span><span class="sig-name descname"><span class="pre">OrderedUpdates</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.sprite.OrderedUpdates" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">RenderUpdates sub-class that draws Sprites in order of addition.</span></div>
+<div class="line"><span class="signature">OrderedUpdates(*sprites) -&gt; OrderedUpdates</span></div>
+</div>
+<p>This class derives from <code class="docutils literal notranslate"><span class="pre">pygame.sprite.RenderUpdates()</span></code>. It maintains the
+order in which the Sprites were added to the Group for rendering. This makes
+adding and removing Sprites from the Group a little slower than regular
+Groups.</p>
+</dd></dl>
+
+<dl class="py class definition">
+<dt class="sig sig-object py title" id="pygame.sprite.LayeredUpdates">
+<span class="sig-prename descclassname"><span class="pre">pygame.sprite.</span></span><span class="sig-name descname"><span class="pre">LayeredUpdates</span></span><a class="headerlink" href="#pygame.sprite.LayeredUpdates" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">LayeredUpdates is a sprite group that handles layers and draws like OrderedUpdates.</span></div>
+<div class="line"><span class="signature">LayeredUpdates(*sprites, **kwargs) -&gt; LayeredUpdates</span></div>
+</div>
+<table class="toc docutils align-default">
+<tbody>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="sprite.html#pygame.sprite.LayeredUpdates.add">pygame.sprite.LayeredUpdates.add</a></div>
+</td>
+<td>—</td>
+<td>add a sprite or sequence of sprites to a group</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="sprite.html#pygame.sprite.LayeredUpdates.sprites">pygame.sprite.LayeredUpdates.sprites</a></div>
+</td>
+<td>—</td>
+<td>returns a ordered list of sprites (first back, last top).</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="sprite.html#pygame.sprite.LayeredUpdates.draw">pygame.sprite.LayeredUpdates.draw</a></div>
+</td>
+<td>—</td>
+<td>draw all sprites in the right order onto the passed surface.</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="sprite.html#pygame.sprite.LayeredUpdates.get_sprites_at">pygame.sprite.LayeredUpdates.get_sprites_at</a></div>
+</td>
+<td>—</td>
+<td>returns a list with all sprites at that position.</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="sprite.html#pygame.sprite.LayeredUpdates.get_sprite">pygame.sprite.LayeredUpdates.get_sprite</a></div>
+</td>
+<td>—</td>
+<td>returns the sprite at the index idx from the groups sprites</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="sprite.html#pygame.sprite.LayeredUpdates.remove_sprites_of_layer">pygame.sprite.LayeredUpdates.remove_sprites_of_layer</a></div>
+</td>
+<td>—</td>
+<td>removes all sprites from a layer and returns them as a list.</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="sprite.html#pygame.sprite.LayeredUpdates.layers">pygame.sprite.LayeredUpdates.layers</a></div>
+</td>
+<td>—</td>
+<td>returns a list of layers defined (unique), sorted from bottom up.</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="sprite.html#pygame.sprite.LayeredUpdates.change_layer">pygame.sprite.LayeredUpdates.change_layer</a></div>
+</td>
+<td>—</td>
+<td>changes the layer of the sprite</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="sprite.html#pygame.sprite.LayeredUpdates.get_layer_of_sprite">pygame.sprite.LayeredUpdates.get_layer_of_sprite</a></div>
+</td>
+<td>—</td>
+<td>returns the layer that sprite is currently in.</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="sprite.html#pygame.sprite.LayeredUpdates.get_top_layer">pygame.sprite.LayeredUpdates.get_top_layer</a></div>
+</td>
+<td>—</td>
+<td>returns the top layer</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="sprite.html#pygame.sprite.LayeredUpdates.get_bottom_layer">pygame.sprite.LayeredUpdates.get_bottom_layer</a></div>
+</td>
+<td>—</td>
+<td>returns the bottom layer</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="sprite.html#pygame.sprite.LayeredUpdates.move_to_front">pygame.sprite.LayeredUpdates.move_to_front</a></div>
+</td>
+<td>—</td>
+<td>brings the sprite to front layer</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="sprite.html#pygame.sprite.LayeredUpdates.move_to_back">pygame.sprite.LayeredUpdates.move_to_back</a></div>
+</td>
+<td>—</td>
+<td>moves the sprite to the bottom layer</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="sprite.html#pygame.sprite.LayeredUpdates.get_top_sprite">pygame.sprite.LayeredUpdates.get_top_sprite</a></div>
+</td>
+<td>—</td>
+<td>returns the topmost sprite</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="sprite.html#pygame.sprite.LayeredUpdates.get_sprites_from_layer">pygame.sprite.LayeredUpdates.get_sprites_from_layer</a></div>
+</td>
+<td>—</td>
+<td>returns all sprites from a layer, ordered by how they where added</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="sprite.html#pygame.sprite.LayeredUpdates.switch_layer">pygame.sprite.LayeredUpdates.switch_layer</a></div>
+</td>
+<td>—</td>
+<td>switches the sprites from layer1 to layer2</td>
+</tr>
+</tbody>
+</table>
+<p>This group is fully compatible with <a class="tooltip reference internal" href="#pygame.sprite.Sprite" title=""><code class="xref py py-class docutils literal notranslate"><span class="pre">pygame.sprite.Sprite</span></code><span class="tooltip-content">Simple base class for visible game objects.</span></a>.</p>
+<p>You can set the default layer through kwargs using 'default_layer' and an
+integer for the layer. The default layer is 0.</p>
+<p>If the sprite you add has an attribute _layer then that layer will be used.
+If the **kwarg contains 'layer' then the sprites passed will be added to
+that layer (overriding the <code class="docutils literal notranslate"><span class="pre">sprite.layer</span></code> attribute). If neither sprite
+has attribute layer nor **kwarg then the default layer is used to add the
+sprites.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 1.8.</span></p>
+</div>
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.sprite.LayeredUpdates.add">
+<span class="sig-name descname"><span class="pre">add</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.sprite.LayeredUpdates.add" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">add a sprite or sequence of sprites to a group</span></div>
+<div class="line"><span class="signature">add(*sprites, **kwargs) -&gt; None</span></div>
+</div>
+<p>If the <code class="docutils literal notranslate"><span class="pre">sprite(s)</span></code> have an attribute layer then that is used for the
+layer. If **kwargs contains 'layer' then the <code class="docutils literal notranslate"><span class="pre">sprite(s)</span></code> will be added
+to that argument (overriding the sprite layer attribute). If neither is
+passed then the <code class="docutils literal notranslate"><span class="pre">sprite(s)</span></code> will be added to the default layer.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.sprite.LayeredUpdates.sprites">
+<span class="sig-name descname"><span class="pre">sprites</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.sprite.LayeredUpdates.sprites" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">returns a ordered list of sprites (first back, last top).</span></div>
+<div class="line"><span class="signature">sprites() -&gt; sprites</span></div>
+</div>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.sprite.LayeredUpdates.draw">
+<span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.sprite.LayeredUpdates.draw" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">draw all sprites in the right order onto the passed surface.</span></div>
+<div class="line"><span class="signature">draw(surface, bgsurf=None, special_flags=0) -&gt; Rect_list</span></div>
+</div>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.sprite.LayeredUpdates.get_sprites_at">
+<span class="sig-name descname"><span class="pre">get_sprites_at</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.sprite.LayeredUpdates.get_sprites_at" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">returns a list with all sprites at that position.</span></div>
+<div class="line"><span class="signature">get_sprites_at(pos) -&gt; colliding_sprites</span></div>
+</div>
+<p>Bottom sprites first, top last.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.sprite.LayeredUpdates.get_sprite">
+<span class="sig-name descname"><span class="pre">get_sprite</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.sprite.LayeredUpdates.get_sprite" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">returns the sprite at the index idx from the groups sprites</span></div>
+<div class="line"><span class="signature">get_sprite(idx) -&gt; sprite</span></div>
+</div>
+<p>Raises IndexOutOfBounds if the idx is not within range.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.sprite.LayeredUpdates.remove_sprites_of_layer">
+<span class="sig-name descname"><span class="pre">remove_sprites_of_layer</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.sprite.LayeredUpdates.remove_sprites_of_layer" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">removes all sprites from a layer and returns them as a list.</span></div>
+<div class="line"><span class="signature">remove_sprites_of_layer(layer_nr) -&gt; sprites</span></div>
+</div>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.sprite.LayeredUpdates.layers">
+<span class="sig-name descname"><span class="pre">layers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.sprite.LayeredUpdates.layers" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">returns a list of layers defined (unique), sorted from bottom up.</span></div>
+<div class="line"><span class="signature">layers() -&gt; layers</span></div>
+</div>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.sprite.LayeredUpdates.change_layer">
+<span class="sig-name descname"><span class="pre">change_layer</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.sprite.LayeredUpdates.change_layer" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">changes the layer of the sprite</span></div>
+<div class="line"><span class="signature">change_layer(sprite, new_layer) -&gt; None</span></div>
+</div>
+<p>sprite must have been added to the renderer. It is not checked.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.sprite.LayeredUpdates.get_layer_of_sprite">
+<span class="sig-name descname"><span class="pre">get_layer_of_sprite</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.sprite.LayeredUpdates.get_layer_of_sprite" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">returns the layer that sprite is currently in.</span></div>
+<div class="line"><span class="signature">get_layer_of_sprite(sprite) -&gt; layer</span></div>
+</div>
+<p>If the sprite is not found then it will return the default layer.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.sprite.LayeredUpdates.get_top_layer">
+<span class="sig-name descname"><span class="pre">get_top_layer</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.sprite.LayeredUpdates.get_top_layer" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">returns the top layer</span></div>
+<div class="line"><span class="signature">get_top_layer() -&gt; layer</span></div>
+</div>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.sprite.LayeredUpdates.get_bottom_layer">
+<span class="sig-name descname"><span class="pre">get_bottom_layer</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.sprite.LayeredUpdates.get_bottom_layer" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">returns the bottom layer</span></div>
+<div class="line"><span class="signature">get_bottom_layer() -&gt; layer</span></div>
+</div>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.sprite.LayeredUpdates.move_to_front">
+<span class="sig-name descname"><span class="pre">move_to_front</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.sprite.LayeredUpdates.move_to_front" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">brings the sprite to front layer</span></div>
+<div class="line"><span class="signature">move_to_front(sprite) -&gt; None</span></div>
+</div>
+<p>Brings the sprite to front, changing sprite layer to topmost layer (added
+at the end of that layer).</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.sprite.LayeredUpdates.move_to_back">
+<span class="sig-name descname"><span class="pre">move_to_back</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.sprite.LayeredUpdates.move_to_back" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">moves the sprite to the bottom layer</span></div>
+<div class="line"><span class="signature">move_to_back(sprite) -&gt; None</span></div>
+</div>
+<p>Moves the sprite to the bottom layer, moving it behind all other layers
+and adding one additional layer.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.sprite.LayeredUpdates.get_top_sprite">
+<span class="sig-name descname"><span class="pre">get_top_sprite</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.sprite.LayeredUpdates.get_top_sprite" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">returns the topmost sprite</span></div>
+<div class="line"><span class="signature">get_top_sprite() -&gt; Sprite</span></div>
+</div>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.sprite.LayeredUpdates.get_sprites_from_layer">
+<span class="sig-name descname"><span class="pre">get_sprites_from_layer</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.sprite.LayeredUpdates.get_sprites_from_layer" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">returns all sprites from a layer, ordered by how they where added</span></div>
+<div class="line"><span class="signature">get_sprites_from_layer(layer) -&gt; sprites</span></div>
+</div>
+<p>Returns all sprites from a layer, ordered by how they where added. It
+uses linear search and the sprites are not removed from layer.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.sprite.LayeredUpdates.switch_layer">
+<span class="sig-name descname"><span class="pre">switch_layer</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.sprite.LayeredUpdates.switch_layer" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">switches the sprites from layer1 to layer2</span></div>
+<div class="line"><span class="signature">switch_layer(layer1_nr, layer2_nr) -&gt; None</span></div>
+</div>
+<p>The layers number must exist, it is not checked.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class definition">
+<dt class="sig sig-object py title" id="pygame.sprite.LayeredDirty">
+<span class="sig-prename descclassname"><span class="pre">pygame.sprite.</span></span><span class="sig-name descname"><span class="pre">LayeredDirty</span></span><a class="headerlink" href="#pygame.sprite.LayeredDirty" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">LayeredDirty group is for DirtySprite objects.  Subclasses LayeredUpdates.</span></div>
+<div class="line"><span class="signature">LayeredDirty(*sprites, **kwargs) -&gt; LayeredDirty</span></div>
+</div>
+<table class="toc docutils align-default">
+<tbody>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="sprite.html#pygame.sprite.LayeredDirty.draw">pygame.sprite.LayeredDirty.draw</a></div>
+</td>
+<td>—</td>
+<td>draw all sprites in the right order onto the passed surface.</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="sprite.html#pygame.sprite.LayeredDirty.clear">pygame.sprite.LayeredDirty.clear</a></div>
+</td>
+<td>—</td>
+<td>used to set background</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="sprite.html#pygame.sprite.LayeredDirty.repaint_rect">pygame.sprite.LayeredDirty.repaint_rect</a></div>
+</td>
+<td>—</td>
+<td>repaints the given area</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="sprite.html#pygame.sprite.LayeredDirty.set_clip">pygame.sprite.LayeredDirty.set_clip</a></div>
+</td>
+<td>—</td>
+<td>clip the area where to draw. Just pass None (default) to reset the clip</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="sprite.html#pygame.sprite.LayeredDirty.get_clip">pygame.sprite.LayeredDirty.get_clip</a></div>
+</td>
+<td>—</td>
+<td>clip the area where to draw. Just pass None (default) to reset the clip</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="sprite.html#pygame.sprite.LayeredDirty.change_layer">pygame.sprite.LayeredDirty.change_layer</a></div>
+</td>
+<td>—</td>
+<td>changes the layer of the sprite</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="sprite.html#pygame.sprite.LayeredDirty.set_timing_treshold">pygame.sprite.LayeredDirty.set_timing_treshold</a></div>
+</td>
+<td>—</td>
+<td>sets the threshold in milliseconds</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="sprite.html#pygame.sprite.LayeredDirty.set_timing_threshold">pygame.sprite.LayeredDirty.set_timing_threshold</a></div>
+</td>
+<td>—</td>
+<td>sets the threshold in milliseconds</td>
+</tr>
+</tbody>
+</table>
+<p>This group requires <a class="tooltip reference internal" href="#pygame.sprite.DirtySprite" title=""><code class="xref py py-class docutils literal notranslate"><span class="pre">pygame.sprite.DirtySprite</span></code><span class="tooltip-content">A subclass of Sprite with more attributes and features.</span></a> or any sprite that
+has the following attributes:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">image</span><span class="p">,</span> <span class="n">rect</span><span class="p">,</span> <span class="n">dirty</span><span class="p">,</span> <span class="n">visible</span><span class="p">,</span> <span class="n">blendmode</span> <span class="p">(</span><span class="n">see</span> <span class="n">doc</span> <span class="n">of</span> <span class="n">DirtySprite</span><span class="p">)</span><span class="o">.</span>
+</pre></div>
+</div>
+<p>It uses the dirty flag technique and is therefore faster than the
+<a class="tooltip reference internal" href="#pygame.sprite.RenderUpdates" title=""><code class="xref py py-class docutils literal notranslate"><span class="pre">pygame.sprite.RenderUpdates</span></code><span class="tooltip-content">Group sub-class that tracks dirty updates.</span></a> if you have many static sprites. It
+also switches automatically between dirty rect update and full screen
+drawing, so you do not have to worry what would be faster.</p>
+<p>Same as for the <a class="tooltip reference internal" href="#pygame.sprite.Group" title=""><code class="xref py py-class docutils literal notranslate"><span class="pre">pygame.sprite.Group</span></code><span class="tooltip-content">A container class to hold and manage multiple Sprite objects.</span></a>. You can specify some
+additional attributes through kwargs:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">_use_update</span><span class="p">:</span> <span class="kc">True</span><span class="o">/</span><span class="kc">False</span>   <span class="n">default</span> <span class="ow">is</span> <span class="kc">False</span>
+<span class="n">_default_layer</span><span class="p">:</span> <span class="n">default</span> <span class="n">layer</span> <span class="n">where</span> <span class="n">sprites</span> <span class="n">without</span> <span class="n">a</span> <span class="n">layer</span> <span class="n">are</span> <span class="n">added</span><span class="o">.</span>
+<span class="n">_time_threshold</span><span class="p">:</span> <span class="n">threshold</span> <span class="n">time</span> <span class="k">for</span> <span class="n">switching</span> <span class="n">between</span> <span class="n">dirty</span> <span class="n">rect</span> <span class="n">mode</span>
+    <span class="ow">and</span> <span class="n">fullscreen</span> <span class="n">mode</span><span class="p">,</span> <span class="n">defaults</span> <span class="n">to</span> <span class="mf">1000.</span><span class="o">/</span><span class="mi">80</span>  <span class="o">==</span> <span class="mf">1000.</span><span class="o">/</span><span class="n">fps</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 1.8.</span></p>
+</div>
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.sprite.LayeredDirty.draw">
+<span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.sprite.LayeredDirty.draw" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">draw all sprites in the right order onto the passed surface.</span></div>
+<div class="line"><span class="signature">draw(surface, bgsurf=None, special_flags=None) -&gt; Rect_list</span></div>
+</div>
+<p>You can pass the background too. If a background is already set, then the
+bgsurf argument has no effect. If present, the <code class="docutils literal notranslate"><span class="pre">special_flags</span></code> argument is
+always passed to <code class="docutils literal notranslate"><span class="pre">Surface.blit()</span></code>, overriding <code class="docutils literal notranslate"><span class="pre">DirtySprite.blendmode</span></code>.
+If <code class="docutils literal notranslate"><span class="pre">special_flags</span></code> is not present, <code class="docutils literal notranslate"><span class="pre">DirtySprite.blendmode</span></code> is passed
+to the <code class="docutils literal notranslate"><span class="pre">Surface.blit()</span></code> instead.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.sprite.LayeredDirty.clear">
+<span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.sprite.LayeredDirty.clear" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">used to set background</span></div>
+<div class="line"><span class="signature">clear(surface, bgd) -&gt; None</span></div>
+</div>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.sprite.LayeredDirty.repaint_rect">
+<span class="sig-name descname"><span class="pre">repaint_rect</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.sprite.LayeredDirty.repaint_rect" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">repaints the given area</span></div>
+<div class="line"><span class="signature">repaint_rect(screen_rect) -&gt; None</span></div>
+</div>
+<p>screen_rect is in screen coordinates.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.sprite.LayeredDirty.set_clip">
+<span class="sig-name descname"><span class="pre">set_clip</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.sprite.LayeredDirty.set_clip" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">clip the area where to draw. Just pass None (default) to reset the clip</span></div>
+<div class="line"><span class="signature">set_clip(screen_rect=None) -&gt; None</span></div>
+</div>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.sprite.LayeredDirty.get_clip">
+<span class="sig-name descname"><span class="pre">get_clip</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.sprite.LayeredDirty.get_clip" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">clip the area where to draw. Just pass None (default) to reset the clip</span></div>
+<div class="line"><span class="signature">get_clip() -&gt; Rect</span></div>
+</div>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.sprite.LayeredDirty.change_layer">
+<span class="sig-name descname"><span class="pre">change_layer</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.sprite.LayeredDirty.change_layer" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">changes the layer of the sprite</span></div>
+<div class="line"><span class="signature">change_layer(sprite, new_layer) -&gt; None</span></div>
+</div>
+<p>sprite must have been added to the renderer. It is not checked.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.sprite.LayeredDirty.set_timing_treshold">
+<span class="sig-name descname"><span class="pre">set_timing_treshold</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.sprite.LayeredDirty.set_timing_treshold" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">sets the threshold in milliseconds</span></div>
+<div class="line"><span class="signature">set_timing_treshold(time_ms) -&gt; None</span></div>
+</div>
+<p>DEPRECATED: Use set_timing_threshold() instead.</p>
+<div class="deprecated">
+<p><span class="versionmodified deprecated">Deprecated since pygame 2.1.1.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.sprite.LayeredDirty.set_timing_threshold">
+<span class="sig-name descname"><span class="pre">set_timing_threshold</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.sprite.LayeredDirty.set_timing_threshold" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">sets the threshold in milliseconds</span></div>
+<div class="line"><span class="signature">set_timing_threshold(time_ms) -&gt; None</span></div>
+</div>
+<p>Defaults to 1000.0 / 80.0. This means that the screen will be painted
+using the flip method rather than the update method if the update
+method is taking so long to update the screen that the frame rate falls
+below 80 frames per second.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 2.1.1.</span></p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>TypeError</strong> -- if <code class="docutils literal notranslate"><span class="pre">time_ms</span></code> is not int or float</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.sprite.GroupSingle">
+<span class="sig-prename descclassname"><span class="pre">pygame.sprite.</span></span><span class="sig-name descname"><span class="pre">GroupSingle</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.sprite.GroupSingle" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Group container that holds a single sprite.</span></div>
+<div class="line"><span class="signature">GroupSingle(sprite=None) -&gt; GroupSingle</span></div>
+</div>
+<p>The GroupSingle container only holds a single Sprite. When a new Sprite is
+added, the old one is removed.</p>
+<p>There is a special property, <code class="docutils literal notranslate"><span class="pre">GroupSingle.sprite</span></code>, that accesses the
+Sprite that this Group contains. It can be None when the Group is empty. The
+property can also be assigned to add a Sprite into the GroupSingle
+container.</p>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.sprite.spritecollide">
+<span class="sig-prename descclassname"><span class="pre">pygame.sprite.</span></span><span class="sig-name descname"><span class="pre">spritecollide</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.sprite.spritecollide" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Find sprites in a group that intersect another sprite.</span></div>
+<div class="line"><span class="signature">spritecollide(sprite, group, dokill, collided = None) -&gt; Sprite_list</span></div>
+</div>
+<p>Return a list containing all Sprites in a Group that intersect with another
+Sprite. Intersection is determined by comparing the <code class="docutils literal notranslate"><span class="pre">Sprite.rect</span></code>
+attribute of each Sprite.</p>
+<p>The dokill argument is a bool. If set to True, all Sprites that collide will
+be removed from the Group.</p>
+<p>The collided argument is a callback function used to calculate if two
+sprites are colliding. it should take two sprites as values, and return a
+bool value indicating if they are colliding. If collided is not passed, all
+sprites must have a &quot;rect&quot; value, which is a rectangle of the sprite area,
+which will be used to calculate the collision.</p>
+<p>collided callables:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">collide_rect</span><span class="p">,</span> <span class="n">collide_rect_ratio</span><span class="p">,</span> <span class="n">collide_circle</span><span class="p">,</span>
+<span class="n">collide_circle_ratio</span><span class="p">,</span> <span class="n">collide_mask</span>
+</pre></div>
+</div>
+<p>Example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># See if the Sprite block has collided with anything in the Group block_list</span>
+<span class="c1"># The True flag will remove the sprite in block_list</span>
+<span class="n">blocks_hit_list</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">sprite</span><span class="o">.</span><span class="n">spritecollide</span><span class="p">(</span><span class="n">player</span><span class="p">,</span> <span class="n">block_list</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Check the list of colliding sprites, and add one to the score for each one</span>
+<span class="k">for</span> <span class="n">block</span> <span class="ow">in</span> <span class="n">blocks_hit_list</span><span class="p">:</span>
+    <span class="n">score</span> <span class="o">+=</span><span class="mi">1</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.sprite.collide_rect">
+<span class="sig-prename descclassname"><span class="pre">pygame.sprite.</span></span><span class="sig-name descname"><span class="pre">collide_rect</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.sprite.collide_rect" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Collision detection between two sprites, using rects.</span></div>
+<div class="line"><span class="signature">collide_rect(left, right) -&gt; bool</span></div>
+</div>
+<p>Tests for collision between two sprites. Uses the pygame rect colliderect
+function to calculate the collision. Intended to be passed as a collided
+callback function to the *collide functions. Sprites must have a &quot;rect&quot;
+attributes.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 1.8.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.sprite.collide_rect_ratio">
+<span class="sig-prename descclassname"><span class="pre">pygame.sprite.</span></span><span class="sig-name descname"><span class="pre">collide_rect_ratio</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.sprite.collide_rect_ratio" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Collision detection between two sprites, using rects scaled to a ratio.</span></div>
+<div class="line"><span class="signature">collide_rect_ratio(ratio) -&gt; collided_callable</span></div>
+</div>
+<p>A callable class that checks for collisions between two sprites, using a
+scaled version of the sprites rects.</p>
+<p>Is created with a ratio, the instance is then intended to be passed as a
+collided callback function to the *collide functions.</p>
+<p>A ratio is a floating point number - 1.0 is the same size, 2.0 is twice as
+big, and 0.5 is half the size.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 1.8.1.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.sprite.collide_circle">
+<span class="sig-prename descclassname"><span class="pre">pygame.sprite.</span></span><span class="sig-name descname"><span class="pre">collide_circle</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.sprite.collide_circle" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Collision detection between two sprites, using circles.</span></div>
+<div class="line"><span class="signature">collide_circle(left, right) -&gt; bool</span></div>
+</div>
+<p>Tests for collision between two sprites, by testing to see if two circles
+centered on the sprites overlap. If the sprites have a &quot;radius&quot; attribute,
+that is used to create the circle, otherwise a circle is created that is big
+enough to completely enclose the sprites rect as given by the &quot;rect&quot;
+attribute. Intended to be passed as a collided callback function to the
+*collide functions. Sprites must have a &quot;rect&quot; and an optional &quot;radius&quot;
+attribute.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 1.8.1.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.sprite.collide_circle_ratio">
+<span class="sig-prename descclassname"><span class="pre">pygame.sprite.</span></span><span class="sig-name descname"><span class="pre">collide_circle_ratio</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.sprite.collide_circle_ratio" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Collision detection between two sprites, using circles scaled to a ratio.</span></div>
+<div class="line"><span class="signature">collide_circle_ratio(ratio) -&gt; collided_callable</span></div>
+</div>
+<p>A callable class that checks for collisions between two sprites, using a
+scaled version of the sprites radius.</p>
+<p>Is created with a floating point ratio, the instance is then intended to be
+passed as a collided callback function to the *collide functions.</p>
+<p>A ratio is a floating point number - 1.0 is the same size, 2.0 is twice as
+big, and 0.5 is half the size.</p>
+<p>The created callable tests for collision between two sprites, by testing to
+see if two circles centered on the sprites overlap, after scaling the
+circles radius by the stored ratio. If the sprites have a &quot;radius&quot;
+attribute, that is used to create the circle, otherwise a circle is created
+that is big enough to completely enclose the sprites rect as given by the
+&quot;rect&quot; attribute. Intended to be passed as a collided callback function to
+the *collide functions. Sprites must have a &quot;rect&quot; and an optional &quot;radius&quot;
+attribute.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 1.8.1.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.sprite.collide_mask">
+<span class="sig-prename descclassname"><span class="pre">pygame.sprite.</span></span><span class="sig-name descname"><span class="pre">collide_mask</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.sprite.collide_mask" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Collision detection between two sprites, using masks.</span></div>
+<div class="line"><span class="signature">collide_mask(sprite1, sprite2) -&gt; (int, int)</span></div>
+<div class="line"><span class="signature">collide_mask(sprite1, sprite2) -&gt; None</span></div>
+</div>
+<p>Tests for collision between two sprites, by testing if their bitmasks
+overlap (uses <a class="tooltip reference internal" href="mask.html#pygame.mask.Mask.overlap" title=""><code class="xref py py-func docutils literal notranslate"><span class="pre">pygame.mask.Mask.overlap()</span></code><span class="tooltip-content">Returns the point of intersection</span></a>). If the sprites have a
+<code class="docutils literal notranslate"><span class="pre">mask</span></code> attribute, it is used as the mask, otherwise a mask is created from
+the sprite's <code class="docutils literal notranslate"><span class="pre">image</span></code> (uses <a class="tooltip reference internal" href="mask.html#pygame.mask.from_surface" title=""><code class="xref py py-func docutils literal notranslate"><span class="pre">pygame.mask.from_surface()</span></code><span class="tooltip-content">Creates a Mask from the given surface</span></a>). Sprites must
+have a <code class="docutils literal notranslate"><span class="pre">rect</span></code> attribute; the <code class="docutils literal notranslate"><span class="pre">mask</span></code> attribute is optional.</p>
+<p>The first point of collision between the masks is returned. The collision
+point is offset from <code class="docutils literal notranslate"><span class="pre">sprite1</span></code>'s mask's topleft corner (which is always
+(0, 0)). The collision point is a position within the mask and is not
+related to the actual screen position of <code class="docutils literal notranslate"><span class="pre">sprite1</span></code>.</p>
+<p>This function is intended to be passed as a <code class="docutils literal notranslate"><span class="pre">collided</span></code> callback function
+to the group collide functions (see <a class="reference internal" href="#pygame.sprite.spritecollide" title="pygame.sprite.spritecollide"><code class="xref py py-meth docutils literal notranslate"><span class="pre">spritecollide()</span></code></a>,
+<a class="reference internal" href="#pygame.sprite.groupcollide" title="pygame.sprite.groupcollide"><code class="xref py py-meth docutils literal notranslate"><span class="pre">groupcollide()</span></code></a>, <a class="reference internal" href="#pygame.sprite.spritecollideany" title="pygame.sprite.spritecollideany"><code class="xref py py-meth docutils literal notranslate"><span class="pre">spritecollideany()</span></code></a>).</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>To increase performance, create and set a <code class="docutils literal notranslate"><span class="pre">mask</span></code> attribute for all
+sprites that will use this function to check for collisions. Otherwise,
+each time this function is called it will create new masks.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>A new mask needs to be recreated each time a sprite's image is changed
+(e.g. if a new image is used or the existing image is rotated).</p>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Example of mask creation for a sprite.</span>
+<span class="n">sprite</span><span class="o">.</span><span class="n">mask</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">mask</span><span class="o">.</span><span class="n">from_surface</span><span class="p">(</span><span class="n">sprite</span><span class="o">.</span><span class="n">image</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>first point of collision between the masks or <code class="docutils literal notranslate"><span class="pre">None</span></code> if no
+collision</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple(int, int) or NoneType</p>
+</dd>
+</dl>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 1.8.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.sprite.groupcollide">
+<span class="sig-prename descclassname"><span class="pre">pygame.sprite.</span></span><span class="sig-name descname"><span class="pre">groupcollide</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.sprite.groupcollide" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Find all sprites that collide between two groups.</span></div>
+<div class="line"><span class="signature">groupcollide(group1, group2, dokill1, dokill2, collided = None) -&gt; Sprite_dict</span></div>
+</div>
+<p>This will find collisions between all the Sprites in two groups.
+Collision is determined by comparing the <code class="docutils literal notranslate"><span class="pre">Sprite.rect</span></code> attribute of
+each Sprite or by using the collided function if it is not None.</p>
+<p>Every Sprite inside group1 is added to the return dictionary. The value for
+each item is the list of Sprites in group2 that intersect.</p>
+<p>If either dokill argument is True, the colliding Sprites will be removed
+from their respective Group.</p>
+<p>The collided argument is a callback function used to calculate if two sprites are
+colliding. It should take two sprites as values and return a bool value
+indicating if they are colliding. If collided is not passed, then all
+sprites must have a &quot;rect&quot; value, which is a rectangle of the sprite area,
+which will be used to calculate the collision.</p>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.sprite.spritecollideany">
+<span class="sig-prename descclassname"><span class="pre">pygame.sprite.</span></span><span class="sig-name descname"><span class="pre">spritecollideany</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.sprite.spritecollideany" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Simple test if a sprite intersects anything in a group.</span></div>
+<div class="line"><span class="signature">spritecollideany(sprite, group, collided = None) -&gt; Sprite</span> Collision with the returned sprite.</div>
+<div class="line"><span class="signature">spritecollideany(sprite, group, collided = None) -&gt; None</span> No collision</div>
+</div>
+<p>If the sprite collides with any single sprite in the group, a single
+sprite from the group is returned.  On no collision None is returned.</p>
+<p>If you don't need all the features of the <code class="docutils literal notranslate"><span class="pre">pygame.sprite.spritecollide()</span></code> function, this
+function will be a bit quicker.</p>
+<p>The collided argument is a callback function used to calculate if two sprites are
+colliding. It should take two sprites as values and return a bool value
+indicating if they are colliding. If collided is not passed, then all
+sprites must have a &quot;rect&quot; value, which is a rectangle of the sprite area,
+which will be used to calculate the collision.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+<br /><br />
+<hr />
+<a href="https://github.com/pygame/pygame/edit/main/docs/reST/ref/sprite.rst" rel="nofollow">Edit on GitHub</a>
+            <div class="clearer"></div>
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="surface.html" title="pygame.Surface"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="sndarray.html" title="pygame.sndarray"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">pygame v2.5.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href=""><code class="xref py py-mod docutils literal notranslate"><span class="pre">pygame.sprite</span></code></a></li>
+    <script type="text/javascript" src="https://www.pygame.org/comment/jquery.plugin.docscomments.js"></script>
+
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2000-2023, pygame developers.
+    </div>
+  </body>
+</html>

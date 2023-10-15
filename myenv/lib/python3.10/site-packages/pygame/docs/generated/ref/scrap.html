@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>pygame.scrap &#8212; pygame v2.5.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygame.css?v=71ee6cc2" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=ba44479e"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <link rel="icon" href="../_static/pygame.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="pygame._sdl2.controller" href="sdl2_controller.html" />
+    <link rel="prev" title="pygame.Rect" href="rect.html" /> 
+  </head><body>  
+
+    <div class="document">
+
+  <div class="header">
+	<div class="flex-container">
+	<div class="logo">
+	  <a href="https://www.pygame.org/">
+	    <img src="../_static/pygame_tiny.png"/>
+	  </a>
+	  <h5>pygame documentation</h5>
+	</div>
+	<div class="pagelinks">
+	  <div class="top">
+	    <a href="https://www.pygame.org/">Pygame Home</a> ||
+	    <a href="../index.html">Help Contents</a> ||
+	    <a href="../genindex.html">Reference Index</a>
+
+        <form action="../search.html" method="get" style="display:inline;float:right;">
+          <input name="q" value="" type="text">
+          <input value="search" type="submit">
+        </form>
+	  </div>
+	  <hr style="color:black;border-bottom:none;border-style: dotted;border-bottom-style:none;">
+	  <p class="bottom"><b>Most useful stuff</b>:
+	    <a href="color.html">Color</a> | 
+	    <a href="display.html">display</a> | 
+	    <a href="draw.html">draw</a> | 
+	    <a href="event.html">event</a> | 
+	    <a href="font.html">font</a> | 
+	    <a href="image.html">image</a> | 
+	    <a href="key.html">key</a> | 
+	    <a href="locals.html">locals</a> | 
+	    <a href="mixer.html">mixer</a> | 
+	    <a href="mouse.html">mouse</a> | 
+	    <a href="rect.html">Rect</a> | 
+	    <a href="surface.html">Surface</a> | 
+	    <a href="time.html">time</a> | 
+	    <a href="music.html">music</a> | 
+	    <a href="pygame.html">pygame</a>
+	  </p>
+
+	  <p class="bottom"><b>Advanced stuff</b>:
+	    <a href="cursors.html">cursors</a> | 
+	    <a href="joystick.html">joystick</a> | 
+	    <a href="mask.html">mask</a> | 
+	    <a href="sprite.html">sprite</a> | 
+	    <a href="transform.html">transform</a> | 
+	    <a href="bufferproxy.html">BufferProxy</a> | 
+	    <a href="freetype.html">freetype</a> | 
+	    <a href="gfxdraw.html">gfxdraw</a> | 
+	    <a href="midi.html">midi</a> | 
+	    <a href="pixelarray.html">PixelArray</a> | 
+	    <a href="pixelcopy.html">pixelcopy</a> | 
+	    <a href="sndarray.html">sndarray</a> | 
+	    <a href="surfarray.html">surfarray</a> | 
+	    <a href="math.html">math</a>
+	  </p>
+
+	  <p class="bottom"><b>Other</b>:
+	    <a href="camera.html">camera</a> | 
+	    <a href="sdl2_controller.html#module-pygame._sdl2.controller">controller</a> | 
+	    <a href="examples.html">examples</a> | 
+	    <a href="fastevent.html">fastevent</a> | 
+	    <a href="scrap.html">scrap</a> | 
+	    <a href="tests.html">tests</a> | 
+	    <a href="touch.html">touch</a> | 
+	    <a href="pygame.html#module-pygame.version">version</a>
+	  </p>
+</div>
+</div>
+  </div>
+
+      <div class="documentwrapper">
+          <div class="body" role="main">
+            
+<section id="module-pygame.scrap">
+<span id="pygame-scrap"></span><dl class="definition">
+<dt class="title module sig sig-object">
+<code class="docutils literal notranslate"><span class="pre">pygame.scrap</span></code></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">pygame module for clipboard support.</span></div>
+</div>
+<table class="toc docutils align-default">
+<tbody>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="scrap.html#pygame.scrap.init">pygame.scrap.init</a></div>
+</td>
+<td>—</td>
+<td>Initializes the scrap module.</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="scrap.html#pygame.scrap.get_init">pygame.scrap.get_init</a></div>
+</td>
+<td>—</td>
+<td>Returns True if the scrap module is currently initialized.</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="scrap.html#pygame.scrap.get">pygame.scrap.get</a></div>
+</td>
+<td>—</td>
+<td>Gets the data for the specified type from the clipboard.</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="scrap.html#pygame.scrap.get_types">pygame.scrap.get_types</a></div>
+</td>
+<td>—</td>
+<td>Gets a list of the available clipboard types.</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="scrap.html#pygame.scrap.put">pygame.scrap.put</a></div>
+</td>
+<td>—</td>
+<td>Places data into the clipboard.</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="scrap.html#pygame.scrap.contains">pygame.scrap.contains</a></div>
+</td>
+<td>—</td>
+<td>Checks whether data for a given type is available in the clipboard.</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="scrap.html#pygame.scrap.lost">pygame.scrap.lost</a></div>
+</td>
+<td>—</td>
+<td>Indicates if the clipboard ownership has been lost by the pygame application.</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="scrap.html#pygame.scrap.set_mode">pygame.scrap.set_mode</a></div>
+</td>
+<td>—</td>
+<td>Sets the clipboard access mode.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>EXPERIMENTAL!</strong>: This API may change or disappear in later pygame releases. If
+you use this, your code may break with the next pygame release.</p>
+<p>The scrap module is for transferring data to/from the clipboard. This allows
+for cutting and pasting data between pygame and other applications. Some basic
+data (MIME) types are defined and registered:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span> <span class="n">pygame</span>         <span class="n">string</span>
+<span class="n">constant</span>        <span class="n">value</span>        <span class="n">description</span>
+<span class="o">--------------------------------------------------</span>
+<span class="n">SCRAP_TEXT</span>   <span class="s2">&quot;text/plain&quot;</span>    <span class="n">plain</span> <span class="n">text</span>
+<span class="n">SCRAP_BMP</span>    <span class="s2">&quot;image/bmp&quot;</span>     <span class="n">BMP</span> <span class="n">encoded</span> <span class="n">image</span> <span class="n">data</span>
+<span class="n">SCRAP_PBM</span>    <span class="s2">&quot;image/pbm&quot;</span>     <span class="n">PBM</span> <span class="n">encoded</span> <span class="n">image</span> <span class="n">data</span>
+<span class="n">SCRAP_PPM</span>    <span class="s2">&quot;image/ppm&quot;</span>     <span class="n">PPM</span> <span class="n">encoded</span> <span class="n">image</span> <span class="n">data</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">pygame.SCRAP_PPM</span></code>, <code class="docutils literal notranslate"><span class="pre">pygame.SCRAP_PBM</span></code> and <code class="docutils literal notranslate"><span class="pre">pygame.SCRAP_BMP</span></code> are
+suitable for surface buffers to be shared with other applications.
+<code class="docutils literal notranslate"><span class="pre">pygame.SCRAP_TEXT</span></code> is an alias for the plain text clipboard type.</p>
+<p>Depending on the platform, additional types are automatically registered when
+data is placed into the clipboard to guarantee a consistent sharing behaviour
+with other applications. The following listed types can be used as strings to
+be passed to the respective <a class="tooltip reference internal" href="#module-pygame.scrap" title=""><code class="xref py py-mod docutils literal notranslate"><span class="pre">pygame.scrap</span></code><span class="tooltip-content">pygame module for clipboard support.</span></a> module functions.</p>
+<p>For <strong>Windows</strong> platforms, these additional types are supported automatically
+and resolve to their internal definitions:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;text/plain;charset=utf-8&quot;</span>   <span class="n">UTF</span><span class="o">-</span><span class="mi">8</span> <span class="n">encoded</span> <span class="n">text</span>
+<span class="s2">&quot;audio/wav&quot;</span>                  <span class="n">WAV</span> <span class="n">encoded</span> <span class="n">audio</span>
+<span class="s2">&quot;image/tiff&quot;</span>                 <span class="n">TIFF</span> <span class="n">encoded</span> <span class="n">image</span> <span class="n">data</span>
+</pre></div>
+</div>
+<p>For <strong>X11</strong> platforms, these additional types are supported automatically and
+resolve to their internal definitions:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;text/plain;charset=utf-8&quot;</span>   <span class="n">UTF</span><span class="o">-</span><span class="mi">8</span> <span class="n">encoded</span> <span class="n">text</span>
+<span class="s2">&quot;UTF8_STRING&quot;</span>                <span class="n">UTF</span><span class="o">-</span><span class="mi">8</span> <span class="n">encoded</span> <span class="n">text</span>
+<span class="s2">&quot;COMPOUND_TEXT&quot;</span>              <span class="n">COMPOUND</span> <span class="n">text</span>
+</pre></div>
+</div>
+<p>User defined types can be used, but the data might not be accessible by other
+applications unless they know what data type to look for.
+Example: Data placed into the clipboard by
+<code class="docutils literal notranslate"><span class="pre">pygame.scrap.put(&quot;my_data_type&quot;,</span> <span class="pre">byte_data)</span></code> can only be accessed by
+applications which query the clipboard for the <code class="docutils literal notranslate"><span class="pre">&quot;my_data_type&quot;</span></code> data type.</p>
+<p>For an example of how the scrap module works refer to the examples page
+(<a class="tooltip reference internal" href="examples.html#pygame.examples.scrap_clipboard.main" title=""><code class="xref py py-func docutils literal notranslate"><span class="pre">pygame.examples.scrap_clipboard.main()</span></code><span class="tooltip-content">access the clipboard</span></a>) or the code directly in GitHub
+(<a class="reference external" href="https://github.com/pygame/pygame/blob/main/examples/scrap_clipboard.py">pygame/examples/scrap_clipboard.py</a>).</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 1.8.</span></p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The scrap module is currently only supported for Windows, X11 and Mac OS X.
+On Mac OS X only text works at the moment - other types may be supported in
+future releases.</p>
+</div>
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.scrap.init">
+<span class="sig-prename descclassname"><span class="pre">pygame.scrap.</span></span><span class="sig-name descname"><span class="pre">init</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.scrap.init" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Initializes the scrap module.</span></div>
+<div class="line"><span class="signature">init() -&gt; None</span></div>
+</div>
+<p>Initialize the scrap module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="tooltip reference internal" href="pygame.html#pygame.error" title=""><strong>pygame.error</strong><span class="tooltip-content">standard pygame exception</span></a> -- if unable to initialize scrap module</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The scrap module requires <a class="tooltip reference internal" href="display.html#pygame.display.set_mode" title=""><code class="xref py py-func docutils literal notranslate"><span class="pre">pygame.display.set_mode()</span></code><span class="tooltip-content">Initialize a window or screen for display</span></a> be
+called before being initialized.</p>
+</div>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.scrap.get_init">
+<span class="sig-prename descclassname"><span class="pre">pygame.scrap.</span></span><span class="sig-name descname"><span class="pre">get_init</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.scrap.get_init" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Returns True if the scrap module is currently initialized.</span></div>
+<div class="line"><span class="signature">get_init() -&gt; bool</span></div>
+</div>
+<p>Gets the scrap module's initialization state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">True</span></code> if the <a class="tooltip reference internal" href="#module-pygame.scrap" title=""><code class="xref py py-mod docutils literal notranslate"><span class="pre">pygame.scrap</span></code><span class="tooltip-content">pygame module for clipboard support.</span></a> module is currently
+initialized, <code class="docutils literal notranslate"><span class="pre">False</span></code> otherwise</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 1.9.5.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.scrap.get">
+<span class="sig-prename descclassname"><span class="pre">pygame.scrap.</span></span><span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.scrap.get" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Gets the data for the specified type from the clipboard.</span></div>
+<div class="line"><span class="signature">get(type) -&gt; bytes | None</span></div>
+</div>
+<p>Retrieves the data for the specified type from the clipboard. The data is
+returned as a byte string and might need further processing (such as
+decoding to Unicode).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>type</strong> (<em>string</em>) -- data type to retrieve from the clipboard</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>data (bytes object) for the given type identifier or <code class="docutils literal notranslate"><span class="pre">None</span></code> if
+no data for the given type is available</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bytes | None</p>
+</dd>
+</dl>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">text</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">scrap</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pygame</span><span class="o">.</span><span class="n">SCRAP_TEXT</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">text</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;There is text in the clipboard.&quot;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;There does not seem to be text in the clipboard.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.scrap.get_types">
+<span class="sig-prename descclassname"><span class="pre">pygame.scrap.</span></span><span class="sig-name descname"><span class="pre">get_types</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.scrap.get_types" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Gets a list of the available clipboard types.</span></div>
+<div class="line"><span class="signature">get_types() -&gt; list</span></div>
+</div>
+<p>Gets a list of data type string identifiers for the data currently
+available on the clipboard. Each identifier can be used in the
+<a class="tooltip reference internal" href="#pygame.scrap.get" title=""><code class="xref py py-func docutils literal notranslate"><span class="pre">pygame.scrap.get()</span></code><span class="tooltip-content">Gets the data for the specified type from the clipboard.</span></a> method to get the clipboard content of the
+specific type.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of strings of the available clipboard data types, if there
+is no data in the clipboard an empty list is returned</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">pygame</span><span class="o">.</span><span class="n">scrap</span><span class="o">.</span><span class="n">get_types</span><span class="p">():</span>
+    <span class="k">if</span> <span class="s2">&quot;text&quot;</span> <span class="ow">in</span> <span class="n">t</span><span class="p">:</span>
+        <span class="c1"># There is some content with the word &quot;text&quot; in its type string.</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">pygame</span><span class="o">.</span><span class="n">scrap</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">t</span><span class="p">))</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.scrap.put">
+<span class="sig-prename descclassname"><span class="pre">pygame.scrap.</span></span><span class="sig-name descname"><span class="pre">put</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.scrap.put" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Places data into the clipboard.</span></div>
+<div class="line"><span class="signature">put(type, data) -&gt; None</span></div>
+</div>
+<p>Places data for a given clipboard type into the clipboard. The data must
+be a string buffer. The type is a string identifying the type of data to be
+placed into the clipboard. This can be one of the predefined
+<code class="docutils literal notranslate"><span class="pre">pygame.SCRAP_PBM</span></code>, <code class="docutils literal notranslate"><span class="pre">pygame.SCRAP_PPM</span></code>, <code class="docutils literal notranslate"><span class="pre">pygame.SCRAP_BMP</span></code> or
+<code class="docutils literal notranslate"><span class="pre">pygame.SCRAP_TEXT</span></code> values or a user defined string identifier.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>type</strong> (<em>string</em>) -- type identifier of the data to be placed into the
+clipboard</p></li>
+<li><p><strong>data</strong> (<em>bytes</em>) -- data to be place into the clipboard, a bytes object</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="tooltip reference internal" href="pygame.html#pygame.error" title=""><strong>pygame.error</strong><span class="tooltip-content">standard pygame exception</span></a> -- if unable to put the data into the clipboard</p>
+</dd>
+</dl>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;example.bmp&quot;</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
+    <span class="n">pygame</span><span class="o">.</span><span class="n">scrap</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">pygame</span><span class="o">.</span><span class="n">SCRAP_BMP</span><span class="p">,</span> <span class="n">fp</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+<span class="c1"># The image data is now on the clipboard for other applications to access</span>
+<span class="c1"># it.</span>
+<span class="n">pygame</span><span class="o">.</span><span class="n">scrap</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">pygame</span><span class="o">.</span><span class="n">SCRAP_TEXT</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;A text to copy&quot;</span><span class="p">)</span>
+<span class="n">pygame</span><span class="o">.</span><span class="n">scrap</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="s2">&quot;Plain text&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;Data for user defined type &#39;Plain text&#39;&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.scrap.contains">
+<span class="sig-prename descclassname"><span class="pre">pygame.scrap.</span></span><span class="sig-name descname"><span class="pre">contains</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.scrap.contains" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Checks whether data for a given type is available in the clipboard.</span></div>
+<div class="line"><span class="signature">contains(type) -&gt; bool</span></div>
+</div>
+<p>Checks whether data for the given type is currently available in the
+clipboard.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>type</strong> (<em>string</em>) -- data type to check availability of</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">True</span></code> if data for the passed type is available in the
+clipboard, <code class="docutils literal notranslate"><span class="pre">False</span></code> otherwise</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">pygame</span><span class="o">.</span><span class="n">scrap</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="n">pygame</span><span class="o">.</span><span class="n">SCRAP_TEXT</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;There is text in the clipboard.&quot;</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">pygame</span><span class="o">.</span><span class="n">scrap</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s2">&quot;own_data_type&quot;</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;There is stuff in the clipboard.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.scrap.lost">
+<span class="sig-prename descclassname"><span class="pre">pygame.scrap.</span></span><span class="sig-name descname"><span class="pre">lost</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.scrap.lost" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Indicates if the clipboard ownership has been lost by the pygame application.</span></div>
+<div class="line"><span class="signature">lost() -&gt; bool</span></div>
+</div>
+<p>Indicates if the clipboard ownership has been lost by the pygame
+application.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">True</span></code>, if the clipboard ownership has been lost by the pygame
+application, <code class="docutils literal notranslate"><span class="pre">False</span></code> if the pygame application still owns the clipboard</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">pygame</span><span class="o">.</span><span class="n">scrap</span><span class="o">.</span><span class="n">lost</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;The clipboard is in use by another application.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.scrap.set_mode">
+<span class="sig-prename descclassname"><span class="pre">pygame.scrap.</span></span><span class="sig-name descname"><span class="pre">set_mode</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.scrap.set_mode" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Sets the clipboard access mode.</span></div>
+<div class="line"><span class="signature">set_mode(mode) -&gt; None</span></div>
+</div>
+<p>Sets the access mode for the clipboard. This is only of interest for X11
+environments where clipboard modes <code class="docutils literal notranslate"><span class="pre">pygame.SCRAP_SELECTION</span></code> (for mouse
+selections) and <code class="docutils literal notranslate"><span class="pre">pygame.SCRAP_CLIPBOARD</span></code> (for the clipboard) are
+available. Setting the mode to <code class="docutils literal notranslate"><span class="pre">pygame.SCRAP_SELECTION</span></code> in other
+environments will not change the mode from <code class="docutils literal notranslate"><span class="pre">pygame.SCRAP_CLIPBOARD</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>mode</strong> -- access mode, supported values are <code class="docutils literal notranslate"><span class="pre">pygame.SCRAP_CLIPBOARD</span></code>
+and <code class="docutils literal notranslate"><span class="pre">pygame.SCRAP_SELECTION</span></code> (<code class="docutils literal notranslate"><span class="pre">pygame.SCRAP_SELECTION</span></code> only has an
+effect when used on X11 platforms)</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> -- if the <code class="docutils literal notranslate"><span class="pre">mode</span></code> parameter is not
+<code class="docutils literal notranslate"><span class="pre">pygame.SCRAP_CLIPBOARD</span></code> or <code class="docutils literal notranslate"><span class="pre">pygame.SCRAP_SELECTION</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+<br /><br />
+<hr />
+<a href="https://github.com/pygame/pygame/edit/main/docs/reST/ref/scrap.rst" rel="nofollow">Edit on GitHub</a>
+            <div class="clearer"></div>
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="sdl2_controller.html" title="pygame._sdl2.controller"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="rect.html" title="pygame.Rect"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">pygame v2.5.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href=""><code class="xref py py-mod docutils literal notranslate"><span class="pre">pygame.scrap</span></code></a></li>
+    <script type="text/javascript" src="https://www.pygame.org/comment/jquery.plugin.docscomments.js"></script>
+
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2000-2023, pygame developers.
+    </div>
+  </body>
+</html>

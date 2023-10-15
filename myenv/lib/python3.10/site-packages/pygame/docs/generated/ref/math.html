@@ -1,0 +1,1818 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>pygame.math &#8212; pygame v2.5.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygame.css?v=71ee6cc2" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=ba44479e"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <link rel="icon" href="../_static/pygame.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="pygame.midi" href="midi.html" />
+    <link rel="prev" title="pygame.mask" href="mask.html" /> 
+  </head><body>  
+
+    <div class="document">
+
+  <div class="header">
+	<div class="flex-container">
+	<div class="logo">
+	  <a href="https://www.pygame.org/">
+	    <img src="../_static/pygame_tiny.png"/>
+	  </a>
+	  <h5>pygame documentation</h5>
+	</div>
+	<div class="pagelinks">
+	  <div class="top">
+	    <a href="https://www.pygame.org/">Pygame Home</a> ||
+	    <a href="../index.html">Help Contents</a> ||
+	    <a href="../genindex.html">Reference Index</a>
+
+        <form action="../search.html" method="get" style="display:inline;float:right;">
+          <input name="q" value="" type="text">
+          <input value="search" type="submit">
+        </form>
+	  </div>
+	  <hr style="color:black;border-bottom:none;border-style: dotted;border-bottom-style:none;">
+	  <p class="bottom"><b>Most useful stuff</b>:
+	    <a href="color.html">Color</a> | 
+	    <a href="display.html">display</a> | 
+	    <a href="draw.html">draw</a> | 
+	    <a href="event.html">event</a> | 
+	    <a href="font.html">font</a> | 
+	    <a href="image.html">image</a> | 
+	    <a href="key.html">key</a> | 
+	    <a href="locals.html">locals</a> | 
+	    <a href="mixer.html">mixer</a> | 
+	    <a href="mouse.html">mouse</a> | 
+	    <a href="rect.html">Rect</a> | 
+	    <a href="surface.html">Surface</a> | 
+	    <a href="time.html">time</a> | 
+	    <a href="music.html">music</a> | 
+	    <a href="pygame.html">pygame</a>
+	  </p>
+
+	  <p class="bottom"><b>Advanced stuff</b>:
+	    <a href="cursors.html">cursors</a> | 
+	    <a href="joystick.html">joystick</a> | 
+	    <a href="mask.html">mask</a> | 
+	    <a href="sprite.html">sprite</a> | 
+	    <a href="transform.html">transform</a> | 
+	    <a href="bufferproxy.html">BufferProxy</a> | 
+	    <a href="freetype.html">freetype</a> | 
+	    <a href="gfxdraw.html">gfxdraw</a> | 
+	    <a href="midi.html">midi</a> | 
+	    <a href="pixelarray.html">PixelArray</a> | 
+	    <a href="pixelcopy.html">pixelcopy</a> | 
+	    <a href="sndarray.html">sndarray</a> | 
+	    <a href="surfarray.html">surfarray</a> | 
+	    <a href="math.html">math</a>
+	  </p>
+
+	  <p class="bottom"><b>Other</b>:
+	    <a href="camera.html">camera</a> | 
+	    <a href="sdl2_controller.html#module-pygame._sdl2.controller">controller</a> | 
+	    <a href="examples.html">examples</a> | 
+	    <a href="fastevent.html">fastevent</a> | 
+	    <a href="scrap.html">scrap</a> | 
+	    <a href="tests.html">tests</a> | 
+	    <a href="touch.html">touch</a> | 
+	    <a href="pygame.html#module-pygame.version">version</a>
+	  </p>
+</div>
+</div>
+  </div>
+
+      <div class="documentwrapper">
+          <div class="body" role="main">
+            
+<section id="module-pygame.math">
+<span id="pygame-math"></span><dl class="definition">
+<dt class="title module sig sig-object">
+<code class="docutils literal notranslate"><span class="pre">pygame.math</span></code></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">pygame module for vector classes</span></div>
+</div>
+<table class="toc docutils align-default">
+<tbody>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="math.html#pygame.math.clamp">pygame.math.clamp</a></div>
+</td>
+<td>—</td>
+<td>returns value clamped to min and max.</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="math.html#pygame.math.lerp">pygame.math.lerp</a></div>
+</td>
+<td>—</td>
+<td>interpolates between two values by a weight.</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="math.html#pygame.math.Vector2">pygame.math.Vector2</a></div>
+</td>
+<td>—</td>
+<td>a 2-Dimensional Vector</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="math.html#pygame.math.Vector3">pygame.math.Vector3</a></div>
+</td>
+<td>—</td>
+<td>a 3-Dimensional Vector</td>
+</tr>
+</tbody>
+</table>
+<p>The pygame math module currently provides Vector classes in two and three
+dimensions, <code class="docutils literal notranslate"><span class="pre">Vector2</span></code> and <code class="docutils literal notranslate"><span class="pre">Vector3</span></code> respectively.</p>
+<p>They support the following numerical operations: <code class="docutils literal notranslate"><span class="pre">vec</span> <span class="pre">+</span> <span class="pre">vec</span></code>, <code class="docutils literal notranslate"><span class="pre">vec</span> <span class="pre">-</span> <span class="pre">vec</span></code>,
+<code class="docutils literal notranslate"><span class="pre">vec</span> <span class="pre">*</span> <span class="pre">number</span></code>, <code class="docutils literal notranslate"><span class="pre">number</span> <span class="pre">*</span> <span class="pre">vec</span></code>, <code class="docutils literal notranslate"><span class="pre">vec</span> <span class="pre">/</span> <span class="pre">number</span></code>, <code class="docutils literal notranslate"><span class="pre">vec</span> <span class="pre">//</span> <span class="pre">number</span></code>, <code class="docutils literal notranslate"><span class="pre">vec</span> <span class="pre">+=</span> <span class="pre">vec</span></code>,
+<code class="docutils literal notranslate"><span class="pre">vec</span> <span class="pre">-=</span> <span class="pre">vec</span></code>, <code class="docutils literal notranslate"><span class="pre">vec</span> <span class="pre">*=</span> <span class="pre">number</span></code>, <code class="docutils literal notranslate"><span class="pre">vec</span> <span class="pre">/=</span> <span class="pre">number</span></code>, <code class="docutils literal notranslate"><span class="pre">vec</span> <span class="pre">//=</span> <span class="pre">number</span></code>, <code class="docutils literal notranslate"><span class="pre">round(vec,</span> <span class="pre">ndigits=0)</span></code>.</p>
+<p>All these operations will be performed elementwise.
+In addition <code class="docutils literal notranslate"><span class="pre">vec</span> <span class="pre">*</span> <span class="pre">vec</span></code> will perform a scalar-product (a.k.a. dot-product).
+If you want to multiply every element from vector v with every element from
+vector w you can use the elementwise method: <code class="docutils literal notranslate"><span class="pre">v.elementwise()</span> <span class="pre">*</span> <span class="pre">w</span></code></p>
+<p>The coordinates of a vector can be retrieved or set using attributes or
+subscripts</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">v</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Vector3</span><span class="p">()</span>
+
+<span class="n">v</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">v</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">v</span><span class="o">.</span><span class="n">x</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">v</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="c1"># 10</span>
+
+<span class="n">v</span><span class="o">.</span><span class="n">x</span> <span class="o">==</span> <span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">v</span><span class="o">.</span><span class="n">y</span> <span class="o">==</span> <span class="n">v</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">v</span><span class="o">.</span><span class="n">z</span> <span class="o">==</span> <span class="n">v</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Multiple coordinates can be set using slices or swizzling</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">v</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Vector2</span><span class="p">()</span>
+<span class="n">v</span><span class="o">.</span><span class="n">xy</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span>
+<span class="n">v</span><span class="p">[:]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 1.9.2pre.</span></p>
+</div>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in pygame 1.9.4: </span>Removed experimental notice.</p>
+</div>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in pygame 1.9.4: </span>Allow scalar construction like GLSL Vector2(2) == Vector2(2.0, 2.0)</p>
+</div>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in pygame 1.9.4: </span><a class="tooltip reference internal" href="#module-pygame.math" title=""><code class="xref py py-mod docutils literal notranslate"><span class="pre">pygame.math</span></code><span class="tooltip-content">pygame module for vector classes</span></a> import not required. More convenient <code class="docutils literal notranslate"><span class="pre">pygame.Vector2</span></code> and <code class="docutils literal notranslate"><span class="pre">pygame.Vector3</span></code>.</p>
+</div>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in pygame 2.2.0: </span><cite>round</cite> returns a new vector with components rounded to the specified digits.</p>
+</div>
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.math.clamp">
+<span class="sig-prename descclassname"><span class="pre">pygame.math.</span></span><span class="sig-name descname"><span class="pre">clamp</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.math.clamp" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">returns value clamped to min and max.</span></div>
+<div class="line"><span class="signature">clamp(value, min, max) -&gt; float</span></div>
+</div>
+<p><strong>Experimental:</strong> feature still in development available for testing and feedback. It may change.
+<a class="reference external" href="https://github.com/pygame/pygame/pull/3326">Please leave clamp feedback with authors</a></p>
+<p>Clamps a numeric <code class="docutils literal notranslate"><span class="pre">value</span></code> so that it's no lower than <code class="docutils literal notranslate"><span class="pre">min</span></code>, and no higher
+than <code class="docutils literal notranslate"><span class="pre">max</span></code>.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 2.1.3.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.math.lerp">
+<span class="sig-prename descclassname"><span class="pre">pygame.math.</span></span><span class="sig-name descname"><span class="pre">lerp</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.math.lerp" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">interpolates between two values by a weight.</span></div>
+<div class="line"><span class="signature">lerp(a, b, weight) -&gt; float</span></div>
+</div>
+<p>Linearly interpolates between <code class="docutils literal notranslate"><span class="pre">a</span></code> and <code class="docutils literal notranslate"><span class="pre">b</span></code> by <code class="docutils literal notranslate"><span class="pre">weight</span></code> using the formula <code class="docutils literal notranslate"><span class="pre">a</span> <span class="pre">+</span> <span class="pre">(b-a)</span> <span class="pre">*</span> <span class="pre">weight</span></code>.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">weight</span></code> is <code class="docutils literal notranslate"><span class="pre">0.5</span></code>, <code class="docutils literal notranslate"><span class="pre">lerp</span></code> will return the value half-way between <code class="docutils literal notranslate"><span class="pre">a</span></code>
+and <code class="docutils literal notranslate"><span class="pre">b</span></code>. When <code class="docutils literal notranslate"><span class="pre">a</span> <span class="pre">=</span> <span class="pre">10</span></code> and <code class="docutils literal notranslate"><span class="pre">b</span> <span class="pre">=</span> <span class="pre">20</span></code>, <code class="docutils literal notranslate"><span class="pre">lerp(a,</span> <span class="pre">b,</span> <span class="pre">0.5)</span></code> will return <code class="docutils literal notranslate"><span class="pre">15</span></code>. You
+can think of weight as the percentage of interpolation from <code class="docutils literal notranslate"><span class="pre">a</span></code> to <code class="docutils literal notranslate"><span class="pre">b</span></code>, <code class="docutils literal notranslate"><span class="pre">0.0</span></code>
+being 0% and <code class="docutils literal notranslate"><span class="pre">1.0</span></code> being 100%.</p>
+<p><code class="docutils literal notranslate"><span class="pre">lerp</span></code> can be used for many things. You could rotate a sprite by a weight with
+<code class="docutils literal notranslate"><span class="pre">angle</span> <span class="pre">=</span> <span class="pre">lerp(0,</span> <span class="pre">360,</span> <span class="pre">weight)</span></code>. You could even scale an enemy's attack value
+based on the level you're playing:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">FINAL_LEVEL</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">current_level</span> <span class="o">=</span> <span class="mi">2</span>
+
+<span class="n">attack</span> <span class="o">=</span> <span class="n">lerp</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="n">current_level</span><span class="o">/</span><span class="n">MAX_LEVEL</span><span class="p">)</span> <span class="c1"># 18</span>
+</pre></div>
+</div>
+<p>If you're on level 0, <code class="docutils literal notranslate"><span class="pre">attack</span></code> will be <code class="docutils literal notranslate"><span class="pre">10</span></code>, if you're on level 10,
+<code class="docutils literal notranslate"><span class="pre">attack</span></code> will be <code class="docutils literal notranslate"><span class="pre">50</span></code>. If you're on level 5, the
+result of <code class="docutils literal notranslate"><span class="pre">current_level/MAX_LEVEL</span></code> will be <code class="docutils literal notranslate"><span class="pre">0.5</span></code>
+which represents 50%, therefore <code class="docutils literal notranslate"><span class="pre">attack</span></code> will be <code class="docutils literal notranslate"><span class="pre">30</span></code>, which is the midpoint of <code class="docutils literal notranslate"><span class="pre">10</span></code> and <code class="docutils literal notranslate"><span class="pre">50</span></code>.</p>
+<p>Raises a ValueError if <code class="docutils literal notranslate"><span class="pre">weight</span></code> is outside the range of <code class="docutils literal notranslate"><span class="pre">[0,</span> <span class="pre">1]</span></code>.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 2.1.3.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py class definition">
+<dt class="sig sig-object py title" id="pygame.math.Vector2">
+<span class="sig-prename descclassname"><span class="pre">pygame.math.</span></span><span class="sig-name descname"><span class="pre">Vector2</span></span><a class="headerlink" href="#pygame.math.Vector2" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">a 2-Dimensional Vector</span></div>
+<div class="line"><span class="signature">Vector2() -&gt; Vector2(0, 0)</span></div>
+<div class="line"><span class="signature">Vector2(int) -&gt; Vector2</span></div>
+<div class="line"><span class="signature">Vector2(float) -&gt; Vector2</span></div>
+<div class="line"><span class="signature">Vector2(Vector2) -&gt; Vector2</span></div>
+<div class="line"><span class="signature">Vector2(x, y) -&gt; Vector2</span></div>
+<div class="line"><span class="signature">Vector2((x, y)) -&gt; Vector2</span></div>
+</div>
+<table class="toc docutils align-default">
+<tbody>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="math.html#pygame.math.Vector2.dot">pygame.math.Vector2.dot</a></div>
+</td>
+<td>—</td>
+<td>calculates the dot- or scalar-product with the other vector</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="math.html#pygame.math.Vector2.cross">pygame.math.Vector2.cross</a></div>
+</td>
+<td>—</td>
+<td>calculates the cross- or vector-product</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="math.html#pygame.math.Vector2.magnitude">pygame.math.Vector2.magnitude</a></div>
+</td>
+<td>—</td>
+<td>returns the Euclidean magnitude of the vector.</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="math.html#pygame.math.Vector2.magnitude_squared">pygame.math.Vector2.magnitude_squared</a></div>
+</td>
+<td>—</td>
+<td>returns the squared magnitude of the vector.</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="math.html#pygame.math.Vector2.length">pygame.math.Vector2.length</a></div>
+</td>
+<td>—</td>
+<td>returns the Euclidean length of the vector.</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="math.html#pygame.math.Vector2.length_squared">pygame.math.Vector2.length_squared</a></div>
+</td>
+<td>—</td>
+<td>returns the squared Euclidean length of the vector.</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="math.html#pygame.math.Vector2.normalize">pygame.math.Vector2.normalize</a></div>
+</td>
+<td>—</td>
+<td>returns a vector with the same direction but length 1.</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="math.html#pygame.math.Vector2.normalize_ip">pygame.math.Vector2.normalize_ip</a></div>
+</td>
+<td>—</td>
+<td>normalizes the vector in place so that its length is 1.</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="math.html#pygame.math.Vector2.is_normalized">pygame.math.Vector2.is_normalized</a></div>
+</td>
+<td>—</td>
+<td>tests if the vector is normalized i.e. has length == 1.</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="math.html#pygame.math.Vector2.scale_to_length">pygame.math.Vector2.scale_to_length</a></div>
+</td>
+<td>—</td>
+<td>scales the vector to a given length.</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="math.html#pygame.math.Vector2.reflect">pygame.math.Vector2.reflect</a></div>
+</td>
+<td>—</td>
+<td>returns a vector reflected of a given normal.</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="math.html#pygame.math.Vector2.reflect_ip">pygame.math.Vector2.reflect_ip</a></div>
+</td>
+<td>—</td>
+<td>reflect the vector of a given normal in place.</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="math.html#pygame.math.Vector2.distance_to">pygame.math.Vector2.distance_to</a></div>
+</td>
+<td>—</td>
+<td>calculates the Euclidean distance to a given vector.</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="math.html#pygame.math.Vector2.distance_squared_to">pygame.math.Vector2.distance_squared_to</a></div>
+</td>
+<td>—</td>
+<td>calculates the squared Euclidean distance to a given vector.</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="math.html#pygame.math.Vector2.move_towards">pygame.math.Vector2.move_towards</a></div>
+</td>
+<td>—</td>
+<td>returns a vector moved toward the target by a given distance.</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="math.html#pygame.math.Vector2.move_towards_ip">pygame.math.Vector2.move_towards_ip</a></div>
+</td>
+<td>—</td>
+<td>moves the vector toward its target at a given distance.</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="math.html#pygame.math.Vector2.lerp">pygame.math.Vector2.lerp</a></div>
+</td>
+<td>—</td>
+<td>returns a linear interpolation to the given vector.</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="math.html#pygame.math.Vector2.slerp">pygame.math.Vector2.slerp</a></div>
+</td>
+<td>—</td>
+<td>returns a spherical interpolation to the given vector.</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="math.html#pygame.math.Vector2.elementwise">pygame.math.Vector2.elementwise</a></div>
+</td>
+<td>—</td>
+<td>The next operation will be performed elementwise.</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="math.html#pygame.math.Vector2.rotate">pygame.math.Vector2.rotate</a></div>
+</td>
+<td>—</td>
+<td>rotates a vector by a given angle in degrees.</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="math.html#pygame.math.Vector2.rotate_rad">pygame.math.Vector2.rotate_rad</a></div>
+</td>
+<td>—</td>
+<td>rotates a vector by a given angle in radians.</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="math.html#pygame.math.Vector2.rotate_ip">pygame.math.Vector2.rotate_ip</a></div>
+</td>
+<td>—</td>
+<td>rotates the vector by a given angle in degrees in place.</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="math.html#pygame.math.Vector2.rotate_ip_rad">pygame.math.Vector2.rotate_ip_rad</a></div>
+</td>
+<td>—</td>
+<td>rotates the vector by a given angle in radians in place.</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="math.html#pygame.math.Vector2.rotate_rad_ip">pygame.math.Vector2.rotate_rad_ip</a></div>
+</td>
+<td>—</td>
+<td>rotates the vector by a given angle in radians in place.</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="math.html#pygame.math.Vector2.angle_to">pygame.math.Vector2.angle_to</a></div>
+</td>
+<td>—</td>
+<td>calculates the angle to a given vector in degrees.</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="math.html#pygame.math.Vector2.as_polar">pygame.math.Vector2.as_polar</a></div>
+</td>
+<td>—</td>
+<td>returns a tuple with radial distance and azimuthal angle.</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="math.html#pygame.math.Vector2.from_polar">pygame.math.Vector2.from_polar</a></div>
+</td>
+<td>—</td>
+<td>Creates a Vector2(x, y) or sets x and y from a polar coordinates tuple.</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="math.html#pygame.math.Vector2.project">pygame.math.Vector2.project</a></div>
+</td>
+<td>—</td>
+<td>projects a vector onto another.</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="math.html#pygame.math.Vector2.copy">pygame.math.Vector2.copy</a></div>
+</td>
+<td>—</td>
+<td>Returns a copy of itself.</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="math.html#pygame.math.Vector2.clamp_magnitude">pygame.math.Vector2.clamp_magnitude</a></div>
+</td>
+<td>—</td>
+<td>Returns a copy of a vector with the magnitude clamped between max_length and min_length.</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="math.html#pygame.math.Vector2.clamp_magnitude_ip">pygame.math.Vector2.clamp_magnitude_ip</a></div>
+</td>
+<td>—</td>
+<td>Clamps the vector's magnitude between max_length and min_length</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="math.html#pygame.math.Vector2.update">pygame.math.Vector2.update</a></div>
+</td>
+<td>—</td>
+<td>Sets the coordinates of the vector.</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="math.html#pygame.math.Vector2.epsilon">pygame.math.Vector2.epsilon</a></div>
+</td>
+<td>—</td>
+<td>Determines the tolerance of vector calculations.</td>
+</tr>
+</tbody>
+</table>
+<p>Some general information about the <code class="docutils literal notranslate"><span class="pre">Vector2</span></code> class.</p>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in pygame 2.1.3: </span>Inherited methods of vector subclasses now correctly return an instance of the
+subclass instead of the superclass</p>
+</div>
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.math.Vector2.dot">
+<span class="sig-name descname"><span class="pre">dot</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.math.Vector2.dot" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">calculates the dot- or scalar-product with the other vector</span></div>
+<div class="line"><span class="signature">dot(Vector2) -&gt; float</span></div>
+</div>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.math.Vector2.cross">
+<span class="sig-name descname"><span class="pre">cross</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.math.Vector2.cross" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">calculates the cross- or vector-product</span></div>
+<div class="line"><span class="signature">cross(Vector2) -&gt; float</span></div>
+</div>
+<p>calculates the third component of the cross-product.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.math.Vector2.magnitude">
+<span class="sig-name descname"><span class="pre">magnitude</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.math.Vector2.magnitude" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">returns the Euclidean magnitude of the vector.</span></div>
+<div class="line"><span class="signature">magnitude() -&gt; float</span></div>
+</div>
+<p>calculates the magnitude of the vector which follows from the
+theorem: <code class="docutils literal notranslate"><span class="pre">vec.magnitude()</span> <span class="pre">==</span> <span class="pre">math.sqrt(vec.x**2</span> <span class="pre">+</span> <span class="pre">vec.y**2)</span></code></p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.math.Vector2.magnitude_squared">
+<span class="sig-name descname"><span class="pre">magnitude_squared</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.math.Vector2.magnitude_squared" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">returns the squared magnitude of the vector.</span></div>
+<div class="line"><span class="signature">magnitude_squared() -&gt; float</span></div>
+</div>
+<p>calculates the magnitude of the vector which follows from the
+theorem: <code class="docutils literal notranslate"><span class="pre">vec.magnitude_squared()</span> <span class="pre">==</span> <span class="pre">vec.x**2</span> <span class="pre">+</span> <span class="pre">vec.y**2</span></code>. This
+is faster than <code class="docutils literal notranslate"><span class="pre">vec.magnitude()</span></code> because it avoids the square root.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.math.Vector2.length">
+<span class="sig-name descname"><span class="pre">length</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.math.Vector2.length" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">returns the Euclidean length of the vector.</span></div>
+<div class="line"><span class="signature">length() -&gt; float</span></div>
+</div>
+<p>calculates the Euclidean length of the vector which follows from the
+Pythagorean theorem: <code class="docutils literal notranslate"><span class="pre">vec.length()</span> <span class="pre">==</span> <span class="pre">math.sqrt(vec.x**2</span> <span class="pre">+</span> <span class="pre">vec.y**2)</span></code></p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.math.Vector2.length_squared">
+<span class="sig-name descname"><span class="pre">length_squared</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.math.Vector2.length_squared" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">returns the squared Euclidean length of the vector.</span></div>
+<div class="line"><span class="signature">length_squared() -&gt; float</span></div>
+</div>
+<p>calculates the Euclidean length of the vector which follows from the
+Pythagorean theorem: <code class="docutils literal notranslate"><span class="pre">vec.length_squared()</span> <span class="pre">==</span> <span class="pre">vec.x**2</span> <span class="pre">+</span> <span class="pre">vec.y**2</span></code>.
+This is faster than <code class="docutils literal notranslate"><span class="pre">vec.length()</span></code> because it avoids the square root.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.math.Vector2.normalize">
+<span class="sig-name descname"><span class="pre">normalize</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.math.Vector2.normalize" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">returns a vector with the same direction but length 1.</span></div>
+<div class="line"><span class="signature">normalize() -&gt; Vector2</span></div>
+</div>
+<p>Returns a new vector that has <code class="docutils literal notranslate"><span class="pre">length</span></code> equal to <code class="docutils literal notranslate"><span class="pre">1</span></code> and the same
+direction as self.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.math.Vector2.normalize_ip">
+<span class="sig-name descname"><span class="pre">normalize_ip</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.math.Vector2.normalize_ip" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">normalizes the vector in place so that its length is 1.</span></div>
+<div class="line"><span class="signature">normalize_ip() -&gt; None</span></div>
+</div>
+<p>Normalizes the vector so that it has <code class="docutils literal notranslate"><span class="pre">length</span></code> equal to <code class="docutils literal notranslate"><span class="pre">1</span></code>.
+The direction of the vector is not changed.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.math.Vector2.is_normalized">
+<span class="sig-name descname"><span class="pre">is_normalized</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.math.Vector2.is_normalized" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">tests if the vector is normalized i.e. has length == 1.</span></div>
+<div class="line"><span class="signature">is_normalized() -&gt; Bool</span></div>
+</div>
+<p>Returns True if the vector has <code class="docutils literal notranslate"><span class="pre">length</span></code> equal to <code class="docutils literal notranslate"><span class="pre">1</span></code>. Otherwise
+it returns <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.math.Vector2.scale_to_length">
+<span class="sig-name descname"><span class="pre">scale_to_length</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.math.Vector2.scale_to_length" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">scales the vector to a given length.</span></div>
+<div class="line"><span class="signature">scale_to_length(float) -&gt; None</span></div>
+</div>
+<p>Scales the vector so that it has the given length. The direction of the
+vector is not changed. You can also scale to length <code class="docutils literal notranslate"><span class="pre">0</span></code>. If the vector
+is the zero vector (i.e. has length <code class="docutils literal notranslate"><span class="pre">0</span></code> thus no direction) a
+<code class="docutils literal notranslate"><span class="pre">ValueError</span></code> is raised.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.math.Vector2.reflect">
+<span class="sig-name descname"><span class="pre">reflect</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.math.Vector2.reflect" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">returns a vector reflected of a given normal.</span></div>
+<div class="line"><span class="signature">reflect(Vector2) -&gt; Vector2</span></div>
+</div>
+<p>Returns a new vector that points in the direction as if self would bounce
+of a surface characterized by the given surface normal. The length of the
+new vector is the same as self's.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.math.Vector2.reflect_ip">
+<span class="sig-name descname"><span class="pre">reflect_ip</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.math.Vector2.reflect_ip" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">reflect the vector of a given normal in place.</span></div>
+<div class="line"><span class="signature">reflect_ip(Vector2) -&gt; None</span></div>
+</div>
+<p>Changes the direction of self as if it would have been reflected of a
+surface with the given surface normal.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.math.Vector2.distance_to">
+<span class="sig-name descname"><span class="pre">distance_to</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.math.Vector2.distance_to" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">calculates the Euclidean distance to a given vector.</span></div>
+<div class="line"><span class="signature">distance_to(Vector2) -&gt; float</span></div>
+</div>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.math.Vector2.distance_squared_to">
+<span class="sig-name descname"><span class="pre">distance_squared_to</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.math.Vector2.distance_squared_to" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">calculates the squared Euclidean distance to a given vector.</span></div>
+<div class="line"><span class="signature">distance_squared_to(Vector2) -&gt; float</span></div>
+</div>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.math.Vector2.move_towards">
+<span class="sig-name descname"><span class="pre">move_towards</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.math.Vector2.move_towards" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">returns a vector moved toward the target by a given distance.</span></div>
+<div class="line"><span class="signature">move_towards(Vector2, float) -&gt; Vector2</span></div>
+</div>
+<p><strong>Experimental:</strong> feature still in development available for testing and feedback. It may change.
+<a class="reference external" href="https://github.com/pygame/pygame/pull/2929">Please leave move_towards feedback with authors</a></p>
+<p>Returns a Vector which is moved towards the given Vector by a given
+distance and does not overshoot past its target Vector.
+The first parameter determines the target Vector, while the second
+parameter determines the delta distance. If the distance is in the
+negatives, then it will move away from the target Vector.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 2.1.3.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.math.Vector2.move_towards_ip">
+<span class="sig-name descname"><span class="pre">move_towards_ip</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.math.Vector2.move_towards_ip" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">moves the vector toward its target at a given distance.</span></div>
+<div class="line"><span class="signature">move_towards_ip(Vector2, float) -&gt; None</span></div>
+</div>
+<p><strong>Experimental:</strong> feature still in development available for testing and feedback. It may change.
+<a class="reference external" href="https://github.com/pygame/pygame/pull/2929">Please leave move_towards_ip feedback with authors</a></p>
+<p>Moves itself toward the given Vector at a given distance and does not
+overshoot past its target Vector.
+The first parameter determines the target Vector, while the second
+parameter determines the delta distance. If the distance is in the
+negatives, then it will move away from the target Vector.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 2.1.3.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.math.Vector2.lerp">
+<span class="sig-name descname"><span class="pre">lerp</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.math.Vector2.lerp" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">returns a linear interpolation to the given vector.</span></div>
+<div class="line"><span class="signature">lerp(Vector2, float) -&gt; Vector2</span></div>
+</div>
+<p>Returns a Vector which is a linear interpolation between self and the
+given Vector. The second parameter determines how far between self and
+other the result is going to be. It must be a value between <code class="docutils literal notranslate"><span class="pre">0</span></code> and <code class="docutils literal notranslate"><span class="pre">1</span></code>
+where <code class="docutils literal notranslate"><span class="pre">0</span></code> means self and <code class="docutils literal notranslate"><span class="pre">1</span></code> means other will be returned.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.math.Vector2.slerp">
+<span class="sig-name descname"><span class="pre">slerp</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.math.Vector2.slerp" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">returns a spherical interpolation to the given vector.</span></div>
+<div class="line"><span class="signature">slerp(Vector2, float) -&gt; Vector2</span></div>
+</div>
+<p>Calculates the spherical interpolation from self to the given Vector. The
+second argument - often called t - must be in the range <code class="docutils literal notranslate"><span class="pre">[-1,</span> <span class="pre">1]</span></code>. It
+parametrizes where - in between the two vectors - the result should be.
+If a negative value is given the interpolation will not take the
+complement of the shortest path.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.math.Vector2.elementwise">
+<span class="sig-name descname"><span class="pre">elementwise</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.math.Vector2.elementwise" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">The next operation will be performed elementwise.</span></div>
+<div class="line"><span class="signature">elementwise() -&gt; VectorElementwiseProxy</span></div>
+</div>
+<p>Applies the following operation to each element of the vector.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.math.Vector2.rotate">
+<span class="sig-name descname"><span class="pre">rotate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.math.Vector2.rotate" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">rotates a vector by a given angle in degrees.</span></div>
+<div class="line"><span class="signature">rotate(angle) -&gt; Vector2</span></div>
+</div>
+<p>Returns a vector which has the same length as self but is rotated
+counterclockwise by the given angle in degrees.
+(Note that due to pygame's inverted y coordinate system, the rotation
+will look clockwise if displayed).</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.math.Vector2.rotate_rad">
+<span class="sig-name descname"><span class="pre">rotate_rad</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.math.Vector2.rotate_rad" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">rotates a vector by a given angle in radians.</span></div>
+<div class="line"><span class="signature">rotate_rad(angle) -&gt; Vector2</span></div>
+</div>
+<p>Returns a vector which has the same length as self but is rotated
+counterclockwise by the given angle in radians.
+(Note that due to pygame's inverted y coordinate system, the rotation
+will look clockwise if displayed).</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 2.0.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.math.Vector2.rotate_ip">
+<span class="sig-name descname"><span class="pre">rotate_ip</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.math.Vector2.rotate_ip" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">rotates the vector by a given angle in degrees in place.</span></div>
+<div class="line"><span class="signature">rotate_ip(angle) -&gt; None</span></div>
+</div>
+<p>Rotates the vector counterclockwise by the given angle in degrees. The
+length of the vector is not changed.
+(Note that due to pygame's inverted y coordinate system, the rotation
+will look clockwise if displayed).</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.math.Vector2.rotate_ip_rad">
+<span class="sig-name descname"><span class="pre">rotate_ip_rad</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.math.Vector2.rotate_ip_rad" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">rotates the vector by a given angle in radians in place.</span></div>
+<div class="line"><span class="signature">rotate_ip_rad(angle) -&gt; None</span></div>
+</div>
+<p>DEPRECATED: Use rotate_rad_ip() instead.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 2.0.0.</span></p>
+</div>
+<div class="deprecated">
+<p><span class="versionmodified deprecated">Deprecated since pygame 2.1.1.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.math.Vector2.rotate_rad_ip">
+<span class="sig-name descname"><span class="pre">rotate_rad_ip</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.math.Vector2.rotate_rad_ip" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">rotates the vector by a given angle in radians in place.</span></div>
+<div class="line"><span class="signature">rotate_rad_ip(angle) -&gt; None</span></div>
+</div>
+<p>Rotates the vector counterclockwise by the given angle in radians. The
+length of the vector is not changed.
+(Note that due to pygame's inverted y coordinate system, the rotation
+will look clockwise if displayed).</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 2.1.1.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.math.Vector2.angle_to">
+<span class="sig-name descname"><span class="pre">angle_to</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.math.Vector2.angle_to" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">calculates the angle to a given vector in degrees.</span></div>
+<div class="line"><span class="signature">angle_to(Vector2) -&gt; float</span></div>
+</div>
+<p>Returns the angle from self to the passed <code class="docutils literal notranslate"><span class="pre">Vector2</span></code> that would rotate self
+to be aligned with the passed <code class="docutils literal notranslate"><span class="pre">Vector2</span></code> without crossing over the negative
+x-axis.</p>
+<figure class="align-default" id="id6">
+<img alt="angle_to image" src="../_images/angle_to.png" />
+<figcaption>
+<p><span class="caption-text">Example demonstrating the angle returned</span><a class="headerlink" href="#id6" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.math.Vector2.as_polar">
+<span class="sig-name descname"><span class="pre">as_polar</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.math.Vector2.as_polar" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">returns a tuple with radial distance and azimuthal angle.</span></div>
+<div class="line"><span class="signature">as_polar() -&gt; (r, phi)</span></div>
+</div>
+<p>Returns a tuple <code class="docutils literal notranslate"><span class="pre">(r,</span> <span class="pre">phi)</span></code> where r is the radial distance, and phi
+is the azimuthal angle.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.math.Vector2.from_polar">
+<span class="sig-name descname"><span class="pre">from_polar</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.math.Vector2.from_polar" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Creates a Vector2(x, y) or sets x and y from a polar coordinates tuple.</span></div>
+<div class="line"><span class="signature">Vector2.from_polar((r, phi)) -&gt; Vector2</span></div>
+<div class="line"><span class="signature">Vector2().from_polar((r, phi)) -&gt; None</span></div>
+</div>
+<p>If used from the class creates a Vector2(x,y), else sets x and y.
+The values of x and y are defined from a tuple <code class="docutils literal notranslate"><span class="pre">(r,</span> <span class="pre">phi)</span></code> where r
+is the radial distance, and phi is the azimuthal angle.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.math.Vector2.project">
+<span class="sig-name descname"><span class="pre">project</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.math.Vector2.project" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">projects a vector onto another.</span></div>
+<div class="line"><span class="signature">project(Vector2) -&gt; Vector2</span></div>
+</div>
+<p>Returns the projected vector. This is useful for collision detection in finding the components in a certain direction (e.g. in direction of the wall).
+For a more detailed explanation see <a class="reference external" href="https://en.wikipedia.org/wiki/Vector_projection">Wikipedia</a>.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 2.0.2.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.math.Vector2.copy">
+<span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.math.Vector2.copy" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Returns a copy of itself.</span></div>
+<div class="line"><span class="signature">copy() -&gt; Vector2</span></div>
+</div>
+<p>Returns a new Vector2 having the same dimensions.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 2.1.1.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.math.Vector2.clamp_magnitude">
+<span class="sig-name descname"><span class="pre">clamp_magnitude</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.math.Vector2.clamp_magnitude" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Returns a copy of a vector with the magnitude clamped between max_length and min_length.</span></div>
+<div class="line"><span class="signature">clamp_magnitude(max_length) -&gt; Vector2</span></div>
+<div class="line"><span class="signature">clamp_magnitude(min_length, max_length) -&gt; Vector2</span></div>
+</div>
+<p><strong>Experimental:</strong> feature still in development available for testing and feedback. It may change.
+<a class="reference external" href="https://github.com/pygame/pygame/pull/2990">Please leave clamp_magnitude feedback with authors</a></p>
+<p>Returns a new copy of a vector with the magnitude clamped between
+<code class="docutils literal notranslate"><span class="pre">max_length</span></code> and <code class="docutils literal notranslate"><span class="pre">min_length</span></code>. If only one argument is passed, it is
+taken to be the <code class="docutils literal notranslate"><span class="pre">max_length</span></code></p>
+<p>This function raises <code class="docutils literal notranslate"><span class="pre">ValueError</span></code> if <code class="docutils literal notranslate"><span class="pre">min_length</span></code> is greater than
+<code class="docutils literal notranslate"><span class="pre">max_length</span></code>, or if either of these values are negative.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 2.1.3.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.math.Vector2.clamp_magnitude_ip">
+<span class="sig-name descname"><span class="pre">clamp_magnitude_ip</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.math.Vector2.clamp_magnitude_ip" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Clamps the vector's magnitude between max_length and min_length</span></div>
+<div class="line"><span class="signature">clamp_magnitude_ip(max_length) -&gt; None</span></div>
+<div class="line"><span class="signature">clamp_magnitude_ip(min_length, max_length) -&gt; None</span></div>
+</div>
+<p><strong>Experimental:</strong> feature still in development available for testing and feedback. It may change.
+<a class="reference external" href="https://github.com/pygame/pygame/pull/2990">Please leave clamp_magnitude_ip feedback with authors</a></p>
+<p>Clamps the vector's magnitude between <code class="docutils literal notranslate"><span class="pre">max_length</span></code> and <code class="docutils literal notranslate"><span class="pre">min_length</span></code>.
+If only one argument is passed, it is taken to be the <code class="docutils literal notranslate"><span class="pre">max_length</span></code></p>
+<p>This function raises <code class="docutils literal notranslate"><span class="pre">ValueError</span></code> if <code class="docutils literal notranslate"><span class="pre">min_length</span></code> is greater than
+<code class="docutils literal notranslate"><span class="pre">max_length</span></code>, or if either of these values are negative.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 2.1.3.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.math.Vector2.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.math.Vector2.update" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Sets the coordinates of the vector.</span></div>
+<div class="line"><span class="signature">update() -&gt; None</span></div>
+<div class="line"><span class="signature">update(int) -&gt; None</span></div>
+<div class="line"><span class="signature">update(float) -&gt; None</span></div>
+<div class="line"><span class="signature">update(Vector2) -&gt; None</span></div>
+<div class="line"><span class="signature">update(x, y) -&gt; None</span></div>
+<div class="line"><span class="signature">update((x, y)) -&gt; None</span></div>
+</div>
+<p>Sets coordinates x and y in place.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 1.9.5.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py attribute definition">
+<dt class="sig sig-object py title" id="pygame.math.Vector2.epsilon">
+<span class="sig-name descname"><span class="pre">epsilon</span></span><a class="headerlink" href="#pygame.math.Vector2.epsilon" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Determines the tolerance of vector calculations.</span></div>
+</div>
+<p>Both Vector classes have a value named <code class="docutils literal notranslate"><span class="pre">epsilon</span></code> that defaults to <code class="docutils literal notranslate"><span class="pre">1e-6</span></code>.
+This value acts as a numerical margin in various methods to account for floating point
+arithmetic errors. Specifically, <code class="docutils literal notranslate"><span class="pre">epsilon</span></code> is used in the following places:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>comparing Vectors (<code class="docutils literal notranslate"><span class="pre">==</span></code> and <code class="docutils literal notranslate"><span class="pre">!=</span></code>)</p></li>
+<li><p>the <code class="docutils literal notranslate"><span class="pre">is_normalized</span></code> method (if the square of the length is within <code class="docutils literal notranslate"><span class="pre">epsilon</span></code> of 1, it's normalized)</p></li>
+<li><p>slerping (a Vector with a length of <code class="docutils literal notranslate"><span class="pre">&lt;epsilon</span></code> is considered a zero vector, and can't slerp with that)</p></li>
+<li><p>reflection (can't reflect over the zero vector)</p></li>
+<li><p>projection (can't project onto the zero vector)</p></li>
+<li><p>rotation (only used when rotating by a multiple of 90 degrees)</p></li>
+</ul>
+</div></blockquote>
+<p>While it's possible to change <code class="docutils literal notranslate"><span class="pre">epsilon</span></code> for a specific instance of a Vector, all the other Vectors
+will retain the default value. Changing <code class="docutils literal notranslate"><span class="pre">epsilon</span></code> on a specific instance however could lead to some
+asymmetric behavior where symmetry would be expected, such as</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">u</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Vector2</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">v</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Vector2</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">)</span>
+<span class="n">u</span><span class="o">.</span><span class="n">epsilon</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="c1"># don&#39;t set it nearly this large</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">u</span> <span class="o">==</span> <span class="n">v</span><span class="p">)</span> <span class="c1"># &gt;&gt; True</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">v</span> <span class="o">==</span> <span class="n">u</span><span class="p">)</span> <span class="c1"># &gt;&gt; False</span>
+</pre></div>
+</div>
+<p>You'll probably never have to change <code class="docutils literal notranslate"><span class="pre">epsilon</span></code> from the default value, but in rare situations you might
+find that either the margin is too large or too small, in which case changing <code class="docutils literal notranslate"><span class="pre">epsilon</span></code> slightly
+might help you out.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class definition">
+<dt class="sig sig-object py title" id="pygame.math.Vector3">
+<span class="sig-prename descclassname"><span class="pre">pygame.math.</span></span><span class="sig-name descname"><span class="pre">Vector3</span></span><a class="headerlink" href="#pygame.math.Vector3" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">a 3-Dimensional Vector</span></div>
+<div class="line"><span class="signature">Vector3() -&gt; Vector3(0, 0, 0)</span></div>
+<div class="line"><span class="signature">Vector3(int) -&gt; Vector3</span></div>
+<div class="line"><span class="signature">Vector3(float) -&gt; Vector3</span></div>
+<div class="line"><span class="signature">Vector3(Vector3) -&gt; Vector3</span></div>
+<div class="line"><span class="signature">Vector3(x, y, z) -&gt; Vector3</span></div>
+<div class="line"><span class="signature">Vector3((x, y, z)) -&gt; Vector3</span></div>
+</div>
+<table class="toc docutils align-default">
+<tbody>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="math.html#pygame.math.Vector3.dot">pygame.math.Vector3.dot</a></div>
+</td>
+<td>—</td>
+<td>calculates the dot- or scalar-product with the other vector</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="math.html#pygame.math.Vector3.cross">pygame.math.Vector3.cross</a></div>
+</td>
+<td>—</td>
+<td>calculates the cross- or vector-product</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="math.html#pygame.math.Vector3.magnitude">pygame.math.Vector3.magnitude</a></div>
+</td>
+<td>—</td>
+<td>returns the Euclidean magnitude of the vector.</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="math.html#pygame.math.Vector3.magnitude_squared">pygame.math.Vector3.magnitude_squared</a></div>
+</td>
+<td>—</td>
+<td>returns the squared Euclidean magnitude of the vector.</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="math.html#pygame.math.Vector3.length">pygame.math.Vector3.length</a></div>
+</td>
+<td>—</td>
+<td>returns the Euclidean length of the vector.</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="math.html#pygame.math.Vector3.length_squared">pygame.math.Vector3.length_squared</a></div>
+</td>
+<td>—</td>
+<td>returns the squared Euclidean length of the vector.</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="math.html#pygame.math.Vector3.normalize">pygame.math.Vector3.normalize</a></div>
+</td>
+<td>—</td>
+<td>returns a vector with the same direction but length 1.</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="math.html#pygame.math.Vector3.normalize_ip">pygame.math.Vector3.normalize_ip</a></div>
+</td>
+<td>—</td>
+<td>normalizes the vector in place so that its length is 1.</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="math.html#pygame.math.Vector3.is_normalized">pygame.math.Vector3.is_normalized</a></div>
+</td>
+<td>—</td>
+<td>tests if the vector is normalized i.e. has length == 1.</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="math.html#pygame.math.Vector3.scale_to_length">pygame.math.Vector3.scale_to_length</a></div>
+</td>
+<td>—</td>
+<td>scales the vector to a given length.</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="math.html#pygame.math.Vector3.reflect">pygame.math.Vector3.reflect</a></div>
+</td>
+<td>—</td>
+<td>returns a vector reflected of a given normal.</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="math.html#pygame.math.Vector3.reflect_ip">pygame.math.Vector3.reflect_ip</a></div>
+</td>
+<td>—</td>
+<td>reflect the vector of a given normal in place.</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="math.html#pygame.math.Vector3.distance_to">pygame.math.Vector3.distance_to</a></div>
+</td>
+<td>—</td>
+<td>calculates the Euclidean distance to a given vector.</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="math.html#pygame.math.Vector3.distance_squared_to">pygame.math.Vector3.distance_squared_to</a></div>
+</td>
+<td>—</td>
+<td>calculates the squared Euclidean distance to a given vector.</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="math.html#pygame.math.Vector3.move_towards">pygame.math.Vector3.move_towards</a></div>
+</td>
+<td>—</td>
+<td>returns a vector moved toward the target by a given distance.</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="math.html#pygame.math.Vector3.move_towards_ip">pygame.math.Vector3.move_towards_ip</a></div>
+</td>
+<td>—</td>
+<td>moves the vector toward its target at a given distance.</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="math.html#pygame.math.Vector3.lerp">pygame.math.Vector3.lerp</a></div>
+</td>
+<td>—</td>
+<td>returns a linear interpolation to the given vector.</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="math.html#pygame.math.Vector3.slerp">pygame.math.Vector3.slerp</a></div>
+</td>
+<td>—</td>
+<td>returns a spherical interpolation to the given vector.</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="math.html#pygame.math.Vector3.elementwise">pygame.math.Vector3.elementwise</a></div>
+</td>
+<td>—</td>
+<td>The next operation will be performed elementwise.</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="math.html#pygame.math.Vector3.rotate">pygame.math.Vector3.rotate</a></div>
+</td>
+<td>—</td>
+<td>rotates a vector by a given angle in degrees.</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="math.html#pygame.math.Vector3.rotate_rad">pygame.math.Vector3.rotate_rad</a></div>
+</td>
+<td>—</td>
+<td>rotates a vector by a given angle in radians.</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="math.html#pygame.math.Vector3.rotate_ip">pygame.math.Vector3.rotate_ip</a></div>
+</td>
+<td>—</td>
+<td>rotates the vector by a given angle in degrees in place.</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="math.html#pygame.math.Vector3.rotate_ip_rad">pygame.math.Vector3.rotate_ip_rad</a></div>
+</td>
+<td>—</td>
+<td>rotates the vector by a given angle in radians in place.</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="math.html#pygame.math.Vector3.rotate_rad_ip">pygame.math.Vector3.rotate_rad_ip</a></div>
+</td>
+<td>—</td>
+<td>rotates the vector by a given angle in radians in place.</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="math.html#pygame.math.Vector3.rotate_x">pygame.math.Vector3.rotate_x</a></div>
+</td>
+<td>—</td>
+<td>rotates a vector around the x-axis by the angle in degrees.</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="math.html#pygame.math.Vector3.rotate_x_rad">pygame.math.Vector3.rotate_x_rad</a></div>
+</td>
+<td>—</td>
+<td>rotates a vector around the x-axis by the angle in radians.</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="math.html#pygame.math.Vector3.rotate_x_ip">pygame.math.Vector3.rotate_x_ip</a></div>
+</td>
+<td>—</td>
+<td>rotates the vector around the x-axis by the angle in degrees in place.</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="math.html#pygame.math.Vector3.rotate_x_ip_rad">pygame.math.Vector3.rotate_x_ip_rad</a></div>
+</td>
+<td>—</td>
+<td>rotates the vector around the x-axis by the angle in radians in place.</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="math.html#pygame.math.Vector3.rotate_x_rad_ip">pygame.math.Vector3.rotate_x_rad_ip</a></div>
+</td>
+<td>—</td>
+<td>rotates the vector around the x-axis by the angle in radians in place.</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="math.html#pygame.math.Vector3.rotate_y">pygame.math.Vector3.rotate_y</a></div>
+</td>
+<td>—</td>
+<td>rotates a vector around the y-axis by the angle in degrees.</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="math.html#pygame.math.Vector3.rotate_y_rad">pygame.math.Vector3.rotate_y_rad</a></div>
+</td>
+<td>—</td>
+<td>rotates a vector around the y-axis by the angle in radians.</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="math.html#pygame.math.Vector3.rotate_y_ip">pygame.math.Vector3.rotate_y_ip</a></div>
+</td>
+<td>—</td>
+<td>rotates the vector around the y-axis by the angle in degrees in place.</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="math.html#pygame.math.Vector3.rotate_y_ip_rad">pygame.math.Vector3.rotate_y_ip_rad</a></div>
+</td>
+<td>—</td>
+<td>rotates the vector around the y-axis by the angle in radians in place.</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="math.html#pygame.math.Vector3.rotate_y_rad_ip">pygame.math.Vector3.rotate_y_rad_ip</a></div>
+</td>
+<td>—</td>
+<td>rotates the vector around the y-axis by the angle in radians in place.</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="math.html#pygame.math.Vector3.rotate_z">pygame.math.Vector3.rotate_z</a></div>
+</td>
+<td>—</td>
+<td>rotates a vector around the z-axis by the angle in degrees.</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="math.html#pygame.math.Vector3.rotate_z_rad">pygame.math.Vector3.rotate_z_rad</a></div>
+</td>
+<td>—</td>
+<td>rotates a vector around the z-axis by the angle in radians.</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="math.html#pygame.math.Vector3.rotate_z_ip">pygame.math.Vector3.rotate_z_ip</a></div>
+</td>
+<td>—</td>
+<td>rotates the vector around the z-axis by the angle in degrees in place.</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="math.html#pygame.math.Vector3.rotate_z_ip_rad">pygame.math.Vector3.rotate_z_ip_rad</a></div>
+</td>
+<td>—</td>
+<td>rotates the vector around the z-axis by the angle in radians in place.</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="math.html#pygame.math.Vector3.rotate_z_rad_ip">pygame.math.Vector3.rotate_z_rad_ip</a></div>
+</td>
+<td>—</td>
+<td>rotates the vector around the z-axis by the angle in radians in place.</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="math.html#pygame.math.Vector3.angle_to">pygame.math.Vector3.angle_to</a></div>
+</td>
+<td>—</td>
+<td>calculates the angle to a given vector in degrees.</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="math.html#pygame.math.Vector3.as_spherical">pygame.math.Vector3.as_spherical</a></div>
+</td>
+<td>—</td>
+<td>returns a tuple with radial distance, inclination and azimuthal angle.</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="math.html#pygame.math.Vector3.from_spherical">pygame.math.Vector3.from_spherical</a></div>
+</td>
+<td>—</td>
+<td>Creates a Vector3(x, y, z) or sets x, y and z from a spherical coordinates 3-tuple.</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="math.html#pygame.math.Vector3.project">pygame.math.Vector3.project</a></div>
+</td>
+<td>—</td>
+<td>projects a vector onto another.</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="math.html#pygame.math.Vector3.copy">pygame.math.Vector3.copy</a></div>
+</td>
+<td>—</td>
+<td>Returns a copy of itself.</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="math.html#pygame.math.Vector3.clamp_magnitude">pygame.math.Vector3.clamp_magnitude</a></div>
+</td>
+<td>—</td>
+<td>Returns a copy of a vector with the magnitude clamped between max_length and min_length.</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="math.html#pygame.math.Vector3.clamp_magnitude_ip">pygame.math.Vector3.clamp_magnitude_ip</a></div>
+</td>
+<td>—</td>
+<td>Clamps the vector's magnitude between max_length and min_length</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="math.html#pygame.math.Vector3.update">pygame.math.Vector3.update</a></div>
+</td>
+<td>—</td>
+<td>Sets the coordinates of the vector.</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="math.html#pygame.math.Vector3.epsilon">pygame.math.Vector3.epsilon</a></div>
+</td>
+<td>—</td>
+<td>Determines the tolerance of vector calculations.</td>
+</tr>
+</tbody>
+</table>
+<p>Some general information about the Vector3 class.</p>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in pygame 2.1.3: </span>Inherited methods of vector subclasses now correctly return an instance of the
+subclass instead of the superclass</p>
+</div>
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.math.Vector3.dot">
+<span class="sig-name descname"><span class="pre">dot</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.math.Vector3.dot" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">calculates the dot- or scalar-product with the other vector</span></div>
+<div class="line"><span class="signature">dot(Vector3) -&gt; float</span></div>
+</div>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.math.Vector3.cross">
+<span class="sig-name descname"><span class="pre">cross</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.math.Vector3.cross" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">calculates the cross- or vector-product</span></div>
+<div class="line"><span class="signature">cross(Vector3) -&gt; Vector3</span></div>
+</div>
+<p>calculates the cross-product.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.math.Vector3.magnitude">
+<span class="sig-name descname"><span class="pre">magnitude</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.math.Vector3.magnitude" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">returns the Euclidean magnitude of the vector.</span></div>
+<div class="line"><span class="signature">magnitude() -&gt; float</span></div>
+</div>
+<p>calculates the magnitude of the vector which follows from the
+theorem: <code class="docutils literal notranslate"><span class="pre">vec.magnitude()</span> <span class="pre">==</span> <span class="pre">math.sqrt(vec.x**2</span> <span class="pre">+</span> <span class="pre">vec.y**2</span> <span class="pre">+</span> <span class="pre">vec.z**2)</span></code></p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.math.Vector3.magnitude_squared">
+<span class="sig-name descname"><span class="pre">magnitude_squared</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.math.Vector3.magnitude_squared" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">returns the squared Euclidean magnitude of the vector.</span></div>
+<div class="line"><span class="signature">magnitude_squared() -&gt; float</span></div>
+</div>
+<p>calculates the magnitude of the vector which follows from the
+theorem:
+<code class="docutils literal notranslate"><span class="pre">vec.magnitude_squared()</span> <span class="pre">==</span> <span class="pre">vec.x**2</span> <span class="pre">+</span> <span class="pre">vec.y**2</span> <span class="pre">+</span> <span class="pre">vec.z**2</span></code>.
+This is faster than <code class="docutils literal notranslate"><span class="pre">vec.magnitude()</span></code> because it avoids the
+square root.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.math.Vector3.length">
+<span class="sig-name descname"><span class="pre">length</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.math.Vector3.length" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">returns the Euclidean length of the vector.</span></div>
+<div class="line"><span class="signature">length() -&gt; float</span></div>
+</div>
+<p>calculates the Euclidean length of the vector which follows from the
+Pythagorean theorem:
+<code class="docutils literal notranslate"><span class="pre">vec.length()</span> <span class="pre">==</span> <span class="pre">math.sqrt(vec.x**2</span> <span class="pre">+</span> <span class="pre">vec.y**2</span> <span class="pre">+</span> <span class="pre">vec.z**2)</span></code></p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.math.Vector3.length_squared">
+<span class="sig-name descname"><span class="pre">length_squared</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.math.Vector3.length_squared" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">returns the squared Euclidean length of the vector.</span></div>
+<div class="line"><span class="signature">length_squared() -&gt; float</span></div>
+</div>
+<p>calculates the Euclidean length of the vector which follows from the
+Pythagorean theorem:
+<code class="docutils literal notranslate"><span class="pre">vec.length_squared()</span> <span class="pre">==</span> <span class="pre">vec.x**2</span> <span class="pre">+</span> <span class="pre">vec.y**2</span> <span class="pre">+</span> <span class="pre">vec.z**2</span></code>.
+This is faster than <code class="docutils literal notranslate"><span class="pre">vec.length()</span></code> because it avoids the square root.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.math.Vector3.normalize">
+<span class="sig-name descname"><span class="pre">normalize</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.math.Vector3.normalize" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">returns a vector with the same direction but length 1.</span></div>
+<div class="line"><span class="signature">normalize() -&gt; Vector3</span></div>
+</div>
+<p>Returns a new vector that has <code class="docutils literal notranslate"><span class="pre">length</span></code> equal to <code class="docutils literal notranslate"><span class="pre">1</span></code> and the same
+direction as self.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.math.Vector3.normalize_ip">
+<span class="sig-name descname"><span class="pre">normalize_ip</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.math.Vector3.normalize_ip" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">normalizes the vector in place so that its length is 1.</span></div>
+<div class="line"><span class="signature">normalize_ip() -&gt; None</span></div>
+</div>
+<p>Normalizes the vector so that it has <code class="docutils literal notranslate"><span class="pre">length</span></code> equal to <code class="docutils literal notranslate"><span class="pre">1</span></code>. The
+direction of the vector is not changed.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.math.Vector3.is_normalized">
+<span class="sig-name descname"><span class="pre">is_normalized</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.math.Vector3.is_normalized" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">tests if the vector is normalized i.e. has length == 1.</span></div>
+<div class="line"><span class="signature">is_normalized() -&gt; Bool</span></div>
+</div>
+<p>Returns True if the vector has <code class="docutils literal notranslate"><span class="pre">length</span></code> equal to <code class="docutils literal notranslate"><span class="pre">1</span></code>. Otherwise it
+returns <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.math.Vector3.scale_to_length">
+<span class="sig-name descname"><span class="pre">scale_to_length</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.math.Vector3.scale_to_length" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">scales the vector to a given length.</span></div>
+<div class="line"><span class="signature">scale_to_length(float) -&gt; None</span></div>
+</div>
+<p>Scales the vector so that it has the given length. The direction of the
+vector is not changed. You can also scale to length <code class="docutils literal notranslate"><span class="pre">0</span></code>. If the vector
+is the zero vector (i.e. has length <code class="docutils literal notranslate"><span class="pre">0</span></code> thus no direction) a
+<code class="docutils literal notranslate"><span class="pre">ValueError</span></code> is raised.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.math.Vector3.reflect">
+<span class="sig-name descname"><span class="pre">reflect</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.math.Vector3.reflect" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">returns a vector reflected of a given normal.</span></div>
+<div class="line"><span class="signature">reflect(Vector3) -&gt; Vector3</span></div>
+</div>
+<p>Returns a new vector that points in the direction as if self would bounce
+of a surface characterized by the given surface normal. The length of the
+new vector is the same as self's.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.math.Vector3.reflect_ip">
+<span class="sig-name descname"><span class="pre">reflect_ip</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.math.Vector3.reflect_ip" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">reflect the vector of a given normal in place.</span></div>
+<div class="line"><span class="signature">reflect_ip(Vector3) -&gt; None</span></div>
+</div>
+<p>Changes the direction of self as if it would have been reflected of a
+surface with the given surface normal.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.math.Vector3.distance_to">
+<span class="sig-name descname"><span class="pre">distance_to</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.math.Vector3.distance_to" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">calculates the Euclidean distance to a given vector.</span></div>
+<div class="line"><span class="signature">distance_to(Vector3) -&gt; float</span></div>
+</div>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.math.Vector3.distance_squared_to">
+<span class="sig-name descname"><span class="pre">distance_squared_to</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.math.Vector3.distance_squared_to" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">calculates the squared Euclidean distance to a given vector.</span></div>
+<div class="line"><span class="signature">distance_squared_to(Vector3) -&gt; float</span></div>
+</div>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.math.Vector3.move_towards">
+<span class="sig-name descname"><span class="pre">move_towards</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.math.Vector3.move_towards" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">returns a vector moved toward the target by a given distance.</span></div>
+<div class="line"><span class="signature">move_towards(Vector3, float) -&gt; Vector3</span></div>
+</div>
+<p><strong>Experimental:</strong> feature still in development available for testing and feedback. It may change.
+<a class="reference external" href="https://github.com/pygame/pygame/pull/2929">Please leave move_towards feedback with authors</a></p>
+<p>Returns a Vector which is moved towards the given Vector by a given
+distance and does not overshoot past its target Vector.
+The first parameter determines the target Vector, while the second
+parameter determines the delta distance. If the distance is in the
+negatives, then it will move away from the target Vector.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 2.1.3.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.math.Vector3.move_towards_ip">
+<span class="sig-name descname"><span class="pre">move_towards_ip</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.math.Vector3.move_towards_ip" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">moves the vector toward its target at a given distance.</span></div>
+<div class="line"><span class="signature">move_towards_ip(Vector3, float) -&gt; None</span></div>
+</div>
+<p><strong>Experimental:</strong> feature still in development available for testing and feedback. It may change.
+<a class="reference external" href="https://github.com/pygame/pygame/pull/2929">Please leave move_towards_ip feedback with authors</a></p>
+<p>Moves itself toward the given Vector at a given distance and does not
+overshoot past its target Vector.
+The first parameter determines the target Vector, while the second
+parameter determines the delta distance. If the distance is in the
+negatives, then it will move away from the target Vector.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 2.1.3.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.math.Vector3.lerp">
+<span class="sig-name descname"><span class="pre">lerp</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.math.Vector3.lerp" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">returns a linear interpolation to the given vector.</span></div>
+<div class="line"><span class="signature">lerp(Vector3, float) -&gt; Vector3</span></div>
+</div>
+<p>Returns a Vector which is a linear interpolation between self and the
+given Vector. The second parameter determines how far between self an
+other the result is going to be. It must be a value between <code class="docutils literal notranslate"><span class="pre">0</span></code> and
+<code class="docutils literal notranslate"><span class="pre">1</span></code>, where <code class="docutils literal notranslate"><span class="pre">0</span></code> means self and <code class="docutils literal notranslate"><span class="pre">1</span></code> means other will be returned.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.math.Vector3.slerp">
+<span class="sig-name descname"><span class="pre">slerp</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.math.Vector3.slerp" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">returns a spherical interpolation to the given vector.</span></div>
+<div class="line"><span class="signature">slerp(Vector3, float) -&gt; Vector3</span></div>
+</div>
+<p>Calculates the spherical interpolation from self to the given Vector. The
+second argument - often called t - must be in the range <code class="docutils literal notranslate"><span class="pre">[-1,</span> <span class="pre">1]</span></code>. It
+parametrizes where - in between the two vectors - the result should be.
+If a negative value is given the interpolation will not take the
+complement of the shortest path.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.math.Vector3.elementwise">
+<span class="sig-name descname"><span class="pre">elementwise</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.math.Vector3.elementwise" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">The next operation will be performed elementwise.</span></div>
+<div class="line"><span class="signature">elementwise() -&gt; VectorElementwiseProxy</span></div>
+</div>
+<p>Applies the following operation to each element of the vector.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.math.Vector3.rotate">
+<span class="sig-name descname"><span class="pre">rotate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.math.Vector3.rotate" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">rotates a vector by a given angle in degrees.</span></div>
+<div class="line"><span class="signature">rotate(angle, Vector3) -&gt; Vector3</span></div>
+</div>
+<p>Returns a vector which has the same length as self but is rotated
+counterclockwise by the given angle in degrees around the given axis.
+(Note that due to pygame's inverted y coordinate system, the rotation
+will look clockwise if displayed).</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.math.Vector3.rotate_rad">
+<span class="sig-name descname"><span class="pre">rotate_rad</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.math.Vector3.rotate_rad" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">rotates a vector by a given angle in radians.</span></div>
+<div class="line"><span class="signature">rotate_rad(angle, Vector3) -&gt; Vector3</span></div>
+</div>
+<p>Returns a vector which has the same length as self but is rotated
+counterclockwise by the given angle in radians around the given axis.
+(Note that due to pygame's inverted y coordinate system, the rotation
+will look clockwise if displayed).</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 2.0.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.math.Vector3.rotate_ip">
+<span class="sig-name descname"><span class="pre">rotate_ip</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.math.Vector3.rotate_ip" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">rotates the vector by a given angle in degrees in place.</span></div>
+<div class="line"><span class="signature">rotate_ip(angle, Vector3) -&gt; None</span></div>
+</div>
+<p>Rotates the vector counterclockwise around the given axis by the given
+angle in degrees. The length of the vector is not changed.
+(Note that due to pygame's inverted y coordinate system, the rotation
+will look clockwise if displayed).</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.math.Vector3.rotate_ip_rad">
+<span class="sig-name descname"><span class="pre">rotate_ip_rad</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.math.Vector3.rotate_ip_rad" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">rotates the vector by a given angle in radians in place.</span></div>
+<div class="line"><span class="signature">rotate_ip_rad(angle, Vector3) -&gt; None</span></div>
+</div>
+<p>DEPRECATED: Use rotate_rad_ip() instead.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 2.0.0.</span></p>
+</div>
+<div class="deprecated">
+<p><span class="versionmodified deprecated">Deprecated since pygame 2.1.1.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.math.Vector3.rotate_rad_ip">
+<span class="sig-name descname"><span class="pre">rotate_rad_ip</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.math.Vector3.rotate_rad_ip" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">rotates the vector by a given angle in radians in place.</span></div>
+<div class="line"><span class="signature">rotate_rad_ip(angle, Vector3) -&gt; None</span></div>
+</div>
+<p>Rotates the vector counterclockwise around the given axis by the given
+angle in radians. The length of the vector is not changed.
+(Note that due to pygame's inverted y coordinate system, the rotation
+will look clockwise if displayed).</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 2.1.1.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.math.Vector3.rotate_x">
+<span class="sig-name descname"><span class="pre">rotate_x</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.math.Vector3.rotate_x" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">rotates a vector around the x-axis by the angle in degrees.</span></div>
+<div class="line"><span class="signature">rotate_x(angle) -&gt; Vector3</span></div>
+</div>
+<p>Returns a vector which has the same length as self but is rotated
+counterclockwise around the x-axis by the given angle in degrees.
+(Note that due to pygame's inverted y coordinate system, the rotation
+will look clockwise if displayed).</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.math.Vector3.rotate_x_rad">
+<span class="sig-name descname"><span class="pre">rotate_x_rad</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.math.Vector3.rotate_x_rad" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">rotates a vector around the x-axis by the angle in radians.</span></div>
+<div class="line"><span class="signature">rotate_x_rad(angle) -&gt; Vector3</span></div>
+</div>
+<p>Returns a vector which has the same length as self but is rotated
+counterclockwise around the x-axis by the given angle in radians.
+(Note that due to pygame's inverted y coordinate system, the rotation
+will look clockwise if displayed).</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 2.0.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.math.Vector3.rotate_x_ip">
+<span class="sig-name descname"><span class="pre">rotate_x_ip</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.math.Vector3.rotate_x_ip" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">rotates the vector around the x-axis by the angle in degrees in place.</span></div>
+<div class="line"><span class="signature">rotate_x_ip(angle) -&gt; None</span></div>
+</div>
+<p>Rotates the vector counterclockwise around the x-axis by the given angle
+in degrees. The length of the vector is not changed.
+(Note that due to pygame's inverted y coordinate system, the rotation
+will look clockwise if displayed).</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.math.Vector3.rotate_x_ip_rad">
+<span class="sig-name descname"><span class="pre">rotate_x_ip_rad</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.math.Vector3.rotate_x_ip_rad" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">rotates the vector around the x-axis by the angle in radians in place.</span></div>
+<div class="line"><span class="signature">rotate_x_ip_rad(angle) -&gt; None</span></div>
+</div>
+<p>DEPRECATED: Use rotate_x_rad_ip() instead.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 2.0.0.</span></p>
+</div>
+<div class="deprecated">
+<p><span class="versionmodified deprecated">Deprecated since pygame 2.1.1.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.math.Vector3.rotate_x_rad_ip">
+<span class="sig-name descname"><span class="pre">rotate_x_rad_ip</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.math.Vector3.rotate_x_rad_ip" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">rotates the vector around the x-axis by the angle in radians in place.</span></div>
+<div class="line"><span class="signature">rotate_x_rad_ip(angle) -&gt; None</span></div>
+</div>
+<p>Rotates the vector counterclockwise around the x-axis by the given angle
+in radians. The length of the vector is not changed.
+(Note that due to pygame's inverted y coordinate system, the rotation
+will look clockwise if displayed).</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 2.1.1.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.math.Vector3.rotate_y">
+<span class="sig-name descname"><span class="pre">rotate_y</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.math.Vector3.rotate_y" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">rotates a vector around the y-axis by the angle in degrees.</span></div>
+<div class="line"><span class="signature">rotate_y(angle) -&gt; Vector3</span></div>
+</div>
+<p>Returns a vector which has the same length as self but is rotated
+counterclockwise around the y-axis by the given angle in degrees.
+(Note that due to pygame's inverted y coordinate system, the rotation
+will look clockwise if displayed).</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.math.Vector3.rotate_y_rad">
+<span class="sig-name descname"><span class="pre">rotate_y_rad</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.math.Vector3.rotate_y_rad" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">rotates a vector around the y-axis by the angle in radians.</span></div>
+<div class="line"><span class="signature">rotate_y_rad(angle) -&gt; Vector3</span></div>
+</div>
+<p>Returns a vector which has the same length as self but is rotated
+counterclockwise around the y-axis by the given angle in radians.
+(Note that due to pygame's inverted y coordinate system, the rotation
+will look clockwise if displayed).</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 2.0.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.math.Vector3.rotate_y_ip">
+<span class="sig-name descname"><span class="pre">rotate_y_ip</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.math.Vector3.rotate_y_ip" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">rotates the vector around the y-axis by the angle in degrees in place.</span></div>
+<div class="line"><span class="signature">rotate_y_ip(angle) -&gt; None</span></div>
+</div>
+<p>Rotates the vector counterclockwise around the y-axis by the given angle
+in degrees. The length of the vector is not changed.
+(Note that due to pygame's inverted y coordinate system, the rotation
+will look clockwise if displayed).</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.math.Vector3.rotate_y_ip_rad">
+<span class="sig-name descname"><span class="pre">rotate_y_ip_rad</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.math.Vector3.rotate_y_ip_rad" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">rotates the vector around the y-axis by the angle in radians in place.</span></div>
+<div class="line"><span class="signature">rotate_y_ip_rad(angle) -&gt; None</span></div>
+</div>
+<p>DEPRECATED: Use rotate_y_rad_ip() instead.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 2.0.0.</span></p>
+</div>
+<div class="deprecated">
+<p><span class="versionmodified deprecated">Deprecated since pygame 2.1.1.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.math.Vector3.rotate_y_rad_ip">
+<span class="sig-name descname"><span class="pre">rotate_y_rad_ip</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.math.Vector3.rotate_y_rad_ip" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">rotates the vector around the y-axis by the angle in radians in place.</span></div>
+<div class="line"><span class="signature">rotate_y_rad_ip(angle) -&gt; None</span></div>
+</div>
+<p>Rotates the vector counterclockwise around the y-axis by the given angle
+in radians. The length of the vector is not changed.
+(Note that due to pygame's inverted y coordinate system, the rotation
+will look clockwise if displayed).</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 2.1.1.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.math.Vector3.rotate_z">
+<span class="sig-name descname"><span class="pre">rotate_z</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.math.Vector3.rotate_z" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">rotates a vector around the z-axis by the angle in degrees.</span></div>
+<div class="line"><span class="signature">rotate_z(angle) -&gt; Vector3</span></div>
+</div>
+<p>Returns a vector which has the same length as self but is rotated
+counterclockwise around the z-axis by the given angle in degrees.
+(Note that due to pygame's inverted y coordinate system, the rotation
+will look clockwise if displayed).</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.math.Vector3.rotate_z_rad">
+<span class="sig-name descname"><span class="pre">rotate_z_rad</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.math.Vector3.rotate_z_rad" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">rotates a vector around the z-axis by the angle in radians.</span></div>
+<div class="line"><span class="signature">rotate_z_rad(angle) -&gt; Vector3</span></div>
+</div>
+<p>Returns a vector which has the same length as self but is rotated
+counterclockwise around the z-axis by the given angle in radians.
+(Note that due to pygame's inverted y coordinate system, the rotation
+will look clockwise if displayed).</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 2.0.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.math.Vector3.rotate_z_ip">
+<span class="sig-name descname"><span class="pre">rotate_z_ip</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.math.Vector3.rotate_z_ip" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">rotates the vector around the z-axis by the angle in degrees in place.</span></div>
+<div class="line"><span class="signature">rotate_z_ip(angle) -&gt; None</span></div>
+</div>
+<p>Rotates the vector counterclockwise around the z-axis by the given angle
+in degrees. The length of the vector is not changed.
+(Note that due to pygame's inverted y coordinate system, the rotation
+will look clockwise if displayed).</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.math.Vector3.rotate_z_ip_rad">
+<span class="sig-name descname"><span class="pre">rotate_z_ip_rad</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.math.Vector3.rotate_z_ip_rad" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">rotates the vector around the z-axis by the angle in radians in place.</span></div>
+<div class="line"><span class="signature">rotate_z_ip_rad(angle) -&gt; None</span></div>
+</div>
+<p>DEPRECATED: Use rotate_z_rad_ip() instead.</p>
+<div class="deprecated">
+<p><span class="versionmodified deprecated">Deprecated since pygame 2.1.1.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.math.Vector3.rotate_z_rad_ip">
+<span class="sig-name descname"><span class="pre">rotate_z_rad_ip</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.math.Vector3.rotate_z_rad_ip" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">rotates the vector around the z-axis by the angle in radians in place.</span></div>
+<div class="line"><span class="signature">rotate_z_rad_ip(angle) -&gt; None</span></div>
+</div>
+<p>Rotates the vector counterclockwise around the z-axis by the given angle
+in radians. The length of the vector is not changed.
+(Note that due to pygame's inverted y coordinate system, the rotation
+will look clockwise if displayed).</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 2.1.1.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.math.Vector3.angle_to">
+<span class="sig-name descname"><span class="pre">angle_to</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.math.Vector3.angle_to" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">calculates the angle to a given vector in degrees.</span></div>
+<div class="line"><span class="signature">angle_to(Vector3) -&gt; float</span></div>
+</div>
+<p>Returns the angle between self and the given vector.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.math.Vector3.as_spherical">
+<span class="sig-name descname"><span class="pre">as_spherical</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.math.Vector3.as_spherical" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">returns a tuple with radial distance, inclination and azimuthal angle.</span></div>
+<div class="line"><span class="signature">as_spherical() -&gt; (r, theta, phi)</span></div>
+</div>
+<p>Returns a tuple <code class="docutils literal notranslate"><span class="pre">(r,</span> <span class="pre">theta,</span> <span class="pre">phi)</span></code> where r is the radial distance, theta is
+the inclination angle and phi is the azimuthal angle.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.math.Vector3.from_spherical">
+<span class="sig-name descname"><span class="pre">from_spherical</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.math.Vector3.from_spherical" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Creates a Vector3(x, y, z) or sets x, y and z from a spherical coordinates 3-tuple.</span></div>
+<div class="line"><span class="signature">Vector3.from_spherical((r, theta, phi)) -&gt; Vector3</span></div>
+<div class="line"><span class="signature">Vector3().from_spherical((r, theta, phi)) -&gt; None</span></div>
+</div>
+<p>If used from the class creates a Vector3(x, y, z), else sets x, y, and z.
+The values of x, y, and z are from a tuple <code class="docutils literal notranslate"><span class="pre">(r,</span> <span class="pre">theta,</span> <span class="pre">phi)</span></code> where r is the radial
+distance, theta is the inclination angle and phi is the azimuthal angle.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.math.Vector3.project">
+<span class="sig-name descname"><span class="pre">project</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.math.Vector3.project" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">projects a vector onto another.</span></div>
+<div class="line"><span class="signature">project(Vector3) -&gt; Vector3</span></div>
+</div>
+<p>Returns the projected vector. This is useful for collision detection in finding the components in a certain direction (e.g. in direction of the wall).
+For a more detailed explanation see <a class="reference external" href="https://en.wikipedia.org/wiki/Vector_projection">Wikipedia</a>.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 2.0.2.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.math.Vector3.copy">
+<span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.math.Vector3.copy" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Returns a copy of itself.</span></div>
+<div class="line"><span class="signature">copy() -&gt; Vector3</span></div>
+</div>
+<p>Returns a new Vector3 having the same dimensions.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 2.1.1.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.math.Vector3.clamp_magnitude">
+<span class="sig-name descname"><span class="pre">clamp_magnitude</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.math.Vector3.clamp_magnitude" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Returns a copy of a vector with the magnitude clamped between max_length and min_length.</span></div>
+<div class="line"><span class="signature">clamp_magnitude(max_length) -&gt; Vector3</span></div>
+<div class="line"><span class="signature">clamp_magnitude(min_length, max_length) -&gt; Vector3</span></div>
+</div>
+<p><strong>Experimental:</strong> feature still in development available for testing and feedback. It may change.
+<a class="reference external" href="https://github.com/pygame/pygame/pull/2990">Please leave clamp_magnitude feedback with authors</a></p>
+<p>Returns a new copy of a vector with the magnitude clamped between
+<code class="docutils literal notranslate"><span class="pre">max_length</span></code> and <code class="docutils literal notranslate"><span class="pre">min_length</span></code>. If only one argument is passed, it is
+taken to be the <code class="docutils literal notranslate"><span class="pre">max_length</span></code></p>
+<p>This function raises <code class="docutils literal notranslate"><span class="pre">ValueError</span></code> if <code class="docutils literal notranslate"><span class="pre">min_length</span></code> is greater than
+<code class="docutils literal notranslate"><span class="pre">max_length</span></code>, or if either of these values are negative.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 2.1.3.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.math.Vector3.clamp_magnitude_ip">
+<span class="sig-name descname"><span class="pre">clamp_magnitude_ip</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.math.Vector3.clamp_magnitude_ip" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Clamps the vector's magnitude between max_length and min_length</span></div>
+<div class="line"><span class="signature">clamp_magnitude_ip(max_length) -&gt; None</span></div>
+<div class="line"><span class="signature">clamp_magnitude_ip(min_length, max_length) -&gt; None</span></div>
+</div>
+<p><strong>Experimental:</strong> feature still in development available for testing and feedback. It may change.
+<a class="reference external" href="https://github.com/pygame/pygame/pull/2990">Please leave clamp_magnitude_ip feedback with authors</a></p>
+<p>Clamps the vector's magnitude between <code class="docutils literal notranslate"><span class="pre">max_length</span></code> and <code class="docutils literal notranslate"><span class="pre">min_length</span></code>.
+If only one argument is passed, it is taken to be the <code class="docutils literal notranslate"><span class="pre">max_length</span></code></p>
+<p>This function raises <code class="docutils literal notranslate"><span class="pre">ValueError</span></code> if <code class="docutils literal notranslate"><span class="pre">min_length</span></code> is greater than
+<code class="docutils literal notranslate"><span class="pre">max_length</span></code>, or if either of these values are negative.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 2.1.3.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.math.Vector3.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.math.Vector3.update" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Sets the coordinates of the vector.</span></div>
+<div class="line"><span class="signature">update() -&gt; None</span></div>
+<div class="line"><span class="signature">update(int) -&gt; None</span></div>
+<div class="line"><span class="signature">update(float) -&gt; None</span></div>
+<div class="line"><span class="signature">update(Vector3) -&gt; None</span></div>
+<div class="line"><span class="signature">update(x, y, z) -&gt; None</span></div>
+<div class="line"><span class="signature">update((x, y, z)) -&gt; None</span></div>
+</div>
+<p>Sets coordinates x, y, and z in place.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 1.9.5.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py attribute definition">
+<dt class="sig sig-object py title" id="pygame.math.Vector3.epsilon">
+<span class="sig-name descname"><span class="pre">epsilon</span></span><a class="headerlink" href="#pygame.math.Vector3.epsilon" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Determines the tolerance of vector calculations.</span></div>
+</div>
+<p>With lengths within this number, vectors are considered equal. For more information see <a class="tooltip reference internal" href="#pygame.math.Vector2.epsilon" title=""><code class="xref py py-attr docutils literal notranslate"><span class="pre">pygame.math.Vector2.epsilon</span></code><span class="tooltip-content">Determines the tolerance of vector calculations.</span></a></p>
+</dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+<br /><br />
+<hr />
+<a href="https://github.com/pygame/pygame/edit/main/docs/reST/ref/math.rst" rel="nofollow">Edit on GitHub</a>
+            <div class="clearer"></div>
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="midi.html" title="pygame.midi"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="mask.html" title="pygame.mask"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">pygame v2.5.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href=""><code class="xref py py-mod docutils literal notranslate"><span class="pre">pygame.math</span></code></a></li>
+    <script type="text/javascript" src="https://www.pygame.org/comment/jquery.plugin.docscomments.js"></script>
+
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2000-2023, pygame developers.
+    </div>
+  </body>
+</html>

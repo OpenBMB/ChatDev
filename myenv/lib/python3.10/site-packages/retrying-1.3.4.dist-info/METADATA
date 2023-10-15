@@ -1,0 +1,217 @@
+Metadata-Version: 2.1
+Name: retrying
+Version: 1.3.4
+Summary: Retrying
+Home-page: https://github.com/groodt/retrying
+Author: Greg Roodt
+License: Apache 2.0
+Keywords: decorator decorators retry retrying exception exponential backoff
+Classifier: Intended Audience :: Developers
+Classifier: Natural Language :: English
+Classifier: License :: OSI Approved :: Apache Software License
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3 :: Only
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: Implementation :: CPython
+Classifier: Topic :: Internet
+Classifier: Topic :: Utilities
+License-File: LICENSE
+License-File: NOTICE
+License-File: AUTHORS.rst
+Requires-Dist: six (>=1.7.0)
+
+Retrying
+=========================
+Retrying is an Apache 2.0 licensed general-purpose retrying library, written in
+Python, to simplify the task of adding retry behavior to just about anything.
+
+
+The simplest use case is retrying a flaky function whenever an Exception occurs
+until a value is returned.
+
+.. code-block:: python
+
+    import random
+    from retrying import retry
+
+    @retry
+    def do_something_unreliable():
+        if random.randint(0, 10) > 1:
+            raise IOError("Broken sauce, everything is hosed!!!111one")
+        else:
+            return "Awesome sauce!"
+
+    print do_something_unreliable()
+
+
+Features
+--------
+
+- Generic Decorator API
+- Specify stop condition (i.e. limit by number of attempts)
+- Specify wait condition (i.e. exponential backoff sleeping between attempts)
+- Customize retrying on Exceptions
+- Customize retrying on expected returned result
+
+
+Examples
+----------
+
+As you saw above, the default behavior is to retry forever without waiting.
+
+.. code-block:: python
+
+    @retry
+    def never_give_up_never_surrender():
+        print "Retry forever ignoring Exceptions, don't wait between retries"
+
+
+Let's be a little less persistent and set some boundaries, such as the number of attempts before giving up.
+
+.. code-block:: python
+
+    @retry(stop_max_attempt_number=7)
+    def stop_after_7_attempts():
+        print "Stopping after 7 attempts"
+
+We don't have all day, so let's set a boundary for how long we should be retrying stuff.
+
+.. code-block:: python
+
+    @retry(stop_max_delay=10000)
+    def stop_after_10_s():
+        print "Stopping after 10 seconds"
+
+Most things don't like to be polled as fast as possible, so let's just wait 2 seconds between retries.
+
+.. code-block:: python
+
+    @retry(wait_fixed=2000)
+    def wait_2_s():
+        print "Wait 2 second between retries"
+
+
+Some things perform best with a bit of randomness injected.
+
+.. code-block:: python
+
+    @retry(wait_random_min=1000, wait_random_max=2000)
+    def wait_random_1_to_2_s():
+        print "Randomly wait 1 to 2 seconds between retries"
+
+Then again, it's hard to beat exponential backoff when retrying distributed services and other remote endpoints.
+
+.. code-block:: python
+
+    @retry(wait_exponential_multiplier=1000, wait_exponential_max=10000)
+    def wait_exponential_1000():
+        print "Wait 2^x * 1000 milliseconds between each retry, up to 10 seconds, then 10 seconds afterwards"
+
+
+We have a few options for dealing with retries that raise specific or general exceptions, as in the cases here.
+
+.. code-block:: python
+
+    def retry_if_io_error(exception):
+        """Return True if we should retry (in this case when it's an IOError), False otherwise"""
+        return isinstance(exception, IOError)
+
+    @retry(retry_on_exception=retry_if_io_error)
+    def might_io_error():
+        print "Retry forever with no wait if an IOError occurs, raise any other errors"
+
+    @retry(retry_on_exception=retry_if_io_error, wrap_exception=True)
+    def only_raise_retry_error_when_not_io_error():
+        print "Retry forever with no wait if an IOError occurs, raise any other errors wrapped in RetryError"
+
+We can also use the result of the function to alter the behavior of retrying.
+
+.. code-block:: python
+
+    def retry_if_result_none(result):
+        """Return True if we should retry (in this case when result is None), False otherwise"""
+        return result is None
+
+    @retry(retry_on_result=retry_if_result_none)
+    def might_return_none():
+        print "Retry forever ignoring Exceptions with no wait if return value is None"
+
+
+Any combination of stop, wait, etc. is also supported to give you the freedom to mix and match.
+
+Contribute
+----------
+
+#. Check for open issues or open a fresh issue to start a discussion around a feature idea or a bug.
+#. Fork `the repository`_ on GitHub to start making your changes to the **master** branch (or branch off of it).
+#. Write a test which shows that the bug was fixed or that the feature works as expected.
+#. Send a pull request and bug the maintainer until it gets merged and published. :) Make sure to add yourself to AUTHORS_.
+
+.. _`the repository`: http://github.com/groodt/retrying
+.. _AUTHORS: https://github.com/groodt/retrying/blob/master/AUTHORS.rst
+
+
+.. :changelog:
+
+History
+-------
+1.3.4 (2022-09-03)
+++++++++++++++++++
+- Added Greg Roodt as maintainer
+- Formatted code with black
+- Updated repository references
+
+1.3.3 (2014-12-14)
+++++++++++++++++++
+- Add minimum six version of 1.7.0 since anything less will break things
+
+1.3.2 (2014-11-09)
+++++++++++++++++++
+- Ensure we wrap the decorated functions to prevent information loss
+- Allow a jitter value to be passed in
+
+1.3.1 (2014-09-30)
+++++++++++++++++++
+- Add requirements.txt to MANIFEST.in to fix pip installs
+
+1.3.0 (2014-09-30)
+++++++++++++++++++
+- Add upstream six dependency, remove embedded six functionality
+
+1.2.3 (2014-08-25)
+++++++++++++++++++
+- Add support for custom wait and stop functions
+
+1.2.2 (2014-06-20)
+++++++++++++++++++
+- Bug fix to not raise a RetryError on failure when exceptions aren't being wrapped
+
+1.2.1 (2014-05-05)
+++++++++++++++++++
+- Bug fix for explicitly passing in a wait type
+
+1.2.0 (2014-05-04)
+++++++++++++++++++
+- Remove the need for explicit specification of stop/wait types when they can be inferred
+- Add a little checking for exception propagation
+
+1.1.0 (2014-03-31)
+++++++++++++++++++
+- Added proper exception propagation through reraising with Python 2.6, 2.7, and 3.2 compatibility
+- Update test suite for behavior changes
+
+1.0.1 (2013-03-20)
+++++++++++++++++++
+- Fixed a bug where classes not extending from the Python exception hierarchy could slip through
+- Update test suite for custom Python exceptions
+
+1.0.0 (2013-01-21)
+++++++++++++++++++
+- First stable, tested version now exists
+- Apache 2.0 license applied
+- Sanitizing some setup.py and test suite running
+- Added Travis CI support

@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>pygame.midi &#8212; pygame v2.5.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygame.css?v=71ee6cc2" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=ba44479e"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <link rel="icon" href="../_static/pygame.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="pygame.mixer" href="mixer.html" />
+    <link rel="prev" title="pygame.math" href="math.html" /> 
+  </head><body>  
+
+    <div class="document">
+
+  <div class="header">
+	<div class="flex-container">
+	<div class="logo">
+	  <a href="https://www.pygame.org/">
+	    <img src="../_static/pygame_tiny.png"/>
+	  </a>
+	  <h5>pygame documentation</h5>
+	</div>
+	<div class="pagelinks">
+	  <div class="top">
+	    <a href="https://www.pygame.org/">Pygame Home</a> ||
+	    <a href="../index.html">Help Contents</a> ||
+	    <a href="../genindex.html">Reference Index</a>
+
+        <form action="../search.html" method="get" style="display:inline;float:right;">
+          <input name="q" value="" type="text">
+          <input value="search" type="submit">
+        </form>
+	  </div>
+	  <hr style="color:black;border-bottom:none;border-style: dotted;border-bottom-style:none;">
+	  <p class="bottom"><b>Most useful stuff</b>:
+	    <a href="color.html">Color</a> | 
+	    <a href="display.html">display</a> | 
+	    <a href="draw.html">draw</a> | 
+	    <a href="event.html">event</a> | 
+	    <a href="font.html">font</a> | 
+	    <a href="image.html">image</a> | 
+	    <a href="key.html">key</a> | 
+	    <a href="locals.html">locals</a> | 
+	    <a href="mixer.html">mixer</a> | 
+	    <a href="mouse.html">mouse</a> | 
+	    <a href="rect.html">Rect</a> | 
+	    <a href="surface.html">Surface</a> | 
+	    <a href="time.html">time</a> | 
+	    <a href="music.html">music</a> | 
+	    <a href="pygame.html">pygame</a>
+	  </p>
+
+	  <p class="bottom"><b>Advanced stuff</b>:
+	    <a href="cursors.html">cursors</a> | 
+	    <a href="joystick.html">joystick</a> | 
+	    <a href="mask.html">mask</a> | 
+	    <a href="sprite.html">sprite</a> | 
+	    <a href="transform.html">transform</a> | 
+	    <a href="bufferproxy.html">BufferProxy</a> | 
+	    <a href="freetype.html">freetype</a> | 
+	    <a href="gfxdraw.html">gfxdraw</a> | 
+	    <a href="midi.html">midi</a> | 
+	    <a href="pixelarray.html">PixelArray</a> | 
+	    <a href="pixelcopy.html">pixelcopy</a> | 
+	    <a href="sndarray.html">sndarray</a> | 
+	    <a href="surfarray.html">surfarray</a> | 
+	    <a href="math.html">math</a>
+	  </p>
+
+	  <p class="bottom"><b>Other</b>:
+	    <a href="camera.html">camera</a> | 
+	    <a href="sdl2_controller.html#module-pygame._sdl2.controller">controller</a> | 
+	    <a href="examples.html">examples</a> | 
+	    <a href="fastevent.html">fastevent</a> | 
+	    <a href="scrap.html">scrap</a> | 
+	    <a href="tests.html">tests</a> | 
+	    <a href="touch.html">touch</a> | 
+	    <a href="pygame.html#module-pygame.version">version</a>
+	  </p>
+</div>
+</div>
+  </div>
+
+      <div class="documentwrapper">
+          <div class="body" role="main">
+            
+<section id="module-pygame.midi">
+<span id="pygame-midi"></span><dl class="definition">
+<dt class="title module sig sig-object">
+<code class="docutils literal notranslate"><span class="pre">pygame.midi</span></code></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">pygame module for interacting with midi input and output.</span></div>
+</div>
+<table class="toc docutils align-default">
+<tbody>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="midi.html#pygame.midi.init">pygame.midi.init</a></div>
+</td>
+<td>—</td>
+<td>initialize the midi module</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="midi.html#pygame.midi.quit">pygame.midi.quit</a></div>
+</td>
+<td>—</td>
+<td>uninitialize the midi module</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="midi.html#pygame.midi.get_init">pygame.midi.get_init</a></div>
+</td>
+<td>—</td>
+<td>returns True if the midi module is currently initialized</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="midi.html#pygame.midi.Input">pygame.midi.Input</a></div>
+</td>
+<td>—</td>
+<td>Input is used to get midi input from midi devices.</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="midi.html#pygame.midi.Output">pygame.midi.Output</a></div>
+</td>
+<td>—</td>
+<td>Output is used to send midi to an output device</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="midi.html#pygame.midi.get_count">pygame.midi.get_count</a></div>
+</td>
+<td>—</td>
+<td>gets the number of devices.</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="midi.html#pygame.midi.get_default_input_id">pygame.midi.get_default_input_id</a></div>
+</td>
+<td>—</td>
+<td>gets default input device number</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="midi.html#pygame.midi.get_default_output_id">pygame.midi.get_default_output_id</a></div>
+</td>
+<td>—</td>
+<td>gets default output device number</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="midi.html#pygame.midi.get_device_info">pygame.midi.get_device_info</a></div>
+</td>
+<td>—</td>
+<td>returns information about a midi device</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="midi.html#pygame.midi.midis2events">pygame.midi.midis2events</a></div>
+</td>
+<td>—</td>
+<td>converts midi events to pygame events</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="midi.html#pygame.midi.time">pygame.midi.time</a></div>
+</td>
+<td>—</td>
+<td>returns the current time in ms of the PortMidi timer</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="midi.html#pygame.midi.frequency_to_midi">pygame.midi.frequency_to_midi</a></div>
+</td>
+<td>—</td>
+<td>Converts a frequency into a MIDI note. Rounds to the closest midi note.</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="midi.html#pygame.midi.midi_to_frequency">pygame.midi.midi_to_frequency</a></div>
+</td>
+<td>—</td>
+<td>Converts a midi note to a frequency.</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="midi.html#pygame.midi.midi_to_ansi_note">pygame.midi.midi_to_ansi_note</a></div>
+</td>
+<td>—</td>
+<td>Returns the Ansi Note name for a midi number.</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="midi.html#pygame.midi.MidiException">pygame.midi.MidiException</a></div>
+</td>
+<td>—</td>
+<td>exception that pygame.midi functions and classes can raise</td>
+</tr>
+</tbody>
+</table>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 1.9.0.</span></p>
+</div>
+<p>The midi module can send output to midi devices and get input from midi
+devices. It can also list midi devices on the system.</p>
+<p>The midi module supports real and virtual midi devices.</p>
+<p>It uses the portmidi library. Is portable to which ever platforms portmidi
+supports (currently Windows, Mac OS X, and Linux).</p>
+<p>This uses pyportmidi for now, but may use its own bindings at some point in the
+future. The pyportmidi bindings are included with pygame.</p>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 2.0.0.</span></p>
+</div>
+<p>These are pygame events (<a class="tooltip reference internal" href="event.html#module-pygame.event" title=""><code class="xref py py-mod docutils literal notranslate"><span class="pre">pygame.event</span></code><span class="tooltip-content">pygame module for interacting with events and queues</span></a>) reserved for midi use. The
+<code class="docutils literal notranslate"><span class="pre">MIDIIN</span></code> event is used by <a class="tooltip reference internal" href="#pygame.midi.midis2events" title=""><code class="xref py py-func docutils literal notranslate"><span class="pre">pygame.midi.midis2events()</span></code><span class="tooltip-content">converts midi events to pygame events</span></a> when converting
+midi events to pygame events.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">MIDIIN</span>
+<span class="n">MIDIOUT</span>
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.midi.init">
+<span class="sig-prename descclassname"><span class="pre">pygame.midi.</span></span><span class="sig-name descname"><span class="pre">init</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.midi.init" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">initialize the midi module</span></div>
+<div class="line"><span class="signature">init() -&gt; None</span></div>
+</div>
+<p>Initializes the <a class="tooltip reference internal" href="#module-pygame.midi" title=""><code class="xref py py-mod docutils literal notranslate"><span class="pre">pygame.midi</span></code><span class="tooltip-content">pygame module for interacting with midi input and output.</span></a> module. Must be called before using the
+<a class="tooltip reference internal" href="#module-pygame.midi" title=""><code class="xref py py-mod docutils literal notranslate"><span class="pre">pygame.midi</span></code><span class="tooltip-content">pygame module for interacting with midi input and output.</span></a> module.</p>
+<p>It is safe to call this more than once.</p>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.midi.quit">
+<span class="sig-prename descclassname"><span class="pre">pygame.midi.</span></span><span class="sig-name descname"><span class="pre">quit</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.midi.quit" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">uninitialize the midi module</span></div>
+<div class="line"><span class="signature">quit() -&gt; None</span></div>
+</div>
+<p>Uninitializes the <a class="tooltip reference internal" href="#module-pygame.midi" title=""><code class="xref py py-mod docutils literal notranslate"><span class="pre">pygame.midi</span></code><span class="tooltip-content">pygame module for interacting with midi input and output.</span></a> module. If <a class="tooltip reference internal" href="#pygame.midi.init" title=""><code class="xref py py-func docutils literal notranslate"><span class="pre">pygame.midi.init()</span></code><span class="tooltip-content">initialize the midi module</span></a> was
+called to initialize the <a class="tooltip reference internal" href="#module-pygame.midi" title=""><code class="xref py py-mod docutils literal notranslate"><span class="pre">pygame.midi</span></code><span class="tooltip-content">pygame module for interacting with midi input and output.</span></a> module, then this function will
+be called automatically when your program exits.</p>
+<p>It is safe to call this function more than once.</p>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.midi.get_init">
+<span class="sig-prename descclassname"><span class="pre">pygame.midi.</span></span><span class="sig-name descname"><span class="pre">get_init</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.midi.get_init" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">returns True if the midi module is currently initialized</span></div>
+<div class="line"><span class="signature">get_init() -&gt; bool</span></div>
+</div>
+<p>Gets the initialization state of the <a class="tooltip reference internal" href="#module-pygame.midi" title=""><code class="xref py py-mod docutils literal notranslate"><span class="pre">pygame.midi</span></code><span class="tooltip-content">pygame module for interacting with midi input and output.</span></a> module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">True</span></code> if the <a class="tooltip reference internal" href="#module-pygame.midi" title=""><code class="xref py py-mod docutils literal notranslate"><span class="pre">pygame.midi</span></code><span class="tooltip-content">pygame module for interacting with midi input and output.</span></a> module is currently initialized.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 1.9.5.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py class definition">
+<dt class="sig sig-object py title" id="pygame.midi.Input">
+<span class="sig-prename descclassname"><span class="pre">pygame.midi.</span></span><span class="sig-name descname"><span class="pre">Input</span></span><a class="headerlink" href="#pygame.midi.Input" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Input is used to get midi input from midi devices.</span></div>
+<div class="line"><span class="signature">Input(device_id) -&gt; None</span></div>
+<div class="line"><span class="signature">Input(device_id, buffer_size) -&gt; None</span></div>
+</div>
+<table class="toc docutils align-default">
+<tbody>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="midi.html#pygame.midi.Input.close">pygame.midi.Input.close</a></div>
+</td>
+<td>—</td>
+<td>closes a midi stream, flushing any pending buffers.</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="midi.html#pygame.midi.Input.poll">pygame.midi.Input.poll</a></div>
+</td>
+<td>—</td>
+<td>returns True if there's data, or False if not.</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="midi.html#pygame.midi.Input.read">pygame.midi.Input.read</a></div>
+</td>
+<td>—</td>
+<td>reads num_events midi events from the buffer.</td>
+</tr>
+</tbody>
+</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>device_id</strong> (<em>int</em>) -- midi device id</p></li>
+<li><p><strong>buffer_size</strong> (<em>int</em>) -- (optional) the number of input events to be buffered</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.midi.Input.close">
+<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.midi.Input.close" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">closes a midi stream, flushing any pending buffers.</span></div>
+<div class="line"><span class="signature">close() -&gt; None</span></div>
+</div>
+<p>PortMidi attempts to close open streams when the application exits.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This is particularly difficult under Windows.</p>
+</div>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.midi.Input.poll">
+<span class="sig-name descname"><span class="pre">poll</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.midi.Input.poll" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">returns True if there's data, or False if not.</span></div>
+<div class="line"><span class="signature">poll() -&gt; bool</span></div>
+</div>
+<p>Used to indicate if any data exists.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">True</span></code> if there is data, <code class="docutils literal notranslate"><span class="pre">False</span></code> otherwise</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#pygame.midi.MidiException" title="pygame.midi.MidiException"><strong>MidiException</strong></a> -- on error</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.midi.Input.read">
+<span class="sig-name descname"><span class="pre">read</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.midi.Input.read" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">reads num_events midi events from the buffer.</span></div>
+<div class="line"><span class="signature">read(num_events) -&gt; midi_event_list</span></div>
+</div>
+<p>Reads from the input buffer and gives back midi events.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>num_events</strong> (<em>int</em>) -- number of input events to read</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the format for midi_event_list is
+<code class="docutils literal notranslate"><span class="pre">[[[status,</span> <span class="pre">data1,</span> <span class="pre">data2,</span> <span class="pre">data3],</span> <span class="pre">timestamp],</span> <span class="pre">...]</span></code></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class definition">
+<dt class="sig sig-object py title" id="pygame.midi.Output">
+<span class="sig-prename descclassname"><span class="pre">pygame.midi.</span></span><span class="sig-name descname"><span class="pre">Output</span></span><a class="headerlink" href="#pygame.midi.Output" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Output is used to send midi to an output device</span></div>
+<div class="line"><span class="signature">Output(device_id) -&gt; None</span></div>
+<div class="line"><span class="signature">Output(device_id, latency=0) -&gt; None</span></div>
+<div class="line"><span class="signature">Output(device_id, buffer_size=256) -&gt; None</span></div>
+<div class="line"><span class="signature">Output(device_id, latency, buffer_size) -&gt; None</span></div>
+</div>
+<table class="toc docutils align-default">
+<tbody>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="midi.html#pygame.midi.Output.abort">pygame.midi.Output.abort</a></div>
+</td>
+<td>—</td>
+<td>terminates outgoing messages immediately</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="midi.html#pygame.midi.Output.close">pygame.midi.Output.close</a></div>
+</td>
+<td>—</td>
+<td>closes a midi stream, flushing any pending buffers.</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="midi.html#pygame.midi.Output.note_off">pygame.midi.Output.note_off</a></div>
+</td>
+<td>—</td>
+<td>turns a midi note off (note must be on)</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="midi.html#pygame.midi.Output.note_on">pygame.midi.Output.note_on</a></div>
+</td>
+<td>—</td>
+<td>turns a midi note on (note must be off)</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="midi.html#pygame.midi.Output.set_instrument">pygame.midi.Output.set_instrument</a></div>
+</td>
+<td>—</td>
+<td>select an instrument, with a value between 0 and 127</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="midi.html#pygame.midi.Output.pitch_bend">pygame.midi.Output.pitch_bend</a></div>
+</td>
+<td>—</td>
+<td>modify the pitch of a channel.</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="midi.html#pygame.midi.Output.write">pygame.midi.Output.write</a></div>
+</td>
+<td>—</td>
+<td>writes a list of midi data to the Output</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="midi.html#pygame.midi.Output.write_short">pygame.midi.Output.write_short</a></div>
+</td>
+<td>—</td>
+<td>writes up to 3 bytes of midi data to the Output</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="midi.html#pygame.midi.Output.write_sys_ex">pygame.midi.Output.write_sys_ex</a></div>
+</td>
+<td>—</td>
+<td>writes a timestamped system-exclusive midi message.</td>
+</tr>
+</tbody>
+</table>
+<p>The <code class="docutils literal notranslate"><span class="pre">buffer_size</span></code> specifies the number of output events to be buffered
+waiting for output. In some cases (see below) PortMidi does not buffer
+output at all and merely passes data to a lower-level API, in which case
+buffersize is ignored.</p>
+<p><code class="docutils literal notranslate"><span class="pre">latency</span></code> is the delay in milliseconds applied to timestamps to determine
+when the output should actually occur. If <code class="docutils literal notranslate"><span class="pre">latency</span></code> is &lt;&lt;0, 0 is assumed.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">latency</span></code> is zero, timestamps are ignored and all output is delivered
+immediately. If <code class="docutils literal notranslate"><span class="pre">latency</span></code> is greater than zero, output is delayed until the
+message timestamp plus the <code class="docutils literal notranslate"><span class="pre">latency</span></code>. In some cases, PortMidi can obtain
+better timing than your application by passing timestamps along to the
+device driver or hardware. Latency may also help you to synchronize midi
+data to audio data by matching midi latency to the audio buffer latency.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Time is measured relative to the time source indicated by time_proc.
+Timestamps are absolute, not relative delays or offsets.</p>
+</div>
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.midi.Output.abort">
+<span class="sig-name descname"><span class="pre">abort</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.midi.Output.abort" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">terminates outgoing messages immediately</span></div>
+<div class="line"><span class="signature">abort() -&gt; None</span></div>
+</div>
+<p>The caller should immediately close the output port; this call may result
+in transmission of a partial midi message. There is no abort for Midi
+input because the user can simply ignore messages in the buffer and close
+an input device at any time.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.midi.Output.close">
+<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.midi.Output.close" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">closes a midi stream, flushing any pending buffers.</span></div>
+<div class="line"><span class="signature">close() -&gt; None</span></div>
+</div>
+<p>PortMidi attempts to close open streams when the application exits.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This is particularly difficult under Windows.</p>
+</div>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.midi.Output.note_off">
+<span class="sig-name descname"><span class="pre">note_off</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.midi.Output.note_off" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">turns a midi note off (note must be on)</span></div>
+<div class="line"><span class="signature">note_off(note, velocity=None, channel=0) -&gt; None</span></div>
+</div>
+<p>Turn a note off in the output stream. The note must already be on for
+this to work correctly.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.midi.Output.note_on">
+<span class="sig-name descname"><span class="pre">note_on</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.midi.Output.note_on" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">turns a midi note on (note must be off)</span></div>
+<div class="line"><span class="signature">note_on(note, velocity=None, channel=0) -&gt; None</span></div>
+</div>
+<p>Turn a note on in the output stream. The note must already be off for
+this to work correctly.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.midi.Output.set_instrument">
+<span class="sig-name descname"><span class="pre">set_instrument</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.midi.Output.set_instrument" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">select an instrument, with a value between 0 and 127</span></div>
+<div class="line"><span class="signature">set_instrument(instrument_id, channel=0) -&gt; None</span></div>
+</div>
+<p>Select an instrument.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.midi.Output.pitch_bend">
+<span class="sig-name descname"><span class="pre">pitch_bend</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.midi.Output.pitch_bend" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">modify the pitch of a channel.</span></div>
+<div class="line"><span class="signature">set_instrument(value=0, channel=0) -&gt; None</span></div>
+</div>
+<p>Adjust the pitch of a channel. The value is a signed integer
+from -8192 to +8191. For example, 0 means &quot;no change&quot;, +4096 is
+typically a semitone higher, and -8192 is 1 whole tone lower (though
+the musical range corresponding to the pitch bend range can also be
+changed in some synthesizers).</p>
+<p>If no value is given, the pitch bend is returned to &quot;no change&quot;.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 1.9.4.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.midi.Output.write">
+<span class="sig-name descname"><span class="pre">write</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.midi.Output.write" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">writes a list of midi data to the Output</span></div>
+<div class="line"><span class="signature">write(data) -&gt; None</span></div>
+</div>
+<p>Writes series of MIDI information in the form of a list.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>data</strong> (<em>list</em>) -- data to write, the expected format is
+<code class="docutils literal notranslate"><span class="pre">[[[status,</span> <span class="pre">data1=0,</span> <span class="pre">data2=0,</span> <span class="pre">...],</span> <span class="pre">timestamp],</span> <span class="pre">...]</span></code>
+with the <code class="docutils literal notranslate"><span class="pre">data#</span></code> fields being optional</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>IndexError</strong> -- if more than 1024 elements in the data list</p>
+</dd>
+</dl>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Program change at time 20000 and 500ms later send note 65 with</span>
+<span class="c1"># velocity 100.</span>
+<span class="n">write</span><span class="p">([[[</span><span class="mh">0xc0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="mi">20000</span><span class="p">],</span> <span class="p">[[</span><span class="mh">0x90</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">100</span><span class="p">],</span> <span class="mi">20500</span><span class="p">]])</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>Timestamps will be ignored if latency = 0</p></li>
+<li><p>To get a note to play immediately, send MIDI info with timestamp
+read from function Time</p></li>
+<li><p>Optional data fields: <code class="docutils literal notranslate"><span class="pre">write([[[0xc0,</span> <span class="pre">0,</span> <span class="pre">0],</span> <span class="pre">20000]])</span></code> is
+equivalent to <code class="docutils literal notranslate"><span class="pre">write([[[0xc0],</span> <span class="pre">20000]])</span></code></p></li>
+</ul>
+</div>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.midi.Output.write_short">
+<span class="sig-name descname"><span class="pre">write_short</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.midi.Output.write_short" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">writes up to 3 bytes of midi data to the Output</span></div>
+<div class="line"><span class="signature">write_short(status) -&gt; None</span></div>
+<div class="line"><span class="signature">write_short(status, data1=0, data2=0) -&gt; None</span></div>
+</div>
+<p>Output MIDI information of 3 bytes or less. The <code class="docutils literal notranslate"><span class="pre">data</span></code> fields are
+optional and assumed to be 0 if omitted.</p>
+<p>Examples of status byte values:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mh">0xc0</span>  <span class="c1"># program change</span>
+<span class="mh">0x90</span>  <span class="c1"># note on</span>
+<span class="c1"># etc.</span>
+</pre></div>
+</div>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># note 65 on with velocity 100</span>
+<span class="n">write_short</span><span class="p">(</span><span class="mh">0x90</span><span class="p">,</span> <span class="mi">65</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.midi.Output.write_sys_ex">
+<span class="sig-name descname"><span class="pre">write_sys_ex</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.midi.Output.write_sys_ex" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">writes a timestamped system-exclusive midi message.</span></div>
+<div class="line"><span class="signature">write_sys_ex(when, msg) -&gt; None</span></div>
+</div>
+<p>Writes a timestamped system-exclusive midi message.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>msg</strong> (<em>list</em><em>[</em><em>int</em><em>] or </em><em>str</em>) -- midi message</p></li>
+<li><p><strong>when</strong> -- timestamp in milliseconds</p></li>
+</ul>
+</dd>
+</dl>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">midi_output</span><span class="o">.</span><span class="n">write_sys_ex</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\xF0\x7D\x10\x11\x12\x13\xF7</span><span class="s1">&#39;</span><span class="p">)</span>
+
+<span class="c1"># is equivalent to</span>
+
+<span class="n">midi_output</span><span class="o">.</span><span class="n">write_sys_ex</span><span class="p">(</span><span class="n">pygame</span><span class="o">.</span><span class="n">midi</span><span class="o">.</span><span class="n">time</span><span class="p">(),</span>
+                         <span class="p">[</span><span class="mh">0xF0</span><span class="p">,</span> <span class="mh">0x7D</span><span class="p">,</span> <span class="mh">0x10</span><span class="p">,</span> <span class="mh">0x11</span><span class="p">,</span> <span class="mh">0x12</span><span class="p">,</span> <span class="mh">0x13</span><span class="p">,</span> <span class="mh">0xF7</span><span class="p">])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.midi.get_count">
+<span class="sig-prename descclassname"><span class="pre">pygame.midi.</span></span><span class="sig-name descname"><span class="pre">get_count</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.midi.get_count" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">gets the number of devices.</span></div>
+<div class="line"><span class="signature">get_count() -&gt; num_devices</span></div>
+</div>
+<p>Device ids range from 0 to <code class="docutils literal notranslate"><span class="pre">get_count()</span> <span class="pre">-</span> <span class="pre">1</span></code></p>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.midi.get_default_input_id">
+<span class="sig-prename descclassname"><span class="pre">pygame.midi.</span></span><span class="sig-name descname"><span class="pre">get_default_input_id</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.midi.get_default_input_id" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">gets default input device number</span></div>
+<div class="line"><span class="signature">get_default_input_id() -&gt; default_id</span></div>
+</div>
+<p>The following describes the usage details for this function and the
+<a class="reference internal" href="#pygame.midi.get_default_output_id" title="pygame.midi.get_default_output_id"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_default_output_id()</span></code></a> function.</p>
+<p>Return the default device ID or <code class="docutils literal notranslate"><span class="pre">-1</span></code> if there are no devices. The result
+can be passed to the <a class="reference internal" href="#pygame.midi.Input" title="pygame.midi.Input"><code class="xref py py-class docutils literal notranslate"><span class="pre">Input</span></code></a>/<a class="reference internal" href="#pygame.midi.Output" title="pygame.midi.Output"><code class="xref py py-class docutils literal notranslate"><span class="pre">Output</span></code></a> class.</p>
+<p>On a PC the user can specify a default device by setting an environment
+variable. To use device #1, for example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">set</span> <span class="n">PM_RECOMMENDED_INPUT_DEVICE</span><span class="o">=</span><span class="mi">1</span>
+<span class="ow">or</span>
+<span class="nb">set</span> <span class="n">PM_RECOMMENDED_OUTPUT_DEVICE</span><span class="o">=</span><span class="mi">1</span>
+</pre></div>
+</div>
+<p>The user should first determine the available device ID by using the
+supplied application &quot;testin&quot; or &quot;testout&quot;.</p>
+<p>In general, the registry is a better place for this kind of info. With
+USB devices that can come and go, using integers is not very reliable
+for device identification. Under Windows, if <code class="docutils literal notranslate"><span class="pre">PM_RECOMMENDED_INPUT_DEVICE</span></code>
+(or <code class="docutils literal notranslate"><span class="pre">PM_RECOMMENDED_OUTPUT_DEVICE</span></code>) is NOT found in the environment,
+then the default device is obtained by looking for a string in the registry
+under:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">HKEY_LOCAL_MACHINE</span><span class="o">/</span><span class="n">SOFTWARE</span><span class="o">/</span><span class="n">PortMidi</span><span class="o">/</span><span class="n">Recommended_Input_Device</span>
+<span class="ow">or</span>
+<span class="n">HKEY_LOCAL_MACHINE</span><span class="o">/</span><span class="n">SOFTWARE</span><span class="o">/</span><span class="n">PortMidi</span><span class="o">/</span><span class="n">Recommended_Output_Device</span>
+</pre></div>
+</div>
+<p>The number of the first device with a substring that matches the
+string exactly is returned. For example, if the string in the registry is
+&quot;USB&quot; and device 1 is named &quot;In USB MidiSport 1x1&quot;, then that will be
+the default input because it contains the string &quot;USB&quot;.</p>
+<p>In addition to the name, <a class="reference internal" href="#pygame.midi.get_device_info" title="pygame.midi.get_device_info"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_device_info()</span></code></a> returns &quot;interf&quot;, which is
+the interface name. The &quot;interface&quot; is the underlying software system or
+API used by PortMidi to access devices. Supported interfaces:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">MMSystem</span>   <span class="c1"># the only Win32 interface currently supported</span>
+<span class="n">ALSA</span>       <span class="c1"># the only Linux interface currently supported</span>
+<span class="n">CoreMIDI</span>   <span class="c1"># the only Mac OS X interface currently supported</span>
+<span class="c1"># DirectX - not implemented</span>
+<span class="c1"># OSS     - not implemented</span>
+</pre></div>
+</div>
+<p>To specify both the interface and the device name in the registry, separate
+the two with a comma and a space. The string before the comma must be a
+substring of the &quot;interf&quot; string and the string after the space must be a
+substring of the &quot;name&quot; name string in order to match the device. e.g.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">MMSystem</span><span class="p">,</span> <span class="n">In</span> <span class="n">USB</span> <span class="n">MidiSport</span> <span class="mi">1</span><span class="n">x1</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In the current release, the default is simply the first device (the
+input or output device with the lowest PmDeviceID).</p>
+</div>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.midi.get_default_output_id">
+<span class="sig-prename descclassname"><span class="pre">pygame.midi.</span></span><span class="sig-name descname"><span class="pre">get_default_output_id</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.midi.get_default_output_id" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">gets default output device number</span></div>
+<div class="line"><span class="signature">get_default_output_id() -&gt; default_id</span></div>
+</div>
+<p>See <a class="reference internal" href="#pygame.midi.get_default_input_id" title="pygame.midi.get_default_input_id"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_default_input_id()</span></code></a> for usage details.</p>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.midi.get_device_info">
+<span class="sig-prename descclassname"><span class="pre">pygame.midi.</span></span><span class="sig-name descname"><span class="pre">get_device_info</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.midi.get_device_info" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">returns information about a midi device</span></div>
+<div class="line"><span class="signature">get_device_info(an_id) -&gt; (interf, name, input, output, opened)</span></div>
+<div class="line"><span class="signature">get_device_info(an_id) -&gt; None</span></div>
+</div>
+<p>Gets the device info for a given id.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>an_id</strong> (<em>int</em>) -- id of the midi device being queried</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>if the id is out of range <code class="docutils literal notranslate"><span class="pre">None</span></code> is returned, otherwise
+a tuple of (interf, name, input, output, opened) is returned.</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>interf: string describing the device interface (e.g. 'ALSA')</p></li>
+<li><p>name: string name of the device (e.g. 'Midi Through Port-0')</p></li>
+<li><p>input: 1 if the device is an input device, otherwise 0</p></li>
+<li><p>output: 1 if the device is an output device, otherwise 0</p></li>
+<li><p>opened: 1 if the device is opened, otherwise 0</p></li>
+</ul>
+</div></blockquote>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.midi.midis2events">
+<span class="sig-prename descclassname"><span class="pre">pygame.midi.</span></span><span class="sig-name descname"><span class="pre">midis2events</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.midi.midis2events" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">converts midi events to pygame events</span></div>
+<div class="line"><span class="signature">midis2events(midi_events, device_id) -&gt; [Event, ...]</span></div>
+</div>
+<p>Takes a sequence of midi events and returns list of pygame events.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">midi_events</span></code> data is expected to be a sequence of
+<code class="docutils literal notranslate"><span class="pre">((status,</span> <span class="pre">data1,</span> <span class="pre">data2,</span> <span class="pre">data3),</span> <span class="pre">timestamp)</span></code> midi events (all values
+required).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>a list of pygame events of event type <code class="docutils literal notranslate"><span class="pre">MIDIIN</span></code></p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.midi.time">
+<span class="sig-prename descclassname"><span class="pre">pygame.midi.</span></span><span class="sig-name descname"><span class="pre">time</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.midi.time" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">returns the current time in ms of the PortMidi timer</span></div>
+<div class="line"><span class="signature">time() -&gt; time</span></div>
+</div>
+<p>The time is reset to 0 when the <a class="tooltip reference internal" href="#module-pygame.midi" title=""><code class="xref py py-mod docutils literal notranslate"><span class="pre">pygame.midi</span></code><span class="tooltip-content">pygame module for interacting with midi input and output.</span></a> module is initialized.</p>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.midi.frequency_to_midi">
+<span class="sig-prename descclassname"><span class="pre">pygame.midi.</span></span><span class="sig-name descname"><span class="pre">frequency_to_midi</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.midi.frequency_to_midi" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Converts a frequency into a MIDI note. Rounds to the closest midi note.</span></div>
+<div class="line"><span class="signature">frequency_to_midi(midi_note) -&gt; midi_note</span></div>
+</div>
+<p>example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">frequency_to_midi</span><span class="p">(</span><span class="mf">27.5</span><span class="p">)</span> <span class="o">==</span> <span class="mi">21</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 1.9.5.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.midi.midi_to_frequency">
+<span class="sig-prename descclassname"><span class="pre">pygame.midi.</span></span><span class="sig-name descname"><span class="pre">midi_to_frequency</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.midi.midi_to_frequency" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Converts a midi note to a frequency.</span></div>
+<div class="line"><span class="signature">midi_to_frequency(midi_note) -&gt; frequency</span></div>
+</div>
+<p>example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">midi_to_frequency</span><span class="p">(</span><span class="mi">21</span><span class="p">)</span> <span class="o">==</span> <span class="mf">27.5</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 1.9.5.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.midi.midi_to_ansi_note">
+<span class="sig-prename descclassname"><span class="pre">pygame.midi.</span></span><span class="sig-name descname"><span class="pre">midi_to_ansi_note</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.midi.midi_to_ansi_note" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Returns the Ansi Note name for a midi number.</span></div>
+<div class="line"><span class="signature">midi_to_ansi_note(midi_note) -&gt; ansi_note</span></div>
+</div>
+<p>example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">midi_to_ansi_note</span><span class="p">(</span><span class="mi">21</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;A0&#39;</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 1.9.5.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py exception definition">
+<dt class="sig sig-object py title" id="pygame.midi.MidiException">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pygame.midi.</span></span><span class="sig-name descname"><span class="pre">MidiException</span></span><a class="headerlink" href="#pygame.midi.MidiException" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">exception that pygame.midi functions and classes can raise</span></div>
+<div class="line"><span class="signature">MidiException(errno) -&gt; None</span></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+<br /><br />
+<hr />
+<a href="https://github.com/pygame/pygame/edit/main/docs/reST/ref/midi.rst" rel="nofollow">Edit on GitHub</a>
+            <div class="clearer"></div>
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="mixer.html" title="pygame.mixer"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="math.html" title="pygame.math"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">pygame v2.5.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href=""><code class="xref py py-mod docutils literal notranslate"><span class="pre">pygame.midi</span></code></a></li>
+    <script type="text/javascript" src="https://www.pygame.org/comment/jquery.plugin.docscomments.js"></script>
+
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2000-2023, pygame developers.
+    </div>
+  </body>
+</html>

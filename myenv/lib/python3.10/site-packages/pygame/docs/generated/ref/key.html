@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>pygame.key &#8212; pygame v2.5.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygame.css?v=71ee6cc2" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=ba44479e"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <link rel="icon" href="../_static/pygame.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="pygame.locals" href="locals.html" />
+    <link rel="prev" title="pygame.joystick" href="joystick.html" /> 
+  </head><body>  
+
+    <div class="document">
+
+  <div class="header">
+	<div class="flex-container">
+	<div class="logo">
+	  <a href="https://www.pygame.org/">
+	    <img src="../_static/pygame_tiny.png"/>
+	  </a>
+	  <h5>pygame documentation</h5>
+	</div>
+	<div class="pagelinks">
+	  <div class="top">
+	    <a href="https://www.pygame.org/">Pygame Home</a> ||
+	    <a href="../index.html">Help Contents</a> ||
+	    <a href="../genindex.html">Reference Index</a>
+
+        <form action="../search.html" method="get" style="display:inline;float:right;">
+          <input name="q" value="" type="text">
+          <input value="search" type="submit">
+        </form>
+	  </div>
+	  <hr style="color:black;border-bottom:none;border-style: dotted;border-bottom-style:none;">
+	  <p class="bottom"><b>Most useful stuff</b>:
+	    <a href="color.html">Color</a> | 
+	    <a href="display.html">display</a> | 
+	    <a href="draw.html">draw</a> | 
+	    <a href="event.html">event</a> | 
+	    <a href="font.html">font</a> | 
+	    <a href="image.html">image</a> | 
+	    <a href="key.html">key</a> | 
+	    <a href="locals.html">locals</a> | 
+	    <a href="mixer.html">mixer</a> | 
+	    <a href="mouse.html">mouse</a> | 
+	    <a href="rect.html">Rect</a> | 
+	    <a href="surface.html">Surface</a> | 
+	    <a href="time.html">time</a> | 
+	    <a href="music.html">music</a> | 
+	    <a href="pygame.html">pygame</a>
+	  </p>
+
+	  <p class="bottom"><b>Advanced stuff</b>:
+	    <a href="cursors.html">cursors</a> | 
+	    <a href="joystick.html">joystick</a> | 
+	    <a href="mask.html">mask</a> | 
+	    <a href="sprite.html">sprite</a> | 
+	    <a href="transform.html">transform</a> | 
+	    <a href="bufferproxy.html">BufferProxy</a> | 
+	    <a href="freetype.html">freetype</a> | 
+	    <a href="gfxdraw.html">gfxdraw</a> | 
+	    <a href="midi.html">midi</a> | 
+	    <a href="pixelarray.html">PixelArray</a> | 
+	    <a href="pixelcopy.html">pixelcopy</a> | 
+	    <a href="sndarray.html">sndarray</a> | 
+	    <a href="surfarray.html">surfarray</a> | 
+	    <a href="math.html">math</a>
+	  </p>
+
+	  <p class="bottom"><b>Other</b>:
+	    <a href="camera.html">camera</a> | 
+	    <a href="sdl2_controller.html#module-pygame._sdl2.controller">controller</a> | 
+	    <a href="examples.html">examples</a> | 
+	    <a href="fastevent.html">fastevent</a> | 
+	    <a href="scrap.html">scrap</a> | 
+	    <a href="tests.html">tests</a> | 
+	    <a href="touch.html">touch</a> | 
+	    <a href="pygame.html#module-pygame.version">version</a>
+	  </p>
+</div>
+</div>
+  </div>
+
+      <div class="documentwrapper">
+          <div class="body" role="main">
+            
+<section id="module-pygame.key">
+<span id="pygame-key"></span><dl class="definition">
+<dt class="title module sig sig-object">
+<code class="docutils literal notranslate"><span class="pre">pygame.key</span></code></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">pygame module to work with the keyboard</span></div>
+</div>
+<table class="toc docutils align-default">
+<tbody>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="key.html#pygame.key.get_focused">pygame.key.get_focused</a></div>
+</td>
+<td>—</td>
+<td>true if the display is receiving keyboard input from the system</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="key.html#pygame.key.get_pressed">pygame.key.get_pressed</a></div>
+</td>
+<td>—</td>
+<td>get the state of all keyboard buttons</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="key.html#pygame.key.get_mods">pygame.key.get_mods</a></div>
+</td>
+<td>—</td>
+<td>determine which modifier keys are being held</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="key.html#pygame.key.set_mods">pygame.key.set_mods</a></div>
+</td>
+<td>—</td>
+<td>temporarily set which modifier keys are pressed</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="key.html#pygame.key.set_repeat">pygame.key.set_repeat</a></div>
+</td>
+<td>—</td>
+<td>control how held keys are repeated</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="key.html#pygame.key.get_repeat">pygame.key.get_repeat</a></div>
+</td>
+<td>—</td>
+<td>see how held keys are repeated</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="key.html#pygame.key.name">pygame.key.name</a></div>
+</td>
+<td>—</td>
+<td>get the name of a key identifier</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="key.html#pygame.key.key_code">pygame.key.key_code</a></div>
+</td>
+<td>—</td>
+<td>get the key identifier from a key name</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="key.html#pygame.key.start_text_input">pygame.key.start_text_input</a></div>
+</td>
+<td>—</td>
+<td>start handling Unicode text input events</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="key.html#pygame.key.stop_text_input">pygame.key.stop_text_input</a></div>
+</td>
+<td>—</td>
+<td>stop handling Unicode text input events</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="key.html#pygame.key.set_text_input_rect">pygame.key.set_text_input_rect</a></div>
+</td>
+<td>—</td>
+<td>controls the position of the candidate list</td>
+</tr>
+</tbody>
+</table>
+<p>This module contains functions for dealing with the keyboard.</p>
+<p>The <a class="tooltip reference internal" href="event.html#module-pygame.event" title=""><code class="xref py py-mod docutils literal notranslate"><span class="pre">pygame.event</span></code><span class="tooltip-content">pygame module for interacting with events and queues</span></a> queue gets <code class="docutils literal notranslate"><span class="pre">pygame.KEYDOWN</span></code> and <code class="docutils literal notranslate"><span class="pre">pygame.KEYUP</span></code>
+events when the keyboard buttons are pressed and released. Both events have
+<code class="docutils literal notranslate"><span class="pre">key</span></code> and <code class="docutils literal notranslate"><span class="pre">mod</span></code> attributes.</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">key</span></code>: an <a class="reference internal" href="#key-constants-label"><span class="std std-ref">integer ID</span></a> representing every key
+on the keyboard</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">mod</span></code>: a bitmask of all the <a class="reference internal" href="#key-modifiers-label"><span class="std std-ref">modifier keys</span></a>
+that were in a pressed state when the event occurred</p></li>
+</ul>
+</div></blockquote>
+<p>The <code class="docutils literal notranslate"><span class="pre">pygame.KEYDOWN</span></code> event has the additional attributes <code class="docutils literal notranslate"><span class="pre">unicode</span></code> and
+<code class="docutils literal notranslate"><span class="pre">scancode</span></code>.</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">unicode</span></code>: a single character string that is the fully translated
+character entered, this takes into account the shift and composition keys</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">scancode</span></code>: the platform-specific key code, which could be different from
+keyboard to keyboard, but is useful for key selection of weird keys like
+the multimedia keys</p></li>
+</ul>
+</div></blockquote>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 2.0.0: </span>The <code class="docutils literal notranslate"><span class="pre">pygame.TEXTINPUT</span></code> event is preferred to the <code class="docutils literal notranslate"><span class="pre">unicode</span></code> attribute
+of <code class="docutils literal notranslate"><span class="pre">pygame.KEYDOWN</span></code>. The attribute <code class="docutils literal notranslate"><span class="pre">text</span></code> contains the input.</p>
+</div>
+<p id="key-constants-label">The following is a list of all the constants (from <a class="tooltip reference internal" href="locals.html#module-pygame.locals" title=""><code class="xref py py-mod docutils literal notranslate"><span class="pre">pygame.locals</span></code><span class="tooltip-content">pygame constants</span></a>) used to
+represent keyboard keys.</p>
+<p>Portability note: The integers for key constants differ between pygame 1 and 2.
+Always use key constants (<code class="docutils literal notranslate"><span class="pre">K_a</span></code>) rather than integers directly (<code class="docutils literal notranslate"><span class="pre">97</span></code>) so
+that your key handling code works well on both pygame 1 and pygame 2.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>pygame
+Constant      ASCII   Description
+---------------------------------
+K_BACKSPACE   \b      backspace
+K_TAB         \t      tab
+K_CLEAR               clear
+K_RETURN      \r      return
+K_PAUSE               pause
+K_ESCAPE      ^[      escape
+K_SPACE               space
+K_EXCLAIM     !       exclaim
+K_QUOTEDBL    &quot;       quotedbl
+K_HASH        #       hash
+K_DOLLAR      $       dollar
+K_AMPERSAND   &amp;       ampersand
+K_QUOTE               quote
+K_LEFTPAREN   (       left parenthesis
+K_RIGHTPAREN  )       right parenthesis
+K_ASTERISK    *       asterisk
+K_PLUS        +       plus sign
+K_COMMA       ,       comma
+K_MINUS       -       minus sign
+K_PERIOD      .       period
+K_SLASH       /       forward slash
+K_0           0       0
+K_1           1       1
+K_2           2       2
+K_3           3       3
+K_4           4       4
+K_5           5       5
+K_6           6       6
+K_7           7       7
+K_8           8       8
+K_9           9       9
+K_COLON       :       colon
+K_SEMICOLON   ;       semicolon
+K_LESS        &lt;       less-than sign
+K_EQUALS      =       equals sign
+K_GREATER     &gt;       greater-than sign
+K_QUESTION    ?       question mark
+K_AT          @       at
+K_LEFTBRACKET [       left bracket
+K_BACKSLASH   \       backslash
+K_RIGHTBRACKET ]      right bracket
+K_CARET       ^       caret
+K_UNDERSCORE  _       underscore
+K_BACKQUOTE   `       grave
+K_a           a       a
+K_b           b       b
+K_c           c       c
+K_d           d       d
+K_e           e       e
+K_f           f       f
+K_g           g       g
+K_h           h       h
+K_i           i       i
+K_j           j       j
+K_k           k       k
+K_l           l       l
+K_m           m       m
+K_n           n       n
+K_o           o       o
+K_p           p       p
+K_q           q       q
+K_r           r       r
+K_s           s       s
+K_t           t       t
+K_u           u       u
+K_v           v       v
+K_w           w       w
+K_x           x       x
+K_y           y       y
+K_z           z       z
+K_DELETE              delete
+K_KP0                 keypad 0
+K_KP1                 keypad 1
+K_KP2                 keypad 2
+K_KP3                 keypad 3
+K_KP4                 keypad 4
+K_KP5                 keypad 5
+K_KP6                 keypad 6
+K_KP7                 keypad 7
+K_KP8                 keypad 8
+K_KP9                 keypad 9
+K_KP_PERIOD   .       keypad period
+K_KP_DIVIDE   /       keypad divide
+K_KP_MULTIPLY *       keypad multiply
+K_KP_MINUS    -       keypad minus
+K_KP_PLUS     +       keypad plus
+K_KP_ENTER    \r      keypad enter
+K_KP_EQUALS   =       keypad equals
+K_UP                  up arrow
+K_DOWN                down arrow
+K_RIGHT               right arrow
+K_LEFT                left arrow
+K_INSERT              insert
+K_HOME                home
+K_END                 end
+K_PAGEUP              page up
+K_PAGEDOWN            page down
+K_F1                  F1
+K_F2                  F2
+K_F3                  F3
+K_F4                  F4
+K_F5                  F5
+K_F6                  F6
+K_F7                  F7
+K_F8                  F8
+K_F9                  F9
+K_F10                 F10
+K_F11                 F11
+K_F12                 F12
+K_F13                 F13
+K_F14                 F14
+K_F15                 F15
+K_NUMLOCK             numlock
+K_CAPSLOCK            capslock
+K_SCROLLOCK           scrollock
+K_RSHIFT              right shift
+K_LSHIFT              left shift
+K_RCTRL               right control
+K_LCTRL               left control
+K_RALT                right alt
+K_LALT                left alt
+K_RMETA               right meta
+K_LMETA               left meta
+K_LSUPER              left Windows key
+K_RSUPER              right Windows key
+K_MODE                mode shift
+K_HELP                help
+K_PRINT               print screen
+K_SYSREQ              sysrq
+K_BREAK               break
+K_MENU                menu
+K_POWER               power
+K_EURO                Euro
+K_AC_BACK             Android back button
+</pre></div>
+</div>
+<p id="key-modifiers-label">The keyboard also has a list of modifier states (from <a class="tooltip reference internal" href="locals.html#module-pygame.locals" title=""><code class="xref py py-mod docutils literal notranslate"><span class="pre">pygame.locals</span></code><span class="tooltip-content">pygame constants</span></a>) that
+can be assembled by bitwise-ORing them together.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pygame</span>
+<span class="n">Constant</span>      <span class="n">Description</span>
+<span class="o">-------------------------</span>
+<span class="n">KMOD_NONE</span>     <span class="n">no</span> <span class="n">modifier</span> <span class="n">keys</span> <span class="n">pressed</span>
+<span class="n">KMOD_LSHIFT</span>   <span class="n">left</span> <span class="n">shift</span>
+<span class="n">KMOD_RSHIFT</span>   <span class="n">right</span> <span class="n">shift</span>
+<span class="n">KMOD_SHIFT</span>    <span class="n">left</span> <span class="n">shift</span> <span class="ow">or</span> <span class="n">right</span> <span class="n">shift</span> <span class="ow">or</span> <span class="n">both</span>
+<span class="n">KMOD_LCTRL</span>    <span class="n">left</span> <span class="n">control</span>
+<span class="n">KMOD_RCTRL</span>    <span class="n">right</span> <span class="n">control</span>
+<span class="n">KMOD_CTRL</span>     <span class="n">left</span> <span class="n">control</span> <span class="ow">or</span> <span class="n">right</span> <span class="n">control</span> <span class="ow">or</span> <span class="n">both</span>
+<span class="n">KMOD_LALT</span>     <span class="n">left</span> <span class="n">alt</span>
+<span class="n">KMOD_RALT</span>     <span class="n">right</span> <span class="n">alt</span>
+<span class="n">KMOD_ALT</span>      <span class="n">left</span> <span class="n">alt</span> <span class="ow">or</span> <span class="n">right</span> <span class="n">alt</span> <span class="ow">or</span> <span class="n">both</span>
+<span class="n">KMOD_LMETA</span>    <span class="n">left</span> <span class="n">meta</span>
+<span class="n">KMOD_RMETA</span>    <span class="n">right</span> <span class="n">meta</span>
+<span class="n">KMOD_META</span>     <span class="n">left</span> <span class="n">meta</span> <span class="ow">or</span> <span class="n">right</span> <span class="n">meta</span> <span class="ow">or</span> <span class="n">both</span>
+<span class="n">KMOD_CAPS</span>     <span class="n">caps</span> <span class="n">lock</span>
+<span class="n">KMOD_NUM</span>      <span class="n">num</span> <span class="n">lock</span>
+<span class="n">KMOD_MODE</span>     <span class="n">AltGr</span>
+</pre></div>
+</div>
+<p>The modifier information is contained in the <code class="docutils literal notranslate"><span class="pre">mod</span></code> attribute of the
+<code class="docutils literal notranslate"><span class="pre">pygame.KEYDOWN</span></code> and <code class="docutils literal notranslate"><span class="pre">pygame.KEYUP</span></code> events. The <code class="docutils literal notranslate"><span class="pre">mod</span></code> attribute is a
+bitmask of all the modifier keys that were in a pressed state when the event
+occurred. The modifier information can be decoded using a bitwise AND (except
+for <code class="docutils literal notranslate"><span class="pre">KMOD_NONE</span></code>, which should be compared using equals <code class="docutils literal notranslate"><span class="pre">==</span></code>). For example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">pygame</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">get</span><span class="p">():</span>
+    <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">pygame</span><span class="o">.</span><span class="n">KEYDOWN</span> <span class="ow">or</span> <span class="n">event</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">pygame</span><span class="o">.</span><span class="n">KEYUP</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">mod</span> <span class="o">==</span> <span class="n">pygame</span><span class="o">.</span><span class="n">KMOD_NONE</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;No modifier keys were in a pressed state when this &#39;</span>
+                  <span class="s1">&#39;event occurred.&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">mod</span> <span class="o">&amp;</span> <span class="n">pygame</span><span class="o">.</span><span class="n">KMOD_LSHIFT</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Left shift was in a pressed state when this event &#39;</span>
+                      <span class="s1">&#39;occurred.&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">mod</span> <span class="o">&amp;</span> <span class="n">pygame</span><span class="o">.</span><span class="n">KMOD_RSHIFT</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Right shift was in a pressed state when this event &#39;</span>
+                      <span class="s1">&#39;occurred.&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">mod</span> <span class="o">&amp;</span> <span class="n">pygame</span><span class="o">.</span><span class="n">KMOD_SHIFT</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Left shift or right shift or both were in a &#39;</span>
+                      <span class="s1">&#39;pressed state when this event occurred.&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.key.get_focused">
+<span class="sig-prename descclassname"><span class="pre">pygame.key.</span></span><span class="sig-name descname"><span class="pre">get_focused</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.key.get_focused" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">true if the display is receiving keyboard input from the system</span></div>
+<div class="line"><span class="signature">get_focused() -&gt; bool</span></div>
+</div>
+<p>Returns <code class="docutils literal notranslate"><span class="pre">True</span></code> when the display window has keyboard focus from the
+system. If the display needs to ensure it does not lose keyboard focus, it
+can use <a class="tooltip reference internal" href="event.html#pygame.event.set_grab" title=""><code class="xref py py-func docutils literal notranslate"><span class="pre">pygame.event.set_grab()</span></code><span class="tooltip-content">control the sharing of input devices with other applications</span></a> to grab all input.</p>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.key.get_pressed">
+<span class="sig-prename descclassname"><span class="pre">pygame.key.</span></span><span class="sig-name descname"><span class="pre">get_pressed</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.key.get_pressed" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">get the state of all keyboard buttons</span></div>
+<div class="line"><span class="signature">get_pressed() -&gt; bools</span></div>
+</div>
+<p>Returns a sequence of boolean values representing the state of every key on
+the keyboard. Use the key constant values to index the array. A <code class="docutils literal notranslate"><span class="pre">True</span></code>
+value means that the button is pressed.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Getting the list of pushed buttons with this function is not the proper
+way to handle text entry from the user. There is no way to know the order
+of keys pressed, and rapidly pushed keys can be completely unnoticed
+between two calls to <code class="docutils literal notranslate"><span class="pre">pygame.key.get_pressed()</span></code>. There is also no way to
+translate these pushed keys into a fully translated character value. See
+the <code class="docutils literal notranslate"><span class="pre">pygame.KEYDOWN</span></code> events on the <a class="tooltip reference internal" href="event.html#module-pygame.event" title=""><code class="xref py py-mod docutils literal notranslate"><span class="pre">pygame.event</span></code><span class="tooltip-content">pygame module for interacting with events and queues</span></a> queue for this
+functionality.</p>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 2.2.0: </span>The collection of bools returned by <code class="docutils literal notranslate"><span class="pre">get_pressed</span></code> can not be iterated
+over because the indexes of the internal tuple does not correpsond to the
+keycodes.</p>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 2.5.0: </span>Iteration over the collection of bools returned by <code class="docutils literal notranslate"><span class="pre">get_pressed</span></code> is now
+restored. However it still does not make sense to iterate over it. Currently.</p>
+</div>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.key.get_mods">
+<span class="sig-prename descclassname"><span class="pre">pygame.key.</span></span><span class="sig-name descname"><span class="pre">get_mods</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.key.get_mods" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">determine which modifier keys are being held</span></div>
+<div class="line"><span class="signature">get_mods() -&gt; int</span></div>
+</div>
+<p>Returns a single integer representing a bitmask of all the modifier keys
+being held. Using bitwise operators you can test if specific
+<a class="reference internal" href="#key-modifiers-label"><span class="std std-ref">modifier keys</span></a> are pressed.</p>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.key.set_mods">
+<span class="sig-prename descclassname"><span class="pre">pygame.key.</span></span><span class="sig-name descname"><span class="pre">set_mods</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.key.set_mods" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">temporarily set which modifier keys are pressed</span></div>
+<div class="line"><span class="signature">set_mods(int) -&gt; None</span></div>
+</div>
+<p>Create a bitmask of the <a class="reference internal" href="#key-modifiers-label"><span class="std std-ref">modifier key constants</span></a>
+you want to impose on your program.</p>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.key.set_repeat">
+<span class="sig-prename descclassname"><span class="pre">pygame.key.</span></span><span class="sig-name descname"><span class="pre">set_repeat</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.key.set_repeat" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">control how held keys are repeated</span></div>
+<div class="line"><span class="signature">set_repeat() -&gt; None</span></div>
+<div class="line"><span class="signature">set_repeat(delay) -&gt; None</span></div>
+<div class="line"><span class="signature">set_repeat(delay, interval) -&gt; None</span></div>
+</div>
+<p>When the keyboard repeat is enabled, keys that are held down will generate
+multiple <code class="docutils literal notranslate"><span class="pre">pygame.KEYDOWN</span></code> events. The <code class="docutils literal notranslate"><span class="pre">delay</span></code> parameter is the number of
+milliseconds before the first repeated <code class="docutils literal notranslate"><span class="pre">pygame.KEYDOWN</span></code> event will be sent.
+After that, another <code class="docutils literal notranslate"><span class="pre">pygame.KEYDOWN</span></code> event will be sent every <code class="docutils literal notranslate"><span class="pre">interval</span></code>
+milliseconds. If a <code class="docutils literal notranslate"><span class="pre">delay</span></code> value is provided and an <code class="docutils literal notranslate"><span class="pre">interval</span></code> value is
+not provided or is 0, then the <code class="docutils literal notranslate"><span class="pre">interval</span></code> will be set to the same value as
+<code class="docutils literal notranslate"><span class="pre">delay</span></code>.</p>
+<p>To disable key repeat call this function with no arguments or with <code class="docutils literal notranslate"><span class="pre">delay</span></code>
+set to 0.</p>
+<p>When pygame is initialized the key repeat is disabled.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> -- if <code class="docutils literal notranslate"><span class="pre">delay</span></code> or <code class="docutils literal notranslate"><span class="pre">interval</span></code> is &lt; 0</p>
+</dd>
+</dl>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in pygame 2.0.0: </span>A <code class="docutils literal notranslate"><span class="pre">ValueError</span></code> is now raised (instead of a
+<code class="docutils literal notranslate"><span class="pre">pygame.error</span></code>) if <code class="docutils literal notranslate"><span class="pre">delay</span></code> or <code class="docutils literal notranslate"><span class="pre">interval</span></code> is &lt; 0.</p>
+</div>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.key.get_repeat">
+<span class="sig-prename descclassname"><span class="pre">pygame.key.</span></span><span class="sig-name descname"><span class="pre">get_repeat</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.key.get_repeat" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">see how held keys are repeated</span></div>
+<div class="line"><span class="signature">get_repeat() -&gt; (delay, interval)</span></div>
+</div>
+<p>Get the <code class="docutils literal notranslate"><span class="pre">delay</span></code> and <code class="docutils literal notranslate"><span class="pre">interval</span></code> keyboard repeat values. Refer to
+<a class="tooltip reference internal" href="#pygame.key.set_repeat" title=""><code class="xref py py-func docutils literal notranslate"><span class="pre">pygame.key.set_repeat()</span></code><span class="tooltip-content">control how held keys are repeated</span></a> for a description of these values.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 1.8.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.key.name">
+<span class="sig-prename descclassname"><span class="pre">pygame.key.</span></span><span class="sig-name descname"><span class="pre">name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.key.name" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">get the name of a key identifier</span></div>
+<div class="line"><span class="signature">name(key, use_compat=True) -&gt; str</span></div>
+</div>
+<p>Get the descriptive name of the button from a keyboard button id constant.
+Returns an empty string (<code class="docutils literal notranslate"><span class="pre">&quot;&quot;</span></code>) if the key is not found.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">use_compat</span></code> argument is <code class="docutils literal notranslate"><span class="pre">True</span></code> (which is the default), this function
+returns the legacy name of a key where applicable. The return value is
+expected to be the same across different pygame versions (provided the
+corresponding key constant exists and is unique). If the return value is
+passed to the <code class="docutils literal notranslate"><span class="pre">key_code</span></code> function, the original constant will be returned.</p>
+<p><strong>Experimental:</strong> <code class="docutils literal notranslate"><span class="pre">use_compat</span></code> paramater still in development for testing and feedback. It may change.
+<a class="reference external" href="https://github.com/pygame/pygame/pull/3312">Please leave use_compat feedback with authors</a></p>
+<p>If this argument is <code class="docutils literal notranslate"><span class="pre">False</span></code>, the returned name may be prettier to display
+and may cover a wider range of keys than with <code class="docutils literal notranslate"><span class="pre">use_compat</span></code>, but there are
+no guarantees that this name will be the same across different pygame
+versions. If the name returned is passed to the <code class="docutils literal notranslate"><span class="pre">key_code</span></code> function, the
+original constant is returned back (this is an implementation detail which
+may change later, do not rely on this)</p>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in pygame 2.1.3: </span>Added <code class="docutils literal notranslate"><span class="pre">use_compat</span></code> argument and guaranteed API stability for it</p>
+</div>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.key.key_code">
+<span class="sig-prename descclassname"><span class="pre">pygame.key.</span></span><span class="sig-name descname"><span class="pre">key_code</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.key.key_code" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">get the key identifier from a key name</span></div>
+<div class="line"><span class="signature">key_code(name=string) -&gt; int</span></div>
+</div>
+<p>Get the key identifier code from the descriptive name of the key. This
+returns an integer matching one of the K_* keycodes. For example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pygame</span><span class="o">.</span><span class="n">key</span><span class="o">.</span><span class="n">key_code</span><span class="p">(</span><span class="s2">&quot;return&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="n">pygame</span><span class="o">.</span><span class="n">K_RETURN</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pygame</span><span class="o">.</span><span class="n">key</span><span class="o">.</span><span class="n">key_code</span><span class="p">(</span><span class="s2">&quot;0&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="n">pygame</span><span class="o">.</span><span class="n">K_0</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pygame</span><span class="o">.</span><span class="n">key</span><span class="o">.</span><span class="n">key_code</span><span class="p">(</span><span class="s2">&quot;space&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="n">pygame</span><span class="o">.</span><span class="n">K_SPACE</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> -- if the key name is not known.</p>
+</dd>
+</dl>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 2.0.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.key.start_text_input">
+<span class="sig-prename descclassname"><span class="pre">pygame.key.</span></span><span class="sig-name descname"><span class="pre">start_text_input</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.key.start_text_input" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">start handling Unicode text input events</span></div>
+<div class="line"><span class="signature">start_text_input() -&gt; None</span></div>
+</div>
+<p>Start receiving <code class="docutils literal notranslate"><span class="pre">pygame.TEXTEDITING</span></code> and <code class="docutils literal notranslate"><span class="pre">pygame.TEXTINPUT</span></code>
+events. If applicable, show the on-screen keyboard or IME editor.</p>
+<p>For many languages, key presses will automatically generate a
+corresponding <code class="docutils literal notranslate"><span class="pre">pygame.TEXTINPUT</span></code> event. Special keys like
+escape or function keys, and certain key combinations will not
+generate <code class="docutils literal notranslate"><span class="pre">pygame.TEXTINPUT</span></code> events.</p>
+<p>In other languages, entering a single symbol may require multiple
+key presses, or a language-specific user interface. In this case,
+<code class="docutils literal notranslate"><span class="pre">pygame.TEXTINPUT</span></code> events are preferable to <code class="docutils literal notranslate"><span class="pre">pygame.KEYDOWN</span></code>
+events for text input.</p>
+<p>A <code class="docutils literal notranslate"><span class="pre">pygame.TEXTEDITING</span></code> event is received when an IME composition
+is started or changed. It contains the composition <code class="docutils literal notranslate"><span class="pre">text</span></code>, <code class="docutils literal notranslate"><span class="pre">length</span></code>,
+and editing <code class="docutils literal notranslate"><span class="pre">start</span></code> position within the composition (attributes
+<code class="docutils literal notranslate"><span class="pre">text</span></code>, <code class="docutils literal notranslate"><span class="pre">length</span></code>, and <code class="docutils literal notranslate"><span class="pre">start</span></code>, respectively).
+When the composition is committed (or non-IME input is received),
+a <code class="docutils literal notranslate"><span class="pre">pygame.TEXTINPUT</span></code> event is generated.</p>
+<p>Text input events handling is on by default.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 2.0.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.key.stop_text_input">
+<span class="sig-prename descclassname"><span class="pre">pygame.key.</span></span><span class="sig-name descname"><span class="pre">stop_text_input</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.key.stop_text_input" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">stop handling Unicode text input events</span></div>
+<div class="line"><span class="signature">stop_text_input() -&gt; None</span></div>
+</div>
+<p>Stop receiving <code class="docutils literal notranslate"><span class="pre">pygame.TEXTEDITING</span></code> and <code class="docutils literal notranslate"><span class="pre">pygame.TEXTINPUT</span></code>
+events. If an on-screen keyboard or IME editor was shown with
+<code class="docutils literal notranslate"><span class="pre">pygame.key.start_text_input()</span></code>, hide it again.</p>
+<p>Text input events handling is on by default.</p>
+<p>To avoid triggering the IME editor or the on-screen keyboard
+when the user is holding down a key during gameplay, text input
+should be disabled once text entry is finished, or when the user
+clicks outside of a text box.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 2.0.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.key.set_text_input_rect">
+<span class="sig-prename descclassname"><span class="pre">pygame.key.</span></span><span class="sig-name descname"><span class="pre">set_text_input_rect</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.key.set_text_input_rect" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">controls the position of the candidate list</span></div>
+<div class="line"><span class="signature">set_text_input_rect(Rect) -&gt; None</span></div>
+</div>
+<p>This sets the rectangle used for typing with an IME.
+It controls where the candidate list will open, if supported.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 2.0.0.</span></p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+<br /><br />
+<hr />
+<a href="https://github.com/pygame/pygame/edit/main/docs/reST/ref/key.rst" rel="nofollow">Edit on GitHub</a>
+            <div class="clearer"></div>
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="locals.html" title="pygame.locals"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="joystick.html" title="pygame.joystick"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">pygame v2.5.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href=""><code class="xref py py-mod docutils literal notranslate"><span class="pre">pygame.key</span></code></a></li>
+    <script type="text/javascript" src="https://www.pygame.org/comment/jquery.plugin.docscomments.js"></script>
+
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2000-2023, pygame developers.
+    </div>
+  </body>
+</html>

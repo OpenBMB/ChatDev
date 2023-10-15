@@ -1,0 +1,1109 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>pygame.mask &#8212; pygame v2.5.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygame.css?v=71ee6cc2" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=ba44479e"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <link rel="icon" href="../_static/pygame.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="pygame.math" href="math.html" />
+    <link rel="prev" title="pygame.locals" href="locals.html" /> 
+  </head><body>  
+
+    <div class="document">
+
+  <div class="header">
+	<div class="flex-container">
+	<div class="logo">
+	  <a href="https://www.pygame.org/">
+	    <img src="../_static/pygame_tiny.png"/>
+	  </a>
+	  <h5>pygame documentation</h5>
+	</div>
+	<div class="pagelinks">
+	  <div class="top">
+	    <a href="https://www.pygame.org/">Pygame Home</a> ||
+	    <a href="../index.html">Help Contents</a> ||
+	    <a href="../genindex.html">Reference Index</a>
+
+        <form action="../search.html" method="get" style="display:inline;float:right;">
+          <input name="q" value="" type="text">
+          <input value="search" type="submit">
+        </form>
+	  </div>
+	  <hr style="color:black;border-bottom:none;border-style: dotted;border-bottom-style:none;">
+	  <p class="bottom"><b>Most useful stuff</b>:
+	    <a href="color.html">Color</a> | 
+	    <a href="display.html">display</a> | 
+	    <a href="draw.html">draw</a> | 
+	    <a href="event.html">event</a> | 
+	    <a href="font.html">font</a> | 
+	    <a href="image.html">image</a> | 
+	    <a href="key.html">key</a> | 
+	    <a href="locals.html">locals</a> | 
+	    <a href="mixer.html">mixer</a> | 
+	    <a href="mouse.html">mouse</a> | 
+	    <a href="rect.html">Rect</a> | 
+	    <a href="surface.html">Surface</a> | 
+	    <a href="time.html">time</a> | 
+	    <a href="music.html">music</a> | 
+	    <a href="pygame.html">pygame</a>
+	  </p>
+
+	  <p class="bottom"><b>Advanced stuff</b>:
+	    <a href="cursors.html">cursors</a> | 
+	    <a href="joystick.html">joystick</a> | 
+	    <a href="mask.html">mask</a> | 
+	    <a href="sprite.html">sprite</a> | 
+	    <a href="transform.html">transform</a> | 
+	    <a href="bufferproxy.html">BufferProxy</a> | 
+	    <a href="freetype.html">freetype</a> | 
+	    <a href="gfxdraw.html">gfxdraw</a> | 
+	    <a href="midi.html">midi</a> | 
+	    <a href="pixelarray.html">PixelArray</a> | 
+	    <a href="pixelcopy.html">pixelcopy</a> | 
+	    <a href="sndarray.html">sndarray</a> | 
+	    <a href="surfarray.html">surfarray</a> | 
+	    <a href="math.html">math</a>
+	  </p>
+
+	  <p class="bottom"><b>Other</b>:
+	    <a href="camera.html">camera</a> | 
+	    <a href="sdl2_controller.html#module-pygame._sdl2.controller">controller</a> | 
+	    <a href="examples.html">examples</a> | 
+	    <a href="fastevent.html">fastevent</a> | 
+	    <a href="scrap.html">scrap</a> | 
+	    <a href="tests.html">tests</a> | 
+	    <a href="touch.html">touch</a> | 
+	    <a href="pygame.html#module-pygame.version">version</a>
+	  </p>
+</div>
+</div>
+  </div>
+
+      <div class="documentwrapper">
+          <div class="body" role="main">
+            
+<section id="module-pygame.mask">
+<span id="pygame-mask"></span><dl class="definition">
+<dt class="title module sig sig-object">
+<code class="docutils literal notranslate"><span class="pre">pygame.mask</span></code></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">pygame module for image masks.</span></div>
+</div>
+<table class="toc docutils align-default">
+<tbody>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="mask.html#pygame.mask.from_surface">pygame.mask.from_surface</a></div>
+</td>
+<td>—</td>
+<td>Creates a Mask from the given surface</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="mask.html#pygame.mask.from_threshold">pygame.mask.from_threshold</a></div>
+</td>
+<td>—</td>
+<td>Creates a mask by thresholding Surfaces</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="mask.html#pygame.mask.Mask">pygame.mask.Mask</a></div>
+</td>
+<td>—</td>
+<td>pygame object for representing 2D bitmasks</td>
+</tr>
+</tbody>
+</table>
+<p>Useful for fast pixel perfect collision detection. A mask uses 1 bit per-pixel
+to store which parts collide.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 1.8.</span></p>
+</div>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in pygame 2.0.2: </span>Mask functions now support keyword arguments.</p>
+</div>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in pygame 2.0.2: </span>Mask functions that take positions or offsets now
+support <a class="tooltip reference internal" href="math.html#pygame.math.Vector2" title=""><code class="xref py py-class docutils literal notranslate"><span class="pre">pygame.math.Vector2</span></code><span class="tooltip-content">a 2-Dimensional Vector</span></a> arguments.</p>
+</div>
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.mask.from_surface">
+<span class="sig-prename descclassname"><span class="pre">pygame.mask.</span></span><span class="sig-name descname"><span class="pre">from_surface</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.mask.from_surface" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Creates a Mask from the given surface</span></div>
+<div class="line"><span class="signature">from_surface(surface) -&gt; Mask</span></div>
+<div class="line"><span class="signature">from_surface(surface, threshold=127) -&gt; Mask</span></div>
+</div>
+<p>Creates a <a class="reference internal" href="#pygame.mask.Mask" title="pygame.mask.Mask"><code class="xref py py-class docutils literal notranslate"><span class="pre">Mask</span></code></a> object from the given surface by setting all the
+opaque pixels and not setting the transparent pixels.</p>
+<p>If the surface uses a color-key, then it is used to decide which bits in
+the resulting mask are set. All the pixels that are <strong>not</strong> equal to the
+color-key are <strong>set</strong> and the pixels equal to the color-key are not set.</p>
+<p>If a color-key is not used, then the alpha value of each pixel is used to
+decide which bits in the resulting mask are set. All the pixels that have an
+alpha value <strong>greater than</strong> the <code class="docutils literal notranslate"><span class="pre">threshold</span></code> parameter are <strong>set</strong> and the
+pixels with an alpha value less than or equal to the <code class="docutils literal notranslate"><span class="pre">threshold</span></code> are
+not set.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>surface</strong> (<a class="reference internal" href="surface.html#pygame.Surface" title="pygame.Surface"><em>Surface</em></a>) -- the surface to create the mask from</p></li>
+<li><p><strong>threshold</strong> (<em>int</em>) -- (optional) the alpha threshold (default is 127) to
+compare with each surface pixel's alpha value, if the <code class="docutils literal notranslate"><span class="pre">surface</span></code> is
+color-keyed this parameter is ignored</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>a newly created <a class="reference internal" href="#pygame.mask.Mask" title="pygame.mask.Mask"><code class="xref py py-class docutils literal notranslate"><span class="pre">Mask</span></code></a> object from the given surface</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#pygame.mask.Mask" title="pygame.mask.Mask">Mask</a></p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This function is used to create the masks for
+<a class="tooltip reference internal" href="sprite.html#pygame.sprite.collide_mask" title=""><code class="xref py py-func docutils literal notranslate"><span class="pre">pygame.sprite.collide_mask()</span></code><span class="tooltip-content">Collision detection between two sprites, using masks.</span></a>.</p>
+</div>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.mask.from_threshold">
+<span class="sig-prename descclassname"><span class="pre">pygame.mask.</span></span><span class="sig-name descname"><span class="pre">from_threshold</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.mask.from_threshold" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Creates a mask by thresholding Surfaces</span></div>
+<div class="line"><span class="signature">from_threshold(surface, color) -&gt; Mask</span></div>
+<div class="line"><span class="signature">from_threshold(surface, color, threshold=(0, 0, 0, 255), othersurface=None, palette_colors=1) -&gt; Mask</span></div>
+</div>
+<p>This is a more featureful method of getting a <a class="reference internal" href="#pygame.mask.Mask" title="pygame.mask.Mask"><code class="xref py py-class docutils literal notranslate"><span class="pre">Mask</span></code></a> from a surface.</p>
+<p>If the optional <code class="docutils literal notranslate"><span class="pre">othersurface</span></code> is not used, all the pixels <strong>within</strong> the
+<code class="docutils literal notranslate"><span class="pre">threshold</span></code> of the <code class="docutils literal notranslate"><span class="pre">color</span></code> parameter are <strong>set</strong> in the resulting mask.</p>
+<p>If the optional <code class="docutils literal notranslate"><span class="pre">othersurface</span></code> is used, every pixel in the first surface
+that is <strong>within</strong> the <code class="docutils literal notranslate"><span class="pre">threshold</span></code> of the corresponding pixel in
+<code class="docutils literal notranslate"><span class="pre">othersurface</span></code> is <strong>set</strong> in the resulting mask.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>surface</strong> (<a class="reference internal" href="surface.html#pygame.Surface" title="pygame.Surface"><em>Surface</em></a>) -- the surface to create the mask from</p></li>
+<li><p><strong>color</strong> (<a class="reference internal" href="color.html#pygame.Color" title="pygame.Color"><em>Color</em></a><em> or </em><em>int</em><em> or </em><em>tuple</em><em>(</em><em>int</em><em>, </em><em>int</em><em>, </em><em>int</em><em>, </em><em>[</em><em>int</em><em>]</em><em>) or </em><em>list</em><em>[</em><em>int</em><em>, </em><em>int</em><em>, </em><em>int</em><em>, </em><em>[</em><em>int</em><em>]</em><em>]</em>) -- color used to check if the surface's pixels are within the
+given <code class="docutils literal notranslate"><span class="pre">threshold</span></code> range, this parameter is ignored if the optional
+<code class="docutils literal notranslate"><span class="pre">othersurface</span></code> parameter is supplied</p></li>
+<li><p><strong>threshold</strong> (<a class="reference internal" href="color.html#pygame.Color" title="pygame.Color"><em>Color</em></a><em> or </em><em>int</em><em> or </em><em>tuple</em><em>(</em><em>int</em><em>, </em><em>int</em><em>, </em><em>int</em><em>, </em><em>[</em><em>int</em><em>]</em><em>) or </em><em>list</em><em>[</em><em>int</em><em>, </em><em>int</em><em>, </em><em>int</em><em>, </em><em>[</em><em>int</em><em>]</em><em>]</em>) -- (optional) the threshold range used to check the difference
+between two colors (default is <code class="docutils literal notranslate"><span class="pre">(0,</span> <span class="pre">0,</span> <span class="pre">0,</span> <span class="pre">255)</span></code>)</p></li>
+<li><p><strong>othersurface</strong> (<a class="reference internal" href="surface.html#pygame.Surface" title="pygame.Surface"><em>Surface</em></a>) -- (optional) used to check whether the pixels of
+the first surface are within the given <code class="docutils literal notranslate"><span class="pre">threshold</span></code> range of the pixels
+from this surface (default is <code class="docutils literal notranslate"><span class="pre">None</span></code>)</p></li>
+<li><p><strong>palette_colors</strong> (<em>int</em>) -- (optional) indicates whether to use the palette
+colors or not, a nonzero value causes the palette colors to be used and a
+0 causes them not to be used (default is 1)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>a newly created <a class="reference internal" href="#pygame.mask.Mask" title="pygame.mask.Mask"><code class="xref py py-class docutils literal notranslate"><span class="pre">Mask</span></code></a> object from the given surface</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#pygame.mask.Mask" title="pygame.mask.Mask">Mask</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class definition">
+<dt class="sig sig-object py title" id="pygame.mask.Mask">
+<span class="sig-prename descclassname"><span class="pre">pygame.mask.</span></span><span class="sig-name descname"><span class="pre">Mask</span></span><a class="headerlink" href="#pygame.mask.Mask" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">pygame object for representing 2D bitmasks</span></div>
+<div class="line"><span class="signature">Mask(size=(width, height)) -&gt; Mask</span></div>
+<div class="line"><span class="signature">Mask(size=(width, height), fill=False) -&gt; Mask</span></div>
+</div>
+<table class="toc docutils align-default">
+<tbody>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="mask.html#pygame.mask.Mask.copy">pygame.mask.Mask.copy</a></div>
+</td>
+<td>—</td>
+<td>Returns a new copy of the mask</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="mask.html#pygame.mask.Mask.get_size">pygame.mask.Mask.get_size</a></div>
+</td>
+<td>—</td>
+<td>Returns the size of the mask</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="mask.html#pygame.mask.Mask.get_rect">pygame.mask.Mask.get_rect</a></div>
+</td>
+<td>—</td>
+<td>Returns a Rect based on the size of the mask</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="mask.html#pygame.mask.Mask.get_at">pygame.mask.Mask.get_at</a></div>
+</td>
+<td>—</td>
+<td>Gets the bit at the given position</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="mask.html#pygame.mask.Mask.set_at">pygame.mask.Mask.set_at</a></div>
+</td>
+<td>—</td>
+<td>Sets the bit at the given position</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="mask.html#pygame.mask.Mask.overlap">pygame.mask.Mask.overlap</a></div>
+</td>
+<td>—</td>
+<td>Returns the point of intersection</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="mask.html#pygame.mask.Mask.overlap_area">pygame.mask.Mask.overlap_area</a></div>
+</td>
+<td>—</td>
+<td>Returns the number of overlapping set bits</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="mask.html#pygame.mask.Mask.overlap_mask">pygame.mask.Mask.overlap_mask</a></div>
+</td>
+<td>—</td>
+<td>Returns a mask of the overlapping set bits</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="mask.html#pygame.mask.Mask.fill">pygame.mask.Mask.fill</a></div>
+</td>
+<td>—</td>
+<td>Sets all bits to 1</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="mask.html#pygame.mask.Mask.clear">pygame.mask.Mask.clear</a></div>
+</td>
+<td>—</td>
+<td>Sets all bits to 0</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="mask.html#pygame.mask.Mask.invert">pygame.mask.Mask.invert</a></div>
+</td>
+<td>—</td>
+<td>Flips all the bits</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="mask.html#pygame.mask.Mask.scale">pygame.mask.Mask.scale</a></div>
+</td>
+<td>—</td>
+<td>Resizes a mask</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="mask.html#pygame.mask.Mask.draw">pygame.mask.Mask.draw</a></div>
+</td>
+<td>—</td>
+<td>Draws a mask onto another</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="mask.html#pygame.mask.Mask.erase">pygame.mask.Mask.erase</a></div>
+</td>
+<td>—</td>
+<td>Erases a mask from another</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="mask.html#pygame.mask.Mask.count">pygame.mask.Mask.count</a></div>
+</td>
+<td>—</td>
+<td>Returns the number of set bits</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="mask.html#pygame.mask.Mask.centroid">pygame.mask.Mask.centroid</a></div>
+</td>
+<td>—</td>
+<td>Returns the centroid of the set bits</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="mask.html#pygame.mask.Mask.angle">pygame.mask.Mask.angle</a></div>
+</td>
+<td>—</td>
+<td>Returns the orientation of the set bits</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="mask.html#pygame.mask.Mask.outline">pygame.mask.Mask.outline</a></div>
+</td>
+<td>—</td>
+<td>Returns a list of points outlining an object</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="mask.html#pygame.mask.Mask.convolve">pygame.mask.Mask.convolve</a></div>
+</td>
+<td>—</td>
+<td>Returns the convolution of this mask with another mask</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="mask.html#pygame.mask.Mask.connected_component">pygame.mask.Mask.connected_component</a></div>
+</td>
+<td>—</td>
+<td>Returns a mask containing a connected component</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="mask.html#pygame.mask.Mask.connected_components">pygame.mask.Mask.connected_components</a></div>
+</td>
+<td>—</td>
+<td>Returns a list of masks of connected components</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="mask.html#pygame.mask.Mask.get_bounding_rects">pygame.mask.Mask.get_bounding_rects</a></div>
+</td>
+<td>—</td>
+<td>Returns a list of bounding rects of connected components</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="mask.html#pygame.mask.Mask.to_surface">pygame.mask.Mask.to_surface</a></div>
+</td>
+<td>—</td>
+<td>Returns a surface with the mask drawn on it</td>
+</tr>
+</tbody>
+</table>
+<p>A <code class="docutils literal notranslate"><span class="pre">Mask</span></code> object is used to represent a 2D bitmask. Each bit in
+the mask represents a pixel. 1 is used to indicate a set bit and 0 is used
+to indicate an unset bit. Set bits in a mask can be used to detect collisions
+with other masks and their set bits.</p>
+<p>A filled mask has all of its bits set to 1, conversely an
+unfilled/cleared/empty mask has all of its bits set to 0. Masks can be
+created unfilled (default) or filled by using the <code class="docutils literal notranslate"><span class="pre">fill</span></code> parameter. Masks
+can also be cleared or filled using the <a class="tooltip reference internal" href="#pygame.mask.Mask.clear" title=""><code class="xref py py-func docutils literal notranslate"><span class="pre">pygame.mask.Mask.clear()</span></code><span class="tooltip-content">Sets all bits to 0</span></a> and
+<a class="tooltip reference internal" href="#pygame.mask.Mask.fill" title=""><code class="xref py py-func docutils literal notranslate"><span class="pre">pygame.mask.Mask.fill()</span></code><span class="tooltip-content">Sets all bits to 1</span></a> methods respectively.</p>
+<p>A mask's coordinates start in the top left corner at <code class="docutils literal notranslate"><span class="pre">(0,</span> <span class="pre">0)</span></code> just like
+<a class="tooltip reference internal" href="surface.html#pygame.Surface" title=""><code class="xref py py-mod docutils literal notranslate"><span class="pre">pygame.Surface</span></code><span class="tooltip-content">pygame object for representing images</span></a>. Individual bits can be accessed using the
+<a class="tooltip reference internal" href="#pygame.mask.Mask.get_at" title=""><code class="xref py py-func docutils literal notranslate"><span class="pre">pygame.mask.Mask.get_at()</span></code><span class="tooltip-content">Gets the bit at the given position</span></a> and <a class="tooltip reference internal" href="#pygame.mask.Mask.set_at" title=""><code class="xref py py-func docutils literal notranslate"><span class="pre">pygame.mask.Mask.set_at()</span></code><span class="tooltip-content">Sets the bit at the given position</span></a>
+methods.</p>
+<p id="mask-offset-label">The methods <a class="reference internal" href="#pygame.mask.Mask.overlap" title="pygame.mask.Mask.overlap"><code class="xref py py-meth docutils literal notranslate"><span class="pre">overlap()</span></code></a>, <a class="reference internal" href="#pygame.mask.Mask.overlap_area" title="pygame.mask.Mask.overlap_area"><code class="xref py py-meth docutils literal notranslate"><span class="pre">overlap_area()</span></code></a>, <a class="reference internal" href="#pygame.mask.Mask.overlap_mask" title="pygame.mask.Mask.overlap_mask"><code class="xref py py-meth docutils literal notranslate"><span class="pre">overlap_mask()</span></code></a>,
+<a class="reference internal" href="#pygame.mask.Mask.draw" title="pygame.mask.Mask.draw"><code class="xref py py-meth docutils literal notranslate"><span class="pre">draw()</span></code></a>, <a class="reference internal" href="#pygame.mask.Mask.erase" title="pygame.mask.Mask.erase"><code class="xref py py-meth docutils literal notranslate"><span class="pre">erase()</span></code></a>, and <a class="reference internal" href="#pygame.mask.Mask.convolve" title="pygame.mask.Mask.convolve"><code class="xref py py-meth docutils literal notranslate"><span class="pre">convolve()</span></code></a> use an offset parameter
+to indicate the offset of another mask's top left corner from the calling
+mask's top left corner. The calling mask's top left corner is considered to
+be the origin <code class="docutils literal notranslate"><span class="pre">(0,</span> <span class="pre">0)</span></code>. Offsets are a sequence of two values
+<code class="docutils literal notranslate"><span class="pre">(x_offset,</span> <span class="pre">y_offset)</span></code>. Positive and negative offset values are supported.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>           <span class="mi">0</span> <span class="n">to</span> <span class="n">x</span> <span class="p">(</span><span class="n">x_offset</span><span class="p">)</span>
+           <span class="p">:</span>    <span class="p">:</span>
+   <span class="mi">0</span> <span class="o">.....</span> <span class="o">+----</span><span class="p">:</span><span class="o">---------+</span>
+   <span class="n">to</span>      <span class="o">|</span>    <span class="p">:</span>         <span class="o">|</span>
+   <span class="n">y</span> <span class="o">..........</span> <span class="o">+-----------+</span>
+<span class="p">(</span><span class="n">y_offset</span><span class="p">)</span> <span class="o">|</span>    <span class="o">|</span> <span class="n">othermask</span> <span class="o">|</span>
+           <span class="o">|</span>    <span class="o">+-----------+</span>
+           <span class="o">|</span> <span class="n">calling_mask</span> <span class="o">|</span>
+           <span class="o">+--------------+</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>size</strong> -- the dimensions of the mask (width and height)</p></li>
+<li><p><strong>fill</strong> (<em>bool</em>) -- (optional) create an unfilled mask (default: <code class="docutils literal notranslate"><span class="pre">False</span></code>) or
+filled mask (<code class="docutils literal notranslate"><span class="pre">True</span></code>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>a newly created <a class="reference internal" href="#pygame.mask.Mask" title="pygame.mask.Mask"><code class="xref py py-class docutils literal notranslate"><span class="pre">Mask</span></code></a> object</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#pygame.mask.Mask" title="pygame.mask.Mask">Mask</a></p>
+</dd>
+</dl>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in pygame 2.0.0: </span>Shallow copy support added. The <a class="reference internal" href="#pygame.mask.Mask" title="pygame.mask.Mask"><code class="xref py py-class docutils literal notranslate"><span class="pre">Mask</span></code></a> class supports the special
+method <code class="docutils literal notranslate"><span class="pre">__copy__()</span></code> and shallow copying via <code class="docutils literal notranslate"><span class="pre">copy.copy(mask)</span></code>.</p>
+</div>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in pygame 2.0.0: </span>Subclassing support added. The <a class="reference internal" href="#pygame.mask.Mask" title="pygame.mask.Mask"><code class="xref py py-class docutils literal notranslate"><span class="pre">Mask</span></code></a> class
+can be used as a base class.</p>
+</div>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in pygame 1.9.5: </span>Added support for keyword arguments.</p>
+</div>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in pygame 1.9.5: </span>Added the optional keyword parameter <code class="docutils literal notranslate"><span class="pre">fill</span></code>.</p>
+</div>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in pygame 1.9.5: </span>Added support for masks with a width and/or a
+height of 0.</p>
+</div>
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.mask.Mask.copy">
+<span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.mask.Mask.copy" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Returns a new copy of the mask</span></div>
+<div class="line"><span class="signature">copy() -&gt; Mask</span></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>a new copy of this mask, the new mask will have the same width,
+height, and set/unset bits as the original</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#pygame.mask.Mask" title="pygame.mask.Mask">Mask</a></p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If a mask subclass needs to copy any instance specific attributes
+then it should override the <code class="docutils literal notranslate"><span class="pre">__copy__()</span></code> method. The overridden
+<code class="docutils literal notranslate"><span class="pre">__copy__()</span></code> method needs to call <code class="docutils literal notranslate"><span class="pre">super().__copy__()</span></code> and then
+copy the required data as in the following example code.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">SubMask</span><span class="p">(</span><span class="n">pygame</span><span class="o">.</span><span class="n">mask</span><span class="o">.</span><span class="n">Mask</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__copy__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">new_mask</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__copy__</span><span class="p">()</span>
+        <span class="c1"># Do any SubMask attribute copying here.</span>
+        <span class="k">return</span> <span class="n">new_mask</span>
+</pre></div>
+</div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 2.0.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.mask.Mask.get_size">
+<span class="sig-name descname"><span class="pre">get_size</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.mask.Mask.get_size" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Returns the size of the mask</span></div>
+<div class="line"><span class="signature">get_size() -&gt; (width, height)</span></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>the size of the mask, (width, height)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple(int, int)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.mask.Mask.get_rect">
+<span class="sig-name descname"><span class="pre">get_rect</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.mask.Mask.get_rect" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Returns a Rect based on the size of the mask</span></div>
+<div class="line"><span class="signature">get_rect(**kwargs) -&gt; Rect</span></div>
+</div>
+<p>Returns a new <a class="tooltip reference internal" href="rect.html#pygame.Rect" title=""><code class="xref py py-func docutils literal notranslate"><span class="pre">pygame.Rect()</span></code><span class="tooltip-content">pygame object for storing rectangular coordinates</span></a> object based on the size of this mask.
+The rect's default position will be <code class="docutils literal notranslate"><span class="pre">(0,</span> <span class="pre">0)</span></code> and its default width and
+height will be the same as this mask's. The rect's attributes can be
+altered via <a class="tooltip reference internal" href="rect.html#pygame.Rect" title=""><code class="xref py py-func docutils literal notranslate"><span class="pre">pygame.Rect()</span></code><span class="tooltip-content">pygame object for storing rectangular coordinates</span></a> attribute keyword arguments/values passed
+into this method. As an example, <code class="docutils literal notranslate"><span class="pre">a_mask.get_rect(center=(10,</span> <span class="pre">5))</span></code> would
+create a <a class="tooltip reference internal" href="rect.html#pygame.Rect" title=""><code class="xref py py-func docutils literal notranslate"><span class="pre">pygame.Rect()</span></code><span class="tooltip-content">pygame object for storing rectangular coordinates</span></a> based on the mask's size centered at the
+given position.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>kwargs</strong> (<em>dict</em>) -- <a class="tooltip reference internal" href="rect.html#pygame.Rect" title=""><code class="xref py py-func docutils literal notranslate"><span class="pre">pygame.Rect()</span></code><span class="tooltip-content">pygame object for storing rectangular coordinates</span></a> attribute keyword arguments/values
+that will be applied to the rect</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>a new <a class="tooltip reference internal" href="rect.html#pygame.Rect" title=""><code class="xref py py-func docutils literal notranslate"><span class="pre">pygame.Rect()</span></code><span class="tooltip-content">pygame object for storing rectangular coordinates</span></a> object based on the size of this mask
+with any <a class="tooltip reference internal" href="rect.html#pygame.Rect" title=""><code class="xref py py-func docutils literal notranslate"><span class="pre">pygame.Rect()</span></code><span class="tooltip-content">pygame object for storing rectangular coordinates</span></a> attribute keyword arguments/values applied
+to it</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="rect.html#pygame.Rect" title="pygame.Rect">Rect</a></p>
+</dd>
+</dl>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 2.0.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.mask.Mask.get_at">
+<span class="sig-name descname"><span class="pre">get_at</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.mask.Mask.get_at" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Gets the bit at the given position</span></div>
+<div class="line"><span class="signature">get_at(pos) -&gt; int</span></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>pos</strong> -- the position of the bit to get (x, y)</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>1 if the bit is set, 0 if the bit is not set</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>IndexError</strong> -- if the position is outside of the mask's bounds</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.mask.Mask.set_at">
+<span class="sig-name descname"><span class="pre">set_at</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.mask.Mask.set_at" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Sets the bit at the given position</span></div>
+<div class="line"><span class="signature">set_at(pos) -&gt; None</span></div>
+<div class="line"><span class="signature">set_at(pos, value=1) -&gt; None</span></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pos</strong> -- the position of the bit to set (x, y)</p></li>
+<li><p><strong>value</strong> (<em>int</em>) -- any nonzero int will set the bit to 1, 0 will set the
+bit to 0 (default is 1)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">None</span></code></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>NoneType</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>IndexError</strong> -- if the position is outside of the mask's bounds</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.mask.Mask.overlap">
+<span class="sig-name descname"><span class="pre">overlap</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.mask.Mask.overlap" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Returns the point of intersection</span></div>
+<div class="line"><span class="signature">overlap(other, offset) -&gt; (x, y)</span></div>
+<div class="line"><span class="signature">overlap(other, offset) -&gt; None</span></div>
+</div>
+<p>Returns the first point of intersection encountered between this mask and
+<code class="docutils literal notranslate"><span class="pre">other</span></code>. A point of intersection is 2 overlapping set bits.</p>
+<p>The current algorithm searches the overlapping area in
+<code class="docutils literal notranslate"><span class="pre">sizeof(unsigned</span> <span class="pre">long</span> <span class="pre">int)</span> <span class="pre">*</span> <span class="pre">CHAR_BIT</span></code> bit wide column blocks (the value
+of <code class="docutils literal notranslate"><span class="pre">sizeof(unsigned</span> <span class="pre">long</span> <span class="pre">int)</span> <span class="pre">*</span> <span class="pre">CHAR_BIT</span></code> is platform dependent, for
+clarity it will be referred to as <code class="docutils literal notranslate"><span class="pre">W</span></code>). Starting at the top left corner
+it checks bits 0 to <code class="docutils literal notranslate"><span class="pre">W</span> <span class="pre">-</span> <span class="pre">1</span></code> of the first row (<code class="docutils literal notranslate"><span class="pre">(0,</span> <span class="pre">0)</span></code> to
+<code class="docutils literal notranslate"><span class="pre">(W</span> <span class="pre">-</span> <span class="pre">1,</span> <span class="pre">0)</span></code>) then continues to the next row (<code class="docutils literal notranslate"><span class="pre">(0,</span> <span class="pre">1)</span></code> to
+<code class="docutils literal notranslate"><span class="pre">(W</span> <span class="pre">-</span> <span class="pre">1,</span> <span class="pre">1)</span></code>). Once this entire column block is checked, it continues to
+the next one (<code class="docutils literal notranslate"><span class="pre">W</span></code> to <code class="docutils literal notranslate"><span class="pre">2</span> <span class="pre">*</span> <span class="pre">W</span> <span class="pre">-</span> <span class="pre">1</span></code>). This is repeated until it finds a
+point of intersection or the entire overlapping area is checked.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>other</strong> (<a class="reference internal" href="#pygame.mask.Mask" title="pygame.mask.Mask"><em>Mask</em></a>) -- the other mask to overlap with this mask</p></li>
+<li><p><strong>offset</strong> -- the offset of <code class="docutils literal notranslate"><span class="pre">other</span></code> from this mask, for more
+details refer to the <a class="reference internal" href="#mask-offset-label"><span class="std std-ref">Mask offset notes</span></a></p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>point of intersection or <code class="docutils literal notranslate"><span class="pre">None</span></code> if no intersection</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple(int, int) or NoneType</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.mask.Mask.overlap_area">
+<span class="sig-name descname"><span class="pre">overlap_area</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.mask.Mask.overlap_area" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Returns the number of overlapping set bits</span></div>
+<div class="line"><span class="signature">overlap_area(other, offset) -&gt; numbits</span></div>
+</div>
+<p>Returns the number of overlapping set bits between between this mask and
+<code class="docutils literal notranslate"><span class="pre">other</span></code>.</p>
+<p>This can be useful for collision detection. An approximate collision
+normal can be found by calculating the gradient of the overlapping area
+through the finite difference.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">dx</span> <span class="o">=</span> <span class="n">mask</span><span class="o">.</span><span class="n">overlap_area</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span> <span class="o">-</span> <span class="n">mask</span><span class="o">.</span><span class="n">overlap_area</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
+<span class="n">dy</span> <span class="o">=</span> <span class="n">mask</span><span class="o">.</span><span class="n">overlap_area</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span> <span class="o">-</span> <span class="n">mask</span><span class="o">.</span><span class="n">overlap_area</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>other</strong> (<a class="reference internal" href="#pygame.mask.Mask" title="pygame.mask.Mask"><em>Mask</em></a>) -- the other mask to overlap with this mask</p></li>
+<li><p><strong>offset</strong> -- the offset of <code class="docutils literal notranslate"><span class="pre">other</span></code> from this mask, for more
+details refer to the <a class="reference internal" href="#mask-offset-label"><span class="std std-ref">Mask offset notes</span></a></p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the number of overlapping set bits</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.mask.Mask.overlap_mask">
+<span class="sig-name descname"><span class="pre">overlap_mask</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.mask.Mask.overlap_mask" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Returns a mask of the overlapping set bits</span></div>
+<div class="line"><span class="signature">overlap_mask(other, offset) -&gt; Mask</span></div>
+</div>
+<p>Returns a <a class="reference internal" href="#pygame.mask.Mask" title="pygame.mask.Mask"><code class="xref py py-class docutils literal notranslate"><span class="pre">Mask</span></code></a>, the same size as this mask, containing the
+overlapping set bits between this mask and <code class="docutils literal notranslate"><span class="pre">other</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>other</strong> (<a class="reference internal" href="#pygame.mask.Mask" title="pygame.mask.Mask"><em>Mask</em></a>) -- the other mask to overlap with this mask</p></li>
+<li><p><strong>offset</strong> -- the offset of <code class="docutils literal notranslate"><span class="pre">other</span></code> from this mask, for more
+details refer to the <a class="reference internal" href="#mask-offset-label"><span class="std std-ref">Mask offset notes</span></a></p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>a newly created <a class="reference internal" href="#pygame.mask.Mask" title="pygame.mask.Mask"><code class="xref py py-class docutils literal notranslate"><span class="pre">Mask</span></code></a> with the overlapping bits set</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#pygame.mask.Mask" title="pygame.mask.Mask">Mask</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.mask.Mask.fill">
+<span class="sig-name descname"><span class="pre">fill</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.mask.Mask.fill" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Sets all bits to 1</span></div>
+<div class="line"><span class="signature">fill() -&gt; None</span></div>
+</div>
+<p>Sets all bits in the mask to 1.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">None</span></code></p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>NoneType</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.mask.Mask.clear">
+<span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.mask.Mask.clear" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Sets all bits to 0</span></div>
+<div class="line"><span class="signature">clear() -&gt; None</span></div>
+</div>
+<p>Sets all bits in the mask to 0.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">None</span></code></p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>NoneType</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.mask.Mask.invert">
+<span class="sig-name descname"><span class="pre">invert</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.mask.Mask.invert" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Flips all the bits</span></div>
+<div class="line"><span class="signature">invert() -&gt; None</span></div>
+</div>
+<p>Flips all of the bits in the mask. All the set bits are cleared to 0 and
+all the unset bits are set to 1.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">None</span></code></p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>NoneType</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.mask.Mask.scale">
+<span class="sig-name descname"><span class="pre">scale</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.mask.Mask.scale" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Resizes a mask</span></div>
+<div class="line"><span class="signature">scale((width, height)) -&gt; Mask</span></div>
+</div>
+<p>Creates a new <a class="reference internal" href="#pygame.mask.Mask" title="pygame.mask.Mask"><code class="xref py py-class docutils literal notranslate"><span class="pre">Mask</span></code></a> of the requested size with its bits scaled
+from this mask.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>size</strong> -- the width and height (size) of the mask to create</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>a new <a class="reference internal" href="#pygame.mask.Mask" title="pygame.mask.Mask"><code class="xref py py-class docutils literal notranslate"><span class="pre">Mask</span></code></a> object with its bits scaled from this mask</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#pygame.mask.Mask" title="pygame.mask.Mask">Mask</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> -- if <code class="docutils literal notranslate"><span class="pre">width</span> <span class="pre">&lt;</span> <span class="pre">0</span></code> or <code class="docutils literal notranslate"><span class="pre">height</span> <span class="pre">&lt;</span> <span class="pre">0</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.mask.Mask.draw">
+<span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.mask.Mask.draw" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Draws a mask onto another</span></div>
+<div class="line"><span class="signature">draw(other, offset) -&gt; None</span></div>
+</div>
+<p>Performs a bitwise OR, drawing <code class="docutils literal notranslate"><span class="pre">othermask</span></code> onto this mask.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>other</strong> (<a class="reference internal" href="#pygame.mask.Mask" title="pygame.mask.Mask"><em>Mask</em></a>) -- the mask to draw onto this mask</p></li>
+<li><p><strong>offset</strong> -- the offset of <code class="docutils literal notranslate"><span class="pre">other</span></code> from this mask, for more
+details refer to the <a class="reference internal" href="#mask-offset-label"><span class="std std-ref">Mask offset notes</span></a></p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">None</span></code></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>NoneType</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.mask.Mask.erase">
+<span class="sig-name descname"><span class="pre">erase</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.mask.Mask.erase" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Erases a mask from another</span></div>
+<div class="line"><span class="signature">erase(other, offset) -&gt; None</span></div>
+</div>
+<p>Erases (clears) all bits set in <code class="docutils literal notranslate"><span class="pre">other</span></code> from this mask.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>other</strong> (<a class="reference internal" href="#pygame.mask.Mask" title="pygame.mask.Mask"><em>Mask</em></a>) -- the mask to erase from this mask</p></li>
+<li><p><strong>offset</strong> -- the offset of <code class="docutils literal notranslate"><span class="pre">other</span></code> from this mask, for more
+details refer to the <a class="reference internal" href="#mask-offset-label"><span class="std std-ref">Mask offset notes</span></a></p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">None</span></code></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>NoneType</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.mask.Mask.count">
+<span class="sig-name descname"><span class="pre">count</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.mask.Mask.count" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Returns the number of set bits</span></div>
+<div class="line"><span class="signature">count() -&gt; bits</span></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>the number of set bits in the mask</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.mask.Mask.centroid">
+<span class="sig-name descname"><span class="pre">centroid</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.mask.Mask.centroid" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Returns the centroid of the set bits</span></div>
+<div class="line"><span class="signature">centroid() -&gt; (x, y)</span></div>
+</div>
+<p>Finds the centroid (the center mass of the set bits) for this mask.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>a coordinate tuple indicating the centroid of the mask, it will
+return <code class="docutils literal notranslate"><span class="pre">(0,</span> <span class="pre">0)</span></code> if the mask has no bits set</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple(int, int)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.mask.Mask.angle">
+<span class="sig-name descname"><span class="pre">angle</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.mask.Mask.angle" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Returns the orientation of the set bits</span></div>
+<div class="line"><span class="signature">angle() -&gt; theta</span></div>
+</div>
+<p>Finds the approximate orientation (from -90 to 90 degrees) of the set bits
+in the mask. This works best if performed on a mask with only one
+connected component.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>the orientation of the set bits in the mask, it will return
+<code class="docutils literal notranslate"><span class="pre">0.0</span></code> if the mask has no bits set</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>See <a class="reference internal" href="#pygame.mask.Mask.connected_component" title="pygame.mask.Mask.connected_component"><code class="xref py py-meth docutils literal notranslate"><span class="pre">connected_component()</span></code></a> for details on how a connected
+component is calculated.</p>
+</div>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.mask.Mask.outline">
+<span class="sig-name descname"><span class="pre">outline</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.mask.Mask.outline" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Returns a list of points outlining an object</span></div>
+<div class="line"><span class="signature">outline() -&gt; [(x, y), ...]</span></div>
+<div class="line"><span class="signature">outline(every=1) -&gt; [(x, y), ...]</span></div>
+</div>
+<p>Returns a list of points of the outline of the first connected component
+encountered in the mask. To find a connected component, the mask is
+searched per row (left to right) starting in the top left corner.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">every</span></code> optional parameter skips set bits in the outline. For
+example, setting it to 10 would return a list of every 10th set bit in the
+outline.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>every</strong> (<em>int</em>) -- (optional) indicates the number of bits to skip over in
+the outline (default is 1)</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>a list of points outlining the first connected component
+encountered, an empty list is returned if the mask has no bits set</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[tuple(int, int)]</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>See <a class="reference internal" href="#pygame.mask.Mask.connected_component" title="pygame.mask.Mask.connected_component"><code class="xref py py-meth docutils literal notranslate"><span class="pre">connected_component()</span></code></a> for details on how a connected
+component is calculated.</p>
+</div>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.mask.Mask.convolve">
+<span class="sig-name descname"><span class="pre">convolve</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.mask.Mask.convolve" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Returns the convolution of this mask with another mask</span></div>
+<div class="line"><span class="signature">convolve(other) -&gt; Mask</span></div>
+<div class="line"><span class="signature">convolve(other, output=None, offset=(0, 0)) -&gt; Mask</span></div>
+</div>
+<p>Convolve this mask with the given <code class="docutils literal notranslate"><span class="pre">other</span></code> Mask.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>other</strong> (<a class="reference internal" href="#pygame.mask.Mask" title="pygame.mask.Mask"><em>Mask</em></a>) -- mask to convolve this mask with</p></li>
+<li><p><strong>output</strong> (<a class="reference internal" href="#pygame.mask.Mask" title="pygame.mask.Mask"><em>Mask</em></a><em> or </em><em>NoneType</em>) -- (optional) mask for output (default is <code class="docutils literal notranslate"><span class="pre">None</span></code>)</p></li>
+<li><p><strong>offset</strong> -- the offset of <code class="docutils literal notranslate"><span class="pre">other</span></code> from this mask, (default is
+<code class="docutils literal notranslate"><span class="pre">(0,</span> <span class="pre">0)</span></code>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>a <a class="reference internal" href="#pygame.mask.Mask" title="pygame.mask.Mask"><code class="xref py py-class docutils literal notranslate"><span class="pre">Mask</span></code></a> with the <code class="docutils literal notranslate"><span class="pre">(i</span> <span class="pre">-</span> <span class="pre">offset[0],</span> <span class="pre">j</span> <span class="pre">-</span> <span class="pre">offset[1])</span></code> bit
+set, if shifting <code class="docutils literal notranslate"><span class="pre">other</span></code> (such that its bottom right corner is at
+<code class="docutils literal notranslate"><span class="pre">(i,</span> <span class="pre">j)</span></code>) causes it to overlap with this mask</p>
+<p>If an <code class="docutils literal notranslate"><span class="pre">output</span></code> Mask is specified, the output is drawn onto it and
+it is returned. Otherwise a mask of size <code class="docutils literal notranslate"><span class="pre">(MAX(0,</span> <span class="pre">width</span> <span class="pre">+</span> <span class="pre">other</span> <span class="pre">mask's</span>
+<span class="pre">width</span> <span class="pre">-</span> <span class="pre">1),</span> <span class="pre">MAX(0,</span> <span class="pre">height</span> <span class="pre">+</span> <span class="pre">other</span> <span class="pre">mask's</span> <span class="pre">height</span> <span class="pre">-</span> <span class="pre">1))</span></code> is created and
+returned.</p>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#pygame.mask.Mask" title="pygame.mask.Mask">Mask</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.mask.Mask.connected_component">
+<span class="sig-name descname"><span class="pre">connected_component</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.mask.Mask.connected_component" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Returns a mask containing a connected component</span></div>
+<div class="line"><span class="signature">connected_component() -&gt; Mask</span></div>
+<div class="line"><span class="signature">connected_component(pos) -&gt; Mask</span></div>
+</div>
+<p>A connected component is a group (1 or more) of connected set bits
+(orthogonally and diagonally). The SAUF algorithm, which checks 8 point
+connectivity, is used to find a connected component in the mask.</p>
+<p>By default this method will return a <a class="reference internal" href="#pygame.mask.Mask" title="pygame.mask.Mask"><code class="xref py py-class docutils literal notranslate"><span class="pre">Mask</span></code></a> containing the largest
+connected component in the mask. Optionally, a bit coordinate can be
+specified and the connected component containing it will be returned. If
+the bit at the given location is not set, the returned <a class="reference internal" href="#pygame.mask.Mask" title="pygame.mask.Mask"><code class="xref py py-class docutils literal notranslate"><span class="pre">Mask</span></code></a> will
+be empty (no bits set).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>pos</strong> -- (optional) selects the connected component that contains the
+bit at this position</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>a <a class="reference internal" href="#pygame.mask.Mask" title="pygame.mask.Mask"><code class="xref py py-class docutils literal notranslate"><span class="pre">Mask</span></code></a> object (same size as this mask) with the largest
+connected component from this mask, if this mask has no bits set then
+an empty mask will be returned</p>
+<p>If the <code class="docutils literal notranslate"><span class="pre">pos</span></code> parameter is provided then the mask returned will have
+the connected component that contains this position. An empty mask will
+be returned if the <code class="docutils literal notranslate"><span class="pre">pos</span></code> parameter selects an unset bit.</p>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#pygame.mask.Mask" title="pygame.mask.Mask">Mask</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>IndexError</strong> -- if the optional <code class="docutils literal notranslate"><span class="pre">pos</span></code> parameter is outside of the
+mask's bounds</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.mask.Mask.connected_components">
+<span class="sig-name descname"><span class="pre">connected_components</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.mask.Mask.connected_components" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Returns a list of masks of connected components</span></div>
+<div class="line"><span class="signature">connected_components() -&gt; [Mask, ...]</span></div>
+<div class="line"><span class="signature">connected_components(minimum=0) -&gt; [Mask, ...]</span></div>
+</div>
+<p>Provides a list containing a <a class="reference internal" href="#pygame.mask.Mask" title="pygame.mask.Mask"><code class="xref py py-class docutils literal notranslate"><span class="pre">Mask</span></code></a> object for each connected
+component.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>minimum</strong> (<em>int</em>) -- (optional) indicates the minimum number of bits (to
+filter out noise) per connected component (default is 0, which equates
+to no minimum and is equivalent to setting it to 1, as a connected
+component must have at least 1 bit set)</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>a list containing a <a class="reference internal" href="#pygame.mask.Mask" title="pygame.mask.Mask"><code class="xref py py-class docutils literal notranslate"><span class="pre">Mask</span></code></a> object for each connected
+component, an empty list is returned if the mask has no bits set</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[<a class="reference internal" href="#pygame.mask.Mask" title="pygame.mask.Mask">Mask</a>]</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>See <a class="reference internal" href="#pygame.mask.Mask.connected_component" title="pygame.mask.Mask.connected_component"><code class="xref py py-meth docutils literal notranslate"><span class="pre">connected_component()</span></code></a> for details on how a connected
+component is calculated.</p>
+</div>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.mask.Mask.get_bounding_rects">
+<span class="sig-name descname"><span class="pre">get_bounding_rects</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.mask.Mask.get_bounding_rects" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Returns a list of bounding rects of connected components</span></div>
+<div class="line"><span class="signature">get_bounding_rects() -&gt; [Rect, ...]</span></div>
+</div>
+<p>Provides a list containing a bounding rect for each connected component.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>a list containing a bounding rect for each connected component,
+an empty list is returned if the mask has no bits set</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list[<a class="reference internal" href="rect.html#pygame.Rect" title="pygame.Rect">Rect</a>]</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>See <a class="reference internal" href="#pygame.mask.Mask.connected_component" title="pygame.mask.Mask.connected_component"><code class="xref py py-meth docutils literal notranslate"><span class="pre">connected_component()</span></code></a> for details on how a connected
+component is calculated.</p>
+</div>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.mask.Mask.to_surface">
+<span class="sig-name descname"><span class="pre">to_surface</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.mask.Mask.to_surface" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Returns a surface with the mask drawn on it</span></div>
+<div class="line"><span class="signature">to_surface() -&gt; Surface</span></div>
+<div class="line"><span class="signature">to_surface(surface=None, setsurface=None, unsetsurface=None, setcolor=(255, 255, 255, 255), unsetcolor=(0, 0, 0, 255), dest=(0, 0)) -&gt; Surface</span></div>
+</div>
+<p>Draws this mask on the given surface. Set bits (bits set to 1) and unset
+bits (bits set to 0) can be drawn onto a surface.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>surface</strong> (<a class="reference internal" href="surface.html#pygame.Surface" title="pygame.Surface"><em>Surface</em></a><em> or </em><em>None</em>) -- (optional) Surface to draw mask onto, if no surface is
+provided one will be created (default is <code class="docutils literal notranslate"><span class="pre">None</span></code>, which will cause a
+surface with the parameters
+<code class="docutils literal notranslate"><span class="pre">Surface(size=mask.get_size(),</span> <span class="pre">flags=SRCALPHA,</span> <span class="pre">depth=32)</span></code> to be
+created, drawn on, and returned)</p></li>
+<li><p><strong>setsurface</strong> (<a class="reference internal" href="surface.html#pygame.Surface" title="pygame.Surface"><em>Surface</em></a><em> or </em><em>None</em>) -- (optional) use this surface's color values to draw
+set bits (default is <code class="docutils literal notranslate"><span class="pre">None</span></code>), if this surface is smaller than the
+mask any bits outside its bounds will use the <code class="docutils literal notranslate"><span class="pre">setcolor</span></code> value</p></li>
+<li><p><strong>unsetsurface</strong> (<a class="reference internal" href="surface.html#pygame.Surface" title="pygame.Surface"><em>Surface</em></a><em> or </em><em>None</em>) -- (optional) use this surface's color values to draw
+unset bits (default is <code class="docutils literal notranslate"><span class="pre">None</span></code>), if this surface is smaller than the
+mask any bits outside its bounds will use the <code class="docutils literal notranslate"><span class="pre">unsetcolor</span></code> value</p></li>
+<li><p><strong>setcolor</strong> (<a class="reference internal" href="color.html#pygame.Color" title="pygame.Color"><em>Color</em></a><em> or </em><em>str</em><em> or </em><em>int</em><em> or </em><em>tuple</em><em>(</em><em>int</em><em>, </em><em>int</em><em>, </em><em>int</em><em>, </em><em>[</em><em>int</em><em>]</em><em>) or
+</em><em>list</em><em>(</em><em>int</em><em>, </em><em>int</em><em>, </em><em>int</em><em>, </em><em>[</em><em>int</em><em>]</em><em>) or </em><em>None</em>) -- (optional) color to draw set bits (default is
+<code class="docutils literal notranslate"><span class="pre">(255,</span> <span class="pre">255,</span> <span class="pre">255,</span> <span class="pre">255)</span></code>, white), use <code class="docutils literal notranslate"><span class="pre">None</span></code> to skip drawing the set
+bits, the <code class="docutils literal notranslate"><span class="pre">setsurface</span></code> parameter (if set) will takes precedence over
+this parameter</p></li>
+<li><p><strong>unsetcolor</strong> (<a class="reference internal" href="color.html#pygame.Color" title="pygame.Color"><em>Color</em></a><em> or </em><em>str</em><em> or </em><em>int</em><em> or </em><em>tuple</em><em>(</em><em>int</em><em>, </em><em>int</em><em>, </em><em>int</em><em>, </em><em>[</em><em>int</em><em>]</em><em>) or
+</em><em>list</em><em>(</em><em>int</em><em>, </em><em>int</em><em>, </em><em>int</em><em>, </em><em>[</em><em>int</em><em>]</em><em>) or </em><em>None</em>) -- (optional) color to draw unset bits (default is
+<code class="docutils literal notranslate"><span class="pre">(0,</span> <span class="pre">0,</span> <span class="pre">0,</span> <span class="pre">255)</span></code>, black), use <code class="docutils literal notranslate"><span class="pre">None</span></code> to skip drawing the unset
+bits, the <code class="docutils literal notranslate"><span class="pre">unsetsurface</span></code> parameter (if set) will takes precedence
+over this parameter</p></li>
+<li><p><strong>dest</strong> (<a class="reference internal" href="rect.html#pygame.Rect" title="pygame.Rect"><em>Rect</em></a><em> or </em><em>tuple</em><em>(</em><em>int</em><em>, </em><em>int</em><em>) or </em><em>list</em><em>(</em><em>int</em><em>, </em><em>int</em><em>) or </em><a class="reference internal" href="math.html#pygame.math.Vector2" title="pygame.math.Vector2"><em>Vector2</em></a><em>(</em><em>int</em><em>, </em><em>int</em><em>)</em>) -- (optional) surface destination of where to position the
+topleft corner of the mask being drawn (default is <code class="docutils literal notranslate"><span class="pre">(0,</span> <span class="pre">0)</span></code>), if a
+Rect is used as the <code class="docutils literal notranslate"><span class="pre">dest</span></code> parameter, its <code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code> attributes
+will be used as the destination, <strong>NOTE1:</strong> rects with a negative width
+or height value will not be normalized before using their <code class="docutils literal notranslate"><span class="pre">x</span></code> and
+<code class="docutils literal notranslate"><span class="pre">y</span></code> values, <strong>NOTE2:</strong> this destination value is only used to
+position the mask on the surface, it does not offset the <code class="docutils literal notranslate"><span class="pre">setsurface</span></code>
+and <code class="docutils literal notranslate"><span class="pre">unsetsurface</span></code> from the mask, they are always aligned with the
+mask (i.e. position <code class="docutils literal notranslate"><span class="pre">(0,</span> <span class="pre">0)</span></code> on the mask always corresponds to
+position <code class="docutils literal notranslate"><span class="pre">(0,</span> <span class="pre">0)</span></code> on the <code class="docutils literal notranslate"><span class="pre">setsurface</span></code> and <code class="docutils literal notranslate"><span class="pre">unsetsurface</span></code>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the <code class="docutils literal notranslate"><span class="pre">surface</span></code> parameter (or a newly created surface if no
+<code class="docutils literal notranslate"><span class="pre">surface</span></code> parameter was provided) with this mask drawn on it</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="surface.html#pygame.Surface" title="pygame.Surface">Surface</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> -- if the <code class="docutils literal notranslate"><span class="pre">setsurface</span></code> parameter or <code class="docutils literal notranslate"><span class="pre">unsetsurface</span></code>
+parameter does not have the same format (bytesize/bitsize/alpha) as
+the <code class="docutils literal notranslate"><span class="pre">surface</span></code> parameter</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>To skip drawing the set bits, both <code class="docutils literal notranslate"><span class="pre">setsurface</span></code> and <code class="docutils literal notranslate"><span class="pre">setcolor</span></code> must
+be <code class="docutils literal notranslate"><span class="pre">None</span></code>. The <code class="docutils literal notranslate"><span class="pre">setsurface</span></code> parameter defaults to <code class="docutils literal notranslate"><span class="pre">None</span></code>, but
+<code class="docutils literal notranslate"><span class="pre">setcolor</span></code> defaults to a color value and therefore must be set to
+<code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>To skip drawing the unset bits, both <code class="docutils literal notranslate"><span class="pre">unsetsurface</span></code> and
+<code class="docutils literal notranslate"><span class="pre">unsetcolor</span></code> must be <code class="docutils literal notranslate"><span class="pre">None</span></code>. The <code class="docutils literal notranslate"><span class="pre">unsetsurface</span></code> parameter
+defaults to <code class="docutils literal notranslate"><span class="pre">None</span></code>, but <code class="docutils literal notranslate"><span class="pre">unsetcolor</span></code> defaults to a color value and
+therefore must be set to <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 2.0.0.</span></p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+<br /><br />
+<hr />
+<a href="https://github.com/pygame/pygame/edit/main/docs/reST/ref/mask.rst" rel="nofollow">Edit on GitHub</a>
+            <div class="clearer"></div>
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="math.html" title="pygame.math"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="locals.html" title="pygame.locals"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">pygame v2.5.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href=""><code class="xref py py-mod docutils literal notranslate"><span class="pre">pygame.mask</span></code></a></li>
+    <script type="text/javascript" src="https://www.pygame.org/comment/jquery.plugin.docscomments.js"></script>
+
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2000-2023, pygame developers.
+    </div>
+  </body>
+</html>

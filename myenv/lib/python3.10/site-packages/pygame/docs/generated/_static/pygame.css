@@ -1,0 +1,707 @@
+/**
+ * Pygame stylesheet -- original theme
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ */
+
+@import url("reset.css");
+@import url("tooltip.css");
+@import url("basic.css");
+
+/* -- index page ------------------------------------------------------------ */
+
+#pygame-front-page h2 {
+    margin-top: 2em;
+}
+
+#pygame-front-page dt {
+    padding-top: 1em;
+}
+
+#pygame-front-page dl {
+    padding-left: 1em;
+}
+
+/* -- tutorial page --------------------------------------------------------- */
+
+div.body table.docinfo {
+    font-size: 0.9em;
+    margin-left: 3em;
+}
+
+div.body table.docinfo th {
+    text-align: left;
+    font-weight: bolder;
+}
+
+div.body table.docinfo td {
+    padding-left: 1em;
+}
+
+div.body table.matrix th,
+div.body table.matrix td {
+    border-right: 0.1em solid black;
+}
+
+div.body table.matrix th:last-child,
+div.body table.matrix td:last-child {
+    border-right-style: none;
+}
+
+div.body table.matrix th {
+    font-weight: bolder;
+}
+
+div.body table.matrix th.head {
+    text-align: center;
+    border-bottom: 0.2em double black;
+}
+
+div.body table.matrix td {
+    text-align: center;
+}
+
+div.body table.matrix th.stub {
+    text-align: left;
+}
+
+/* Let a float element be beside a code block */
+div.highlight-python.notranslate {
+    display: inline-block;
+}
+
+/* -- page layout ----------------------------------------------------------- */
+
+body {
+    font-family: sans-serif;
+    color: #000000;
+    font-style: normal;
+    text-decoration: none;
+    text-align: left;
+    border-style: none;
+}
+
+div.header {
+    padding: 0.5em;
+    line-height: 1.2em;
+}
+
+div.header > div {
+    border: 3px solid black;
+    border-collapse: collapse;
+    background-color: #6aee28;
+}
+
+div.header .logo {
+    background-color: #c2fc20;
+    padding: 0.3em;
+    border-right: 3px solid black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+div.header .logo img {
+    min-width: 200px;
+    min-height: 60px;
+    border-style: none;
+}
+
+div.header .pagelinks {
+    padding: 0.3em;
+    text-align: center;
+    vertical-align: middle;
+    flex-grow: 1;
+}
+
+div.header p.top {
+    margin-top: 0;
+    margin-bottom: 1em;
+}
+
+div.header p.bottom {
+    margin-bottom: 0;
+    text-align: left;
+}
+
+div.header .pagelinks a {
+    text-decoration: underline;
+}
+
+div.header .pagelinks a:hover {
+    text-decoration: none;
+}
+
+div.document {
+    background-color: #aaeebb;
+}
+
+.flex-container {
+    display: flex;
+    flex-direction: row;
+}
+
+@media only screen and (max-width: 680px) {
+  .flex-container {
+    flex-direction: column;
+  }
+
+  div.header .logo {
+      border-right: none;
+      border-bottom: 3px solid black;
+  }
+}
+
+/* on wide screens center text, and max width for readable area.  */
+@media only screen and (min-width: 680px) {
+    div.documentwrapper {
+        float: initial;
+        width: 100%;
+        max-width: 700px;
+        margin: 0 auto;
+    }
+}
+
+.toc td {
+    display:block;
+    width: 200%;
+}
+
+.toc td:last-child {
+    padding-bottom: 20px;
+}
+
+table.toc td:nth-child(2) {
+    display: none;
+}
+
+div.bodywrapper {
+    margin: 0 0 0 230px;
+}
+
+div.body {
+    min-width: auto;
+    padding: 0.5em;
+}
+
+div.heading {
+    padding: 0 0 0 0.5em;
+}
+
+div.footer {
+    display: none;
+    color: #000000;
+    width: 100%;
+    padding: 9px 0;
+    text-align: center;
+    font-size: 75%;
+}
+
+div.footer a {
+    background-color: #11303d;
+    color: #000000;
+    text-decoration: underline;
+}
+
+div.related {
+    background-color: #6aee28;
+    line-height: 30px;
+    color: #000000;
+    border-top: 3px solid black;
+    border-bottom: 3px solid black;
+}
+
+div.related a {
+    color: #000000;
+}
+
+div.sphinxsidebar {
+}
+
+div.sphinxsidebar h3 {
+    font-family: sans-serif;
+    color: #ffffff;
+    font-size: 1.4em;
+    font-weight: normal;
+    margin: 0;
+    padding: 0;
+}
+
+div.sphinxsidebar h3 a {
+    color: #ffffff;
+}
+
+div.sphinxsidebar h4 {
+    font-family: sans-serif;
+    color: #ffffff;
+    font-size: 1.3em;
+    font-weight: normal;
+    margin: 5px 0 0 0;
+    padding: 0;
+}
+
+div.sphinxsidebar p {
+    color: #ffffff;
+}
+
+div.sphinxsidebar p.topless {
+    margin: 5px 10px 10px 10px;
+}
+
+div.sphinxsidebar ul {
+    margin: 10px;
+    padding: 0;
+    color: #ffffff;
+}
+
+div.sphinxsidebar a {
+    color: #98dbcc;
+}
+
+div.sphinxsidebar input {
+    border: 1px solid #98dbcc;
+    font-family: sans-serif;
+    font-size: 1em;
+}
+
+/* -- body styles ----------------------------------------------------------- */
+
+a {
+    color: #000000;
+    background-color: transparent;
+    text-decoration: underline;
+}
+
+a:hover {
+    color: #000000;
+    background-color: transparent;
+    text-decoration: none;
+}
+
+p {
+    margin: 0.5em 0;
+}
+
+strong {
+    font-weight: bold;
+}
+
+em {
+    font-style: italic;
+}
+
+dl.definition {
+    padding-top: 0.7em;
+    padding-bottom: 0.7em;
+}
+
+dt.title {
+    font-family: monospace;
+}
+
+dt tt {
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+dt.module {
+    margin-bottom: 1em;
+}
+
+table.toc {
+    margin-left: 2em;
+    margin-bottom: 0.5em;
+}
+
+table.toc td {
+    border-style: none;
+    padding-right: 10px;
+}
+
+span.summaryline {
+    font-style: italic;
+}
+
+span.signature {
+    font-family: monospace;
+    margin-bottom: 0.5em;
+}
+
+span.pre {
+    font-family: monospace;
+}
+
+code.download span.pre {
+    font-family: inherit;
+    font-weight: normal;
+}
+
+table.docutils td.toc {
+    border-style: none;
+}
+
+div.body p, div.body dd, div.body li {
+    text-align: left;
+    line-height: 130%;
+}
+
+div.body h1,
+div.body h2,
+div.body h3,
+div.body h4,
+div.body h5,
+div.body h6 {
+    font-family: sans-serif;
+    font-weight: bold;
+    margin: 1em 0 0.5em;
+    text-align: left;
+}
+
+div.body h6 {
+    font-weight: normal;
+    font-style: italic;
+    margin: 0;
+    padding: 0;
+    line-height: 130%;
+}
+
+div.body h1 { font-size: 1.5em; }
+div.body h2 { font-size: 1.4em; }
+div.body h3 { font-size: 1.3em; }
+div.body h4 { font-size: 1.2em; }
+div.body h5 { font-size: 1.1em; }
+div.body h6 { font-size: 1.0em; }
+
+a.headerlink {
+    color: #68698b;
+    font-size: 0.8em;
+    padding: 0 4px 0 4px;
+    text-decoration: none;
+}
+
+a.headerlink:hover {
+    background-color: #68698b;
+    color: white;
+}
+
+blockquote {
+    margin-left: 2em;
+}
+
+div.admonition p.admonition-title + p {
+    display: inline;
+}
+
+div.admonition p,
+div.admonition pre,
+div.admonition ul,
+div.admonition ol {
+    margin-bottom: 5px;
+}
+
+p.admonition-title {
+    display: inline;
+}
+
+p.admonition-title:after {
+    content: ":";
+}
+
+dl.definition div.note, dl.definition div.seealso {
+    background: none;
+    border: none;
+}
+
+dl.definition div.admonition {
+    margin-bottom: 0.5em;
+}
+
+dl.definition .admonition-title {
+    font-weight: bold;
+}
+
+div.note {
+    background-color: #eeeeee;
+    border: 1px solid #ccc;
+}
+
+.note tt {
+    background: #d6d6d6;
+}
+
+div.seealso {
+    background-color: #ffc;
+    border: 1px solid #ff6;
+}
+
+div.topic {
+    background-color: #eee;
+}
+
+div.caution {
+    background-color: #eeffcc;
+    border: 1px solid #aabb88;
+}
+
+div.warning {
+    background-color: #ffe4e4;
+    border: 1px solid #f66;
+}
+
+.warning tt {
+    background: #efc2c2;
+}
+
+p.linklist {
+    text-align: center;
+}
+
+.section:target > h2,
+.section:target > h3,
+.section:target > h4,
+dt:target,
+span.highlighted {
+    background-color: #c7c695;
+}
+
+pre {
+    background-color: #eeffcc;
+    border: 1px solid #ac9;
+    border-left: none;
+    border-right: none;
+    color: #333333;
+    display: block;
+    font-family: monospace;
+    line-height: 120%;
+    margin-bottom: 1em;
+    padding: 5px 5px 5px 15px;
+    text-align: justify;
+}
+
+div.highlight pre {
+    border: none;
+}
+
+ul.simple {
+    list-style-type: circle;
+    margin-bottom: 1em;
+}
+
+code.descclassname, code.descname {
+    font-size: 1.3em;
+    font-weight: bold;
+}
+
+/*
+    Top level section title format
+    section tag has been introduced in docutils 0.17 as a replacement for div.section
+    Both rule variations are kept to support old versions of docutils
+ */
+div.body > section > dl > dt.title, div.body > div.section > dl > dt.title {
+    font-size: 120%;
+    font-weight: bold;
+    margin-bottom: 1em;
+}
+
+/* Visually separate an element from previous content in a section */
+div.body .leading {
+    margin-top: 0.5em;
+}
+
+/* Visually separate an element from following content in a section */
+div.body .trailing {
+    margin-bottom: 0.75em;
+}
+
+/* An element that spans the width of its section */
+div.body div.fullwidth div,
+div.body div.fullwidth img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+div.body div.fullwidth p {
+    text-align: center;
+}
+
+/* A two column table with link, description pairs. */
+table.more-to-explore,
+table.more-to-explore th,
+table.more-to-explore td {
+    border: 0.2em double black;
+    border-collapse: collapse;
+    background-color: inherit;
+}
+
+table.more-to-explore caption {
+    text-align: left;
+    font-size: larger;
+    background-color: inherit;
+}
+
+table.more-to-explore th,
+table.more-to-explore td {
+    padding: 0.2em 2em 0.3em 0.5em;
+}
+
+div.body p.small-heading {
+    margin-bottom: 0.2em;
+    font-size: small;
+}
+
+/* Inlined element float right */
+div.body div.inlined,
+div.body img.inlined-right {
+    float: right;
+    margin: 1em 0;
+}
+
+div.body .inset {
+    margin-left: 2em;
+}
+
+/* Code line reference text style */
+div.body span.codelineref {
+    text-decoration: underline;
+}
+
+/* Highlight Code types and functions. */
+.py-class .pre,
+.reference.internal em {
+    font-weight: bold;
+    background-color: #90ee90;
+}
+
+span.linenos {
+    margin-right: 15px;
+}
+
+/* Examples section: contains one or more example subsections */
+div.examples > div.example {
+    clear: both;
+    margin-top: 0.2em;
+    border: 0.1em solid teal;
+    padding: 0.2em;
+}
+
+div.example img {
+    float: left;
+    padding-right: 0.3em;
+    padding-bottom: 0.1em;
+}
+
+div.example p,
+div.example pre {
+    margin-top: 0;
+    margin-bottom: 0.4em;
+}
+
+div.example div.break {
+    clear: both;
+    height: 0;
+}
+
+/* -- tooltip style --------------------------------------------------------- */
+
+a.tooltip {
+    text-decoration: underline;
+}
+
+a.tooltip:hover {
+    text-decoration: none;
+}
+
+.tooltip-content {
+    width: 250px;
+    background-color: #c2fc20;
+    border: 1px solid #ace01C;
+    padding: 3px;
+    border-radius: 5px 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.1);
+    -webkit-box-shadow: 5px 5px rgba(0, 0, 0, 0.1);
+    -moz-box-shadow: 5px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* -- comments style --------------------------------------------------------- */
+
+form.addcomment {
+    display:inline;
+}
+
+.addcomment input,
+a.commentButton {
+    background-color: #6aee28;
+    border: 1px solid #000000;
+    font-family: Arial,Helvetica,sans-serif;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 6px;
+    margin-right: 4px;
+}
+
+article.commentsArticle {
+    background: none repeat scroll 0 0 #FEF790;
+    border: 1px solid black;
+    margin-bottom: 12px;
+    margin-top: 12px;
+    padding: 4px;
+
+}
+
+article.hidden {
+    display:none;
+}
+
+header.commentHeading {
+    background: none repeat scroll 0 0 #FDE42D;
+    text-align: center;
+}
+
+pre.commentContent {
+    overflow: auto;
+    max-width: 800px;
+    margin-left:0;
+    border: 0;
+    white-space: pre-wrap;
+}
+
+/* -- logos page ---------------------------------------------------------------- */
+
+.fullwidth .line-block {
+    text-align: center;
+}
+
+/* -- responsive design --------------------------------------------------------- */
+
+@media only screen and (max-width: 680px) {
+    /* Make tables be responsive-ish. */
+    table, thead, tbody, th, td, tr {
+        display: block;
+    }
+
+    div.body img.inlined-right {
+        float: none;
+        display: block;
+        margin: auto
+    }
+
+    span.linenos {
+        margin-right: 10px;
+    }
+
+    .addcomment input, a.commentButton {
+        font-size: 10px;
+    }
+
+    pre {
+        white-space: pre-wrap;
+        word-wrap: break-word;
+    }
+
+    .toc td {
+        width: 100%;
+    }
+}

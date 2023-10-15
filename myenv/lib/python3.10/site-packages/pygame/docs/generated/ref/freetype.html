@@ -1,0 +1,1261 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>pygame.freetype &#8212; pygame v2.5.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygame.css?v=71ee6cc2" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=ba44479e"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <link rel="icon" href="../_static/pygame.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="pygame.gfxdraw" href="gfxdraw.html" />
+    <link rel="prev" title="pygame.font" href="font.html" /> 
+  </head><body>  
+
+    <div class="document">
+
+  <div class="header">
+	<div class="flex-container">
+	<div class="logo">
+	  <a href="https://www.pygame.org/">
+	    <img src="../_static/pygame_tiny.png"/>
+	  </a>
+	  <h5>pygame documentation</h5>
+	</div>
+	<div class="pagelinks">
+	  <div class="top">
+	    <a href="https://www.pygame.org/">Pygame Home</a> ||
+	    <a href="../index.html">Help Contents</a> ||
+	    <a href="../genindex.html">Reference Index</a>
+
+        <form action="../search.html" method="get" style="display:inline;float:right;">
+          <input name="q" value="" type="text">
+          <input value="search" type="submit">
+        </form>
+	  </div>
+	  <hr style="color:black;border-bottom:none;border-style: dotted;border-bottom-style:none;">
+	  <p class="bottom"><b>Most useful stuff</b>:
+	    <a href="color.html">Color</a> | 
+	    <a href="display.html">display</a> | 
+	    <a href="draw.html">draw</a> | 
+	    <a href="event.html">event</a> | 
+	    <a href="font.html">font</a> | 
+	    <a href="image.html">image</a> | 
+	    <a href="key.html">key</a> | 
+	    <a href="locals.html">locals</a> | 
+	    <a href="mixer.html">mixer</a> | 
+	    <a href="mouse.html">mouse</a> | 
+	    <a href="rect.html">Rect</a> | 
+	    <a href="surface.html">Surface</a> | 
+	    <a href="time.html">time</a> | 
+	    <a href="music.html">music</a> | 
+	    <a href="pygame.html">pygame</a>
+	  </p>
+
+	  <p class="bottom"><b>Advanced stuff</b>:
+	    <a href="cursors.html">cursors</a> | 
+	    <a href="joystick.html">joystick</a> | 
+	    <a href="mask.html">mask</a> | 
+	    <a href="sprite.html">sprite</a> | 
+	    <a href="transform.html">transform</a> | 
+	    <a href="bufferproxy.html">BufferProxy</a> | 
+	    <a href="freetype.html">freetype</a> | 
+	    <a href="gfxdraw.html">gfxdraw</a> | 
+	    <a href="midi.html">midi</a> | 
+	    <a href="pixelarray.html">PixelArray</a> | 
+	    <a href="pixelcopy.html">pixelcopy</a> | 
+	    <a href="sndarray.html">sndarray</a> | 
+	    <a href="surfarray.html">surfarray</a> | 
+	    <a href="math.html">math</a>
+	  </p>
+
+	  <p class="bottom"><b>Other</b>:
+	    <a href="camera.html">camera</a> | 
+	    <a href="sdl2_controller.html#module-pygame._sdl2.controller">controller</a> | 
+	    <a href="examples.html">examples</a> | 
+	    <a href="fastevent.html">fastevent</a> | 
+	    <a href="scrap.html">scrap</a> | 
+	    <a href="tests.html">tests</a> | 
+	    <a href="touch.html">touch</a> | 
+	    <a href="pygame.html#module-pygame.version">version</a>
+	  </p>
+</div>
+</div>
+  </div>
+
+      <div class="documentwrapper">
+          <div class="body" role="main">
+            
+<section id="module-pygame.freetype">
+<span id="pygame-freetype"></span><dl class="definition">
+<dt class="title module sig sig-object">
+<code class="docutils literal notranslate"><span class="pre">pygame.freetype</span></code></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Enhanced pygame module for loading and rendering computer fonts</span></div>
+</div>
+<table class="toc docutils align-default">
+<tbody>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="freetype.html#pygame.freetype.get_error">pygame.freetype.get_error</a></div>
+</td>
+<td>—</td>
+<td>Return the latest FreeType error</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="freetype.html#pygame.freetype.get_version">pygame.freetype.get_version</a></div>
+</td>
+<td>—</td>
+<td>Return the FreeType version</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="freetype.html#pygame.freetype.init">pygame.freetype.init</a></div>
+</td>
+<td>—</td>
+<td>Initialize the underlying FreeType library.</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="freetype.html#pygame.freetype.quit">pygame.freetype.quit</a></div>
+</td>
+<td>—</td>
+<td>Shut down the underlying FreeType library.</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="freetype.html#pygame.freetype.get_init">pygame.freetype.get_init</a></div>
+</td>
+<td>—</td>
+<td>Returns True if the FreeType module is currently initialized.</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="freetype.html#pygame.freetype.was_init">pygame.freetype.was_init</a></div>
+</td>
+<td>—</td>
+<td>DEPRECATED: Use get_init() instead.</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="freetype.html#pygame.freetype.get_cache_size">pygame.freetype.get_cache_size</a></div>
+</td>
+<td>—</td>
+<td>Return the glyph case size</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="freetype.html#pygame.freetype.get_default_resolution">pygame.freetype.get_default_resolution</a></div>
+</td>
+<td>—</td>
+<td>Return the default pixel size in dots per inch</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="freetype.html#pygame.freetype.set_default_resolution">pygame.freetype.set_default_resolution</a></div>
+</td>
+<td>—</td>
+<td>Set the default pixel size in dots per inch for the module</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="freetype.html#pygame.freetype.SysFont">pygame.freetype.SysFont</a></div>
+</td>
+<td>—</td>
+<td>create a Font object from the system fonts</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="freetype.html#pygame.freetype.get_default_font">pygame.freetype.get_default_font</a></div>
+</td>
+<td>—</td>
+<td>Get the filename of the default font</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="freetype.html#pygame.freetype.Font">pygame.freetype.Font</a></div>
+</td>
+<td>—</td>
+<td>Create a new Font instance from a supported font file.</td>
+</tr>
+</tbody>
+</table>
+<p>The <code class="docutils literal notranslate"><span class="pre">pygame.freetype</span></code> module is a replacement for <a class="tooltip reference internal" href="font.html#module-pygame.font" title=""><code class="xref py py-mod docutils literal notranslate"><span class="pre">pygame.font</span></code><span class="tooltip-content">pygame module for loading and rendering fonts</span></a>.
+It has all of the functionality of the original, plus many new features.
+Yet is has absolutely no dependencies on the SDL_ttf library.
+It is implemented directly on the FreeType 2 library.
+The <code class="docutils literal notranslate"><span class="pre">pygame.freetype</span></code> module is not itself backward compatible with
+<a class="tooltip reference internal" href="font.html#module-pygame.font" title=""><code class="xref py py-mod docutils literal notranslate"><span class="pre">pygame.font</span></code><span class="tooltip-content">pygame module for loading and rendering fonts</span></a>.
+Instead, use the <code class="docutils literal notranslate"><span class="pre">pygame.ftfont</span></code> module as a drop-in replacement
+for <a class="tooltip reference internal" href="font.html#module-pygame.font" title=""><code class="xref py py-mod docutils literal notranslate"><span class="pre">pygame.font</span></code><span class="tooltip-content">pygame module for loading and rendering fonts</span></a>.</p>
+<p>All font file formats supported by FreeType can be rendered by
+<code class="docutils literal notranslate"><span class="pre">pygame.freetype</span></code>, namely <code class="docutils literal notranslate"><span class="pre">TTF</span></code>, Type1, <code class="docutils literal notranslate"><span class="pre">CFF</span></code>, OpenType,
+<code class="docutils literal notranslate"><span class="pre">SFNT</span></code>, <code class="docutils literal notranslate"><span class="pre">PCF</span></code>, <code class="docutils literal notranslate"><span class="pre">FNT</span></code>, <code class="docutils literal notranslate"><span class="pre">BDF</span></code>, <code class="docutils literal notranslate"><span class="pre">PFR</span></code> and Type42 fonts.
+All glyphs having UTF-32 code points are accessible
+(see <a class="reference internal" href="#pygame.freetype.Font.ucs4" title="pygame.freetype.Font.ucs4"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Font.ucs4</span></code></a>).</p>
+<p>Most work on fonts is done using <a class="reference internal" href="#pygame.freetype.Font" title="pygame.freetype.Font"><code class="xref py py-class docutils literal notranslate"><span class="pre">Font</span></code></a> instances.
+The module itself only has routines for initialization and creation
+of <a class="reference internal" href="#pygame.freetype.Font" title="pygame.freetype.Font"><code class="xref py py-class docutils literal notranslate"><span class="pre">Font</span></code></a> objects.
+You can load fonts from the system using the <a class="reference internal" href="#pygame.freetype.SysFont" title="pygame.freetype.SysFont"><code class="xref py py-func docutils literal notranslate"><span class="pre">SysFont()</span></code></a> function.</p>
+<p>Extra support of bitmap fonts is available. Available bitmap sizes can
+be listed (see <a class="reference internal" href="#pygame.freetype.Font.get_sizes" title="pygame.freetype.Font.get_sizes"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Font.get_sizes()</span></code></a>). For bitmap only fonts <a class="reference internal" href="#pygame.freetype.Font" title="pygame.freetype.Font"><code class="xref py py-class docutils literal notranslate"><span class="pre">Font</span></code></a>
+can set the size for you (see the <a class="reference internal" href="#pygame.freetype.Font.size" title="pygame.freetype.Font.size"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Font.size</span></code></a> property).</p>
+<p>For now undefined character codes are replaced with the <code class="docutils literal notranslate"><span class="pre">.notdef</span></code>
+(not defined) character.
+How undefined codes are handled may become configurable in a future release.</p>
+<p>Pygame comes with a built-in default font. This can always be accessed by
+passing None as the font name to the <a class="reference internal" href="#pygame.freetype.Font" title="pygame.freetype.Font"><code class="xref py py-class docutils literal notranslate"><span class="pre">Font</span></code></a> constructor.</p>
+<p>Extra rendering features available to <a class="tooltip reference internal" href="#pygame.freetype.Font" title=""><code class="xref py py-class docutils literal notranslate"><span class="pre">pygame.freetype.Font</span></code><span class="tooltip-content">Create a new Font instance from a supported font file.</span></a>
+are direct to surface rendering (see <a class="reference internal" href="#pygame.freetype.Font.render_to" title="pygame.freetype.Font.render_to"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Font.render_to()</span></code></a>), character kerning
+(see <a class="reference internal" href="#pygame.freetype.Font.kerning" title="pygame.freetype.Font.kerning"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Font.kerning</span></code></a>), vertical layout (see <a class="reference internal" href="#pygame.freetype.Font.vertical" title="pygame.freetype.Font.vertical"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Font.vertical</span></code></a>),
+rotation of rendered text (see <a class="reference internal" href="#pygame.freetype.Font.rotation" title="pygame.freetype.Font.rotation"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Font.rotation</span></code></a>),
+and the strong style (see <a class="reference internal" href="#pygame.freetype.Font.strong" title="pygame.freetype.Font.strong"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Font.strong</span></code></a>).
+Some properties are configurable, such as
+strong style strength (see <a class="reference internal" href="#pygame.freetype.Font.strength" title="pygame.freetype.Font.strength"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Font.strength</span></code></a>) and underline positioning
+(see <a class="reference internal" href="#pygame.freetype.Font.underline_adjustment" title="pygame.freetype.Font.underline_adjustment"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Font.underline_adjustment</span></code></a>). Text can be positioned by the upper
+right corner of the text box or by the text baseline (see <a class="reference internal" href="#pygame.freetype.Font.origin" title="pygame.freetype.Font.origin"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Font.origin</span></code></a>).
+Finally, a font's vertical and horizontal size can be adjusted separately
+(see <a class="reference internal" href="#pygame.freetype.Font.size" title="pygame.freetype.Font.size"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Font.size</span></code></a>).
+The <a class="reference internal" href="examples.html#pygame.examples.freetype_misc.main" title="pygame.examples.freetype_misc.main"><code class="xref any py py-func docutils literal notranslate"><span class="pre">pygame.examples.freetype_misc</span></code></a>
+example shows these features in use.</p>
+<p>The pygame package does not import <code class="docutils literal notranslate"><span class="pre">freetype</span></code> automatically when
+loaded. This module must be imported explicitly to be used.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pygame</span>
+<span class="kn">import</span> <span class="nn">pygame.freetype</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 1.9.2: </span><code class="xref py py-mod docutils literal notranslate"><span class="pre">freetype</span></code></p>
+</div>
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.freetype.get_error">
+<span class="sig-prename descclassname"><span class="pre">pygame.freetype.</span></span><span class="sig-name descname"><span class="pre">get_error</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.freetype.get_error" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Return the latest FreeType error</span></div>
+<div class="line"><span class="signature">get_error() -&gt; str</span></div>
+<div class="line"><span class="signature">get_error() -&gt; None</span></div>
+</div>
+<p>Return a description of the last error which occurred in the FreeType2
+library, or <code class="docutils literal notranslate"><span class="pre">None</span></code> if no errors have occurred.</p>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.freetype.get_version">
+<span class="sig-prename descclassname"><span class="pre">pygame.freetype.</span></span><span class="sig-name descname"><span class="pre">get_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.freetype.get_version" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Return the FreeType version</span></div>
+<div class="line"><span class="signature">get_version(linked=True) -&gt; (int, int, int)</span></div>
+</div>
+<p>Returns the version of the FreeType library in use by this module. <code class="docutils literal notranslate"><span class="pre">linked=True</span></code>
+is the default behavior and returns the linked version of FreeType and <code class="docutils literal notranslate"><span class="pre">linked=False</span></code>
+returns the compiled version of FreeType.</p>
+<p>Note that the <code class="docutils literal notranslate"><span class="pre">freetype</span></code> module depends on the FreeType 2 library.
+It will not compile with the original FreeType 1.0. Hence, the first element
+of the tuple will always be &quot;2&quot;.</p>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in pygame 2.2.0: </span><code class="docutils literal notranslate"><span class="pre">linked</span></code> keyword argument added and default behavior changed from returning compiled version to returning linked version</p>
+</div>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.freetype.init">
+<span class="sig-prename descclassname"><span class="pre">pygame.freetype.</span></span><span class="sig-name descname"><span class="pre">init</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.freetype.init" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Initialize the underlying FreeType library.</span></div>
+<div class="line"><span class="signature">init(cache_size=64, resolution=72) -&gt; None</span></div>
+</div>
+<p>This function initializes the underlying FreeType library and must be
+called before trying to use any of the functionality of the <code class="docutils literal notranslate"><span class="pre">freetype</span></code>
+module.</p>
+<p>However, <a class="tooltip reference internal" href="pygame.html#pygame.init" title=""><code class="xref py py-func docutils literal notranslate"><span class="pre">pygame.init()</span></code><span class="tooltip-content">initialize all imported pygame modules</span></a> will automatically call this function
+if the <code class="docutils literal notranslate"><span class="pre">freetype</span></code> module is already imported. It is safe to call this
+function more than once.</p>
+<p>Optionally, you may specify a default <em>cache_size</em> for the Glyph cache: the
+maximum number of glyphs that will be cached at any given time by the
+module. Exceedingly small values will be automatically tuned for
+performance. Also a default pixel <em>resolution</em>, in dots per inch, can
+be given to adjust font scaling.</p>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.freetype.quit">
+<span class="sig-prename descclassname"><span class="pre">pygame.freetype.</span></span><span class="sig-name descname"><span class="pre">quit</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.freetype.quit" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Shut down the underlying FreeType library.</span></div>
+<div class="line"><span class="signature">quit() -&gt; None</span></div>
+</div>
+<p>This function closes the <code class="docutils literal notranslate"><span class="pre">freetype</span></code> module. After calling this
+function, you should not invoke any class, method or function related to the
+<code class="docutils literal notranslate"><span class="pre">freetype</span></code> module as they are likely to fail or might give unpredictable
+results. It is safe to call this function even if the module hasn't been
+initialized yet.</p>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.freetype.get_init">
+<span class="sig-prename descclassname"><span class="pre">pygame.freetype.</span></span><span class="sig-name descname"><span class="pre">get_init</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.freetype.get_init" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Returns True if the FreeType module is currently initialized.</span></div>
+<div class="line"><span class="signature">get_init() -&gt; bool</span></div>
+</div>
+<p>Returns <code class="docutils literal notranslate"><span class="pre">True</span></code> if the <code class="docutils literal notranslate"><span class="pre">pygame.freetype</span></code> module is currently initialized.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 1.9.5.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.freetype.was_init">
+<span class="sig-prename descclassname"><span class="pre">pygame.freetype.</span></span><span class="sig-name descname"><span class="pre">was_init</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.freetype.was_init" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">DEPRECATED: Use get_init() instead.</span></div>
+<div class="line"><span class="signature">was_init() -&gt; bool</span></div>
+</div>
+<p>DEPRECATED: Returns <code class="docutils literal notranslate"><span class="pre">True</span></code> if the <code class="docutils literal notranslate"><span class="pre">pygame.freetype</span></code> module is currently
+initialized. Use <code class="docutils literal notranslate"><span class="pre">get_init()</span></code> instead.</p>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.freetype.get_cache_size">
+<span class="sig-prename descclassname"><span class="pre">pygame.freetype.</span></span><span class="sig-name descname"><span class="pre">get_cache_size</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.freetype.get_cache_size" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Return the glyph case size</span></div>
+<div class="line"><span class="signature">get_cache_size() -&gt; long</span></div>
+</div>
+<p>See <a class="tooltip reference internal" href="#pygame.freetype.init" title=""><code class="xref py py-func docutils literal notranslate"><span class="pre">pygame.freetype.init()</span></code><span class="tooltip-content">Initialize the underlying FreeType library.</span></a>.</p>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.freetype.get_default_resolution">
+<span class="sig-prename descclassname"><span class="pre">pygame.freetype.</span></span><span class="sig-name descname"><span class="pre">get_default_resolution</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.freetype.get_default_resolution" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Return the default pixel size in dots per inch</span></div>
+<div class="line"><span class="signature">get_default_resolution() -&gt; long</span></div>
+</div>
+<p>Returns the default pixel size, in dots per inch, for the module.
+The default is 72 DPI.</p>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.freetype.set_default_resolution">
+<span class="sig-prename descclassname"><span class="pre">pygame.freetype.</span></span><span class="sig-name descname"><span class="pre">set_default_resolution</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.freetype.set_default_resolution" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Set the default pixel size in dots per inch for the module</span></div>
+<div class="line"><span class="signature">set_default_resolution([resolution])</span></div>
+</div>
+<p>Set the default pixel size, in dots per inch, for the module. If the
+optional argument is omitted or zero the resolution is reset to 72 DPI.</p>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.freetype.SysFont">
+<span class="sig-prename descclassname"><span class="pre">pygame.freetype.</span></span><span class="sig-name descname"><span class="pre">SysFont</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.freetype.SysFont" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">create a Font object from the system fonts</span></div>
+<div class="line"><span class="signature">SysFont(name, size, bold=False, italic=False) -&gt; Font</span></div>
+</div>
+<p>Return a new Font object that is loaded from the system fonts. The font will
+match the requested <em>bold</em> and <em>italic</em> flags. Pygame uses a small set of
+common font aliases. If the specific font you ask for is not available, a
+reasonable alternative may be used. If a suitable system font is not found
+this will fall back on loading the default pygame font.</p>
+<p>The font <em>name</em> can also be an iterable of font names, a string of
+comma-separated font names, or a bytes of comma-separated font names, in
+which case the set of names will be searched in order.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 2.0.1: </span>Accept an iterable of font names.</p>
+</div>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.freetype.get_default_font">
+<span class="sig-prename descclassname"><span class="pre">pygame.freetype.</span></span><span class="sig-name descname"><span class="pre">get_default_font</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.freetype.get_default_font" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Get the filename of the default font</span></div>
+<div class="line"><span class="signature">get_default_font() -&gt; string</span></div>
+</div>
+<p>Return the filename of the default pygame font. This is not the full path
+to the file. The file is usually in the same directory as the font module,
+but can also be bundled in a separate archive.</p>
+</dd></dl>
+
+<dl class="py class definition">
+<dt class="sig sig-object py title" id="pygame.freetype.Font">
+<span class="sig-prename descclassname"><span class="pre">pygame.freetype.</span></span><span class="sig-name descname"><span class="pre">Font</span></span><a class="headerlink" href="#pygame.freetype.Font" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Create a new Font instance from a supported font file.</span></div>
+<div class="line"><span class="signature">Font(file, size=0, font_index=0, resolution=0, ucs4=False) -&gt; Font</span></div>
+<div class="line"><span class="signature">Font(pathlib.Path) -&gt; Font</span></div>
+</div>
+<table class="toc docutils align-default">
+<tbody>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="freetype.html#pygame.freetype.Font.name">pygame.freetype.Font.name</a></div>
+</td>
+<td>—</td>
+<td>Proper font name.</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="freetype.html#pygame.freetype.Font.path">pygame.freetype.Font.path</a></div>
+</td>
+<td>—</td>
+<td>Font file path</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="freetype.html#pygame.freetype.Font.size">pygame.freetype.Font.size</a></div>
+</td>
+<td>—</td>
+<td>The default point size used in rendering</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="freetype.html#pygame.freetype.Font.get_rect">pygame.freetype.Font.get_rect</a></div>
+</td>
+<td>—</td>
+<td>Return the size and offset of rendered text</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="freetype.html#pygame.freetype.Font.get_metrics">pygame.freetype.Font.get_metrics</a></div>
+</td>
+<td>—</td>
+<td>Return the glyph metrics for the given text</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="freetype.html#pygame.freetype.Font.height">pygame.freetype.Font.height</a></div>
+</td>
+<td>—</td>
+<td>The unscaled height of the font in font units</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="freetype.html#pygame.freetype.Font.ascender">pygame.freetype.Font.ascender</a></div>
+</td>
+<td>—</td>
+<td>The unscaled ascent of the font in font units</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="freetype.html#pygame.freetype.Font.descender">pygame.freetype.Font.descender</a></div>
+</td>
+<td>—</td>
+<td>The unscaled descent of the font in font units</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="freetype.html#pygame.freetype.Font.get_sized_ascender">pygame.freetype.Font.get_sized_ascender</a></div>
+</td>
+<td>—</td>
+<td>The scaled ascent of the font in pixels</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="freetype.html#pygame.freetype.Font.get_sized_descender">pygame.freetype.Font.get_sized_descender</a></div>
+</td>
+<td>—</td>
+<td>The scaled descent of the font in pixels</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="freetype.html#pygame.freetype.Font.get_sized_height">pygame.freetype.Font.get_sized_height</a></div>
+</td>
+<td>—</td>
+<td>The scaled height of the font in pixels</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="freetype.html#pygame.freetype.Font.get_sized_glyph_height">pygame.freetype.Font.get_sized_glyph_height</a></div>
+</td>
+<td>—</td>
+<td>The scaled bounding box height of the font in pixels</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="freetype.html#pygame.freetype.Font.get_sizes">pygame.freetype.Font.get_sizes</a></div>
+</td>
+<td>—</td>
+<td>return the available sizes of embedded bitmaps</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="freetype.html#pygame.freetype.Font.render">pygame.freetype.Font.render</a></div>
+</td>
+<td>—</td>
+<td>Return rendered text as a surface</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="freetype.html#pygame.freetype.Font.render_to">pygame.freetype.Font.render_to</a></div>
+</td>
+<td>—</td>
+<td>Render text onto an existing surface</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="freetype.html#pygame.freetype.Font.render_raw">pygame.freetype.Font.render_raw</a></div>
+</td>
+<td>—</td>
+<td>Return rendered text as a string of bytes</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="freetype.html#pygame.freetype.Font.render_raw_to">pygame.freetype.Font.render_raw_to</a></div>
+</td>
+<td>—</td>
+<td>Render text into an array of ints</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="freetype.html#pygame.freetype.Font.style">pygame.freetype.Font.style</a></div>
+</td>
+<td>—</td>
+<td>The font's style flags</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="freetype.html#pygame.freetype.Font.underline">pygame.freetype.Font.underline</a></div>
+</td>
+<td>—</td>
+<td>The state of the font's underline style flag</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="freetype.html#pygame.freetype.Font.strong">pygame.freetype.Font.strong</a></div>
+</td>
+<td>—</td>
+<td>The state of the font's strong style flag</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="freetype.html#pygame.freetype.Font.oblique">pygame.freetype.Font.oblique</a></div>
+</td>
+<td>—</td>
+<td>The state of the font's oblique style flag</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="freetype.html#pygame.freetype.Font.wide">pygame.freetype.Font.wide</a></div>
+</td>
+<td>—</td>
+<td>The state of the font's wide style flag</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="freetype.html#pygame.freetype.Font.strength">pygame.freetype.Font.strength</a></div>
+</td>
+<td>—</td>
+<td>The strength associated with the strong or wide font styles</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="freetype.html#pygame.freetype.Font.underline_adjustment">pygame.freetype.Font.underline_adjustment</a></div>
+</td>
+<td>—</td>
+<td>Adjustment factor for the underline position</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="freetype.html#pygame.freetype.Font.fixed_width">pygame.freetype.Font.fixed_width</a></div>
+</td>
+<td>—</td>
+<td>Gets whether the font is fixed-width</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="freetype.html#pygame.freetype.Font.fixed_sizes">pygame.freetype.Font.fixed_sizes</a></div>
+</td>
+<td>—</td>
+<td>the number of available bitmap sizes for the font</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="freetype.html#pygame.freetype.Font.scalable">pygame.freetype.Font.scalable</a></div>
+</td>
+<td>—</td>
+<td>Gets whether the font is scalable</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="freetype.html#pygame.freetype.Font.use_bitmap_strikes">pygame.freetype.Font.use_bitmap_strikes</a></div>
+</td>
+<td>—</td>
+<td>allow the use of embedded bitmaps in an outline font file</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="freetype.html#pygame.freetype.Font.antialiased">pygame.freetype.Font.antialiased</a></div>
+</td>
+<td>—</td>
+<td>Font anti-aliasing mode</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="freetype.html#pygame.freetype.Font.kerning">pygame.freetype.Font.kerning</a></div>
+</td>
+<td>—</td>
+<td>Character kerning mode</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="freetype.html#pygame.freetype.Font.vertical">pygame.freetype.Font.vertical</a></div>
+</td>
+<td>—</td>
+<td>Font vertical mode</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="freetype.html#pygame.freetype.Font.rotation">pygame.freetype.Font.rotation</a></div>
+</td>
+<td>—</td>
+<td>text rotation in degrees counterclockwise</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="freetype.html#pygame.freetype.Font.fgcolor">pygame.freetype.Font.fgcolor</a></div>
+</td>
+<td>—</td>
+<td>default foreground color</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="freetype.html#pygame.freetype.Font.bgcolor">pygame.freetype.Font.bgcolor</a></div>
+</td>
+<td>—</td>
+<td>default background color</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="freetype.html#pygame.freetype.Font.origin">pygame.freetype.Font.origin</a></div>
+</td>
+<td>—</td>
+<td>Font render to text origin mode</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="freetype.html#pygame.freetype.Font.pad">pygame.freetype.Font.pad</a></div>
+</td>
+<td>—</td>
+<td>padded boundary mode</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="freetype.html#pygame.freetype.Font.ucs4">pygame.freetype.Font.ucs4</a></div>
+</td>
+<td>—</td>
+<td>Enable UCS-4 mode</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="freetype.html#pygame.freetype.Font.resolution">pygame.freetype.Font.resolution</a></div>
+</td>
+<td>—</td>
+<td>Pixel resolution in dots per inch</td>
+</tr>
+</tbody>
+</table>
+<p>Argument <em>file</em> can be either a string representing the font's filename, a
+file-like object containing the font, or None; if None, a default,
+Pygame, font is used.</p>
+<p id="freetype-font-size-argument">Optionally, a <em>size</em> argument may be specified to set the default size in
+points, which determines the size of the rendered characters.
+The size can also be passed explicitly to each method call.
+Because of the way the caching   system works, specifying a default size on
+the constructor doesn't imply a performance gain over manually passing
+the size on each function call. If the font is bitmap and no <em>size</em>
+is given, the default size is set to the first available size for the font.</p>
+<p>If the font file has more than one font, the font to load can be chosen with
+the <em>index</em> argument. An exception is raised for an out-of-range font index
+value.</p>
+<p>The optional <em>resolution</em> argument sets the pixel size, in dots per inch,
+for use in scaling glyphs for this Font instance. If 0 then the default
+module value, set by <a class="reference internal" href="#pygame.freetype.init" title="pygame.freetype.init"><code class="xref py py-func docutils literal notranslate"><span class="pre">init()</span></code></a>, is used. The Font object's
+resolution can only be changed by re-initializing the Font instance.</p>
+<p>The optional <em>ucs4</em> argument, an integer, sets the default text translation
+mode: 0 (False) recognize UTF-16 surrogate pairs, any other value (True),
+to treat Unicode text as UCS-4, with no surrogate pairs. See
+<a class="reference internal" href="#pygame.freetype.Font.ucs4" title="pygame.freetype.Font.ucs4"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Font.ucs4</span></code></a>.</p>
+<dl class="py attribute definition">
+<dt class="sig sig-object py title" id="pygame.freetype.Font.name">
+<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#pygame.freetype.Font.name" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Proper font name.</span></div>
+<div class="line"><span class="signature">name -&gt; string</span></div>
+</div>
+<p>Read only. Returns the real (long) name of the font, as
+recorded in the font file.</p>
+</dd></dl>
+
+<dl class="py attribute definition">
+<dt class="sig sig-object py title" id="pygame.freetype.Font.path">
+<span class="sig-name descname"><span class="pre">path</span></span><a class="headerlink" href="#pygame.freetype.Font.path" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Font file path</span></div>
+<div class="line"><span class="signature">path -&gt; unicode</span></div>
+</div>
+<p>Read only. Returns the path of the loaded font file</p>
+</dd></dl>
+
+<dl class="py attribute definition">
+<dt class="sig sig-object py title" id="pygame.freetype.Font.size">
+<span class="sig-name descname"><span class="pre">size</span></span><a class="headerlink" href="#pygame.freetype.Font.size" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">The default point size used in rendering</span></div>
+<div class="line"><span class="signature">size -&gt; float</span></div>
+<div class="line"><span class="signature">size -&gt; (float, float)</span></div>
+</div>
+<p>Get or set the default size for text metrics and rendering. It can be
+a single point size, given as a Python <code class="docutils literal notranslate"><span class="pre">int</span></code> or <code class="docutils literal notranslate"><span class="pre">float</span></code>, or a
+font ppem (width, height) <code class="docutils literal notranslate"><span class="pre">tuple</span></code>. Size values are non-negative.
+A zero size or width represents an undefined size. In this case
+the size must be given as a method argument, or an exception is
+raised. A zero width but non-zero height is a ValueError.</p>
+<p>For a scalable font, a single number value is equivalent to a tuple
+with width equal height. A font can be stretched vertically with
+height set greater than width, or horizontally with width set
+greater than height. For embedded bitmaps, as listed by <a class="reference internal" href="#pygame.freetype.Font.get_sizes" title="pygame.freetype.Font.get_sizes"><code class="xref py py-meth docutils literal notranslate"><span class="pre">get_sizes()</span></code></a>,
+use the nominal width and height to select an available size.</p>
+<p>Font size differs for a non-scalable, bitmap, font. During a
+method call it must match one of the available sizes returned by
+method <a class="reference internal" href="#pygame.freetype.Font.get_sizes" title="pygame.freetype.Font.get_sizes"><code class="xref py py-meth docutils literal notranslate"><span class="pre">get_sizes()</span></code></a>. If not, an exception is raised.
+If the size is a single number, the size is first matched against the
+point size value. If no match, then the available size with the
+same nominal width and height is chosen.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.freetype.Font.get_rect">
+<span class="sig-name descname"><span class="pre">get_rect</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.freetype.Font.get_rect" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Return the size and offset of rendered text</span></div>
+<div class="line"><span class="signature">get_rect(text, style=STYLE_DEFAULT, rotation=0, size=0) -&gt; rect</span></div>
+</div>
+<p>Gets the final dimensions and origin, in pixels, of <em>text</em> using the
+optional <em>size</em> in points, <em>style</em>, and <em>rotation</em>. For other
+relevant render properties, and for any optional argument not given,
+the default values set for the <a class="reference internal" href="#pygame.freetype.Font" title="pygame.freetype.Font"><code class="xref py py-class docutils literal notranslate"><span class="pre">Font</span></code></a> instance are used.</p>
+<p>Returns a <a class="reference internal" href="rect.html#pygame.Rect" title="pygame.Rect"><code class="xref py py-class docutils literal notranslate"><span class="pre">Rect</span></code></a> instance containing the
+width and height of the text's bounding box and the position of the
+text's origin.
+The origin is useful in aligning separately rendered pieces of text.
+It gives the baseline position and bearing at the start of the text.
+See the <a class="reference internal" href="#pygame.freetype.Font.render_to" title="pygame.freetype.Font.render_to"><code class="xref py py-meth docutils literal notranslate"><span class="pre">render_to()</span></code></a> method for an example.</p>
+<p>If <em>text</em> is a char (byte) string, its encoding is assumed to be
+<code class="docutils literal notranslate"><span class="pre">LATIN1</span></code>.</p>
+<p>Optionally, <em>text</em> can be <code class="docutils literal notranslate"><span class="pre">None</span></code>, which will return the bounding
+rectangle for the text passed to a previous <a class="reference internal" href="#pygame.freetype.Font.get_rect" title="pygame.freetype.Font.get_rect"><code class="xref py py-meth docutils literal notranslate"><span class="pre">get_rect()</span></code></a>,
+<a class="reference internal" href="#pygame.freetype.Font.render" title="pygame.freetype.Font.render"><code class="xref py py-meth docutils literal notranslate"><span class="pre">render()</span></code></a>, <a class="reference internal" href="#pygame.freetype.Font.render_to" title="pygame.freetype.Font.render_to"><code class="xref py py-meth docutils literal notranslate"><span class="pre">render_to()</span></code></a>, <a class="reference internal" href="#pygame.freetype.Font.render_raw" title="pygame.freetype.Font.render_raw"><code class="xref py py-meth docutils literal notranslate"><span class="pre">render_raw()</span></code></a>, or
+<a class="reference internal" href="#pygame.freetype.Font.render_raw_to" title="pygame.freetype.Font.render_raw_to"><code class="xref py py-meth docutils literal notranslate"><span class="pre">render_raw_to()</span></code></a> call. See <a class="reference internal" href="#pygame.freetype.Font.render_to" title="pygame.freetype.Font.render_to"><code class="xref py py-meth docutils literal notranslate"><span class="pre">render_to()</span></code></a> for more
+details.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.freetype.Font.get_metrics">
+<span class="sig-name descname"><span class="pre">get_metrics</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.freetype.Font.get_metrics" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Return the glyph metrics for the given text</span></div>
+<div class="line"><span class="signature">get_metrics(text, size=0) -&gt; [(...), ...]</span></div>
+</div>
+<p>Returns the glyph metrics for each character in <em>text</em>.</p>
+<p>The glyph metrics are returned as a list of tuples. Each tuple gives
+metrics of a single character glyph. The glyph metrics are:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">min_x</span><span class="p">,</span> <span class="n">max_x</span><span class="p">,</span> <span class="n">min_y</span><span class="p">,</span> <span class="n">max_y</span><span class="p">,</span> <span class="n">horizontal_advance_x</span><span class="p">,</span> <span class="n">horizontal_advance_y</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The bounding box min_x, max_x, min_y, and max_y values are returned as
+grid-fitted pixel coordinates of type int. The advance values are
+float values.</p>
+<p>The calculations are done using the font's default size in points.
+Optionally you may specify another point size with the <em>size</em> argument.</p>
+<p>The metrics are adjusted for the current rotation, strong, and oblique
+settings.</p>
+<p>If text is a char (byte) string, then its encoding is assumed to be
+<code class="docutils literal notranslate"><span class="pre">LATIN1</span></code>.</p>
+</dd></dl>
+
+<dl class="py attribute definition">
+<dt class="sig sig-object py title" id="pygame.freetype.Font.height">
+<span class="sig-name descname"><span class="pre">height</span></span><a class="headerlink" href="#pygame.freetype.Font.height" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">The unscaled height of the font in font units</span></div>
+<div class="line"><span class="signature">height -&gt; int</span></div>
+</div>
+<p>Read only. Gets the height of the font. This is the average value of all
+glyphs in the font.</p>
+</dd></dl>
+
+<dl class="py attribute definition">
+<dt class="sig sig-object py title" id="pygame.freetype.Font.ascender">
+<span class="sig-name descname"><span class="pre">ascender</span></span><a class="headerlink" href="#pygame.freetype.Font.ascender" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">The unscaled ascent of the font in font units</span></div>
+<div class="line"><span class="signature">ascender -&gt; int</span></div>
+</div>
+<p>Read only. Return the number of units from the font's baseline to
+the top of the bounding box.</p>
+</dd></dl>
+
+<dl class="py attribute definition">
+<dt class="sig sig-object py title" id="pygame.freetype.Font.descender">
+<span class="sig-name descname"><span class="pre">descender</span></span><a class="headerlink" href="#pygame.freetype.Font.descender" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">The unscaled descent of the font in font units</span></div>
+<div class="line"><span class="signature">descender -&gt; int</span></div>
+</div>
+<p>Read only. Return the height in font units for the font descent.
+The descent is the number of units from the font's baseline to the
+bottom of the bounding box.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.freetype.Font.get_sized_ascender">
+<span class="sig-name descname"><span class="pre">get_sized_ascender</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.freetype.Font.get_sized_ascender" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">The scaled ascent of the font in pixels</span></div>
+<div class="line"><span class="signature">get_sized_ascender(&lt;size&gt;=0) -&gt; int</span></div>
+</div>
+<p>Return the number of units from the font's baseline to the top of the
+bounding box. It is not adjusted for strong or rotation.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.freetype.Font.get_sized_descender">
+<span class="sig-name descname"><span class="pre">get_sized_descender</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.freetype.Font.get_sized_descender" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">The scaled descent of the font in pixels</span></div>
+<div class="line"><span class="signature">get_sized_descender(&lt;size&gt;=0) -&gt; int</span></div>
+</div>
+<p>Return the number of pixels from the font's baseline to the top of the
+bounding box. It is not adjusted for strong or rotation.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.freetype.Font.get_sized_height">
+<span class="sig-name descname"><span class="pre">get_sized_height</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.freetype.Font.get_sized_height" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">The scaled height of the font in pixels</span></div>
+<div class="line"><span class="signature">get_sized_height(&lt;size&gt;=0) -&gt; int</span></div>
+</div>
+<p>Returns the height of the font. This is the average value of all
+glyphs in the font. It is not adjusted for strong or rotation.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.freetype.Font.get_sized_glyph_height">
+<span class="sig-name descname"><span class="pre">get_sized_glyph_height</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.freetype.Font.get_sized_glyph_height" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">The scaled bounding box height of the font in pixels</span></div>
+<div class="line"><span class="signature">get_sized_glyph_height(&lt;size&gt;=0) -&gt; int</span></div>
+</div>
+<p>Return the glyph bounding box height of the font in pixels.
+This is the average value of all glyphs in the font.
+It is not adjusted for strong or rotation.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.freetype.Font.get_sizes">
+<span class="sig-name descname"><span class="pre">get_sizes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.freetype.Font.get_sizes" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">return the available sizes of embedded bitmaps</span></div>
+<div class="line"><span class="signature">get_sizes() -&gt; [(int, int, int, float, float), ...]</span></div>
+<div class="line"><span class="signature">get_sizes() -&gt; []</span></div>
+</div>
+<p>Returns a list of tuple records, one for each point size
+supported. Each tuple containing the point size, the height in pixels,
+width in pixels, horizontal ppem (nominal width) in fractional pixels,
+and vertical ppem (nominal height) in fractional pixels.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.freetype.Font.render">
+<span class="sig-name descname"><span class="pre">render</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.freetype.Font.render" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Return rendered text as a surface</span></div>
+<div class="line"><span class="signature">render(text, fgcolor=None, bgcolor=None, style=STYLE_DEFAULT, rotation=0, size=0) -&gt; (Surface, Rect)</span></div>
+</div>
+<p>Returns a new <a class="reference internal" href="surface.html#pygame.Surface" title="pygame.Surface"><code class="xref py py-class docutils literal notranslate"><span class="pre">Surface</span></code></a>,
+with the text rendered to it
+in the color given by 'fgcolor'. If no foreground color is given,
+the default foreground color, <a class="reference internal" href="#pygame.freetype.Font.fgcolor" title="pygame.freetype.Font.fgcolor"><code class="xref py py-attr docutils literal notranslate"><span class="pre">fgcolor</span></code></a> is used.
+If <code class="docutils literal notranslate"><span class="pre">bgcolor</span></code> is given, the surface
+will be filled with this color. When no background color is given,
+the surface background is transparent, zero alpha. Normally the returned
+surface has a 32 bit pixel size. However, if <code class="docutils literal notranslate"><span class="pre">bgcolor</span></code> is <code class="docutils literal notranslate"><span class="pre">None</span></code>
+and anti-aliasing is disabled a monochrome 8 bit colorkey surface,
+with colorkey set for the background color, is returned.</p>
+<p>The return value is a tuple: the new surface and the bounding
+rectangle giving the size and origin of the rendered text.</p>
+<p>If an empty string is passed for text then the returned Rect is zero
+width and the height of the font.</p>
+<p>Optional <em>fgcolor</em>, <em>style</em>, <em>rotation</em>, and <em>size</em> arguments override
+the default values set for the <a class="reference internal" href="#pygame.freetype.Font" title="pygame.freetype.Font"><code class="xref py py-class docutils literal notranslate"><span class="pre">Font</span></code></a> instance.</p>
+<p>If <em>text</em> is a char (byte) string, then its encoding is assumed to be
+<code class="docutils literal notranslate"><span class="pre">LATIN1</span></code>.</p>
+<p>Optionally, <em>text</em> can be <code class="docutils literal notranslate"><span class="pre">None</span></code>, which will render the text
+passed to a previous <a class="reference internal" href="#pygame.freetype.Font.get_rect" title="pygame.freetype.Font.get_rect"><code class="xref py py-meth docutils literal notranslate"><span class="pre">get_rect()</span></code></a>, <a class="reference internal" href="#pygame.freetype.Font.render" title="pygame.freetype.Font.render"><code class="xref py py-meth docutils literal notranslate"><span class="pre">render()</span></code></a>, <a class="reference internal" href="#pygame.freetype.Font.render_to" title="pygame.freetype.Font.render_to"><code class="xref py py-meth docutils literal notranslate"><span class="pre">render_to()</span></code></a>,
+<a class="reference internal" href="#pygame.freetype.Font.render_raw" title="pygame.freetype.Font.render_raw"><code class="xref py py-meth docutils literal notranslate"><span class="pre">render_raw()</span></code></a>, or <a class="reference internal" href="#pygame.freetype.Font.render_raw_to" title="pygame.freetype.Font.render_raw_to"><code class="xref py py-meth docutils literal notranslate"><span class="pre">render_raw_to()</span></code></a> call.
+See <a class="reference internal" href="#pygame.freetype.Font.render_to" title="pygame.freetype.Font.render_to"><code class="xref py py-meth docutils literal notranslate"><span class="pre">render_to()</span></code></a> for details.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.freetype.Font.render_to">
+<span class="sig-name descname"><span class="pre">render_to</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.freetype.Font.render_to" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Render text onto an existing surface</span></div>
+<div class="line"><span class="signature">render_to(surf, dest, text, fgcolor=None, bgcolor=None, style=STYLE_DEFAULT, rotation=0, size=0) -&gt; Rect</span></div>
+</div>
+<p>Renders the string <em>text</em> to the <a class="tooltip reference internal" href="surface.html#pygame.Surface" title=""><code class="xref py py-mod docutils literal notranslate"><span class="pre">pygame.Surface</span></code><span class="tooltip-content">pygame object for representing images</span></a> <em>surf</em>,
+at position <em>dest</em>, a (x, y) surface coordinate pair.
+If either x or y is not an integer it is converted to one if possible.
+Any sequence where the first two items are x and y positional elements
+is accepted, including a <a class="reference internal" href="rect.html#pygame.Rect" title="pygame.Rect"><code class="xref py py-class docutils literal notranslate"><span class="pre">Rect</span></code></a> instance.
+As with <a class="reference internal" href="#pygame.freetype.Font.render" title="pygame.freetype.Font.render"><code class="xref py py-meth docutils literal notranslate"><span class="pre">render()</span></code></a>,
+optional <em>fgcolor</em>, <em>style</em>, <em>rotation</em>, and <em>size</em> argument are
+available.</p>
+<p>If a background color <em>bgcolor</em> is given, the text bounding box is
+first filled with that color. The text is blitted next.
+Both the background fill and text rendering involve full alpha blits.
+That is, the alpha values of the foreground, background, and destination
+target surface all affect the blit.</p>
+<p>The return value is a rectangle giving the size and position of the
+rendered text within the surface.</p>
+<p>If an empty string is passed for text then the returned
+<a class="reference internal" href="rect.html#pygame.Rect" title="pygame.Rect"><code class="xref py py-class docutils literal notranslate"><span class="pre">Rect</span></code></a> is zero width and the height of the font.
+The rect will test False.</p>
+<p>Optionally, <em>text</em> can be set <code class="docutils literal notranslate"><span class="pre">None</span></code>, which will re-render text
+passed to a previous <a class="reference internal" href="#pygame.freetype.Font.render_to" title="pygame.freetype.Font.render_to"><code class="xref py py-meth docutils literal notranslate"><span class="pre">render_to()</span></code></a>, <a class="reference internal" href="#pygame.freetype.Font.get_rect" title="pygame.freetype.Font.get_rect"><code class="xref py py-meth docutils literal notranslate"><span class="pre">get_rect()</span></code></a>, <a class="reference internal" href="#pygame.freetype.Font.render" title="pygame.freetype.Font.render"><code class="xref py py-meth docutils literal notranslate"><span class="pre">render()</span></code></a>,
+<a class="reference internal" href="#pygame.freetype.Font.render_raw" title="pygame.freetype.Font.render_raw"><code class="xref py py-meth docutils literal notranslate"><span class="pre">render_raw()</span></code></a>, or <a class="reference internal" href="#pygame.freetype.Font.render_raw_to" title="pygame.freetype.Font.render_raw_to"><code class="xref py py-meth docutils literal notranslate"><span class="pre">render_raw_to()</span></code></a> call. Primarily, this
+feature is an aid to using <a class="reference internal" href="#pygame.freetype.Font.render_to" title="pygame.freetype.Font.render_to"><code class="xref py py-meth docutils literal notranslate"><span class="pre">render_to()</span></code></a> in combination with
+<a class="reference internal" href="#pygame.freetype.Font.get_rect" title="pygame.freetype.Font.get_rect"><code class="xref py py-meth docutils literal notranslate"><span class="pre">get_rect()</span></code></a>. An example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">word_wrap</span><span class="p">(</span><span class="n">surf</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">font</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)):</span>
+    <span class="n">font</span><span class="o">.</span><span class="n">origin</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">words</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+    <span class="n">width</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="n">surf</span><span class="o">.</span><span class="n">get_size</span><span class="p">()</span>
+    <span class="n">line_spacing</span> <span class="o">=</span> <span class="n">font</span><span class="o">.</span><span class="n">get_sized_height</span><span class="p">()</span> <span class="o">+</span> <span class="mi">2</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">line_spacing</span>
+    <span class="n">space</span> <span class="o">=</span> <span class="n">font</span><span class="o">.</span><span class="n">get_rect</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">words</span><span class="p">:</span>
+        <span class="n">bounds</span> <span class="o">=</span> <span class="n">font</span><span class="o">.</span><span class="n">get_rect</span><span class="p">(</span><span class="n">word</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">x</span> <span class="o">+</span> <span class="n">bounds</span><span class="o">.</span><span class="n">width</span> <span class="o">+</span> <span class="n">bounds</span><span class="o">.</span><span class="n">x</span> <span class="o">&gt;=</span> <span class="n">width</span><span class="p">:</span>
+            <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="n">line_spacing</span>
+        <span class="k">if</span> <span class="n">x</span> <span class="o">+</span> <span class="n">bounds</span><span class="o">.</span><span class="n">width</span> <span class="o">+</span> <span class="n">bounds</span><span class="o">.</span><span class="n">x</span> <span class="o">&gt;=</span> <span class="n">width</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;word too wide for the surface&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">y</span> <span class="o">+</span> <span class="n">bounds</span><span class="o">.</span><span class="n">height</span> <span class="o">-</span> <span class="n">bounds</span><span class="o">.</span><span class="n">y</span> <span class="o">&gt;=</span> <span class="n">height</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;text to long for the surface&quot;</span><span class="p">)</span>
+        <span class="n">font</span><span class="o">.</span><span class="n">render_to</span><span class="p">(</span><span class="n">surf</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span> <span class="kc">None</span><span class="p">,</span> <span class="n">color</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">+=</span> <span class="n">bounds</span><span class="o">.</span><span class="n">width</span> <span class="o">+</span> <span class="n">space</span><span class="o">.</span><span class="n">width</span>
+    <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span>
+</pre></div>
+</div>
+<p>When <a class="reference internal" href="#pygame.freetype.Font.render_to" title="pygame.freetype.Font.render_to"><code class="xref py py-meth docutils literal notranslate"><span class="pre">render_to()</span></code></a> is called with the same
+font properties ― <a class="reference internal" href="#pygame.freetype.Font.size" title="pygame.freetype.Font.size"><code class="xref py py-attr docutils literal notranslate"><span class="pre">size</span></code></a>, <a class="reference internal" href="#pygame.freetype.Font.style" title="pygame.freetype.Font.style"><code class="xref py py-attr docutils literal notranslate"><span class="pre">style</span></code></a>, <a class="reference internal" href="#pygame.freetype.Font.strength" title="pygame.freetype.Font.strength"><code class="xref py py-attr docutils literal notranslate"><span class="pre">strength</span></code></a>,
+<a class="reference internal" href="#pygame.freetype.Font.wide" title="pygame.freetype.Font.wide"><code class="xref py py-attr docutils literal notranslate"><span class="pre">wide</span></code></a>, <a class="reference internal" href="#pygame.freetype.Font.antialiased" title="pygame.freetype.Font.antialiased"><code class="xref py py-attr docutils literal notranslate"><span class="pre">antialiased</span></code></a>, <a class="reference internal" href="#pygame.freetype.Font.vertical" title="pygame.freetype.Font.vertical"><code class="xref py py-attr docutils literal notranslate"><span class="pre">vertical</span></code></a>, <a class="reference internal" href="#pygame.freetype.Font.rotation" title="pygame.freetype.Font.rotation"><code class="xref py py-attr docutils literal notranslate"><span class="pre">rotation</span></code></a>,
+<a class="reference internal" href="#pygame.freetype.Font.kerning" title="pygame.freetype.Font.kerning"><code class="xref py py-attr docutils literal notranslate"><span class="pre">kerning</span></code></a>, and <a class="reference internal" href="#pygame.freetype.Font.use_bitmap_strikes" title="pygame.freetype.Font.use_bitmap_strikes"><code class="xref py py-attr docutils literal notranslate"><span class="pre">use_bitmap_strikes</span></code></a> ― as <a class="reference internal" href="#pygame.freetype.Font.get_rect" title="pygame.freetype.Font.get_rect"><code class="xref py py-meth docutils literal notranslate"><span class="pre">get_rect()</span></code></a>,
+<a class="reference internal" href="#pygame.freetype.Font.render_to" title="pygame.freetype.Font.render_to"><code class="xref py py-meth docutils literal notranslate"><span class="pre">render_to()</span></code></a> will use the layout calculated by <a class="reference internal" href="#pygame.freetype.Font.get_rect" title="pygame.freetype.Font.get_rect"><code class="xref py py-meth docutils literal notranslate"><span class="pre">get_rect()</span></code></a>.
+Otherwise, <a class="reference internal" href="#pygame.freetype.Font.render_to" title="pygame.freetype.Font.render_to"><code class="xref py py-meth docutils literal notranslate"><span class="pre">render_to()</span></code></a> will recalculate the layout if called
+with a text string or one of the above properties has changed
+after the <a class="reference internal" href="#pygame.freetype.Font.get_rect" title="pygame.freetype.Font.get_rect"><code class="xref py py-meth docutils literal notranslate"><span class="pre">get_rect()</span></code></a> call.</p>
+<p>If <em>text</em> is a char (byte) string, then its encoding is assumed to be
+<code class="docutils literal notranslate"><span class="pre">LATIN1</span></code>.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.freetype.Font.render_raw">
+<span class="sig-name descname"><span class="pre">render_raw</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.freetype.Font.render_raw" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Return rendered text as a string of bytes</span></div>
+<div class="line"><span class="signature">render_raw(text, style=STYLE_DEFAULT, rotation=0, size=0, invert=False) -&gt; (bytes, (int, int))</span></div>
+</div>
+<p>Like <a class="reference internal" href="#pygame.freetype.Font.render" title="pygame.freetype.Font.render"><code class="xref py py-meth docutils literal notranslate"><span class="pre">render()</span></code></a> but with the pixels returned as a byte string
+of 8-bit gray-scale values. The foreground color is 255, the
+background 0, useful as an alpha mask for a foreground pattern.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.freetype.Font.render_raw_to">
+<span class="sig-name descname"><span class="pre">render_raw_to</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.freetype.Font.render_raw_to" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Render text into an array of ints</span></div>
+<div class="line"><span class="signature">render_raw_to(array, text, dest=None, style=STYLE_DEFAULT, rotation=0, size=0, invert=False) -&gt; Rect</span></div>
+</div>
+<p>Render to an array object exposing an array struct interface. The array
+must be two dimensional with integer items. The default <em>dest</em> value,
+<code class="docutils literal notranslate"><span class="pre">None</span></code>, is equivalent to position (0, 0). See <a class="reference internal" href="#pygame.freetype.Font.render_to" title="pygame.freetype.Font.render_to"><code class="xref py py-meth docutils literal notranslate"><span class="pre">render_to()</span></code></a>.
+As with the other render methods, <em>text</em> can be <code class="docutils literal notranslate"><span class="pre">None</span></code> to
+render a text string passed previously to another method.</p>
+<p>The return value is a <a class="tooltip reference internal" href="rect.html#pygame.Rect" title=""><code class="xref py py-func docutils literal notranslate"><span class="pre">pygame.Rect()</span></code><span class="tooltip-content">pygame object for storing rectangular coordinates</span></a> giving the size and position of
+the rendered text.</p>
+</dd></dl>
+
+<dl class="py attribute definition">
+<dt class="sig sig-object py title" id="pygame.freetype.Font.style">
+<span class="sig-name descname"><span class="pre">style</span></span><a class="headerlink" href="#pygame.freetype.Font.style" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">The font's style flags</span></div>
+<div class="line"><span class="signature">style -&gt; int</span></div>
+</div>
+<p>Gets or sets the default style of the Font. This default style will be
+used for all text rendering and size calculations unless overridden
+specifically a render or <a class="reference internal" href="#pygame.freetype.Font.get_rect" title="pygame.freetype.Font.get_rect"><code class="xref py py-meth docutils literal notranslate"><span class="pre">get_rect()</span></code></a> call.
+The style value may be a bit-wise OR of one or more of the following
+constants:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">STYLE_NORMAL</span>
+<span class="n">STYLE_UNDERLINE</span>
+<span class="n">STYLE_OBLIQUE</span>
+<span class="n">STYLE_STRONG</span>
+<span class="n">STYLE_WIDE</span>
+<span class="n">STYLE_DEFAULT</span>
+</pre></div>
+</div>
+<p>These constants may be found on the FreeType constants module.
+Optionally, the default style can be modified or obtained accessing the
+individual style attributes (underline, oblique, strong).</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">STYLE_OBLIQUE</span></code> and <code class="docutils literal notranslate"><span class="pre">STYLE_STRONG</span></code> styles are for
+scalable fonts only. An attempt to set either for a bitmap font raises
+an AttributeError. An attempt to set either for an inactive font,
+as returned by <code class="docutils literal notranslate"><span class="pre">Font.__new__()</span></code>, raises a RuntimeError.</p>
+<p>Assigning <code class="docutils literal notranslate"><span class="pre">STYLE_DEFAULT</span></code> to the <a class="reference internal" href="#pygame.freetype.Font.style" title="pygame.freetype.Font.style"><code class="xref py py-attr docutils literal notranslate"><span class="pre">style</span></code></a> property leaves
+the property unchanged, as this property defines the default.
+The <a class="reference internal" href="#pygame.freetype.Font.style" title="pygame.freetype.Font.style"><code class="xref py py-attr docutils literal notranslate"><span class="pre">style</span></code></a> property will never return <code class="docutils literal notranslate"><span class="pre">STYLE_DEFAULT</span></code>.</p>
+</dd></dl>
+
+<dl class="py attribute definition">
+<dt class="sig sig-object py title" id="pygame.freetype.Font.underline">
+<span class="sig-name descname"><span class="pre">underline</span></span><a class="headerlink" href="#pygame.freetype.Font.underline" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">The state of the font's underline style flag</span></div>
+<div class="line"><span class="signature">underline -&gt; bool</span></div>
+</div>
+<p>Gets or sets whether the font will be underlined when drawing text. This
+default style value will be used for all text rendering and size
+calculations unless overridden specifically in a render or
+<a class="reference internal" href="#pygame.freetype.Font.get_rect" title="pygame.freetype.Font.get_rect"><code class="xref py py-meth docutils literal notranslate"><span class="pre">get_rect()</span></code></a> call, via the 'style' parameter.</p>
+</dd></dl>
+
+<dl class="py attribute definition">
+<dt class="sig sig-object py title" id="pygame.freetype.Font.strong">
+<span class="sig-name descname"><span class="pre">strong</span></span><a class="headerlink" href="#pygame.freetype.Font.strong" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">The state of the font's strong style flag</span></div>
+<div class="line"><span class="signature">strong -&gt; bool</span></div>
+</div>
+<p>Gets or sets whether the font will be bold when drawing text. This
+default style value will be used for all text rendering and size
+calculations unless overridden specifically in a render or
+<a class="reference internal" href="#pygame.freetype.Font.get_rect" title="pygame.freetype.Font.get_rect"><code class="xref py py-meth docutils literal notranslate"><span class="pre">get_rect()</span></code></a> call, via the 'style' parameter.</p>
+</dd></dl>
+
+<dl class="py attribute definition">
+<dt class="sig sig-object py title" id="pygame.freetype.Font.oblique">
+<span class="sig-name descname"><span class="pre">oblique</span></span><a class="headerlink" href="#pygame.freetype.Font.oblique" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">The state of the font's oblique style flag</span></div>
+<div class="line"><span class="signature">oblique -&gt; bool</span></div>
+</div>
+<p>Gets or sets whether the font will be rendered as oblique. This
+default style value will be used for all text rendering and size
+calculations unless overridden specifically in a render or
+<a class="reference internal" href="#pygame.freetype.Font.get_rect" title="pygame.freetype.Font.get_rect"><code class="xref py py-meth docutils literal notranslate"><span class="pre">get_rect()</span></code></a> call, via the <em>style</em> parameter.</p>
+<p>The oblique style is only supported for scalable (outline) fonts.
+An attempt to set this style on a bitmap font will raise an
+AttributeError. If the font object is inactive, as returned by
+<code class="docutils literal notranslate"><span class="pre">Font.__new__()</span></code>, setting this property raises a RuntimeError.</p>
+</dd></dl>
+
+<dl class="py attribute definition">
+<dt class="sig sig-object py title" id="pygame.freetype.Font.wide">
+<span class="sig-name descname"><span class="pre">wide</span></span><a class="headerlink" href="#pygame.freetype.Font.wide" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">The state of the font's wide style flag</span></div>
+<div class="line"><span class="signature">wide -&gt; bool</span></div>
+</div>
+<p>Gets or sets whether the font will be stretched horizontally
+when drawing text. It produces a result similar to
+<a class="tooltip reference internal" href="font.html#pygame.font.Font" title=""><code class="xref py py-class docutils literal notranslate"><span class="pre">pygame.font.Font</span></code><span class="tooltip-content">create a new Font object from a file</span></a>'s bold. This style not available for
+rotated text.</p>
+</dd></dl>
+
+<dl class="py attribute definition">
+<dt class="sig sig-object py title" id="pygame.freetype.Font.strength">
+<span class="sig-name descname"><span class="pre">strength</span></span><a class="headerlink" href="#pygame.freetype.Font.strength" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">The strength associated with the strong or wide font styles</span></div>
+<div class="line"><span class="signature">strength -&gt; float</span></div>
+</div>
+<p>The amount by which a font glyph's size is enlarged for the
+strong or wide transformations, as a fraction of the untransformed
+size. For the wide style only the horizontal dimension is
+increased. For strong text both the horizontal and vertical
+dimensions are enlarged. A wide style of strength 0.08333 ( 1/12 ) is
+equivalent to the <a class="tooltip reference internal" href="font.html#pygame.font.Font" title=""><code class="xref py py-class docutils literal notranslate"><span class="pre">pygame.font.Font</span></code><span class="tooltip-content">create a new Font object from a file</span></a> bold style.
+The default is 0.02778 ( 1/36 ).</p>
+<p>The strength style is only supported for scalable (outline) fonts.
+An attempt to set this property on a bitmap font will raise an
+AttributeError. If the font object is inactive, as returned by
+<code class="docutils literal notranslate"><span class="pre">Font.__new__()</span></code>, assignment to this property raises a RuntimeError.</p>
+</dd></dl>
+
+<dl class="py attribute definition">
+<dt class="sig sig-object py title" id="pygame.freetype.Font.underline_adjustment">
+<span class="sig-name descname"><span class="pre">underline_adjustment</span></span><a class="headerlink" href="#pygame.freetype.Font.underline_adjustment" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Adjustment factor for the underline position</span></div>
+<div class="line"><span class="signature">underline_adjustment -&gt; float</span></div>
+</div>
+<p>Gets or sets a factor which, when positive, is multiplied with the
+font's underline offset to adjust the underline position. A negative
+value turns an underline into a strike-through or overline. It is
+multiplied with the ascender. Accepted values range between -2.0 and 2.0
+inclusive. A value of 0.5 closely matches Tango underlining. A value of
+1.0 mimics <a class="tooltip reference internal" href="font.html#pygame.font.Font" title=""><code class="xref py py-class docutils literal notranslate"><span class="pre">pygame.font.Font</span></code><span class="tooltip-content">create a new Font object from a file</span></a> underlining.</p>
+</dd></dl>
+
+<dl class="py attribute definition">
+<dt class="sig sig-object py title" id="pygame.freetype.Font.fixed_width">
+<span class="sig-name descname"><span class="pre">fixed_width</span></span><a class="headerlink" href="#pygame.freetype.Font.fixed_width" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Gets whether the font is fixed-width</span></div>
+<div class="line"><span class="signature">fixed_width -&gt; bool</span></div>
+</div>
+<p>Read only. Returns <code class="docutils literal notranslate"><span class="pre">True</span></code> if the font contains fixed-width
+characters (for example Courier, Bitstream Vera Sans Mono, Andale Mono).</p>
+</dd></dl>
+
+<dl class="py attribute definition">
+<dt class="sig sig-object py title" id="pygame.freetype.Font.fixed_sizes">
+<span class="sig-name descname"><span class="pre">fixed_sizes</span></span><a class="headerlink" href="#pygame.freetype.Font.fixed_sizes" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">the number of available bitmap sizes for the font</span></div>
+<div class="line"><span class="signature">fixed_sizes -&gt; int</span></div>
+</div>
+<p>Read only. Returns the number of point sizes for which the font contains
+bitmap character images. If zero then the font is not a bitmap font.
+A scalable font may contain pre-rendered point sizes as strikes.</p>
+</dd></dl>
+
+<dl class="py attribute definition">
+<dt class="sig sig-object py title" id="pygame.freetype.Font.scalable">
+<span class="sig-name descname"><span class="pre">scalable</span></span><a class="headerlink" href="#pygame.freetype.Font.scalable" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Gets whether the font is scalable</span></div>
+<div class="line"><span class="signature">scalable -&gt; bool</span></div>
+</div>
+<p>Read only. Returns <code class="docutils literal notranslate"><span class="pre">True</span></code> if the font contains outline glyphs.
+If so, the point size is not limited to available bitmap sizes.</p>
+</dd></dl>
+
+<dl class="py attribute definition">
+<dt class="sig sig-object py title" id="pygame.freetype.Font.use_bitmap_strikes">
+<span class="sig-name descname"><span class="pre">use_bitmap_strikes</span></span><a class="headerlink" href="#pygame.freetype.Font.use_bitmap_strikes" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">allow the use of embedded bitmaps in an outline font file</span></div>
+<div class="line"><span class="signature">use_bitmap_strikes -&gt; bool</span></div>
+</div>
+<p>Some scalable fonts include embedded bitmaps for particular point
+sizes. This property controls whether or not those bitmap strikes
+are used. Set it <code class="docutils literal notranslate"><span class="pre">False</span></code> to disable the loading of any bitmap
+strike. Set it <code class="docutils literal notranslate"><span class="pre">True</span></code>, the default, to permit bitmap strikes
+for a non-rotated render with no style other than <a class="reference internal" href="#pygame.freetype.Font.wide" title="pygame.freetype.Font.wide"><code class="xref py py-attr docutils literal notranslate"><span class="pre">wide</span></code></a> or
+<a class="reference internal" href="#pygame.freetype.Font.underline" title="pygame.freetype.Font.underline"><code class="xref py py-attr docutils literal notranslate"><span class="pre">underline</span></code></a>. This property is ignored for bitmap fonts.</p>
+<p>See also <a class="reference internal" href="#pygame.freetype.Font.fixed_sizes" title="pygame.freetype.Font.fixed_sizes"><code class="xref py py-attr docutils literal notranslate"><span class="pre">fixed_sizes</span></code></a> and <a class="reference internal" href="#pygame.freetype.Font.get_sizes" title="pygame.freetype.Font.get_sizes"><code class="xref py py-meth docutils literal notranslate"><span class="pre">get_sizes()</span></code></a>.</p>
+</dd></dl>
+
+<dl class="py attribute definition">
+<dt class="sig sig-object py title" id="pygame.freetype.Font.antialiased">
+<span class="sig-name descname"><span class="pre">antialiased</span></span><a class="headerlink" href="#pygame.freetype.Font.antialiased" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Font anti-aliasing mode</span></div>
+<div class="line"><span class="signature">antialiased -&gt; bool</span></div>
+</div>
+<p>Gets or sets the font's anti-aliasing mode. This defaults to
+<code class="docutils literal notranslate"><span class="pre">True</span></code> on all fonts, which are rendered with full 8 bit blending.</p>
+<p>Set to <code class="docutils literal notranslate"><span class="pre">False</span></code> to do monochrome rendering. This should
+provide a small speed gain and reduce cache memory size.</p>
+</dd></dl>
+
+<dl class="py attribute definition">
+<dt class="sig sig-object py title" id="pygame.freetype.Font.kerning">
+<span class="sig-name descname"><span class="pre">kerning</span></span><a class="headerlink" href="#pygame.freetype.Font.kerning" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Character kerning mode</span></div>
+<div class="line"><span class="signature">kerning -&gt; bool</span></div>
+</div>
+<p>Gets or sets the font's kerning mode. This defaults to <code class="docutils literal notranslate"><span class="pre">False</span></code>
+on all fonts, which will be rendered without kerning.</p>
+<p>Set to <code class="docutils literal notranslate"><span class="pre">True</span></code> to add kerning between character pairs, if supported
+by the font, when positioning glyphs.</p>
+</dd></dl>
+
+<dl class="py attribute definition">
+<dt class="sig sig-object py title" id="pygame.freetype.Font.vertical">
+<span class="sig-name descname"><span class="pre">vertical</span></span><a class="headerlink" href="#pygame.freetype.Font.vertical" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Font vertical mode</span></div>
+<div class="line"><span class="signature">vertical -&gt; bool</span></div>
+</div>
+<p>Gets or sets whether the characters are laid out vertically rather
+than horizontally. May be useful when rendering Kanji or some other
+vertical script.</p>
+<p>Set to <code class="docutils literal notranslate"><span class="pre">True</span></code> to switch to a vertical text layout. The default
+is <code class="docutils literal notranslate"><span class="pre">False</span></code>, place horizontally.</p>
+<p>Note that the <a class="reference internal" href="#pygame.freetype.Font" title="pygame.freetype.Font"><code class="xref py py-class docutils literal notranslate"><span class="pre">Font</span></code></a> class does not automatically determine
+script orientation. Vertical layout must be selected explicitly.</p>
+<p>Also note that several font formats (especially bitmap based ones) don't
+contain the necessary metrics to draw glyphs vertically, so drawing in
+those cases will give unspecified results.</p>
+</dd></dl>
+
+<dl class="py attribute definition">
+<dt class="sig sig-object py title" id="pygame.freetype.Font.rotation">
+<span class="sig-name descname"><span class="pre">rotation</span></span><a class="headerlink" href="#pygame.freetype.Font.rotation" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">text rotation in degrees counterclockwise</span></div>
+<div class="line"><span class="signature">rotation -&gt; int</span></div>
+</div>
+<p>Gets or sets the baseline angle of the rendered text. The angle is
+represented as integer degrees. The default angle is 0, with horizontal
+text rendered along the X-axis, and vertical text along the Y-axis.
+A positive value rotates these axes counterclockwise that many degrees.
+A negative angle corresponds to a clockwise rotation. The rotation
+value is normalized to a value within the range 0 to 359 inclusive
+(eg. 390 -&gt; 390 - 360 -&gt; 30, -45 -&gt; 360 + -45 -&gt; 315,
+720 -&gt; 720 - (2 * 360) -&gt; 0).</p>
+<p>Only scalable (outline) fonts can be rotated. An attempt to change
+the rotation of a bitmap font raises an AttributeError.
+An attempt to change the rotation of an inactive font instance, as
+returned by <code class="docutils literal notranslate"><span class="pre">Font.__new__()</span></code>, raises a RuntimeError.</p>
+</dd></dl>
+
+<dl class="py attribute definition">
+<dt class="sig sig-object py title" id="pygame.freetype.Font.fgcolor">
+<span class="sig-name descname"><span class="pre">fgcolor</span></span><a class="headerlink" href="#pygame.freetype.Font.fgcolor" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">default foreground color</span></div>
+<div class="line"><span class="signature">fgcolor -&gt; Color</span></div>
+</div>
+<p>Gets or sets the default glyph rendering color. It is initially opaque
+black ― (0, 0, 0, 255). Applies to <a class="reference internal" href="#pygame.freetype.Font.render" title="pygame.freetype.Font.render"><code class="xref py py-meth docutils literal notranslate"><span class="pre">render()</span></code></a> and <a class="reference internal" href="#pygame.freetype.Font.render_to" title="pygame.freetype.Font.render_to"><code class="xref py py-meth docutils literal notranslate"><span class="pre">render_to()</span></code></a>.</p>
+</dd></dl>
+
+<dl class="py attribute definition">
+<dt class="sig sig-object py title" id="pygame.freetype.Font.bgcolor">
+<span class="sig-name descname"><span class="pre">bgcolor</span></span><a class="headerlink" href="#pygame.freetype.Font.bgcolor" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">default background color</span></div>
+<div class="line"><span class="signature">bgcolor -&gt; Color</span></div>
+</div>
+<p>Gets or sets the default background rendering color. Initially it is
+unset and text will render with a transparent background by default.
+Applies to <a class="reference internal" href="#pygame.freetype.Font.render" title="pygame.freetype.Font.render"><code class="xref py py-meth docutils literal notranslate"><span class="pre">render()</span></code></a> and <a class="reference internal" href="#pygame.freetype.Font.render_to" title="pygame.freetype.Font.render_to"><code class="xref py py-meth docutils literal notranslate"><span class="pre">render_to()</span></code></a>.</p>
+</dd></dl>
+
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 2.0.0.</span></p>
+</div>
+<dl class="py attribute definition">
+<dt class="sig sig-object py title" id="pygame.freetype.Font.origin">
+<span class="sig-name descname"><span class="pre">origin</span></span><a class="headerlink" href="#pygame.freetype.Font.origin" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Font render to text origin mode</span></div>
+<div class="line"><span class="signature">origin -&gt; bool</span></div>
+</div>
+<p>If set <code class="docutils literal notranslate"><span class="pre">True</span></code>, <a class="reference internal" href="#pygame.freetype.Font.render_to" title="pygame.freetype.Font.render_to"><code class="xref py py-meth docutils literal notranslate"><span class="pre">render_to()</span></code></a> and <a class="reference internal" href="#pygame.freetype.Font.render_raw_to" title="pygame.freetype.Font.render_raw_to"><code class="xref py py-meth docutils literal notranslate"><span class="pre">render_raw_to()</span></code></a> will
+take the <em>dest</em> position to be that of the text origin, as opposed to
+the top-left corner of the bounding box. See <a class="reference internal" href="#pygame.freetype.Font.get_rect" title="pygame.freetype.Font.get_rect"><code class="xref py py-meth docutils literal notranslate"><span class="pre">get_rect()</span></code></a> for
+details.</p>
+</dd></dl>
+
+<dl class="py attribute definition">
+<dt class="sig sig-object py title" id="pygame.freetype.Font.pad">
+<span class="sig-name descname"><span class="pre">pad</span></span><a class="headerlink" href="#pygame.freetype.Font.pad" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">padded boundary mode</span></div>
+<div class="line"><span class="signature">pad -&gt; bool</span></div>
+</div>
+<p>If set <code class="docutils literal notranslate"><span class="pre">True</span></code>, then the text boundary rectangle will be inflated
+to match that of <a class="reference internal" href="font.html#pygame.font.Font" title="pygame.font.Font"><code class="xref py py-class docutils literal notranslate"><span class="pre">font.Font</span></code></a>.
+Otherwise, the boundary rectangle is just large enough for the text.</p>
+</dd></dl>
+
+<dl class="py attribute definition">
+<dt class="sig sig-object py title" id="pygame.freetype.Font.ucs4">
+<span class="sig-name descname"><span class="pre">ucs4</span></span><a class="headerlink" href="#pygame.freetype.Font.ucs4" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Enable UCS-4 mode</span></div>
+<div class="line"><span class="signature">ucs4 -&gt; bool</span></div>
+</div>
+<p>Gets or sets the decoding of Unicode text. By default, the
+freetype module performs UTF-16 surrogate pair decoding on Unicode text.
+This allows 32-bit escape sequences ('Uxxxxxxxx') between 0x10000 and
+0x10FFFF to represent their corresponding UTF-32 code points on Python
+interpreters built with a UCS-2 Unicode type (on Windows, for instance).
+It also means character values within the UTF-16 surrogate area (0xD800
+to 0xDFFF) are considered part of a surrogate pair. A malformed surrogate
+pair will raise a UnicodeEncodeError. Setting ucs4 <code class="docutils literal notranslate"><span class="pre">True</span></code> turns
+surrogate pair decoding off, allowing access the full UCS-4 character
+range to a Python interpreter built with four-byte Unicode character
+support.</p>
+</dd></dl>
+
+<dl class="py attribute definition">
+<dt class="sig sig-object py title" id="pygame.freetype.Font.resolution">
+<span class="sig-name descname"><span class="pre">resolution</span></span><a class="headerlink" href="#pygame.freetype.Font.resolution" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Pixel resolution in dots per inch</span></div>
+<div class="line"><span class="signature">resolution -&gt; int</span></div>
+</div>
+<p>Read only. Gets pixel size used in scaling font glyphs for this
+<a class="reference internal" href="#pygame.freetype.Font" title="pygame.freetype.Font"><code class="xref py py-class docutils literal notranslate"><span class="pre">Font</span></code></a> instance.</p>
+</dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+<br /><br />
+<hr />
+<a href="https://github.com/pygame/pygame/edit/main/docs/reST/ref/freetype.rst" rel="nofollow">Edit on GitHub</a>
+            <div class="clearer"></div>
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="gfxdraw.html" title="pygame.gfxdraw"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="font.html" title="pygame.font"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">pygame v2.5.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href=""><code class="xref py py-mod docutils literal notranslate"><span class="pre">pygame.freetype</span></code></a></li>
+    <script type="text/javascript" src="https://www.pygame.org/comment/jquery.plugin.docscomments.js"></script>
+
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2000-2023, pygame developers.
+    </div>
+  </body>
+</html>

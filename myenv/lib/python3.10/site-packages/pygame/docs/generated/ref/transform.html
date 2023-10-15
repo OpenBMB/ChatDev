@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>pygame.transform &#8212; pygame v2.5.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygame.css?v=71ee6cc2" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=ba44479e"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <link rel="icon" href="../_static/pygame.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Pygame Tutorials - Camera Module Introduction" href="../tut/CameraIntro.html" />
+    <link rel="prev" title="pygame._sdl2.touch" href="touch.html" /> 
+  </head><body>  
+
+    <div class="document">
+
+  <div class="header">
+	<div class="flex-container">
+	<div class="logo">
+	  <a href="https://www.pygame.org/">
+	    <img src="../_static/pygame_tiny.png"/>
+	  </a>
+	  <h5>pygame documentation</h5>
+	</div>
+	<div class="pagelinks">
+	  <div class="top">
+	    <a href="https://www.pygame.org/">Pygame Home</a> ||
+	    <a href="../index.html">Help Contents</a> ||
+	    <a href="../genindex.html">Reference Index</a>
+
+        <form action="../search.html" method="get" style="display:inline;float:right;">
+          <input name="q" value="" type="text">
+          <input value="search" type="submit">
+        </form>
+	  </div>
+	  <hr style="color:black;border-bottom:none;border-style: dotted;border-bottom-style:none;">
+	  <p class="bottom"><b>Most useful stuff</b>:
+	    <a href="color.html">Color</a> | 
+	    <a href="display.html">display</a> | 
+	    <a href="draw.html">draw</a> | 
+	    <a href="event.html">event</a> | 
+	    <a href="font.html">font</a> | 
+	    <a href="image.html">image</a> | 
+	    <a href="key.html">key</a> | 
+	    <a href="locals.html">locals</a> | 
+	    <a href="mixer.html">mixer</a> | 
+	    <a href="mouse.html">mouse</a> | 
+	    <a href="rect.html">Rect</a> | 
+	    <a href="surface.html">Surface</a> | 
+	    <a href="time.html">time</a> | 
+	    <a href="music.html">music</a> | 
+	    <a href="pygame.html">pygame</a>
+	  </p>
+
+	  <p class="bottom"><b>Advanced stuff</b>:
+	    <a href="cursors.html">cursors</a> | 
+	    <a href="joystick.html">joystick</a> | 
+	    <a href="mask.html">mask</a> | 
+	    <a href="sprite.html">sprite</a> | 
+	    <a href="transform.html">transform</a> | 
+	    <a href="bufferproxy.html">BufferProxy</a> | 
+	    <a href="freetype.html">freetype</a> | 
+	    <a href="gfxdraw.html">gfxdraw</a> | 
+	    <a href="midi.html">midi</a> | 
+	    <a href="pixelarray.html">PixelArray</a> | 
+	    <a href="pixelcopy.html">pixelcopy</a> | 
+	    <a href="sndarray.html">sndarray</a> | 
+	    <a href="surfarray.html">surfarray</a> | 
+	    <a href="math.html">math</a>
+	  </p>
+
+	  <p class="bottom"><b>Other</b>:
+	    <a href="camera.html">camera</a> | 
+	    <a href="sdl2_controller.html#module-pygame._sdl2.controller">controller</a> | 
+	    <a href="examples.html">examples</a> | 
+	    <a href="fastevent.html">fastevent</a> | 
+	    <a href="scrap.html">scrap</a> | 
+	    <a href="tests.html">tests</a> | 
+	    <a href="touch.html">touch</a> | 
+	    <a href="pygame.html#module-pygame.version">version</a>
+	  </p>
+</div>
+</div>
+  </div>
+
+      <div class="documentwrapper">
+          <div class="body" role="main">
+            
+<section id="module-pygame.transform">
+<span id="pygame-transform"></span><dl class="definition">
+<dt class="title module sig sig-object">
+<code class="docutils literal notranslate"><span class="pre">pygame.transform</span></code></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">pygame module to transform surfaces</span></div>
+</div>
+<table class="toc docutils align-default">
+<tbody>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="transform.html#pygame.transform.flip">pygame.transform.flip</a></div>
+</td>
+<td>—</td>
+<td>flip vertically and horizontally</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="transform.html#pygame.transform.scale">pygame.transform.scale</a></div>
+</td>
+<td>—</td>
+<td>resize to new resolution</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="transform.html#pygame.transform.scale_by">pygame.transform.scale_by</a></div>
+</td>
+<td>—</td>
+<td>resize to new resolution, using scalar(s)</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="transform.html#pygame.transform.rotate">pygame.transform.rotate</a></div>
+</td>
+<td>—</td>
+<td>rotate an image</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="transform.html#pygame.transform.rotozoom">pygame.transform.rotozoom</a></div>
+</td>
+<td>—</td>
+<td>filtered scale and rotation</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="transform.html#pygame.transform.scale2x">pygame.transform.scale2x</a></div>
+</td>
+<td>—</td>
+<td>specialized image doubler</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="transform.html#pygame.transform.smoothscale">pygame.transform.smoothscale</a></div>
+</td>
+<td>—</td>
+<td>scale a surface to an arbitrary size smoothly</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="transform.html#pygame.transform.smoothscale_by">pygame.transform.smoothscale_by</a></div>
+</td>
+<td>—</td>
+<td>resize to new resolution, using scalar(s)</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="transform.html#pygame.transform.get_smoothscale_backend">pygame.transform.get_smoothscale_backend</a></div>
+</td>
+<td>—</td>
+<td>return smoothscale filter version in use: 'GENERIC', 'MMX', or 'SSE'</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="transform.html#pygame.transform.set_smoothscale_backend">pygame.transform.set_smoothscale_backend</a></div>
+</td>
+<td>—</td>
+<td>set smoothscale filter version to one of: 'GENERIC', 'MMX', or 'SSE'</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="transform.html#pygame.transform.chop">pygame.transform.chop</a></div>
+</td>
+<td>—</td>
+<td>gets a copy of an image with an interior area removed</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="transform.html#pygame.transform.laplacian">pygame.transform.laplacian</a></div>
+</td>
+<td>—</td>
+<td>find edges in a surface</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="transform.html#pygame.transform.average_surfaces">pygame.transform.average_surfaces</a></div>
+</td>
+<td>—</td>
+<td>find the average surface from many surfaces.</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="transform.html#pygame.transform.average_color">pygame.transform.average_color</a></div>
+</td>
+<td>—</td>
+<td>finds the average color of a surface</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="transform.html#pygame.transform.grayscale">pygame.transform.grayscale</a></div>
+</td>
+<td>—</td>
+<td>grayscale a surface</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="transform.html#pygame.transform.threshold">pygame.transform.threshold</a></div>
+</td>
+<td>—</td>
+<td>finds which, and how many pixels in a surface are within a threshold of a 'search_color' or a 'search_surf'.</td>
+</tr>
+</tbody>
+</table>
+<p>A Surface transform is an operation that moves or resizes the pixels. All these
+functions take a Surface to operate on and return a new Surface with the
+results.</p>
+<p>Some of the transforms are considered destructive. These means every time they
+are performed they lose pixel data. Common examples of this are resizing and
+rotating. For this reason, it is better to re-transform the original surface
+than to keep transforming an image multiple times. (For example, suppose you
+are animating a bouncing spring which expands and contracts. If you applied the
+size changes incrementally to the previous images, you would lose detail.
+Instead, always begin with the original image and scale to the desired size.)</p>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in pygame 2.0.2: </span>transform functions now support keyword arguments.</p>
+</div>
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.transform.flip">
+<span class="sig-prename descclassname"><span class="pre">pygame.transform.</span></span><span class="sig-name descname"><span class="pre">flip</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.transform.flip" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">flip vertically and horizontally</span></div>
+<div class="line"><span class="signature">flip(surface, flip_x, flip_y) -&gt; Surface</span></div>
+</div>
+<p>This can flip a Surface either vertically, horizontally, or both.
+The arguments <code class="docutils literal notranslate"><span class="pre">flip_x</span></code> and <code class="docutils literal notranslate"><span class="pre">flip_y</span></code> are booleans that control whether
+to flip each axis. Flipping a Surface is non-destructive and returns a new
+Surface with the same dimensions.</p>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.transform.scale">
+<span class="sig-prename descclassname"><span class="pre">pygame.transform.</span></span><span class="sig-name descname"><span class="pre">scale</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.transform.scale" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">resize to new resolution</span></div>
+<div class="line"><span class="signature">scale(surface, size, dest_surface=None) -&gt; Surface</span></div>
+</div>
+<p>Resizes the Surface to a new size, given as (width, height).
+This is a fast scale operation that does not sample the results.</p>
+<p>An optional destination surface can be used, rather than have it create a
+new one. This is quicker if you want to repeatedly scale something. However
+the destination must be the same size as the size (width, height) passed in. Also
+the destination surface must be the same format.</p>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.transform.scale_by">
+<span class="sig-prename descclassname"><span class="pre">pygame.transform.</span></span><span class="sig-name descname"><span class="pre">scale_by</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.transform.scale_by" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">resize to new resolution, using scalar(s)</span></div>
+<div class="line"><span class="signature">scale_by(surface, factor, dest_surface=None) -&gt; Surface</span></div>
+</div>
+<p><strong>Experimental:</strong> feature still in development available for testing and feedback. It may change.
+<a class="reference external" href="https://github.com/pygame/pygame/pull/2723">Please leave scale_by feedback with authors</a></p>
+<p>Same as <a class="reference internal" href="#pygame.transform.scale" title="pygame.transform.scale"><code class="xref py py-func docutils literal notranslate"><span class="pre">scale()</span></code></a>, but scales by some factor, rather than taking
+the new size explicitly. For example, <code class="code docutils literal notranslate"><span class="pre">transform.scale_by(surf,</span> <span class="pre">3)</span></code>
+will triple the size of the surface in both dimensions. Optionally, the
+scale factor can be a sequence of two numbers, controlling x and y scaling
+separately. For example, <code class="code docutils literal notranslate"><span class="pre">transform.scale_by(surf,</span> <span class="pre">(2,</span> <span class="pre">1))</span></code> doubles
+the image width but keeps the height the same.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 2.1.3.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.transform.rotate">
+<span class="sig-prename descclassname"><span class="pre">pygame.transform.</span></span><span class="sig-name descname"><span class="pre">rotate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.transform.rotate" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">rotate an image</span></div>
+<div class="line"><span class="signature">rotate(surface, angle) -&gt; Surface</span></div>
+</div>
+<p>Unfiltered counterclockwise rotation. The angle argument represents degrees
+and can be any floating point value. Negative angle amounts will rotate
+clockwise.</p>
+<p>Unless rotating by 90 degree increments, the image will be padded larger to
+hold the new size. If the image has pixel alphas, the padded area will be
+transparent. Otherwise pygame will pick a color that matches the Surface
+colorkey or the topleft pixel value.</p>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.transform.rotozoom">
+<span class="sig-prename descclassname"><span class="pre">pygame.transform.</span></span><span class="sig-name descname"><span class="pre">rotozoom</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.transform.rotozoom" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">filtered scale and rotation</span></div>
+<div class="line"><span class="signature">rotozoom(surface, angle, scale) -&gt; Surface</span></div>
+</div>
+<p>This is a combined scale and rotation transform. The resulting Surface will
+be a filtered 32-bit Surface. The scale argument is a floating point value
+that will be multiplied by the current resolution. The angle argument is a
+floating point value that represents the counterclockwise degrees to rotate.
+A negative rotation angle will rotate clockwise.</p>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.transform.scale2x">
+<span class="sig-prename descclassname"><span class="pre">pygame.transform.</span></span><span class="sig-name descname"><span class="pre">scale2x</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.transform.scale2x" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">specialized image doubler</span></div>
+<div class="line"><span class="signature">scale2x(surface, dest_surface=None) -&gt; Surface</span></div>
+</div>
+<p>This will return a new image that is double the size of the original. It
+uses the AdvanceMAME Scale2X algorithm which does a 'jaggie-less' scale of
+bitmap graphics.</p>
+<p>This really only has an effect on simple images with solid colors. On
+photographic and antialiased images it will look like a regular unfiltered
+scale.</p>
+<p>An optional destination surface can be used, rather than have it create a
+new one. This is quicker if you want to repeatedly scale something. However
+the destination must be twice the size of the source surface passed in. Also
+the destination surface must be the same format.</p>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.transform.smoothscale">
+<span class="sig-prename descclassname"><span class="pre">pygame.transform.</span></span><span class="sig-name descname"><span class="pre">smoothscale</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.transform.smoothscale" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">scale a surface to an arbitrary size smoothly</span></div>
+<div class="line"><span class="signature">smoothscale(surface, size, dest_surface=None) -&gt; Surface</span></div>
+</div>
+<p>Uses one of two different algorithms for scaling each dimension of the input
+surface as required. For shrinkage, the output pixels are area averages of
+the colors they cover. For expansion, a bilinear filter is used. For the
+x86-64 and i686 architectures, optimized <code class="docutils literal notranslate"><span class="pre">MMX</span></code> routines are included and
+will run much faster than other machine types. The size is a 2 number
+sequence for (width, height). This function only works for 24-bit or 32-bit
+surfaces. An exception will be thrown if the input surface bit depth is less
+than 24.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 1.8.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.transform.smoothscale_by">
+<span class="sig-prename descclassname"><span class="pre">pygame.transform.</span></span><span class="sig-name descname"><span class="pre">smoothscale_by</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.transform.smoothscale_by" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">resize to new resolution, using scalar(s)</span></div>
+<div class="line"><span class="signature">smoothscale_by(surface, factor, dest_surface=None) -&gt; Surface</span></div>
+</div>
+<p><strong>Experimental:</strong> feature still in development available for testing and feedback. It may change.
+<a class="reference external" href="https://github.com/pygame/pygame/pull/2723">Please leave smoothscale_by feedback with authors</a></p>
+<p>Same as <a class="reference internal" href="#pygame.transform.smoothscale" title="pygame.transform.smoothscale"><code class="xref py py-func docutils literal notranslate"><span class="pre">smoothscale()</span></code></a>, but scales by some factor, rather than
+taking the new size explicitly. For example,
+<code class="code docutils literal notranslate"><span class="pre">transform.smoothscale_by(surf,</span> <span class="pre">3)</span></code> will triple the size of the
+surface in both dimensions. Optionally, the scale factor can be a sequence
+of two numbers, controlling x and y scaling separately. For example,
+<code class="code docutils literal notranslate"><span class="pre">transform.smoothscale_by(surf,</span> <span class="pre">(2,</span> <span class="pre">1))</span></code> doubles the image width but
+keeps the height the same.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 2.1.3.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.transform.get_smoothscale_backend">
+<span class="sig-prename descclassname"><span class="pre">pygame.transform.</span></span><span class="sig-name descname"><span class="pre">get_smoothscale_backend</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.transform.get_smoothscale_backend" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">return smoothscale filter version in use: 'GENERIC', 'MMX', or 'SSE'</span></div>
+<div class="line"><span class="signature">get_smoothscale_backend() -&gt; string</span></div>
+</div>
+<p>Shows whether or not smoothscale is using <code class="docutils literal notranslate"><span class="pre">MMX</span></code> or <code class="docutils literal notranslate"><span class="pre">SSE</span></code> acceleration.
+If no acceleration is available then &quot;GENERIC&quot; is returned. For a x86
+processor the level of acceleration to use is determined at runtime.</p>
+<p>This function is provided for pygame testing and debugging.</p>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.transform.set_smoothscale_backend">
+<span class="sig-prename descclassname"><span class="pre">pygame.transform.</span></span><span class="sig-name descname"><span class="pre">set_smoothscale_backend</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.transform.set_smoothscale_backend" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">set smoothscale filter version to one of: 'GENERIC', 'MMX', or 'SSE'</span></div>
+<div class="line"><span class="signature">set_smoothscale_backend(backend) -&gt; None</span></div>
+</div>
+<p>Sets smoothscale acceleration. Takes a string argument. A value of 'GENERIC'
+turns off acceleration. 'MMX' uses <code class="docutils literal notranslate"><span class="pre">MMX</span></code> instructions only. 'SSE' allows
+<code class="docutils literal notranslate"><span class="pre">SSE</span></code> extensions as well. A value error is raised if type is not
+recognized or not supported by the current processor.</p>
+<p>This function is provided for pygame testing and debugging. If smoothscale
+causes an invalid instruction error then it is a pygame/SDL bug that should
+be reported. Use this function as a temporary fix only.</p>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.transform.chop">
+<span class="sig-prename descclassname"><span class="pre">pygame.transform.</span></span><span class="sig-name descname"><span class="pre">chop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.transform.chop" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">gets a copy of an image with an interior area removed</span></div>
+<div class="line"><span class="signature">chop(surface, rect) -&gt; Surface</span></div>
+</div>
+<p>Extracts a portion of an image. All vertical and horizontal pixels
+surrounding the given rectangle area are removed. The corner areas (diagonal
+to the rect) are then brought together. (The original image is not altered
+by this operation.)</p>
+<p><code class="docutils literal notranslate"><span class="pre">NOTE</span></code>: If you want a &quot;crop&quot; that returns the part of an image within a
+rect, you can blit with a rect to a new surface or copy a subsurface.</p>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.transform.laplacian">
+<span class="sig-prename descclassname"><span class="pre">pygame.transform.</span></span><span class="sig-name descname"><span class="pre">laplacian</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.transform.laplacian" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">find edges in a surface</span></div>
+<div class="line"><span class="signature">laplacian(surface, dest_surface=None) -&gt; Surface</span></div>
+</div>
+<p>Finds the edges in a surface using the laplacian algorithm.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 1.8.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.transform.average_surfaces">
+<span class="sig-prename descclassname"><span class="pre">pygame.transform.</span></span><span class="sig-name descname"><span class="pre">average_surfaces</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.transform.average_surfaces" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">find the average surface from many surfaces.</span></div>
+<div class="line"><span class="signature">average_surfaces(surfaces, dest_surface=None, palette_colors=1) -&gt; Surface</span></div>
+</div>
+<p>Takes a sequence of surfaces and returns a surface with average colors from
+each of the surfaces.</p>
+<p>palette_colors - if true we average the colors in palette, otherwise we
+average the pixel values. This is useful if the surface is actually
+greyscale colors, and not palette colors.</p>
+<p>Note, this function currently does not handle palette using surfaces
+correctly.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 1.8.</span></p>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 1.9: </span><code class="docutils literal notranslate"><span class="pre">palette_colors</span></code> argument</p>
+</div>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.transform.average_color">
+<span class="sig-prename descclassname"><span class="pre">pygame.transform.</span></span><span class="sig-name descname"><span class="pre">average_color</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.transform.average_color" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">finds the average color of a surface</span></div>
+<div class="line"><span class="signature">average_color(surface, rect=None, consider_alpha=False) -&gt; Color</span></div>
+</div>
+<p>Finds the average color of a Surface or a region of a surface specified by a
+Rect, and returns it as a Color. If consider_alpha is set to True, then alpha is
+taken into account (removing the black artifacts).</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 2.1.2: </span><code class="docutils literal notranslate"><span class="pre">consider_alpha</span></code> argument</p>
+</div>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.transform.grayscale">
+<span class="sig-prename descclassname"><span class="pre">pygame.transform.</span></span><span class="sig-name descname"><span class="pre">grayscale</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.transform.grayscale" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">grayscale a surface</span></div>
+<div class="line"><span class="signature">grayscale(surface, dest_surface=None) -&gt; Surface</span></div>
+</div>
+<p>Returns a grayscaled version of the original surface using the luminosity formula which weights red, green and blue according to their wavelengths.</p>
+<p>An optional destination surface can be passed which is faster than creating a new Surface.
+This destination surface must have the same dimensions (width, height) and depth as the source Surface.</p>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.transform.threshold">
+<span class="sig-prename descclassname"><span class="pre">pygame.transform.</span></span><span class="sig-name descname"><span class="pre">threshold</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.transform.threshold" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">finds which, and how many pixels in a surface are within a threshold of a 'search_color' or a 'search_surf'.</span></div>
+<div class="line"><span class="signature">threshold(dest_surface, surface, search_color, threshold=(0,0,0,0), set_color=(0,0,0,0), set_behavior=1, search_surf=None, inverse_set=False) -&gt; num_threshold_pixels</span></div>
+</div>
+<p>This versatile function can be used for find colors in a 'surf' close to a 'search_color'
+or close to colors in a separate 'search_surf'.</p>
+<p>It can also be used to transfer pixels into a 'dest_surf' that match or don't match.</p>
+<p>By default it sets pixels in the 'dest_surf' where all of the pixels NOT within the
+threshold are changed to set_color. If inverse_set is optionally set to True,
+the pixels that ARE within the threshold are changed to set_color.</p>
+<p>If the optional 'search_surf' surface is given, it is used to threshold against
+rather than the specified 'set_color'. That is, it will find each pixel in the
+'surf' that is within the 'threshold' of the pixel at the same coordinates
+of the 'search_surf'.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dest_surf</strong> (<a class="tooltip reference internal" href="surface.html#pygame.Surface" title=""><em>pygame.Surface</em><span class="tooltip-content">pygame object for representing images</span></a><em> or </em><em>None</em>) -- Surface we are changing. See 'set_behavior'.
+Should be None if counting (set_behavior is 0).</p></li>
+<li><p><strong>surf</strong> (<a class="tooltip reference internal" href="surface.html#pygame.Surface" title=""><em>pygame.Surface</em><span class="tooltip-content">pygame object for representing images</span></a>) -- Surface we are looking at.</p></li>
+<li><p><strong>search_color</strong> (<a class="tooltip reference internal" href="color.html#pygame.Color" title=""><em>pygame.Color</em><span class="tooltip-content">pygame object for color representations</span></a>) -- Color we are searching for.</p></li>
+<li><p><strong>threshold</strong> (<a class="tooltip reference internal" href="color.html#pygame.Color" title=""><em>pygame.Color</em><span class="tooltip-content">pygame object for color representations</span></a>) -- Within this distance from search_color (or search_surf).
+You can use a threshold of (r,g,b,a) where the r,g,b can have different
+thresholds. So you could use an r threshold of 40 and a blue threshold of 2
+if you like.</p></li>
+<li><p><strong>set_color</strong> (<a class="tooltip reference internal" href="color.html#pygame.Color" title=""><em>pygame.Color</em><span class="tooltip-content">pygame object for color representations</span></a><em> or </em><em>None</em>) -- Color we set in dest_surf.</p></li>
+<li><p><strong>set_behavior</strong> (<em>int</em>) -- <ul>
+<li><p>set_behavior=1 (default). Pixels in dest_surface will be changed to 'set_color'.</p></li>
+<li><p>set_behavior=0 we do not change 'dest_surf', just count. Make dest_surf=None.</p></li>
+<li><p>set_behavior=2 pixels set in 'dest_surf' will be from 'surf'.</p></li>
+</ul>
+</p></li>
+<li><p><strong>search_surf</strong> (<a class="tooltip reference internal" href="surface.html#pygame.Surface" title=""><em>pygame.Surface</em><span class="tooltip-content">pygame object for representing images</span></a><em> or </em><em>None</em>) -- <ul>
+<li><p>search_surf=None (default). Search against 'search_color' instead.</p></li>
+<li><p>search_surf=Surface. Look at the color in 'search_surf' rather than using 'search_color'.</p></li>
+</ul>
+</p></li>
+<li><p><strong>inverse_set</strong> (<em>bool</em>) -- <ul>
+<li><p>False, default. Pixels outside of threshold are changed.</p></li>
+<li><p>True, Pixels within threshold are changed.</p></li>
+</ul>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The number of pixels that are within the 'threshold' in 'surf'
+compared to either 'search_color' or <cite>search_surf</cite>.</p>
+</dd>
+<dt class="field-even">Examples<span class="colon">:</span></dt>
+<dd class="field-even"><p></p></dd>
+</dl>
+<p>See the threshold tests for a full of examples: <a class="reference external" href="https://github.com/pygame/pygame/blob/main/test/transform_test.py">https://github.com/pygame/pygame/blob/main/test/transform_test.py</a></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>    <span class="k">def</span> <span class="nf">test_threshold_dest_surf_not_change</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;the pixels within the threshold.</span>
+
+<span class="sd">        All pixels not within threshold are changed to set_color.</span>
+<span class="sd">        So there should be none changed in this test.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">)</span> <span class="o">=</span> <span class="n">size</span> <span class="o">=</span> <span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="mi">32</span><span class="p">)</span>
+        <span class="n">threshold</span> <span class="o">=</span> <span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+        <span class="n">original_color</span> <span class="o">=</span> <span class="p">(</span><span class="mi">25</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">25</span><span class="p">)</span>
+        <span class="n">original_dest_color</span> <span class="o">=</span> <span class="p">(</span><span class="mi">65</span><span class="p">,</span> <span class="mi">65</span><span class="p">,</span> <span class="mi">65</span><span class="p">,</span> <span class="mi">55</span><span class="p">)</span>
+        <span class="n">threshold_color</span> <span class="o">=</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+        <span class="n">set_color</span> <span class="o">=</span> <span class="p">(</span><span class="mi">255</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+
+        <span class="n">surf</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Surface</span><span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="n">pygame</span><span class="o">.</span><span class="n">SRCALPHA</span><span class="p">,</span> <span class="mi">32</span><span class="p">)</span>
+        <span class="n">dest_surf</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Surface</span><span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="n">pygame</span><span class="o">.</span><span class="n">SRCALPHA</span><span class="p">,</span> <span class="mi">32</span><span class="p">)</span>
+        <span class="n">search_surf</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Surface</span><span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="n">pygame</span><span class="o">.</span><span class="n">SRCALPHA</span><span class="p">,</span> <span class="mi">32</span><span class="p">)</span>
+
+        <span class="n">surf</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="n">original_color</span><span class="p">)</span>
+        <span class="n">search_surf</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="n">threshold_color</span><span class="p">)</span>
+        <span class="n">dest_surf</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="n">original_dest_color</span><span class="p">)</span>
+
+        <span class="c1"># set_behavior=1, set dest_surface from set_color.</span>
+        <span class="c1"># all within threshold of third_surface, so no color is set.</span>
+
+        <span class="n">THRESHOLD_BEHAVIOR_FROM_SEARCH_COLOR</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">pixels_within_threshold</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">threshold</span><span class="p">(</span>
+            <span class="n">dest_surface</span><span class="o">=</span><span class="n">dest_surf</span><span class="p">,</span>
+            <span class="n">surface</span><span class="o">=</span><span class="n">surf</span><span class="p">,</span>
+            <span class="n">search_color</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">threshold</span><span class="o">=</span><span class="n">threshold</span><span class="p">,</span>
+            <span class="n">set_color</span><span class="o">=</span><span class="n">set_color</span><span class="p">,</span>
+            <span class="n">set_behavior</span><span class="o">=</span><span class="n">THRESHOLD_BEHAVIOR_FROM_SEARCH_COLOR</span><span class="p">,</span>
+            <span class="n">search_surf</span><span class="o">=</span><span class="n">search_surf</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="c1"># # Return, of pixels within threshold is correct</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">w</span> <span class="o">*</span> <span class="n">h</span><span class="p">,</span> <span class="n">pixels_within_threshold</span><span class="p">)</span>
+
+        <span class="c1"># # Size of dest surface is correct</span>
+        <span class="n">dest_rect</span> <span class="o">=</span> <span class="n">dest_surf</span><span class="o">.</span><span class="n">get_rect</span><span class="p">()</span>
+        <span class="n">dest_size</span> <span class="o">=</span> <span class="n">dest_rect</span><span class="o">.</span><span class="n">size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="n">dest_size</span><span class="p">)</span>
+
+        <span class="c1"># The color is not the change_color specified for every pixel As all</span>
+        <span class="c1"># pixels are within threshold</span>
+
+        <span class="k">for</span> <span class="n">pt</span> <span class="ow">in</span> <span class="n">test_utils</span><span class="o">.</span><span class="n">rect_area_pts</span><span class="p">(</span><span class="n">dest_rect</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertNotEqual</span><span class="p">(</span><span class="n">dest_surf</span><span class="o">.</span><span class="n">get_at</span><span class="p">(</span><span class="n">pt</span><span class="p">),</span> <span class="n">set_color</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">dest_surf</span><span class="o">.</span><span class="n">get_at</span><span class="p">(</span><span class="n">pt</span><span class="p">),</span> <span class="n">original_dest_color</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 1.8.</span></p>
+</div>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in pygame 1.9.4: </span>Fixed a lot of bugs and added keyword arguments. Test your code.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+<br /><br />
+<hr />
+<a href="https://github.com/pygame/pygame/edit/main/docs/reST/ref/transform.rst" rel="nofollow">Edit on GitHub</a>
+            <div class="clearer"></div>
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../tut/CameraIntro.html" title="Pygame Tutorials - Camera Module Introduction"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="touch.html" title="pygame._sdl2.touch"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">pygame v2.5.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href=""><code class="xref py py-mod docutils literal notranslate"><span class="pre">pygame.transform</span></code></a></li>
+    <script type="text/javascript" src="https://www.pygame.org/comment/jquery.plugin.docscomments.js"></script>
+
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2000-2023, pygame developers.
+    </div>
+  </body>
+</html>

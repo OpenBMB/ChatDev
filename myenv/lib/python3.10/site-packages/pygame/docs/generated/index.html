@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Pygame Front Page &#8212; pygame v2.5.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="_static/pygame.css?v=71ee6cc2" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=ba44479e"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+    <link rel="icon" href="_static/pygame.ico"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="pygame.BufferProxy" href="ref/bufferproxy.html" /> 
+  </head><body>  
+
+    <div class="document">
+
+  <div class="header">
+	<div class="flex-container">
+	<div class="logo">
+	  <a href="https://www.pygame.org/">
+	    <img src="_static/pygame_tiny.png"/>
+	  </a>
+	  <h5>pygame documentation</h5>
+	</div>
+	<div class="pagelinks">
+	  <div class="top">
+	    <a href="https://www.pygame.org/">Pygame Home</a> ||
+	    <a href="#">Help Contents</a> ||
+	    <a href="genindex.html">Reference Index</a>
+
+        <form action="search.html" method="get" style="display:inline;float:right;">
+          <input name="q" value="" type="text">
+          <input value="search" type="submit">
+        </form>
+	  </div>
+	  <hr style="color:black;border-bottom:none;border-style: dotted;border-bottom-style:none;">
+	  <p class="bottom"><b>Most useful stuff</b>:
+	    <a href="ref/color.html">Color</a> | 
+	    <a href="ref/display.html">display</a> | 
+	    <a href="ref/draw.html">draw</a> | 
+	    <a href="ref/event.html">event</a> | 
+	    <a href="ref/font.html">font</a> | 
+	    <a href="ref/image.html">image</a> | 
+	    <a href="ref/key.html">key</a> | 
+	    <a href="ref/locals.html">locals</a> | 
+	    <a href="ref/mixer.html">mixer</a> | 
+	    <a href="ref/mouse.html">mouse</a> | 
+	    <a href="ref/rect.html">Rect</a> | 
+	    <a href="ref/surface.html">Surface</a> | 
+	    <a href="ref/time.html">time</a> | 
+	    <a href="ref/music.html">music</a> | 
+	    <a href="ref/pygame.html">pygame</a>
+	  </p>
+
+	  <p class="bottom"><b>Advanced stuff</b>:
+	    <a href="ref/cursors.html">cursors</a> | 
+	    <a href="ref/joystick.html">joystick</a> | 
+	    <a href="ref/mask.html">mask</a> | 
+	    <a href="ref/sprite.html">sprite</a> | 
+	    <a href="ref/transform.html">transform</a> | 
+	    <a href="ref/bufferproxy.html">BufferProxy</a> | 
+	    <a href="ref/freetype.html">freetype</a> | 
+	    <a href="ref/gfxdraw.html">gfxdraw</a> | 
+	    <a href="ref/midi.html">midi</a> | 
+	    <a href="ref/pixelarray.html">PixelArray</a> | 
+	    <a href="ref/pixelcopy.html">pixelcopy</a> | 
+	    <a href="ref/sndarray.html">sndarray</a> | 
+	    <a href="ref/surfarray.html">surfarray</a> | 
+	    <a href="ref/math.html">math</a>
+	  </p>
+
+	  <p class="bottom"><b>Other</b>:
+	    <a href="ref/camera.html">camera</a> | 
+	    <a href="ref/sdl2_controller.html#module-pygame._sdl2.controller">controller</a> | 
+	    <a href="ref/examples.html">examples</a> | 
+	    <a href="ref/fastevent.html">fastevent</a> | 
+	    <a href="ref/scrap.html">scrap</a> | 
+	    <a href="ref/tests.html">tests</a> | 
+	    <a href="ref/touch.html">touch</a> | 
+	    <a href="ref/pygame.html#module-pygame.version">version</a>
+	  </p>
+</div>
+</div>
+  </div>
+
+      <div class="documentwrapper">
+          <div class="body" role="main">
+            
+<section id="pygame-front-page">
+<h1>Pygame Front Page<a class="headerlink" href="#pygame-front-page" title="Permalink to this heading">¶</a></h1>
+<div class="toctree-wrapper compound">
+</div>
+<section id="quick-start">
+<h2>Quick start<a class="headerlink" href="#quick-start" title="Permalink to this heading">¶</a></h2>
+<p>Welcome to pygame! Once you've got pygame installed (<code class="code docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">pygame</span></code> or
+<code class="code docutils literal notranslate"><span class="pre">pip3</span> <span class="pre">install</span> <span class="pre">pygame</span></code> for most people), the next question is how to get a game
+loop running. Pygame, unlike some other libraries, gives you full control of program
+execution. That freedom means it is easy to mess up in your initial steps.</p>
+<p>Here is a good example of a basic setup (opens the window, updates the screen, and handles events)--</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Example file showing a basic pygame &quot;game loop&quot;</span>
+<span class="kn">import</span> <span class="nn">pygame</span>
+
+<span class="c1"># pygame setup</span>
+<span class="n">pygame</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+<span class="n">screen</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">set_mode</span><span class="p">((</span><span class="mi">1280</span><span class="p">,</span> <span class="mi">720</span><span class="p">))</span>
+<span class="n">clock</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">Clock</span><span class="p">()</span>
+<span class="n">running</span> <span class="o">=</span> <span class="kc">True</span>
+
+<span class="k">while</span> <span class="n">running</span><span class="p">:</span>
+    <span class="c1"># poll for events</span>
+    <span class="c1"># pygame.QUIT event means the user clicked X to close your window</span>
+    <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">pygame</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">get</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">pygame</span><span class="o">.</span><span class="n">QUIT</span><span class="p">:</span>
+            <span class="n">running</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="c1"># fill the screen with a color to wipe away anything from last frame</span>
+    <span class="n">screen</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="s2">&quot;purple&quot;</span><span class="p">)</span>
+
+    <span class="c1"># RENDER YOUR GAME HERE</span>
+
+    <span class="c1"># flip() the display to put your work on screen</span>
+    <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">flip</span><span class="p">()</span>
+
+    <span class="n">clock</span><span class="o">.</span><span class="n">tick</span><span class="p">(</span><span class="mi">60</span><span class="p">)</span>  <span class="c1"># limits FPS to 60</span>
+
+<span class="n">pygame</span><span class="o">.</span><span class="n">quit</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Here is a slightly more fleshed out example, which shows you how to move something
+(a circle in this case) around on screen--</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Example file showing a circle moving on screen</span>
+<span class="kn">import</span> <span class="nn">pygame</span>
+
+<span class="c1"># pygame setup</span>
+<span class="n">pygame</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+<span class="n">screen</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">set_mode</span><span class="p">((</span><span class="mi">1280</span><span class="p">,</span> <span class="mi">720</span><span class="p">))</span>
+<span class="n">clock</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">Clock</span><span class="p">()</span>
+<span class="n">running</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="n">dt</span> <span class="o">=</span> <span class="mi">0</span>
+
+<span class="n">player_pos</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Vector2</span><span class="p">(</span><span class="n">screen</span><span class="o">.</span><span class="n">get_width</span><span class="p">()</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">screen</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+
+<span class="k">while</span> <span class="n">running</span><span class="p">:</span>
+    <span class="c1"># poll for events</span>
+    <span class="c1"># pygame.QUIT event means the user clicked X to close your window</span>
+    <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">pygame</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">get</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">pygame</span><span class="o">.</span><span class="n">QUIT</span><span class="p">:</span>
+            <span class="n">running</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="c1"># fill the screen with a color to wipe away anything from last frame</span>
+    <span class="n">screen</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="s2">&quot;purple&quot;</span><span class="p">)</span>
+
+    <span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">circle</span><span class="p">(</span><span class="n">screen</span><span class="p">,</span> <span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="n">player_pos</span><span class="p">,</span> <span class="mi">40</span><span class="p">)</span>
+
+    <span class="n">keys</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">key</span><span class="o">.</span><span class="n">get_pressed</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">keys</span><span class="p">[</span><span class="n">pygame</span><span class="o">.</span><span class="n">K_w</span><span class="p">]:</span>
+        <span class="n">player_pos</span><span class="o">.</span><span class="n">y</span> <span class="o">-=</span> <span class="mi">300</span> <span class="o">*</span> <span class="n">dt</span>
+    <span class="k">if</span> <span class="n">keys</span><span class="p">[</span><span class="n">pygame</span><span class="o">.</span><span class="n">K_s</span><span class="p">]:</span>
+        <span class="n">player_pos</span><span class="o">.</span><span class="n">y</span> <span class="o">+=</span> <span class="mi">300</span> <span class="o">*</span> <span class="n">dt</span>
+    <span class="k">if</span> <span class="n">keys</span><span class="p">[</span><span class="n">pygame</span><span class="o">.</span><span class="n">K_a</span><span class="p">]:</span>
+        <span class="n">player_pos</span><span class="o">.</span><span class="n">x</span> <span class="o">-=</span> <span class="mi">300</span> <span class="o">*</span> <span class="n">dt</span>
+    <span class="k">if</span> <span class="n">keys</span><span class="p">[</span><span class="n">pygame</span><span class="o">.</span><span class="n">K_d</span><span class="p">]:</span>
+        <span class="n">player_pos</span><span class="o">.</span><span class="n">x</span> <span class="o">+=</span> <span class="mi">300</span> <span class="o">*</span> <span class="n">dt</span>
+
+    <span class="c1"># flip() the display to put your work on screen</span>
+    <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">flip</span><span class="p">()</span>
+
+    <span class="c1"># limits FPS to 60</span>
+    <span class="c1"># dt is delta time in seconds since last frame, used for framerate-</span>
+    <span class="c1"># independent physics.</span>
+    <span class="n">dt</span> <span class="o">=</span> <span class="n">clock</span><span class="o">.</span><span class="n">tick</span><span class="p">(</span><span class="mi">60</span><span class="p">)</span> <span class="o">/</span> <span class="mi">1000</span>
+
+<span class="n">pygame</span><span class="o">.</span><span class="n">quit</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>For more in depth reference, check out the <a class="reference internal" href="#tutorials-reference-label"><span class="std std-ref">Tutorials</span></a>
+section below, check out a video tutorial (<a class="reference external" href="https://www.youtube.com/watch?v=AY9MnQ4x3zk">I'm a fan of this one</a>), or reference the API
+documentation by module.</p>
+</section>
+<section id="documents">
+<h2>Documents<a class="headerlink" href="#documents" title="Permalink to this heading">¶</a></h2>
+<dl class="simple">
+<dt><a class="reference external" href="../wiki/about">Readme</a></dt><dd><p>Basic information about pygame: what it is, who is involved, and where to find it.</p>
+</dd>
+<dt><a class="reference external" href="../wiki/GettingStarted#Pygame%20Installation">Install</a></dt><dd><p>Steps needed to compile pygame on several platforms.
+Also help on finding and installing prebuilt binaries for your system.</p>
+</dd>
+<dt><a class="reference internal" href="filepaths.html"><span class="doc">File Path Function Arguments</span></a></dt><dd><p>How pygame handles file system paths.</p>
+</dd>
+<dt><a class="reference internal" href="logos.html"><span class="doc">Pygame Logos</span></a></dt><dd><p>The logos of Pygame in different resolutions.</p>
+</dd>
+<dt><a class="reference external" href="LGPL.txt">LGPL License</a></dt><dd><p>This is the license pygame is distributed under.
+It provides for pygame to be distributed with open source and commercial software.
+Generally, if pygame is not changed, it can be used with any type of program.</p>
+</dd>
+</dl>
+</section>
+<section id="tutorials">
+<span id="tutorials-reference-label"></span><h2>Tutorials<a class="headerlink" href="#tutorials" title="Permalink to this heading">¶</a></h2>
+<dl class="simple">
+<dt><a class="reference internal" href="tut/PygameIntro.html"><span class="doc">Introduction to Pygame</span></a></dt><dd><p>An introduction to the basics of pygame.
+This is written for users of Python and appeared in volume two of the Py magazine.</p>
+</dd>
+<dt><a class="reference internal" href="tut/ImportInit.html"><span class="doc">Import and Initialize</span></a></dt><dd><p>The beginning steps on importing and initializing pygame.
+The pygame package is made of several modules.
+Some modules are not included on all platforms.</p>
+</dd>
+<dt><a class="reference internal" href="tut/MoveIt.html"><span class="doc">How do I move an Image?</span></a></dt><dd><p>A basic tutorial that covers the concepts behind 2D computer animation.
+Information about drawing and clearing objects to make them appear animated.</p>
+</dd>
+<dt><a class="reference internal" href="tut/ChimpLineByLine.html"><span class="doc">Chimp Tutorial, Line by Line</span></a></dt><dd><p>The pygame examples include a simple program with an interactive fist and a chimpanzee.
+This was inspired by the annoying flash banner of the early 2000s.
+This tutorial examines every line of code used in the example.</p>
+</dd>
+<dt><a class="reference internal" href="tut/SpriteIntro.html"><span class="doc">Sprite Module Introduction</span></a></dt><dd><p>Pygame includes a higher level sprite module to help organize games.
+The sprite module includes several classes that help manage details found in almost all games types.
+The Sprite classes are a bit more advanced than the regular pygame modules,
+and need more understanding to be properly used.</p>
+</dd>
+<dt><a class="reference internal" href="tut/SurfarrayIntro.html"><span class="doc">Surfarray Introduction</span></a></dt><dd><p>Pygame used the NumPy python module to allow efficient per pixel effects on images.
+Using the surface arrays is an advanced feature that allows custom effects and filters.
+This also examines some of the simple effects from the pygame example, arraydemo.py.</p>
+</dd>
+<dt><a class="reference internal" href="tut/CameraIntro.html"><span class="doc">Camera Module Introduction</span></a></dt><dd><p>Pygame, as of 1.9, has a camera module that allows you to capture images,
+watch live streams, and do some basic computer vision.
+This tutorial covers those use cases.</p>
+</dd>
+<dt><a class="reference internal" href="tut/newbieguide.html"><span class="doc">Newbie Guide</span></a></dt><dd><p>A list of thirteen helpful tips for people to get comfortable using pygame.</p>
+</dd>
+<dt><a class="reference internal" href="tut/MakeGames.html"><span class="doc">Making Games Tutorial</span></a></dt><dd><p>A large tutorial that covers the bigger topics needed to create an entire game.</p>
+</dd>
+<dt><a class="reference internal" href="tut/DisplayModes.html"><span class="doc">Display Modes</span></a></dt><dd><p>Getting a display surface for the screen.</p>
+</dd>
+<dt><a class="reference internal" href="tut/ko/%EB%B9%A8%EA%B0%84%EB%B8%94%EB%A1%9D%20%EA%B2%80%EC%9D%80%EB%B8%94%EB%A1%9D/%EA%B0%9C%EC%9A%94.html"><span class="doc">한국어 튜토리얼 (Korean Tutorial)</span></a></dt><dd><p>빨간블록 검은블록</p>
+</dd>
+</dl>
+</section>
+<section id="reference">
+<h2>Reference<a class="headerlink" href="#reference" title="Permalink to this heading">¶</a></h2>
+<dl class="simple">
+<dt><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></dt><dd><p>A list of all functions, classes, and methods in the pygame package.</p>
+</dd>
+<dt><a class="reference internal" href="ref/bufferproxy.html"><span class="doc">pygame.BufferProxy</span></a></dt><dd><p>An array protocol view of surface pixels</p>
+</dd>
+<dt><a class="reference internal" href="ref/color.html"><span class="doc">pygame.Color</span></a></dt><dd><p>Color representation.</p>
+</dd>
+<dt><a class="reference internal" href="ref/cursors.html"><span class="doc">pygame.cursors</span></a></dt><dd><p>Loading and compiling cursor images.</p>
+</dd>
+<dt><a class="reference internal" href="ref/display.html"><span class="doc">pygame.display</span></a></dt><dd><p>Configure the display surface.</p>
+</dd>
+<dt><a class="reference internal" href="ref/draw.html"><span class="doc">pygame.draw</span></a></dt><dd><p>Drawing simple shapes like lines and ellipses to surfaces.</p>
+</dd>
+<dt><a class="reference internal" href="ref/event.html"><span class="doc">pygame.event</span></a></dt><dd><p>Manage the incoming events from various input devices and the windowing platform.</p>
+</dd>
+<dt><a class="reference internal" href="ref/examples.html"><span class="doc">pygame.examples</span></a></dt><dd><p>Various programs demonstrating the use of individual pygame modules.</p>
+</dd>
+<dt><a class="reference internal" href="ref/font.html"><span class="doc">pygame.font</span></a></dt><dd><p>Loading and rendering TrueType fonts.</p>
+</dd>
+<dt><a class="reference internal" href="ref/freetype.html"><span class="doc">pygame.freetype</span></a></dt><dd><p>Enhanced pygame module for loading and rendering font faces.</p>
+</dd>
+<dt><a class="reference internal" href="ref/gfxdraw.html"><span class="doc">pygame.gfxdraw</span></a></dt><dd><p>Anti-aliasing draw functions.</p>
+</dd>
+<dt><a class="reference internal" href="ref/image.html"><span class="doc">pygame.image</span></a></dt><dd><p>Loading, saving, and transferring of surfaces.</p>
+</dd>
+<dt><a class="reference internal" href="ref/joystick.html"><span class="doc">pygame.joystick</span></a></dt><dd><p>Manage the joystick devices.</p>
+</dd>
+<dt><a class="reference internal" href="ref/key.html"><span class="doc">pygame.key</span></a></dt><dd><p>Manage the keyboard device.</p>
+</dd>
+<dt><a class="reference internal" href="ref/locals.html"><span class="doc">pygame.locals</span></a></dt><dd><p>Pygame constants.</p>
+</dd>
+<dt><a class="reference internal" href="ref/mixer.html"><span class="doc">pygame.mixer</span></a></dt><dd><p>Load and play sounds</p>
+</dd>
+<dt><a class="reference internal" href="ref/mouse.html"><span class="doc">pygame.mouse</span></a></dt><dd><p>Manage the mouse device and display.</p>
+</dd>
+<dt><a class="reference internal" href="ref/music.html"><span class="doc">pygame.mixer.music</span></a></dt><dd><p>Play streaming music tracks.</p>
+</dd>
+<dt><a class="reference internal" href="ref/pygame.html"><span class="doc">pygame</span></a></dt><dd><p>Top level functions to manage pygame.</p>
+</dd>
+<dt><a class="reference internal" href="ref/pixelarray.html"><span class="doc">pygame.PixelArray</span></a></dt><dd><p>Manipulate image pixel data.</p>
+</dd>
+<dt><a class="reference internal" href="ref/rect.html"><span class="doc">pygame.Rect</span></a></dt><dd><p>Flexible container for a rectangle.</p>
+</dd>
+<dt><a class="reference internal" href="ref/scrap.html"><span class="doc">pygame.scrap</span></a></dt><dd><p>Native clipboard access.</p>
+</dd>
+<dt><a class="reference internal" href="ref/sndarray.html"><span class="doc">pygame.sndarray</span></a></dt><dd><p>Manipulate sound sample data.</p>
+</dd>
+<dt><a class="reference internal" href="ref/sprite.html"><span class="doc">pygame.sprite</span></a></dt><dd><p>Higher level objects to represent game images.</p>
+</dd>
+<dt><a class="reference internal" href="ref/surface.html"><span class="doc">pygame.Surface</span></a></dt><dd><p>Objects for images and the screen.</p>
+</dd>
+<dt><a class="reference internal" href="ref/surfarray.html"><span class="doc">pygame.surfarray</span></a></dt><dd><p>Manipulate image pixel data.</p>
+</dd>
+<dt><a class="reference internal" href="ref/tests.html"><span class="doc">pygame.tests</span></a></dt><dd><p>Test pygame.</p>
+</dd>
+<dt><a class="reference internal" href="ref/time.html"><span class="doc">pygame.time</span></a></dt><dd><p>Manage timing and framerate.</p>
+</dd>
+<dt><a class="reference internal" href="ref/transform.html"><span class="doc">pygame.transform</span></a></dt><dd><p>Resize and move images.</p>
+</dd>
+<dt><a class="reference internal" href="c_api.html"><span class="doc">pygame C API</span></a></dt><dd><p>The C api shared amongst pygame extension modules.</p>
+</dd>
+<dt><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></dt><dd><p>Search pygame documents by keyword.</p>
+</dd>
+</dl>
+</section>
+</section>
+
+
+<br /><br />
+<hr />
+<a href="https://github.com/pygame/pygame/edit/main/docs/reST/index.rst" rel="nofollow">Edit on GitHub</a>
+            <div class="clearer"></div>
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="ref/bufferproxy.html" title="pygame.BufferProxy"
+             accesskey="N">next</a> |</li>
+        <li class="nav-item nav-item-0"><a href="#">pygame v2.5.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Pygame Front Page</a></li>
+    <script type="text/javascript" src="https://www.pygame.org/comment/jquery.plugin.docscomments.js"></script>
+
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2000-2023, pygame developers.
+    </div>
+  </body>
+</html>

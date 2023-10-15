@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>pygame._sdl2.touch &#8212; pygame v2.5.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygame.css?v=71ee6cc2" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=ba44479e"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <link rel="icon" href="../_static/pygame.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="pygame.transform" href="transform.html" />
+    <link rel="prev" title="pygame.time" href="time.html" /> 
+  </head><body>  
+
+    <div class="document">
+
+  <div class="header">
+	<div class="flex-container">
+	<div class="logo">
+	  <a href="https://www.pygame.org/">
+	    <img src="../_static/pygame_tiny.png"/>
+	  </a>
+	  <h5>pygame documentation</h5>
+	</div>
+	<div class="pagelinks">
+	  <div class="top">
+	    <a href="https://www.pygame.org/">Pygame Home</a> ||
+	    <a href="../index.html">Help Contents</a> ||
+	    <a href="../genindex.html">Reference Index</a>
+
+        <form action="../search.html" method="get" style="display:inline;float:right;">
+          <input name="q" value="" type="text">
+          <input value="search" type="submit">
+        </form>
+	  </div>
+	  <hr style="color:black;border-bottom:none;border-style: dotted;border-bottom-style:none;">
+	  <p class="bottom"><b>Most useful stuff</b>:
+	    <a href="color.html">Color</a> | 
+	    <a href="display.html">display</a> | 
+	    <a href="draw.html">draw</a> | 
+	    <a href="event.html">event</a> | 
+	    <a href="font.html">font</a> | 
+	    <a href="image.html">image</a> | 
+	    <a href="key.html">key</a> | 
+	    <a href="locals.html">locals</a> | 
+	    <a href="mixer.html">mixer</a> | 
+	    <a href="mouse.html">mouse</a> | 
+	    <a href="rect.html">Rect</a> | 
+	    <a href="surface.html">Surface</a> | 
+	    <a href="time.html">time</a> | 
+	    <a href="music.html">music</a> | 
+	    <a href="pygame.html">pygame</a>
+	  </p>
+
+	  <p class="bottom"><b>Advanced stuff</b>:
+	    <a href="cursors.html">cursors</a> | 
+	    <a href="joystick.html">joystick</a> | 
+	    <a href="mask.html">mask</a> | 
+	    <a href="sprite.html">sprite</a> | 
+	    <a href="transform.html">transform</a> | 
+	    <a href="bufferproxy.html">BufferProxy</a> | 
+	    <a href="freetype.html">freetype</a> | 
+	    <a href="gfxdraw.html">gfxdraw</a> | 
+	    <a href="midi.html">midi</a> | 
+	    <a href="pixelarray.html">PixelArray</a> | 
+	    <a href="pixelcopy.html">pixelcopy</a> | 
+	    <a href="sndarray.html">sndarray</a> | 
+	    <a href="surfarray.html">surfarray</a> | 
+	    <a href="math.html">math</a>
+	  </p>
+
+	  <p class="bottom"><b>Other</b>:
+	    <a href="camera.html">camera</a> | 
+	    <a href="sdl2_controller.html#module-pygame._sdl2.controller">controller</a> | 
+	    <a href="examples.html">examples</a> | 
+	    <a href="fastevent.html">fastevent</a> | 
+	    <a href="scrap.html">scrap</a> | 
+	    <a href="tests.html">tests</a> | 
+	    <a href="touch.html">touch</a> | 
+	    <a href="pygame.html#module-pygame.version">version</a>
+	  </p>
+</div>
+</div>
+  </div>
+
+      <div class="documentwrapper">
+          <div class="body" role="main">
+            
+<section id="module-pygame._sdl2.touch">
+<span id="pygame-sdl2-touch"></span><dl class="definition">
+<dt class="title module sig sig-object">
+<code class="docutils literal notranslate"><span class="pre">pygame._sdl2.touch</span></code></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">pygame module to work with touch input</span></div>
+</div>
+<table class="toc docutils align-default">
+<tbody>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="touch.html#pygame._sdl2.touch.get_num_devices">pygame._sdl2.touch.get_num_devices</a></div>
+</td>
+<td>—</td>
+<td>get the number of touch devices</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="touch.html#pygame._sdl2.touch.get_device">pygame._sdl2.touch.get_device</a></div>
+</td>
+<td>—</td>
+<td>get the a touch device id for a given index</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="touch.html#pygame._sdl2.touch.get_num_fingers">pygame._sdl2.touch.get_num_fingers</a></div>
+</td>
+<td>—</td>
+<td>the number of active fingers for a given touch device</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="touch.html#pygame._sdl2.touch.get_finger">pygame._sdl2.touch.get_finger</a></div>
+</td>
+<td>—</td>
+<td>get information about an active finger</td>
+</tr>
+</tbody>
+</table>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 2: </span>This module requires SDL2.</p>
+</div>
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame._sdl2.touch.get_num_devices">
+<span class="sig-prename descclassname"><span class="pre">pygame._sdl2.touch.</span></span><span class="sig-name descname"><span class="pre">get_num_devices</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame._sdl2.touch.get_num_devices" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">get the number of touch devices</span></div>
+<div class="line"><span class="signature">get_num_devices() -&gt; int</span></div>
+</div>
+<p>Return the number of available touch devices.</p>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame._sdl2.touch.get_device">
+<span class="sig-prename descclassname"><span class="pre">pygame._sdl2.touch.</span></span><span class="sig-name descname"><span class="pre">get_device</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame._sdl2.touch.get_device" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">get the a touch device id for a given index</span></div>
+<div class="line"><span class="signature">get_device(index) -&gt; touchid</span></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>index</strong> (<em>int</em>) -- This number is at least 0 and less than the
+<a class="reference internal" href="#pygame._sdl2.touch.get_num_devices" title="pygame._sdl2.touch.get_num_devices"><code class="xref py py-func docutils literal notranslate"><span class="pre">number</span> <span class="pre">of</span> <span class="pre">devices</span></code></a>.</p>
+</dd>
+</dl>
+<p>Return an integer id associated with the given <code class="docutils literal notranslate"><span class="pre">index</span></code>.</p>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame._sdl2.touch.get_num_fingers">
+<span class="sig-prename descclassname"><span class="pre">pygame._sdl2.touch.</span></span><span class="sig-name descname"><span class="pre">get_num_fingers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame._sdl2.touch.get_num_fingers" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">the number of active fingers for a given touch device</span></div>
+<div class="line"><span class="signature">get_num_fingers(touchid) -&gt; int</span></div>
+</div>
+<p>Return the number of fingers active for the touch device
+whose id is <cite>touchid</cite>.</p>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame._sdl2.touch.get_finger">
+<span class="sig-prename descclassname"><span class="pre">pygame._sdl2.touch.</span></span><span class="sig-name descname"><span class="pre">get_finger</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame._sdl2.touch.get_finger" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">get information about an active finger</span></div>
+<div class="line"><span class="signature">get_finger(touchid, index) -&gt; int</span></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>touchid</strong> (<em>int</em>) -- The touch device id.</p></li>
+<li><p><strong>index</strong> (<em>int</em>) -- The index of the finger to return
+information about, between 0 and the
+<a class="reference internal" href="#pygame._sdl2.touch.get_num_fingers" title="pygame._sdl2.touch.get_num_fingers"><code class="xref py py-func docutils literal notranslate"><span class="pre">number</span> <span class="pre">of</span> <span class="pre">active</span> <span class="pre">fingers</span></code></a>.</p></li>
+</ul>
+</dd>
+</dl>
+<p>Return a dict for the finger <code class="docutils literal notranslate"><span class="pre">index</span></code> active on <code class="docutils literal notranslate"><span class="pre">touchid</span></code>.
+The dict contains these keys:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">id</span>         <span class="n">the</span> <span class="nb">id</span> <span class="n">of</span> <span class="n">the</span> <span class="n">finger</span> <span class="p">(</span><span class="n">an</span> <span class="n">integer</span><span class="p">)</span><span class="o">.</span>
+<span class="n">x</span>          <span class="n">the</span> <span class="n">normalized</span> <span class="n">x</span> <span class="n">position</span> <span class="n">of</span> <span class="n">the</span> <span class="n">finger</span><span class="p">,</span> <span class="n">between</span> <span class="mi">0</span> <span class="ow">and</span> <span class="mf">1.</span>
+<span class="n">y</span>          <span class="n">the</span> <span class="n">normalized</span> <span class="n">y</span> <span class="n">position</span> <span class="n">of</span> <span class="n">the</span> <span class="n">finger</span><span class="p">,</span> <span class="n">between</span> <span class="mi">0</span> <span class="ow">and</span> <span class="mf">1.</span>
+<span class="n">pressure</span>   <span class="n">the</span> <span class="n">amount</span> <span class="n">of</span> <span class="n">pressure</span> <span class="n">applied</span> <span class="n">by</span> <span class="n">the</span> <span class="n">finger</span><span class="p">,</span> <span class="n">between</span> <span class="mi">0</span> <span class="ow">and</span> <span class="mf">1.</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+<br /><br />
+<hr />
+<a href="https://github.com/pygame/pygame/edit/main/docs/reST/ref/touch.rst" rel="nofollow">Edit on GitHub</a>
+            <div class="clearer"></div>
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="transform.html" title="pygame.transform"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="time.html" title="pygame.time"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">pygame v2.5.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href=""><code class="xref py py-mod docutils literal notranslate"><span class="pre">pygame._sdl2.touch</span></code></a></li>
+    <script type="text/javascript" src="https://www.pygame.org/comment/jquery.plugin.docscomments.js"></script>
+
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2000-2023, pygame developers.
+    </div>
+  </body>
+</html>

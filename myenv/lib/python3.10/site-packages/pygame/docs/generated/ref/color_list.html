@@ -1,0 +1,2805 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Named Colors &#8212; pygame v2.5.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygame.css?v=71ee6cc2" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=ba44479e"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <link rel="icon" href="../_static/pygame.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="pygame.cursors" href="cursors.html" />
+    <link rel="prev" title="pygame.Color" href="color.html" /> 
+  </head><body>  
+
+    <div class="document">
+
+  <div class="header">
+	<div class="flex-container">
+	<div class="logo">
+	  <a href="https://www.pygame.org/">
+	    <img src="../_static/pygame_tiny.png"/>
+	  </a>
+	  <h5>pygame documentation</h5>
+	</div>
+	<div class="pagelinks">
+	  <div class="top">
+	    <a href="https://www.pygame.org/">Pygame Home</a> ||
+	    <a href="../index.html">Help Contents</a> ||
+	    <a href="../genindex.html">Reference Index</a>
+
+        <form action="../search.html" method="get" style="display:inline;float:right;">
+          <input name="q" value="" type="text">
+          <input value="search" type="submit">
+        </form>
+	  </div>
+	  <hr style="color:black;border-bottom:none;border-style: dotted;border-bottom-style:none;">
+	  <p class="bottom"><b>Most useful stuff</b>:
+	    <a href="color.html">Color</a> | 
+	    <a href="display.html">display</a> | 
+	    <a href="draw.html">draw</a> | 
+	    <a href="event.html">event</a> | 
+	    <a href="font.html">font</a> | 
+	    <a href="image.html">image</a> | 
+	    <a href="key.html">key</a> | 
+	    <a href="locals.html">locals</a> | 
+	    <a href="mixer.html">mixer</a> | 
+	    <a href="mouse.html">mouse</a> | 
+	    <a href="rect.html">Rect</a> | 
+	    <a href="surface.html">Surface</a> | 
+	    <a href="time.html">time</a> | 
+	    <a href="music.html">music</a> | 
+	    <a href="pygame.html">pygame</a>
+	  </p>
+
+	  <p class="bottom"><b>Advanced stuff</b>:
+	    <a href="cursors.html">cursors</a> | 
+	    <a href="joystick.html">joystick</a> | 
+	    <a href="mask.html">mask</a> | 
+	    <a href="sprite.html">sprite</a> | 
+	    <a href="transform.html">transform</a> | 
+	    <a href="bufferproxy.html">BufferProxy</a> | 
+	    <a href="freetype.html">freetype</a> | 
+	    <a href="gfxdraw.html">gfxdraw</a> | 
+	    <a href="midi.html">midi</a> | 
+	    <a href="pixelarray.html">PixelArray</a> | 
+	    <a href="pixelcopy.html">pixelcopy</a> | 
+	    <a href="sndarray.html">sndarray</a> | 
+	    <a href="surfarray.html">surfarray</a> | 
+	    <a href="math.html">math</a>
+	  </p>
+
+	  <p class="bottom"><b>Other</b>:
+	    <a href="camera.html">camera</a> | 
+	    <a href="sdl2_controller.html#module-pygame._sdl2.controller">controller</a> | 
+	    <a href="examples.html">examples</a> | 
+	    <a href="fastevent.html">fastevent</a> | 
+	    <a href="scrap.html">scrap</a> | 
+	    <a href="tests.html">tests</a> | 
+	    <a href="touch.html">touch</a> | 
+	    <a href="pygame.html#module-pygame.version">version</a>
+	  </p>
+</div>
+</div>
+  </div>
+
+      <div class="documentwrapper">
+          <div class="body" role="main">
+            
+<section id="named-colors">
+<style>
+.aliceblue {background-color: #f0f8ff; color: #f0f8ff;}
+.antiquewhite {background-color: #faebd7; color: #faebd7;}
+.antiquewhite1 {background-color: #ffefdb; color: #ffefdb;}
+.antiquewhite2 {background-color: #eedfcc; color: #eedfcc;}
+.antiquewhite3 {background-color: #cdc0b0; color: #cdc0b0;}
+.antiquewhite4 {background-color: #8b8378; color: #8b8378;}
+.aqua {background-color: #00ffff; color: #00ffff;}
+.aquamarine {background-color: #7fffd4; color: #7fffd4;}
+.aquamarine1 {background-color: #7fffd4; color: #7fffd4;}
+.aquamarine2 {background-color: #76eec6; color: #76eec6;}
+.aquamarine3 {background-color: #66cdaa; color: #66cdaa;}
+.aquamarine4 {background-color: #458b74; color: #458b74;}
+.azure {background-color: #f0ffff; color: #f0ffff;}
+.azure1 {background-color: #f0ffff; color: #f0ffff;}
+.azure3 {background-color: #c1cdcd; color: #c1cdcd;}
+.azure2 {background-color: #e0eeee; color: #e0eeee;}
+.azure4 {background-color: #838b8b; color: #838b8b;}
+.beige {background-color: #f5f5dc; color: #f5f5dc;}
+.bisque {background-color: #ffe4c4; color: #ffe4c4;}
+.bisque1 {background-color: #ffe4c4; color: #ffe4c4;}
+.bisque2 {background-color: #eed5b7; color: #eed5b7;}
+.bisque3 {background-color: #cdb79e; color: #cdb79e;}
+.bisque4 {background-color: #8b7d6b; color: #8b7d6b;}
+.black {background-color: #000000; color: #000000;}
+.blanchedalmond {background-color: #ffebcd; color: #ffebcd;}
+.blue {background-color: #0000ff; color: #0000ff;}
+.blue1 {background-color: #0000ff; color: #0000ff;}
+.blue2 {background-color: #0000ee; color: #0000ee;}
+.blue3 {background-color: #0000cd; color: #0000cd;}
+.blue4 {background-color: #00008b; color: #00008b;}
+.blueviolet {background-color: #8a2be2; color: #8a2be2;}
+.brown {background-color: #a52a2a; color: #a52a2a;}
+.brown1 {background-color: #ff4040; color: #ff4040;}
+.brown2 {background-color: #ee3b3b; color: #ee3b3b;}
+.brown3 {background-color: #cd3333; color: #cd3333;}
+.brown4 {background-color: #8b2323; color: #8b2323;}
+.burlywood {background-color: #deb887; color: #deb887;}
+.burlywood1 {background-color: #ffd39b; color: #ffd39b;}
+.burlywood2 {background-color: #eec591; color: #eec591;}
+.burlywood3 {background-color: #cdaa7d; color: #cdaa7d;}
+.burlywood4 {background-color: #8b7355; color: #8b7355;}
+.cadetblue {background-color: #5f9ea0; color: #5f9ea0;}
+.cadetblue1 {background-color: #98f5ff; color: #98f5ff;}
+.cadetblue2 {background-color: #8ee5ee; color: #8ee5ee;}
+.cadetblue3 {background-color: #7ac5cd; color: #7ac5cd;}
+.cadetblue4 {background-color: #53868b; color: #53868b;}
+.chartreuse {background-color: #7fff00; color: #7fff00;}
+.chartreuse1 {background-color: #7fff00; color: #7fff00;}
+.chartreuse2 {background-color: #76ee00; color: #76ee00;}
+.chartreuse3 {background-color: #66cd00; color: #66cd00;}
+.chartreuse4 {background-color: #458b00; color: #458b00;}
+.chocolate {background-color: #d2691e; color: #d2691e;}
+.chocolate1 {background-color: #ff7f24; color: #ff7f24;}
+.chocolate2 {background-color: #ee7621; color: #ee7621;}
+.chocolate3 {background-color: #cd661d; color: #cd661d;}
+.chocolate4 {background-color: #8b4513; color: #8b4513;}
+.coral {background-color: #ff7f50; color: #ff7f50;}
+.coral1 {background-color: #ff7256; color: #ff7256;}
+.coral2 {background-color: #ee6a50; color: #ee6a50;}
+.coral3 {background-color: #cd5b45; color: #cd5b45;}
+.coral4 {background-color: #8b3e2f; color: #8b3e2f;}
+.cornflowerblue {background-color: #6495ed; color: #6495ed;}
+.cornsilk {background-color: #fff8dc; color: #fff8dc;}
+.cornsilk1 {background-color: #fff8dc; color: #fff8dc;}
+.cornsilk2 {background-color: #eee8cd; color: #eee8cd;}
+.cornsilk3 {background-color: #cdc8b1; color: #cdc8b1;}
+.cornsilk4 {background-color: #8b8878; color: #8b8878;}
+.crimson {background-color: #dc143c; color: #dc143c;}
+.cyan {background-color: #00ffff; color: #00ffff;}
+.cyan1 {background-color: #00ffff; color: #00ffff;}
+.cyan2 {background-color: #00eeee; color: #00eeee;}
+.cyan3 {background-color: #00cdcd; color: #00cdcd;}
+.cyan4 {background-color: #008b8b; color: #008b8b;}
+.darkblue {background-color: #00008b; color: #00008b;}
+.darkcyan {background-color: #008b8b; color: #008b8b;}
+.darkgoldenrod {background-color: #b8860b; color: #b8860b;}
+.darkgoldenrod1 {background-color: #ffb90f; color: #ffb90f;}
+.darkgoldenrod2 {background-color: #eead0e; color: #eead0e;}
+.darkgoldenrod3 {background-color: #cd950c; color: #cd950c;}
+.darkgoldenrod4 {background-color: #8b6508; color: #8b6508;}
+.darkgray {background-color: #a9a9a9; color: #a9a9a9;}
+.darkgreen {background-color: #006400; color: #006400;}
+.darkgrey {background-color: #a9a9a9; color: #a9a9a9;}
+.darkkhaki {background-color: #bdb76b; color: #bdb76b;}
+.darkmagenta {background-color: #8b008b; color: #8b008b;}
+.darkolivegreen {background-color: #556b2f; color: #556b2f;}
+.darkolivegreen1 {background-color: #caff70; color: #caff70;}
+.darkolivegreen2 {background-color: #bcee68; color: #bcee68;}
+.darkolivegreen3 {background-color: #a2cd5a; color: #a2cd5a;}
+.darkolivegreen4 {background-color: #6e8b3d; color: #6e8b3d;}
+.darkorange {background-color: #ff8c00; color: #ff8c00;}
+.darkorange1 {background-color: #ff7f00; color: #ff7f00;}
+.darkorange2 {background-color: #ee7600; color: #ee7600;}
+.darkorange3 {background-color: #cd6600; color: #cd6600;}
+.darkorange4 {background-color: #8b4500; color: #8b4500;}
+.darkorchid {background-color: #9932cc; color: #9932cc;}
+.darkorchid1 {background-color: #bf3eff; color: #bf3eff;}
+.darkorchid2 {background-color: #b23aee; color: #b23aee;}
+.darkorchid3 {background-color: #9a32cd; color: #9a32cd;}
+.darkorchid4 {background-color: #68228b; color: #68228b;}
+.darkred {background-color: #8b0000; color: #8b0000;}
+.darksalmon {background-color: #e9967a; color: #e9967a;}
+.darkseagreen {background-color: #8fbc8f; color: #8fbc8f;}
+.darkseagreen1 {background-color: #c1ffc1; color: #c1ffc1;}
+.darkseagreen2 {background-color: #b4eeb4; color: #b4eeb4;}
+.darkseagreen3 {background-color: #9bcd9b; color: #9bcd9b;}
+.darkseagreen4 {background-color: #698b69; color: #698b69;}
+.darkslateblue {background-color: #483d8b; color: #483d8b;}
+.darkslategray {background-color: #2f4f4f; color: #2f4f4f;}
+.darkslategray1 {background-color: #97ffff; color: #97ffff;}
+.darkslategray2 {background-color: #8deeee; color: #8deeee;}
+.darkslategray3 {background-color: #79cdcd; color: #79cdcd;}
+.darkslategray4 {background-color: #528b8b; color: #528b8b;}
+.darkslategrey {background-color: #2f4f4f; color: #2f4f4f;}
+.darkturquoise {background-color: #00ced1; color: #00ced1;}
+.darkviolet {background-color: #9400d3; color: #9400d3;}
+.deeppink {background-color: #ff1493; color: #ff1493;}
+.deeppink1 {background-color: #ff1493; color: #ff1493;}
+.deeppink2 {background-color: #ee1289; color: #ee1289;}
+.deeppink3 {background-color: #cd1076; color: #cd1076;}
+.deeppink4 {background-color: #8b0a50; color: #8b0a50;}
+.deepskyblue {background-color: #00bfff; color: #00bfff;}
+.deepskyblue1 {background-color: #00bfff; color: #00bfff;}
+.deepskyblue2 {background-color: #00b2ee; color: #00b2ee;}
+.deepskyblue3 {background-color: #009acd; color: #009acd;}
+.deepskyblue4 {background-color: #00688b; color: #00688b;}
+.dimgray {background-color: #696969; color: #696969;}
+.dimgrey {background-color: #696969; color: #696969;}
+.dodgerblue {background-color: #1e90ff; color: #1e90ff;}
+.dodgerblue1 {background-color: #1e90ff; color: #1e90ff;}
+.dodgerblue2 {background-color: #1c86ee; color: #1c86ee;}
+.dodgerblue3 {background-color: #1874cd; color: #1874cd;}
+.dodgerblue4 {background-color: #104e8b; color: #104e8b;}
+.firebrick {background-color: #b22222; color: #b22222;}
+.firebrick1 {background-color: #ff3030; color: #ff3030;}
+.firebrick2 {background-color: #ee2c2c; color: #ee2c2c;}
+.firebrick3 {background-color: #cd2626; color: #cd2626;}
+.firebrick4 {background-color: #8b1a1a; color: #8b1a1a;}
+.floralwhite {background-color: #fffaf0; color: #fffaf0;}
+.forestgreen {background-color: #228b22; color: #228b22;}
+.fuchsia {background-color: #ff00ff; color: #ff00ff;}
+.gainsboro {background-color: #dcdcdc; color: #dcdcdc;}
+.ghostwhite {background-color: #f8f8ff; color: #f8f8ff;}
+.gold {background-color: #ffd700; color: #ffd700;}
+.gold1 {background-color: #ffd700; color: #ffd700;}
+.gold2 {background-color: #eec900; color: #eec900;}
+.gold3 {background-color: #cdad00; color: #cdad00;}
+.gold4 {background-color: #8b7500; color: #8b7500;}
+.goldenrod {background-color: #daa520; color: #daa520;}
+.goldenrod1 {background-color: #ffc125; color: #ffc125;}
+.goldenrod2 {background-color: #eeb422; color: #eeb422;}
+.goldenrod3 {background-color: #cd9b1d; color: #cd9b1d;}
+.goldenrod4 {background-color: #8b6914; color: #8b6914;}
+.gray {background-color: #bebebe; color: #bebebe;}
+.gray0 {background-color: #000000; color: #000000;}
+.gray1 {background-color: #030303; color: #030303;}
+.gray2 {background-color: #050505; color: #050505;}
+.gray3 {background-color: #080808; color: #080808;}
+.gray4 {background-color: #0a0a0a; color: #0a0a0a;}
+.gray5 {background-color: #0d0d0d; color: #0d0d0d;}
+.gray6 {background-color: #0f0f0f; color: #0f0f0f;}
+.gray7 {background-color: #121212; color: #121212;}
+.gray8 {background-color: #141414; color: #141414;}
+.gray9 {background-color: #171717; color: #171717;}
+.gray10 {background-color: #1a1a1a; color: #1a1a1a;}
+.gray11 {background-color: #1c1c1c; color: #1c1c1c;}
+.gray12 {background-color: #1f1f1f; color: #1f1f1f;}
+.gray13 {background-color: #212121; color: #212121;}
+.gray14 {background-color: #242424; color: #242424;}
+.gray15 {background-color: #262626; color: #262626;}
+.gray16 {background-color: #292929; color: #292929;}
+.gray17 {background-color: #2b2b2b; color: #2b2b2b;}
+.gray18 {background-color: #2e2e2e; color: #2e2e2e;}
+.gray19 {background-color: #303030; color: #303030;}
+.gray20 {background-color: #333333; color: #333333;}
+.gray21 {background-color: #363636; color: #363636;}
+.gray22 {background-color: #383838; color: #383838;}
+.gray23 {background-color: #3b3b3b; color: #3b3b3b;}
+.gray24 {background-color: #3d3d3d; color: #3d3d3d;}
+.gray25 {background-color: #404040; color: #404040;}
+.gray26 {background-color: #424242; color: #424242;}
+.gray27 {background-color: #454545; color: #454545;}
+.gray28 {background-color: #474747; color: #474747;}
+.gray29 {background-color: #4a4a4a; color: #4a4a4a;}
+.gray30 {background-color: #4d4d4d; color: #4d4d4d;}
+.gray31 {background-color: #4f4f4f; color: #4f4f4f;}
+.gray32 {background-color: #525252; color: #525252;}
+.gray33 {background-color: #545454; color: #545454;}
+.gray34 {background-color: #575757; color: #575757;}
+.gray35 {background-color: #595959; color: #595959;}
+.gray36 {background-color: #5c5c5c; color: #5c5c5c;}
+.gray37 {background-color: #5e5e5e; color: #5e5e5e;}
+.gray38 {background-color: #616161; color: #616161;}
+.gray39 {background-color: #636363; color: #636363;}
+.gray40 {background-color: #666666; color: #666666;}
+.gray41 {background-color: #696969; color: #696969;}
+.gray42 {background-color: #6b6b6b; color: #6b6b6b;}
+.gray43 {background-color: #6e6e6e; color: #6e6e6e;}
+.gray44 {background-color: #707070; color: #707070;}
+.gray45 {background-color: #737373; color: #737373;}
+.gray46 {background-color: #757575; color: #757575;}
+.gray47 {background-color: #787878; color: #787878;}
+.gray48 {background-color: #7a7a7a; color: #7a7a7a;}
+.gray49 {background-color: #7d7d7d; color: #7d7d7d;}
+.gray50 {background-color: #7f7f7f; color: #7f7f7f;}
+.gray51 {background-color: #828282; color: #828282;}
+.gray52 {background-color: #858585; color: #858585;}
+.gray53 {background-color: #878787; color: #878787;}
+.gray54 {background-color: #8a8a8a; color: #8a8a8a;}
+.gray55 {background-color: #8c8c8c; color: #8c8c8c;}
+.gray56 {background-color: #8f8f8f; color: #8f8f8f;}
+.gray57 {background-color: #919191; color: #919191;}
+.gray58 {background-color: #949494; color: #949494;}
+.gray59 {background-color: #969696; color: #969696;}
+.gray60 {background-color: #999999; color: #999999;}
+.gray61 {background-color: #9c9c9c; color: #9c9c9c;}
+.gray62 {background-color: #9e9e9e; color: #9e9e9e;}
+.gray63 {background-color: #a1a1a1; color: #a1a1a1;}
+.gray64 {background-color: #a3a3a3; color: #a3a3a3;}
+.gray65 {background-color: #a6a6a6; color: #a6a6a6;}
+.gray66 {background-color: #a8a8a8; color: #a8a8a8;}
+.gray67 {background-color: #ababab; color: #ababab;}
+.gray68 {background-color: #adadad; color: #adadad;}
+.gray69 {background-color: #b0b0b0; color: #b0b0b0;}
+.gray70 {background-color: #b3b3b3; color: #b3b3b3;}
+.gray71 {background-color: #b5b5b5; color: #b5b5b5;}
+.gray72 {background-color: #b8b8b8; color: #b8b8b8;}
+.gray73 {background-color: #bababa; color: #bababa;}
+.gray74 {background-color: #bdbdbd; color: #bdbdbd;}
+.gray75 {background-color: #bfbfbf; color: #bfbfbf;}
+.gray76 {background-color: #c2c2c2; color: #c2c2c2;}
+.gray77 {background-color: #c4c4c4; color: #c4c4c4;}
+.gray78 {background-color: #c7c7c7; color: #c7c7c7;}
+.gray79 {background-color: #c9c9c9; color: #c9c9c9;}
+.gray80 {background-color: #cccccc; color: #cccccc;}
+.gray81 {background-color: #cfcfcf; color: #cfcfcf;}
+.gray82 {background-color: #d1d1d1; color: #d1d1d1;}
+.gray83 {background-color: #d4d4d4; color: #d4d4d4;}
+.gray84 {background-color: #d6d6d6; color: #d6d6d6;}
+.gray85 {background-color: #d9d9d9; color: #d9d9d9;}
+.gray86 {background-color: #dbdbdb; color: #dbdbdb;}
+.gray87 {background-color: #dedede; color: #dedede;}
+.gray88 {background-color: #e0e0e0; color: #e0e0e0;}
+.gray89 {background-color: #e3e3e3; color: #e3e3e3;}
+.gray90 {background-color: #e5e5e5; color: #e5e5e5;}
+.gray91 {background-color: #e8e8e8; color: #e8e8e8;}
+.gray92 {background-color: #ebebeb; color: #ebebeb;}
+.gray93 {background-color: #ededed; color: #ededed;}
+.gray94 {background-color: #f0f0f0; color: #f0f0f0;}
+.gray95 {background-color: #f2f2f2; color: #f2f2f2;}
+.gray96 {background-color: #f5f5f5; color: #f5f5f5;}
+.gray97 {background-color: #f7f7f7; color: #f7f7f7;}
+.gray98 {background-color: #fafafa; color: #fafafa;}
+.gray99 {background-color: #fcfcfc; color: #fcfcfc;}
+.gray100 {background-color: #ffffff; color: #ffffff;}
+.green {background-color: #00ff00; color: #00ff00;}
+.green1 {background-color: #00ff00; color: #00ff00;}
+.green2 {background-color: #00ee00; color: #00ee00;}
+.green3 {background-color: #00cd00; color: #00cd00;}
+.green4 {background-color: #008b00; color: #008b00;}
+.greenyellow {background-color: #adff2f; color: #adff2f;}
+.grey {background-color: #bebebe; color: #bebebe;}
+.grey0 {background-color: #000000; color: #000000;}
+.grey1 {background-color: #030303; color: #030303;}
+.grey2 {background-color: #050505; color: #050505;}
+.grey3 {background-color: #080808; color: #080808;}
+.grey4 {background-color: #0a0a0a; color: #0a0a0a;}
+.grey5 {background-color: #0d0d0d; color: #0d0d0d;}
+.grey6 {background-color: #0f0f0f; color: #0f0f0f;}
+.grey7 {background-color: #121212; color: #121212;}
+.grey8 {background-color: #141414; color: #141414;}
+.grey9 {background-color: #171717; color: #171717;}
+.grey10 {background-color: #1a1a1a; color: #1a1a1a;}
+.grey11 {background-color: #1c1c1c; color: #1c1c1c;}
+.grey12 {background-color: #1f1f1f; color: #1f1f1f;}
+.grey13 {background-color: #212121; color: #212121;}
+.grey14 {background-color: #242424; color: #242424;}
+.grey15 {background-color: #262626; color: #262626;}
+.grey16 {background-color: #292929; color: #292929;}
+.grey17 {background-color: #2b2b2b; color: #2b2b2b;}
+.grey18 {background-color: #2e2e2e; color: #2e2e2e;}
+.grey19 {background-color: #303030; color: #303030;}
+.grey20 {background-color: #333333; color: #333333;}
+.grey21 {background-color: #363636; color: #363636;}
+.grey22 {background-color: #383838; color: #383838;}
+.grey23 {background-color: #3b3b3b; color: #3b3b3b;}
+.grey24 {background-color: #3d3d3d; color: #3d3d3d;}
+.grey25 {background-color: #404040; color: #404040;}
+.grey26 {background-color: #424242; color: #424242;}
+.grey27 {background-color: #454545; color: #454545;}
+.grey28 {background-color: #474747; color: #474747;}
+.grey29 {background-color: #4a4a4a; color: #4a4a4a;}
+.grey30 {background-color: #4d4d4d; color: #4d4d4d;}
+.grey31 {background-color: #4f4f4f; color: #4f4f4f;}
+.grey32 {background-color: #525252; color: #525252;}
+.grey33 {background-color: #545454; color: #545454;}
+.grey34 {background-color: #575757; color: #575757;}
+.grey35 {background-color: #595959; color: #595959;}
+.grey36 {background-color: #5c5c5c; color: #5c5c5c;}
+.grey37 {background-color: #5e5e5e; color: #5e5e5e;}
+.grey38 {background-color: #616161; color: #616161;}
+.grey39 {background-color: #636363; color: #636363;}
+.grey40 {background-color: #666666; color: #666666;}
+.grey41 {background-color: #696969; color: #696969;}
+.grey42 {background-color: #6b6b6b; color: #6b6b6b;}
+.grey43 {background-color: #6e6e6e; color: #6e6e6e;}
+.grey44 {background-color: #707070; color: #707070;}
+.grey45 {background-color: #737373; color: #737373;}
+.grey46 {background-color: #757575; color: #757575;}
+.grey47 {background-color: #787878; color: #787878;}
+.grey48 {background-color: #7a7a7a; color: #7a7a7a;}
+.grey49 {background-color: #7d7d7d; color: #7d7d7d;}
+.grey50 {background-color: #7f7f7f; color: #7f7f7f;}
+.grey51 {background-color: #828282; color: #828282;}
+.grey52 {background-color: #858585; color: #858585;}
+.grey53 {background-color: #878787; color: #878787;}
+.grey54 {background-color: #8a8a8a; color: #8a8a8a;}
+.grey55 {background-color: #8c8c8c; color: #8c8c8c;}
+.grey56 {background-color: #8f8f8f; color: #8f8f8f;}
+.grey57 {background-color: #919191; color: #919191;}
+.grey58 {background-color: #949494; color: #949494;}
+.grey59 {background-color: #969696; color: #969696;}
+.grey60 {background-color: #999999; color: #999999;}
+.grey61 {background-color: #9c9c9c; color: #9c9c9c;}
+.grey62 {background-color: #9e9e9e; color: #9e9e9e;}
+.grey63 {background-color: #a1a1a1; color: #a1a1a1;}
+.grey64 {background-color: #a3a3a3; color: #a3a3a3;}
+.grey65 {background-color: #a6a6a6; color: #a6a6a6;}
+.grey66 {background-color: #a8a8a8; color: #a8a8a8;}
+.grey67 {background-color: #ababab; color: #ababab;}
+.grey68 {background-color: #adadad; color: #adadad;}
+.grey69 {background-color: #b0b0b0; color: #b0b0b0;}
+.grey70 {background-color: #b3b3b3; color: #b3b3b3;}
+.grey71 {background-color: #b5b5b5; color: #b5b5b5;}
+.grey72 {background-color: #b8b8b8; color: #b8b8b8;}
+.grey73 {background-color: #bababa; color: #bababa;}
+.grey74 {background-color: #bdbdbd; color: #bdbdbd;}
+.grey75 {background-color: #bfbfbf; color: #bfbfbf;}
+.grey76 {background-color: #c2c2c2; color: #c2c2c2;}
+.grey77 {background-color: #c4c4c4; color: #c4c4c4;}
+.grey78 {background-color: #c7c7c7; color: #c7c7c7;}
+.grey79 {background-color: #c9c9c9; color: #c9c9c9;}
+.grey80 {background-color: #cccccc; color: #cccccc;}
+.grey81 {background-color: #cfcfcf; color: #cfcfcf;}
+.grey82 {background-color: #d1d1d1; color: #d1d1d1;}
+.grey83 {background-color: #d4d4d4; color: #d4d4d4;}
+.grey84 {background-color: #d6d6d6; color: #d6d6d6;}
+.grey85 {background-color: #d9d9d9; color: #d9d9d9;}
+.grey86 {background-color: #dbdbdb; color: #dbdbdb;}
+.grey87 {background-color: #dedede; color: #dedede;}
+.grey88 {background-color: #e0e0e0; color: #e0e0e0;}
+.grey89 {background-color: #e3e3e3; color: #e3e3e3;}
+.grey90 {background-color: #e5e5e5; color: #e5e5e5;}
+.grey91 {background-color: #e8e8e8; color: #e8e8e8;}
+.grey92 {background-color: #ebebeb; color: #ebebeb;}
+.grey93 {background-color: #ededed; color: #ededed;}
+.grey94 {background-color: #f0f0f0; color: #f0f0f0;}
+.grey95 {background-color: #f2f2f2; color: #f2f2f2;}
+.grey96 {background-color: #f5f5f5; color: #f5f5f5;}
+.grey97 {background-color: #f7f7f7; color: #f7f7f7;}
+.grey98 {background-color: #fafafa; color: #fafafa;}
+.grey99 {background-color: #fcfcfc; color: #fcfcfc;}
+.grey100 {background-color: #ffffff; color: #ffffff;}
+.honeydew {background-color: #f0fff0; color: #f0fff0;}
+.honeydew1 {background-color: #f0fff0; color: #f0fff0;}
+.honeydew2 {background-color: #e0eee0; color: #e0eee0;}
+.honeydew3 {background-color: #c1cdc1; color: #c1cdc1;}
+.honeydew4 {background-color: #838b83; color: #838b83;}
+.hotpink {background-color: #ff69b4; color: #ff69b4;}
+.hotpink1 {background-color: #ff6eb4; color: #ff6eb4;}
+.hotpink2 {background-color: #ee6aa7; color: #ee6aa7;}
+.hotpink3 {background-color: #cd6090; color: #cd6090;}
+.hotpink4 {background-color: #8b3a62; color: #8b3a62;}
+.indianred {background-color: #cd5c5c; color: #cd5c5c;}
+.indianred1 {background-color: #ff6a6a; color: #ff6a6a;}
+.indianred2 {background-color: #ee6363; color: #ee6363;}
+.indianred3 {background-color: #cd5555; color: #cd5555;}
+.indianred4 {background-color: #8b3a3a; color: #8b3a3a;}
+.indigo {background-color: #4b0082; color: #4b0082;}
+.ivory {background-color: #fffff0; color: #fffff0;}
+.ivory1 {background-color: #fffff0; color: #fffff0;}
+.ivory2 {background-color: #eeeee0; color: #eeeee0;}
+.ivory3 {background-color: #cdcdc1; color: #cdcdc1;}
+.ivory4 {background-color: #8b8b83; color: #8b8b83;}
+.khaki {background-color: #f0e68c; color: #f0e68c;}
+.khaki1 {background-color: #fff68f; color: #fff68f;}
+.khaki2 {background-color: #eee685; color: #eee685;}
+.khaki3 {background-color: #cdc673; color: #cdc673;}
+.khaki4 {background-color: #8b864e; color: #8b864e;}
+.lavender {background-color: #e6e6fa; color: #e6e6fa;}
+.lavenderblush {background-color: #fff0f5; color: #fff0f5;}
+.lavenderblush1 {background-color: #fff0f5; color: #fff0f5;}
+.lavenderblush2 {background-color: #eee0e5; color: #eee0e5;}
+.lavenderblush3 {background-color: #cdc1c5; color: #cdc1c5;}
+.lavenderblush4 {background-color: #8b8386; color: #8b8386;}
+.lawngreen {background-color: #7cfc00; color: #7cfc00;}
+.lemonchiffon {background-color: #fffacd; color: #fffacd;}
+.lemonchiffon1 {background-color: #fffacd; color: #fffacd;}
+.lemonchiffon2 {background-color: #eee9bf; color: #eee9bf;}
+.lemonchiffon3 {background-color: #cdc9a5; color: #cdc9a5;}
+.lemonchiffon4 {background-color: #8b8970; color: #8b8970;}
+.lightblue {background-color: #add8e6; color: #add8e6;}
+.lightblue1 {background-color: #bfefff; color: #bfefff;}
+.lightblue2 {background-color: #b2dfee; color: #b2dfee;}
+.lightblue3 {background-color: #9ac0cd; color: #9ac0cd;}
+.lightblue4 {background-color: #68838b; color: #68838b;}
+.lightcoral {background-color: #f08080; color: #f08080;}
+.lightcyan {background-color: #e0ffff; color: #e0ffff;}
+.lightcyan1 {background-color: #e0ffff; color: #e0ffff;}
+.lightcyan2 {background-color: #d1eeee; color: #d1eeee;}
+.lightcyan3 {background-color: #b4cdcd; color: #b4cdcd;}
+.lightcyan4 {background-color: #7a8b8b; color: #7a8b8b;}
+.lightgoldenrod {background-color: #eedd82; color: #eedd82;}
+.lightgoldenrod1 {background-color: #ffec8b; color: #ffec8b;}
+.lightgoldenrod2 {background-color: #eedc82; color: #eedc82;}
+.lightgoldenrod3 {background-color: #cdbe70; color: #cdbe70;}
+.lightgoldenrod4 {background-color: #8b814c; color: #8b814c;}
+.lightgoldenrodyellow {background-color: #fafad2; color: #fafad2;}
+.lightgray {background-color: #d3d3d3; color: #d3d3d3;}
+.lightgreen {background-color: #90ee90; color: #90ee90;}
+.lightgrey {background-color: #d3d3d3; color: #d3d3d3;}
+.lightpink {background-color: #ffb6c1; color: #ffb6c1;}
+.lightpink1 {background-color: #ffaeb9; color: #ffaeb9;}
+.lightpink2 {background-color: #eea2ad; color: #eea2ad;}
+.lightpink3 {background-color: #cd8c95; color: #cd8c95;}
+.lightpink4 {background-color: #8b5f65; color: #8b5f65;}
+.lightsalmon {background-color: #ffa07a; color: #ffa07a;}
+.lightsalmon1 {background-color: #ffa07a; color: #ffa07a;}
+.lightsalmon2 {background-color: #ee9572; color: #ee9572;}
+.lightsalmon3 {background-color: #cd8162; color: #cd8162;}
+.lightsalmon4 {background-color: #8b5742; color: #8b5742;}
+.lightseagreen {background-color: #20b2aa; color: #20b2aa;}
+.lightskyblue {background-color: #87cefa; color: #87cefa;}
+.lightskyblue1 {background-color: #b0e2ff; color: #b0e2ff;}
+.lightskyblue2 {background-color: #a4d3ee; color: #a4d3ee;}
+.lightskyblue3 {background-color: #8db6cd; color: #8db6cd;}
+.lightskyblue4 {background-color: #607b8b; color: #607b8b;}
+.lightslateblue {background-color: #8470ff; color: #8470ff;}
+.lightslategray {background-color: #778899; color: #778899;}
+.lightslategrey {background-color: #778899; color: #778899;}
+.lightsteelblue {background-color: #b0c4de; color: #b0c4de;}
+.lightsteelblue1 {background-color: #cae1ff; color: #cae1ff;}
+.lightsteelblue2 {background-color: #bcd2ee; color: #bcd2ee;}
+.lightsteelblue3 {background-color: #a2b5cd; color: #a2b5cd;}
+.lightsteelblue4 {background-color: #6e7b8b; color: #6e7b8b;}
+.lightyellow {background-color: #ffffe0; color: #ffffe0;}
+.lightyellow1 {background-color: #ffffe0; color: #ffffe0;}
+.lightyellow2 {background-color: #eeeed1; color: #eeeed1;}
+.lightyellow3 {background-color: #cdcdb4; color: #cdcdb4;}
+.lightyellow4 {background-color: #8b8b7a; color: #8b8b7a;}
+.linen {background-color: #faf0e6; color: #faf0e6;}
+.limegreen {background-color: #32cd32; color: #32cd32;}
+.lime {background-color: #00ff00; color: #00ff00;}
+.magenta {background-color: #ff00ff; color: #ff00ff;}
+.magenta1 {background-color: #ff00ff; color: #ff00ff;}
+.magenta2 {background-color: #ee00ee; color: #ee00ee;}
+.magenta3 {background-color: #cd00cd; color: #cd00cd;}
+.magenta4 {background-color: #8b008b; color: #8b008b;}
+.maroon {background-color: #b03060; color: #b03060;}
+.maroon1 {background-color: #ff34b3; color: #ff34b3;}
+.maroon2 {background-color: #ee30a7; color: #ee30a7;}
+.maroon3 {background-color: #cd2990; color: #cd2990;}
+.maroon4 {background-color: #8b1c62; color: #8b1c62;}
+.mediumaquamarine {background-color: #66cdaa; color: #66cdaa;}
+.mediumblue {background-color: #0000cd; color: #0000cd;}
+.mediumorchid {background-color: #ba55d3; color: #ba55d3;}
+.mediumorchid1 {background-color: #e066ff; color: #e066ff;}
+.mediumorchid2 {background-color: #d15fee; color: #d15fee;}
+.mediumorchid3 {background-color: #b452cd; color: #b452cd;}
+.mediumorchid4 {background-color: #7a378b; color: #7a378b;}
+.mediumpurple {background-color: #9370db; color: #9370db;}
+.mediumpurple1 {background-color: #ab82ff; color: #ab82ff;}
+.mediumpurple2 {background-color: #9f79ee; color: #9f79ee;}
+.mediumpurple3 {background-color: #8968cd; color: #8968cd;}
+.mediumpurple4 {background-color: #5d478b; color: #5d478b;}
+.mediumseagreen {background-color: #3cb371; color: #3cb371;}
+.mediumslateblue {background-color: #7b68ee; color: #7b68ee;}
+.mediumspringgreen {background-color: #00fa9a; color: #00fa9a;}
+.mediumturquoise {background-color: #48d1cc; color: #48d1cc;}
+.mediumvioletred {background-color: #c71585; color: #c71585;}
+.midnightblue {background-color: #191970; color: #191970;}
+.mintcream {background-color: #f5fffa; color: #f5fffa;}
+.mistyrose {background-color: #ffe4e1; color: #ffe4e1;}
+.mistyrose1 {background-color: #ffe4e1; color: #ffe4e1;}
+.mistyrose2 {background-color: #eed5d2; color: #eed5d2;}
+.mistyrose3 {background-color: #cdb7b5; color: #cdb7b5;}
+.mistyrose4 {background-color: #8b7d7b; color: #8b7d7b;}
+.moccasin {background-color: #ffe4b5; color: #ffe4b5;}
+.navajowhite {background-color: #ffdead; color: #ffdead;}
+.navajowhite1 {background-color: #ffdead; color: #ffdead;}
+.navajowhite2 {background-color: #eecfa1; color: #eecfa1;}
+.navajowhite3 {background-color: #cdb38b; color: #cdb38b;}
+.navajowhite4 {background-color: #8b795e; color: #8b795e;}
+.navy {background-color: #000080; color: #000080;}
+.navyblue {background-color: #000080; color: #000080;}
+.oldlace {background-color: #fdf5e6; color: #fdf5e6;}
+.olive {background-color: #808000; color: #808000;}
+.olivedrab {background-color: #6b8e23; color: #6b8e23;}
+.olivedrab1 {background-color: #c0ff3e; color: #c0ff3e;}
+.olivedrab2 {background-color: #b3ee3a; color: #b3ee3a;}
+.olivedrab3 {background-color: #9acd32; color: #9acd32;}
+.olivedrab4 {background-color: #698b22; color: #698b22;}
+.orange {background-color: #ffa500; color: #ffa500;}
+.orange1 {background-color: #ffa500; color: #ffa500;}
+.orange2 {background-color: #ee9a00; color: #ee9a00;}
+.orange3 {background-color: #cd8500; color: #cd8500;}
+.orange4 {background-color: #8b5a00; color: #8b5a00;}
+.orangered {background-color: #ff4500; color: #ff4500;}
+.orangered1 {background-color: #ff4500; color: #ff4500;}
+.orangered2 {background-color: #ee4000; color: #ee4000;}
+.orangered3 {background-color: #cd3700; color: #cd3700;}
+.orangered4 {background-color: #8b2500; color: #8b2500;}
+.orchid {background-color: #da70d6; color: #da70d6;}
+.orchid1 {background-color: #ff83fa; color: #ff83fa;}
+.orchid2 {background-color: #ee7ae9; color: #ee7ae9;}
+.orchid3 {background-color: #cd69c9; color: #cd69c9;}
+.orchid4 {background-color: #8b4789; color: #8b4789;}
+.palegreen {background-color: #98fb98; color: #98fb98;}
+.palegreen1 {background-color: #9aff9a; color: #9aff9a;}
+.palegreen2 {background-color: #90ee90; color: #90ee90;}
+.palegreen3 {background-color: #7ccd7c; color: #7ccd7c;}
+.palegreen4 {background-color: #548b54; color: #548b54;}
+.palegoldenrod {background-color: #eee8aa; color: #eee8aa;}
+.paleturquoise {background-color: #afeeee; color: #afeeee;}
+.paleturquoise1 {background-color: #bbffff; color: #bbffff;}
+.paleturquoise2 {background-color: #aeeeee; color: #aeeeee;}
+.paleturquoise3 {background-color: #96cdcd; color: #96cdcd;}
+.paleturquoise4 {background-color: #668b8b; color: #668b8b;}
+.palevioletred {background-color: #db7093; color: #db7093;}
+.palevioletred1 {background-color: #ff82ab; color: #ff82ab;}
+.palevioletred2 {background-color: #ee799f; color: #ee799f;}
+.palevioletred3 {background-color: #cd6889; color: #cd6889;}
+.palevioletred4 {background-color: #8b475d; color: #8b475d;}
+.papayawhip {background-color: #ffefd5; color: #ffefd5;}
+.peachpuff {background-color: #ffdab9; color: #ffdab9;}
+.peachpuff1 {background-color: #ffdab9; color: #ffdab9;}
+.peachpuff2 {background-color: #eecbad; color: #eecbad;}
+.peachpuff3 {background-color: #cdaf95; color: #cdaf95;}
+.peachpuff4 {background-color: #8b7765; color: #8b7765;}
+.peru {background-color: #cd853f; color: #cd853f;}
+.pink {background-color: #ffc0cb; color: #ffc0cb;}
+.pink1 {background-color: #ffb5c5; color: #ffb5c5;}
+.pink2 {background-color: #eea9b8; color: #eea9b8;}
+.pink3 {background-color: #cd919e; color: #cd919e;}
+.pink4 {background-color: #8b636c; color: #8b636c;}
+.plum {background-color: #dda0dd; color: #dda0dd;}
+.plum1 {background-color: #ffbbff; color: #ffbbff;}
+.plum2 {background-color: #eeaeee; color: #eeaeee;}
+.plum3 {background-color: #cd96cd; color: #cd96cd;}
+.plum4 {background-color: #8b668b; color: #8b668b;}
+.powderblue {background-color: #b0e0e6; color: #b0e0e6;}
+.purple {background-color: #a020f0; color: #a020f0;}
+.purple1 {background-color: #9b30ff; color: #9b30ff;}
+.purple2 {background-color: #912cee; color: #912cee;}
+.purple3 {background-color: #7d26cd; color: #7d26cd;}
+.purple4 {background-color: #551a8b; color: #551a8b;}
+.red {background-color: #ff0000; color: #ff0000;}
+.red1 {background-color: #ff0000; color: #ff0000;}
+.red2 {background-color: #ee0000; color: #ee0000;}
+.red3 {background-color: #cd0000; color: #cd0000;}
+.red4 {background-color: #8b0000; color: #8b0000;}
+.rosybrown {background-color: #bc8f8f; color: #bc8f8f;}
+.rosybrown1 {background-color: #ffc1c1; color: #ffc1c1;}
+.rosybrown2 {background-color: #eeb4b4; color: #eeb4b4;}
+.rosybrown3 {background-color: #cd9b9b; color: #cd9b9b;}
+.rosybrown4 {background-color: #8b6969; color: #8b6969;}
+.royalblue {background-color: #4169e1; color: #4169e1;}
+.royalblue1 {background-color: #4876ff; color: #4876ff;}
+.royalblue2 {background-color: #436eee; color: #436eee;}
+.royalblue3 {background-color: #3a5fcd; color: #3a5fcd;}
+.royalblue4 {background-color: #27408b; color: #27408b;}
+.salmon {background-color: #fa8072; color: #fa8072;}
+.salmon1 {background-color: #ff8c69; color: #ff8c69;}
+.salmon2 {background-color: #ee8262; color: #ee8262;}
+.salmon3 {background-color: #cd7054; color: #cd7054;}
+.salmon4 {background-color: #8b4c39; color: #8b4c39;}
+.saddlebrown {background-color: #8b4513; color: #8b4513;}
+.sandybrown {background-color: #f4a460; color: #f4a460;}
+.seagreen {background-color: #2e8b57; color: #2e8b57;}
+.seagreen1 {background-color: #54ff9f; color: #54ff9f;}
+.seagreen2 {background-color: #4eee94; color: #4eee94;}
+.seagreen3 {background-color: #43cd80; color: #43cd80;}
+.seagreen4 {background-color: #2e8b57; color: #2e8b57;}
+.seashell {background-color: #fff5ee; color: #fff5ee;}
+.seashell1 {background-color: #fff5ee; color: #fff5ee;}
+.seashell2 {background-color: #eee5de; color: #eee5de;}
+.seashell3 {background-color: #cdc5bf; color: #cdc5bf;}
+.seashell4 {background-color: #8b8682; color: #8b8682;}
+.sienna {background-color: #a0522d; color: #a0522d;}
+.sienna1 {background-color: #ff8247; color: #ff8247;}
+.sienna2 {background-color: #ee7942; color: #ee7942;}
+.sienna3 {background-color: #cd6839; color: #cd6839;}
+.sienna4 {background-color: #8b4726; color: #8b4726;}
+.silver {background-color: #c0c0c0; color: #c0c0c0;}
+.skyblue {background-color: #87ceeb; color: #87ceeb;}
+.skyblue1 {background-color: #87ceff; color: #87ceff;}
+.skyblue2 {background-color: #7ec0ee; color: #7ec0ee;}
+.skyblue3 {background-color: #6ca6cd; color: #6ca6cd;}
+.skyblue4 {background-color: #4a708b; color: #4a708b;}
+.slateblue {background-color: #6a5acd; color: #6a5acd;}
+.slateblue1 {background-color: #836fff; color: #836fff;}
+.slateblue2 {background-color: #7a67ee; color: #7a67ee;}
+.slateblue3 {background-color: #6959cd; color: #6959cd;}
+.slateblue4 {background-color: #473c8b; color: #473c8b;}
+.slategray {background-color: #708090; color: #708090;}
+.slategray1 {background-color: #c6e2ff; color: #c6e2ff;}
+.slategray2 {background-color: #b9d3ee; color: #b9d3ee;}
+.slategray3 {background-color: #9fb6cd; color: #9fb6cd;}
+.slategray4 {background-color: #6c7b8b; color: #6c7b8b;}
+.slategrey {background-color: #708090; color: #708090;}
+.snow {background-color: #fffafa; color: #fffafa;}
+.snow1 {background-color: #fffafa; color: #fffafa;}
+.snow2 {background-color: #eee9e9; color: #eee9e9;}
+.snow3 {background-color: #cdc9c9; color: #cdc9c9;}
+.snow4 {background-color: #8b8989; color: #8b8989;}
+.springgreen {background-color: #00ff7f; color: #00ff7f;}
+.springgreen1 {background-color: #00ff7f; color: #00ff7f;}
+.springgreen2 {background-color: #00ee76; color: #00ee76;}
+.springgreen3 {background-color: #00cd66; color: #00cd66;}
+.springgreen4 {background-color: #008b45; color: #008b45;}
+.steelblue {background-color: #4682b4; color: #4682b4;}
+.steelblue1 {background-color: #63b8ff; color: #63b8ff;}
+.steelblue2 {background-color: #5cacee; color: #5cacee;}
+.steelblue3 {background-color: #4f94cd; color: #4f94cd;}
+.steelblue4 {background-color: #36648b; color: #36648b;}
+.tan {background-color: #d2b48c; color: #d2b48c;}
+.tan1 {background-color: #ffa54f; color: #ffa54f;}
+.tan2 {background-color: #ee9a49; color: #ee9a49;}
+.tan3 {background-color: #cd853f; color: #cd853f;}
+.tan4 {background-color: #8b5a2b; color: #8b5a2b;}
+.teal {background-color: #008080; color: #008080;}
+.thistle {background-color: #d8bfd8; color: #d8bfd8;}
+.thistle1 {background-color: #ffe1ff; color: #ffe1ff;}
+.thistle2 {background-color: #eed2ee; color: #eed2ee;}
+.thistle3 {background-color: #cdb5cd; color: #cdb5cd;}
+.thistle4 {background-color: #8b7b8b; color: #8b7b8b;}
+.tomato {background-color: #ff6347; color: #ff6347;}
+.tomato1 {background-color: #ff6347; color: #ff6347;}
+.tomato2 {background-color: #ee5c42; color: #ee5c42;}
+.tomato3 {background-color: #cd4f39; color: #cd4f39;}
+.tomato4 {background-color: #8b3626; color: #8b3626;}
+.turquoise {background-color: #40e0d0; color: #40e0d0;}
+.turquoise1 {background-color: #00f5ff; color: #00f5ff;}
+.turquoise2 {background-color: #00e5ee; color: #00e5ee;}
+.turquoise3 {background-color: #00c5cd; color: #00c5cd;}
+.turquoise4 {background-color: #00868b; color: #00868b;}
+.violet {background-color: #ee82ee; color: #ee82ee;}
+.violetred {background-color: #d02090; color: #d02090;}
+.violetred1 {background-color: #ff3e96; color: #ff3e96;}
+.violetred2 {background-color: #ee3a8c; color: #ee3a8c;}
+.violetred3 {background-color: #cd3278; color: #cd3278;}
+.violetred4 {background-color: #8b2252; color: #8b2252;}
+.wheat {background-color: #f5deb3; color: #f5deb3;}
+.wheat1 {background-color: #ffe7ba; color: #ffe7ba;}
+.wheat2 {background-color: #eed8ae; color: #eed8ae;}
+.wheat3 {background-color: #cdba96; color: #cdba96;}
+.wheat4 {background-color: #8b7e66; color: #8b7e66;}
+.white {background-color: #ffffff; color: #ffffff;}
+.whitesmoke {background-color: #f5f5f5; color: #f5f5f5;}
+.yellow {background-color: #ffff00; color: #ffff00;}
+.yellow1 {background-color: #ffff00; color: #ffff00;}
+.yellow2 {background-color: #eeee00; color: #eeee00;}
+.yellow3 {background-color: #cdcd00; color: #cdcd00;}
+.yellow4 {background-color: #8b8b00; color: #8b8b00;}
+.yellowgreen {background-color: #9acd32; color: #9acd32;}
+</style><p><a class="tooltip reference internal" href="color.html" title=""><span class="doc">pygame.Color</span><span class="tooltip-content">pygame object for color representations</span></a> lets you specify any of these named colors when creating a new
+<code class="docutils literal notranslate"><span class="pre">pygame.Color</span></code> (taken from the
+<a class="reference external" href="https://github.com/pygame/pygame/blob/main/src_py/colordict.py">colordict module</a>).</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Name</p></th>
+<th class="head"><p>Color</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">aliceblue</span></code></p></td>
+<td><p><span class="aliceblue">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">antiquewhite</span></code></p></td>
+<td><p><span class="antiquewhite">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">antiquewhite1</span></code></p></td>
+<td><p><span class="antiquewhite1">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">antiquewhite2</span></code></p></td>
+<td><p><span class="antiquewhite2">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">antiquewhite3</span></code></p></td>
+<td><p><span class="antiquewhite3">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">antiquewhite4</span></code></p></td>
+<td><p><span class="antiquewhite4">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">aqua</span></code></p></td>
+<td><p><span class="aqua">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">aquamarine</span></code></p></td>
+<td><p><span class="aquamarine">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">aquamarine1</span></code></p></td>
+<td><p><span class="aquamarine1">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">aquamarine2</span></code></p></td>
+<td><p><span class="aquamarine2">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">aquamarine3</span></code></p></td>
+<td><p><span class="aquamarine3">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">aquamarine4</span></code></p></td>
+<td><p><span class="aquamarine4">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">azure</span></code></p></td>
+<td><p><span class="azure">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">azure1</span></code></p></td>
+<td><p><span class="azure1">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">azure2</span></code></p></td>
+<td><p><span class="azure2">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">azure3</span></code></p></td>
+<td><p><span class="azure3">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">azure4</span></code></p></td>
+<td><p><span class="azure4">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">beige</span></code></p></td>
+<td><p><span class="beige">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">bisque</span></code></p></td>
+<td><p><span class="bisque">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">bisque1</span></code></p></td>
+<td><p><span class="bisque1">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">bisque2</span></code></p></td>
+<td><p><span class="bisque2">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">bisque3</span></code></p></td>
+<td><p><span class="bisque3">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">bisque4</span></code></p></td>
+<td><p><span class="bisque4">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">black</span></code></p></td>
+<td><p><span class="black">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">blanchedalmond</span></code></p></td>
+<td><p><span class="blanchedalmond">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">blue</span></code></p></td>
+<td><p><span class="blue">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">blue1</span></code></p></td>
+<td><p><span class="blue1">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">blue2</span></code></p></td>
+<td><p><span class="blue2">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">blue3</span></code></p></td>
+<td><p><span class="blue3">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">blue4</span></code></p></td>
+<td><p><span class="blue4">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">blueviolet</span></code></p></td>
+<td><p><span class="blueviolet">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">brown</span></code></p></td>
+<td><p><span class="brown">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">brown1</span></code></p></td>
+<td><p><span class="brown1">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">brown2</span></code></p></td>
+<td><p><span class="brown2">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">brown3</span></code></p></td>
+<td><p><span class="brown3">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">brown4</span></code></p></td>
+<td><p><span class="brown4">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">burlywood</span></code></p></td>
+<td><p><span class="burlywood">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">burlywood1</span></code></p></td>
+<td><p><span class="burlywood1">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">burlywood2</span></code></p></td>
+<td><p><span class="burlywood2">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">burlywood3</span></code></p></td>
+<td><p><span class="burlywood3">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">burlywood4</span></code></p></td>
+<td><p><span class="burlywood4">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">cadetblue</span></code></p></td>
+<td><p><span class="cadetblue">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">cadetblue1</span></code></p></td>
+<td><p><span class="cadetblue1">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">cadetblue2</span></code></p></td>
+<td><p><span class="cadetblue2">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">cadetblue3</span></code></p></td>
+<td><p><span class="cadetblue3">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">cadetblue4</span></code></p></td>
+<td><p><span class="cadetblue4">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">chartreuse</span></code></p></td>
+<td><p><span class="chartreuse">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">chartreuse1</span></code></p></td>
+<td><p><span class="chartreuse1">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">chartreuse2</span></code></p></td>
+<td><p><span class="chartreuse2">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">chartreuse3</span></code></p></td>
+<td><p><span class="chartreuse3">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">chartreuse4</span></code></p></td>
+<td><p><span class="chartreuse4">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">chocolate</span></code></p></td>
+<td><p><span class="chocolate">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">chocolate1</span></code></p></td>
+<td><p><span class="chocolate1">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">chocolate2</span></code></p></td>
+<td><p><span class="chocolate2">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">chocolate3</span></code></p></td>
+<td><p><span class="chocolate3">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">chocolate4</span></code></p></td>
+<td><p><span class="chocolate4">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">coral</span></code></p></td>
+<td><p><span class="coral">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">coral1</span></code></p></td>
+<td><p><span class="coral1">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">coral2</span></code></p></td>
+<td><p><span class="coral2">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">coral3</span></code></p></td>
+<td><p><span class="coral3">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">coral4</span></code></p></td>
+<td><p><span class="coral4">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">cornflowerblue</span></code></p></td>
+<td><p><span class="cornflowerblue">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">cornsilk</span></code></p></td>
+<td><p><span class="cornsilk">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">cornsilk1</span></code></p></td>
+<td><p><span class="cornsilk1">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">cornsilk2</span></code></p></td>
+<td><p><span class="cornsilk2">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">cornsilk3</span></code></p></td>
+<td><p><span class="cornsilk3">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">cornsilk4</span></code></p></td>
+<td><p><span class="cornsilk4">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">crimson</span></code></p></td>
+<td><p><span class="crimson">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">cyan</span></code></p></td>
+<td><p><span class="cyan">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">cyan1</span></code></p></td>
+<td><p><span class="cyan1">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">cyan2</span></code></p></td>
+<td><p><span class="cyan2">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">cyan3</span></code></p></td>
+<td><p><span class="cyan3">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">cyan4</span></code></p></td>
+<td><p><span class="cyan4">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">darkblue</span></code></p></td>
+<td><p><span class="darkblue">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">darkcyan</span></code></p></td>
+<td><p><span class="darkcyan">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">darkgoldenrod</span></code></p></td>
+<td><p><span class="darkgoldenrod">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">darkgoldenrod1</span></code></p></td>
+<td><p><span class="darkgoldenrod1">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">darkgoldenrod2</span></code></p></td>
+<td><p><span class="darkgoldenrod2">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">darkgoldenrod3</span></code></p></td>
+<td><p><span class="darkgoldenrod3">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">darkgoldenrod4</span></code></p></td>
+<td><p><span class="darkgoldenrod4">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">darkgray</span></code></p></td>
+<td><p><span class="darkgray">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">darkgreen</span></code></p></td>
+<td><p><span class="darkgreen">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">darkgrey</span></code></p></td>
+<td><p><span class="darkgrey">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">darkkhaki</span></code></p></td>
+<td><p><span class="darkkhaki">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">darkmagenta</span></code></p></td>
+<td><p><span class="darkmagenta">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">darkolivegreen</span></code></p></td>
+<td><p><span class="darkolivegreen">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">darkolivegreen1</span></code></p></td>
+<td><p><span class="darkolivegreen1">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">darkolivegreen2</span></code></p></td>
+<td><p><span class="darkolivegreen2">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">darkolivegreen3</span></code></p></td>
+<td><p><span class="darkolivegreen3">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">darkolivegreen4</span></code></p></td>
+<td><p><span class="darkolivegreen4">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">darkorange</span></code></p></td>
+<td><p><span class="darkorange">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">darkorange1</span></code></p></td>
+<td><p><span class="darkorange1">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">darkorange2</span></code></p></td>
+<td><p><span class="darkorange2">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">darkorange3</span></code></p></td>
+<td><p><span class="darkorange3">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">darkorange4</span></code></p></td>
+<td><p><span class="darkorange4">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">darkorchid</span></code></p></td>
+<td><p><span class="darkorchid">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">darkorchid1</span></code></p></td>
+<td><p><span class="darkorchid1">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">darkorchid2</span></code></p></td>
+<td><p><span class="darkorchid2">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">darkorchid3</span></code></p></td>
+<td><p><span class="darkorchid3">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">darkorchid4</span></code></p></td>
+<td><p><span class="darkorchid4">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">darkred</span></code></p></td>
+<td><p><span class="darkred">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">darksalmon</span></code></p></td>
+<td><p><span class="darksalmon">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">darkseagreen</span></code></p></td>
+<td><p><span class="darkseagreen">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">darkseagreen1</span></code></p></td>
+<td><p><span class="darkseagreen1">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">darkseagreen2</span></code></p></td>
+<td><p><span class="darkseagreen2">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">darkseagreen3</span></code></p></td>
+<td><p><span class="darkseagreen3">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">darkseagreen4</span></code></p></td>
+<td><p><span class="darkseagreen4">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">darkslateblue</span></code></p></td>
+<td><p><span class="darkslateblue">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">darkslategray</span></code></p></td>
+<td><p><span class="darkslategray">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">darkslategray1</span></code></p></td>
+<td><p><span class="darkslategray1">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">darkslategray2</span></code></p></td>
+<td><p><span class="darkslategray2">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">darkslategray3</span></code></p></td>
+<td><p><span class="darkslategray3">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">darkslategray4</span></code></p></td>
+<td><p><span class="darkslategray4">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">darkslategrey</span></code></p></td>
+<td><p><span class="darkslategrey">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">darkturquoise</span></code></p></td>
+<td><p><span class="darkturquoise">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">darkviolet</span></code></p></td>
+<td><p><span class="darkviolet">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">deeppink</span></code></p></td>
+<td><p><span class="deeppink">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">deeppink1</span></code></p></td>
+<td><p><span class="deeppink1">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">deeppink2</span></code></p></td>
+<td><p><span class="deeppink2">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">deeppink3</span></code></p></td>
+<td><p><span class="deeppink3">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">deeppink4</span></code></p></td>
+<td><p><span class="deeppink4">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">deepskyblue</span></code></p></td>
+<td><p><span class="deepskyblue">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">deepskyblue1</span></code></p></td>
+<td><p><span class="deepskyblue1">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">deepskyblue2</span></code></p></td>
+<td><p><span class="deepskyblue2">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">deepskyblue3</span></code></p></td>
+<td><p><span class="deepskyblue3">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">deepskyblue4</span></code></p></td>
+<td><p><span class="deepskyblue4">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">dimgray</span></code></p></td>
+<td><p><span class="dimgray">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">dimgrey</span></code></p></td>
+<td><p><span class="dimgrey">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">dodgerblue</span></code></p></td>
+<td><p><span class="dodgerblue">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">dodgerblue1</span></code></p></td>
+<td><p><span class="dodgerblue1">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">dodgerblue2</span></code></p></td>
+<td><p><span class="dodgerblue2">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">dodgerblue3</span></code></p></td>
+<td><p><span class="dodgerblue3">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">dodgerblue4</span></code></p></td>
+<td><p><span class="dodgerblue4">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">firebrick</span></code></p></td>
+<td><p><span class="firebrick">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">firebrick1</span></code></p></td>
+<td><p><span class="firebrick1">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">firebrick2</span></code></p></td>
+<td><p><span class="firebrick2">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">firebrick3</span></code></p></td>
+<td><p><span class="firebrick3">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">firebrick4</span></code></p></td>
+<td><p><span class="firebrick4">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">floralwhite</span></code></p></td>
+<td><p><span class="floralwhite">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">forestgreen</span></code></p></td>
+<td><p><span class="forestgreen">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">fuchsia</span></code></p></td>
+<td><p><span class="fuchsia">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">gainsboro</span></code></p></td>
+<td><p><span class="gainsboro">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ghostwhite</span></code></p></td>
+<td><p><span class="ghostwhite">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">gold</span></code></p></td>
+<td><p><span class="gold">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">gold1</span></code></p></td>
+<td><p><span class="gold1">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">gold2</span></code></p></td>
+<td><p><span class="gold2">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">gold3</span></code></p></td>
+<td><p><span class="gold3">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">gold4</span></code></p></td>
+<td><p><span class="gold4">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">goldenrod</span></code></p></td>
+<td><p><span class="goldenrod">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">goldenrod1</span></code></p></td>
+<td><p><span class="goldenrod1">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">goldenrod2</span></code></p></td>
+<td><p><span class="goldenrod2">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">goldenrod3</span></code></p></td>
+<td><p><span class="goldenrod3">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">goldenrod4</span></code></p></td>
+<td><p><span class="goldenrod4">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">gray</span></code></p></td>
+<td><p><span class="gray">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">gray0</span></code></p></td>
+<td><p><span class="gray0">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">gray1</span></code></p></td>
+<td><p><span class="gray1">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">gray2</span></code></p></td>
+<td><p><span class="gray2">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">gray3</span></code></p></td>
+<td><p><span class="gray3">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">gray4</span></code></p></td>
+<td><p><span class="gray4">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">gray5</span></code></p></td>
+<td><p><span class="gray5">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">gray6</span></code></p></td>
+<td><p><span class="gray6">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">gray7</span></code></p></td>
+<td><p><span class="gray7">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">gray8</span></code></p></td>
+<td><p><span class="gray8">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">gray9</span></code></p></td>
+<td><p><span class="gray9">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">gray10</span></code></p></td>
+<td><p><span class="gray10">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">gray11</span></code></p></td>
+<td><p><span class="gray11">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">gray12</span></code></p></td>
+<td><p><span class="gray12">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">gray13</span></code></p></td>
+<td><p><span class="gray13">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">gray14</span></code></p></td>
+<td><p><span class="gray14">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">gray15</span></code></p></td>
+<td><p><span class="gray15">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">gray16</span></code></p></td>
+<td><p><span class="gray16">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">gray17</span></code></p></td>
+<td><p><span class="gray17">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">gray18</span></code></p></td>
+<td><p><span class="gray18">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">gray19</span></code></p></td>
+<td><p><span class="gray19">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">gray20</span></code></p></td>
+<td><p><span class="gray20">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">gray21</span></code></p></td>
+<td><p><span class="gray21">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">gray22</span></code></p></td>
+<td><p><span class="gray22">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">gray23</span></code></p></td>
+<td><p><span class="gray23">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">gray24</span></code></p></td>
+<td><p><span class="gray24">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">gray25</span></code></p></td>
+<td><p><span class="gray25">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">gray26</span></code></p></td>
+<td><p><span class="gray26">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">gray27</span></code></p></td>
+<td><p><span class="gray27">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">gray28</span></code></p></td>
+<td><p><span class="gray28">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">gray29</span></code></p></td>
+<td><p><span class="gray29">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">gray30</span></code></p></td>
+<td><p><span class="gray30">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">gray31</span></code></p></td>
+<td><p><span class="gray31">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">gray32</span></code></p></td>
+<td><p><span class="gray32">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">gray33</span></code></p></td>
+<td><p><span class="gray33">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">gray34</span></code></p></td>
+<td><p><span class="gray34">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">gray35</span></code></p></td>
+<td><p><span class="gray35">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">gray36</span></code></p></td>
+<td><p><span class="gray36">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">gray37</span></code></p></td>
+<td><p><span class="gray37">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">gray38</span></code></p></td>
+<td><p><span class="gray38">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">gray39</span></code></p></td>
+<td><p><span class="gray39">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">gray40</span></code></p></td>
+<td><p><span class="gray40">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">gray41</span></code></p></td>
+<td><p><span class="gray41">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">gray42</span></code></p></td>
+<td><p><span class="gray42">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">gray43</span></code></p></td>
+<td><p><span class="gray43">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">gray44</span></code></p></td>
+<td><p><span class="gray44">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">gray45</span></code></p></td>
+<td><p><span class="gray45">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">gray46</span></code></p></td>
+<td><p><span class="gray46">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">gray47</span></code></p></td>
+<td><p><span class="gray47">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">gray48</span></code></p></td>
+<td><p><span class="gray48">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">gray49</span></code></p></td>
+<td><p><span class="gray49">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">gray50</span></code></p></td>
+<td><p><span class="gray50">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">gray51</span></code></p></td>
+<td><p><span class="gray51">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">gray52</span></code></p></td>
+<td><p><span class="gray52">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">gray53</span></code></p></td>
+<td><p><span class="gray53">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">gray54</span></code></p></td>
+<td><p><span class="gray54">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">gray55</span></code></p></td>
+<td><p><span class="gray55">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">gray56</span></code></p></td>
+<td><p><span class="gray56">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">gray57</span></code></p></td>
+<td><p><span class="gray57">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">gray58</span></code></p></td>
+<td><p><span class="gray58">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">gray59</span></code></p></td>
+<td><p><span class="gray59">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">gray60</span></code></p></td>
+<td><p><span class="gray60">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">gray61</span></code></p></td>
+<td><p><span class="gray61">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">gray62</span></code></p></td>
+<td><p><span class="gray62">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">gray63</span></code></p></td>
+<td><p><span class="gray63">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">gray64</span></code></p></td>
+<td><p><span class="gray64">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">gray65</span></code></p></td>
+<td><p><span class="gray65">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">gray66</span></code></p></td>
+<td><p><span class="gray66">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">gray67</span></code></p></td>
+<td><p><span class="gray67">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">gray68</span></code></p></td>
+<td><p><span class="gray68">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">gray69</span></code></p></td>
+<td><p><span class="gray69">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">gray70</span></code></p></td>
+<td><p><span class="gray70">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">gray71</span></code></p></td>
+<td><p><span class="gray71">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">gray72</span></code></p></td>
+<td><p><span class="gray72">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">gray73</span></code></p></td>
+<td><p><span class="gray73">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">gray74</span></code></p></td>
+<td><p><span class="gray74">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">gray75</span></code></p></td>
+<td><p><span class="gray75">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">gray76</span></code></p></td>
+<td><p><span class="gray76">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">gray77</span></code></p></td>
+<td><p><span class="gray77">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">gray78</span></code></p></td>
+<td><p><span class="gray78">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">gray79</span></code></p></td>
+<td><p><span class="gray79">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">gray80</span></code></p></td>
+<td><p><span class="gray80">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">gray81</span></code></p></td>
+<td><p><span class="gray81">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">gray82</span></code></p></td>
+<td><p><span class="gray82">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">gray83</span></code></p></td>
+<td><p><span class="gray83">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">gray84</span></code></p></td>
+<td><p><span class="gray84">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">gray85</span></code></p></td>
+<td><p><span class="gray85">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">gray86</span></code></p></td>
+<td><p><span class="gray86">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">gray87</span></code></p></td>
+<td><p><span class="gray87">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">gray88</span></code></p></td>
+<td><p><span class="gray88">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">gray89</span></code></p></td>
+<td><p><span class="gray89">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">gray90</span></code></p></td>
+<td><p><span class="gray90">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">gray91</span></code></p></td>
+<td><p><span class="gray91">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">gray92</span></code></p></td>
+<td><p><span class="gray92">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">gray93</span></code></p></td>
+<td><p><span class="gray93">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">gray94</span></code></p></td>
+<td><p><span class="gray94">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">gray95</span></code></p></td>
+<td><p><span class="gray95">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">gray96</span></code></p></td>
+<td><p><span class="gray96">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">gray97</span></code></p></td>
+<td><p><span class="gray97">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">gray98</span></code></p></td>
+<td><p><span class="gray98">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">gray99</span></code></p></td>
+<td><p><span class="gray99">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">gray100</span></code></p></td>
+<td><p><span class="gray100">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">green</span></code></p></td>
+<td><p><span class="green">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">green1</span></code></p></td>
+<td><p><span class="green1">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">green2</span></code></p></td>
+<td><p><span class="green2">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">green3</span></code></p></td>
+<td><p><span class="green3">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">green4</span></code></p></td>
+<td><p><span class="green4">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">greenyellow</span></code></p></td>
+<td><p><span class="greenyellow">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">grey</span></code></p></td>
+<td><p><span class="grey">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">grey0</span></code></p></td>
+<td><p><span class="grey0">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">grey1</span></code></p></td>
+<td><p><span class="grey1">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">grey2</span></code></p></td>
+<td><p><span class="grey2">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">grey3</span></code></p></td>
+<td><p><span class="grey3">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">grey4</span></code></p></td>
+<td><p><span class="grey4">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">grey5</span></code></p></td>
+<td><p><span class="grey5">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">grey6</span></code></p></td>
+<td><p><span class="grey6">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">grey7</span></code></p></td>
+<td><p><span class="grey7">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">grey8</span></code></p></td>
+<td><p><span class="grey8">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">grey9</span></code></p></td>
+<td><p><span class="grey9">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">grey10</span></code></p></td>
+<td><p><span class="grey10">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">grey11</span></code></p></td>
+<td><p><span class="grey11">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">grey12</span></code></p></td>
+<td><p><span class="grey12">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">grey13</span></code></p></td>
+<td><p><span class="grey13">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">grey14</span></code></p></td>
+<td><p><span class="grey14">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">grey15</span></code></p></td>
+<td><p><span class="grey15">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">grey16</span></code></p></td>
+<td><p><span class="grey16">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">grey17</span></code></p></td>
+<td><p><span class="grey17">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">grey18</span></code></p></td>
+<td><p><span class="grey18">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">grey19</span></code></p></td>
+<td><p><span class="grey19">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">grey20</span></code></p></td>
+<td><p><span class="grey20">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">grey21</span></code></p></td>
+<td><p><span class="grey21">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">grey22</span></code></p></td>
+<td><p><span class="grey22">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">grey23</span></code></p></td>
+<td><p><span class="grey23">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">grey24</span></code></p></td>
+<td><p><span class="grey24">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">grey25</span></code></p></td>
+<td><p><span class="grey25">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">grey26</span></code></p></td>
+<td><p><span class="grey26">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">grey27</span></code></p></td>
+<td><p><span class="grey27">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">grey28</span></code></p></td>
+<td><p><span class="grey28">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">grey29</span></code></p></td>
+<td><p><span class="grey29">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">grey30</span></code></p></td>
+<td><p><span class="grey30">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">grey31</span></code></p></td>
+<td><p><span class="grey31">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">grey32</span></code></p></td>
+<td><p><span class="grey32">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">grey33</span></code></p></td>
+<td><p><span class="grey33">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">grey34</span></code></p></td>
+<td><p><span class="grey34">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">grey35</span></code></p></td>
+<td><p><span class="grey35">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">grey36</span></code></p></td>
+<td><p><span class="grey36">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">grey37</span></code></p></td>
+<td><p><span class="grey37">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">grey38</span></code></p></td>
+<td><p><span class="grey38">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">grey39</span></code></p></td>
+<td><p><span class="grey39">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">grey40</span></code></p></td>
+<td><p><span class="grey40">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">grey41</span></code></p></td>
+<td><p><span class="grey41">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">grey42</span></code></p></td>
+<td><p><span class="grey42">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">grey43</span></code></p></td>
+<td><p><span class="grey43">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">grey44</span></code></p></td>
+<td><p><span class="grey44">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">grey45</span></code></p></td>
+<td><p><span class="grey45">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">grey46</span></code></p></td>
+<td><p><span class="grey46">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">grey47</span></code></p></td>
+<td><p><span class="grey47">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">grey48</span></code></p></td>
+<td><p><span class="grey48">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">grey49</span></code></p></td>
+<td><p><span class="grey49">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">grey50</span></code></p></td>
+<td><p><span class="grey50">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">grey51</span></code></p></td>
+<td><p><span class="grey51">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">grey52</span></code></p></td>
+<td><p><span class="grey52">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">grey53</span></code></p></td>
+<td><p><span class="grey53">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">grey54</span></code></p></td>
+<td><p><span class="grey54">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">grey55</span></code></p></td>
+<td><p><span class="grey55">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">grey56</span></code></p></td>
+<td><p><span class="grey56">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">grey57</span></code></p></td>
+<td><p><span class="grey57">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">grey58</span></code></p></td>
+<td><p><span class="grey58">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">grey59</span></code></p></td>
+<td><p><span class="grey59">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">grey60</span></code></p></td>
+<td><p><span class="grey60">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">grey61</span></code></p></td>
+<td><p><span class="grey61">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">grey62</span></code></p></td>
+<td><p><span class="grey62">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">grey63</span></code></p></td>
+<td><p><span class="grey63">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">grey64</span></code></p></td>
+<td><p><span class="grey64">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">grey65</span></code></p></td>
+<td><p><span class="grey65">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">grey66</span></code></p></td>
+<td><p><span class="grey66">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">grey67</span></code></p></td>
+<td><p><span class="grey67">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">grey68</span></code></p></td>
+<td><p><span class="grey68">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">grey69</span></code></p></td>
+<td><p><span class="grey69">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">grey70</span></code></p></td>
+<td><p><span class="grey70">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">grey71</span></code></p></td>
+<td><p><span class="grey71">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">grey72</span></code></p></td>
+<td><p><span class="grey72">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">grey73</span></code></p></td>
+<td><p><span class="grey73">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">grey74</span></code></p></td>
+<td><p><span class="grey74">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">grey75</span></code></p></td>
+<td><p><span class="grey75">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">grey76</span></code></p></td>
+<td><p><span class="grey76">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">grey77</span></code></p></td>
+<td><p><span class="grey77">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">grey78</span></code></p></td>
+<td><p><span class="grey78">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">grey79</span></code></p></td>
+<td><p><span class="grey79">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">grey80</span></code></p></td>
+<td><p><span class="grey80">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">grey81</span></code></p></td>
+<td><p><span class="grey81">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">grey82</span></code></p></td>
+<td><p><span class="grey82">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">grey83</span></code></p></td>
+<td><p><span class="grey83">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">grey84</span></code></p></td>
+<td><p><span class="grey84">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">grey85</span></code></p></td>
+<td><p><span class="grey85">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">grey86</span></code></p></td>
+<td><p><span class="grey86">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">grey87</span></code></p></td>
+<td><p><span class="grey87">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">grey88</span></code></p></td>
+<td><p><span class="grey88">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">grey89</span></code></p></td>
+<td><p><span class="grey89">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">grey90</span></code></p></td>
+<td><p><span class="grey90">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">grey91</span></code></p></td>
+<td><p><span class="grey91">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">grey92</span></code></p></td>
+<td><p><span class="grey92">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">grey93</span></code></p></td>
+<td><p><span class="grey93">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">grey94</span></code></p></td>
+<td><p><span class="grey94">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">grey95</span></code></p></td>
+<td><p><span class="grey95">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">grey96</span></code></p></td>
+<td><p><span class="grey96">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">grey97</span></code></p></td>
+<td><p><span class="grey97">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">grey98</span></code></p></td>
+<td><p><span class="grey98">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">grey99</span></code></p></td>
+<td><p><span class="grey99">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">grey100</span></code></p></td>
+<td><p><span class="grey100">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">honeydew</span></code></p></td>
+<td><p><span class="honeydew">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">honeydew1</span></code></p></td>
+<td><p><span class="honeydew1">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">honeydew2</span></code></p></td>
+<td><p><span class="honeydew2">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">honeydew3</span></code></p></td>
+<td><p><span class="honeydew3">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">honeydew4</span></code></p></td>
+<td><p><span class="honeydew4">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">hotpink</span></code></p></td>
+<td><p><span class="hotpink">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">hotpink1</span></code></p></td>
+<td><p><span class="hotpink1">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">hotpink2</span></code></p></td>
+<td><p><span class="hotpink2">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">hotpink3</span></code></p></td>
+<td><p><span class="hotpink3">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">hotpink4</span></code></p></td>
+<td><p><span class="hotpink4">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">indianred</span></code></p></td>
+<td><p><span class="indianred">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">indianred1</span></code></p></td>
+<td><p><span class="indianred1">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">indianred2</span></code></p></td>
+<td><p><span class="indianred2">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">indianred3</span></code></p></td>
+<td><p><span class="indianred3">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">indianred4</span></code></p></td>
+<td><p><span class="indianred4">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">indigo</span></code></p></td>
+<td><p><span class="indigo">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ivory</span></code></p></td>
+<td><p><span class="ivory">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ivory1</span></code></p></td>
+<td><p><span class="ivory1">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ivory2</span></code></p></td>
+<td><p><span class="ivory2">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ivory3</span></code></p></td>
+<td><p><span class="ivory3">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ivory4</span></code></p></td>
+<td><p><span class="ivory4">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">khaki</span></code></p></td>
+<td><p><span class="khaki">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">khaki1</span></code></p></td>
+<td><p><span class="khaki1">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">khaki2</span></code></p></td>
+<td><p><span class="khaki2">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">khaki3</span></code></p></td>
+<td><p><span class="khaki3">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">khaki4</span></code></p></td>
+<td><p><span class="khaki4">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">lavender</span></code></p></td>
+<td><p><span class="lavender">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">lavenderblush</span></code></p></td>
+<td><p><span class="lavenderblush">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">lavenderblush1</span></code></p></td>
+<td><p><span class="lavenderblush1">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">lavenderblush2</span></code></p></td>
+<td><p><span class="lavenderblush2">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">lavenderblush3</span></code></p></td>
+<td><p><span class="lavenderblush3">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">lavenderblush4</span></code></p></td>
+<td><p><span class="lavenderblush4">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">lawngreen</span></code></p></td>
+<td><p><span class="lawngreen">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">lemonchiffon</span></code></p></td>
+<td><p><span class="lemonchiffon">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">lemonchiffon1</span></code></p></td>
+<td><p><span class="lemonchiffon1">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">lemonchiffon2</span></code></p></td>
+<td><p><span class="lemonchiffon2">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">lemonchiffon3</span></code></p></td>
+<td><p><span class="lemonchiffon3">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">lemonchiffon4</span></code></p></td>
+<td><p><span class="lemonchiffon4">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">lightblue</span></code></p></td>
+<td><p><span class="lightblue">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">lightblue1</span></code></p></td>
+<td><p><span class="lightblue1">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">lightblue2</span></code></p></td>
+<td><p><span class="lightblue2">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">lightblue3</span></code></p></td>
+<td><p><span class="lightblue3">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">lightblue4</span></code></p></td>
+<td><p><span class="lightblue4">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">lightcoral</span></code></p></td>
+<td><p><span class="lightcoral">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">lightcyan</span></code></p></td>
+<td><p><span class="lightcyan">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">lightcyan1</span></code></p></td>
+<td><p><span class="lightcyan1">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">lightcyan2</span></code></p></td>
+<td><p><span class="lightcyan2">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">lightcyan3</span></code></p></td>
+<td><p><span class="lightcyan3">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">lightcyan4</span></code></p></td>
+<td><p><span class="lightcyan4">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">lightgoldenrod</span></code></p></td>
+<td><p><span class="lightgoldenrod">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">lightgoldenrod1</span></code></p></td>
+<td><p><span class="lightgoldenrod1">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">lightgoldenrod2</span></code></p></td>
+<td><p><span class="lightgoldenrod2">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">lightgoldenrod3</span></code></p></td>
+<td><p><span class="lightgoldenrod3">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">lightgoldenrod4</span></code></p></td>
+<td><p><span class="lightgoldenrod4">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">lightgoldenrodyellow</span></code></p></td>
+<td><p><span class="lightgoldenrodyellow">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">lightgray</span></code></p></td>
+<td><p><span class="lightgray">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">lightgreen</span></code></p></td>
+<td><p><span class="lightgreen">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">lightgrey</span></code></p></td>
+<td><p><span class="lightgrey">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">lightpink</span></code></p></td>
+<td><p><span class="lightpink">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">lightpink1</span></code></p></td>
+<td><p><span class="lightpink1">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">lightpink2</span></code></p></td>
+<td><p><span class="lightpink2">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">lightpink3</span></code></p></td>
+<td><p><span class="lightpink3">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">lightpink4</span></code></p></td>
+<td><p><span class="lightpink4">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">lightsalmon</span></code></p></td>
+<td><p><span class="lightsalmon">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">lightsalmon1</span></code></p></td>
+<td><p><span class="lightsalmon1">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">lightsalmon2</span></code></p></td>
+<td><p><span class="lightsalmon2">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">lightsalmon3</span></code></p></td>
+<td><p><span class="lightsalmon3">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">lightsalmon4</span></code></p></td>
+<td><p><span class="lightsalmon4">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">lightseagreen</span></code></p></td>
+<td><p><span class="lightseagreen">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">lightskyblue</span></code></p></td>
+<td><p><span class="lightskyblue">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">lightskyblue1</span></code></p></td>
+<td><p><span class="lightskyblue1">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">lightskyblue2</span></code></p></td>
+<td><p><span class="lightskyblue2">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">lightskyblue3</span></code></p></td>
+<td><p><span class="lightskyblue3">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">lightskyblue4</span></code></p></td>
+<td><p><span class="lightskyblue4">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">lightslateblue</span></code></p></td>
+<td><p><span class="lightslateblue">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">lightslategray</span></code></p></td>
+<td><p><span class="lightslategray">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">lightslategrey</span></code></p></td>
+<td><p><span class="lightslategrey">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">lightsteelblue</span></code></p></td>
+<td><p><span class="lightsteelblue">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">lightsteelblue1</span></code></p></td>
+<td><p><span class="lightsteelblue1">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">lightsteelblue2</span></code></p></td>
+<td><p><span class="lightsteelblue2">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">lightsteelblue3</span></code></p></td>
+<td><p><span class="lightsteelblue3">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">lightsteelblue4</span></code></p></td>
+<td><p><span class="lightsteelblue4">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">lightyellow</span></code></p></td>
+<td><p><span class="lightyellow">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">lightyellow1</span></code></p></td>
+<td><p><span class="lightyellow1">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">lightyellow2</span></code></p></td>
+<td><p><span class="lightyellow2">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">lightyellow3</span></code></p></td>
+<td><p><span class="lightyellow3">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">lightyellow4</span></code></p></td>
+<td><p><span class="lightyellow4">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">lime</span></code></p></td>
+<td><p><span class="lime">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">limegreen</span></code></p></td>
+<td><p><span class="limegreen">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">linen</span></code></p></td>
+<td><p><span class="linen">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">magenta</span></code></p></td>
+<td><p><span class="magenta">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">magenta1</span></code></p></td>
+<td><p><span class="magenta1">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">magenta2</span></code></p></td>
+<td><p><span class="magenta2">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">magenta3</span></code></p></td>
+<td><p><span class="magenta3">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">magenta4</span></code></p></td>
+<td><p><span class="magenta4">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">maroon</span></code></p></td>
+<td><p><span class="maroon">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">maroon1</span></code></p></td>
+<td><p><span class="maroon1">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">maroon2</span></code></p></td>
+<td><p><span class="maroon2">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">maroon3</span></code></p></td>
+<td><p><span class="maroon3">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">maroon4</span></code></p></td>
+<td><p><span class="maroon4">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">mediumaquamarine</span></code></p></td>
+<td><p><span class="mediumaquamarine">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">mediumblue</span></code></p></td>
+<td><p><span class="mediumblue">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">mediumorchid</span></code></p></td>
+<td><p><span class="mediumorchid">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">mediumorchid1</span></code></p></td>
+<td><p><span class="mediumorchid1">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">mediumorchid2</span></code></p></td>
+<td><p><span class="mediumorchid2">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">mediumorchid3</span></code></p></td>
+<td><p><span class="mediumorchid3">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">mediumorchid4</span></code></p></td>
+<td><p><span class="mediumorchid4">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">mediumpurple</span></code></p></td>
+<td><p><span class="mediumpurple">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">mediumpurple1</span></code></p></td>
+<td><p><span class="mediumpurple1">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">mediumpurple2</span></code></p></td>
+<td><p><span class="mediumpurple2">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">mediumpurple3</span></code></p></td>
+<td><p><span class="mediumpurple3">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">mediumpurple4</span></code></p></td>
+<td><p><span class="mediumpurple4">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">mediumseagreen</span></code></p></td>
+<td><p><span class="mediumseagreen">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">mediumslateblue</span></code></p></td>
+<td><p><span class="mediumslateblue">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">mediumspringgreen</span></code></p></td>
+<td><p><span class="mediumspringgreen">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">mediumturquoise</span></code></p></td>
+<td><p><span class="mediumturquoise">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">mediumvioletred</span></code></p></td>
+<td><p><span class="mediumvioletred">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">midnightblue</span></code></p></td>
+<td><p><span class="midnightblue">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">mintcream</span></code></p></td>
+<td><p><span class="mintcream">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">mistyrose</span></code></p></td>
+<td><p><span class="mistyrose">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">mistyrose1</span></code></p></td>
+<td><p><span class="mistyrose1">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">mistyrose2</span></code></p></td>
+<td><p><span class="mistyrose2">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">mistyrose3</span></code></p></td>
+<td><p><span class="mistyrose3">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">mistyrose4</span></code></p></td>
+<td><p><span class="mistyrose4">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">moccasin</span></code></p></td>
+<td><p><span class="moccasin">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">navajowhite</span></code></p></td>
+<td><p><span class="navajowhite">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">navajowhite1</span></code></p></td>
+<td><p><span class="navajowhite1">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">navajowhite2</span></code></p></td>
+<td><p><span class="navajowhite2">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">navajowhite3</span></code></p></td>
+<td><p><span class="navajowhite3">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">navajowhite4</span></code></p></td>
+<td><p><span class="navajowhite4">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">navy</span></code></p></td>
+<td><p><span class="navy">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">navyblue</span></code></p></td>
+<td><p><span class="navyblue">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">oldlace</span></code></p></td>
+<td><p><span class="oldlace">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">olive</span></code></p></td>
+<td><p><span class="olive">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">olivedrab</span></code></p></td>
+<td><p><span class="olivedrab">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">olivedrab1</span></code></p></td>
+<td><p><span class="olivedrab1">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">olivedrab2</span></code></p></td>
+<td><p><span class="olivedrab2">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">olivedrab3</span></code></p></td>
+<td><p><span class="olivedrab3">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">olivedrab4</span></code></p></td>
+<td><p><span class="olivedrab4">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">orange</span></code></p></td>
+<td><p><span class="orange">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">orange1</span></code></p></td>
+<td><p><span class="orange1">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">orange2</span></code></p></td>
+<td><p><span class="orange2">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">orange3</span></code></p></td>
+<td><p><span class="orange3">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">orange4</span></code></p></td>
+<td><p><span class="orange4">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">orangered</span></code></p></td>
+<td><p><span class="orangered">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">orangered1</span></code></p></td>
+<td><p><span class="orangered1">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">orangered2</span></code></p></td>
+<td><p><span class="orangered2">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">orangered3</span></code></p></td>
+<td><p><span class="orangered3">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">orangered4</span></code></p></td>
+<td><p><span class="orangered4">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">orchid</span></code></p></td>
+<td><p><span class="orchid">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">orchid1</span></code></p></td>
+<td><p><span class="orchid1">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">orchid2</span></code></p></td>
+<td><p><span class="orchid2">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">orchid3</span></code></p></td>
+<td><p><span class="orchid3">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">orchid4</span></code></p></td>
+<td><p><span class="orchid4">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">palegoldenrod</span></code></p></td>
+<td><p><span class="palegoldenrod">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">palegreen</span></code></p></td>
+<td><p><span class="palegreen">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">palegreen1</span></code></p></td>
+<td><p><span class="palegreen1">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">palegreen2</span></code></p></td>
+<td><p><span class="palegreen2">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">palegreen3</span></code></p></td>
+<td><p><span class="palegreen3">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">palegreen4</span></code></p></td>
+<td><p><span class="palegreen4">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">paleturquoise</span></code></p></td>
+<td><p><span class="paleturquoise">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">paleturquoise1</span></code></p></td>
+<td><p><span class="paleturquoise1">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">paleturquoise2</span></code></p></td>
+<td><p><span class="paleturquoise2">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">paleturquoise3</span></code></p></td>
+<td><p><span class="paleturquoise3">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">paleturquoise4</span></code></p></td>
+<td><p><span class="paleturquoise4">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">palevioletred</span></code></p></td>
+<td><p><span class="palevioletred">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">palevioletred1</span></code></p></td>
+<td><p><span class="palevioletred1">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">palevioletred2</span></code></p></td>
+<td><p><span class="palevioletred2">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">palevioletred3</span></code></p></td>
+<td><p><span class="palevioletred3">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">palevioletred4</span></code></p></td>
+<td><p><span class="palevioletred4">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">papayawhip</span></code></p></td>
+<td><p><span class="papayawhip">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">peachpuff</span></code></p></td>
+<td><p><span class="peachpuff">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">peachpuff1</span></code></p></td>
+<td><p><span class="peachpuff1">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">peachpuff2</span></code></p></td>
+<td><p><span class="peachpuff2">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">peachpuff3</span></code></p></td>
+<td><p><span class="peachpuff3">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">peachpuff4</span></code></p></td>
+<td><p><span class="peachpuff4">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">peru</span></code></p></td>
+<td><p><span class="peru">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">pink</span></code></p></td>
+<td><p><span class="pink">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">pink1</span></code></p></td>
+<td><p><span class="pink1">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">pink2</span></code></p></td>
+<td><p><span class="pink2">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">pink3</span></code></p></td>
+<td><p><span class="pink3">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">pink4</span></code></p></td>
+<td><p><span class="pink4">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plum</span></code></p></td>
+<td><p><span class="plum">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plum1</span></code></p></td>
+<td><p><span class="plum1">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plum2</span></code></p></td>
+<td><p><span class="plum2">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plum3</span></code></p></td>
+<td><p><span class="plum3">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plum4</span></code></p></td>
+<td><p><span class="plum4">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">powderblue</span></code></p></td>
+<td><p><span class="powderblue">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">purple</span></code></p></td>
+<td><p><span class="purple">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">purple1</span></code></p></td>
+<td><p><span class="purple1">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">purple2</span></code></p></td>
+<td><p><span class="purple2">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">purple3</span></code></p></td>
+<td><p><span class="purple3">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">purple4</span></code></p></td>
+<td><p><span class="purple4">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">red</span></code></p></td>
+<td><p><span class="red">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">red1</span></code></p></td>
+<td><p><span class="red1">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">red2</span></code></p></td>
+<td><p><span class="red2">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">red3</span></code></p></td>
+<td><p><span class="red3">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">red4</span></code></p></td>
+<td><p><span class="red4">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">rosybrown</span></code></p></td>
+<td><p><span class="rosybrown">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">rosybrown1</span></code></p></td>
+<td><p><span class="rosybrown1">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">rosybrown2</span></code></p></td>
+<td><p><span class="rosybrown2">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">rosybrown3</span></code></p></td>
+<td><p><span class="rosybrown3">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">rosybrown4</span></code></p></td>
+<td><p><span class="rosybrown4">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">royalblue</span></code></p></td>
+<td><p><span class="royalblue">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">royalblue1</span></code></p></td>
+<td><p><span class="royalblue1">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">royalblue2</span></code></p></td>
+<td><p><span class="royalblue2">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">royalblue3</span></code></p></td>
+<td><p><span class="royalblue3">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">royalblue4</span></code></p></td>
+<td><p><span class="royalblue4">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">saddlebrown</span></code></p></td>
+<td><p><span class="saddlebrown">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">salmon</span></code></p></td>
+<td><p><span class="salmon">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">salmon1</span></code></p></td>
+<td><p><span class="salmon1">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">salmon2</span></code></p></td>
+<td><p><span class="salmon2">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">salmon3</span></code></p></td>
+<td><p><span class="salmon3">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">salmon4</span></code></p></td>
+<td><p><span class="salmon4">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">sandybrown</span></code></p></td>
+<td><p><span class="sandybrown">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">seagreen</span></code></p></td>
+<td><p><span class="seagreen">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">seagreen1</span></code></p></td>
+<td><p><span class="seagreen1">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">seagreen2</span></code></p></td>
+<td><p><span class="seagreen2">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">seagreen3</span></code></p></td>
+<td><p><span class="seagreen3">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">seagreen4</span></code></p></td>
+<td><p><span class="seagreen4">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">seashell</span></code></p></td>
+<td><p><span class="seashell">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">seashell1</span></code></p></td>
+<td><p><span class="seashell1">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">seashell2</span></code></p></td>
+<td><p><span class="seashell2">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">seashell3</span></code></p></td>
+<td><p><span class="seashell3">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">seashell4</span></code></p></td>
+<td><p><span class="seashell4">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">sienna</span></code></p></td>
+<td><p><span class="sienna">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">sienna1</span></code></p></td>
+<td><p><span class="sienna1">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">sienna2</span></code></p></td>
+<td><p><span class="sienna2">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">sienna3</span></code></p></td>
+<td><p><span class="sienna3">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">sienna4</span></code></p></td>
+<td><p><span class="sienna4">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">silver</span></code></p></td>
+<td><p><span class="silver">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">skyblue</span></code></p></td>
+<td><p><span class="skyblue">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">skyblue1</span></code></p></td>
+<td><p><span class="skyblue1">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">skyblue2</span></code></p></td>
+<td><p><span class="skyblue2">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">skyblue3</span></code></p></td>
+<td><p><span class="skyblue3">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">skyblue4</span></code></p></td>
+<td><p><span class="skyblue4">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">slateblue</span></code></p></td>
+<td><p><span class="slateblue">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">slateblue1</span></code></p></td>
+<td><p><span class="slateblue1">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">slateblue2</span></code></p></td>
+<td><p><span class="slateblue2">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">slateblue3</span></code></p></td>
+<td><p><span class="slateblue3">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">slateblue4</span></code></p></td>
+<td><p><span class="slateblue4">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">slategray</span></code></p></td>
+<td><p><span class="slategray">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">slategray1</span></code></p></td>
+<td><p><span class="slategray1">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">slategray2</span></code></p></td>
+<td><p><span class="slategray2">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">slategray3</span></code></p></td>
+<td><p><span class="slategray3">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">slategray4</span></code></p></td>
+<td><p><span class="slategray4">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">slategrey</span></code></p></td>
+<td><p><span class="slategrey">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">snow</span></code></p></td>
+<td><p><span class="snow">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">snow1</span></code></p></td>
+<td><p><span class="snow1">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">snow2</span></code></p></td>
+<td><p><span class="snow2">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">snow3</span></code></p></td>
+<td><p><span class="snow3">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">snow4</span></code></p></td>
+<td><p><span class="snow4">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">springgreen</span></code></p></td>
+<td><p><span class="springgreen">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">springgreen1</span></code></p></td>
+<td><p><span class="springgreen1">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">springgreen2</span></code></p></td>
+<td><p><span class="springgreen2">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">springgreen3</span></code></p></td>
+<td><p><span class="springgreen3">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">springgreen4</span></code></p></td>
+<td><p><span class="springgreen4">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">steelblue</span></code></p></td>
+<td><p><span class="steelblue">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">steelblue1</span></code></p></td>
+<td><p><span class="steelblue1">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">steelblue2</span></code></p></td>
+<td><p><span class="steelblue2">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">steelblue3</span></code></p></td>
+<td><p><span class="steelblue3">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">steelblue4</span></code></p></td>
+<td><p><span class="steelblue4">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">tan</span></code></p></td>
+<td><p><span class="tan">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">tan1</span></code></p></td>
+<td><p><span class="tan1">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">tan2</span></code></p></td>
+<td><p><span class="tan2">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">tan3</span></code></p></td>
+<td><p><span class="tan3">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">tan4</span></code></p></td>
+<td><p><span class="tan4">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">teal</span></code></p></td>
+<td><p><span class="teal">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">thistle</span></code></p></td>
+<td><p><span class="thistle">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">thistle1</span></code></p></td>
+<td><p><span class="thistle1">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">thistle2</span></code></p></td>
+<td><p><span class="thistle2">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">thistle3</span></code></p></td>
+<td><p><span class="thistle3">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">thistle4</span></code></p></td>
+<td><p><span class="thistle4">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">tomato</span></code></p></td>
+<td><p><span class="tomato">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">tomato1</span></code></p></td>
+<td><p><span class="tomato1">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">tomato2</span></code></p></td>
+<td><p><span class="tomato2">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">tomato3</span></code></p></td>
+<td><p><span class="tomato3">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">tomato4</span></code></p></td>
+<td><p><span class="tomato4">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">turquoise</span></code></p></td>
+<td><p><span class="turquoise">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">turquoise1</span></code></p></td>
+<td><p><span class="turquoise1">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">turquoise2</span></code></p></td>
+<td><p><span class="turquoise2">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">turquoise3</span></code></p></td>
+<td><p><span class="turquoise3">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">turquoise4</span></code></p></td>
+<td><p><span class="turquoise4">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">violet</span></code></p></td>
+<td><p><span class="violet">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">violetred</span></code></p></td>
+<td><p><span class="violetred">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">violetred1</span></code></p></td>
+<td><p><span class="violetred1">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">violetred2</span></code></p></td>
+<td><p><span class="violetred2">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">violetred3</span></code></p></td>
+<td><p><span class="violetred3">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">violetred4</span></code></p></td>
+<td><p><span class="violetred4">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">wheat</span></code></p></td>
+<td><p><span class="wheat">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">wheat1</span></code></p></td>
+<td><p><span class="wheat1">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">wheat2</span></code></p></td>
+<td><p><span class="wheat2">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">wheat3</span></code></p></td>
+<td><p><span class="wheat3">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">wheat4</span></code></p></td>
+<td><p><span class="wheat4">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">white</span></code></p></td>
+<td><p><span class="white">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">whitesmoke</span></code></p></td>
+<td><p><span class="whitesmoke">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">yellow</span></code></p></td>
+<td><p><span class="yellow">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">yellow1</span></code></p></td>
+<td><p><span class="yellow1">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">yellow2</span></code></p></td>
+<td><p><span class="yellow2">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">yellow3</span></code></p></td>
+<td><p><span class="yellow3">████████</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">yellow4</span></code></p></td>
+<td><p><span class="yellow4">████████</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">yellowgreen</span></code></p></td>
+<td><p><span class="yellowgreen">████████</span></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+
+
+<br /><br />
+<hr />
+<a href="https://github.com/pygame/pygame/edit/main/docs/reST/ref/color_list.rst" rel="nofollow">Edit on GitHub</a>
+            <div class="clearer"></div>
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="cursors.html" title="pygame.cursors"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="color.html" title="pygame.Color"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">pygame v2.5.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Named Colors</a></li>
+    <script type="text/javascript" src="https://www.pygame.org/comment/jquery.plugin.docscomments.js"></script>
+
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2000-2023, pygame developers.
+    </div>
+  </body>
+</html>

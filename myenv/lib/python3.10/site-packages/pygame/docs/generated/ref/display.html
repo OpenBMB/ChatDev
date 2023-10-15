@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>pygame.display &#8212; pygame v2.5.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygame.css?v=71ee6cc2" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=ba44479e"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <link rel="icon" href="../_static/pygame.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="pygame.draw" href="draw.html" />
+    <link rel="prev" title="pygame.cursors" href="cursors.html" /> 
+  </head><body>  
+
+    <div class="document">
+
+  <div class="header">
+	<div class="flex-container">
+	<div class="logo">
+	  <a href="https://www.pygame.org/">
+	    <img src="../_static/pygame_tiny.png"/>
+	  </a>
+	  <h5>pygame documentation</h5>
+	</div>
+	<div class="pagelinks">
+	  <div class="top">
+	    <a href="https://www.pygame.org/">Pygame Home</a> ||
+	    <a href="../index.html">Help Contents</a> ||
+	    <a href="../genindex.html">Reference Index</a>
+
+        <form action="../search.html" method="get" style="display:inline;float:right;">
+          <input name="q" value="" type="text">
+          <input value="search" type="submit">
+        </form>
+	  </div>
+	  <hr style="color:black;border-bottom:none;border-style: dotted;border-bottom-style:none;">
+	  <p class="bottom"><b>Most useful stuff</b>:
+	    <a href="color.html">Color</a> | 
+	    <a href="display.html">display</a> | 
+	    <a href="draw.html">draw</a> | 
+	    <a href="event.html">event</a> | 
+	    <a href="font.html">font</a> | 
+	    <a href="image.html">image</a> | 
+	    <a href="key.html">key</a> | 
+	    <a href="locals.html">locals</a> | 
+	    <a href="mixer.html">mixer</a> | 
+	    <a href="mouse.html">mouse</a> | 
+	    <a href="rect.html">Rect</a> | 
+	    <a href="surface.html">Surface</a> | 
+	    <a href="time.html">time</a> | 
+	    <a href="music.html">music</a> | 
+	    <a href="pygame.html">pygame</a>
+	  </p>
+
+	  <p class="bottom"><b>Advanced stuff</b>:
+	    <a href="cursors.html">cursors</a> | 
+	    <a href="joystick.html">joystick</a> | 
+	    <a href="mask.html">mask</a> | 
+	    <a href="sprite.html">sprite</a> | 
+	    <a href="transform.html">transform</a> | 
+	    <a href="bufferproxy.html">BufferProxy</a> | 
+	    <a href="freetype.html">freetype</a> | 
+	    <a href="gfxdraw.html">gfxdraw</a> | 
+	    <a href="midi.html">midi</a> | 
+	    <a href="pixelarray.html">PixelArray</a> | 
+	    <a href="pixelcopy.html">pixelcopy</a> | 
+	    <a href="sndarray.html">sndarray</a> | 
+	    <a href="surfarray.html">surfarray</a> | 
+	    <a href="math.html">math</a>
+	  </p>
+
+	  <p class="bottom"><b>Other</b>:
+	    <a href="camera.html">camera</a> | 
+	    <a href="sdl2_controller.html#module-pygame._sdl2.controller">controller</a> | 
+	    <a href="examples.html">examples</a> | 
+	    <a href="fastevent.html">fastevent</a> | 
+	    <a href="scrap.html">scrap</a> | 
+	    <a href="tests.html">tests</a> | 
+	    <a href="touch.html">touch</a> | 
+	    <a href="pygame.html#module-pygame.version">version</a>
+	  </p>
+</div>
+</div>
+  </div>
+
+      <div class="documentwrapper">
+          <div class="body" role="main">
+            
+<section id="module-pygame.display">
+<span id="pygame-display"></span><dl class="definition">
+<dt class="title module sig sig-object">
+<code class="docutils literal notranslate"><span class="pre">pygame.display</span></code></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">pygame module to control the display window and screen</span></div>
+</div>
+<table class="toc docutils align-default">
+<tbody>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="display.html#pygame.display.init">pygame.display.init</a></div>
+</td>
+<td>—</td>
+<td>Initialize the display module</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="display.html#pygame.display.quit">pygame.display.quit</a></div>
+</td>
+<td>—</td>
+<td>Uninitialize the display module</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="display.html#pygame.display.get_init">pygame.display.get_init</a></div>
+</td>
+<td>—</td>
+<td>Returns True if the display module has been initialized</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="display.html#pygame.display.set_mode">pygame.display.set_mode</a></div>
+</td>
+<td>—</td>
+<td>Initialize a window or screen for display</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="display.html#pygame.display.get_surface">pygame.display.get_surface</a></div>
+</td>
+<td>—</td>
+<td>Get a reference to the currently set display surface</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="display.html#pygame.display.flip">pygame.display.flip</a></div>
+</td>
+<td>—</td>
+<td>Update the full display Surface to the screen</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="display.html#pygame.display.update">pygame.display.update</a></div>
+</td>
+<td>—</td>
+<td>Update portions of the screen for software displays</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="display.html#pygame.display.get_driver">pygame.display.get_driver</a></div>
+</td>
+<td>—</td>
+<td>Get the name of the pygame display backend</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="display.html#pygame.display.Info">pygame.display.Info</a></div>
+</td>
+<td>—</td>
+<td>Create a video display information object</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="display.html#pygame.display.get_wm_info">pygame.display.get_wm_info</a></div>
+</td>
+<td>—</td>
+<td>Get information about the current windowing system</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="display.html#pygame.display.get_desktop_sizes">pygame.display.get_desktop_sizes</a></div>
+</td>
+<td>—</td>
+<td>Get sizes of active desktops</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="display.html#pygame.display.list_modes">pygame.display.list_modes</a></div>
+</td>
+<td>—</td>
+<td>Get list of available fullscreen modes</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="display.html#pygame.display.mode_ok">pygame.display.mode_ok</a></div>
+</td>
+<td>—</td>
+<td>Pick the best color depth for a display mode</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="display.html#pygame.display.gl_get_attribute">pygame.display.gl_get_attribute</a></div>
+</td>
+<td>—</td>
+<td>Get the value for an OpenGL flag for the current display</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="display.html#pygame.display.gl_set_attribute">pygame.display.gl_set_attribute</a></div>
+</td>
+<td>—</td>
+<td>Request an OpenGL display attribute for the display mode</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="display.html#pygame.display.get_active">pygame.display.get_active</a></div>
+</td>
+<td>—</td>
+<td>Returns True when the display is active on the screen</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="display.html#pygame.display.iconify">pygame.display.iconify</a></div>
+</td>
+<td>—</td>
+<td>Iconify the display surface</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="display.html#pygame.display.toggle_fullscreen">pygame.display.toggle_fullscreen</a></div>
+</td>
+<td>—</td>
+<td>Switch between fullscreen and windowed displays</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="display.html#pygame.display.set_gamma">pygame.display.set_gamma</a></div>
+</td>
+<td>—</td>
+<td>Change the hardware gamma ramps</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="display.html#pygame.display.set_gamma_ramp">pygame.display.set_gamma_ramp</a></div>
+</td>
+<td>—</td>
+<td>Change the hardware gamma ramps with a custom lookup</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="display.html#pygame.display.set_icon">pygame.display.set_icon</a></div>
+</td>
+<td>—</td>
+<td>Change the system image for the display window</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="display.html#pygame.display.set_caption">pygame.display.set_caption</a></div>
+</td>
+<td>—</td>
+<td>Set the current window caption</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="display.html#pygame.display.get_caption">pygame.display.get_caption</a></div>
+</td>
+<td>—</td>
+<td>Get the current window caption</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="display.html#pygame.display.set_palette">pygame.display.set_palette</a></div>
+</td>
+<td>—</td>
+<td>Set the display color palette for indexed displays</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="display.html#pygame.display.get_num_displays">pygame.display.get_num_displays</a></div>
+</td>
+<td>—</td>
+<td>Return the number of displays</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="display.html#pygame.display.get_window_size">pygame.display.get_window_size</a></div>
+</td>
+<td>—</td>
+<td>Return the size of the window or screen</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="display.html#pygame.display.get_allow_screensaver">pygame.display.get_allow_screensaver</a></div>
+</td>
+<td>—</td>
+<td>Return whether the screensaver is allowed to run.</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="display.html#pygame.display.set_allow_screensaver">pygame.display.set_allow_screensaver</a></div>
+</td>
+<td>—</td>
+<td>Set whether the screensaver may run</td>
+</tr>
+</tbody>
+</table>
+<p>This module offers control over the pygame display. Pygame has a single display
+Surface that is either contained in a window or runs full screen. Once you
+create the display you treat it as a regular Surface. Changes are not
+immediately visible onscreen; you must choose one of the two flipping functions
+to update the actual display.</p>
+<p>The origin of the display, where x = 0 and y = 0, is the top left of the
+screen. Both axes increase positively towards the bottom right of the screen.</p>
+<p>The pygame display can actually be initialized in one of several modes. By
+default, the display is a basic software driven framebuffer. You can request
+special modules like automatic scaling or OpenGL support. These are
+controlled by flags passed to <code class="docutils literal notranslate"><span class="pre">pygame.display.set_mode()</span></code>.</p>
+<p>Pygame can only have a single display active at any time. Creating a new one
+with <code class="docutils literal notranslate"><span class="pre">pygame.display.set_mode()</span></code> will close the previous display. To detect
+the number and size of attached screens, you can use
+<code class="docutils literal notranslate"><span class="pre">pygame.display.get_desktop_sizes</span></code> and then select appropriate window size
+and display index to pass to <code class="docutils literal notranslate"><span class="pre">pygame.display.set_mode()</span></code>.</p>
+<p>For backward compatibility <code class="docutils literal notranslate"><span class="pre">pygame.display</span></code> allows precise control over
+the pixel format or display resolutions. This used to be necessary with old
+graphics cards and CRT screens, but is usually not needed any more. Use the
+functions <code class="docutils literal notranslate"><span class="pre">pygame.display.mode_ok()</span></code>, <code class="docutils literal notranslate"><span class="pre">pygame.display.list_modes()</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">pygame.display.Info()</span></code> to query detailed information about the display.</p>
+<p>Once the display Surface is created, the functions from this module affect the
+single existing display. The Surface becomes invalid if the module is
+uninitialized. If a new display mode is set, the existing Surface will
+automatically switch to operate on the new display.</p>
+<p>When the display mode is set, several events are placed on the pygame event
+queue. <code class="docutils literal notranslate"><span class="pre">pygame.QUIT</span></code> is sent when the user has requested the program to
+shut down. The window will receive <code class="docutils literal notranslate"><span class="pre">pygame.ACTIVEEVENT</span></code> events as the display
+gains and loses input focus. If the display is set with the
+<code class="docutils literal notranslate"><span class="pre">pygame.RESIZABLE</span></code> flag, <code class="docutils literal notranslate"><span class="pre">pygame.VIDEORESIZE</span></code> events will be sent when the
+user adjusts the window dimensions. Hardware displays that draw direct to the
+screen will get <code class="docutils literal notranslate"><span class="pre">pygame.VIDEOEXPOSE</span></code> events when portions of the window must
+be redrawn.</p>
+<p>A new windowevent API was introduced in pygame 2.0.1. Check event module docs
+for more information on that</p>
+<p>Some display environments have an option for automatically stretching all
+windows. When this option is enabled, this automatic stretching distorts the
+appearance of the pygame window. In the pygame examples directory, there is
+example code (prevent_display_stretching.py) which shows how to disable this
+automatic stretching of the pygame display on Microsoft Windows (Vista or newer
+required).</p>
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.display.init">
+<span class="sig-prename descclassname"><span class="pre">pygame.display.</span></span><span class="sig-name descname"><span class="pre">init</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.display.init" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Initialize the display module</span></div>
+<div class="line"><span class="signature">init() -&gt; None</span></div>
+</div>
+<p>Initializes the pygame display module. The display module cannot do anything
+until it is initialized. This is usually handled for you automatically when
+you call the higher level <code class="docutils literal notranslate"><span class="pre">pygame.init()</span></code>.</p>
+<p>Pygame will select from one of several internal display backends when it is
+initialized. The display mode will be chosen depending on the platform and
+permissions of current user. Before the display module is initialized the
+environment variable <code class="docutils literal notranslate"><span class="pre">SDL_VIDEODRIVER</span></code> can be set to control which backend
+is used. The systems with multiple choices are listed here.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Windows</span> <span class="p">:</span> <span class="n">windib</span><span class="p">,</span> <span class="n">directx</span>
+<span class="n">Unix</span>    <span class="p">:</span> <span class="n">x11</span><span class="p">,</span> <span class="n">dga</span><span class="p">,</span> <span class="n">fbcon</span><span class="p">,</span> <span class="n">directfb</span><span class="p">,</span> <span class="n">ggi</span><span class="p">,</span> <span class="n">vgl</span><span class="p">,</span> <span class="n">svgalib</span><span class="p">,</span> <span class="n">aalib</span>
+</pre></div>
+</div>
+<p>On some platforms it is possible to embed the pygame display into an already
+existing window. To do this, the environment variable <code class="docutils literal notranslate"><span class="pre">SDL_WINDOWID</span></code> must
+be set to a string containing the window id or handle. The environment
+variable is checked when the pygame display is initialized. Be aware that
+there can be many strange side effects when running in an embedded display.</p>
+<p>It is harmless to call this more than once, repeated calls have no effect.</p>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.display.quit">
+<span class="sig-prename descclassname"><span class="pre">pygame.display.</span></span><span class="sig-name descname"><span class="pre">quit</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.display.quit" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Uninitialize the display module</span></div>
+<div class="line"><span class="signature">quit() -&gt; None</span></div>
+</div>
+<p>This will shut down the entire display module. This means any active
+displays will be closed. This will also be handled automatically when the
+program exits.</p>
+<p>It is harmless to call this more than once, repeated calls have no effect.</p>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.display.get_init">
+<span class="sig-prename descclassname"><span class="pre">pygame.display.</span></span><span class="sig-name descname"><span class="pre">get_init</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.display.get_init" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Returns True if the display module has been initialized</span></div>
+<div class="line"><span class="signature">get_init() -&gt; bool</span></div>
+</div>
+<p>Returns True if the <a class="tooltip reference internal" href="#module-pygame.display" title=""><code class="xref py py-mod docutils literal notranslate"><span class="pre">pygame.display</span></code><span class="tooltip-content">pygame module to control the display window and screen</span></a> module is currently initialized.</p>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.display.set_mode">
+<span class="sig-prename descclassname"><span class="pre">pygame.display.</span></span><span class="sig-name descname"><span class="pre">set_mode</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.display.set_mode" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Initialize a window or screen for display</span></div>
+<div class="line"><span class="signature">set_mode(size=(0, 0), flags=0, depth=0, display=0, vsync=0) -&gt; Surface</span></div>
+</div>
+<p>This function will create a display Surface. The arguments passed in are
+requests for a display type. The actual created display will be the best
+possible match supported by the system.</p>
+<p>Note that calling this function implicitly initializes <code class="docutils literal notranslate"><span class="pre">pygame.display</span></code>, if
+it was not initialized before.</p>
+<p>The size argument is a pair of numbers representing the width and
+height. The flags argument is a collection of additional options. The depth
+argument represents the number of bits to use for color.</p>
+<p>The Surface that gets returned can be drawn to like a regular Surface but
+changes will eventually be seen on the monitor.</p>
+<p>If no size is passed or is set to <code class="docutils literal notranslate"><span class="pre">(0,</span> <span class="pre">0)</span></code> and pygame uses <code class="docutils literal notranslate"><span class="pre">SDL</span></code>
+version 1.2.10 or above, the created Surface will have the same size as the
+current screen resolution. If only the width or height are set to <code class="docutils literal notranslate"><span class="pre">0</span></code>, the
+Surface will have the same width or height as the screen resolution. Using a
+<code class="docutils literal notranslate"><span class="pre">SDL</span></code> version prior to 1.2.10 will raise an exception.</p>
+<p>It is usually best to not pass the depth argument. It will default to the
+best and fastest color depth for the system. If your game requires a
+specific color format you can control the depth with this argument. Pygame
+will emulate an unavailable color depth which can be slow.</p>
+<p>When requesting fullscreen display modes, sometimes an exact match for the
+requested size cannot be made. In these situations pygame will select
+the closest compatible match. The returned surface will still always match
+the requested size.</p>
+<p>On high resolution displays(4k, 1080p) and tiny graphics games (640x480)
+show up very small so that they are unplayable. SCALED scales up the window
+for you. The game thinks it's a 640x480 window, but really it can be bigger.
+Mouse events are scaled for you, so your game doesn't need to do it. Note
+that SCALED is considered an experimental API and may change in future
+releases.</p>
+<p>The flags argument controls which type of display you want. There are
+several to choose from, and you can even combine multiple types using the
+bitwise or operator, (the pipe &quot;|&quot; character). Here are the display
+flags you will want to choose from:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pygame</span><span class="o">.</span><span class="n">FULLSCREEN</span>    <span class="n">create</span> <span class="n">a</span> <span class="n">fullscreen</span> <span class="n">display</span>
+<span class="n">pygame</span><span class="o">.</span><span class="n">DOUBLEBUF</span>     <span class="n">only</span> <span class="n">applicable</span> <span class="k">with</span> <span class="n">OPENGL</span>
+<span class="n">pygame</span><span class="o">.</span><span class="n">HWSURFACE</span>     <span class="p">(</span><span class="n">obsolete</span> <span class="ow">in</span> <span class="n">pygame</span> <span class="mi">2</span><span class="p">)</span> <span class="n">hardware</span> <span class="n">accelerated</span><span class="p">,</span> <span class="n">only</span> <span class="ow">in</span> <span class="n">FULLSCREEN</span>
+<span class="n">pygame</span><span class="o">.</span><span class="n">OPENGL</span>        <span class="n">create</span> <span class="n">an</span> <span class="n">OpenGL</span><span class="o">-</span><span class="n">renderable</span> <span class="n">display</span>
+<span class="n">pygame</span><span class="o">.</span><span class="n">RESIZABLE</span>     <span class="n">display</span> <span class="n">window</span> <span class="n">should</span> <span class="n">be</span> <span class="n">sizeable</span>
+<span class="n">pygame</span><span class="o">.</span><span class="n">NOFRAME</span>       <span class="n">display</span> <span class="n">window</span> <span class="n">will</span> <span class="n">have</span> <span class="n">no</span> <span class="n">border</span> <span class="ow">or</span> <span class="n">controls</span>
+<span class="n">pygame</span><span class="o">.</span><span class="n">SCALED</span>        <span class="n">resolution</span> <span class="n">depends</span> <span class="n">on</span> <span class="n">desktop</span> <span class="n">size</span> <span class="ow">and</span> <span class="n">scale</span> <span class="n">graphics</span>
+<span class="n">pygame</span><span class="o">.</span><span class="n">SHOWN</span>         <span class="n">window</span> <span class="ow">is</span> <span class="n">opened</span> <span class="ow">in</span> <span class="n">visible</span> <span class="n">mode</span> <span class="p">(</span><span class="n">default</span><span class="p">)</span>
+<span class="n">pygame</span><span class="o">.</span><span class="n">HIDDEN</span>        <span class="n">window</span> <span class="ow">is</span> <span class="n">opened</span> <span class="ow">in</span> <span class="n">hidden</span> <span class="n">mode</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 2.0.0: </span><code class="docutils literal notranslate"><span class="pre">SCALED</span></code>, <code class="docutils literal notranslate"><span class="pre">SHOWN</span></code> and <code class="docutils literal notranslate"><span class="pre">HIDDEN</span></code></p>
+</div>
+<p>By setting the <code class="docutils literal notranslate"><span class="pre">vsync</span></code> parameter to <code class="docutils literal notranslate"><span class="pre">1</span></code>, it is possible to get a display
+with vertical sync, but you are not guaranteed to get one. The request only
+works at all for calls to <code class="docutils literal notranslate"><span class="pre">set_mode()</span></code> with the <code class="docutils literal notranslate"><span class="pre">pygame.OPENGL</span></code> or
+<code class="docutils literal notranslate"><span class="pre">pygame.SCALED</span></code> flags set, and is still not guaranteed even with one of
+those set. What you get depends on the hardware and driver configuration
+of the system pygame is running on. Here is an example usage of a call
+to <code class="docutils literal notranslate"><span class="pre">set_mode()</span></code> that may give you a display with vsync:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">flags</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">OPENGL</span> <span class="o">|</span> <span class="n">pygame</span><span class="o">.</span><span class="n">FULLSCREEN</span>
+<span class="n">window_surface</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">set_mode</span><span class="p">((</span><span class="mi">1920</span><span class="p">,</span> <span class="mi">1080</span><span class="p">),</span> <span class="n">flags</span><span class="p">,</span> <span class="n">vsync</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Vsync behaviour is considered experimental, and may change in future releases.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 2.0.0: </span><code class="docutils literal notranslate"><span class="pre">vsync</span></code></p>
+</div>
+<p>Basic example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Open a window on the screen</span>
+<span class="n">screen_width</span><span class="o">=</span><span class="mi">700</span>
+<span class="n">screen_height</span><span class="o">=</span><span class="mi">400</span>
+<span class="n">screen</span><span class="o">=</span><span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">set_mode</span><span class="p">([</span><span class="n">screen_width</span><span class="p">,</span> <span class="n">screen_height</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>The display index <code class="docutils literal notranslate"><span class="pre">0</span></code> means the default display is used. If no display
+index argument is provided, the default display can be overridden with an
+environment variable.</p>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in pygame 1.9.5: </span><code class="docutils literal notranslate"><span class="pre">display</span></code> argument added</p>
+</div>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in pygame 2.1.3: </span>pygame now ensures that subsequent calls to this function clears the
+window to black. On older versions, this was an implementation detail
+on the major platforms this function was tested with.</p>
+</div>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.display.get_surface">
+<span class="sig-prename descclassname"><span class="pre">pygame.display.</span></span><span class="sig-name descname"><span class="pre">get_surface</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.display.get_surface" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Get a reference to the currently set display surface</span></div>
+<div class="line"><span class="signature">get_surface() -&gt; Surface</span></div>
+</div>
+<p>Return a reference to the currently set display Surface. If no display mode
+has been set this will return None.</p>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.display.flip">
+<span class="sig-prename descclassname"><span class="pre">pygame.display.</span></span><span class="sig-name descname"><span class="pre">flip</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.display.flip" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Update the full display Surface to the screen</span></div>
+<div class="line"><span class="signature">flip() -&gt; None</span></div>
+</div>
+<p>This will update the contents of the entire display. If your display mode is
+using the flags <code class="docutils literal notranslate"><span class="pre">pygame.HWSURFACE</span></code> and <code class="docutils literal notranslate"><span class="pre">pygame.DOUBLEBUF</span></code> on pygame 1,
+this will wait for a vertical retrace and swap the surfaces.</p>
+<p>When using an <code class="docutils literal notranslate"><span class="pre">pygame.OPENGL</span></code> display mode this will perform a gl buffer
+swap.</p>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.display.update">
+<span class="sig-prename descclassname"><span class="pre">pygame.display.</span></span><span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.display.update" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Update portions of the screen for software displays</span></div>
+<div class="line"><span class="signature">update(rectangle=None) -&gt; None</span></div>
+<div class="line"><span class="signature">update(rectangle_list) -&gt; None</span></div>
+</div>
+<p>This function is like an optimized version of <code class="docutils literal notranslate"><span class="pre">pygame.display.flip()</span></code> for
+software displays. It allows only a portion of the screen to be updated,
+instead of the entire area. If no argument is passed it updates the entire
+Surface area like <code class="docutils literal notranslate"><span class="pre">pygame.display.flip()</span></code>.</p>
+<p>Note that calling <code class="docutils literal notranslate"><span class="pre">display.update(None)</span></code> means no part of the window is
+updated. Whereas <code class="docutils literal notranslate"><span class="pre">display.update()</span></code> means the whole window is updated.</p>
+<p>You can pass the function a single rectangle, or a sequence of rectangles.
+It is more efficient to pass many rectangles at once than to call update
+multiple times with single or a partial list of rectangles. If passing a
+sequence of rectangles it is safe to include None values in the list, which
+will be skipped.</p>
+<p>This call cannot be used on <code class="docutils literal notranslate"><span class="pre">pygame.OPENGL</span></code> displays and will generate an
+exception.</p>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.display.get_driver">
+<span class="sig-prename descclassname"><span class="pre">pygame.display.</span></span><span class="sig-name descname"><span class="pre">get_driver</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.display.get_driver" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Get the name of the pygame display backend</span></div>
+<div class="line"><span class="signature">get_driver() -&gt; name</span></div>
+</div>
+<p>Pygame chooses one of many available display backends when it is
+initialized. This returns the internal name used for the display backend.
+This can be used to provide limited information about what display
+capabilities might be accelerated. See the <code class="docutils literal notranslate"><span class="pre">SDL_VIDEODRIVER</span></code> flags in
+<code class="docutils literal notranslate"><span class="pre">pygame.display.set_mode()</span></code> to see some of the common options.</p>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.display.Info">
+<span class="sig-prename descclassname"><span class="pre">pygame.display.</span></span><span class="sig-name descname"><span class="pre">Info</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.display.Info" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Create a video display information object</span></div>
+<div class="line"><span class="signature">Info() -&gt; VideoInfo</span></div>
+</div>
+<p>Creates a simple object containing several attributes to describe the
+current graphics environment. If this is called before
+<code class="docutils literal notranslate"><span class="pre">pygame.display.set_mode()</span></code> some platforms can provide information about
+the default display mode. This can also be called after setting the display
+mode to verify specific display options were satisfied. The VidInfo object
+has several attributes:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">hw</span><span class="p">:</span>         <span class="mi">1</span> <span class="k">if</span> <span class="n">the</span> <span class="n">display</span> <span class="ow">is</span> <span class="n">hardware</span> <span class="n">accelerated</span>
+<span class="n">wm</span><span class="p">:</span>         <span class="mi">1</span> <span class="k">if</span> <span class="n">windowed</span> <span class="n">display</span> <span class="n">modes</span> <span class="n">can</span> <span class="n">be</span> <span class="n">used</span>
+<span class="n">video_mem</span><span class="p">:</span>  <span class="n">The</span> <span class="n">megabytes</span> <span class="n">of</span> <span class="n">video</span> <span class="n">memory</span> <span class="n">on</span> <span class="n">the</span> <span class="n">display</span><span class="o">.</span> <span class="n">This</span> <span class="ow">is</span> <span class="mi">0</span> <span class="k">if</span>
+            <span class="n">unknown</span>
+<span class="n">bitsize</span><span class="p">:</span>    <span class="n">Number</span> <span class="n">of</span> <span class="n">bits</span> <span class="n">used</span> <span class="n">to</span> <span class="n">store</span> <span class="n">each</span> <span class="n">pixel</span>
+<span class="n">bytesize</span><span class="p">:</span>   <span class="n">Number</span> <span class="n">of</span> <span class="nb">bytes</span> <span class="n">used</span> <span class="n">to</span> <span class="n">store</span> <span class="n">each</span> <span class="n">pixel</span>
+<span class="n">masks</span><span class="p">:</span>      <span class="n">Four</span> <span class="n">values</span> <span class="n">used</span> <span class="n">to</span> <span class="n">pack</span> <span class="n">RGBA</span> <span class="n">values</span> <span class="n">into</span> <span class="n">pixels</span>
+<span class="n">shifts</span><span class="p">:</span>     <span class="n">Four</span> <span class="n">values</span> <span class="n">used</span> <span class="n">to</span> <span class="n">pack</span> <span class="n">RGBA</span> <span class="n">values</span> <span class="n">into</span> <span class="n">pixels</span>
+<span class="n">losses</span><span class="p">:</span>     <span class="n">Four</span> <span class="n">values</span> <span class="n">used</span> <span class="n">to</span> <span class="n">pack</span> <span class="n">RGBA</span> <span class="n">values</span> <span class="n">into</span> <span class="n">pixels</span>
+<span class="n">blit_hw</span><span class="p">:</span>    <span class="mi">1</span> <span class="k">if</span> <span class="n">hardware</span> <span class="n">Surface</span> <span class="n">blitting</span> <span class="ow">is</span> <span class="n">accelerated</span>
+<span class="n">blit_hw_CC</span><span class="p">:</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">hardware</span> <span class="n">Surface</span> <span class="n">colorkey</span> <span class="n">blitting</span> <span class="ow">is</span> <span class="n">accelerated</span>
+<span class="n">blit_hw_A</span><span class="p">:</span>  <span class="mi">1</span> <span class="k">if</span> <span class="n">hardware</span> <span class="n">Surface</span> <span class="n">pixel</span> <span class="n">alpha</span> <span class="n">blitting</span> <span class="ow">is</span> <span class="n">accelerated</span>
+<span class="n">blit_sw</span><span class="p">:</span>    <span class="mi">1</span> <span class="k">if</span> <span class="n">software</span> <span class="n">Surface</span> <span class="n">blitting</span> <span class="ow">is</span> <span class="n">accelerated</span>
+<span class="n">blit_sw_CC</span><span class="p">:</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">software</span> <span class="n">Surface</span> <span class="n">colorkey</span> <span class="n">blitting</span> <span class="ow">is</span> <span class="n">accelerated</span>
+<span class="n">blit_sw_A</span><span class="p">:</span>  <span class="mi">1</span> <span class="k">if</span> <span class="n">software</span> <span class="n">Surface</span> <span class="n">pixel</span> <span class="n">alpha</span> <span class="n">blitting</span> <span class="ow">is</span> <span class="n">accelerated</span>
+<span class="n">current_h</span><span class="p">,</span> <span class="n">current_w</span><span class="p">:</span>  <span class="n">Height</span> <span class="ow">and</span> <span class="n">width</span> <span class="n">of</span> <span class="n">the</span> <span class="n">current</span> <span class="n">video</span> <span class="n">mode</span><span class="p">,</span> <span class="ow">or</span>
+            <span class="n">of</span> <span class="n">the</span> <span class="n">desktop</span> <span class="n">mode</span> <span class="k">if</span> <span class="n">called</span> <span class="n">before</span> <span class="n">the</span> <span class="n">display</span><span class="o">.</span><span class="n">set_mode</span>
+            <span class="ow">is</span> <span class="n">called</span><span class="o">.</span> <span class="p">(</span><span class="n">current_h</span><span class="p">,</span> <span class="n">current_w</span> <span class="n">are</span> <span class="n">available</span> <span class="n">since</span>
+            <span class="n">SDL</span> <span class="mf">1.2.10</span><span class="p">,</span> <span class="ow">and</span> <span class="n">pygame</span> <span class="mf">1.8.0</span><span class="p">)</span><span class="o">.</span> <span class="n">They</span> <span class="n">are</span> <span class="o">-</span><span class="mi">1</span> <span class="n">on</span> <span class="n">error</span><span class="p">,</span> <span class="ow">or</span> <span class="k">if</span>
+            <span class="n">an</span> <span class="n">old</span> <span class="n">SDL</span> <span class="ow">is</span> <span class="n">being</span> <span class="n">used</span><span class="o">.</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.display.get_wm_info">
+<span class="sig-prename descclassname"><span class="pre">pygame.display.</span></span><span class="sig-name descname"><span class="pre">get_wm_info</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.display.get_wm_info" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Get information about the current windowing system</span></div>
+<div class="line"><span class="signature">get_wm_info() -&gt; dict</span></div>
+</div>
+<p>Creates a dictionary filled with string keys. The strings and values are
+arbitrarily created by the system. Some systems may have no information and
+an empty dictionary will be returned. Most platforms will return a &quot;window&quot;
+key with the value set to the system id for the current display.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 1.7.1.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.display.get_desktop_sizes">
+<span class="sig-prename descclassname"><span class="pre">pygame.display.</span></span><span class="sig-name descname"><span class="pre">get_desktop_sizes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.display.get_desktop_sizes" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Get sizes of active desktops</span></div>
+<div class="line"><span class="signature">get_desktop_sizes() -&gt; list</span></div>
+</div>
+<p>This function returns the sizes of the currently configured
+virtual desktops as a list of (x, y) tuples of integers.</p>
+<p>The length of the list is not the same as the number of attached monitors,
+as a desktop can be mirrored across multiple monitors. The desktop sizes
+do not indicate the maximum monitor resolutions supported by the hardware,
+but the desktop size configured in the operating system.</p>
+<p>In order to fit windows into the desktop as it is currently configured, and
+to respect the resolution configured by the operating system in fullscreen
+mode, this function <em>should</em> be used to replace many use cases of
+<code class="docutils literal notranslate"><span class="pre">pygame.display.list_modes()</span></code> whenever applicable.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 2.0.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.display.list_modes">
+<span class="sig-prename descclassname"><span class="pre">pygame.display.</span></span><span class="sig-name descname"><span class="pre">list_modes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.display.list_modes" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Get list of available fullscreen modes</span></div>
+<div class="line"><span class="signature">list_modes(depth=0, flags=pygame.FULLSCREEN, display=0) -&gt; list</span></div>
+</div>
+<p>This function returns a list of possible sizes for a specified color
+depth. The return value will be an empty list if no display modes are
+available with the given arguments. A return value of <code class="docutils literal notranslate"><span class="pre">-1</span></code> means that
+any requested size should work (this is likely the case for windowed
+modes). Mode sizes are sorted from biggest to smallest.</p>
+<p>If depth is <code class="docutils literal notranslate"><span class="pre">0</span></code>, the current/best color depth for the display is used.
+The flags defaults to <code class="docutils literal notranslate"><span class="pre">pygame.FULLSCREEN</span></code>, but you may need to add
+additional flags for specific fullscreen modes.</p>
+<p>The display index <code class="docutils literal notranslate"><span class="pre">0</span></code> means the default display is used.</p>
+<p>Since pygame 2.0, <code class="docutils literal notranslate"><span class="pre">pygame.display.get_desktop_sizes()</span></code> has taken over
+some use cases from <code class="docutils literal notranslate"><span class="pre">pygame.display.list_modes()</span></code>:</p>
+<p>To find a suitable size for non-fullscreen windows, it is preferable to
+use <code class="docutils literal notranslate"><span class="pre">pygame.display.get_desktop_sizes()</span></code> to get the size of the <em>current</em>
+desktop, and to then choose a smaller window size. This way, the window is
+guaranteed to fit, even when the monitor is configured to a lower resolution
+than the maximum supported by the hardware.</p>
+<p>To avoid changing the physical monitor resolution, it is also preferable to
+use <code class="docutils literal notranslate"><span class="pre">pygame.display.get_desktop_sizes()</span></code> to determine the fullscreen
+resolution. Developers are strongly advised to default to the current
+physical monitor resolution unless the user explicitly requests a different
+one (e.g. in an options menu or configuration file).</p>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in pygame 1.9.5: </span><code class="docutils literal notranslate"><span class="pre">display</span></code> argument added</p>
+</div>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.display.mode_ok">
+<span class="sig-prename descclassname"><span class="pre">pygame.display.</span></span><span class="sig-name descname"><span class="pre">mode_ok</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.display.mode_ok" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Pick the best color depth for a display mode</span></div>
+<div class="line"><span class="signature">mode_ok(size, flags=0, depth=0, display=0) -&gt; depth</span></div>
+</div>
+<p>This function uses the same arguments as <code class="docutils literal notranslate"><span class="pre">pygame.display.set_mode()</span></code>. It
+is used to determine if a requested display mode is available. It will
+return <code class="docutils literal notranslate"><span class="pre">0</span></code> if the display mode cannot be set. Otherwise it will return a
+pixel depth that best matches the display asked for.</p>
+<p>Usually the depth argument is not passed, but some platforms can support
+multiple display depths. If passed it will hint to which depth is a better
+match.</p>
+<p>The function will return <code class="docutils literal notranslate"><span class="pre">0</span></code> if the passed display flags cannot be set.</p>
+<p>The display index <code class="docutils literal notranslate"><span class="pre">0</span></code> means the default display is used.</p>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in pygame 1.9.5: </span><code class="docutils literal notranslate"><span class="pre">display</span></code> argument added</p>
+</div>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.display.gl_get_attribute">
+<span class="sig-prename descclassname"><span class="pre">pygame.display.</span></span><span class="sig-name descname"><span class="pre">gl_get_attribute</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.display.gl_get_attribute" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Get the value for an OpenGL flag for the current display</span></div>
+<div class="line"><span class="signature">gl_get_attribute(flag) -&gt; value</span></div>
+</div>
+<p>After calling <code class="docutils literal notranslate"><span class="pre">pygame.display.set_mode()</span></code> with the <code class="docutils literal notranslate"><span class="pre">pygame.OPENGL</span></code> flag,
+it is a good idea to check the value of any requested OpenGL attributes. See
+<code class="docutils literal notranslate"><span class="pre">pygame.display.gl_set_attribute()</span></code> for a list of valid flags.</p>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in pygame 2.5.0: </span>Added support for keyword arguments.</p>
+</div>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.display.gl_set_attribute">
+<span class="sig-prename descclassname"><span class="pre">pygame.display.</span></span><span class="sig-name descname"><span class="pre">gl_set_attribute</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.display.gl_set_attribute" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Request an OpenGL display attribute for the display mode</span></div>
+<div class="line"><span class="signature">gl_set_attribute(flag, value) -&gt; None</span></div>
+</div>
+<p>When calling <code class="docutils literal notranslate"><span class="pre">pygame.display.set_mode()</span></code> with the <code class="docutils literal notranslate"><span class="pre">pygame.OPENGL</span></code> flag,
+Pygame automatically handles setting the OpenGL attributes like color and
+double-buffering. OpenGL offers several other attributes you may want control
+over. Pass one of these attributes as the flag, and its appropriate value.
+This must be called before <code class="docutils literal notranslate"><span class="pre">pygame.display.set_mode()</span></code>.</p>
+<p>Many settings are the requested minimum. Creating a window with an OpenGL context
+will fail if OpenGL cannot provide the requested attribute, but it may for example
+give you a stencil buffer even if you request none, or it may give you a larger
+one than requested.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">OPENGL</span></code> flags are:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">GL_ALPHA_SIZE</span><span class="p">,</span> <span class="n">GL_DEPTH_SIZE</span><span class="p">,</span> <span class="n">GL_STENCIL_SIZE</span><span class="p">,</span> <span class="n">GL_ACCUM_RED_SIZE</span><span class="p">,</span>
+<span class="n">GL_ACCUM_GREEN_SIZE</span><span class="p">,</span>  <span class="n">GL_ACCUM_BLUE_SIZE</span><span class="p">,</span> <span class="n">GL_ACCUM_ALPHA_SIZE</span><span class="p">,</span>
+<span class="n">GL_MULTISAMPLEBUFFERS</span><span class="p">,</span> <span class="n">GL_MULTISAMPLESAMPLES</span><span class="p">,</span> <span class="n">GL_STEREO</span>
+</pre></div>
+</div>
+<p><code class="xref py py-const docutils literal notranslate"><span class="pre">GL_MULTISAMPLEBUFFERS</span></code></p>
+<blockquote>
+<div><p>Whether to enable multisampling anti-aliasing.
+Defaults to 0 (disabled).</p>
+<p>Set <code class="docutils literal notranslate"><span class="pre">GL_MULTISAMPLESAMPLES</span></code> to a value
+above 0 to control the amount of anti-aliasing.
+A typical value is 2 or 3.</p>
+</div></blockquote>
+<p><code class="xref py py-const docutils literal notranslate"><span class="pre">GL_STENCIL_SIZE</span></code></p>
+<blockquote>
+<div><p>Minimum bit size of the stencil buffer. Defaults to 0.</p>
+</div></blockquote>
+<p><code class="xref py py-const docutils literal notranslate"><span class="pre">GL_DEPTH_SIZE</span></code></p>
+<blockquote>
+<div><p>Minimum bit size of the depth buffer. Defaults to 16.</p>
+</div></blockquote>
+<p><code class="xref py py-const docutils literal notranslate"><span class="pre">GL_STEREO</span></code></p>
+<blockquote>
+<div><p>1 enables stereo 3D. Defaults to 0.</p>
+</div></blockquote>
+<p><code class="xref py py-const docutils literal notranslate"><span class="pre">GL_BUFFER_SIZE</span></code></p>
+<blockquote>
+<div><p>Minimum bit size of the frame buffer. Defaults to 0.</p>
+</div></blockquote>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in pygame 2.5.0: </span>Added support for keyword arguments.</p>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 2.0.0: </span>Additional attributes:</p>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">GL_ACCELERATED_VISUAL</span><span class="p">,</span>
+<span class="n">GL_CONTEXT_MAJOR_VERSION</span><span class="p">,</span> <span class="n">GL_CONTEXT_MINOR_VERSION</span><span class="p">,</span>
+<span class="n">GL_CONTEXT_FLAGS</span><span class="p">,</span> <span class="n">GL_CONTEXT_PROFILE_MASK</span><span class="p">,</span>
+<span class="n">GL_SHARE_WITH_CURRENT_CONTEXT</span><span class="p">,</span>
+<span class="n">GL_CONTEXT_RELEASE_BEHAVIOR</span><span class="p">,</span>
+<span class="n">GL_FRAMEBUFFER_SRGB_CAPABLE</span>
+</pre></div>
+</div>
+<p><code class="xref py py-const docutils literal notranslate"><span class="pre">GL_CONTEXT_PROFILE_MASK</span></code></p>
+<blockquote>
+<div><p>Sets the OpenGL profile to one of these values:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">GL_CONTEXT_PROFILE_CORE</span>             <span class="n">disable</span> <span class="n">deprecated</span> <span class="n">features</span>
+<span class="n">GL_CONTEXT_PROFILE_COMPATIBILITY</span>    <span class="n">allow</span> <span class="n">deprecated</span> <span class="n">features</span>
+<span class="n">GL_CONTEXT_PROFILE_ES</span>               <span class="n">allow</span> <span class="n">only</span> <span class="n">the</span> <span class="n">ES</span> <span class="n">feature</span>
+                                    <span class="n">subset</span> <span class="n">of</span> <span class="n">OpenGL</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p><code class="xref py py-const docutils literal notranslate"><span class="pre">GL_ACCELERATED_VISUAL</span></code></p>
+<blockquote>
+<div><p>Set to 1 to require hardware acceleration, or 0 to force software render.
+By default, both are allowed.</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.display.get_active">
+<span class="sig-prename descclassname"><span class="pre">pygame.display.</span></span><span class="sig-name descname"><span class="pre">get_active</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.display.get_active" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Returns True when the display is active on the screen</span></div>
+<div class="line"><span class="signature">get_active() -&gt; bool</span></div>
+</div>
+<p>Returns True when the display Surface is considered actively
+renderable on the screen and may be visible to the user.  This is
+the default state immediately after <code class="docutils literal notranslate"><span class="pre">pygame.display.set_mode()</span></code>.
+This method may return True even if the application is fully hidden
+behind another application window.</p>
+<p>This will return False if the display Surface has been iconified or
+minimized (either via <code class="docutils literal notranslate"><span class="pre">pygame.display.iconify()</span></code> or via an OS
+specific method such as the minimize-icon available on most
+desktops).</p>
+<p>The method can also return False for other reasons without the
+application being explicitly iconified or minimized by the user.  A
+notable example being if the user has multiple virtual desktops and
+the display Surface is not on the active virtual desktop.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This function returning True is unrelated to whether the
+application has input focus.  Please see
+<code class="docutils literal notranslate"><span class="pre">pygame.key.get_focused()</span></code> and <code class="docutils literal notranslate"><span class="pre">pygame.mouse.get_focused()</span></code>
+for APIs related to input focus.</p>
+</div>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.display.iconify">
+<span class="sig-prename descclassname"><span class="pre">pygame.display.</span></span><span class="sig-name descname"><span class="pre">iconify</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.display.iconify" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Iconify the display surface</span></div>
+<div class="line"><span class="signature">iconify() -&gt; bool</span></div>
+</div>
+<p>Request the window for the display surface be iconified or hidden. Not all
+systems and displays support an iconified display. The function will return
+True if successful.</p>
+<p>When the display is iconified <code class="docutils literal notranslate"><span class="pre">pygame.display.get_active()</span></code> will return
+<code class="docutils literal notranslate"><span class="pre">False</span></code>. The event queue should receive an <code class="docutils literal notranslate"><span class="pre">ACTIVEEVENT</span></code> event when the
+window has been iconified. Additionally, the event queue also receives a
+<code class="docutils literal notranslate"><span class="pre">WINDOWEVENT_MINIMIZED</span></code> event when the window has been iconified on pygame 2.</p>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.display.toggle_fullscreen">
+<span class="sig-prename descclassname"><span class="pre">pygame.display.</span></span><span class="sig-name descname"><span class="pre">toggle_fullscreen</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.display.toggle_fullscreen" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Switch between fullscreen and windowed displays</span></div>
+<div class="line"><span class="signature">toggle_fullscreen() -&gt; int</span></div>
+</div>
+<p>Switches the display window between windowed and fullscreen modes.
+Display driver support is not great when using pygame 1, but with
+pygame 2 it is the most reliable method to switch to and from fullscreen.</p>
+<p>Supported display drivers in pygame 1:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>x11 (Linux/Unix)</p></li>
+<li><p>wayland (Linux/Unix)</p></li>
+</ul>
+</div></blockquote>
+<p>Supported display drivers in pygame 2:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>windows (Windows)</p></li>
+<li><p>x11 (Linux/Unix)</p></li>
+<li><p>wayland (Linux/Unix)</p></li>
+<li><p>cocoa (OSX/Mac)</p></li>
+</ul>
+</div></blockquote>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><a class="reference internal" href="#pygame.display.toggle_fullscreen" title="pygame.display.toggle_fullscreen"><code class="xref py py-func docutils literal notranslate"><span class="pre">toggle_fullscreen()</span></code></a> doesn't work on Windows
+unless the window size is in <a class="tooltip reference internal" href="#pygame.display.list_modes" title=""><code class="xref py py-func docutils literal notranslate"><span class="pre">pygame.display.list_modes()</span></code><span class="tooltip-content">Get list of available fullscreen modes</span></a> or
+the window is created with the flag <code class="docutils literal notranslate"><span class="pre">pygame.SCALED</span></code>.
+See <a class="reference external" href="https://github.com/pygame/pygame/issues/2380">issue #2380</a>.</p>
+</div>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.display.set_gamma">
+<span class="sig-prename descclassname"><span class="pre">pygame.display.</span></span><span class="sig-name descname"><span class="pre">set_gamma</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.display.set_gamma" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Change the hardware gamma ramps</span></div>
+<div class="line"><span class="signature">set_gamma(red, green=None, blue=None) -&gt; bool</span></div>
+</div>
+<p>DEPRECATED: This functionality will go away in SDL3.</p>
+<p>Set the red, green, and blue gamma values on the display hardware. If the
+green and blue arguments are not passed, they will both be the same as red.
+Not all systems and hardware support gamma ramps, if the function succeeds
+it will return <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p>
+<p>A gamma value of <code class="docutils literal notranslate"><span class="pre">1.0</span></code> creates a linear color table. Lower values will
+darken the display and higher values will brighten.</p>
+<div class="deprecated">
+<p><span class="versionmodified deprecated">Deprecated since pygame 2.2.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.display.set_gamma_ramp">
+<span class="sig-prename descclassname"><span class="pre">pygame.display.</span></span><span class="sig-name descname"><span class="pre">set_gamma_ramp</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.display.set_gamma_ramp" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Change the hardware gamma ramps with a custom lookup</span></div>
+<div class="line"><span class="signature">set_gamma_ramp(red, green, blue) -&gt; bool</span></div>
+</div>
+<p>DEPRECATED: This functionality will go away in SDL3.</p>
+<p>Set the red, green, and blue gamma ramps with an explicit lookup table. Each
+argument should be sequence of 256 integers. The integers should range
+between <code class="docutils literal notranslate"><span class="pre">0</span></code> and <code class="docutils literal notranslate"><span class="pre">0xffff</span></code>. Not all systems and hardware support gamma
+ramps, if the function succeeds it will return <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p>
+<div class="deprecated">
+<p><span class="versionmodified deprecated">Deprecated since pygame 2.2.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.display.set_icon">
+<span class="sig-prename descclassname"><span class="pre">pygame.display.</span></span><span class="sig-name descname"><span class="pre">set_icon</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.display.set_icon" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Change the system image for the display window</span></div>
+<div class="line"><span class="signature">set_icon(Surface) -&gt; None</span></div>
+</div>
+<p>Sets the runtime icon the system will use to represent the display window.
+All windows default to a simple pygame logo for the window icon.</p>
+<p>Note that calling this function implicitly initializes <code class="docutils literal notranslate"><span class="pre">pygame.display</span></code>, if
+it was not initialized before.</p>
+<p>You can pass any surface, but most systems want a smaller image around
+32x32. The image can have colorkey transparency which will be passed to the
+system.</p>
+<p>Some systems do not allow the window icon to change after it has been shown.
+This function can be called before <code class="docutils literal notranslate"><span class="pre">pygame.display.set_mode()</span></code> to create
+the icon before the display mode is set.</p>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.display.set_caption">
+<span class="sig-prename descclassname"><span class="pre">pygame.display.</span></span><span class="sig-name descname"><span class="pre">set_caption</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.display.set_caption" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Set the current window caption</span></div>
+<div class="line"><span class="signature">set_caption(title, icontitle=None) -&gt; None</span></div>
+</div>
+<p>If the display has a window title, this function will change the name on the
+window. In pygame 1.x, some systems supported an alternate shorter title to
+be used for minimized displays, but in pygame 2 <code class="docutils literal notranslate"><span class="pre">icontitle</span></code> does nothing.</p>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in pygame 2.5.0: </span>Added support for keyword arguments.</p>
+</div>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.display.get_caption">
+<span class="sig-prename descclassname"><span class="pre">pygame.display.</span></span><span class="sig-name descname"><span class="pre">get_caption</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.display.get_caption" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Get the current window caption</span></div>
+<div class="line"><span class="signature">get_caption() -&gt; (title, icontitle)</span></div>
+</div>
+<p>Returns the title and icontitle for the display window. In pygame 2.x
+these will always be the same value.</p>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.display.set_palette">
+<span class="sig-prename descclassname"><span class="pre">pygame.display.</span></span><span class="sig-name descname"><span class="pre">set_palette</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.display.set_palette" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Set the display color palette for indexed displays</span></div>
+<div class="line"><span class="signature">set_palette(palette=None) -&gt; None</span></div>
+</div>
+<p>This will change the video display color palette for 8-bit displays. This
+does not change the palette for the actual display Surface, only the palette
+that is used to display the Surface. If no palette argument is passed, the
+system default palette will be restored. The palette is a sequence of
+<code class="docutils literal notranslate"><span class="pre">RGB</span></code> triplets.</p>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in pygame 2.5.0: </span>Added support for keyword arguments.</p>
+</div>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.display.get_num_displays">
+<span class="sig-prename descclassname"><span class="pre">pygame.display.</span></span><span class="sig-name descname"><span class="pre">get_num_displays</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.display.get_num_displays" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Return the number of displays</span></div>
+<div class="line"><span class="signature">get_num_displays() -&gt; int</span></div>
+</div>
+<p>Returns the number of available displays. This is always 1 if
+<a class="tooltip reference internal" href="pygame.html#pygame.get_sdl_version" title=""><code class="xref py py-func docutils literal notranslate"><span class="pre">pygame.get_sdl_version()</span></code><span class="tooltip-content">get the version number of SDL</span></a> returns a major version number below 2.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 1.9.5.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.display.get_window_size">
+<span class="sig-prename descclassname"><span class="pre">pygame.display.</span></span><span class="sig-name descname"><span class="pre">get_window_size</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.display.get_window_size" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Return the size of the window or screen</span></div>
+<div class="line"><span class="signature">get_window_size() -&gt; tuple</span></div>
+</div>
+<p>Returns the size of the window initialized with <a class="tooltip reference internal" href="#pygame.display.set_mode" title=""><code class="xref py py-func docutils literal notranslate"><span class="pre">pygame.display.set_mode()</span></code><span class="tooltip-content">Initialize a window or screen for display</span></a>.
+This may differ from the size of the display surface if <code class="docutils literal notranslate"><span class="pre">SCALED</span></code> is used.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 2.0.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.display.get_allow_screensaver">
+<span class="sig-prename descclassname"><span class="pre">pygame.display.</span></span><span class="sig-name descname"><span class="pre">get_allow_screensaver</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.display.get_allow_screensaver" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Return whether the screensaver is allowed to run.</span></div>
+<div class="line"><span class="signature">get_allow_screensaver() -&gt; bool</span></div>
+</div>
+<p>Return whether screensaver is allowed to run whilst the app is running.
+Default is <code class="docutils literal notranslate"><span class="pre">False</span></code>.
+By default pygame does not allow the screensaver during game play.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Some platforms do not have a screensaver or support
+disabling the screensaver.  Please see
+<a class="tooltip reference internal" href="#pygame.display.set_allow_screensaver" title=""><code class="xref py py-func docutils literal notranslate"><span class="pre">pygame.display.set_allow_screensaver()</span></code><span class="tooltip-content">Set whether the screensaver may run</span></a> for
+caveats with screensaver support.</p>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 2.0.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.display.set_allow_screensaver">
+<span class="sig-prename descclassname"><span class="pre">pygame.display.</span></span><span class="sig-name descname"><span class="pre">set_allow_screensaver</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.display.set_allow_screensaver" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Set whether the screensaver may run</span></div>
+<div class="line"><span class="signature">set_allow_screensaver(bool) -&gt; None</span></div>
+</div>
+<p>Change whether screensavers should be allowed whilst the app is running.
+The default value of the argument to the function is True.
+By default pygame does not allow the screensaver during game play.</p>
+<p>If the screensaver has been disallowed due to this function, it will automatically
+be allowed to run when <a class="tooltip reference internal" href="pygame.html#pygame.quit" title=""><code class="xref py py-func docutils literal notranslate"><span class="pre">pygame.quit()</span></code><span class="tooltip-content">uninitialize all pygame modules</span></a> is called.</p>
+<p>It is possible to influence the default value via the environment variable
+<code class="docutils literal notranslate"><span class="pre">SDL_HINT_VIDEO_ALLOW_SCREENSAVER</span></code>, which can be set to either <code class="docutils literal notranslate"><span class="pre">0</span></code> (disable)
+or <code class="docutils literal notranslate"><span class="pre">1</span></code> (enable).</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Disabling screensaver is subject to platform support.
+When platform support is absent, this function will
+silently appear to work even though the screensaver state
+is unchanged.  The lack of feedback is due to SDL not
+providing any supported method for determining whether
+it supports changing the screensaver state.
+<code class="docutils literal notranslate"><span class="pre">SDL_HINT_VIDEO_ALLOW_SCREENSAVER</span></code> is available in SDL 2.0.2 or later.
+SDL1.2 does not implement this.</p>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 2.0.0.</span></p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+<br /><br />
+<hr />
+<a href="https://github.com/pygame/pygame/edit/main/docs/reST/ref/display.rst" rel="nofollow">Edit on GitHub</a>
+            <div class="clearer"></div>
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="draw.html" title="pygame.draw"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="cursors.html" title="pygame.cursors"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">pygame v2.5.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href=""><code class="xref py py-mod docutils literal notranslate"><span class="pre">pygame.display</span></code></a></li>
+    <script type="text/javascript" src="https://www.pygame.org/comment/jquery.plugin.docscomments.js"></script>
+
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2000-2023, pygame developers.
+    </div>
+  </body>
+</html>

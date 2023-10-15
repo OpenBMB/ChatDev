@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Pygame Tutorials - Camera Module Introduction &#8212; pygame v2.5.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygame.css?v=71ee6cc2" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=ba44479e"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <link rel="icon" href="../_static/pygame.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Pygame Tutorials - Line By Line Chimp Example" href="ChimpLineByLine.html" />
+    <link rel="prev" title="pygame.transform" href="../ref/transform.html" /> 
+  </head><body>  
+
+    <div class="document">
+
+  <div class="header">
+	<div class="flex-container">
+	<div class="logo">
+	  <a href="https://www.pygame.org/">
+	    <img src="../_static/pygame_tiny.png"/>
+	  </a>
+	  <h5>pygame documentation</h5>
+	</div>
+	<div class="pagelinks">
+	  <div class="top">
+	    <a href="https://www.pygame.org/">Pygame Home</a> ||
+	    <a href="../index.html">Help Contents</a> ||
+	    <a href="../genindex.html">Reference Index</a>
+
+        <form action="../search.html" method="get" style="display:inline;float:right;">
+          <input name="q" value="" type="text">
+          <input value="search" type="submit">
+        </form>
+	  </div>
+	  <hr style="color:black;border-bottom:none;border-style: dotted;border-bottom-style:none;">
+	  <p class="bottom"><b>Most useful stuff</b>:
+	    <a href="../ref/color.html">Color</a> | 
+	    <a href="../ref/display.html">display</a> | 
+	    <a href="../ref/draw.html">draw</a> | 
+	    <a href="../ref/event.html">event</a> | 
+	    <a href="../ref/font.html">font</a> | 
+	    <a href="../ref/image.html">image</a> | 
+	    <a href="../ref/key.html">key</a> | 
+	    <a href="../ref/locals.html">locals</a> | 
+	    <a href="../ref/mixer.html">mixer</a> | 
+	    <a href="../ref/mouse.html">mouse</a> | 
+	    <a href="../ref/rect.html">Rect</a> | 
+	    <a href="../ref/surface.html">Surface</a> | 
+	    <a href="../ref/time.html">time</a> | 
+	    <a href="../ref/music.html">music</a> | 
+	    <a href="../ref/pygame.html">pygame</a>
+	  </p>
+
+	  <p class="bottom"><b>Advanced stuff</b>:
+	    <a href="../ref/cursors.html">cursors</a> | 
+	    <a href="../ref/joystick.html">joystick</a> | 
+	    <a href="../ref/mask.html">mask</a> | 
+	    <a href="../ref/sprite.html">sprite</a> | 
+	    <a href="../ref/transform.html">transform</a> | 
+	    <a href="../ref/bufferproxy.html">BufferProxy</a> | 
+	    <a href="../ref/freetype.html">freetype</a> | 
+	    <a href="../ref/gfxdraw.html">gfxdraw</a> | 
+	    <a href="../ref/midi.html">midi</a> | 
+	    <a href="../ref/pixelarray.html">PixelArray</a> | 
+	    <a href="../ref/pixelcopy.html">pixelcopy</a> | 
+	    <a href="../ref/sndarray.html">sndarray</a> | 
+	    <a href="../ref/surfarray.html">surfarray</a> | 
+	    <a href="../ref/math.html">math</a>
+	  </p>
+
+	  <p class="bottom"><b>Other</b>:
+	    <a href="../ref/camera.html">camera</a> | 
+	    <a href="../ref/sdl2_controller.html#module-pygame._sdl2.controller">controller</a> | 
+	    <a href="../ref/examples.html">examples</a> | 
+	    <a href="../ref/fastevent.html">fastevent</a> | 
+	    <a href="../ref/scrap.html">scrap</a> | 
+	    <a href="../ref/tests.html">tests</a> | 
+	    <a href="../ref/touch.html">touch</a> | 
+	    <a href="../ref/pygame.html#module-pygame.version">version</a>
+	  </p>
+</div>
+</div>
+  </div>
+
+      <div class="documentwrapper">
+          <div class="body" role="main">
+            
+<section id="pygame-tutorials-camera-module-introduction">
+<section id="camera-module-introduction">
+<h2>Camera Module Introduction<a class="headerlink" href="#camera-module-introduction" title="Permalink to this heading">¶</a></h2>
+<dl class="docinfo field-list simple">
+<dt class="field-odd">Author<span class="colon">:</span></dt>
+<dd class="field-odd"><p>by Nirav Patel</p>
+</dd>
+<dt class="field-even">Contact<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="mailto:nrp&#37;&#52;&#48;eclecti&#46;cc">nrp<span>&#64;</span>eclecti<span>&#46;</span>cc</a></p>
+</dd>
+</dl>
+<p>Pygame 1.9 comes with support for interfacing cameras, allowing you to capture
+still images, watch live streams, and do some simple computer vision.  This
+tutorial will cover all of those use cases, providing code samples you can base
+your app or game on.  You can refer to the <a class="reference internal" href="../ref/camera.html#module-pygame.camera" title="pygame.camera: pygame module for camera use"><code class="xref py py-mod docutils literal notranslate"><span class="pre">reference</span> <span class="pre">documentation</span></code></a>
+for the full API.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>As of Pygame 1.9, the camera module offers native support for cameras
+that use v4l2 on Linux.  There is support for other platforms via Videocapture
+or OpenCV, but this guide will focus on the native module.  Most of the code
+will be valid for other platforms, but certain things like controls will not
+work.  The module is also marked as <strong>EXPERIMENTAL</strong>, meaning the API could
+change in subsequent versions.</p>
+</div>
+<section id="import-and-init">
+<h3>Import and Init<a class="headerlink" href="#import-and-init" title="Permalink to this heading">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pygame</span>
+<span class="kn">import</span> <span class="nn">pygame.camera</span>
+<span class="kn">from</span> <span class="nn">pygame.locals</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="n">pygame</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+<span class="n">pygame</span><span class="o">.</span><span class="n">camera</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>As the camera module is optional, it needs to be imported and initialized
+manually as shown above.</p>
+</section>
+<section id="capturing-a-single-image">
+<h3>Capturing a Single Image<a class="headerlink" href="#capturing-a-single-image" title="Permalink to this heading">¶</a></h3>
+<p>Now we will go over the simplest case of opening a camera and capturing a frame
+as a surface.  In the below example, we assume that there is a camera at
+/dev/video0 on the computer, and initialize it with a size of 640 by 480.
+The surface called image is whatever the camera was seeing when get_image() was
+called.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cam</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">camera</span><span class="o">.</span><span class="n">Camera</span><span class="p">(</span><span class="s2">&quot;/dev/video0&quot;</span><span class="p">,(</span><span class="mi">640</span><span class="p">,</span><span class="mi">480</span><span class="p">))</span>
+<span class="n">cam</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+<span class="n">image</span> <span class="o">=</span> <span class="n">cam</span><span class="o">.</span><span class="n">get_image</span><span class="p">()</span>
+</pre></div>
+</div>
+<section id="listing-connected-cameras">
+<h4>Listing Connected Cameras<a class="headerlink" href="#listing-connected-cameras" title="Permalink to this heading">¶</a></h4>
+<p>You may be wondering, what if we don't know the exact path of the camera?
+We can ask the module to provide a list of cameras attached to the
+computer and initialize the first camera in the list.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">camlist</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">camera</span><span class="o">.</span><span class="n">list_cameras</span><span class="p">()</span>
+<span class="k">if</span> <span class="n">camlist</span><span class="p">:</span>
+    <span class="n">cam</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">camera</span><span class="o">.</span><span class="n">Camera</span><span class="p">(</span><span class="n">camlist</span><span class="p">[</span><span class="mi">0</span><span class="p">],(</span><span class="mi">640</span><span class="p">,</span><span class="mi">480</span><span class="p">))</span>
+</pre></div>
+</div>
+</section>
+<section id="using-camera-controls">
+<h4>Using Camera Controls<a class="headerlink" href="#using-camera-controls" title="Permalink to this heading">¶</a></h4>
+<p>Most cameras support controls like flipping the image and changing brightness.
+set_controls() and get_controls() can be used at any point after using start().</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cam</span><span class="o">.</span><span class="n">set_controls</span><span class="p">(</span><span class="n">hflip</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">vflip</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+<span class="nb">print</span> <span class="n">camera</span><span class="o">.</span><span class="n">get_controls</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="capturing-a-live-stream">
+<h3>Capturing a Live Stream<a class="headerlink" href="#capturing-a-live-stream" title="Permalink to this heading">¶</a></h3>
+<p>The rest of this tutorial will be based around capturing a live stream of
+images.  For this, we will be using the class below.  As described, it will
+simply blit a constant stream of camera frames to the screen, effectively
+showing live video.  It is basically what you would expect, looping get_image(),
+blitting to the display surface, and flipping it.  For performance reasons,
+we will be supplying the camera with the same surface to use each time.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Capture</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="p">(</span><span class="mi">640</span><span class="p">,</span><span class="mi">480</span><span class="p">)</span>
+        <span class="c1"># create a display surface. standard pygame stuff</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">display</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">set_mode</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+        <span class="c1"># this is the same as what we saw before</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">clist</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">camera</span><span class="o">.</span><span class="n">list_cameras</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">clist</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Sorry, no cameras detected.&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cam</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">camera</span><span class="o">.</span><span class="n">Camera</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">clist</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cam</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+
+        <span class="c1"># create a surface to capture to.  for performance purposes</span>
+        <span class="c1"># bit depth is the same as that of the display surface.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">snapshot</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">surface</span><span class="o">.</span><span class="n">Surface</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">display</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">get_and_flip</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># if you don&#39;t want to tie the framerate to the camera, you can check</span>
+        <span class="c1"># if the camera has an image ready.  note that while this works</span>
+        <span class="c1"># on most cameras, some will never return true.</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cam</span><span class="o">.</span><span class="n">query_image</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">snapshot</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cam</span><span class="o">.</span><span class="n">get_image</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">snapshot</span><span class="p">)</span>
+
+        <span class="c1"># blit it to the display surface.  simple!</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">snapshot</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">))</span>
+        <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">flip</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">going</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">while</span> <span class="n">going</span><span class="p">:</span>
+            <span class="n">events</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">events</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">QUIT</span> <span class="ow">or</span> <span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">KEYDOWN</span> <span class="ow">and</span> <span class="n">e</span><span class="o">.</span><span class="n">key</span> <span class="o">==</span> <span class="n">K_ESCAPE</span><span class="p">):</span>
+                    <span class="c1"># close the camera safely</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">cam</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+                    <span class="n">going</span> <span class="o">=</span> <span class="kc">False</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_and_flip</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Since get_image() is a blocking call that could take quite a bit of time on a
+slow camera, this example uses query_image() to see if the camera is ready.
+This allows you to separate the framerate of your game from that of your camera.
+It is also possible to have the camera capturing images in a separate thread,
+for approximately the same performance gain, if you find that your camera does
+not support the query_image() function correctly.</p>
+</section>
+<section id="basic-computer-vision">
+<h3>Basic Computer Vision<a class="headerlink" href="#basic-computer-vision" title="Permalink to this heading">¶</a></h3>
+<p>By using the camera, transform, and mask modules, pygame can do some basic
+computer vision.</p>
+<section id="colorspaces">
+<h4>Colorspaces<a class="headerlink" href="#colorspaces" title="Permalink to this heading">¶</a></h4>
+<p>When initializing a camera, colorspace is an optional parameter, with 'RGB',
+'YUV', and 'HSV' as the possible choices.  YUV and HSV are both generally more
+useful for computer vision than RGB, and allow you to more easily threshold by
+color, something we will look at later in the tutorial.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">cam</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">camera</span><span class="o">.</span><span class="n">Camera</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">clist</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="s2">&quot;RGB&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="../_images/camera_rgb.jpg" class="trailing" src="../_images/camera_rgb.jpg" />
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">cam</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">camera</span><span class="o">.</span><span class="n">Camera</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">clist</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="s2">&quot;YUV&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="../_images/camera_yuv.jpg" class="trailing" src="../_images/camera_yuv.jpg" />
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">cam</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">camera</span><span class="o">.</span><span class="n">Camera</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">clist</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="s2">&quot;HSV&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="../_images/camera_hsv.jpg" class="trailing" src="../_images/camera_hsv.jpg" />
+</section>
+<section id="thresholding">
+<h4>Thresholding<a class="headerlink" href="#thresholding" title="Permalink to this heading">¶</a></h4>
+<p>Using the threshold() function from the transform module, one can do simple
+green screen like effects, or isolate specifically colored objects in a scene.
+In the below example, we threshold out just the green tree and make the rest
+of the image black.  Check the reference documentation for details on the
+<a class="reference internal" href="../ref/transform.html#pygame.transform.threshold" title="pygame.transform.threshold"><code class="xref py py-func docutils literal notranslate"><span class="pre">threshold</span> <span class="pre">function</span></code></a>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">thresholded</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">surface</span><span class="o">.</span><span class="n">Surface</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">display</span><span class="p">)</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">snapshot</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cam</span><span class="o">.</span><span class="n">get_image</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">snapshot</span><span class="p">)</span>
+<span class="n">pygame</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">threshold</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">thresholded</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">snapshot</span><span class="p">,(</span><span class="mi">0</span><span class="p">,</span><span class="mi">255</span><span class="p">,</span><span class="mi">0</span><span class="p">),(</span><span class="mi">90</span><span class="p">,</span><span class="mi">170</span><span class="p">,</span><span class="mi">170</span><span class="p">),(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="../_images/camera_thresholded.jpg" class="trailing" src="../_images/camera_thresholded.jpg" />
+<p>Of course, this is only useful if you already know the exact color of the object
+you are looking for.  To get around this and make thresholding usable in the
+real world, we need to add a calibration stage where we identify the color of an
+object and use it to threshold against.  We will be using the average_color()
+function of the transform module to do this.  Below is an example calibration
+function that you could loop until an event like a key press, and an image of
+what it would look like.  The color inside the box will be the one that is
+used for the threshold.  Note that we are using the HSV colorspace in the below
+images.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">calibrate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="c1"># capture the image</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">snapshot</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cam</span><span class="o">.</span><span class="n">get_image</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">snapshot</span><span class="p">)</span>
+    <span class="c1"># blit it to the display surface</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">snapshot</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">))</span>
+    <span class="c1"># make a rect in the middle of the screen</span>
+    <span class="n">crect</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">rect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">display</span><span class="p">,</span> <span class="p">(</span><span class="mi">255</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">145</span><span class="p">,</span><span class="mi">105</span><span class="p">,</span><span class="mi">30</span><span class="p">,</span><span class="mi">30</span><span class="p">),</span> <span class="mi">4</span><span class="p">)</span>
+    <span class="c1"># get the average color of the area inside the rect</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">ccolor</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">average_color</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">snapshot</span><span class="p">,</span> <span class="n">crect</span><span class="p">)</span>
+    <span class="c1"># fill the upper left corner with that color</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ccolor</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">50</span><span class="p">,</span><span class="mi">50</span><span class="p">))</span>
+    <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">flip</span><span class="p">()</span>
+</pre></div>
+</div>
+<img alt="../_images/camera_average.jpg" class="trailing" src="../_images/camera_average.jpg" />
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pygame</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">threshold</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">thresholded</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">snapshot</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">ccolor</span><span class="p">,(</span><span class="mi">30</span><span class="p">,</span><span class="mi">30</span><span class="p">,</span><span class="mi">30</span><span class="p">),(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="../_images/camera_thresh.jpg" class="trailing" src="../_images/camera_thresh.jpg" />
+<p>You can use the same idea to do a simple green screen/blue screen, by first
+getting a background image and then thresholding against it.  The below example
+just has the camera pointed at a blank white wall in HSV colorspace.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">calibrate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="c1"># capture a bunch of background images</span>
+    <span class="n">bg</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">5</span><span class="p">):</span>
+      <span class="n">bg</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cam</span><span class="o">.</span><span class="n">get_image</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">background</span><span class="p">))</span>
+    <span class="c1"># average them down to one to get rid of some noise</span>
+    <span class="n">pygame</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">average_surfaces</span><span class="p">(</span><span class="n">bg</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">background</span><span class="p">)</span>
+    <span class="c1"># blit it to the display surface</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">background</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">))</span>
+    <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">flip</span><span class="p">()</span>
+</pre></div>
+</div>
+<img alt="../_images/camera_background.jpg" class="trailing" src="../_images/camera_background.jpg" />
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pygame</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">threshold</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">thresholded</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">snapshot</span><span class="p">,(</span><span class="mi">0</span><span class="p">,</span><span class="mi">255</span><span class="p">,</span><span class="mi">0</span><span class="p">),(</span><span class="mi">30</span><span class="p">,</span><span class="mi">30</span><span class="p">,</span><span class="mi">30</span><span class="p">),(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span><span class="mi">1</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">background</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="../_images/camera_green.jpg" class="trailing" src="../_images/camera_green.jpg" />
+</section>
+<section id="using-the-mask-module">
+<h4>Using the Mask Module<a class="headerlink" href="#using-the-mask-module" title="Permalink to this heading">¶</a></h4>
+<p>The stuff above is great if you just want to display images, but with the
+<a class="reference internal" href="../ref/mask.html#module-pygame.mask" title="pygame.mask: pygame module for image masks."><code class="xref py py-mod docutils literal notranslate"><span class="pre">mask</span> <span class="pre">module</span></code></a>, you can also use a camera as an
+input device for a game.  For example, going back to the example of
+thresholding out a specific object, we can find the position of that object and
+use it to control an on screen object.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_and_flip</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">snapshot</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cam</span><span class="o">.</span><span class="n">get_image</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">snapshot</span><span class="p">)</span>
+    <span class="c1"># threshold against the color we got before</span>
+    <span class="n">mask</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">mask</span><span class="o">.</span><span class="n">from_threshold</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">snapshot</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ccolor</span><span class="p">,</span> <span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">30</span><span class="p">))</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">snapshot</span><span class="p">,(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">))</span>
+    <span class="c1"># keep only the largest blob of that color</span>
+    <span class="n">connected</span> <span class="o">=</span> <span class="n">mask</span><span class="o">.</span><span class="n">connected_component</span><span class="p">()</span>
+    <span class="c1"># make sure the blob is big enough that it isn&#39;t just noise</span>
+    <span class="k">if</span> <span class="n">mask</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">100</span><span class="p">:</span>
+        <span class="c1"># find the center of the blob</span>
+        <span class="n">coord</span> <span class="o">=</span> <span class="n">mask</span><span class="o">.</span><span class="n">centroid</span><span class="p">()</span>
+        <span class="c1"># draw a circle with size variable on the size of the blob</span>
+        <span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">circle</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">display</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">255</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="n">coord</span><span class="p">,</span> <span class="nb">max</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span><span class="n">mask</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="o">/</span><span class="mi">400</span><span class="p">),</span><span class="mi">5</span><span class="p">))</span>
+    <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">flip</span><span class="p">()</span>
+</pre></div>
+</div>
+<img alt="../_images/camera_mask.jpg" class="trailing" src="../_images/camera_mask.jpg" />
+<p>This is just the most basic example.  You can track multiple different colored
+blobs, find the outlines of objects, have collision detection between real life
+and in game objects, get the angle of an object to allow for even finer control,
+and more.  Have fun!</p>
+</section>
+</section>
+</section>
+</section>
+
+
+<br /><br />
+<hr />
+<a href="https://github.com/pygame/pygame/edit/main/docs/reST/tut/CameraIntro.rst" rel="nofollow">Edit on GitHub</a>
+            <div class="clearer"></div>
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="ChimpLineByLine.html" title="Pygame Tutorials - Line By Line Chimp Example"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../ref/transform.html" title="pygame.transform"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">pygame v2.5.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Pygame Tutorials - Camera Module Introduction</a></li>
+    <script type="text/javascript" src="https://www.pygame.org/comment/jquery.plugin.docscomments.js"></script>
+
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2000-2023, pygame developers.
+    </div>
+  </body>
+</html>

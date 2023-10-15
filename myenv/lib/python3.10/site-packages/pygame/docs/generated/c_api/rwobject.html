@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>API exported by pygame.rwobject &#8212; pygame v2.5.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygame.css?v=71ee6cc2" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=ba44479e"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <link rel="icon" href="../_static/pygame.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Class Surface API exported by pygame.surface" href="surface.html" />
+    <link rel="prev" title="Class Rect API exported by pygame.rect" href="rect.html" /> 
+  </head><body>  
+
+    <div class="document">
+
+  <div class="header">
+	<div class="flex-container">
+	<div class="logo">
+	  <a href="https://www.pygame.org/">
+	    <img src="../_static/pygame_tiny.png"/>
+	  </a>
+	  <h5>pygame documentation</h5>
+	</div>
+	<div class="pagelinks">
+	  <div class="top">
+	    <a href="https://www.pygame.org/">Pygame Home</a> ||
+	    <a href="../index.html">Help Contents</a> ||
+	    <a href="../genindex.html">Reference Index</a>
+
+        <form action="../search.html" method="get" style="display:inline;float:right;">
+          <input name="q" value="" type="text">
+          <input value="search" type="submit">
+        </form>
+	  </div>
+	  <hr style="color:black;border-bottom:none;border-style: dotted;border-bottom-style:none;">
+	  <p class="bottom"><b>Most useful stuff</b>:
+	    <a href="../ref/color.html">Color</a> | 
+	    <a href="../ref/display.html">display</a> | 
+	    <a href="../ref/draw.html">draw</a> | 
+	    <a href="../ref/event.html">event</a> | 
+	    <a href="../ref/font.html">font</a> | 
+	    <a href="../ref/image.html">image</a> | 
+	    <a href="../ref/key.html">key</a> | 
+	    <a href="../ref/locals.html">locals</a> | 
+	    <a href="../ref/mixer.html">mixer</a> | 
+	    <a href="../ref/mouse.html">mouse</a> | 
+	    <a href="../ref/rect.html">Rect</a> | 
+	    <a href="../ref/surface.html">Surface</a> | 
+	    <a href="../ref/time.html">time</a> | 
+	    <a href="../ref/music.html">music</a> | 
+	    <a href="../ref/pygame.html">pygame</a>
+	  </p>
+
+	  <p class="bottom"><b>Advanced stuff</b>:
+	    <a href="../ref/cursors.html">cursors</a> | 
+	    <a href="../ref/joystick.html">joystick</a> | 
+	    <a href="../ref/mask.html">mask</a> | 
+	    <a href="../ref/sprite.html">sprite</a> | 
+	    <a href="../ref/transform.html">transform</a> | 
+	    <a href="../ref/bufferproxy.html">BufferProxy</a> | 
+	    <a href="../ref/freetype.html">freetype</a> | 
+	    <a href="../ref/gfxdraw.html">gfxdraw</a> | 
+	    <a href="../ref/midi.html">midi</a> | 
+	    <a href="../ref/pixelarray.html">PixelArray</a> | 
+	    <a href="../ref/pixelcopy.html">pixelcopy</a> | 
+	    <a href="../ref/sndarray.html">sndarray</a> | 
+	    <a href="../ref/surfarray.html">surfarray</a> | 
+	    <a href="../ref/math.html">math</a>
+	  </p>
+
+	  <p class="bottom"><b>Other</b>:
+	    <a href="../ref/camera.html">camera</a> | 
+	    <a href="../ref/sdl2_controller.html#module-pygame._sdl2.controller">controller</a> | 
+	    <a href="../ref/examples.html">examples</a> | 
+	    <a href="../ref/fastevent.html">fastevent</a> | 
+	    <a href="../ref/scrap.html">scrap</a> | 
+	    <a href="../ref/tests.html">tests</a> | 
+	    <a href="../ref/touch.html">touch</a> | 
+	    <a href="../ref/pygame.html#module-pygame.version">version</a>
+	  </p>
+</div>
+</div>
+  </div>
+
+      <div class="documentwrapper">
+          <div class="body" role="main">
+            
+<section id="api-exported-by-pygame-rwobject">
+<section id="src-c-rwobject-c">
+<h2>src_c/rwobject.c<a class="headerlink" href="#src-c-rwobject-c" title="Permalink to this heading">¶</a></h2>
+<p>This extension module implements functions for wrapping a Python file like
+object in a <code class="xref c c-type docutils literal notranslate"><span class="pre">SDL_RWops</span></code> struct for SDL file access.</p>
+<p>Header file: src_c/include/pygame.h</p>
+<dl class="c function">
+<dt class="sig sig-object c" id="c.pgRWops_FromObject">
+<span class="n"><span class="pre">SDL_RWops</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">pgRWops_FromObject</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">PyObject</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">obj</span></span>, <span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">extptr</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.pgRWops_FromObject" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return a SDL_RWops struct filled to access <em>obj</em>.
+If <em>obj</em> is a string then let SDL open the file it names.
+Otherwise, if <em>obj</em> is a Python file-like object then use its <code class="docutils literal notranslate"><span class="pre">read</span></code>, <code class="docutils literal notranslate"><span class="pre">write</span></code>,
+<code class="docutils literal notranslate"><span class="pre">seek</span></code>, <code class="docutils literal notranslate"><span class="pre">tell</span></code>, and <code class="docutils literal notranslate"><span class="pre">close</span></code> methods. If threads are available,
+the Python GIL is acquired before calling any of the <em>obj</em> methods.
+If you want to see the file extension, you can pass in a char double pointer
+that will be populated to a dynamically allocated string or NULL. Caller is
+responsible for freeing the extension string. It is safe to pass NULL if you
+don't care about the file extension. On error raise a Python exception and
+return <code class="docutils literal notranslate"><span class="pre">NULL</span></code>. If NULL is returned, the extptr will not be populated with
+dynamic memory, it is not necessary to free in that error handling.</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.pgRWops_FromFileObject">
+<span class="n"><span class="pre">SDL_RWops</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">pgRWops_FromFileObject</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">PyObject</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">obj</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.pgRWops_FromFileObject" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return a SDL_RWops struct filled to access the Python file-like object <em>obj</em>.
+Uses its <code class="docutils literal notranslate"><span class="pre">read</span></code>, <code class="docutils literal notranslate"><span class="pre">write</span></code>, <code class="docutils literal notranslate"><span class="pre">seek</span></code>, <code class="docutils literal notranslate"><span class="pre">tell</span></code>, and <code class="docutils literal notranslate"><span class="pre">close</span></code> methods.
+If threads are available, the Python GIL is acquired before calling any of the <em>obj</em> methods.
+On error raise a Python exception and return <code class="docutils literal notranslate"><span class="pre">NULL</span></code>.</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.pgRWops_IsFileObject">
+<span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">pgRWops_IsFileObject</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">SDL_RWops</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">rw</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.pgRWops_IsFileObject" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return true if <em>rw</em> is a Python file-like object wrapper returned by <a class="reference internal" href="#c.pgRWops_FromObject" title="pgRWops_FromObject"><code class="xref c c-func docutils literal notranslate"><span class="pre">pgRWops_FromObject()</span></code></a>
+or <a class="reference internal" href="#c.pgRWops_FromFileObject" title="pgRWops_FromFileObject"><code class="xref c c-func docutils literal notranslate"><span class="pre">pgRWops_FromFileObject()</span></code></a>.</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.pgRWops_ReleaseObject">
+<span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">pgRWops_ReleaseObject</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">SDL_RWops</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">context</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.pgRWops_ReleaseObject" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Free a SDL_RWops struct. If it is attached to a Python file-like object, decrement its
+refcount. Otherwise, close the file handle.
+Return 0 on success. On error, raise a Python exception and return a negative value.</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.pg_EncodeFilePath">
+<span class="n"><span class="pre">PyObject</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">pg_EncodeFilePath</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">PyObject</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">obj</span></span>, <span class="n"><span class="pre">PyObject</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">eclass</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.pg_EncodeFilePath" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return the file path <em>obj</em> as a byte string properly encoded for the OS.
+Null bytes are forbidden in the encoded file path.
+On error raise a Python exception and return <code class="docutils literal notranslate"><span class="pre">NULL</span></code>,
+using <em>eclass</em> as the exception type if it is not <code class="docutils literal notranslate"><span class="pre">NULL</span></code>.
+If <em>obj</em> is <code class="docutils literal notranslate"><span class="pre">NULL</span></code> assume an exception was already raised and pass it on.</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.pg_EncodeString">
+<span class="n"><span class="pre">PyObject</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">pg_EncodeString</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">PyObject</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">obj</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">encoding</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">errors</span></span>, <span class="n"><span class="pre">PyObject</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">eclass</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.pg_EncodeString" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return string <em>obj</em> as an encoded byte string.
+The C string arguments <em>encoding</em> and <em>errors</em> are the same as for
+<code class="xref c c-func docutils literal notranslate"><span class="pre">PyUnicode_AsEncodedString()</span></code>.
+On error raise a Python exception and return <code class="docutils literal notranslate"><span class="pre">NULL</span></code>,
+using <em>eclass</em> as the exception type if it is not <code class="docutils literal notranslate"><span class="pre">NULL</span></code>.
+If <em>obj</em> is <code class="docutils literal notranslate"><span class="pre">NULL</span></code> assume an exception was already raised and pass it on.</p>
+</dd></dl>
+
+</section>
+</section>
+
+
+<br /><br />
+<hr />
+<a href="https://github.com/pygame/pygame/edit/main/docs/reST/c_api/rwobject.rst" rel="nofollow">Edit on GitHub</a>
+            <div class="clearer"></div>
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="surface.html" title="Class Surface API exported by pygame.surface"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="rect.html" title="Class Rect API exported by pygame.rect"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">pygame v2.5.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../c_api.html" accesskey="U">pygame C API</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">API exported by pygame.rwobject</a></li>
+    <script type="text/javascript" src="https://www.pygame.org/comment/jquery.plugin.docscomments.js"></script>
+
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2000-2023, pygame developers.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>API exported by pygame.surflock &#8212; pygame v2.5.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygame.css?v=71ee6cc2" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=ba44479e"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <link rel="icon" href="../_static/pygame.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="API exported by pygame.version" href="version.html" />
+    <link rel="prev" title="Class Surface API exported by pygame.surface" href="surface.html" /> 
+  </head><body>  
+
+    <div class="document">
+
+  <div class="header">
+	<div class="flex-container">
+	<div class="logo">
+	  <a href="https://www.pygame.org/">
+	    <img src="../_static/pygame_tiny.png"/>
+	  </a>
+	  <h5>pygame documentation</h5>
+	</div>
+	<div class="pagelinks">
+	  <div class="top">
+	    <a href="https://www.pygame.org/">Pygame Home</a> ||
+	    <a href="../index.html">Help Contents</a> ||
+	    <a href="../genindex.html">Reference Index</a>
+
+        <form action="../search.html" method="get" style="display:inline;float:right;">
+          <input name="q" value="" type="text">
+          <input value="search" type="submit">
+        </form>
+	  </div>
+	  <hr style="color:black;border-bottom:none;border-style: dotted;border-bottom-style:none;">
+	  <p class="bottom"><b>Most useful stuff</b>:
+	    <a href="../ref/color.html">Color</a> | 
+	    <a href="../ref/display.html">display</a> | 
+	    <a href="../ref/draw.html">draw</a> | 
+	    <a href="../ref/event.html">event</a> | 
+	    <a href="../ref/font.html">font</a> | 
+	    <a href="../ref/image.html">image</a> | 
+	    <a href="../ref/key.html">key</a> | 
+	    <a href="../ref/locals.html">locals</a> | 
+	    <a href="../ref/mixer.html">mixer</a> | 
+	    <a href="../ref/mouse.html">mouse</a> | 
+	    <a href="../ref/rect.html">Rect</a> | 
+	    <a href="../ref/surface.html">Surface</a> | 
+	    <a href="../ref/time.html">time</a> | 
+	    <a href="../ref/music.html">music</a> | 
+	    <a href="../ref/pygame.html">pygame</a>
+	  </p>
+
+	  <p class="bottom"><b>Advanced stuff</b>:
+	    <a href="../ref/cursors.html">cursors</a> | 
+	    <a href="../ref/joystick.html">joystick</a> | 
+	    <a href="../ref/mask.html">mask</a> | 
+	    <a href="../ref/sprite.html">sprite</a> | 
+	    <a href="../ref/transform.html">transform</a> | 
+	    <a href="../ref/bufferproxy.html">BufferProxy</a> | 
+	    <a href="../ref/freetype.html">freetype</a> | 
+	    <a href="../ref/gfxdraw.html">gfxdraw</a> | 
+	    <a href="../ref/midi.html">midi</a> | 
+	    <a href="../ref/pixelarray.html">PixelArray</a> | 
+	    <a href="../ref/pixelcopy.html">pixelcopy</a> | 
+	    <a href="../ref/sndarray.html">sndarray</a> | 
+	    <a href="../ref/surfarray.html">surfarray</a> | 
+	    <a href="../ref/math.html">math</a>
+	  </p>
+
+	  <p class="bottom"><b>Other</b>:
+	    <a href="../ref/camera.html">camera</a> | 
+	    <a href="../ref/sdl2_controller.html#module-pygame._sdl2.controller">controller</a> | 
+	    <a href="../ref/examples.html">examples</a> | 
+	    <a href="../ref/fastevent.html">fastevent</a> | 
+	    <a href="../ref/scrap.html">scrap</a> | 
+	    <a href="../ref/tests.html">tests</a> | 
+	    <a href="../ref/touch.html">touch</a> | 
+	    <a href="../ref/pygame.html#module-pygame.version">version</a>
+	  </p>
+</div>
+</div>
+  </div>
+
+      <div class="documentwrapper">
+          <div class="body" role="main">
+            
+<section id="api-exported-by-pygame-surflock">
+<section id="src-c-surflock-c">
+<h2>src_c/surflock.c<a class="headerlink" href="#src-c-surflock-c" title="Permalink to this heading">¶</a></h2>
+<p>This extension module implements SDL surface locking for the
+<a class="tooltip reference internal" href="../ref/surface.html#pygame.Surface" title=""><code class="xref py py-class docutils literal notranslate"><span class="pre">pygame.Surface</span></code><span class="tooltip-content">pygame object for representing images</span></a> type.</p>
+<p>Header file: src_c/include/pygame.h</p>
+<dl class="c type">
+<dt class="sig sig-object c" id="c.pgLifetimeLockObject">
+<span class="k"><span class="pre">type</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">pgLifetimeLockObject</span></span></span><a class="headerlink" href="#c.pgLifetimeLockObject" title="Permalink to this definition">¶</a><br /></dt>
+<dd><dl class="c member">
+<dt class="sig sig-object c" id="c.pgLifetimeLockObject.surface">
+<span class="n"><span class="pre">PyObject</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">surface</span></span></span><a class="headerlink" href="#c.pgLifetimeLockObject.surface" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>An SDL locked pygame surface.</p>
+</dd></dl>
+
+<dl class="c member">
+<dt class="sig sig-object c" id="c.pgLifetimeLockObject.lockobj">
+<span class="n"><span class="pre">PyObject</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">lockobj</span></span></span><a class="headerlink" href="#c.pgLifetimeLockObject.lockobj" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The Python object which owns the lock on the surface.
+This field does not own a reference to the object.</p>
+</dd></dl>
+
+<p>The lifetime lock type instance.
+A lifetime lock pairs a locked pygame surface with
+the Python object that locked the surface for modification.
+The lock is removed automatically when the lifetime lock instance
+is garbage collected.</p>
+</dd></dl>
+
+<dl class="c var">
+<dt class="sig sig-object c" id="c.pgLifetimeLock_Type">
+<span class="n"><span class="pre">PyTypeObject</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">pgLifetimeLock_Type</span></span></span><a class="headerlink" href="#c.pgLifetimeLock_Type" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The pygame internal surflock lifetime lock object type.</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.pgLifetimeLock_Check">
+<span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">pgLifetimeLock_Check</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">PyObject</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">x</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.pgLifetimeLock_Check" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return true if Python object <em>x</em> is a <a class="reference internal" href="#c.pgLifetimeLock_Type" title="pgLifetimeLock_Type"><code class="xref c c-data docutils literal notranslate"><span class="pre">pgLifetimeLock_Type</span></code></a> instance,
+false otherwise.
+This will return false on <a class="reference internal" href="#c.pgLifetimeLock_Type" title="pgLifetimeLock_Type"><code class="xref c c-data docutils literal notranslate"><span class="pre">pgLifetimeLock_Type</span></code></a> subclass instances as well.</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.pgSurface_Prep">
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">pgSurface_Prep</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="surface.html#c.pgSurfaceObject" title="pgSurfaceObject"><span class="n"><span class="pre">pgSurfaceObject</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">surfobj</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.pgSurface_Prep" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>If <em>surfobj</em> is a subsurface, then lock the parent surface with <em>surfobj</em>
+the owner of the lock.</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.pgSurface_Unprep">
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">pgSurface_Unprep</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="surface.html#c.pgSurfaceObject" title="pgSurfaceObject"><span class="n"><span class="pre">pgSurfaceObject</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">surfobj</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.pgSurface_Unprep" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>If <em>surfobj</em> is a subsurface, then release its lock on the parent surface.</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.pgSurface_Lock">
+<span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">pgSurface_Lock</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="surface.html#c.pgSurfaceObject" title="pgSurfaceObject"><span class="n"><span class="pre">pgSurfaceObject</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">surfobj</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.pgSurface_Lock" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Lock pygame surface <em>surfobj</em>, with <em>surfobj</em> owning its own lock.</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.pgSurface_LockBy">
+<span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">pgSurface_LockBy</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="surface.html#c.pgSurfaceObject" title="pgSurfaceObject"><span class="n"><span class="pre">pgSurfaceObject</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">surfobj</span></span>, <span class="n"><span class="pre">PyObject</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">lockobj</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.pgSurface_LockBy" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Lock pygame surface <em>surfobj</em> with Python object <em>lockobj</em> the owning
+the lock.</p>
+<p>The surface will keep a weak reference to object <em>lockobj</em>,
+and eventually remove the lock on itself if <em>lockobj</em> is garbage collected.
+However, it is best if <em>lockobj</em> also keep a reference to the locked surface
+and call to <a class="reference internal" href="#c.pgSurface_UnLockBy" title="pgSurface_UnLockBy"><code class="xref c c-func docutils literal notranslate"><span class="pre">pgSurface_UnLockBy()</span></code></a> when finished with the surface.</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.pgSurface_UnLock">
+<span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">pgSurface_UnLock</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="surface.html#c.pgSurfaceObject" title="pgSurfaceObject"><span class="n"><span class="pre">pgSurfaceObject</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">surfobj</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.pgSurface_UnLock" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Remove the pygame surface <em>surfobj</em> object's lock on itself.</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.pgSurface_UnLockBy">
+<span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">pgSurface_UnLockBy</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="surface.html#c.pgSurfaceObject" title="pgSurfaceObject"><span class="n"><span class="pre">pgSurfaceObject</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">surfobj</span></span>, <span class="n"><span class="pre">PyObject</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">lockobj</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.pgSurface_UnLockBy" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Remove the lock on pygame surface <em>surfobj</em> owned by Python object <em>lockobj</em>.</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.pgSurface_LockLifetime">
+<span class="n"><span class="pre">PyObject</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">pgSurface_LockLifetime</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">PyObject</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">surfobj</span></span>, <span class="n"><span class="pre">PyObject</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">lockobj</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.pgSurface_LockLifetime" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Lock pygame surface <em>surfobj</em> for Python object <em>lockobj</em> and return a
+new <a class="reference internal" href="#c.pgLifetimeLock_Type" title="pgLifetimeLock_Type"><code class="xref c c-data docutils literal notranslate"><span class="pre">pgLifetimeLock_Type</span></code></a> instance for the lock.</p>
+<p>This function is not called anywhere within pygame.
+It and pgLifetimeLock_Type are candidates for removal.</p>
+</dd></dl>
+
+</section>
+</section>
+
+
+<br /><br />
+<hr />
+<a href="https://github.com/pygame/pygame/edit/main/docs/reST/c_api/surflock.rst" rel="nofollow">Edit on GitHub</a>
+            <div class="clearer"></div>
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="version.html" title="API exported by pygame.version"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="surface.html" title="Class Surface API exported by pygame.surface"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">pygame v2.5.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../c_api.html" accesskey="U">pygame C API</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">API exported by pygame.surflock</a></li>
+    <script type="text/javascript" src="https://www.pygame.org/comment/jquery.plugin.docscomments.js"></script>
+
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2000-2023, pygame developers.
+    </div>
+  </body>
+</html>

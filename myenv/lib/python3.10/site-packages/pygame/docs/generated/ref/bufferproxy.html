@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>pygame.BufferProxy &#8212; pygame v2.5.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygame.css?v=71ee6cc2" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=ba44479e"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <link rel="icon" href="../_static/pygame.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="pygame.camera" href="camera.html" />
+    <link rel="prev" title="Pygame Front Page" href="../index.html" /> 
+  </head><body>  
+
+    <div class="document">
+
+  <div class="header">
+	<div class="flex-container">
+	<div class="logo">
+	  <a href="https://www.pygame.org/">
+	    <img src="../_static/pygame_tiny.png"/>
+	  </a>
+	  <h5>pygame documentation</h5>
+	</div>
+	<div class="pagelinks">
+	  <div class="top">
+	    <a href="https://www.pygame.org/">Pygame Home</a> ||
+	    <a href="../index.html">Help Contents</a> ||
+	    <a href="../genindex.html">Reference Index</a>
+
+        <form action="../search.html" method="get" style="display:inline;float:right;">
+          <input name="q" value="" type="text">
+          <input value="search" type="submit">
+        </form>
+	  </div>
+	  <hr style="color:black;border-bottom:none;border-style: dotted;border-bottom-style:none;">
+	  <p class="bottom"><b>Most useful stuff</b>:
+	    <a href="color.html">Color</a> | 
+	    <a href="display.html">display</a> | 
+	    <a href="draw.html">draw</a> | 
+	    <a href="event.html">event</a> | 
+	    <a href="font.html">font</a> | 
+	    <a href="image.html">image</a> | 
+	    <a href="key.html">key</a> | 
+	    <a href="locals.html">locals</a> | 
+	    <a href="mixer.html">mixer</a> | 
+	    <a href="mouse.html">mouse</a> | 
+	    <a href="rect.html">Rect</a> | 
+	    <a href="surface.html">Surface</a> | 
+	    <a href="time.html">time</a> | 
+	    <a href="music.html">music</a> | 
+	    <a href="pygame.html">pygame</a>
+	  </p>
+
+	  <p class="bottom"><b>Advanced stuff</b>:
+	    <a href="cursors.html">cursors</a> | 
+	    <a href="joystick.html">joystick</a> | 
+	    <a href="mask.html">mask</a> | 
+	    <a href="sprite.html">sprite</a> | 
+	    <a href="transform.html">transform</a> | 
+	    <a href="bufferproxy.html">BufferProxy</a> | 
+	    <a href="freetype.html">freetype</a> | 
+	    <a href="gfxdraw.html">gfxdraw</a> | 
+	    <a href="midi.html">midi</a> | 
+	    <a href="pixelarray.html">PixelArray</a> | 
+	    <a href="pixelcopy.html">pixelcopy</a> | 
+	    <a href="sndarray.html">sndarray</a> | 
+	    <a href="surfarray.html">surfarray</a> | 
+	    <a href="math.html">math</a>
+	  </p>
+
+	  <p class="bottom"><b>Other</b>:
+	    <a href="camera.html">camera</a> | 
+	    <a href="sdl2_controller.html#module-pygame._sdl2.controller">controller</a> | 
+	    <a href="examples.html">examples</a> | 
+	    <a href="fastevent.html">fastevent</a> | 
+	    <a href="scrap.html">scrap</a> | 
+	    <a href="tests.html">tests</a> | 
+	    <a href="touch.html">touch</a> | 
+	    <a href="pygame.html#module-pygame.version">version</a>
+	  </p>
+</div>
+</div>
+  </div>
+
+      <div class="documentwrapper">
+          <div class="body" role="main">
+            
+<section id="pygame-bufferproxy">
+<dl class="py class definition">
+<dt class="sig sig-object py title" id="pygame.BufferProxy">
+<span class="sig-prename descclassname"><span class="pre">pygame.</span></span><span class="sig-name descname"><span class="pre">BufferProxy</span></span><a class="headerlink" href="#pygame.BufferProxy" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">pygame object to export a surface buffer through an array protocol</span></div>
+<div class="line"><span class="signature">BufferProxy(&lt;parent&gt;) -&gt; BufferProxy</span></div>
+</div>
+<table class="toc docutils align-default">
+<tbody>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="bufferproxy.html#pygame.BufferProxy.parent">pygame.BufferProxy.parent</a></div>
+</td>
+<td>—</td>
+<td>Return wrapped exporting object.</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="bufferproxy.html#pygame.BufferProxy.length">pygame.BufferProxy.length</a></div>
+</td>
+<td>—</td>
+<td>The size, in bytes, of the exported buffer.</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="bufferproxy.html#pygame.BufferProxy.raw">pygame.BufferProxy.raw</a></div>
+</td>
+<td>—</td>
+<td>A copy of the exported buffer as a single block of bytes.</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="bufferproxy.html#pygame.BufferProxy.write">pygame.BufferProxy.write</a></div>
+</td>
+<td>—</td>
+<td>Write raw bytes to object buffer.</td>
+</tr>
+</tbody>
+</table>
+<p><a class="reference internal" href="#pygame.BufferProxy" title="pygame.BufferProxy"><code class="xref py py-class docutils literal notranslate"><span class="pre">BufferProxy</span></code></a> is a pygame support type, designed as the return value
+of the <a class="reference internal" href="surface.html#pygame.Surface.get_buffer" title="pygame.Surface.get_buffer"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Surface.get_buffer()</span></code></a> and <a class="reference internal" href="surface.html#pygame.Surface.get_view" title="pygame.Surface.get_view"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Surface.get_view()</span></code></a> methods.
+For all Python versions a <a class="reference internal" href="#pygame.BufferProxy" title="pygame.BufferProxy"><code class="xref py py-class docutils literal notranslate"><span class="pre">BufferProxy</span></code></a> object exports a C struct
+and Python level array interface on behalf of its parent object's buffer.
+A new buffer interface is also exported.
+In pygame, <a class="reference internal" href="#pygame.BufferProxy" title="pygame.BufferProxy"><code class="xref py py-class docutils literal notranslate"><span class="pre">BufferProxy</span></code></a> is key to implementing the
+<a class="tooltip reference internal" href="surfarray.html#module-pygame.surfarray" title=""><code class="xref py py-mod docutils literal notranslate"><span class="pre">pygame.surfarray</span></code><span class="tooltip-content">pygame module for accessing surface pixel data using array interfaces</span></a> module.</p>
+<p><a class="reference internal" href="#pygame.BufferProxy" title="pygame.BufferProxy"><code class="xref py py-class docutils literal notranslate"><span class="pre">BufferProxy</span></code></a> instances can be created directly from Python code,
+either for a parent that exports an interface, or from a Python <code class="docutils literal notranslate"><span class="pre">dict</span></code>
+describing an object's buffer layout. The dict entries are based on the
+Python level array interface mapping. The following keys are recognized:</p>
+<blockquote>
+<div><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">&quot;shape&quot;</span></code><span class="classifier">tuple</span></dt><dd><p>The length of each array dimension as a tuple of integers. The
+length of the tuple is the number of dimensions in the array.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">&quot;typestr&quot;</span></code><span class="classifier">string</span></dt><dd><p>The array element type as a length 3 string. The first character
+gives byteorder, '&lt;' for little-endian, '&gt;' for big-endian, and
+'|' for not applicable. The second character is the element type,
+'i' for signed integer, 'u' for unsigned integer, 'f' for floating
+point, and 'V' for an chunk of bytes. The third character gives the
+bytesize of the element, from '1' to '9' bytes. So, for example,
+&quot;&lt;u4&quot; is an unsigned 4 byte little-endian integer, such as a
+32 bit pixel on a PC, while &quot;|V3&quot; would represent a 24 bit pixel,
+which has no integer equivalent.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">&quot;data&quot;</span></code><span class="classifier">tuple</span></dt><dd><p>The physical buffer start address and a read-only flag as a length
+2 tuple. The address is an integer value, while the read-only flag
+is a bool—<code class="docutils literal notranslate"><span class="pre">False</span></code> for writable, <code class="docutils literal notranslate"><span class="pre">True</span></code> for read-only.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">&quot;strides&quot;</span></code><span class="classifier">tuple</span><span class="classifier">(optional)</span></dt><dd><p>Array stride information as a tuple of integers. It is required
+only of non C-contiguous arrays. The tuple length must match
+that of <code class="docutils literal notranslate"><span class="pre">&quot;shape&quot;</span></code>.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">&quot;parent&quot;</span></code><span class="classifier">object</span><span class="classifier">(optional)</span></dt><dd><p>The exporting object. It can be used to keep the parent object
+alive while its buffer is visible.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">&quot;before&quot;</span></code><span class="classifier">callable</span><span class="classifier">(optional)</span></dt><dd><p>Callback invoked when the <a class="reference internal" href="#pygame.BufferProxy" title="pygame.BufferProxy"><code class="xref py py-class docutils literal notranslate"><span class="pre">BufferProxy</span></code></a> instance
+exports the buffer. The callback is given one argument, the
+<code class="docutils literal notranslate"><span class="pre">&quot;parent&quot;</span></code> object if given, otherwise <code class="docutils literal notranslate"><span class="pre">None</span></code>.
+The callback is useful for setting a lock on the parent.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">&quot;after&quot;</span></code><span class="classifier">callable</span><span class="classifier">(optional)</span></dt><dd><p>Callback invoked when an exported buffer is released.
+The callback is passed on argument, the <code class="docutils literal notranslate"><span class="pre">&quot;parent&quot;</span></code> object if given,
+otherwise None. The callback is useful for releasing a lock on the
+parent.</p>
+</dd>
+</dl>
+</div></blockquote>
+<p>The BufferProxy class supports subclassing, instance variables, and weak
+references.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 1.8.0.</span></p>
+</div>
+<div class="versionextended">
+<p><span class="versionmodified extended">Extended in pygame 1.9.2.</span></p>
+</div>
+<dl class="py attribute definition">
+<dt class="sig sig-object py title" id="pygame.BufferProxy.parent">
+<span class="sig-name descname"><span class="pre">parent</span></span><a class="headerlink" href="#pygame.BufferProxy.parent" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Return wrapped exporting object.</span></div>
+<div class="line"><span class="signature">parent -&gt; Surface</span></div>
+<div class="line"><span class="signature">parent -&gt; &lt;parent&gt;</span></div>
+</div>
+<p>The <a class="reference internal" href="surface.html#pygame.Surface" title="pygame.Surface"><code class="xref py py-class docutils literal notranslate"><span class="pre">Surface</span></code></a> which returned the <a class="reference internal" href="#pygame.BufferProxy" title="pygame.BufferProxy"><code class="xref py py-class docutils literal notranslate"><span class="pre">BufferProxy</span></code></a> object or
+the object passed to a <a class="reference internal" href="#pygame.BufferProxy" title="pygame.BufferProxy"><code class="xref py py-class docutils literal notranslate"><span class="pre">BufferProxy</span></code></a> call.</p>
+</dd></dl>
+
+<dl class="py attribute definition">
+<dt class="sig sig-object py title" id="pygame.BufferProxy.length">
+<span class="sig-name descname"><span class="pre">length</span></span><a class="headerlink" href="#pygame.BufferProxy.length" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">The size, in bytes, of the exported buffer.</span></div>
+<div class="line"><span class="signature">length -&gt; int</span></div>
+</div>
+<p>The number of valid bytes of data exported. For discontinuous data,
+that is data which is not a single block of memory, the bytes within
+the gaps are excluded from the count. This property is equivalent to
+the <code class="docutils literal notranslate"><span class="pre">Py_buffer</span></code> C struct <code class="docutils literal notranslate"><span class="pre">len</span></code> field.</p>
+</dd></dl>
+
+<dl class="py attribute definition">
+<dt class="sig sig-object py title" id="pygame.BufferProxy.raw">
+<span class="sig-name descname"><span class="pre">raw</span></span><a class="headerlink" href="#pygame.BufferProxy.raw" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">A copy of the exported buffer as a single block of bytes.</span></div>
+<div class="line"><span class="signature">raw -&gt; bytes</span></div>
+</div>
+<p>The buffer data as a <code class="docutils literal notranslate"><span class="pre">str</span></code>/<code class="docutils literal notranslate"><span class="pre">bytes</span></code> object.
+Any gaps in the exported data are removed.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.BufferProxy.write">
+<span class="sig-name descname"><span class="pre">write</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.BufferProxy.write" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Write raw bytes to object buffer.</span></div>
+<div class="line"><span class="signature">write(buffer, offset=0)</span></div>
+</div>
+<p>Overwrite bytes in the parent object's data. The data must be C or F
+contiguous, otherwise a ValueError is raised. Argument <cite>buffer</cite> is a
+<code class="docutils literal notranslate"><span class="pre">str</span></code>/<code class="docutils literal notranslate"><span class="pre">bytes</span></code> object. An optional offset gives a
+start position, in bytes, within the buffer where overwriting begins.
+If the offset is negative or greater that or equal to the buffer proxy's
+<a class="reference internal" href="#pygame.BufferProxy.length" title="pygame.BufferProxy.length"><code class="xref py py-attr docutils literal notranslate"><span class="pre">length</span></code></a> value, an <code class="docutils literal notranslate"><span class="pre">IndexException</span></code> is raised.
+If <code class="docutils literal notranslate"><span class="pre">len(buffer)</span> <span class="pre">&gt;</span> <span class="pre">proxy.length</span> <span class="pre">+</span> <span class="pre">offset</span></code>, a <code class="docutils literal notranslate"><span class="pre">ValueError</span></code> is raised.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+<br /><br />
+<hr />
+<a href="https://github.com/pygame/pygame/edit/main/docs/reST/ref/bufferproxy.rst" rel="nofollow">Edit on GitHub</a>
+            <div class="clearer"></div>
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="camera.html" title="pygame.camera"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../index.html" title="Pygame Front Page"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">pygame v2.5.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href=""><code class="xref py py-class docutils literal notranslate"><span class="pre">pygame.BufferProxy</span></code></a></li>
+    <script type="text/javascript" src="https://www.pygame.org/comment/jquery.plugin.docscomments.js"></script>
+
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2000-2023, pygame developers.
+    </div>
+  </body>
+</html>

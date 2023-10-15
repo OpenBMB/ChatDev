@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>pygame.surfarray &#8212; pygame v2.5.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygame.css?v=71ee6cc2" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=ba44479e"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <link rel="icon" href="../_static/pygame.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="pygame.tests" href="tests.html" />
+    <link rel="prev" title="pygame.Surface" href="surface.html" /> 
+  </head><body>  
+
+    <div class="document">
+
+  <div class="header">
+	<div class="flex-container">
+	<div class="logo">
+	  <a href="https://www.pygame.org/">
+	    <img src="../_static/pygame_tiny.png"/>
+	  </a>
+	  <h5>pygame documentation</h5>
+	</div>
+	<div class="pagelinks">
+	  <div class="top">
+	    <a href="https://www.pygame.org/">Pygame Home</a> ||
+	    <a href="../index.html">Help Contents</a> ||
+	    <a href="../genindex.html">Reference Index</a>
+
+        <form action="../search.html" method="get" style="display:inline;float:right;">
+          <input name="q" value="" type="text">
+          <input value="search" type="submit">
+        </form>
+	  </div>
+	  <hr style="color:black;border-bottom:none;border-style: dotted;border-bottom-style:none;">
+	  <p class="bottom"><b>Most useful stuff</b>:
+	    <a href="color.html">Color</a> | 
+	    <a href="display.html">display</a> | 
+	    <a href="draw.html">draw</a> | 
+	    <a href="event.html">event</a> | 
+	    <a href="font.html">font</a> | 
+	    <a href="image.html">image</a> | 
+	    <a href="key.html">key</a> | 
+	    <a href="locals.html">locals</a> | 
+	    <a href="mixer.html">mixer</a> | 
+	    <a href="mouse.html">mouse</a> | 
+	    <a href="rect.html">Rect</a> | 
+	    <a href="surface.html">Surface</a> | 
+	    <a href="time.html">time</a> | 
+	    <a href="music.html">music</a> | 
+	    <a href="pygame.html">pygame</a>
+	  </p>
+
+	  <p class="bottom"><b>Advanced stuff</b>:
+	    <a href="cursors.html">cursors</a> | 
+	    <a href="joystick.html">joystick</a> | 
+	    <a href="mask.html">mask</a> | 
+	    <a href="sprite.html">sprite</a> | 
+	    <a href="transform.html">transform</a> | 
+	    <a href="bufferproxy.html">BufferProxy</a> | 
+	    <a href="freetype.html">freetype</a> | 
+	    <a href="gfxdraw.html">gfxdraw</a> | 
+	    <a href="midi.html">midi</a> | 
+	    <a href="pixelarray.html">PixelArray</a> | 
+	    <a href="pixelcopy.html">pixelcopy</a> | 
+	    <a href="sndarray.html">sndarray</a> | 
+	    <a href="surfarray.html">surfarray</a> | 
+	    <a href="math.html">math</a>
+	  </p>
+
+	  <p class="bottom"><b>Other</b>:
+	    <a href="camera.html">camera</a> | 
+	    <a href="sdl2_controller.html#module-pygame._sdl2.controller">controller</a> | 
+	    <a href="examples.html">examples</a> | 
+	    <a href="fastevent.html">fastevent</a> | 
+	    <a href="scrap.html">scrap</a> | 
+	    <a href="tests.html">tests</a> | 
+	    <a href="touch.html">touch</a> | 
+	    <a href="pygame.html#module-pygame.version">version</a>
+	  </p>
+</div>
+</div>
+  </div>
+
+      <div class="documentwrapper">
+          <div class="body" role="main">
+            
+<section id="module-pygame.surfarray">
+<span id="pygame-surfarray"></span><dl class="definition">
+<dt class="title module sig sig-object">
+<code class="docutils literal notranslate"><span class="pre">pygame.surfarray</span></code></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">pygame module for accessing surface pixel data using array interfaces</span></div>
+</div>
+<table class="toc docutils align-default">
+<tbody>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="surfarray.html#pygame.surfarray.array2d">pygame.surfarray.array2d</a></div>
+</td>
+<td>—</td>
+<td>Copy pixels into a 2d array</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="surfarray.html#pygame.surfarray.pixels2d">pygame.surfarray.pixels2d</a></div>
+</td>
+<td>—</td>
+<td>Reference pixels into a 2d array</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="surfarray.html#pygame.surfarray.array3d">pygame.surfarray.array3d</a></div>
+</td>
+<td>—</td>
+<td>Copy pixels into a 3d array</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="surfarray.html#pygame.surfarray.pixels3d">pygame.surfarray.pixels3d</a></div>
+</td>
+<td>—</td>
+<td>Reference pixels into a 3d array</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="surfarray.html#pygame.surfarray.array_alpha">pygame.surfarray.array_alpha</a></div>
+</td>
+<td>—</td>
+<td>Copy pixel alphas into a 2d array</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="surfarray.html#pygame.surfarray.pixels_alpha">pygame.surfarray.pixels_alpha</a></div>
+</td>
+<td>—</td>
+<td>Reference pixel alphas into a 2d array</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="surfarray.html#pygame.surfarray.array_red">pygame.surfarray.array_red</a></div>
+</td>
+<td>—</td>
+<td>Copy red pixels into a 2d array</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="surfarray.html#pygame.surfarray.pixels_red">pygame.surfarray.pixels_red</a></div>
+</td>
+<td>—</td>
+<td>Reference pixel red into a 2d array.</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="surfarray.html#pygame.surfarray.array_green">pygame.surfarray.array_green</a></div>
+</td>
+<td>—</td>
+<td>Copy green pixels into a 2d array</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="surfarray.html#pygame.surfarray.pixels_green">pygame.surfarray.pixels_green</a></div>
+</td>
+<td>—</td>
+<td>Reference pixel green into a 2d array.</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="surfarray.html#pygame.surfarray.array_blue">pygame.surfarray.array_blue</a></div>
+</td>
+<td>—</td>
+<td>Copy blue pixels into a 2d array</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="surfarray.html#pygame.surfarray.pixels_blue">pygame.surfarray.pixels_blue</a></div>
+</td>
+<td>—</td>
+<td>Reference pixel blue into a 2d array.</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="surfarray.html#pygame.surfarray.array_colorkey">pygame.surfarray.array_colorkey</a></div>
+</td>
+<td>—</td>
+<td>Copy the colorkey values into a 2d array</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="surfarray.html#pygame.surfarray.make_surface">pygame.surfarray.make_surface</a></div>
+</td>
+<td>—</td>
+<td>Copy an array to a new surface</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="surfarray.html#pygame.surfarray.blit_array">pygame.surfarray.blit_array</a></div>
+</td>
+<td>—</td>
+<td>Blit directly from a array values</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="surfarray.html#pygame.surfarray.map_array">pygame.surfarray.map_array</a></div>
+</td>
+<td>—</td>
+<td>Map a 3d array into a 2d array</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="surfarray.html#pygame.surfarray.use_arraytype">pygame.surfarray.use_arraytype</a></div>
+</td>
+<td>—</td>
+<td>Sets the array system to be used for surface arrays</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="surfarray.html#pygame.surfarray.get_arraytype">pygame.surfarray.get_arraytype</a></div>
+</td>
+<td>—</td>
+<td>Gets the currently active array type.</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="surfarray.html#pygame.surfarray.get_arraytypes">pygame.surfarray.get_arraytypes</a></div>
+</td>
+<td>—</td>
+<td>Gets the array system types currently supported.</td>
+</tr>
+</tbody>
+</table>
+<p>Functions to convert between NumPy arrays and Surface objects. This module
+will only be functional when pygame can use the external NumPy package.
+If NumPy can't be imported, <code class="docutils literal notranslate"><span class="pre">surfarray</span></code> becomes a <code class="docutils literal notranslate"><span class="pre">MissingModule</span></code> object.</p>
+<p>Every pixel is stored as a single integer value to represent the red, green,
+and blue colors. The 8-bit images use a value that looks into a colormap. Pixels
+with higher depth use a bit packing process to place three or four values into
+a single number.</p>
+<p>The arrays are indexed by the <code class="docutils literal notranslate"><span class="pre">X</span></code> axis first, followed by the <code class="docutils literal notranslate"><span class="pre">Y</span></code> axis.
+Arrays that treat the pixels as a single integer are referred to as 2D arrays.
+This module can also separate the red, green, and blue color values into
+separate indices. These types of arrays are referred to as 3D arrays, and the
+last index is 0 for red, 1 for green, and 2 for blue.</p>
+<p>The pixels of a 2D array as returned by <a class="reference internal" href="#pygame.surfarray.array2d" title="pygame.surfarray.array2d"><code class="xref py py-func docutils literal notranslate"><span class="pre">array2d()</span></code></a> and <a class="reference internal" href="#pygame.surfarray.pixels2d" title="pygame.surfarray.pixels2d"><code class="xref py py-func docutils literal notranslate"><span class="pre">pixels2d()</span></code></a>
+are mapped to the specific surface. Use <a class="tooltip reference internal" href="surface.html#pygame.Surface.unmap_rgb" title=""><code class="xref py py-meth docutils literal notranslate"><span class="pre">pygame.Surface.unmap_rgb()</span></code><span class="tooltip-content">convert a mapped integer color value into a Color</span></a>
+to convert to a color, and <a class="tooltip reference internal" href="surface.html#pygame.Surface.map_rgb" title=""><code class="xref py py-meth docutils literal notranslate"><span class="pre">pygame.Surface.map_rgb()</span></code><span class="tooltip-content">convert a color into a mapped color value</span></a> to get the surface
+specific pixel value of a color. Integer pixel values can only be used directly
+between surfaces with matching pixel layouts (see <a class="tooltip reference internal" href="surface.html#pygame.Surface" title=""><code class="xref py py-class docutils literal notranslate"><span class="pre">pygame.Surface</span></code><span class="tooltip-content">pygame object for representing images</span></a>).</p>
+<p>All functions that refer to &quot;array&quot; will copy the surface information to a new
+numpy array. All functions that refer to &quot;pixels&quot; will directly reference the
+pixels from the surface and any changes performed to the array will make changes
+in the surface. As this last functions share memory with the surface, this one
+will be locked during the lifetime of the array.</p>
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.surfarray.array2d">
+<span class="sig-prename descclassname"><span class="pre">pygame.surfarray.</span></span><span class="sig-name descname"><span class="pre">array2d</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.surfarray.array2d" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Copy pixels into a 2d array</span></div>
+<div class="line"><span class="signature">array2d(Surface) -&gt; array</span></div>
+</div>
+<p>Copy the <a class="reference internal" href="surface.html#pygame.Surface.map_rgb" title="pygame.Surface.map_rgb"><code class="xref py py-meth docutils literal notranslate"><span class="pre">mapped</span></code></a> (raw) pixels from a Surface
+into a 2D array.
+The bit depth of the surface will control the size of the integer values,
+and will work for any type of pixel format.</p>
+<p>This function will temporarily lock the Surface as pixels are copied
+(see the <a class="tooltip reference internal" href="surface.html#pygame.Surface.lock" title=""><code class="xref py py-meth docutils literal notranslate"><span class="pre">pygame.Surface.lock()</span></code><span class="tooltip-content">lock the Surface memory for pixel access</span></a> - lock the Surface memory for pixel
+access method).</p>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.surfarray.pixels2d">
+<span class="sig-prename descclassname"><span class="pre">pygame.surfarray.</span></span><span class="sig-name descname"><span class="pre">pixels2d</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.surfarray.pixels2d" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Reference pixels into a 2d array</span></div>
+<div class="line"><span class="signature">pixels2d(Surface) -&gt; array</span></div>
+</div>
+<p>Create a new 2D array that directly references the pixel values in a
+Surface. Any changes to the array will affect the pixels in the Surface.
+This is a fast operation since no data is copied.</p>
+<p>Pixels from a 24-bit Surface cannot be referenced, but all other Surface bit
+depths can.</p>
+<p>The Surface this references will remain locked for the lifetime of the array,
+since the array generated by this function shares memory with the surface.
+See the <a class="tooltip reference internal" href="surface.html#pygame.Surface.lock" title=""><code class="xref py py-meth docutils literal notranslate"><span class="pre">pygame.Surface.lock()</span></code><span class="tooltip-content">lock the Surface memory for pixel access</span></a> - lock the Surface memory for pixel
+access method.</p>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.surfarray.array3d">
+<span class="sig-prename descclassname"><span class="pre">pygame.surfarray.</span></span><span class="sig-name descname"><span class="pre">array3d</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.surfarray.array3d" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Copy pixels into a 3d array</span></div>
+<div class="line"><span class="signature">array3d(Surface) -&gt; array</span></div>
+</div>
+<p>Copy the pixels from a Surface into a 3D array. The bit depth of the surface
+will control the size of the integer values, and will work for any type of
+pixel format.</p>
+<p>This function will temporarily lock the Surface as pixels are copied (see
+the <a class="tooltip reference internal" href="surface.html#pygame.Surface.lock" title=""><code class="xref py py-meth docutils literal notranslate"><span class="pre">pygame.Surface.lock()</span></code><span class="tooltip-content">lock the Surface memory for pixel access</span></a> - lock the Surface memory for pixel
+access method).</p>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.surfarray.pixels3d">
+<span class="sig-prename descclassname"><span class="pre">pygame.surfarray.</span></span><span class="sig-name descname"><span class="pre">pixels3d</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.surfarray.pixels3d" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Reference pixels into a 3d array</span></div>
+<div class="line"><span class="signature">pixels3d(Surface) -&gt; array</span></div>
+</div>
+<p>Create a new 3D array that directly references the pixel values in a
+Surface. Any changes to the array will affect the pixels in the Surface.
+This is a fast operation since no data is copied.</p>
+<p>This will only work on Surfaces that have 24-bit or 32-bit formats. Lower
+pixel formats cannot be referenced.</p>
+<p>The Surface this references will remain locked for the lifetime of the array,
+since the array generated by this function shares memory with the surface.
+See the <a class="tooltip reference internal" href="surface.html#pygame.Surface.lock" title=""><code class="xref py py-meth docutils literal notranslate"><span class="pre">pygame.Surface.lock()</span></code><span class="tooltip-content">lock the Surface memory for pixel access</span></a> - lock the Surface memory for pixel
+access method.</p>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.surfarray.array_alpha">
+<span class="sig-prename descclassname"><span class="pre">pygame.surfarray.</span></span><span class="sig-name descname"><span class="pre">array_alpha</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.surfarray.array_alpha" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Copy pixel alphas into a 2d array</span></div>
+<div class="line"><span class="signature">array_alpha(Surface) -&gt; array</span></div>
+</div>
+<p>Copy the pixel alpha values (degree of transparency) from a Surface into a
+2D array. This will work for any type of Surface format. Surfaces without a
+pixel alpha will return an array with all opaque values.</p>
+<p>This function will temporarily lock the Surface as pixels are copied (see
+the <a class="tooltip reference internal" href="surface.html#pygame.Surface.lock" title=""><code class="xref py py-meth docutils literal notranslate"><span class="pre">pygame.Surface.lock()</span></code><span class="tooltip-content">lock the Surface memory for pixel access</span></a> - lock the Surface memory for pixel
+access method).</p>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.surfarray.pixels_alpha">
+<span class="sig-prename descclassname"><span class="pre">pygame.surfarray.</span></span><span class="sig-name descname"><span class="pre">pixels_alpha</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.surfarray.pixels_alpha" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Reference pixel alphas into a 2d array</span></div>
+<div class="line"><span class="signature">pixels_alpha(Surface) -&gt; array</span></div>
+</div>
+<p>Create a new 2D array that directly references the alpha values (degree of
+transparency) in a Surface. Any changes to the array will affect the pixels
+in the Surface. This is a fast operation since no data is copied.</p>
+<p>This can only work on 32-bit Surfaces with a per-pixel alpha value.</p>
+<p>The Surface this references will remain locked for the lifetime of the array,
+since the array generated by this function shares memory with the surface.
+See the <a class="tooltip reference internal" href="surface.html#pygame.Surface.lock" title=""><code class="xref py py-meth docutils literal notranslate"><span class="pre">pygame.Surface.lock()</span></code><span class="tooltip-content">lock the Surface memory for pixel access</span></a> - lock the Surface memory for pixel
+access method.</p>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.surfarray.array_red">
+<span class="sig-prename descclassname"><span class="pre">pygame.surfarray.</span></span><span class="sig-name descname"><span class="pre">array_red</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.surfarray.array_red" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Copy red pixels into a 2d array</span></div>
+<div class="line"><span class="signature">array_red(Surface) -&gt; array</span></div>
+</div>
+<p>Copy the pixel red values from a Surface into a 2D array. This will work
+for any type of Surface format.</p>
+<p>This function will temporarily lock the Surface as pixels are copied (see
+the <a class="tooltip reference internal" href="surface.html#pygame.Surface.lock" title=""><code class="xref py py-meth docutils literal notranslate"><span class="pre">pygame.Surface.lock()</span></code><span class="tooltip-content">lock the Surface memory for pixel access</span></a> - lock the Surface memory for pixel
+access method).</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 2.0.2.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.surfarray.pixels_red">
+<span class="sig-prename descclassname"><span class="pre">pygame.surfarray.</span></span><span class="sig-name descname"><span class="pre">pixels_red</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.surfarray.pixels_red" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Reference pixel red into a 2d array.</span></div>
+<div class="line"><span class="signature">pixels_red (Surface) -&gt; array</span></div>
+</div>
+<p>Create a new 2D array that directly references the red values in a Surface.
+Any changes to the array will affect the pixels in the Surface. This is a
+fast operation since no data is copied.</p>
+<p>This can only work on 24-bit or 32-bit Surfaces.</p>
+<p>The Surface this references will remain locked for the lifetime of the array,
+since the array generated by this function shares memory with the surface.
+See the <a class="tooltip reference internal" href="surface.html#pygame.Surface.lock" title=""><code class="xref py py-meth docutils literal notranslate"><span class="pre">pygame.Surface.lock()</span></code><span class="tooltip-content">lock the Surface memory for pixel access</span></a> - lock the Surface memory for pixel
+access method.</p>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.surfarray.array_green">
+<span class="sig-prename descclassname"><span class="pre">pygame.surfarray.</span></span><span class="sig-name descname"><span class="pre">array_green</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.surfarray.array_green" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Copy green pixels into a 2d array</span></div>
+<div class="line"><span class="signature">array_green(Surface) -&gt; array</span></div>
+</div>
+<p>Copy the pixel green values from a Surface into a 2D array. This will work
+for any type of Surface format.</p>
+<p>This function will temporarily lock the Surface as pixels are copied (see
+the <a class="tooltip reference internal" href="surface.html#pygame.Surface.lock" title=""><code class="xref py py-meth docutils literal notranslate"><span class="pre">pygame.Surface.lock()</span></code><span class="tooltip-content">lock the Surface memory for pixel access</span></a> - lock the Surface memory for pixel
+access method).</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 2.0.2.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.surfarray.pixels_green">
+<span class="sig-prename descclassname"><span class="pre">pygame.surfarray.</span></span><span class="sig-name descname"><span class="pre">pixels_green</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.surfarray.pixels_green" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Reference pixel green into a 2d array.</span></div>
+<div class="line"><span class="signature">pixels_green (Surface) -&gt; array</span></div>
+</div>
+<p>Create a new 2D array that directly references the green values in a
+Surface. Any changes to the array will affect the pixels in the Surface.
+This is a fast operation since no data is copied.</p>
+<p>This can only work on 24-bit or 32-bit Surfaces.</p>
+<p>The Surface this references will remain locked for the lifetime of the array,
+since the array generated by this function shares memory with the surface.
+See the <a class="tooltip reference internal" href="surface.html#pygame.Surface.lock" title=""><code class="xref py py-meth docutils literal notranslate"><span class="pre">pygame.Surface.lock()</span></code><span class="tooltip-content">lock the Surface memory for pixel access</span></a> - lock the Surface memory for pixel
+access method.</p>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.surfarray.array_blue">
+<span class="sig-prename descclassname"><span class="pre">pygame.surfarray.</span></span><span class="sig-name descname"><span class="pre">array_blue</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.surfarray.array_blue" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Copy blue pixels into a 2d array</span></div>
+<div class="line"><span class="signature">array_blue(Surface) -&gt; array</span></div>
+</div>
+<p>Copy the pixel blue values from a Surface into a 2D array. This will work
+for any type of Surface format.</p>
+<p>This function will temporarily lock the Surface as pixels are copied (see
+the <a class="tooltip reference internal" href="surface.html#pygame.Surface.lock" title=""><code class="xref py py-meth docutils literal notranslate"><span class="pre">pygame.Surface.lock()</span></code><span class="tooltip-content">lock the Surface memory for pixel access</span></a> - lock the Surface memory for pixel
+access method).</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 2.0.2.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.surfarray.pixels_blue">
+<span class="sig-prename descclassname"><span class="pre">pygame.surfarray.</span></span><span class="sig-name descname"><span class="pre">pixels_blue</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.surfarray.pixels_blue" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Reference pixel blue into a 2d array.</span></div>
+<div class="line"><span class="signature">pixels_blue (Surface) -&gt; array</span></div>
+</div>
+<p>Create a new 2D array that directly references the blue values in a Surface.
+Any changes to the array will affect the pixels in the Surface. This is a
+fast operation since no data is copied.</p>
+<p>This can only work on 24-bit or 32-bit Surfaces.</p>
+<p>The Surface this references will remain locked for the lifetime of the array,
+since the array generated by this function shares memory with the surface.
+See the <a class="tooltip reference internal" href="surface.html#pygame.Surface.lock" title=""><code class="xref py py-meth docutils literal notranslate"><span class="pre">pygame.Surface.lock()</span></code><span class="tooltip-content">lock the Surface memory for pixel access</span></a> - lock the Surface memory for pixel
+access method.</p>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.surfarray.array_colorkey">
+<span class="sig-prename descclassname"><span class="pre">pygame.surfarray.</span></span><span class="sig-name descname"><span class="pre">array_colorkey</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.surfarray.array_colorkey" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Copy the colorkey values into a 2d array</span></div>
+<div class="line"><span class="signature">array_colorkey(Surface) -&gt; array</span></div>
+</div>
+<p>Create a new array with the colorkey transparency value from each pixel. If
+the pixel matches the colorkey it will be fully transparent; otherwise it
+will be fully opaque.</p>
+<p>This will work on any type of Surface format. If the image has no colorkey a
+solid opaque array will be returned.</p>
+<p>This function will temporarily lock the Surface as pixels are copied.</p>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.surfarray.make_surface">
+<span class="sig-prename descclassname"><span class="pre">pygame.surfarray.</span></span><span class="sig-name descname"><span class="pre">make_surface</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.surfarray.make_surface" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Copy an array to a new surface</span></div>
+<div class="line"><span class="signature">make_surface(array) -&gt; Surface</span></div>
+</div>
+<p>Create a new Surface that best resembles the data and format on the array.
+The array can be 2D or 3D with any sized integer values. Function
+make_surface uses the array struct interface to acquire array properties,
+so is not limited to just NumPy arrays. See <a class="tooltip reference internal" href="pixelcopy.html#module-pygame.pixelcopy" title=""><code class="xref py py-mod docutils literal notranslate"><span class="pre">pygame.pixelcopy</span></code><span class="tooltip-content">pygame module for general pixel array copying</span></a>.</p>
+<p>New in pygame 1.9.2: array struct interface support.</p>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.surfarray.blit_array">
+<span class="sig-prename descclassname"><span class="pre">pygame.surfarray.</span></span><span class="sig-name descname"><span class="pre">blit_array</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.surfarray.blit_array" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Blit directly from a array values</span></div>
+<div class="line"><span class="signature">blit_array(Surface, array) -&gt; None</span></div>
+</div>
+<p>Directly copy values from an array into a Surface. This is faster than
+converting the array into a Surface and blitting. The array must be the same
+dimensions as the Surface and will completely replace all pixel values. Only
+integer, ASCII character and record arrays are accepted.</p>
+<p>This function will temporarily lock the Surface as the new values are
+copied.</p>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.surfarray.map_array">
+<span class="sig-prename descclassname"><span class="pre">pygame.surfarray.</span></span><span class="sig-name descname"><span class="pre">map_array</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.surfarray.map_array" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Map a 3d array into a 2d array</span></div>
+<div class="line"><span class="signature">map_array(Surface, array3d) -&gt; array2d</span></div>
+</div>
+<p>Convert a 3D array into a 2D array. This will use the given Surface format
+to control the conversion. Palette surface formats are supported for NumPy
+arrays.</p>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.surfarray.use_arraytype">
+<span class="sig-prename descclassname"><span class="pre">pygame.surfarray.</span></span><span class="sig-name descname"><span class="pre">use_arraytype</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.surfarray.use_arraytype" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Sets the array system to be used for surface arrays</span></div>
+<div class="line"><span class="signature">use_arraytype (arraytype) -&gt; None</span></div>
+</div>
+<p>DEPRECATED: Uses the requested array type for the module functions.
+The only supported arraytype is <code class="docutils literal notranslate"><span class="pre">'numpy'</span></code>. Other values will raise
+ValueError. Using this function will raise a <code class="docutils literal notranslate"><span class="pre">DeprecationWarning</span></code>.</p>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.surfarray.get_arraytype">
+<span class="sig-prename descclassname"><span class="pre">pygame.surfarray.</span></span><span class="sig-name descname"><span class="pre">get_arraytype</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.surfarray.get_arraytype" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Gets the currently active array type.</span></div>
+<div class="line"><span class="signature">get_arraytype () -&gt; str</span></div>
+</div>
+<p>DEPRECATED: Returns the currently active array type. This will be a value of the
+<code class="docutils literal notranslate"><span class="pre">get_arraytypes()</span></code> tuple and indicates which type of array module is used
+for the array creation. Using this function will raise a <code class="docutils literal notranslate"><span class="pre">DeprecationWarning</span></code>.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 1.8.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.surfarray.get_arraytypes">
+<span class="sig-prename descclassname"><span class="pre">pygame.surfarray.</span></span><span class="sig-name descname"><span class="pre">get_arraytypes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.surfarray.get_arraytypes" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Gets the array system types currently supported.</span></div>
+<div class="line"><span class="signature">get_arraytypes () -&gt; tuple</span></div>
+</div>
+<p>DEPRECATED: Checks, which array systems are available and returns them as a tuple of
+strings. The values of the tuple can be used directly in the
+<a class="tooltip reference internal" href="#pygame.surfarray.use_arraytype" title=""><code class="xref py py-func docutils literal notranslate"><span class="pre">pygame.surfarray.use_arraytype()</span></code><span class="tooltip-content">Sets the array system to be used for surface arrays</span></a> () method. If no supported array
+system could be found, None will be returned.  Using this function will raise a
+<code class="docutils literal notranslate"><span class="pre">DeprecationWarning</span></code>.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 1.8.</span></p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+<br /><br />
+<hr />
+<a href="https://github.com/pygame/pygame/edit/main/docs/reST/ref/surfarray.rst" rel="nofollow">Edit on GitHub</a>
+            <div class="clearer"></div>
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="tests.html" title="pygame.tests"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="surface.html" title="pygame.Surface"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">pygame v2.5.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href=""><code class="xref py py-mod docutils literal notranslate"><span class="pre">pygame.surfarray</span></code></a></li>
+    <script type="text/javascript" src="https://www.pygame.org/comment/jquery.plugin.docscomments.js"></script>
+
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2000-2023, pygame developers.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>pygame.Rect &#8212; pygame v2.5.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygame.css?v=71ee6cc2" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=ba44479e"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <link rel="icon" href="../_static/pygame.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="pygame.scrap" href="scrap.html" />
+    <link rel="prev" title="pygame" href="pygame.html" /> 
+  </head><body>  
+
+    <div class="document">
+
+  <div class="header">
+	<div class="flex-container">
+	<div class="logo">
+	  <a href="https://www.pygame.org/">
+	    <img src="../_static/pygame_tiny.png"/>
+	  </a>
+	  <h5>pygame documentation</h5>
+	</div>
+	<div class="pagelinks">
+	  <div class="top">
+	    <a href="https://www.pygame.org/">Pygame Home</a> ||
+	    <a href="../index.html">Help Contents</a> ||
+	    <a href="../genindex.html">Reference Index</a>
+
+        <form action="../search.html" method="get" style="display:inline;float:right;">
+          <input name="q" value="" type="text">
+          <input value="search" type="submit">
+        </form>
+	  </div>
+	  <hr style="color:black;border-bottom:none;border-style: dotted;border-bottom-style:none;">
+	  <p class="bottom"><b>Most useful stuff</b>:
+	    <a href="color.html">Color</a> | 
+	    <a href="display.html">display</a> | 
+	    <a href="draw.html">draw</a> | 
+	    <a href="event.html">event</a> | 
+	    <a href="font.html">font</a> | 
+	    <a href="image.html">image</a> | 
+	    <a href="key.html">key</a> | 
+	    <a href="locals.html">locals</a> | 
+	    <a href="mixer.html">mixer</a> | 
+	    <a href="mouse.html">mouse</a> | 
+	    <a href="rect.html">Rect</a> | 
+	    <a href="surface.html">Surface</a> | 
+	    <a href="time.html">time</a> | 
+	    <a href="music.html">music</a> | 
+	    <a href="pygame.html">pygame</a>
+	  </p>
+
+	  <p class="bottom"><b>Advanced stuff</b>:
+	    <a href="cursors.html">cursors</a> | 
+	    <a href="joystick.html">joystick</a> | 
+	    <a href="mask.html">mask</a> | 
+	    <a href="sprite.html">sprite</a> | 
+	    <a href="transform.html">transform</a> | 
+	    <a href="bufferproxy.html">BufferProxy</a> | 
+	    <a href="freetype.html">freetype</a> | 
+	    <a href="gfxdraw.html">gfxdraw</a> | 
+	    <a href="midi.html">midi</a> | 
+	    <a href="pixelarray.html">PixelArray</a> | 
+	    <a href="pixelcopy.html">pixelcopy</a> | 
+	    <a href="sndarray.html">sndarray</a> | 
+	    <a href="surfarray.html">surfarray</a> | 
+	    <a href="math.html">math</a>
+	  </p>
+
+	  <p class="bottom"><b>Other</b>:
+	    <a href="camera.html">camera</a> | 
+	    <a href="sdl2_controller.html#module-pygame._sdl2.controller">controller</a> | 
+	    <a href="examples.html">examples</a> | 
+	    <a href="fastevent.html">fastevent</a> | 
+	    <a href="scrap.html">scrap</a> | 
+	    <a href="tests.html">tests</a> | 
+	    <a href="touch.html">touch</a> | 
+	    <a href="pygame.html#module-pygame.version">version</a>
+	  </p>
+</div>
+</div>
+  </div>
+
+      <div class="documentwrapper">
+          <div class="body" role="main">
+            
+<section id="pygame-rect">
+<dl class="py class definition">
+<dt class="sig sig-object py title" id="pygame.Rect">
+<span class="sig-prename descclassname"><span class="pre">pygame.</span></span><span class="sig-name descname"><span class="pre">Rect</span></span><a class="headerlink" href="#pygame.Rect" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">pygame object for storing rectangular coordinates</span></div>
+<div class="line"><span class="signature">Rect(left, top, width, height) -&gt; Rect</span></div>
+<div class="line"><span class="signature">Rect((left, top), (width, height)) -&gt; Rect</span></div>
+<div class="line"><span class="signature">Rect(object) -&gt; Rect</span></div>
+</div>
+<table class="toc docutils align-default">
+<tbody>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="rect.html#pygame.Rect.copy">pygame.Rect.copy</a></div>
+</td>
+<td>—</td>
+<td>copy the rectangle</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="rect.html#pygame.Rect.move">pygame.Rect.move</a></div>
+</td>
+<td>—</td>
+<td>moves the rectangle</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="rect.html#pygame.Rect.move_ip">pygame.Rect.move_ip</a></div>
+</td>
+<td>—</td>
+<td>moves the rectangle, in place</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="rect.html#pygame.Rect.inflate">pygame.Rect.inflate</a></div>
+</td>
+<td>—</td>
+<td>grow or shrink the rectangle size</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="rect.html#pygame.Rect.inflate_ip">pygame.Rect.inflate_ip</a></div>
+</td>
+<td>—</td>
+<td>grow or shrink the rectangle size, in place</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="rect.html#pygame.Rect.scale_by">pygame.Rect.scale_by</a></div>
+</td>
+<td>—</td>
+<td>scale the rectangle by given a multiplier</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="rect.html#pygame.Rect.scale_by_ip">pygame.Rect.scale_by_ip</a></div>
+</td>
+<td>—</td>
+<td>grow or shrink the rectangle size, in place</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="rect.html#pygame.Rect.update">pygame.Rect.update</a></div>
+</td>
+<td>—</td>
+<td>sets the position and size of the rectangle</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="rect.html#pygame.Rect.clamp">pygame.Rect.clamp</a></div>
+</td>
+<td>—</td>
+<td>moves the rectangle inside another</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="rect.html#pygame.Rect.clamp_ip">pygame.Rect.clamp_ip</a></div>
+</td>
+<td>—</td>
+<td>moves the rectangle inside another, in place</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="rect.html#pygame.Rect.clip">pygame.Rect.clip</a></div>
+</td>
+<td>—</td>
+<td>crops a rectangle inside another</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="rect.html#pygame.Rect.clipline">pygame.Rect.clipline</a></div>
+</td>
+<td>—</td>
+<td>crops a line inside a rectangle</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="rect.html#pygame.Rect.union">pygame.Rect.union</a></div>
+</td>
+<td>—</td>
+<td>joins two rectangles into one</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="rect.html#pygame.Rect.union_ip">pygame.Rect.union_ip</a></div>
+</td>
+<td>—</td>
+<td>joins two rectangles into one, in place</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="rect.html#pygame.Rect.unionall">pygame.Rect.unionall</a></div>
+</td>
+<td>—</td>
+<td>the union of many rectangles</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="rect.html#pygame.Rect.unionall_ip">pygame.Rect.unionall_ip</a></div>
+</td>
+<td>—</td>
+<td>the union of many rectangles, in place</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="rect.html#pygame.Rect.fit">pygame.Rect.fit</a></div>
+</td>
+<td>—</td>
+<td>resize and move a rectangle with aspect ratio</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="rect.html#pygame.Rect.normalize">pygame.Rect.normalize</a></div>
+</td>
+<td>—</td>
+<td>correct negative sizes</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="rect.html#pygame.Rect.contains">pygame.Rect.contains</a></div>
+</td>
+<td>—</td>
+<td>test if one rectangle is inside another</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="rect.html#pygame.Rect.collidepoint">pygame.Rect.collidepoint</a></div>
+</td>
+<td>—</td>
+<td>test if a point is inside a rectangle</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="rect.html#pygame.Rect.colliderect">pygame.Rect.colliderect</a></div>
+</td>
+<td>—</td>
+<td>test if two rectangles overlap</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="rect.html#pygame.Rect.collidelist">pygame.Rect.collidelist</a></div>
+</td>
+<td>—</td>
+<td>test if one rectangle in a list intersects</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="rect.html#pygame.Rect.collidelistall">pygame.Rect.collidelistall</a></div>
+</td>
+<td>—</td>
+<td>test if all rectangles in a list intersect</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="rect.html#pygame.Rect.collideobjects">pygame.Rect.collideobjects</a></div>
+</td>
+<td>—</td>
+<td>test if any object in a list intersects</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="rect.html#pygame.Rect.collideobjectsall">pygame.Rect.collideobjectsall</a></div>
+</td>
+<td>—</td>
+<td>test if all objects in a list intersect</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="rect.html#pygame.Rect.collidedict">pygame.Rect.collidedict</a></div>
+</td>
+<td>—</td>
+<td>test if one rectangle in a dictionary intersects</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="rect.html#pygame.Rect.collidedictall">pygame.Rect.collidedictall</a></div>
+</td>
+<td>—</td>
+<td>test if all rectangles in a dictionary intersect</td>
+</tr>
+</tbody>
+</table>
+<p>Pygame uses Rect objects to store and manipulate rectangular areas. A Rect
+can be created from a combination of left, top, width, and height values.
+Rects can also be created from Python objects that are already a Rect or
+have an attribute named &quot;rect&quot;.</p>
+<p>Any Pygame function that requires a Rect argument also accepts any of these
+values to construct a Rect. This makes it easier to create Rects on the fly
+as arguments for functions.</p>
+<p>The Rect functions that change the position or size of a Rect return a new
+copy of the Rect with the affected changes. The original Rect is not
+modified. Some methods have an alternate &quot;in-place&quot; version that returns
+None but affects the original Rect. These &quot;in-place&quot; methods are denoted
+with the &quot;ip&quot; suffix.</p>
+<p>The Rect object has several virtual attributes which can be used to move and
+align the Rect:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">x</span><span class="p">,</span><span class="n">y</span>
+<span class="n">top</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">bottom</span><span class="p">,</span> <span class="n">right</span>
+<span class="n">topleft</span><span class="p">,</span> <span class="n">bottomleft</span><span class="p">,</span> <span class="n">topright</span><span class="p">,</span> <span class="n">bottomright</span>
+<span class="n">midtop</span><span class="p">,</span> <span class="n">midleft</span><span class="p">,</span> <span class="n">midbottom</span><span class="p">,</span> <span class="n">midright</span>
+<span class="n">center</span><span class="p">,</span> <span class="n">centerx</span><span class="p">,</span> <span class="n">centery</span>
+<span class="n">size</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span>
+<span class="n">w</span><span class="p">,</span><span class="n">h</span>
+</pre></div>
+</div>
+<p>All of these attributes can be assigned to:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">rect1</span><span class="o">.</span><span class="n">right</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">rect2</span><span class="o">.</span><span class="n">center</span> <span class="o">=</span> <span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">30</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Assigning to size, width or height changes the dimensions of the rectangle;
+all other assignments move the rectangle without resizing it. Notice that
+some attributes are integers and others are pairs of integers.</p>
+<p>If a Rect has a nonzero width or height, it will return <code class="docutils literal notranslate"><span class="pre">True</span></code> for a
+nonzero test. Some methods return a Rect with 0 size to represent an invalid
+rectangle. A Rect with a 0 size will not collide when using collision
+detection methods (e.g. <a class="reference internal" href="#pygame.Rect.collidepoint" title="pygame.Rect.collidepoint"><code class="xref py py-meth docutils literal notranslate"><span class="pre">collidepoint()</span></code></a>, <a class="reference internal" href="#pygame.Rect.colliderect" title="pygame.Rect.colliderect"><code class="xref py py-meth docutils literal notranslate"><span class="pre">colliderect()</span></code></a>, etc.).</p>
+<p>The coordinates for Rect objects are all integers. The size values can be
+programmed to have negative values, but these are considered illegal Rects
+for most operations.</p>
+<p>There are several collision tests between other rectangles. Most python
+containers can be searched for collisions against a single Rect.</p>
+<p>The area covered by a Rect does not include the right- and bottom-most edge
+of pixels. If one Rect's bottom border is another Rect's top border (i.e.,
+rect1.bottom=rect2.top), the two meet exactly on the screen but do not
+overlap, and <code class="docutils literal notranslate"><span class="pre">rect1.colliderect(rect2)</span></code> returns false.</p>
+<p>The Rect object is also iterable:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">r</span> <span class="o">=</span> <span class="n">Rect</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">h</span> <span class="o">=</span> <span class="n">r</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 1.9.2: </span>The Rect class can be subclassed. Methods such as <code class="docutils literal notranslate"><span class="pre">copy()</span></code> and <code class="docutils literal notranslate"><span class="pre">move()</span></code>
+will recognize this and return instances of the subclass.
+However, the subclass's <code class="docutils literal notranslate"><span class="pre">__init__()</span></code> method is not called,
+and <code class="docutils literal notranslate"><span class="pre">__new__()</span></code> is assumed to take no arguments. So these methods should be
+overridden if any extra attributes need to be copied.</p>
+</div>
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.Rect.copy">
+<span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.Rect.copy" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">copy the rectangle</span></div>
+<div class="line"><span class="signature">copy() -&gt; Rect</span></div>
+</div>
+<p>Returns a new rectangle having the same position and size as the original.</p>
+<p>New in pygame 1.9</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.Rect.move">
+<span class="sig-name descname"><span class="pre">move</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.Rect.move" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">moves the rectangle</span></div>
+<div class="line"><span class="signature">move(x, y) -&gt; Rect</span></div>
+</div>
+<p>Returns a new rectangle that is moved by the given offset. The x and y
+arguments can be any integer value, positive or negative.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.Rect.move_ip">
+<span class="sig-name descname"><span class="pre">move_ip</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.Rect.move_ip" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">moves the rectangle, in place</span></div>
+<div class="line"><span class="signature">move_ip(x, y) -&gt; None</span></div>
+</div>
+<p>Same as the <code class="docutils literal notranslate"><span class="pre">Rect.move()</span></code> method, but operates in place.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.Rect.inflate">
+<span class="sig-name descname"><span class="pre">inflate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.Rect.inflate" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">grow or shrink the rectangle size</span></div>
+<div class="line"><span class="signature">inflate(x, y) -&gt; Rect</span></div>
+</div>
+<p>Returns a new rectangle with the size changed by the given offset. The
+rectangle remains centered around its current center. Negative values
+will shrink the rectangle. Note, uses integers, if the offset given is
+too small(&lt; 2 &gt; -2), center will be off.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.Rect.inflate_ip">
+<span class="sig-name descname"><span class="pre">inflate_ip</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.Rect.inflate_ip" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">grow or shrink the rectangle size, in place</span></div>
+<div class="line"><span class="signature">inflate_ip(x, y) -&gt; None</span></div>
+</div>
+<p>Same as the <code class="docutils literal notranslate"><span class="pre">Rect.inflate()</span></code> method, but operates in place.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.Rect.scale_by">
+<span class="sig-name descname"><span class="pre">scale_by</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.Rect.scale_by" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">scale the rectangle by given a multiplier</span></div>
+<div class="line"><span class="signature">scale_by(scalar) -&gt; Rect</span></div>
+<div class="line"><span class="signature">scale_by(scalex, scaley) -&gt; Rect</span></div>
+</div>
+<p>Returns a new rectangle with the size scaled by the given multipliers.
+The rectangle remains centered around its current center. A single
+scalar or separate width and height scalars are allowed. Values above
+one will increase the size of the rectangle, whereas values between
+zero and one will decrease the size of the rectangle.</p>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in pygame 2.5.0: </span>Added support for keyword arguments.</p>
+</div>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.Rect.scale_by_ip">
+<span class="sig-name descname"><span class="pre">scale_by_ip</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.Rect.scale_by_ip" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">grow or shrink the rectangle size, in place</span></div>
+<div class="line"><span class="signature">scale_by_ip(scalar) -&gt; None</span></div>
+<div class="line"><span class="signature">scale_by_ip(scalex, scaley) -&gt; None</span></div>
+</div>
+<p>Same as the <code class="docutils literal notranslate"><span class="pre">Rect.scale_by()</span></code> method, but operates in place.</p>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in pygame 2.5.0: </span>Added support for keyword arguments.</p>
+</div>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.Rect.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.Rect.update" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">sets the position and size of the rectangle</span></div>
+<div class="line"><span class="signature">update(left, top, width, height) -&gt; None</span></div>
+<div class="line"><span class="signature">update((left, top), (width, height)) -&gt; None</span></div>
+<div class="line"><span class="signature">update(object) -&gt; None</span></div>
+</div>
+<p>Sets the position and size of the rectangle, in place. See
+parameters for <a class="tooltip reference internal" href="#pygame.Rect" title=""><code class="xref py py-meth docutils literal notranslate"><span class="pre">pygame.Rect()</span></code><span class="tooltip-content">pygame object for storing rectangular coordinates</span></a> for the parameters of this function.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 2.0.1.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.Rect.clamp">
+<span class="sig-name descname"><span class="pre">clamp</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.Rect.clamp" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">moves the rectangle inside another</span></div>
+<div class="line"><span class="signature">clamp(Rect) -&gt; Rect</span></div>
+</div>
+<p>Returns a new rectangle that is moved to be completely inside the
+argument Rect. If the rectangle is too large to fit inside, it is
+centered inside the argument Rect, but its size is not changed.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.Rect.clamp_ip">
+<span class="sig-name descname"><span class="pre">clamp_ip</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.Rect.clamp_ip" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">moves the rectangle inside another, in place</span></div>
+<div class="line"><span class="signature">clamp_ip(Rect) -&gt; None</span></div>
+</div>
+<p>Same as the <code class="docutils literal notranslate"><span class="pre">Rect.clamp()</span></code> method, but operates in place.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.Rect.clip">
+<span class="sig-name descname"><span class="pre">clip</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.Rect.clip" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">crops a rectangle inside another</span></div>
+<div class="line"><span class="signature">clip(Rect) -&gt; Rect</span></div>
+</div>
+<p>Returns a new rectangle that is cropped to be completely inside the
+argument Rect. If the two rectangles do not overlap to begin with, a Rect
+with 0 size is returned.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.Rect.clipline">
+<span class="sig-name descname"><span class="pre">clipline</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.Rect.clipline" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">crops a line inside a rectangle</span></div>
+<div class="line"><span class="signature">clipline(x1, y1, x2, y2) -&gt; ((cx1, cy1), (cx2, cy2))</span></div>
+<div class="line"><span class="signature">clipline(x1, y1, x2, y2) -&gt; ()</span></div>
+<div class="line"><span class="signature">clipline((x1, y1), (x2, y2)) -&gt; ((cx1, cy1), (cx2, cy2))</span></div>
+<div class="line"><span class="signature">clipline((x1, y1), (x2, y2)) -&gt; ()</span></div>
+<div class="line"><span class="signature">clipline((x1, y1, x2, y2)) -&gt; ((cx1, cy1), (cx2, cy2))</span></div>
+<div class="line"><span class="signature">clipline((x1, y1, x2, y2)) -&gt; ()</span></div>
+<div class="line"><span class="signature">clipline(((x1, y1), (x2, y2))) -&gt; ((cx1, cy1), (cx2, cy2))</span></div>
+<div class="line"><span class="signature">clipline(((x1, y1), (x2, y2))) -&gt; ()</span></div>
+</div>
+<p>Returns the coordinates of a line that is cropped to be completely inside
+the rectangle. If the line does not overlap the rectangle, then an empty
+tuple is returned.</p>
+<p>The line to crop can be any of the following formats (floats can be used
+in place of ints, but they will be truncated):</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>four ints</p></li>
+<li><p>2 lists/tuples/Vector2s of 2 ints</p></li>
+<li><p>a list/tuple of four ints</p></li>
+<li><p>a list/tuple of 2 lists/tuples/Vector2s of 2 ints</p></li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>a tuple with the coordinates of the given line cropped to be
+completely inside the rectangle is returned, if the given line does
+not overlap the rectangle, an empty tuple is returned</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple(tuple(int, int), tuple(int, int)) or ()</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>TypeError</strong> -- if the line coordinates are not given as one of the
+above described line formats</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This method can be used for collision detection between a rect and a
+line. See example code below.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">rect.bottom</span></code> and <code class="docutils literal notranslate"><span class="pre">rect.right</span></code> attributes of a
+<a class="tooltip reference internal" href="#pygame.Rect" title=""><code class="xref py py-mod docutils literal notranslate"><span class="pre">pygame.Rect</span></code><span class="tooltip-content">pygame object for storing rectangular coordinates</span></a> always lie one pixel outside of its actual border.</p>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Example using clipline().</span>
+<span class="n">clipped_line</span> <span class="o">=</span> <span class="n">rect</span><span class="o">.</span><span class="n">clipline</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">clipped_line</span><span class="p">:</span>
+    <span class="c1"># If clipped_line is not an empty tuple then the line</span>
+    <span class="c1"># collides/overlaps with the rect. The returned value contains</span>
+    <span class="c1"># the endpoints of the clipped line.</span>
+    <span class="n">start</span><span class="p">,</span> <span class="n">end</span> <span class="o">=</span> <span class="n">clipped_line</span>
+    <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span> <span class="o">=</span> <span class="n">start</span>
+    <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span> <span class="o">=</span> <span class="n">end</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No clipping. The line is fully outside the rect.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in pygame 2.5.0: </span>Added support for keyword arguments.</p>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 2.0.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.Rect.union">
+<span class="sig-name descname"><span class="pre">union</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.Rect.union" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">joins two rectangles into one</span></div>
+<div class="line"><span class="signature">union(Rect) -&gt; Rect</span></div>
+</div>
+<p>Returns a new rectangle that completely covers the area of the two
+provided rectangles. There may be area inside the new Rect that is not
+covered by the originals.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.Rect.union_ip">
+<span class="sig-name descname"><span class="pre">union_ip</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.Rect.union_ip" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">joins two rectangles into one, in place</span></div>
+<div class="line"><span class="signature">union_ip(Rect) -&gt; None</span></div>
+</div>
+<p>Same as the <code class="docutils literal notranslate"><span class="pre">Rect.union()</span></code> method, but operates in place.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.Rect.unionall">
+<span class="sig-name descname"><span class="pre">unionall</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.Rect.unionall" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">the union of many rectangles</span></div>
+<div class="line"><span class="signature">unionall(Rect_sequence) -&gt; Rect</span></div>
+</div>
+<p>Returns the union of one rectangle with a sequence of many rectangles.</p>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in pygame 2.5.0: </span>Added support for keyword arguments.</p>
+</div>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.Rect.unionall_ip">
+<span class="sig-name descname"><span class="pre">unionall_ip</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.Rect.unionall_ip" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">the union of many rectangles, in place</span></div>
+<div class="line"><span class="signature">unionall_ip(Rect_sequence) -&gt; None</span></div>
+</div>
+<p>The same as the <code class="docutils literal notranslate"><span class="pre">Rect.unionall()</span></code> method, but operates in place.</p>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in pygame 2.5.0: </span>Added support for keyword arguments.</p>
+</div>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.Rect.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.Rect.fit" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">resize and move a rectangle with aspect ratio</span></div>
+<div class="line"><span class="signature">fit(Rect) -&gt; Rect</span></div>
+</div>
+<p>Returns a new rectangle that is moved and resized to fit another. The
+aspect ratio of the original Rect is preserved, so the new rectangle may
+be smaller than the target in either width or height.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.Rect.normalize">
+<span class="sig-name descname"><span class="pre">normalize</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.Rect.normalize" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">correct negative sizes</span></div>
+<div class="line"><span class="signature">normalize() -&gt; None</span></div>
+</div>
+<p>This will flip the width or height of a rectangle if it has a negative
+size. The rectangle will remain in the same place, with only the sides
+swapped.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.Rect.contains">
+<span class="sig-name descname"><span class="pre">contains</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.Rect.contains" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">test if one rectangle is inside another</span></div>
+<div class="line"><span class="signature">contains(Rect) -&gt; bool</span></div>
+</div>
+<p>Returns true when the argument is completely inside the Rect.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.Rect.collidepoint">
+<span class="sig-name descname"><span class="pre">collidepoint</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.Rect.collidepoint" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">test if a point is inside a rectangle</span></div>
+<div class="line"><span class="signature">collidepoint(x, y) -&gt; bool</span></div>
+<div class="line"><span class="signature">collidepoint((x,y)) -&gt; bool</span></div>
+</div>
+<p>Returns true if the given point is inside the rectangle. A point along
+the right or bottom edge is not considered to be inside the rectangle.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For collision detection between a rect and a line the <a class="reference internal" href="#pygame.Rect.clipline" title="pygame.Rect.clipline"><code class="xref py py-meth docutils literal notranslate"><span class="pre">clipline()</span></code></a>
+method can be used.</p>
+</div>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.Rect.colliderect">
+<span class="sig-name descname"><span class="pre">colliderect</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.Rect.colliderect" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">test if two rectangles overlap</span></div>
+<div class="line"><span class="signature">colliderect(Rect) -&gt; bool</span></div>
+</div>
+<p>Returns true if any portion of either rectangle overlap (except the
+top+bottom or left+right edges).</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For collision detection between a rect and a line the <a class="reference internal" href="#pygame.Rect.clipline" title="pygame.Rect.clipline"><code class="xref py py-meth docutils literal notranslate"><span class="pre">clipline()</span></code></a>
+method can be used.</p>
+</div>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.Rect.collidelist">
+<span class="sig-name descname"><span class="pre">collidelist</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.Rect.collidelist" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">test if one rectangle in a list intersects</span></div>
+<div class="line"><span class="signature">collidelist(list) -&gt; index</span></div>
+</div>
+<p>Test whether the rectangle collides with any in a sequence of rectangles.
+The index of the first collision found is returned. If no collisions are
+found an index of -1 is returned.</p>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in pygame 2.5.0: </span>Added support for keyword arguments.</p>
+</div>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.Rect.collidelistall">
+<span class="sig-name descname"><span class="pre">collidelistall</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.Rect.collidelistall" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">test if all rectangles in a list intersect</span></div>
+<div class="line"><span class="signature">collidelistall(list) -&gt; indices</span></div>
+</div>
+<p>Returns a list of all the indices that contain rectangles that collide
+with the Rect. If no intersecting rectangles are found, an empty list is
+returned.</p>
+<p>Not only Rects are valid arguments, but these are all valid calls:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">Rect</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Rect</span>
+<span class="n">r</span> <span class="o">=</span> <span class="n">Rect</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+
+<span class="n">list_of_rects</span> <span class="o">=</span> <span class="p">[</span><span class="n">Rect</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">Rect</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)]</span>
+<span class="n">indices0</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">collidelistall</span><span class="p">(</span><span class="n">list_of_rects</span><span class="p">)</span>
+
+<span class="n">list_of_lists</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">]]</span>
+<span class="n">indices1</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">collidelistall</span><span class="p">(</span><span class="n">list_of_lists</span><span class="p">)</span>
+
+<span class="n">list_of_tuples</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)]</span>
+<span class="n">indices2</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">collidelistall</span><span class="p">(</span><span class="n">list_of_tuples</span><span class="p">)</span>
+
+<span class="n">list_of_double_tuples</span> <span class="o">=</span> <span class="p">[((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span> <span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))]</span>
+<span class="n">indices3</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">collidelistall</span><span class="p">(</span><span class="n">list_of_double_tuples</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">ObjectWithRectAttribute</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">r</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rect</span> <span class="o">=</span> <span class="n">r</span>
+
+<span class="n">list_of_object_with_rect_attribute</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">ObjectWithRectAttribute</span><span class="p">(</span><span class="n">Rect</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span>
+    <span class="n">ObjectWithRectAttribute</span><span class="p">(</span><span class="n">Rect</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)),</span>
+<span class="p">]</span>
+<span class="n">indices4</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">collidelistall</span><span class="p">(</span><span class="n">list_of_object_with_rect_attribute</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">ObjectWithCallableRectAttribute</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">r</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_rect</span> <span class="o">=</span> <span class="n">r</span>
+
+    <span class="k">def</span> <span class="nf">rect</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rect</span>
+
+<span class="n">list_of_object_with_callable_rect</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">ObjectWithCallableRectAttribute</span><span class="p">(</span><span class="n">Rect</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span>
+    <span class="n">ObjectWithCallableRectAttribute</span><span class="p">(</span><span class="n">Rect</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)),</span>
+<span class="p">]</span>
+<span class="n">indices5</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">collidelistall</span><span class="p">(</span><span class="n">list_of_object_with_callable_rect</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in pygame 2.5.0: </span>Added support for keyword arguments.</p>
+</div>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.Rect.collideobjects">
+<span class="sig-name descname"><span class="pre">collideobjects</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.Rect.collideobjects" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">test if any object in a list intersects</span></div>
+<div class="line"><span class="signature">collideobjects(rect_list) -&gt; object</span></div>
+<div class="line"><span class="signature">collideobjects(obj_list, key=func) -&gt; object</span></div>
+</div>
+<p><strong>Experimental:</strong> feature still in development available for testing and feedback. It may change.
+<a class="reference external" href="https://github.com/pygame/pygame/pull/3026">Please leave collideobjects feedback with authors</a></p>
+<p>Test whether the rectangle collides with any object in the sequence.
+The object of the first collision found is returned. If no collisions are
+found then <code class="docutils literal notranslate"><span class="pre">None</span></code> is returned</p>
+<p>If key is given, then it should be a method taking an object from the list
+as input and returning a rect like object e.g. <code class="docutils literal notranslate"><span class="pre">lambda</span> <span class="pre">obj:</span> <span class="pre">obj.rectangle</span></code>.
+If an object has multiple attributes of type Rect then key could return one
+of them.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">r</span> <span class="o">=</span> <span class="n">Rect</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+
+<span class="n">rects</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">Rect</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
+    <span class="n">Rect</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
+    <span class="n">Rect</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="n">Rect</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+<span class="p">]</span>
+
+<span class="n">result</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">collideobjects</span><span class="p">(</span><span class="n">rects</span><span class="p">)</span>  <span class="c1"># -&gt; &lt;rect(1, 1, 10, 10)&gt;</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">ObjectWithSomRectAttribute</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">collision_box</span><span class="p">,</span> <span class="n">draw_rect</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">draw_rect</span> <span class="o">=</span> <span class="n">draw_rect</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">collision_box</span> <span class="o">=</span> <span class="n">collision_box</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;&lt;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s1">(&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">&quot;, </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">collision_box</span><span class="p">)</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">draw_rect</span><span class="p">)</span><span class="si">}</span><span class="s1">)&gt;&#39;</span>
+
+<span class="n">objects</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">ObjectWithSomRectAttribute</span><span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="n">Rect</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">Rect</span><span class="p">(</span><span class="mi">150</span><span class="p">,</span> <span class="mi">150</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">)),</span>
+    <span class="n">ObjectWithSomRectAttribute</span><span class="p">(</span><span class="s2">&quot;B&quot;</span><span class="p">,</span> <span class="n">Rect</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="n">Rect</span><span class="p">(</span><span class="mi">300</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">)),</span>
+    <span class="n">ObjectWithSomRectAttribute</span><span class="p">(</span><span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="n">Rect</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="n">Rect</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">)),</span>
+<span class="p">]</span>
+
+<span class="c1"># collision = r.collideobjects(objects) # this does not work because the items in the list are no Rect like object</span>
+<span class="n">collision</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">collideobjects</span><span class="p">(</span>
+    <span class="n">objects</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">o</span><span class="p">:</span> <span class="n">o</span><span class="o">.</span><span class="n">collision_box</span>
+<span class="p">)</span>  <span class="c1"># -&gt; &lt;ObjectWithSomRectAttribute(&quot;B&quot;, [1, 1, 10, 10], [300, 300, 50, 50])&gt;</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">collision</span><span class="p">)</span>
+
+<span class="n">screen_rect</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">collideobjects</span><span class="p">(</span><span class="n">objects</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">o</span><span class="p">:</span> <span class="n">o</span><span class="o">.</span><span class="n">draw_rect</span><span class="p">)</span>  <span class="c1"># -&gt; None</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">screen_rect</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 2.1.3.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.Rect.collideobjectsall">
+<span class="sig-name descname"><span class="pre">collideobjectsall</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.Rect.collideobjectsall" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">test if all objects in a list intersect</span></div>
+<div class="line"><span class="signature">collideobjectsall(rect_list) -&gt; objects</span></div>
+<div class="line"><span class="signature">collideobjectsall(obj_list, key=func) -&gt; objects</span></div>
+</div>
+<p><strong>Experimental:</strong> feature still in development available for testing and feedback. It may change.
+<a class="reference external" href="https://github.com/pygame/pygame/pull/3026">Please leave collideobjectsall feedback with authors</a></p>
+<p>Returns a list of all the objects that contain rectangles that collide
+with the Rect. If no intersecting objects are found, an empty list is
+returned.</p>
+<p>If key is given, then it should be a method taking an object from the list
+as input and returning a rect like object e.g. <code class="docutils literal notranslate"><span class="pre">lambda</span> <span class="pre">obj:</span> <span class="pre">obj.rectangle</span></code>.
+If an object has multiple attributes of type Rect then key could return one
+of them.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">r</span> <span class="o">=</span> <span class="n">Rect</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+
+<span class="n">rects</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">Rect</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
+    <span class="n">Rect</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
+    <span class="n">Rect</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="n">Rect</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+<span class="p">]</span>
+
+<span class="n">result</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">collideobjectsall</span><span class="p">(</span>
+    <span class="n">rects</span>
+<span class="p">)</span>  <span class="c1"># -&gt; [&lt;rect(1, 1, 10, 10)&gt;, &lt;rect(5, 5, 10, 10)&gt;, &lt;rect(2, 2, 1, 1)&gt;]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">ObjectWithSomRectAttribute</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">collision_box</span><span class="p">,</span> <span class="n">draw_rect</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">draw_rect</span> <span class="o">=</span> <span class="n">draw_rect</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">collision_box</span> <span class="o">=</span> <span class="n">collision_box</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;&lt;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s1">(&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">&quot;, </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">collision_box</span><span class="p">)</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">draw_rect</span><span class="p">)</span><span class="si">}</span><span class="s1">)&gt;&#39;</span>
+
+<span class="n">objects</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">ObjectWithSomRectAttribute</span><span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="n">Rect</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="n">Rect</span><span class="p">(</span><span class="mi">300</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">)),</span>
+    <span class="n">ObjectWithSomRectAttribute</span><span class="p">(</span><span class="s2">&quot;B&quot;</span><span class="p">,</span> <span class="n">Rect</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="n">Rect</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">)),</span>
+    <span class="n">ObjectWithSomRectAttribute</span><span class="p">(</span><span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="n">Rect</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">Rect</span><span class="p">(</span><span class="mi">150</span><span class="p">,</span> <span class="mi">150</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">)),</span>
+<span class="p">]</span>
+
+<span class="c1"># collisions = r.collideobjectsall(objects) # this does not work because ObjectWithSomRectAttribute is not a Rect like object</span>
+<span class="n">collisions</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">collideobjectsall</span><span class="p">(</span>
+    <span class="n">objects</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">o</span><span class="p">:</span> <span class="n">o</span><span class="o">.</span><span class="n">collision_box</span>
+<span class="p">)</span>  <span class="c1"># -&gt; [&lt;ObjectWithSomRectAttribute(&quot;A&quot;, [1, 1, 10, 10], [300, 300, 50, 50])&gt;, &lt;ObjectWithSomRectAttribute(&quot;B&quot;, [5, 5, 10, 10], [200, 500, 50, 50])&gt;]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">collisions</span><span class="p">)</span>
+
+<span class="n">screen_rects</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">collideobjectsall</span><span class="p">(</span><span class="n">objects</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">o</span><span class="p">:</span> <span class="n">o</span><span class="o">.</span><span class="n">draw_rect</span><span class="p">)</span>  <span class="c1"># -&gt; []</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">screen_rects</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 2.1.3.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.Rect.collidedict">
+<span class="sig-name descname"><span class="pre">collidedict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.Rect.collidedict" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">test if one rectangle in a dictionary intersects</span></div>
+<div class="line"><span class="signature">collidedict(dict) -&gt; (key, value)</span></div>
+<div class="line"><span class="signature">collidedict(dict) -&gt; None</span></div>
+<div class="line"><span class="signature">collidedict(dict, use_values=0) -&gt; (key, value)</span></div>
+<div class="line"><span class="signature">collidedict(dict, use_values=0) -&gt; None</span></div>
+</div>
+<p>Returns the first key and value pair that intersects with the calling
+Rect object. If no collisions are found, <code class="docutils literal notranslate"><span class="pre">None</span></code> is returned. If
+<code class="docutils literal notranslate"><span class="pre">use_values</span></code> is 0 (default) then the dict's keys will be used in the
+collision detection, otherwise the dict's values will be used.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Rect objects cannot be used as keys in a dictionary (they are not
+hashable), so they must be converted to a tuple.
+e.g. <code class="docutils literal notranslate"><span class="pre">rect.collidedict({tuple(key_rect)</span> <span class="pre">:</span> <span class="pre">value})</span></code></p>
+</div>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in pygame 2.5.0: </span>Added support for keyword arguments.</p>
+</div>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.Rect.collidedictall">
+<span class="sig-name descname"><span class="pre">collidedictall</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.Rect.collidedictall" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">test if all rectangles in a dictionary intersect</span></div>
+<div class="line"><span class="signature">collidedictall(dict) -&gt; [(key, value), ...]</span></div>
+<div class="line"><span class="signature">collidedictall(dict, use_values=0) -&gt; [(key, value), ...]</span></div>
+</div>
+<p>Returns a list of all the key and value pairs that intersect with the
+calling Rect object. If no collisions are found an empty list is returned.
+If <code class="docutils literal notranslate"><span class="pre">use_values</span></code> is 0 (default) then the dict's keys will be used in the
+collision detection, otherwise the dict's values will be used.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Rect objects cannot be used as keys in a dictionary (they are not
+hashable), so they must be converted to a tuple.
+e.g. <code class="docutils literal notranslate"><span class="pre">rect.collidedictall({tuple(key_rect)</span> <span class="pre">:</span> <span class="pre">value})</span></code></p>
+</div>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in pygame 2.5.0: </span>Added support for keyword arguments.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+<br /><br />
+<hr />
+<a href="https://github.com/pygame/pygame/edit/main/docs/reST/ref/rect.rst" rel="nofollow">Edit on GitHub</a>
+            <div class="clearer"></div>
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="scrap.html" title="pygame.scrap"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="pygame.html" title="pygame"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">pygame v2.5.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href=""><code class="xref py py-mod docutils literal notranslate"><span class="pre">pygame.Rect</span></code></a></li>
+    <script type="text/javascript" src="https://www.pygame.org/comment/jquery.plugin.docscomments.js"></script>
+
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2000-2023, pygame developers.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Pygame Tutorials - Setting Display Modes &#8212; pygame v2.5.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygame.css?v=71ee6cc2" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=ba44479e"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <link rel="icon" href="../_static/pygame.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Pygame Tutorials - Import and Initialize" href="ImportInit.html" />
+    <link rel="prev" title="pygame/examples/chimp.py" href="chimp.py.html" /> 
+  </head><body>  
+
+    <div class="document">
+
+  <div class="header">
+	<div class="flex-container">
+	<div class="logo">
+	  <a href="https://www.pygame.org/">
+	    <img src="../_static/pygame_tiny.png"/>
+	  </a>
+	  <h5>pygame documentation</h5>
+	</div>
+	<div class="pagelinks">
+	  <div class="top">
+	    <a href="https://www.pygame.org/">Pygame Home</a> ||
+	    <a href="../index.html">Help Contents</a> ||
+	    <a href="../genindex.html">Reference Index</a>
+
+        <form action="../search.html" method="get" style="display:inline;float:right;">
+          <input name="q" value="" type="text">
+          <input value="search" type="submit">
+        </form>
+	  </div>
+	  <hr style="color:black;border-bottom:none;border-style: dotted;border-bottom-style:none;">
+	  <p class="bottom"><b>Most useful stuff</b>:
+	    <a href="../ref/color.html">Color</a> | 
+	    <a href="../ref/display.html">display</a> | 
+	    <a href="../ref/draw.html">draw</a> | 
+	    <a href="../ref/event.html">event</a> | 
+	    <a href="../ref/font.html">font</a> | 
+	    <a href="../ref/image.html">image</a> | 
+	    <a href="../ref/key.html">key</a> | 
+	    <a href="../ref/locals.html">locals</a> | 
+	    <a href="../ref/mixer.html">mixer</a> | 
+	    <a href="../ref/mouse.html">mouse</a> | 
+	    <a href="../ref/rect.html">Rect</a> | 
+	    <a href="../ref/surface.html">Surface</a> | 
+	    <a href="../ref/time.html">time</a> | 
+	    <a href="../ref/music.html">music</a> | 
+	    <a href="../ref/pygame.html">pygame</a>
+	  </p>
+
+	  <p class="bottom"><b>Advanced stuff</b>:
+	    <a href="../ref/cursors.html">cursors</a> | 
+	    <a href="../ref/joystick.html">joystick</a> | 
+	    <a href="../ref/mask.html">mask</a> | 
+	    <a href="../ref/sprite.html">sprite</a> | 
+	    <a href="../ref/transform.html">transform</a> | 
+	    <a href="../ref/bufferproxy.html">BufferProxy</a> | 
+	    <a href="../ref/freetype.html">freetype</a> | 
+	    <a href="../ref/gfxdraw.html">gfxdraw</a> | 
+	    <a href="../ref/midi.html">midi</a> | 
+	    <a href="../ref/pixelarray.html">PixelArray</a> | 
+	    <a href="../ref/pixelcopy.html">pixelcopy</a> | 
+	    <a href="../ref/sndarray.html">sndarray</a> | 
+	    <a href="../ref/surfarray.html">surfarray</a> | 
+	    <a href="../ref/math.html">math</a>
+	  </p>
+
+	  <p class="bottom"><b>Other</b>:
+	    <a href="../ref/camera.html">camera</a> | 
+	    <a href="../ref/sdl2_controller.html#module-pygame._sdl2.controller">controller</a> | 
+	    <a href="../ref/examples.html">examples</a> | 
+	    <a href="../ref/fastevent.html">fastevent</a> | 
+	    <a href="../ref/scrap.html">scrap</a> | 
+	    <a href="../ref/tests.html">tests</a> | 
+	    <a href="../ref/touch.html">touch</a> | 
+	    <a href="../ref/pygame.html#module-pygame.version">version</a>
+	  </p>
+</div>
+</div>
+  </div>
+
+      <div class="documentwrapper">
+          <div class="body" role="main">
+            
+<section id="pygame-tutorials-setting-display-modes">
+<section id="setting-display-modes">
+<h2>Setting Display Modes<a class="headerlink" href="#setting-display-modes" title="Permalink to this heading">¶</a></h2>
+<dl class="docinfo field-list simple">
+<dt class="field-odd">Author<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Pete Shinners</p>
+</dd>
+<dt class="field-even">Contact<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="mailto:pete&#37;&#52;&#48;shinners&#46;org">pete<span>&#64;</span>shinners<span>&#46;</span>org</a></p>
+</dd>
+</dl>
+<section id="introduction">
+<h3>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading">¶</a></h3>
+<p>Setting the display mode in <em>pygame</em> creates a visible image surface
+on the monitor.
+This surface can either cover the full screen, or be windowed
+on platforms that support a window manager.
+The display surface is nothing more than a standard <em>pygame</em> surface object.
+There are special functions needed in the <a class="tooltip reference internal" href="../ref/display.html#module-pygame.display" title=""><code class="xref py py-mod docutils literal notranslate"><span class="pre">pygame.display</span></code><span class="tooltip-content">pygame module to control the display window and screen</span></a>
+module to keep the image surface contents updated on the monitor.</p>
+<p>Setting the display mode in <em>pygame</em> is an easier task than with most
+graphic libraries.
+The advantage is if your display mode is not available,
+<em>pygame</em> will emulate the display mode that you asked for.
+<em>Pygame</em> will select a display resolution and color depth that best matches
+the settings you have requested,
+then allow you to access the display with the format you have requested.
+In reality, since the <a class="tooltip reference internal" href="../ref/display.html#module-pygame.display" title=""><code class="xref py py-mod docutils literal notranslate"><span class="pre">pygame.display</span></code><span class="tooltip-content">pygame module to control the display window and screen</span></a> module is
+a binding around the SDL library, SDL is really doing all this work.</p>
+<p>There are advantages and disadvantages to setting the display mode in this
+manner.
+The advantage is that if your game requires a specific display mode,
+your game will run on platforms that do not support your requirements.
+It also makes life easier when you're getting something started,
+it is always easy to go back later and make the mode selection a little more
+particular.
+The disadvantage is that what you request is not always what you will get.
+There is also a performance penalty when the display mode must be emulated.
+This tutorial will help you understand the different methods for querying
+the platforms display capabilities, and setting the display mode for your game.</p>
+</section>
+<section id="setting-basics">
+<h3>Setting Basics<a class="headerlink" href="#setting-basics" title="Permalink to this heading">¶</a></h3>
+<p>The first thing to learn about is how to actually set the current display mode.
+The display mode may be set at any time after the <a class="tooltip reference internal" href="../ref/display.html#module-pygame.display" title=""><code class="xref py py-mod docutils literal notranslate"><span class="pre">pygame.display</span></code><span class="tooltip-content">pygame module to control the display window and screen</span></a>
+module has been initialized.
+If you have previously set the display mode,
+setting it again will change the current mode.
+Setting the display mode is handled with the function
+<a class="tooltip reference internal" href="../ref/display.html#pygame.display.set_mode" title=""><code class="xref py py-func docutils literal notranslate"><span class="pre">pygame.display.set_mode((width,</span> <span class="pre">height),</span> <span class="pre">flags,</span> <span class="pre">depth)</span></code><span class="tooltip-content">Initialize a window or screen for display</span></a>.
+The only required argument in this function is a sequence containing
+the width and height of the new display mode.
+The depth flag is the requested bits per pixel for the surface.
+If the given depth is 8, <em>pygame</em> will create a color-mapped surface.
+When given a higher bit depth, <em>pygame</em> will use a packed color mode.
+Much more information about depths and color modes can be found in the
+documentation for the display and surface modules.
+The default value for depth is 0.
+When given an argument of 0, <em>pygame</em> will select the best bit depth to use,
+usually the same as the system's current bit depth.
+The flags argument lets you control extra features for the display mode.
+Again, more information about this is found in the <em>pygame</em> reference documents.</p>
+</section>
+<section id="how-to-decide">
+<h3>How to Decide<a class="headerlink" href="#how-to-decide" title="Permalink to this heading">¶</a></h3>
+<p>So how do you select a display mode that is going to work best with your
+graphic resources and the platform your game is running on?
+There are several methods for gathering information about the display device.
+All of these methods must be called after the display module has been
+initialized, but you likely want to call them before setting the display mode.
+First, <a class="tooltip reference internal" href="../ref/display.html#pygame.display.Info" title=""><code class="xref py py-func docutils literal notranslate"><span class="pre">pygame.display.Info()</span></code><span class="tooltip-content">Create a video display information object</span></a>
+will return a special object type of VidInfo,
+which can tell you a lot about the graphics driver capabilities.
+The function
+<a class="tooltip reference internal" href="../ref/display.html#pygame.display.list_modes" title=""><code class="xref py py-func docutils literal notranslate"><span class="pre">pygame.display.list_modes(depth,</span> <span class="pre">flags)</span></code><span class="tooltip-content">Get list of available fullscreen modes</span></a>
+can be used to find the supported graphic modes by the system.
+<a class="tooltip reference internal" href="../ref/display.html#pygame.display.mode_ok" title=""><code class="xref py py-func docutils literal notranslate"><span class="pre">pygame.display.mode_ok((width,</span> <span class="pre">height),</span> <span class="pre">flags,</span> <span class="pre">depth)</span></code><span class="tooltip-content">Pick the best color depth for a display mode</span></a> takes the same arguments as
+<a class="reference internal" href="../ref/display.html#pygame.display.set_mode" title="pygame.display.set_mode"><code class="xref py py-func docutils literal notranslate"><span class="pre">set_mode()</span></code></a>,
+but returns the closest matching bit depth to the one you request.
+Lastly, <a class="tooltip reference internal" href="../ref/display.html#pygame.display.get_driver" title=""><code class="xref py py-func docutils literal notranslate"><span class="pre">pygame.display.get_driver()</span></code><span class="tooltip-content">Get the name of the pygame display backend</span></a>
+will return the name of the graphics driver selected by <em>pygame</em>.</p>
+<p>Just remember the golden rule.
+<em>Pygame</em> will work with pretty much any display mode you request.
+Some display modes will need to be emulated,
+which will slow your game down,
+since <em>pygame</em> will need to convert every update you make to the
+&quot;real&quot; display mode. The best bet is to always let <em>pygame</em>
+choose the best bit depth,
+and convert all your graphic resources to that format when they are loaded.
+You let <em>pygame</em> choose its bit depth by calling
+<a class="reference internal" href="../ref/display.html#pygame.display.set_mode" title="pygame.display.set_mode"><code class="xref py py-func docutils literal notranslate"><span class="pre">set_mode()</span></code></a>
+with no depth argument or a depth of 0,
+or you can call
+<a class="reference internal" href="../ref/display.html#pygame.display.mode_ok" title="pygame.display.mode_ok"><code class="xref py py-func docutils literal notranslate"><span class="pre">mode_ok()</span></code></a>
+to find a closest matching bit depth to what you need.</p>
+<p>When your display mode is windowed,
+you usually must match the same bit depth as the desktop.
+When you are fullscreen, some platforms can switch to any bit depth that
+best suits your needs.
+You can find the depth of the current desktop if you get a VidInfo object
+before ever setting your display mode.</p>
+<p>After setting the display mode,
+you can find out information about its settings by getting a VidInfo object,
+or by calling any of the Surface.get* methods on the display surface.</p>
+</section>
+<section id="functions">
+<h3>Functions<a class="headerlink" href="#functions" title="Permalink to this heading">¶</a></h3>
+<p>These are the routines you can use to determine the most appropriate
+display mode.
+You can find more information about these functions in the display module
+documentation.</p>
+<blockquote>
+<div><p><a class="tooltip reference internal" href="../ref/display.html#pygame.display.mode_ok" title=""><code class="xref py py-func docutils literal notranslate"><span class="pre">pygame.display.mode_ok(size,</span> <span class="pre">flags,</span> <span class="pre">depth)</span></code><span class="tooltip-content">Pick the best color depth for a display mode</span></a></p>
+<blockquote>
+<div><p>This function takes the exact same arguments as pygame.display.set_mode().
+It returns the best available bit depth for the mode you have described.
+If this returns zero,
+then the desired display mode is not available without emulation.</p>
+</div></blockquote>
+<p><a class="tooltip reference internal" href="../ref/display.html#pygame.display.list_modes" title=""><code class="xref py py-func docutils literal notranslate"><span class="pre">pygame.display.list_modes(depth,</span> <span class="pre">flags)</span></code><span class="tooltip-content">Get list of available fullscreen modes</span></a></p>
+<blockquote>
+<div><p>Returns a list of supported display modes with the requested
+depth and flags.
+An empty list is returned when there are no modes.
+The flags argument defaults to <a class="reference internal" href="../ref/display.html#pygame.display.set_mode" title="pygame.display.set_mode"><code class="xref any py py-func docutils literal notranslate"><span class="pre">FULLSCREEN</span></code></a>.
+If you specify your own flags without <a class="reference internal" href="../ref/display.html#pygame.display.set_mode" title="pygame.display.set_mode"><code class="xref any py py-func docutils literal notranslate"><span class="pre">FULLSCREEN</span></code></a>,
+you will likely get a return value of -1.
+This means that any display size is fine, since the display will be windowed.
+Note that the listed modes are sorted largest to smallest.</p>
+</div></blockquote>
+<p><a class="tooltip reference internal" href="../ref/display.html#pygame.display.Info" title=""><code class="xref py py-func docutils literal notranslate"><span class="pre">pygame.display.Info()</span></code><span class="tooltip-content">Create a video display information object</span></a></p>
+<blockquote>
+<div><p>This function returns an object with many members describing
+the display device.
+Printing the VidInfo object will quickly show you all the
+members and values for this object.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pygame.display</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">info</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">Info</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
+<span class="go">&lt;VideoInfo(hw = 0, wm = 1,video_mem = 0</span>
+<span class="go">        blit_hw = 0, blit_hw_CC = 0, blit_hw_A = 0,</span>
+<span class="go">        blit_sw = 0, blit_sw_CC = 0, blit_sw_A = 0,</span>
+<span class="go">        bitsize  = 32, bytesize = 4,</span>
+<span class="go">        masks =  (16711680, 65280, 255, 0),</span>
+<span class="go">        shifts = (16, 8, 0, 0),</span>
+<span class="go">        losses =  (0, 0, 0, 8),</span>
+<span class="go">        current_w = 1920, current_h = 1080</span>
+<span class="go">&gt;</span>
+</pre></div>
+</div>
+</div></blockquote>
+</div></blockquote>
+<p>You can test all these flags as simply members of the VidInfo object.</p>
+</section>
+<section id="examples">
+<h3>Examples<a class="headerlink" href="#examples" title="Permalink to this heading">¶</a></h3>
+<p>Here are some examples of different methods to init the graphics display.
+They should help you get an idea of how to go about setting your display mode.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># give me the best depth with a 640 x 480 windowed display</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">set_mode</span><span class="p">((</span><span class="mi">640</span><span class="p">,</span> <span class="mi">480</span><span class="p">))</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># give me the biggest 16-bit display available</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">modes</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">list_modes</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">if</span> <span class="ow">not</span> <span class="n">modes</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;16-bit not supported&#39;</span><span class="p">)</span>
+<span class="gp">... </span><span class="k">else</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Found Resolution:&#39;</span><span class="p">,</span> <span class="n">modes</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="gp">... </span>    <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">set_mode</span><span class="p">(</span><span class="n">modes</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">FULLSCREEN</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># need an 8-bit surface, nothing else will do</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">if</span> <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">mode_ok</span><span class="p">((</span><span class="mi">800</span><span class="p">,</span> <span class="mi">600</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">8</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Can only work with an 8-bit display, sorry&#39;</span><span class="p">)</span>
+<span class="gp">... </span><span class="k">else</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">set_mode</span><span class="p">((</span><span class="mi">800</span><span class="p">,</span> <span class="mi">600</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+
+<br /><br />
+<hr />
+<a href="https://github.com/pygame/pygame/edit/main/docs/reST/tut/DisplayModes.rst" rel="nofollow">Edit on GitHub</a>
+            <div class="clearer"></div>
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="ImportInit.html" title="Pygame Tutorials - Import and Initialize"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="chimp.py.html" title="pygame/examples/chimp.py"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">pygame v2.5.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Pygame Tutorials - Setting Display Modes</a></li>
+    <script type="text/javascript" src="https://www.pygame.org/comment/jquery.plugin.docscomments.js"></script>
+
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2000-2023, pygame developers.
+    </div>
+  </body>
+</html>

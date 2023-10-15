@@ -1,0 +1,44 @@
+/* Implement hyperlink tooltips
+ *
+ * Adapted from "Sexy Tooltips with Just CSS"
+ * http://sixrevisions.com/css/css-only-tooltips/
+ */
+
+.tooltip {
+  cursor: help; text-decoration: none;
+  position: relative;
+}
+
+.tooltip span.tooltip-content {
+  margin-left: -999em;
+  position: absolute;
+}
+
+.tooltip:hover span.tooltip-content {
+  position: absolute;
+  left: 1em;
+  top: 2em;
+  z-index: 99;
+  margin-left: 0;
+}
+
+.tooltip:hover img {
+  border: 0;
+  margin: -10px 0 0 -55px;
+  float: left;
+  position: absolute;
+}
+
+.tooltip:hover em {
+  font-family: Candara, Tahoma, Geneva, sans-serif;
+  font-size: 1.2em;
+  font-weight: bold;
+  display: block;
+  padding: 0.2em 0 0.6em 0;
+}
+
+.classic { padding: 0.8em 1em; }
+
+.custom { padding: 0.5em 0.8em 0.8em 2em; }
+
+* html a:hover { background: transparent; }

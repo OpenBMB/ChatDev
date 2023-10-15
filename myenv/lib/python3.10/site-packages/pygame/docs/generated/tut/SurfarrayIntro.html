@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Pygame Tutorials - Surfarray Introduction &#8212; pygame v2.5.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygame.css?v=71ee6cc2" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=ba44479e"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <link rel="icon" href="../_static/pygame.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Newbie Guide to Pygame" href="newbieguide.html" />
+    <link rel="prev" title="Pygame Tutorials - Sprite Module Introduction" href="SpriteIntro.html" /> 
+  </head><body>  
+
+    <div class="document">
+
+  <div class="header">
+	<div class="flex-container">
+	<div class="logo">
+	  <a href="https://www.pygame.org/">
+	    <img src="../_static/pygame_tiny.png"/>
+	  </a>
+	  <h5>pygame documentation</h5>
+	</div>
+	<div class="pagelinks">
+	  <div class="top">
+	    <a href="https://www.pygame.org/">Pygame Home</a> ||
+	    <a href="../index.html">Help Contents</a> ||
+	    <a href="../genindex.html">Reference Index</a>
+
+        <form action="../search.html" method="get" style="display:inline;float:right;">
+          <input name="q" value="" type="text">
+          <input value="search" type="submit">
+        </form>
+	  </div>
+	  <hr style="color:black;border-bottom:none;border-style: dotted;border-bottom-style:none;">
+	  <p class="bottom"><b>Most useful stuff</b>:
+	    <a href="../ref/color.html">Color</a> | 
+	    <a href="../ref/display.html">display</a> | 
+	    <a href="../ref/draw.html">draw</a> | 
+	    <a href="../ref/event.html">event</a> | 
+	    <a href="../ref/font.html">font</a> | 
+	    <a href="../ref/image.html">image</a> | 
+	    <a href="../ref/key.html">key</a> | 
+	    <a href="../ref/locals.html">locals</a> | 
+	    <a href="../ref/mixer.html">mixer</a> | 
+	    <a href="../ref/mouse.html">mouse</a> | 
+	    <a href="../ref/rect.html">Rect</a> | 
+	    <a href="../ref/surface.html">Surface</a> | 
+	    <a href="../ref/time.html">time</a> | 
+	    <a href="../ref/music.html">music</a> | 
+	    <a href="../ref/pygame.html">pygame</a>
+	  </p>
+
+	  <p class="bottom"><b>Advanced stuff</b>:
+	    <a href="../ref/cursors.html">cursors</a> | 
+	    <a href="../ref/joystick.html">joystick</a> | 
+	    <a href="../ref/mask.html">mask</a> | 
+	    <a href="../ref/sprite.html">sprite</a> | 
+	    <a href="../ref/transform.html">transform</a> | 
+	    <a href="../ref/bufferproxy.html">BufferProxy</a> | 
+	    <a href="../ref/freetype.html">freetype</a> | 
+	    <a href="../ref/gfxdraw.html">gfxdraw</a> | 
+	    <a href="../ref/midi.html">midi</a> | 
+	    <a href="../ref/pixelarray.html">PixelArray</a> | 
+	    <a href="../ref/pixelcopy.html">pixelcopy</a> | 
+	    <a href="../ref/sndarray.html">sndarray</a> | 
+	    <a href="../ref/surfarray.html">surfarray</a> | 
+	    <a href="../ref/math.html">math</a>
+	  </p>
+
+	  <p class="bottom"><b>Other</b>:
+	    <a href="../ref/camera.html">camera</a> | 
+	    <a href="../ref/sdl2_controller.html#module-pygame._sdl2.controller">controller</a> | 
+	    <a href="../ref/examples.html">examples</a> | 
+	    <a href="../ref/fastevent.html">fastevent</a> | 
+	    <a href="../ref/scrap.html">scrap</a> | 
+	    <a href="../ref/tests.html">tests</a> | 
+	    <a href="../ref/touch.html">touch</a> | 
+	    <a href="../ref/pygame.html#module-pygame.version">version</a>
+	  </p>
+</div>
+</div>
+  </div>
+
+      <div class="documentwrapper">
+          <div class="body" role="main">
+            
+<section id="pygame-tutorials-surfarray-introduction">
+<section id="surfarray-introduction">
+<h2>Surfarray Introduction<a class="headerlink" href="#surfarray-introduction" title="Permalink to this heading">¶</a></h2>
+<dl class="docinfo field-list simple">
+<dt class="field-odd">Author<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Pete Shinners</p>
+</dd>
+<dt class="field-even">Contact<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="mailto:pete&#37;&#52;&#48;shinners&#46;org">pete<span>&#64;</span>shinners<span>&#46;</span>org</a></p>
+</dd>
+</dl>
+<section id="introduction">
+<h3>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading">¶</a></h3>
+<p>This tutorial will attempt to introduce users to both NumPy and the pygame
+surfarray module. To beginners, the code that uses surfarray can be quite
+intimidating. But actually there are only a few concepts to understand and
+you will be up and running. Using the surfarray module, it becomes possible
+to perform pixel level operations from straight python code. The performance
+can become quite close to the level of doing the code in C.</p>
+<p>You may just want to jump down to the <em>&quot;Examples&quot;</em> section to get an
+idea of what is possible with this module, then start at the beginning here
+to work your way up.</p>
+<p>Now I won't try to fool you into thinking everything is very easy. To get
+more advanced effects by modifying pixel values is very tricky. Just mastering
+Numeric Python (SciPy's original array package was Numeric, the predecessor of NumPy)
+takes a lot of learning. In this tutorial I'll be sticking with
+the basics and using a lot of examples in an attempt to plant seeds of wisdom.
+After finishing the tutorial you should have a basic handle on how the surfarray
+works.</p>
+</section>
+<section id="numeric-python">
+<h3>Numeric Python<a class="headerlink" href="#numeric-python" title="Permalink to this heading">¶</a></h3>
+<p>If you do not have the python NumPy package installed,
+you will need to do that now, by following the
+<a class="reference external" href="https://numpy.org/install/">NumPy Installation Guide</a>.
+To make sure NumPy is working for you,
+you should get something like this from the interactive python prompt.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="o">*</span>                    <span class="c1">#import numeric</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">array</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>                 <span class="c1">#create an array</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span>                                      <span class="c1">#display the array</span>
+<span class="go">array([1, 2, 3, 4, 5])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>                                   <span class="c1">#index into the array</span>
+<span class="go">3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="o">*</span><span class="mi">2</span>                                    <span class="c1">#new array with twiced values</span>
+<span class="go">array([ 2,  4,  6,  8, 10])</span>
+</pre></div>
+</div>
+<p>As you can see, the NumPy module gives us a new data type, the <em>array</em>.
+This object holds an array of fixed size, and all values inside are of the same
+type. The arrays can also be multidimensional, which is how we will use them
+with images. There's a bit more to it than this, but it is enough to get us
+started.</p>
+<p>If you look at the last command above, you'll see that mathematical operations
+on NumPy arrays apply to all values in the array. This is called &quot;element-wise
+operations&quot;. These arrays can also be sliced like normal lists. The slicing
+syntax is the same as used on standard python objects.
+<em>(so study up if you need to :] )</em>.
+Here are some more examples of working with arrays.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>                                 <span class="c1">#get array size</span>
+<span class="go">5</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="mi">2</span><span class="p">:]</span>                                  <span class="c1">#elements 2 and up</span>
+<span class="go">array([3, 4, 5])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[:</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>                                 <span class="c1">#all except last 2</span>
+<span class="go">array([1, 2, 3])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="mi">2</span><span class="p">:]</span> <span class="o">+</span> <span class="n">a</span><span class="p">[:</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>                         <span class="c1">#add first and last</span>
+<span class="go">array([4, 6, 8])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">array</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span> <span class="o">+</span> <span class="n">array</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>          <span class="c1">#add arrays of wrong sizes</span>
+<span class="gt">Traceback (most recent call last):</span>
+  File <span class="nb">&quot;&lt;stdin&gt;&quot;</span>, line <span class="m">1</span>, in <span class="n">&lt;module&gt;</span>
+<span class="gr">ValueError</span>: <span class="n">operands could not be broadcast together with shapes (3,) (2,)</span>
+</pre></div>
+</div>
+<p>We get an error on the last command, because we try add together two arrays
+that are different sizes. In order for two arrays two operate with each other,
+including comparisons and assignment, they must have the same dimensions. It is
+very important to know that the new arrays created from slicing the original all
+reference the same values. So changing the values in a slice also changes the
+original values. It is important how this is done.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span>                                      <span class="c1">#show our starting array</span>
+<span class="go">array([1, 2, 3, 4, 5])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">aa</span> <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span>                            <span class="c1">#slice middle 2 elements</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">aa</span>                                     <span class="c1">#show the slice</span>
+<span class="go">array([2, 3])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">aa</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">13</span>                             <span class="c1">#chance value in slice</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span>                                      <span class="c1">#show change in original</span>
+<span class="go">array([ 1, 2, 13,  4,  5])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">aaa</span> <span class="o">=</span> <span class="n">array</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>                         <span class="c1">#make copy of array</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">aaa</span>                                    <span class="c1">#show copy</span>
+<span class="go">array([ 1, 2, 13,  4,  5])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">aaa</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>                           <span class="c1">#set middle values to 0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">aaa</span>                                    <span class="c1">#show copy</span>
+<span class="go">array([1, 0, 0, 0, 5])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span>                                      <span class="c1">#show original again</span>
+<span class="go">array([ 1, 2, 13,  4,  5])</span>
+</pre></div>
+</div>
+<p>Now we will look at small arrays with two
+dimensions. Don't be too worried, getting started it is the same as having a
+two dimensional tuple <em>(a tuple inside a tuple)</em>. Let's get started with
+two dimensional arrays.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">row1</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>                         <span class="c1">#create a tuple of vals</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">row2</span> <span class="o">=</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">)</span>                         <span class="c1">#another tuple</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">(</span><span class="n">row1</span><span class="p">,</span><span class="n">row2</span><span class="p">)</span>                            <span class="c1">#show as a 2D tuple</span>
+<span class="go">((1, 2, 3), (3, 4, 5))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span> <span class="o">=</span> <span class="n">array</span><span class="p">((</span><span class="n">row1</span><span class="p">,</span> <span class="n">row2</span><span class="p">))</span>                <span class="c1">#create a 2D array</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span>                                      <span class="c1">#show the array</span>
+<span class="go">array([[1, 2, 3],</span>
+<span class="go">       [3, 4, 5]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">array</span><span class="p">(((</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">),(</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">),(</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">)))</span>             <span class="c1">#show a new 2D array</span>
+<span class="go">array([[1, 2],</span>
+<span class="go">       [3, 4],</span>
+<span class="go">       [5, 6]])</span>
+</pre></div>
+</div>
+<p>Now with this two
+dimensional array <em>(from now on as &quot;2D&quot;)</em> we can index specific values
+and do slicing on both dimensions. Simply using a comma to separate the indices
+allows us to lookup/slice in multiple dimensions. Just using &quot;<code class="docutils literal notranslate"><span class="pre">:</span></code>&quot; as an
+index <em>(or not supplying enough indices)</em> gives us all the values in
+that dimension. Let's see how this works.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">b</span>                                      <span class="c1">#show our array from above</span>
+<span class="go">array([[1, 2, 3],</span>
+<span class="go">       [3, 4, 5]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>                                 <span class="c1">#index a single value</span>
+<span class="go">2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span><span class="p">[</span><span class="mi">1</span><span class="p">,:]</span>                                 <span class="c1">#slice second row</span>
+<span class="go">array([3, 4, 5])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>                                   <span class="c1">#slice second row (same as above)</span>
+<span class="go">array([3, 4, 5])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span><span class="p">[:,</span><span class="mi">2</span><span class="p">]</span>                                 <span class="c1">#slice last column</span>
+<span class="go">array([3, 5])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span><span class="p">[:,:</span><span class="mi">2</span><span class="p">]</span>                                <span class="c1">#slice into a 2x2 array</span>
+<span class="go">array([[1, 2],</span>
+<span class="go">       [3, 4]])</span>
+</pre></div>
+</div>
+<p>Ok, stay with me here, this is about as hard as it gets. When using NumPy
+there is one more feature to slicing. Slicing arrays also allow you to specify
+a <em>slice increment</em>. The syntax for a slice with increment is
+<code class="docutils literal notranslate"><span class="pre">start_index</span> <span class="pre">:</span> <span class="pre">end_index</span> <span class="pre">:</span> <span class="pre">increment</span></code>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">c</span> <span class="o">=</span> <span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>                         <span class="c1">#like range, but makes an array</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">c</span>                                      <span class="c1">#show the array</span>
+<span class="go">array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">c</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">6</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span>                               <span class="c1">#slice odd values from 1 to 6</span>
+<span class="go">array([1, 3, 5])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">c</span><span class="p">[</span><span class="mi">4</span><span class="p">::</span><span class="mi">4</span><span class="p">]</span>                                <span class="c1">#slice every 4th val starting at 4</span>
+<span class="go">array([4, 8])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">c</span><span class="p">[</span><span class="mi">8</span><span class="p">:</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>                              <span class="c1">#slice 1 to 8, reversed</span>
+<span class="go">array([8, 7, 6, 5, 4, 3, 2])</span>
+</pre></div>
+</div>
+<p>Well that is it. There's enough information there to get you started using
+NumPy with the surfarray module. There's certainly a lot more to NumPy, but
+this is only an introduction. Besides, we want to get on to the fun stuff,
+correct?</p>
+</section>
+<section id="import-surfarray">
+<h3>Import Surfarray<a class="headerlink" href="#import-surfarray" title="Permalink to this heading">¶</a></h3>
+<p>In order to use the surfarray module we need to import it. Since both surfarray
+and NumPy are optional components for pygame, it is nice to make sure they
+import correctly before using them. In these examples I'm going to import
+NumPy into a variable named <em>N</em>. This will let you know which functions
+I'm using are from the NumPy package.
+<em>(and is a lot shorter than typing NumPy before each function)</em></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">N</span>
+    <span class="kn">import</span> <span class="nn">pygame.surfarray</span> <span class="k">as</span> <span class="nn">surfarray</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">,</span> <span class="s2">&quot;NumPy and Surfarray are required.&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="id1">
+<h3>Surfarray Introduction<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h3>
+<p>There are two main types of functions in surfarray. One set of functions for
+creating an array that is a copy of a surface pixel data. The other functions
+create a referenced copy of the array pixel data, so that changes to the array
+directly affect the original surface. There are other functions that allow you
+to access any per-pixel alpha values as arrays along with a few other helpful
+functions. We will look at these other functions later on.</p>
+<p>When working with these surface arrays, there are two ways of representing the
+pixel values. First, they can be represented as mapped integers. This type of
+array is a simple 2D array with a single integer representing the surface's
+mapped color value. This type of array is good for moving parts of an image
+around. The other type of array uses three RGB values to represent each pixel
+color. This type of array makes it extremely simple to do types of effects that
+change the color of each pixel. This type of array is also a little trickier to
+deal with, since it is essentially a 3D numeric array. Still, once you get your
+mind into the right mode, it is not much harder than using the normal 2D arrays.</p>
+<p>The NumPy module uses a machine's natural number types to represent the data
+values, so a NumPy array can consist of integers that are 8-bits, 16-bits, and 32-bits.
+<em>(the arrays can also use other types like floats and doubles, but for our image
+manipulation we mainly need to worry about the integer types)</em>.
+Because of this limitation of integer sizes, you must take a little extra care
+that the type of arrays that reference pixel data can be properly mapped to a
+proper type of data. The functions create these arrays from surfaces are:</p>
+<dl class="py function definition">
+<dt class="sig sig-object py title">
+<span class="sig-prename descclassname"><span class="pre">surfarray.</span></span><span class="sig-name descname"><span class="pre">pixels2d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">surface</span></span></em><span class="sig-paren">)</span></dt>
+<dd><p>Creates a 2D array <em>(integer pixel values)</em> that reference the original surface data.
+This will work for all surface formats except 24-bit.</p>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title">
+<span class="sig-prename descclassname"><span class="pre">surfarray.</span></span><span class="sig-name descname"><span class="pre">array2d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">surface</span></span></em><span class="sig-paren">)</span></dt>
+<dd><p>Creates a 2D array <em>(integer pixel values)</em> that is copied from any type of surface.</p>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title">
+<span class="sig-prename descclassname"><span class="pre">surfarray.</span></span><span class="sig-name descname"><span class="pre">pixels3d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">surface</span></span></em><span class="sig-paren">)</span></dt>
+<dd><p>Creates a 3D array <em>(RGB pixel values)</em> that reference the original surface data.
+This will only work on 24-bit and 32-bit surfaces that have RGB or BGR formatting.</p>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title">
+<span class="sig-prename descclassname"><span class="pre">surfarray.</span></span><span class="sig-name descname"><span class="pre">array3d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">surface</span></span></em><span class="sig-paren">)</span></dt>
+<dd><p>Creates a 3D array <em>(RGB pixel values)</em> that is copied from any type of surface.</p>
+</dd></dl>
+
+<p>Here is a small chart that might better illustrate what types of functions
+should be used on which surfaces. As you can see, both the arrayXD functions
+will work with any type of surface.</p>
+<table class="matrix docutils align-default">
+<colgroup>
+<col style="width: 20.0%" />
+<col style="width: 20.0%" />
+<col style="width: 20.0%" />
+<col style="width: 20.0%" />
+<col style="width: 20.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head stub"></th>
+<th class="head"><p>32-bit</p></th>
+<th class="head"><p>24-bit</p></th>
+<th class="head"><p>16-bit</p></th>
+<th class="head"><p>8-bit(c-map)</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><th class="stub"><p>pixel2d</p></th>
+<td><p>yes</p></td>
+<td></td>
+<td><p>yes</p></td>
+<td><p>yes</p></td>
+</tr>
+<tr class="row-odd"><th class="stub"><p>array2d</p></th>
+<td><p>yes</p></td>
+<td><p>yes</p></td>
+<td><p>yes</p></td>
+<td><p>yes</p></td>
+</tr>
+<tr class="row-even"><th class="stub"><p>pixel3d</p></th>
+<td><p>yes</p></td>
+<td><p>yes</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><th class="stub"><p>array3d</p></th>
+<td><p>yes</p></td>
+<td><p>yes</p></td>
+<td><p>yes</p></td>
+<td><p>yes</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="examples">
+<h3>Examples<a class="headerlink" href="#examples" title="Permalink to this heading">¶</a></h3>
+<p>With this information, we are equipped to start trying things with surface
+arrays. The following are short little demonstrations that create a NumPy
+array and display them in pygame. These different tests are found in the
+<em>arraydemo.py</em> example. There is a simple function named <em>surfdemo_show</em>
+that displays an array on the screen.</p>
+<div class="examples docutils container">
+<div class="example docutils container">
+<img alt="allblack" src="../_images/surfarray_allblack.png" />
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">allblack</span> <span class="o">=</span> <span class="n">N</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">128</span><span class="p">,</span> <span class="mi">128</span><span class="p">))</span>
+<span class="n">surfdemo_show</span><span class="p">(</span><span class="n">allblack</span><span class="p">,</span> <span class="s1">&#39;allblack&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Our first example creates an all black array. Whenever you need
+to create a new numeric array of a specific size, it is best to use the
+<code class="docutils literal notranslate"><span class="pre">zeros</span></code> function. Here we create a 2D array of all zeros and display
+it.</p>
+<div class="break docutils container">
+</div>
+</div>
+<div class="example docutils container">
+<img alt="striped" src="../_images/surfarray_striped.png" />
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">striped</span> <span class="o">=</span> <span class="n">N</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">128</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="n">striped</span><span class="p">[:]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">striped</span><span class="p">[:,::</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">)</span>
+<span class="n">surfdemo_show</span><span class="p">(</span><span class="n">striped</span><span class="p">,</span> <span class="s1">&#39;striped&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Here we are dealing with a 3D array. We start by creating an all red image.
+Then we slice out every third row and assign it to a blue/green color. As you
+can see, we can treat the 3D arrays almost exactly the same as 2D arrays, just
+be sure to assign them 3 values instead of a single mapped integer.</p>
+<div class="break docutils container">
+</div>
+</div>
+<div class="example docutils container">
+<img alt="rgbarray" src="../_images/surfarray_rgbarray.png" />
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">imgsurface</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;surfarray.png&#39;</span><span class="p">)</span>
+<span class="n">rgbarray</span> <span class="o">=</span> <span class="n">surfarray</span><span class="o">.</span><span class="n">array3d</span><span class="p">(</span><span class="n">imgsurface</span><span class="p">)</span>
+<span class="n">surfdemo_show</span><span class="p">(</span><span class="n">rgbarray</span><span class="p">,</span> <span class="s1">&#39;rgbarray&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Here we load an image with the image module, then convert it to a 3D
+array of integer RGB color elements. An RGB copy of a surface always
+has the colors arranged as a[r,c,0] for the red component,
+a[r,c,1] for the green component, and a[r,c,2] for blue. This can then
+be used without caring how the pixels of the actual surface are configured,
+unlike a 2D array which is a copy of the <a class="reference internal" href="../ref/surface.html#pygame.Surface.map_rgb" title="pygame.Surface.map_rgb"><code class="xref py py-meth docutils literal notranslate"><span class="pre">mapped</span></code></a>
+(raw) surface pixels. We will use this image in the rest of the samples.</p>
+<div class="break docutils container">
+</div>
+</div>
+<div class="example docutils container">
+<img alt="flipped" src="../_images/surfarray_flipped.png" />
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">flipped</span> <span class="o">=</span> <span class="n">rgbarray</span><span class="p">[:,::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">surfdemo_show</span><span class="p">(</span><span class="n">flipped</span><span class="p">,</span> <span class="s1">&#39;flipped&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Here we flip the image vertically. All we need to do is take the original
+image array and slice it using a negative increment.</p>
+<div class="break docutils container">
+</div>
+</div>
+<div class="example docutils container">
+<img alt="scaledown" src="../_images/surfarray_scaledown.png" />
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">scaledown</span> <span class="o">=</span> <span class="n">rgbarray</span><span class="p">[::</span><span class="mi">2</span><span class="p">,::</span><span class="mi">2</span><span class="p">]</span>
+<span class="n">surfdemo_show</span><span class="p">(</span><span class="n">scaledown</span><span class="p">,</span> <span class="s1">&#39;scaledown&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Based on the last example, scaling an image down is pretty logical. We just
+slice out all the pixels using an increment of 2 vertically and horizontally.</p>
+<div class="break docutils container">
+</div>
+</div>
+<div class="example docutils container">
+<img alt="scaleup" src="../_images/surfarray_scaleup.png" />
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">shape</span> <span class="o">=</span> <span class="n">rgbarray</span><span class="o">.</span><span class="n">shape</span>
+<span class="n">scaleup</span> <span class="o">=</span> <span class="n">N</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span> <span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span> <span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span>
+<span class="n">scaleup</span><span class="p">[::</span><span class="mi">2</span><span class="p">,::</span><span class="mi">2</span><span class="p">,:]</span> <span class="o">=</span> <span class="n">rgbarray</span>
+<span class="n">scaleup</span><span class="p">[</span><span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">,::</span><span class="mi">2</span><span class="p">,:]</span> <span class="o">=</span> <span class="n">rgbarray</span>
+<span class="n">scaleup</span><span class="p">[:,</span><span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">scaleup</span><span class="p">[:,::</span><span class="mi">2</span><span class="p">]</span>
+<span class="n">surfdemo_show</span><span class="p">(</span><span class="n">scaleup</span><span class="p">,</span> <span class="s1">&#39;scaleup&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Scaling the image up is a little more work, but is similar to the previous
+scaling down, we do it all with slicing. First we create an array that is
+double the size of our original. First we copy the original array into every
+other pixel of the new array. Then we do it again for every other pixel doing
+the odd columns. At this point we have the image scaled properly going across,
+but every other row is black, so we simply need to copy each row to the one
+underneath it. Then we have an image doubled in size.</p>
+<div class="break docutils container">
+</div>
+</div>
+<div class="example docutils container">
+<img alt="redimg" src="../_images/surfarray_redimg.png" />
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">redimg</span> <span class="o">=</span> <span class="n">N</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">rgbarray</span><span class="p">)</span>
+<span class="n">redimg</span><span class="p">[:,:,</span><span class="mi">1</span><span class="p">:]</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">surfdemo_show</span><span class="p">(</span><span class="n">redimg</span><span class="p">,</span> <span class="s1">&#39;redimg&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Now we are using 3D arrays to change the colors. Here we
+set all the values in green and blue to zero.
+This leaves us with just the red channel.</p>
+<div class="break docutils container">
+</div>
+</div>
+<div class="example docutils container">
+<img alt="soften" src="../_images/surfarray_soften.png" />
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">factor</span> <span class="o">=</span> <span class="n">N</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="mi">8</span><span class="p">,),</span> <span class="n">N</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+<span class="n">soften</span> <span class="o">=</span> <span class="n">N</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">rgbarray</span><span class="p">,</span> <span class="n">N</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+<span class="n">soften</span><span class="p">[</span><span class="mi">1</span><span class="p">:,:]</span>  <span class="o">+=</span> <span class="n">rgbarray</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">,:]</span> <span class="o">*</span> <span class="n">factor</span>
+<span class="n">soften</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">,:]</span> <span class="o">+=</span> <span class="n">rgbarray</span><span class="p">[</span><span class="mi">1</span><span class="p">:,:]</span> <span class="o">*</span> <span class="n">factor</span>
+<span class="n">soften</span><span class="p">[:,</span><span class="mi">1</span><span class="p">:]</span>  <span class="o">+=</span> <span class="n">rgbarray</span><span class="p">[:,:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">factor</span>
+<span class="n">soften</span><span class="p">[:,:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="n">rgbarray</span><span class="p">[:,</span><span class="mi">1</span><span class="p">:]</span> <span class="o">*</span> <span class="n">factor</span>
+<span class="n">soften</span> <span class="o">//=</span> <span class="mi">33</span>
+<span class="n">surfdemo_show</span><span class="p">(</span><span class="n">soften</span><span class="p">,</span> <span class="s1">&#39;soften&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Here we perform a 3x3 convolution filter that will soften our image.
+It looks like a lot of steps here, but what we are doing is shifting
+the image 1 pixel in each direction and adding them all together (with some
+multiplication for weighting). Then average all the values. It's no Gaussian,
+but it's fast. One point with NumPy arrays, the precision of arithmetic
+operations is determined by the array with the largest data type.
+So if factor was not declared as a 1 element array of type numpy.int32,
+the multiplications would be performed using numpy.int8, the 8 bit integer
+type of each rgbarray element. This will cause value truncation. The soften
+array must also be declared to have a larger integer size than rgbarray to
+avoid truncation.</p>
+<div class="break docutils container">
+</div>
+</div>
+<div class="example docutils container">
+<img alt="xfade" src="../_images/surfarray_xfade.png" />
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">src</span> <span class="o">=</span> <span class="n">N</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">rgbarray</span><span class="p">)</span>
+<span class="n">dest</span> <span class="o">=</span> <span class="n">N</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">rgbarray</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">dest</span><span class="p">[:]</span> <span class="o">=</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">100</span>
+<span class="n">diff</span> <span class="o">=</span> <span class="p">(</span><span class="n">dest</span> <span class="o">-</span> <span class="n">src</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.50</span>
+<span class="n">xfade</span> <span class="o">=</span> <span class="n">src</span> <span class="o">+</span> <span class="n">diff</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">N</span><span class="o">.</span><span class="n">uint</span><span class="p">)</span>
+<span class="n">surfdemo_show</span><span class="p">(</span><span class="n">xfade</span><span class="p">,</span> <span class="s1">&#39;xfade&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Lastly, we are cross fading between the original image and a solid bluish
+image. Not exciting, but the dest image could be anything, and changing the 0.50
+multiplier will let you choose any step in a linear crossfade between two images.</p>
+<div class="break docutils container">
+</div>
+</div>
+</div>
+<p>Hopefully by this point you are starting to see how surfarray can be used to
+perform special effects and transformations that are only possible at the pixel
+level. At the very least, you can use the surfarray to do a lot of Surface.set_at()
+Surface.get_at() type operations very quickly. But don't think you are finished
+yet, there is still much to learn.</p>
+</section>
+<section id="surface-locking">
+<h3>Surface Locking<a class="headerlink" href="#surface-locking" title="Permalink to this heading">¶</a></h3>
+<p>Like the rest of pygame, surfarray will lock any Surfaces it needs to
+automatically when accessing pixel data. There is one extra thing to be aware
+of though. When creating the <em>pixel</em> arrays, the original surface will
+be locked during the lifetime of that pixel array. This is important to remember.
+Be sure to <em>&quot;del&quot;</em> the pixel array or let it go out of scope
+<em>(ie, when the function returns, etc)</em>.</p>
+<p>Also be aware that you really don't want to be doing much <em>(if any)</em>
+direct pixel access on hardware surfaces <em>(HWSURFACE)</em>. This is because
+the actual surface data lives on the graphics card, and transferring pixel
+changes over the PCI/AGP bus is not fast.</p>
+</section>
+<section id="transparency">
+<h3>Transparency<a class="headerlink" href="#transparency" title="Permalink to this heading">¶</a></h3>
+<p>The surfarray module has several methods for accessing a Surface's alpha/colorkey
+values. None of the alpha functions are affected by overall transparency of a
+Surface, just the pixel alpha values. Here's the list of those functions.</p>
+<dl class="py function definition">
+<dt class="sig sig-object py title">
+<span class="sig-prename descclassname"><span class="pre">surfarray.</span></span><span class="sig-name descname"><span class="pre">pixels_alpha</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">surface</span></span></em><span class="sig-paren">)</span></dt>
+<dd><p>Creates a 2D array <em>(integer pixel values)</em> that references the original
+surface alpha data.
+This will only work on 32-bit images with an 8-bit alpha component.</p>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title">
+<span class="sig-prename descclassname"><span class="pre">surfarray.</span></span><span class="sig-name descname"><span class="pre">array_alpha</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">surface</span></span></em><span class="sig-paren">)</span></dt>
+<dd><p>Creates a 2D array <em>(integer pixel values)</em> that is copied from any
+type of surface.
+If the surface has no alpha values,
+the array will be fully opaque values <em>(255)</em>.</p>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title">
+<span class="sig-prename descclassname"><span class="pre">surfarray.</span></span><span class="sig-name descname"><span class="pre">array_colorkey</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">surface</span></span></em><span class="sig-paren">)</span></dt>
+<dd><p>Creates a 2D array <em>(integer pixel values)</em> that is set to transparent
+<em>(0)</em> wherever that pixel color matches the Surface colorkey.</p>
+</dd></dl>
+
+</section>
+<section id="other-surfarray-functions">
+<h3>Other Surfarray Functions<a class="headerlink" href="#other-surfarray-functions" title="Permalink to this heading">¶</a></h3>
+<p>There are only a few other functions available in surfarray. You can get a better
+list with more documentation on the
+<a class="reference internal" href="../ref/surfarray.html#module-pygame.surfarray" title="pygame.surfarray: pygame module for accessing surface pixel data using array interfaces"><code class="xref py py-mod docutils literal notranslate"><span class="pre">surfarray</span> <span class="pre">reference</span> <span class="pre">page</span></code></a>.
+There is one very useful function though.</p>
+<dl class="py function definition">
+<dt class="sig sig-object py title">
+<span class="sig-prename descclassname"><span class="pre">surfarray.</span></span><span class="sig-name descname"><span class="pre">blit_array</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">surface</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">array</span></span></em><span class="sig-paren">)</span></dt>
+<dd><p>This will transfer any type of 2D or 3D surface array onto a Surface
+of the same dimensions.
+This surfarray blit will generally be faster than assigning an array to a
+referenced pixel array.
+Still, it should not be as fast as normal Surface blitting,
+since those are very optimized.</p>
+</dd></dl>
+
+</section>
+<section id="more-advanced-numpy">
+<h3>More Advanced NumPy<a class="headerlink" href="#more-advanced-numpy" title="Permalink to this heading">¶</a></h3>
+<p>There's a couple last things you should know about NumPy arrays. When dealing
+with very large arrays, like the kind that are 640x480 big, there are some extra
+things you should be careful about. Mainly, while using the operators like + and
+* on the arrays makes them easy to use, it is also very expensive on big arrays.
+These operators must make new temporary copies of the array, that are then
+usually copied into another array. This can get very time consuming. Fortunately,
+all the NumPy operators come with special functions that can perform the
+operation <em>&quot;in place&quot;</em>. For example, you would want to replace
+<code class="docutils literal notranslate"><span class="pre">screen[:]</span> <span class="pre">=</span> <span class="pre">screen</span> <span class="pre">+</span> <span class="pre">brightmap</span></code> with the much faster
+<code class="docutils literal notranslate"><span class="pre">add(screen,</span> <span class="pre">brightmap,</span> <span class="pre">screen)</span></code>.
+Anyway, you'll want to read up on the NumPy UFunc
+documentation for more about this.
+It is important when dealing with the arrays.</p>
+<p>Another thing to be aware of when working with NumPy arrays is the datatype
+of the array. Some of the arrays (especially the mapped pixel type) often return
+arrays with an unsigned 8-bit value. These arrays will easily overflow if you are
+not careful. NumPy will use the same coercion that you find in C programs, so
+mixing an operation with 8-bit numbers and 32-bit numbers will give a result as
+32-bit numbers. You can convert the datatype of an array, but definitely be
+aware of what types of arrays you have, if NumPy gets in a situation where
+precision would be ruined, it will raise an exception.</p>
+<p>Lastly, be aware that when assigning values into the 3D arrays, they must be
+between 0 and 255, or you will get some undefined truncating.</p>
+</section>
+<section id="graduation">
+<h3>Graduation<a class="headerlink" href="#graduation" title="Permalink to this heading">¶</a></h3>
+<p>Well there you have it. My quick primer on Numeric Python and surfarray.
+Hopefully now you see what is possible, and even if you never use them for
+yourself, you do not have to be afraid when you see code that does. Look into
+the vgrade example for more numeric array action. There are also some <em>&quot;flame&quot;</em>
+demos floating around that use surfarray to create a realtime fire effect.</p>
+<p>Best of all, try some things on your own. Take it slow at first and build up,
+I've seen some great things with surfarray already like radial gradients and
+more. Good Luck.</p>
+</section>
+</section>
+</section>
+
+
+<br /><br />
+<hr />
+<a href="https://github.com/pygame/pygame/edit/main/docs/reST/tut/SurfarrayIntro.rst" rel="nofollow">Edit on GitHub</a>
+            <div class="clearer"></div>
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="newbieguide.html" title="Newbie Guide to Pygame"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="SpriteIntro.html" title="Pygame Tutorials - Sprite Module Introduction"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">pygame v2.5.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Pygame Tutorials - Surfarray Introduction</a></li>
+    <script type="text/javascript" src="https://www.pygame.org/comment/jquery.plugin.docscomments.js"></script>
+
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2000-2023, pygame developers.
+    </div>
+  </body>
+</html>
