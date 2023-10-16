@@ -243,10 +243,37 @@
   </tr>
   
   <tr>
-    <td rowspan="1"><a href="https://github.com/Aizhouym" target="_blank"  rel="noopener noreferrer">https://github.com/Aizhouym</a></td>
-    
-    
+    <td rowspan="5"><a href="https://github.com/Aizhouym" target="_blank"  rel="noopener noreferrer">https://github.com/Aizhouym</a></td>
+    <td><a href="WareHouse/Maze_THUNLP_20231006154305" target="_blank" rel="noopener noreferrer">MazeGame</a></td>
+    <td><img src="music/MazeGame.png" width="200px"></td>
+    <td>Runnable</td>
+    <td>GPT3.5</td>
   </tr>
+  <tr>
+    <td><a href="WareHouse/GreedySnakeGame_THUNLP_20231008212648" target="_blank" rel="noopener noreferrer">GreedySnakeGame</a></td>
+    <td><img src="misc/GreedySnakeGame.png" width="200px"></td>
+    <td>Perfect</td>
+    <td>GPT3.5</td>
+  </tr>
+  <tr>
+    <td><a href="WareHouse/BackgroundRemoval_THUNLP_20231015220703" target="_blank" rel="noopener noreferrer">BackgroundRemoval</a></td>
+    <td><img src="misc/BackgroundRemoval.png" width="200px"></td>
+    <td>Biased</td>
+    <td>GPT3.5</td>
+  </tr>
+  <tr>
+    <td><a href="WareHouse/QRCodeGenerator_THUNLP_20231015214731" target="_blank" rel="noopener noreferrer">QRCodeGenerator</a></td>
+    <td><img src="misc/QRCodeGenerator.png" width="200px"></td>
+    <td>Perfect</td>
+    <td>GPT3.5</td>
+  </tr>
+  <tr>
+    <td><a href="WareHouse/WordCloud_THUNLP_20231015215721" target="_blank" rel="noopener noreferrer">WordCloud</a></td>
+    <td><img src="misc/WordCloud.png" width="200px"></td>
+    <td>Perfect</td>
+    <td>GPT3.5</td>
+  </tr>
+  
   <tr>
 </tbody>
 </table>
