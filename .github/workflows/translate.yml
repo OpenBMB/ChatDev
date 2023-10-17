@@ -1,0 +1,33 @@
+name: Translate README
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'README.md'
+
+jobs:
+  translate:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Translate README.md to Spanish
+      run: |
+        TEXT=$(cat README.md)
+        TRANSLATED_TEXT=$(curl -X POST "https://libretranslate.com/translate" \
+                          -H "Content-Type: application/json" \
+                          -d "{\"q\": \"$TEXT\", \"source\": \"en\", \"target\": \"es\"}" \
+                          | jq .translatedText)
+        echo "$TRANSLATED_TEXT" > README.es.md
+
+    - name: Commit and push translated README
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add README.es.md
+        git commit -m "Add translated README.es.md"
+        git push
