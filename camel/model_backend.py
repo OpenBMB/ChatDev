@@ -13,6 +13,7 @@
 # =========== Copyright 2023 @ CAMEL-AI.org. All Rights Reserved. ===========
 from abc import ABC, abstractmethod
 from typing import Any, Dict
+import os
 
 import openai
 import tiktoken
@@ -71,6 +72,7 @@ class OpenAIModel(ModelBackend):
         self.model_config_dict['max_tokens'] = num_max_completion_tokens
         response = openai.ChatCompletion.create(*args, **kwargs,
                                                 model=self.model_type.value,
+                                                engine=os.getenv("OPENAI_API_ENGINE"),
                                                 **self.model_config_dict)
         cost = prompt_cost(
                 self.model_type.value, 
