@@ -16,15 +16,35 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Translate README.md to Spanish
+    - name: Translate README.md to Spanish without translating links
       run: |
-        TEXT=$(cat README.md)
+        # Step 1: Extract and Store Links
+        LINKS=($(grep -oP 'http(s)?://\S+' README.md))
+        
+        # Step 2: Replace Links with Placeholders
+        MODIFIED_TEXT=$(cat README.md)
+        for i in "${!LINKS[@]}"; do
+            PLACEHOLDER="LINKPLACEHOLDER_$i"
+            MODIFIED_TEXT=${MODIFIED_TEXT/${LINKS[$i]}/$PLACEHOLDER}
+        done
+
+        # Step 3: Translate the Modified Text
         RESPONSE=$(curl -X POST "https://libretranslate.com/translate" \
-                  -H "Content-Type: application/json" \
-                  -d "{\"q\": \"$TEXT\", \"source\": \"en\", \"target\": \"es\"}")
-        echo "API Response: $RESPONSE"
+                  -F "q=$MODIFIED_TEXT" \
+                  -F "source=en" \
+                  -F "target=es" \
+                  -F "format=text")
         TRANSLATED_TEXT=$(echo "$RESPONSE" | jq -r .translatedText)
+
+        # Step 4: Restore Links
+        for i in "${!LINKS[@]}"; do
+            PLACEHOLDER="LINKPLACEHOLDER_$i"
+            TRANSLATED_TEXT=${TRANSLATED_TEXT/$PLACEHOLDER/${LINKS[$i]}}
+        done
+
         echo "$TRANSLATED_TEXT" > README.es.md
+
+
 
 
     - name: Commit and push translated README
