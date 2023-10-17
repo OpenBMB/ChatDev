@@ -19,11 +19,13 @@ jobs:
     - name: Translate README.md to Spanish
       run: |
         TEXT=$(cat README.md)
-        TRANSLATED_TEXT=$(curl -X POST "https://libretranslate.com/translate" \
-                          -H "Content-Type: application/json" \
-                          -d "{\"q\": \"$TEXT\", \"source\": \"en\", \"target\": \"es\"}" \
-                          | jq .translatedText)
+        RESPONSE=$(curl -X POST "https://libretranslate.com/translate" \
+                  -H "Content-Type: application/json" \
+                  -d "{\"q\": \"$TEXT\", \"source\": \"en\", \"target\": \"es\"}")
+        echo "API Response: $RESPONSE"
+        TRANSLATED_TEXT=$(echo "$RESPONSE" | jq -r .translatedText)
         echo "$TRANSLATED_TEXT" > README.es.md
+
 
     - name: Commit and push translated README
       run: |
