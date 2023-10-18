@@ -146,7 +146,7 @@
     <td>GPT3.5</td>
   </tr>
   <tr>
-    <td rowspan="6"><a href="https://github.com/NA-Wen" target="_blank" rel="noopener noreferrer">https://github.com/NA-Wen</a></td>
+    <td rowspan="5"><a href="https://github.com/NA-Wen" target="_blank" rel="noopener noreferrer">https://github.com/NA-Wen</a></td>
     <td><a href="WareHouse/md2html_THUNLP_20230823102935" target="_blank" rel="noopener noreferrer">md2html</a></td>
     <td><img src="misc/markdown2html.png" width="200px"></td>
     <td>Runnable</td>
@@ -167,12 +167,6 @@
   <tr>
     <td><a href="WareHouse/ImgEditor_THUNLP_20230824142740" target="_blank" rel="noopener noreferrer">Image Editor</a></td>
     <td><img src="misc/image_editor.png" width="200px"></td>
-    <td>Perfect</td>
-    <td>GPT3.5</td>
-  </tr>
-  <tr>
-    <td><a href="WareHouse/ArtCanvas_THUNLP_20230825093558" target="_blank" rel="noopener noreferrer">ArtCanvas</a></td>
-    <td><img src="misc/paint.png" width="200px"></td>
     <td>Perfect</td>
     <td>GPT3.5</td>
   </tr>
