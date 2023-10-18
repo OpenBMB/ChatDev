@@ -14,6 +14,7 @@
 from abc import ABC, abstractmethod
 from typing import Any, Dict
 import os
+import time
 
 import openai
 import tiktoken
@@ -70,6 +71,7 @@ class OpenAIModel(ModelBackend):
         num_max_token = num_max_token_map[self.model_type.value]
         num_max_completion_tokens = num_max_token - num_prompt_tokens
         self.model_config_dict['max_tokens'] = num_max_completion_tokens
+        time.sleep(0.1)
         response = openai.ChatCompletion.create(*args, **kwargs,
                                                 model=self.model_type.value,
                                                 engine=os.getenv("OPENAI_API_ENGINE"),
