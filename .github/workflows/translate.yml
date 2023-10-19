@@ -13,20 +13,29 @@ jobs:
       pull-requests: write
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
 
-    - name: Translate Readme
-      uses: crowdin/translate-readme@v0.1.0
-      env:
-        CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
-        CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
+      - name: Translate Readme
+        uses: crowdin/translate-readme@v0.1.0
+        env:
+          CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
+          CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
 
-    - name: Create Pull Request
-      uses: peter-evans/create-pull-request@v5
-      with:
-        title: New Readme Translations by Crowdin
-        body: By [translate-readme](https://github.com/crowdin/translate-readme) GitHub action
-        commit-message: New Readme Translations
-        committer: Crowdin Bot <support+bot@crowdin.com>
-        branch: docs/readme-translations
+      - name: Pre-Translate README.md via Translation Memory
+        uses: crowdin/github-action@v1
+        with:
+          command: 'pre-translate'
+          command_args: '-l all --method mt'
+        env:
+          CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
+          CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          title: New Readme Translations by Crowdin
+          body: By [translate-readme](https://github.com/crowdin/translate-readme) GitHub action
+          commit-message: New Readme Translations
+          committer: Crowdin Bot <support+bot@crowdin.com>
+          branch: docs/readme-translations
