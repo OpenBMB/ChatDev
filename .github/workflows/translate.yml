@@ -16,14 +16,15 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Translate README.md to Spanish using the file endpoint
+    - name: Translate README.md to Spanish
       run: |
-        curl -X POST "https://libretranslate.com/translate/file" \
-             -F "file=@README.md" \
-             -F "source=en" \
-             -F "target=es" \
-             -F "format=text" \
-             -o README.es.md
+        TEXT=$(cat README.md)
+        TRANSLATED_TEXT=$(curl -X POST "https://libretranslate.com/translate" \
+                          -F "q=$TEXT" \
+                          -F "source=en" \
+                          -F "target=es" \
+                          -F "format=text" | jq -r .translatedText)
+        echo "$TRANSLATED_TEXT" > README.es.md
 
     - name: Commit and push translated README
       run: |
