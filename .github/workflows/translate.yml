@@ -1,38 +1,29 @@
-name: Translate README
+name: Translate Readme
 
 on:
   push:
-    branches:
-      - main
-    paths:
-      - 'README.md'
+    branches: [ main ]
   workflow_dispatch:
 
 jobs:
-  translate:
+  translate-readme:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+    - name: Checkout
+      uses: actions/checkout@v3
 
-    - name: Translate README.md to Spanish
-      run: |
-        TEXT=$(cat README.md)
-        RESPONSE=$(curl -X POST "https://libretranslate.com/translate" \
-                      -F "q=$TEXT" \
-                      -F "source=en" \
-                      -F "target=es" \
-                      -F "format=text")
-        echo "Server Response: $RESPONSE"  # This will print the server response for debugging
-        TRANSLATED_TEXT=$(echo "$RESPONSE" | jq -r .translatedText)
-        echo "$TRANSLATED_TEXT" > README.es.md
+    - name: Translate Readme
+      uses: crowdin/translate-readme@v0.1.0
+      env:
+        CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
+        CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
 
-
-    - name: Commit and push translated README
-      run: |
-        git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Action"
-        git add README.es.md
-        git commit -m "Add translated README.es.md"
-        git push
+    - name: Create Pull Request
+      uses: peter-evans/create-pull-request@v5
+      with:
+        title: New Readme Translations by Crowdin
+        body: By [translate-readme](https://github.com/crowdin/translate-readme) GitHub action
+        commit-message: New Readme Translations
+        committer: Crowdin Bot <support+bot@crowdin.com>
+        branch: docs/readme-translations
