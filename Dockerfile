@@ -14,8 +14,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 # (you'll need to provide the actual key when running the container)
 ENV OPENAI_API_KEY=your_OpenAI_API_key
 
-# Expose a port if the project has any web-based features
-EXPOSE 8080
+# Expose the port for online_log/app.py
+EXPOSE 8000
 
 # Set an entry point that runs a shell for interactive mode
 ENTRYPOINT ["/bin/bash"]
