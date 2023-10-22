@@ -88,7 +88,7 @@
 
 ## Local Demo
 
-- you can start a flask app fist get a local demo, including enhanced visualized logs, replay demo, and a simple
+- you can start a flask app first to get a local demo, including enhanced visualized logs, replay demo, and a simple
   ChatChain Visualizer.
 
 ```
