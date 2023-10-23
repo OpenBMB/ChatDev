@@ -4,7 +4,7 @@
 
 ### 1. Install `ChatDev`:
 
-- Visit the [quickstart section](README.md#⚡️-quickstart) of readme for installation instructions.
+- Visit the [quickstart section](README.md#%EF%B8%8F-quickstart) of readme for installation instructions.
 
 ### 2. Start building software in one command:
 
