@@ -4,33 +4,7 @@
 
 ### 1. Install `ChatDev`:
 
-- **Clone the GitHub Repository:** Begin by cloning the repository using the command:
-   ```
-   git clone https://github.com/OpenBMB/ChatDev.git
-   ```
-- **Set Up Python Environment:** Ensure you have a Python environment of version 3.9 or higher. You can create and
-  activate this environment using the following commands, replacing `ChatDev_conda_env` with your preferred environment
-  name:
-   ```
-   conda create -n ChatDev_conda_env python=3.9 -y
-   conda activate ChatDev_conda_env
-   ```
-- **Install Dependencies:** Move into the `ChatDev` directory and install the necessary dependencies by running:
-   ```
-   cd ChatDev
-   pip3 install -r requirements.txt
-   ```
-- **Set OpenAI API Key:** Export your OpenAI API key as an environment variable. Replace `"your_OpenAI_API_key"` with
-  your actual API key. Remember that this environment variable is session-specific, so you'll need to set it again if
-  you open a new terminal session.
-  On Unix/Linux:
-   ```
-   export OPENAI_API_KEY="your_OpenAI_API_key"
-   ```
-  On Windows:
-   ```
-   $env:OPENAI_API_KEY="your_OpenAI_API_key"
-   ```
+- Visit the [quickstart section](README.md#%EF%B8%8F-quickstart) of readme for installation instructions.
 
 ### 2. Start building software in one command:
 
@@ -45,9 +19,9 @@
 
     ```commandline
     usage: run.py [-h] [--config CONFIG] [--org ORG] [--task TASK] [--name NAME] [--model MODEL]
-    
+
     argparse
-    
+
     optional arguments:
       -h, --help       show this help message and exit
       --config CONFIG  Name of config, which is used to load configuration under CompanyConfig/; Please see CompanyConfig Section below
@@ -88,7 +62,7 @@
 
 ## Local Demo
 
-- you can start a flask app fist get a local demo, including enhanced visualized logs, replay demo, and a simple
+- you can start a flask app first to get a local demo, including enhanced visualized logs, replay demo, and a simple
   ChatChain Visualizer.
 
 ```
