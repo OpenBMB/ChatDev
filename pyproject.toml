@@ -1,0 +1,66 @@
+[tool.autoflake]
+remove-all-unused-imports = true
+remove-unused-variables = true
+in-place = true
+ignore-init-module-imports = true
+exclude = "**/WareHouse/*"
+
+[tool.black]
+line-length = 88
+force-exclude = '''
+/(
+    | WareHouse
+)/
+'''
+
+[tool.isort]
+profile = "black"
+line_length = 88
+skip = ["WareHouse"]
+src_paths = ["camel", "chatdev", "misc", "online_log"]
+
+[tool.pylint.messages_control]
+good-names = ["_", "id"]
+variable-rgx = "[a-z0-9_]{1,30}$"
+
+# TODO: go through all the errors and fix them
+ignore-paths = '''
+    WareHouse/,
+    camel/__init__.py,
+    camel/agents/__init__.py,
+    camel/agents/base.py,
+    camel/agents/chat_agent.py,
+    camel/agents/critic_agent.py,
+    camel/agents/embodied_agent.py,
+    camel/agents/role_playing.py,
+    camel/agents/task_agent.py,
+    camel/agents/tool_agents/__init__.py,
+    camel/agents/tool_agents/base.py,
+    camel/agents/tool_agents/hugging_face_tool_agent.py,
+    camel/configs.py,
+    camel/generators.py,
+    camel/human.py,
+    camel/messages/__init__.py,
+    camel/messages/base.py,
+    camel/messages/chat_messages.py,
+    camel/messages/system_messages.py,
+    camel/model_backend.py,
+    camel/prompts/__init__.py,
+    camel/prompts/base.py,
+    camel/prompts/prompt_templates.py,
+    camel/prompts/task_prompt_template.py,
+    camel/typing.py,
+    camel/utils.py,
+    chatdev/chat_chain.py,
+    chatdev/chat_env.py,
+    chatdev/codes.py,
+    chatdev/composed_phase.py,
+    chatdev/documents.py,
+    chatdev/phase.py,
+    chatdev/roster.py,
+    chatdev/statistics.py,
+    chatdev/utils.py,
+    online_log/app.py,
+    run.py,
+'''
+disable = []

@@ -11,10 +11,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # =========== Copyright 2023 @ CAMEL-AI.org. All Rights Reserved. ===========
-from .base import BaseToolAgent
-from .hugging_face_tool_agent import HuggingFaceToolAgent
+from camel.agents.tool_agents.base import BaseToolAgent
+from camel.agents.tool_agents.hugging_face_tool_agent import HuggingFaceToolAgent
 
 __all__ = [
-    'BaseToolAgent',
-    'HuggingFaceToolAgent',
+    "BaseToolAgent",
+    "HuggingFaceToolAgent",
 ]

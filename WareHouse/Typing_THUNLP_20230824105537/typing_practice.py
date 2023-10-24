@@ -3,7 +3,6 @@ This file contains the TypingPractice class which manages the typing practice so
 '''
 from typing_exercise import TypingExercise
 from typing_tutor import TypingTutor
-from progress_tracker import ProgressTracker
 class TypingPractice:
     def __init__(self, progress_tracker):
         self.typing_exercise = TypingExercise(progress_tracker)

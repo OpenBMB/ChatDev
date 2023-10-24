@@ -6,7 +6,7 @@ from game import Game
 def main():
     root = tk.Tk()
     root.title("Memory Game")
-    game = Game(root)
+    Game(root)
     root.mainloop()
 if __name__ == "__main__":
     main()

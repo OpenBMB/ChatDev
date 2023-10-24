@@ -4,7 +4,6 @@ This is the main file for the image editor software.
 import tkinter as tk
 from tkinter import filedialog
 from PIL import Image, ImageTk, ImageEnhance
-import os as os_module
 class ImageEditor:
     def __init__(self, root):
         self.root = root

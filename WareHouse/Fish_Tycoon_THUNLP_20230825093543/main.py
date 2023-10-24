@@ -2,7 +2,7 @@
 This is the main file of the virtual aquarium life simulator.
 '''
 import tkinter as tk
-from aquarium import Aquarium, Fish, Effect
+from aquarium import Aquarium
 class AquariumApp(tk.Tk):
     def __init__(self):
         tk.Tk.__init__(self)

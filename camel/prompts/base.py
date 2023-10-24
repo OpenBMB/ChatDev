@@ -12,11 +12,11 @@
 # limitations under the License.
 # =========== Copyright 2023 @ CAMEL-AI.org. All Rights Reserved. ===========
 import inspect
-from typing import Any, Callable, Dict, Optional, Set, Tuple, TypeVar, Union
+from typing import Any, Callable, Optional, TypeVar, Union
 
 from camel.typing import RoleType
 
-T = TypeVar('T')
+T = TypeVar("T")
 
 
 def return_prompt_wrapper(
@@ -52,8 +52,11 @@ def return_prompt_wrapper(
             return cls(result)
         elif isinstance(result, tuple):
             new_result = tuple(
-                cls(item) if isinstance(item, str)
-                and not isinstance(item, cls) else item for item in result)
+                cls(item)
+                if isinstance(item, str) and not isinstance(item, cls)
+                else item
+                for item in result
+            )
             return new_result
         return result
 
@@ -74,7 +77,7 @@ def wrap_prompt_functions(cls: T) -> T:
     Returns:
         type: Decorated class with wrapped functions.
     """
-    excluded_attrs = {'__init__', '__new__', '__str__', '__repr__'}
+    excluded_attrs = {"__init__", "__new__", "__str__", "__repr__"}
     for attr_name in dir(cls):
         attr_value = getattr(cls, attr_name)
         if callable(attr_value) and attr_name not in excluded_attrs:
@@ -95,13 +98,13 @@ class TextPrompt(str):
     """
 
     @property
-    def key_words(self) -> Set[str]:
-        r"""Returns a set of strings representing the key words in the prompt.
-        """
+    def key_words(self) -> set[str]:
+        r"""Returns a set of strings representing the key words in the prompt."""
         from camel.utils import get_prompt_template_key_words
+
         return get_prompt_template_key_words(self)
 
-    def format(self, *args: Any, **kwargs: Any) -> 'TextPrompt':
+    def format(self, *args: Any, **kwargs: Any) -> "TextPrompt":
         r"""Overrides the built-in :obj:`str.format` method to allow for
         default values in the format string. This is used to allow formatting
         the partial string.
@@ -114,7 +117,7 @@ class TextPrompt(str):
             TextPrompt: A new :obj:`TextPrompt` object with the format string
                 replaced with the formatted string.
         """
-        default_kwargs = {key: '{' + f'{key}' + '}' for key in self.key_words}
+        default_kwargs = {key: "{" + f"{key}" + "}" for key in self.key_words}
         default_kwargs.update(kwargs)
         return TextPrompt(super().format(*args, **default_kwargs))
 
@@ -129,7 +132,7 @@ class CodePrompt(TextPrompt):
         code_type (str, optional): The type of code. Defaults to None.
     """
 
-    def __new__(cls, *args: Any, **kwargs: Any) -> 'CodePrompt':
+    def __new__(cls, *args: Any, **kwargs: Any) -> "CodePrompt":
         r"""Creates a new instance of the :obj:`CodePrompt` class.
 
         Args:
@@ -139,7 +142,7 @@ class CodePrompt(TextPrompt):
         Returns:
             CodePrompt: The created :obj:`CodePrompt` instance.
         """
-        code_type = kwargs.pop('code_type', None)
+        code_type = kwargs.pop("code_type", None)
         instance = super().__new__(cls, *args, **kwargs)
         instance._code_type = code_type
         return instance
@@ -161,9 +164,7 @@ class CodePrompt(TextPrompt):
         """
         self._code_type = code_type
 
-    def execute(
-            self,
-            global_vars: Optional[Dict] = None) -> Tuple[str, Optional[Dict]]:
+    def execute(self, global_vars: Optional[dict] = None) -> tuple[str, Optional[dict]]:
         r"""Executes the code string. If there is an error, the error is caught
         and the traceback is returned. Otherwise, the output string and local
         variables are returned.
@@ -181,6 +182,7 @@ class CodePrompt(TextPrompt):
             # Execute the code string
             import io
             import sys
+
             output_str = io.StringIO()
             sys.stdout = output_str
 
@@ -199,6 +201,7 @@ class CodePrompt(TextPrompt):
 
         except Exception:
             import traceback
+
             traceback_str = traceback.format_exc()
             sys.stdout = sys.__stdout__
             # If there was an error, return the traceback
@@ -206,9 +209,8 @@ class CodePrompt(TextPrompt):
 
 
 # flake8: noqa :E501
-class TextPromptDict(Dict[Any, TextPrompt]):
-    r"""A dictionary class that maps from key to :obj:`TextPrompt` object.
-    """
+class TextPromptDict(dict[Any, TextPrompt]):
+    r"""A dictionary class that maps from key to :obj:`TextPrompt` object."""
     EMBODIMENT_PROMPT = TextPrompt(
         """You are the physical embodiment of the {role} who is working on solving a task: {task}.
 You can do things in the physical world including browsing the Internet, reading documents, drawing images, creating videos, executing code and so on.
@@ -226,7 +228,8 @@ You can perform multiple actions.
 You can perform actions in any order.
 First, explain the actions you will perform and your reasons, then write Python code to implement your actions.
 If you decide to perform actions, you must write Python code to implement the actions.
-You may print intermediate results if necessary.""")
+You may print intermediate results if necessary."""
+    )
 
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)

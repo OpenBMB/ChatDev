@@ -42,7 +42,7 @@ class GameApp:
         self.canvas.update()
 def main():
     root = tk.Tk()
-    app = GameApp(root)
+    GameApp(root)
     root.mainloop()
 if __name__ == "__main__":
     main()

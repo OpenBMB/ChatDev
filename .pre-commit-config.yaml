@@ -1,0 +1,41 @@
+repos:
+-   repo: https://github.com/myint/autoflake
+    rev: v2.2.1
+    hooks:
+    -   id: autoflake
+        verbose: true
+
+-   repo: https://github.com/MarcoGorelli/absolufy-imports
+    rev: v0.3.1
+    hooks:
+    -   id: absolufy-imports
+        verbose: true
+
+-   repo: https://github.com/asottile/pyupgrade
+    rev: v3.15.0
+    hooks:
+    -   id: pyupgrade
+        verbose: true
+        args: [--py39-plus]
+        exclude: ^WareHouse/
+
+-   repo: https://github.com/timothycrosley/isort
+    rev: 5.12.0
+    hooks:
+    -   id: isort
+        verbose: true
+
+-   repo: https://github.com/psf/black
+    rev: 23.9.1
+    hooks:
+    -   id: black
+        verbose: true
+
+-   repo: local
+    hooks:
+    -   id: pylint
+        verbose: true
+        name: pylint
+        entry: pylint
+        language: system
+        types: [python]

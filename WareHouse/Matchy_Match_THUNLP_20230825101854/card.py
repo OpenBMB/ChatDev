@@ -1,7 +1,6 @@
 '''
 This file contains the CardItem class which represents a single card in the memory game.
 '''
-import tkinter as tk
 class CardItem:
     def __init__(self, value):
         self.value = value

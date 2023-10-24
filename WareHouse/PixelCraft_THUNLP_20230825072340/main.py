@@ -2,8 +2,7 @@
 Pixel Art Creator App
 '''
 import tkinter as tk
-from tkinter import ttk, colorchooser, filedialog
-from PIL import Image
+from tkinter import ttk, colorchooser
 class PixelArtCreatorApp(tk.Tk):
     def __init__(self):
         super().__init__()

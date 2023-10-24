@@ -1,10 +1,11 @@
 import html
+import inspect
 import logging
 import re
 import time
 
 import markdown
-import inspect
+
 from camel.messages.system_messages import SystemMessage
 from online_log.app import send_msg
 
@@ -29,7 +30,7 @@ def log_and_print_online(role, content=None):
                 value = str(value)
                 value = html.unescape(value)
                 value = markdown.markdown(value)
-                value = re.sub(r'<[^>]*>', '', value)
+                value = re.sub(r"<[^>]*>", "", value)
                 value = value.replace("\n", " ")
                 records_kv.append([key, value])
             content = "**[SystemMessage**]\n\n" + convert_to_markdown_table(records_kv)
@@ -47,7 +48,7 @@ def convert_to_markdown_table(records_kv):
     rows = [f"| **{key}** | {value} |" for (key, value) in records_kv]
 
     # Combine the header and rows to form the final Markdown table
-    markdown_table = header + "\n" + '\n'.join(rows)
+    markdown_table = header + "\n" + "\n".join(rows)
 
     return markdown_table
 
@@ -68,7 +69,7 @@ def log_arguments(func):
             value = str(value)
             value = html.unescape(value)
             value = markdown.markdown(value)
-            value = re.sub(r'<[^>]*>', '', value)
+            value = re.sub(r"<[^>]*>", "", value)
             value = value.replace("\n", " ")
             records_kv.append([name, value])
         records = f"**[{func.__name__}]**\n\n" + convert_to_markdown_table(records_kv)

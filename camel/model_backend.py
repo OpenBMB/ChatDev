@@ -12,7 +12,7 @@
 # limitations under the License.
 # =========== Copyright 2023 @ CAMEL-AI.org. All Rights Reserved. ===========
 from abc import ABC, abstractmethod
-from typing import Any, Dict
+from typing import Any
 
 import openai
 import tiktoken
@@ -28,7 +28,7 @@ class ModelBackend(ABC):
     May be OpenAI API, a local LLM, a stub for unit tests, etc."""
 
     @abstractmethod
-    def run(self, *args, **kwargs) -> Dict[str, Any]:
+    def run(self, *args, **kwargs) -> dict[str, Any]:
         r"""Runs the query to the backend model.
 
         Raises:
@@ -38,19 +38,18 @@ class ModelBackend(ABC):
         Returns:
             Dict[str, Any]: All backends must return a dict in OpenAI format.
         """
-        pass
 
 
 class OpenAIModel(ModelBackend):
     r"""OpenAI API in a unified ModelBackend interface."""
 
-    def __init__(self, model_type: ModelType, model_config_dict: Dict) -> None:
+    def __init__(self, model_type: ModelType, model_config_dict: dict) -> None:
         super().__init__()
         self.model_type = model_type
         self.model_config_dict = model_config_dict
-        
+
     @retry(tries=-1, delay=0, max_delay=None, backoff=1, jitter=0)
-    def run(self, *args, **kwargs) -> Dict[str, Any]:
+    def run(self, *args, **kwargs) -> dict[str, Any]:
         string = "\n".join([message["content"] for message in kwargs["messages"]])
         encoding = tiktoken.encoding_for_model(self.model_type.value)
         num_prompt_tokens = len(encoding.encode(string))
@@ -68,21 +67,25 @@ class OpenAIModel(ModelBackend):
         }
         num_max_token = num_max_token_map[self.model_type.value]
         num_max_completion_tokens = num_max_token - num_prompt_tokens
-        self.model_config_dict['max_tokens'] = num_max_completion_tokens
-        response = openai.ChatCompletion.create(*args, **kwargs,
-                                                model=self.model_type.value,
-                                                **self.model_config_dict)
+        self.model_config_dict["max_tokens"] = num_max_completion_tokens
+        response = openai.ChatCompletion.create(
+            *args, **kwargs, model=self.model_type.value, **self.model_config_dict
+        )
         cost = prompt_cost(
-                self.model_type.value, 
-                num_prompt_tokens=response["usage"]["prompt_tokens"], 
-                num_completion_tokens=response["usage"]["completion_tokens"]
+            self.model_type.value,
+            num_prompt_tokens=response["usage"]["prompt_tokens"],
+            num_completion_tokens=response["usage"]["completion_tokens"],
         )
 
         log_and_print_online(
             "**[OpenAI_Usage_Info Receive]**\nprompt_tokens: {}\ncompletion_tokens: {}\ntotal_tokens: {}\ncost: ${:.6f}\n".format(
-                response["usage"]["prompt_tokens"], response["usage"]["completion_tokens"],
-                response["usage"]["total_tokens"], cost))
-        if not isinstance(response, Dict):
+                response["usage"]["prompt_tokens"],
+                response["usage"]["completion_tokens"],
+                response["usage"]["total_tokens"],
+                cost,
+            )
+        )
+        if not isinstance(response, dict):
             raise RuntimeError("Unexpected return from OpenAI API")
         return response
 
@@ -93,15 +96,17 @@ class StubModel(ModelBackend):
     def __init__(self, *args, **kwargs) -> None:
         super().__init__()
 
-    def run(self, *args, **kwargs) -> Dict[str, Any]:
+    def run(self, *args, **kwargs) -> dict[str, Any]:
         ARBITRARY_STRING = "Lorem Ipsum"
 
         return dict(
             id="stub_model_id",
             usage=dict(),
             choices=[
-                dict(finish_reason="stop",
-                     message=dict(content=ARBITRARY_STRING, role="assistant"))
+                dict(
+                    finish_reason="stop",
+                    message=dict(content=ARBITRARY_STRING, role="assistant"),
+                )
             ],
         )
 
@@ -114,12 +119,14 @@ class ModelFactory:
     """
 
     @staticmethod
-    def create(model_type: ModelType, model_config_dict: Dict) -> ModelBackend:
+    def create(model_type: ModelType, model_config_dict: dict) -> ModelBackend:
         default_model_type = ModelType.GPT_3_5_TURBO
 
         if model_type in {
-            ModelType.GPT_3_5_TURBO, ModelType.GPT_4, ModelType.GPT_4_32k,
-            None
+            ModelType.GPT_3_5_TURBO,
+            ModelType.GPT_4,
+            ModelType.GPT_4_32k,
+            None,
         }:
             model_class = OpenAIModel
         elif model_type == ModelType.STUB:

@@ -11,13 +11,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # =========== Copyright 2023 @ CAMEL-AI.org. All Rights Reserved. ===========
-from .base import TextPrompt, CodePrompt, TextPromptDict
-from .task_prompt_template import TaskPromptTemplateDict
-from .prompt_templates import PromptTemplateGenerator
+from camel.prompts.base import CodePrompt, TextPrompt, TextPromptDict
+from camel.prompts.prompt_templates import PromptTemplateGenerator
+from camel.prompts.task_prompt_template import TaskPromptTemplateDict
 
 __all__ = [
-    'TextPrompt',
-    'TextPromptDict',
-    'TaskPromptTemplateDict',
-    'PromptTemplateGenerator',
+    "TextPrompt",
+    "TextPromptDict",
+    "TaskPromptTemplateDict",
+    "PromptTemplateGenerator",
 ]
