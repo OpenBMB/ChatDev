@@ -241,7 +241,6 @@
     <td>Perfect</td>
     <td>GPT3.5</td>
   </tr>
-  
   <tr>
     <td rowspan="5"><a href="https://github.com/Aizhouym" target="_blank"  rel="noopener noreferrer">https://github.com/Aizhouym</a></td>
     <td><a href="WareHouse/Maze_THUNLP_20231006154305" target="_blank" rel="noopener noreferrer">MazeGame</a></td>
@@ -273,7 +272,33 @@
     <td>Perfect</td>
     <td>GPT3.5</td>
   </tr>
-  
+  <tr>
+    <td rowspan="1"><a href="https://github.com/eMcQuill" target="_blank" rel="noopener noreferrer">https://github.com/eMcQuill</a></td>
+    <td><a href="WareHouse/Poker1_DefaultOrganization_20231006035628" target="_blank" rel="noopener noreferrer">Poker Game</a></td>
+    <td><img src="misc/poker.png" width="200px"></td>
+    <td>Perfect</td>
+    <td>GPT3.5</td>
+  </tr>
+  <tr>
+    <td rowspan="1"><a href="https://github.com/janinehuang" target="_blank" rel="noopener noreferrer">https://github.com/janinehuang</a></td>
+    <td><a href="WareHouse/RGB_Color_Picker_DefaultOrganization_20231015003723" target="_blank" rel="noopener noreferrer">RGB Picker</a></td>
+    <td><img src="misc/rgb.png" width="200px"></td>
+    <td>Perfect</td>
+    <td>GPT3.5</td>
+  </tr>
+  <tr>
+    <td rowspan="2"><a href="https://github.com/Timaos123" target="_blank" rel="noopener noreferrer">https://github.com/Timaos123</a></td>
+    <td><a href="WareHouse/Good_code_ModelBest1024_20231023013519" target="_blank" rel="noopener noreferrer">Good Code</a></td>
+    <td><img src="misc/goodcode.png" width="200px"></td>
+    <td>Perfect</td>
+    <td>GPT3.5</td>
+  </tr>
+  <tr>
+    <td><a href="WareHouse/Article_pic_DefaultOrganization_20231023003059" target="_blank" rel="noopener noreferrer">Article Pic</a></td>
+    <td><img src="misc/article_pic.png" width="200px"></td>
+    <td>Need modification to run</td>
+    <td>GPT3.5</td>
+  </tr>
   <tr>
 </tbody>
 </table>
