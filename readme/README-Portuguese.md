@@ -1,12 +1,12 @@
 # Communicative Agents for Software Development
 
 <p align="center">
-  <img src='./misc/logo1.png' width=550>
+  <img src='../misc/logo1.png' width=550>
 </p>
 
 
 <p align="center">
-    【📚 <a href="wiki.md">Wiki</a> | 🚀 <a href="wiki.md#local-demo">Demo Local</a> | 👥 <a href="Contribution.md">Software Construído pela Comunidade</a> | 🔧 <a href="wiki.md#customization">Personalização</a>】
+    【📚 <a href="../wiki.md">Wiki</a> | 🚀 <a href="../wiki.md#local-demo">Demo Local</a> | 👥 <a href="../Contribution.md">Software Construído pela Comunidade</a> | 🔧 <a href="../wiki.md#customization">Personalização</a>】
 </p>
 
 ## 📖 Overview
@@ -20,19 +20,19 @@ incluindo tarefas como design, codificação, teste e documentação.
 - O objetivo principal do ChatDev é oferecer um framework **fácil de usar**, **altamente personalizável** e **extensível**, baseado em modelos de linguagem grandes (LLMs) e que serve como um cenário ideal para estudar a inteligência coletiva.
 
 <p align="center">
-  <img src='./misc/company.png' width=600>
+  <img src='../misc/company.png' width=600>
 </p>
 
 ## 🎉 Notícias
 
 * **25 de setembro de 2023: A funcionalidade Git agora está disponível**, permitindo que o programador <img src='online_log/static/figures/programmer.png' height=20> utilize o GitHub para controle de versão. Para ativar essa funcionalidade, basta definir ``"git_management"`` para ``"True"`` no arquivo ``ChatChainConfig.json``.
   <p align="center">
-  <img src='./misc/github.png' width=600>
+  <img src='../misc/github.png' width=600>
   </p>
 * 20 de setembro de 2023: O modo **Interação Humano-Agent** agora está disponível! Você pode se envolver com a equipe do ChatDev desempenhando o papel de revisor <img src='online_log/static/figures/reviewer.png' height=20> e fazendo sugestões ao programador <img src='online_log/static/figures/programmer.png' height=20>;
   tente ``python3 run.py --task [descrição_da_sua_ideia] --config "Human"``. Veja [guia](../wiki.md#human-agent-interaction) e [exemplo](../WareHouse/Gomoku_HumanAgentInteraction_20230920135038).
 <p align="center">
-<img src='./misc/Human_intro.png' width=600>
+<img src='../misc/Human_intro.png' width=600>
 </p>
 
 * 1º de setembro de 2023: O modo **Arte** está disponível agora! Você pode ativar o agente designer <img src='online_log/static/figures/designer.png' height=20> para gerar imagens usadas no software;

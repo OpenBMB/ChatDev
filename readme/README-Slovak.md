@@ -1,12 +1,12 @@
 # Communicative Agents for Software Development
 
 <p align="center">
-  <img src='./misc/logo1.png' width=550>
+  <img src='../misc/logo1.png' width=550>
 </p>
 
 
 <p align="center">
-    【📚 <a href="wiki.md">Wiki</a> | 🚀 <a href="wiki.md#local-demo">Lokalne Demo</a> | 👥 <a href="Contribution.md">Softvér vytvorený komunitou</a> | 🔧 <a href="wiki.md#customization">Prispôsobenie</a>】
+    【📚 <a href="../wiki.md">Wiki</a> | 🚀 <a href="../wiki.md#local-demo">Lokalne Demo</a> | 👥 <a href="../Contribution.md">Softvér vytvorený komunitou</a> | 🔧 <a href="../wiki.md#customization">Prispôsobenie</a>】
 </p>
 
 ## 📖 Prehľad
@@ -19,19 +19,19 @@
 - Hlavným cieľom ChatDev je ponúknuť **jednoduchý**, **vysoko prispôsobiteľný** a **rozšíriteľný** framework,
   ktorý je založený na veľkých jazykových modeloch (LLM) a slúži ako ideálny scenár na štúdium kolektívnej inteligencie.
 <p align="center">
-  <img src='./misc/company.png' width=600>
+  <img src='../misc/company.png' width=600>
 </p>
 
 ## 🎉 Novinky
 
 * september 25. 2023: Teraz je k dispozícii funkcia **Git**, ktorá umožňuje programátorovi <img src='online_log/static/figures/programmer.png' height=20> využívať GitHub na version control. Ak chcete túto funkciu povoliť, jednoducho nastavte ``"git_management"`` na ``"True"`` v súbore ``ChatChainConfig.json``.
   <p align="center">
-  <img src='./misc/github.png' width=600>
+  <img src='../misc/github.png' width=600>
   </p>
 * september 20. 2023: Režim **Human-Agent-Interaction** je teraz k dispozícii! Môžete sa zapojiť do tímu ChatDev tým, že budete hrať úlohu recenzenta <img src='online_log/static/figures/reviewer.png' height=20> a predkladať návrhy programátorovi <img src='online_log/static/figures/programmer.png' height=20>;
   skúste ``python3 run.py --task [description_of_your_idea] --config "Human"``. Pozri [návod](../wiki.md#human-agent-interaction) a [príklad](../WareHouse/Gomoku_HumanAgentInteraction_20230920135038).
   <p align="center">
-  <img src='./misc/Human_intro.png' width=600>
+  <img src='../misc/Human_intro.png' width=600>
   </p>
 * september 1. 2023: Režim **Art** je už k dispozícii! Môžete si aktivovať agenta dizajnéra <img src='online_log/static/figures/designer.png' height=20> na generovanie obrázkov používaných v programe;
   skúste ``python3 run.py --task [description_of_your_idea] --config "Art"``. Pozri [návod](../wiki.md#art) a [príklad](../WareHouse/gomokugameArtExample_THUNLP_20230831122822).

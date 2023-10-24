@@ -1,12 +1,12 @@
 # Communicative Agents for Software Development
 
 <p align="center">
-  <img src='./misc/logo1.png' width=600>
+  <img src='../misc/logo1.png' width=600>
 </p>
 
 
 <p align="center">
-    【📚 <a href="wiki.md">Wiki</a> | 🚀 <a href="wiki.md#local-demo">ローカルデモ</a> | 👥 <a href="Contribution.md">コミュニティにより作られたソフト</a> | 🔧 <a href="wiki.md#customization">カスタマイズ</a>】
+    【📚 <a href="../wiki.md">Wiki</a> | 🚀 <a href="../wiki.md#local-demo">ローカルデモ</a> | 👥 <a href="../Contribution.md">コミュニティにより作られたソフト</a> | 🔧 <a href="../wiki.md#customization">カスタマイズ</a>】
 </p>
 
 ## 📖 概要
@@ -19,19 +19,19 @@
 - ChatDev の主な目的は、**使いやす**く**高度にカスタマイズ可能**で**拡張可能**なフレームワークを提供することであり、
   これは大規模言語モデル（LLM）に基づいており、集合知を研究するための理想的なシナリオとして機能します。
 <p align="center">
-  <img src='./misc/company.png' width=600>
+  <img src='../misc/company.png' width=600>
 </p>
 
 ## 🎉 ニュース
 
 * **2023年9月25日: **Git** 機能が利用可能になりました**、プログラマー <img src='online_log/static/figures/programmer.png' height=20> がバージョン管理に GitHub を利用できるようになります。この機能を有効にするには、``ChatChainConfig.json`` で ``"git_management"`` を ``"True"`` に設定するだけです。
   <p align="center">
-  <img src='./misc/github.png' width=600>
+  <img src='../misc/github.png' width=600>
   </p>
 * 2023年9月20日: **Human-Agent-Interaction** モードが利用可能になりました！レビュアー <img src='online_log/static/figures/reviewer.png' height=20> になってプログラマー <img src='online_log/static/figures/programmer.png' height=20> に提案することで、ChatDev チームに参加することができます;
   ``python3 run.py --task [description_of_your_idea] --config "Human"`` を試してみてください。また、[ガイド](../wiki.md#human-agent-interaction)と[例](../WareHouse/Gomoku_HumanAgentInteraction_20230920135038)を参照してください。
   <p align="center">
-  <img src='./misc/Human_intro.png' width=600>
+  <img src='../misc/Human_intro.png' width=600>
   </p>
 * 2023年9月1日: **Art** モードが利用可能になりました！デザイナーエージェント <img src='online_log/static/figures/designer.png' height=20> を有効にすると、ソフトウェアで使用する画像を生成できます;
   ``python3 run.py --task [description_of_your_idea] --config "Art"`` を試してみてください。また、[ガイド](../wiki.md#art)と[例](../WareHouse/gomokugameArtExample_THUNLP_20230831122822)を参照してください。

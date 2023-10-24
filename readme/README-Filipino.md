@@ -1,12 +1,12 @@
 # Communicative Agents for Software Development
 
 <p align="center">
-  <img src='./misc/logo1.png' width=550>
+  <img src='../misc/logo1.png' width=550>
 </p>
 
 
 <p align="center">
-    【📚 <a href="wiki.md">Wiki</a> | 🚀 <a href="wiki.md#local-demo">Lokal na Demo</a> | 👥 <a href="Contribution.md">Komunidad ng Kontribusyon sa Software</a> | 🔧 <a href="wiki.md#customization">Kostomisasyon</a>】
+    【📚 <a href="../wiki.md">Wiki</a> | 🚀 <a href="../wiki.md#local-demo">Lokal na Demo</a> | 👥 <a href="../Contribution.md">Komunidad ng Kontribusyon sa Software</a> | 🔧 <a href="../wiki.md#customization">Kostomisasyon</a>】
 </p>
 
 ## 📖 Pangkalahatan
@@ -15,18 +15,18 @@
 - Ang pangunahing layunin ng ChatDev ay mag-alok ng isang **madaling gamitin**, **mabilis ma-customize**, at **napapalawak** na framework, na batay sa malalaking modelo ng wika (LLMs) at naglilingkod bilang isang ideal na scenario para pag-aralan ang kolektibong kaalaman.
 
 <p align="center">
-  <img src='./misc/company.png' width=600>
+  <img src='../misc/company.png' width=600>
 </p>
 
 ## 📰 Balita
 
 * **Setyembre 25, 2023: Ang **Git** na feature ay available na**, nagbibigay-daan sa programmer <img src='online_log/static/figures/programmer.png' height=20> na gamitin ang GitHub para sa version control. Upang paganahin ang feature na ito, i-set ang ``"git_management"`` sa ``"True"`` sa ``ChatChainConfig.json``.
   <p align="center">
-  <img src='./misc/github.png' width=600>
+  <img src='../misc/github.png' width=600>
   </p>
 * Setyembre 20, 2023: Ang **Human-Agent-Interaction** mode ay available na! Maaari kang makilahok sa ChatDev team sa pamamagitan ng pagganap ng papel ng reviewer <img src='online_log/static/figures/reviewer.png' height=20> at pagbibigay ng mga suhestiyon sa programmer <img src='online_log/static/figures/programmer.png' height=20>; subukan ang ``python3 run.py --task [description_ng_ideya_mo] --config "Human"``. Tingnan ang [gabay](../wiki.md#human-agent-interaction) at [halimbawa](../WareHouse/Gomoku_HumanAgentInteraction_20230920135038).
   <p align="center">
-  <img src='./misc/Human_intro.png' width=600>
+  <img src='../misc/Human_intro.png' width=600>
   </p>
 * Setyembre 1, 2023: Ang **Art** mode ay available na! Maaari mong paganahin ang ahenteng designer <img src='online_log/static/figures/designer.png' height=20> upang lumikha ng mga imahe na ginagamit sa software; subukan ang ``python3 run.py --task [description_ng_ideya_mo] --config "Art"``. Tingnan ang [gabay](../wiki.md#art) at [halimbawa](../WareHouse/gomokugameArtExample_THUNLP_20230831122822).
 * Agosto 28, 2023: Ang sistema ay magagamit na ng publiko.
