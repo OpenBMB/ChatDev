@@ -4,9 +4,7 @@
   <img src='./misc/logo1.png' width=600>
 </p>
 
-<p align="center">
-    【<a href="README.md">English</a> | <a href="README-Chinese.md">Chinese</a> | <a href="README-Japanese.md">Japanese</a> | Korean | <a href="README-Filipino.md">Filipino</a> | <a href="README-French.md">French</a> | <a href="README-Slovak.md">Slovak</a> | <a href="README-Portuguese.md">Portuguese</a> | <a href="README-Spanish.md">Spanish</a> | <a href="README-Dutch.md">Dutch</a>】
-</p>
+
 <p align="center">
     【📚 <a href="wiki.md">Wiki</a> | 🚀 <a href="wiki.md#local-demo">Local Demo</a> | 👥 <a href="Contribution.md">Community Built Software</a> | 🔧 <a href="wiki.md#customization">Customization</a>】
 </p>
@@ -18,7 +16,7 @@
 
 ## 📰 뉴스
 
-* **2023년 9월 1일: Art 모드가 출시되었습니다! ``python3 run.py --config "Art"``로 소프트웨어에서 사용되는 이미지를 생성해보세요.** [예제](WareHouse/gomokugameArtExample_THUNLP_20230831122822)를 참조하세요.
+* **2023년 9월 1일: Art 모드가 출시되었습니다! ``python3 run.py --config "Art"``로 소프트웨어에서 사용되는 이미지를 생성해보세요.** [예제](../WareHouse/gomokugameArtExample_THUNLP_20230831122822)를 참조하세요.
 * 2023년 8월 28일: 시스템이 공개되었습니다.
 * 2023년 8월 17일: V1.0.0 버전 출시 준비가 완료되었습니다.
 * 2023년 7월 30일: 사용자가 ChatChain, Phase 및 Role을 설정할 수 있습니다. 또한, Online Log 모드와 Replay 모드가 지원됩니다.
@@ -27,7 +25,7 @@
 
 ## ❓ ChatDev는 무엇을 할 수 있나요?
 
-![intro](misc/intro.png)
+![intro](../misc/intro.png)
 
 https://github.com/OpenBMB/ChatDev/assets/11889052/80d01d2f-677b-4399-ad8b-f7af9bb62b72
 
@@ -81,7 +79,7 @@ https://github.com/OpenBMB/ChatDev/assets/11889052/80d01d2f-677b-4399-ad8b-f7af9
    
 ## ✨️ 심화 스킬
 
-[위키](wiki.md)에서 아래 더 자세한 정보를 확인할 수 있습니다:
+[위키](../wiki.md)에서 아래 더 자세한 정보를 확인할 수 있습니다:
 
 - 모든 명령 실행 매개변수에 대한 소개
 - 더 보기 좋게 시각화된 로그, 다시보기 데모, 간단한 ChatChain 시각화 도구가 포함된 로컬 웹 데모를 설정하는 방법에 대한 간단한 가이드
@@ -96,7 +94,7 @@ https://github.com/OpenBMB/ChatDev/assets/11889052/80d01d2f-677b-4399-ad8b-f7af9
 
 **코드**: 오픈소스 프로젝트에 관심을 가져주셔서 감사합니다. 문제가 발견되면 주저하지 마시고 신고해 주세요. 궁금한 점이 있거나 여러분의 작업을 공유할 준비가 되었다면 얼마든지 PR을 작성해 주세요! 여러분의 기여는 매우 소중합니다. 도움이 필요한 사항이 있으면 언제든지 알려주세요!
 
-**회사**: 당신만의 맞춤형 "ChatDev 회사"를 쉽게 만들 수 있습니다. 이 맞춤형 설정에는 세 가지 간단한 구성 JSON 파일이 포함됩니다. ``CompanyConfig/Default`` 디렉토리에 제공된 예제를 확인하세요. 맞춤화에 대한 자세한 지침은 [위키](wiki.md)를 참조하세요.
+**회사**: 당신만의 맞춤형 "ChatDev 회사"를 쉽게 만들 수 있습니다. 이 맞춤형 설정에는 세 가지 간단한 구성 JSON 파일이 포함됩니다. ``CompanyConfig/Default`` 디렉토리에 제공된 예제를 확인하세요. 맞춤화에 대한 자세한 지침은 [위키](../wiki.md)를 참조하세요.
 
 **소프트웨어**: ChatDev를 사용하여 소프트웨어를 개발할 때마다 모든 필수 정보가 포함된 해당 폴더가 생성됩니다. PR을 작성하는 것만큼이나 간단하게 작업을 공유할 수 있습니다. 예를 들어, ``python3 run.py --task "design a 2048 game" --name "2048" --org "THUNLP" --config "Default"``라는 명령을 실행합니다. 이렇게 하면 소프트웨어 패키지가 생성되고 ``/WareHouse/2048_THUNLP_timestamp``라는 폴더가 생성됩니다. 그 안에는 다음과 같은 파일들이 있습니다:
 
@@ -105,7 +103,7 @@ https://github.com/OpenBMB/ChatDev/assets/11889052/80d01d2f-677b-4399-ad8b-f7af9
 - 다시보기에서 소프트웨어의 빌드 프로세스를 자세히 설명하는 포괄적인 로그(``timestamp.log``)
 - 이 소프트웨어를 만드는 데 사용된 초기 프롬프트(``2048.prompt``)
 
-**커뮤니티에서 기여한 소프트웨어를 보려면 [여기](Contribution.md)를 참조해주세요!**
+**커뮤니티에서 기여한 소프트웨어를 보려면 [여기](../Contribution.md)를 참조해주세요!**
 
 ### 소프트웨어 기여자
 

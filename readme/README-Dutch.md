@@ -5,9 +5,6 @@
 </p>
 
 <p align="center">
-    【<a href="README.md">English</a> | <a href="README-Chinese.md">Chinese</a> | <a href="README-Japanese.md">Japanese</a> | <a href="README-Korean.md">Korean</a> | <a href="README-Filipino.md">Filipino</a> | <a href="README-French.md">French</a> | <a href="README-Slovak.md">Slovak</a> | <a href="README-Portuguese.md">Portuguese</a> | <a href="README-Spanish.md">Spanish</a> | Dutch】
-</p>
-<p align="center">
     【📚 <a href="wiki.md">Wiki</a> | 🚀 <a href="wiki.md#local-demo">Lokale Demo</a> | 👥 <a href="Contribution.md">Community Gebouwde Software</a> | 🔧 <a href="wiki.md#customization">Aanpassing</a>】
 </p>
 
@@ -25,11 +22,11 @@
   <p align="center">
   <img src='./misc/github.png' width=600>
   </p>
-* 20 september 2023: De **Human-Agent-Interaction**-modus is nu beschikbaar! U kunt deelnemen aan het ChatDev-team door de rol van recensent <img src='online_log/static/figures/reviewer.png' height=20> te spelen en suggesties te doen aan de programmeur <img src='online_log/static/figures/programmer.png' height=20>; probeer ``python3 run.py --task [beschrijving_van_uw_idee] --configuratie "Human"``. Zie [handleiding](wiki.md#human-agent-interactie) en [voorbeeld](WareHouse/Gomoku_HumanAgentInteraction_20230920135038).
+* 20 september 2023: De **Human-Agent-Interaction**-modus is nu beschikbaar! U kunt deelnemen aan het ChatDev-team door de rol van recensent <img src='online_log/static/figures/reviewer.png' height=20> te spelen en suggesties te doen aan de programmeur <img src='online_log/static/figures/programmer.png' height=20>; probeer ``python3 run.py --task [beschrijving_van_uw_idee] --configuratie "Human"``. Zie [handleiding](../wiki.md#human-agent-interactie) en [voorbeeld](../WareHouse/Gomoku_HumanAgentInteraction_20230920135038).
   <p align="center">
   <img src='./misc/Human_intro.png' width=600>
   </p>
-* 1 september 2023: De **Art**-modus is nu beschikbaar! U kunt de ontwerpagent <img src='online_log/static/figures/designer.png' height=20> activeren om afbeeldingen te genereren die in de software worden gebruikt; probeer ``python3 run.py --task [beschrijving_van_uw_idee] --configuratie "Art"``. Zie [handleiding](wiki.md#art) en [voorbeeld](WareHouse/gomokugameArtExample_THUNLP_20230831122822).
+* 1 september 2023: De **Art**-modus is nu beschikbaar! U kunt de ontwerpagent <img src='online_log/static/figures/designer.png' height=20> activeren om afbeeldingen te genereren die in de software worden gebruikt; probeer ``python3 run.py --task [beschrijving_van_uw_idee] --configuratie "Art"``. Zie [handleiding](../wiki.md#art) en [voorbeeld](../WareHouse/gomokugameArtExample_THUNLP_20230831122822).
 * 28 augustus 2023: Het systeem is nu openbaar beschikbaar.
 * 17 augustus 2023: De v1.0.0-versie was gereed voor release.
 * 30 juli 2023: Gebruikers kunnen ChatChain-, Fase- en Rolvermeldingen aanpassen. Bovendien worden zowel online Log-modus als herhalingsmodus ondersteund.
@@ -38,7 +35,7 @@
 
 ## ❓ Wat kan ChatDev doen?
 
-![intro](misc/intro.png)
+![intro](../misc/intro.png)
 
 https://github.com/OpenBMB/ChatDev/assets/11889052/80d01d2f-677b-4399-ad8b-f7af9bb62b72
 
@@ -92,7 +89,7 @@ Om aan de slag te gaan, volg deze stappen:
 
 ## ✨️ Geavanceerde Vaardigheden
 
-Voor meer gedetailleerde informatie, verwijzen wij u graag naar onze [Wiki](wiki.md), waar u kunt vinden:
+Voor meer gedetailleerde informatie, verwijzen wij u graag naar onze [Wiki](../wiki.md), waar u kunt vinden:
 
 - Een inleiding tot alle commando-uitvoeringsparameters.
 - Een eenvoudige handleiding voor het opzetten van een lokale webdemo, inclusief verbeterde visuele logs, een herhalingdemo en een eenvoudige ChatChain Visualizer.
@@ -107,7 +104,7 @@ Voor meer gedetailleerde informatie, verwijzen wij u graag naar onze [Wiki](wiki
 
 **Code**: We zijn enthousiast over je interesse om deel te nemen aan ons open-source project. Als je ergens problemen tegenkomt, aarzel dan niet om ze te melden. Voel je vrij om een pull-aanvraag te maken als je vragen hebt of als je bereid bent je werk met ons te delen! Jouw bijdragen worden zeer gewaardeerd. Laat me weten als er iets is waarbij je hulp nodig hebt!
 
-**Bedrijf**: Het creëren van je eigen aangepaste "ChatDev-bedrijf" is een fluitje van een cent. Deze gepersonaliseerde opstelling omvat drie eenvoudige configuratie-JSON-bestanden. Bekijk het voorbeeld in de map ``CompanyConfig/Default``. Voor gedetailleerde instructies over aanpassing, verwijzen wij naar onze [Wiki](wiki.md).
+**Bedrijf**: Het creëren van je eigen aangepaste "ChatDev-bedrijf" is een fluitje van een cent. Deze gepersonaliseerde opstelling omvat drie eenvoudige configuratie-JSON-bestanden. Bekijk het voorbeeld in de map ``CompanyConfig/Default``. Voor gedetailleerde instructies over aanpassing, verwijzen wij naar onze [Wiki](../wiki.md).
 
 **Software**: Telkens wanneer je software ontwikkelt met ChatDev, wordt er een overeenkomstige map gegenereerd met alle essentiële informatie. Je werk met ons delen is net zo eenvoudig als een pull-aanvraag maken. Hier is een voorbeeld: voer het commando uit ``python3 run.py --task "ontwerp een 2048 spel" --naam "2048" --org "THUNLP" --configuratie "Default"``. Hiermee maak je een softwarepakket en genereert een map met de naam ``/WareHouse/2048_THUNLP_timestamp``. Daarin vind je:
 
@@ -116,7 +113,7 @@ Voor meer gedetailleerde informatie, verwijzen wij u graag naar onze [Wiki](wiki
 - Een uitgebreid logboek met details over het bouwproces van de software, dat kan worden gebruikt voor herhaling (``timestamp.log``)
 - De oorspronkelijke prompt die is gebruikt om deze software te maken (``2048.prompt``)
 
-**Bekijk door de gemeenschap bijgedragen software [hier](Contribution.md)!**
+**Bekijk door de gemeenschap bijgedragen software [hier](../Contribution.md)!**
 
 ## 👨‍💻‍ Software Bijdragers
 

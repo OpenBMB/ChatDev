@@ -4,9 +4,7 @@
   <img src='./misc/logo1.png' width=600>
 </p>
 
-<p align="center">
-    【<a href="README.md">English</a> | <a href="README-Chinese.md">Chinese</a> | Japanese | <a href="README-Korean.md">Korean</a> | <a href="README-Filipino.md">Filipino</a> | <a href="README-French.md">French</a> | <a href="README-Slovak.md">Slovak</a> | <a href="README-Portuguese.md">Portuguese</a> | <a href="README-Spanish.md">Spanish</a> | <a href="README-Dutch.md">Dutch</a>】
-</p>
+
 <p align="center">
     【📚 <a href="wiki.md">Wiki</a> | 🚀 <a href="wiki.md#local-demo">ローカルデモ</a> | 👥 <a href="Contribution.md">コミュニティにより作られたソフト</a> | 🔧 <a href="wiki.md#customization">カスタマイズ</a>】
 </p>
@@ -31,12 +29,12 @@
   <img src='./misc/github.png' width=600>
   </p>
 * 2023年9月20日: **Human-Agent-Interaction** モードが利用可能になりました！レビュアー <img src='online_log/static/figures/reviewer.png' height=20> になってプログラマー <img src='online_log/static/figures/programmer.png' height=20> に提案することで、ChatDev チームに参加することができます;
-  ``python3 run.py --task [description_of_your_idea] --config "Human"`` を試してみてください。また、[ガイド](wiki.md#human-agent-interaction)と[例](WareHouse/Gomoku_HumanAgentInteraction_20230920135038)を参照してください。
+  ``python3 run.py --task [description_of_your_idea] --config "Human"`` を試してみてください。また、[ガイド](../wiki.md#human-agent-interaction)と[例](../WareHouse/Gomoku_HumanAgentInteraction_20230920135038)を参照してください。
   <p align="center">
   <img src='./misc/Human_intro.png' width=600>
   </p>
 * 2023年9月1日: **Art** モードが利用可能になりました！デザイナーエージェント <img src='online_log/static/figures/designer.png' height=20> を有効にすると、ソフトウェアで使用する画像を生成できます;
-  ``python3 run.py --task [description_of_your_idea] --config "Art"`` を試してみてください。また、[ガイド](wiki.md#art)と[例](WareHouse/gomokugameArtExample_THUNLP_20230831122822)を参照してください。
+  ``python3 run.py --task [description_of_your_idea] --config "Art"`` を試してみてください。また、[ガイド](../wiki.md#art)と[例](../WareHouse/gomokugameArtExample_THUNLP_20230831122822)を参照してください。
 * 2023年8月28日: システムが一般公開されました。
 * 2023年8月17日: v1.0.0 のリリース準備が整いました。
 * 2023年7月30日: ユーザーは、ChatChain、Phase、Role の設定をカスタマイズすることができます。さらに、オンラインログモードとリプレイモードの両方がサポートされました。
@@ -45,7 +43,7 @@
 
 ## ❓ ChatDev は何ができるのか？
 
-![intro](misc/intro.png)
+![intro](../misc/intro.png)
 
 https://github.com/OpenBMB/ChatDev/assets/11889052/80d01d2f-677b-4399-ad8b-f7af9bb62b72
 
@@ -104,7 +102,7 @@ https://github.com/OpenBMB/ChatDev/assets/11889052/80d01d2f-677b-4399-ad8b-f7af9
 
 ## ✨️ 高度なスキル
 
-より詳細な情報については、私たちの [Wiki](wiki.md) を参照してください:
+より詳細な情報については、私たちの [Wiki](../wiki.md) を参照してください:
 
 - すべてのコマンド実行パラメータの紹介。
 - 強化されたビジュアライズされたログ、リプレイデモ、シンプルな ChatChain ビジュアライザを含む、ローカルウェブデモをセットアップするための簡単なガイド。
@@ -124,7 +122,7 @@ https://github.com/OpenBMB/ChatDev/assets/11889052/80d01d2f-677b-4399-ad8b-f7af9
 
 **カンパニー**: カスタマイズした "ChatDev Company"
 の作成は簡単です。このパーソナライズされたセットアップには、3つの簡単な設定JSONファイルが必要です。``CompanyConfig/Default``
-ディレクトリで提供されている例をチェックしてください。カスタマイズの詳細については [Wiki](wiki.md) を参照してください。
+ディレクトリで提供されている例をチェックしてください。カスタマイズの詳細については [Wiki](../wiki.md) を参照してください。
 
 **ソフトウェア**: ChatDev
 を使ってソフトウェアを開発すると、必要な情報を含むフォルダが作成されます。プルリクエストを行うだけで、あなたの作品を共有することができます。コマンド ``python3 run.py --task "design a 2048 game" --name "2048" --org "THUNLP" --config "Default"``
@@ -136,7 +134,7 @@ https://github.com/OpenBMB/ChatDev/assets/11889052/80d01d2f-677b-4399-ad8b-f7af9
 - リプレイに使用できる、このソフトウェアのビルドプロセスの詳細なログ（``timestamp.log``）
 - このソフトウェアを作成するために使用された最初のプロンプト (``2048.prompt``)
 
-**コミュニティによって投稿されたソフトウェアは[こちら](Contribution.md)を参照してください！**
+**コミュニティによって投稿されたソフトウェアは[こちら](../Contribution.md)を参照してください！**
 
 ### 👨‍💻 ソフトウェア共有者
 

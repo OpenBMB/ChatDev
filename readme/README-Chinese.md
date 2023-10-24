@@ -4,9 +4,7 @@
   <img src='./misc/logo1.png' width=600>
 </p>
 
-<p align="center">
-    【<a href="README.md">English</a> | Chinese | <a href="README-Japanese.md">Japanese</a> | <a href="README-Korean.md">Korean</a> | <a href="README-Filipino.md">Filipino</a> | <a href="README-French.md">French</a> | <a href="README-Slovak.md">Slovak</a> | <a href="README-Portuguese.md">Portuguese</a> | <a href="README-Spanish.md">Spanish</a> | <a href="README-Dutch.md">Dutch</a>】
-</p>
+
 <p align="center">
     【📚 <a href="wiki.md">Wiki</a> | 🚀 <a href="wiki.md#local-demo">Local Demo</a> | 👥 <a href="Contribution.md">Community Built Software</a> | 🔧 <a href="wiki.md#customization">Customization</a>】
 </p>
@@ -29,7 +27,7 @@
 
 ## ❓ ChatDev能做什么？
 
-![intro](misc/intro.png)
+![intro](../misc/intro.png)
 
 https://github.com/OpenBMB/ChatDev/assets/11889052/80d01d2f-677b-4399-ad8b-f7af9bb62b72
 
@@ -75,35 +73,35 @@ https://github.com/OpenBMB/ChatDev/assets/11889052/80d01d2f-677b-4399-ad8b-f7af9
 5. **构建您的软件：** 使用以下命令启动生成您的软件，将`[description_of_your_idea]`替换为您的想法描述，将`[project_name]`
    替换为您想要的项目名称：
    在Unix/Linux系统上：
-   
+
    ```
    python3 run.py --task "[description_of_your_idea]" --name "[project_name]"
    ```
-   
+
    在Windows系统上：
-   
+
    ```
    python run.py --task "[description_of_your_idea]" --name "[project_name]"
    ```
 6. **运行您的软件：** 生成后，您可以在`WareHouse`
    目录下的特定项目文件夹中找到您的软件，例如`project_name_DefaultOrganization_timestamp`。在该目录中运行以下命令来运行您的软件：
    在Unix/Linux系统上：
-   
+
    ```
    cd WareHouse/project_name_DefaultOrganization_timestamp
    python3 main.py
    ```
-   
+
    在Windows系统上：
-   
+
    ```
    cd WareHouse/project_name_DefaultOrganization_timestamp
    python main.py
    ```
-   
+
 ## ✨️ 进阶技能
 
-有关更详细的信息，请参阅我们的[Wiki](wiki.md)，您可以在其中找到：
+有关更详细的信息，请参阅我们的[Wiki](../wiki.md)，您可以在其中找到：
 
 - 所有命令运行参数的介绍。
 - 一个简单的设置本地Web演示的指南，其中包括增强可视化日志、重放演示和简单的ChatChain可视化工具。
@@ -120,7 +118,7 @@ https://github.com/OpenBMB/ChatDev/assets/11889052/80d01d2f-677b-4399-ad8b-f7af9
 request！您的贡献非常宝贵。如果您需要帮助，请联系我们！
 
 **公司：** 创建自己定制的“ChatDev公司”非常简单。此个性化设置涉及三个简单的配置JSON文件。请查看`CompanyConfig/Default`
-目录中提供的示例。有关自定义的详细说明，请参阅我们的[Wiki](wiki.md)。
+目录中提供的示例。有关自定义的详细说明，请参阅我们的[Wiki](../wiki.md)。
 
 **软件：** 每当您使用ChatDev开发软件时，都会生成一个包含所有必要信息的相应文件夹。与我们分享您的工作就像创建一个pull
 request一样简单。这是一个示例：执行命令`python3 run.py --task "design a 2048 game" --name "2048" --org "THUNLP" --config "Default"`
@@ -131,7 +129,7 @@ request一样简单。这是一个示例：执行命令`python3 run.py --task "d
 - 描述软件构建过程的详细日志，可用于重播（`timestamp.log`）
 - 用于创建此软件的初始提示（`2048.prompt`）
 
-**参观社区制造分享的[软件](Contribution.md)!**
+**参观社区制造分享的[软件](../Contribution.md)!**
 
 ### 软件分享者
 

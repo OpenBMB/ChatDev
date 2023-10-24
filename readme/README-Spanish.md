@@ -4,9 +4,7 @@
   <img src='./misc/logo1.png' width=550>
 </p>
 
-<p align="center">
-    【<a href="README.md">English</a> | <a href="README-Chinese.md">Chinese</a> | <a href="README-Japanese.md">Japanese</a> | <a href="README-Korean.md">Korean</a> | <a href="README-Filipino.md">Filipino</a> | <a href="README-French.md">French</a> | <a href="README-Slovak.md">Slovak</a> | <a href="README-Portuguese.md">Portuguese</a> | Spanish | <a href="README-Dutch.md">Dutch</a>】
-</p>
+
 <p align="center">
     【📚 <a href="wiki.md">Wiki</a> | 🚀 <a href="wiki.md#local-demo">Local Demo</a> | 👥 <a href="Contribution.md">Community Built Software</a> | 🔧 <a href="wiki.md#customization">Customization</a>】
 </p>
@@ -26,12 +24,12 @@
   <img src='./misc/github.png' width=600>
   </p>
 * 20 de septiembre de 2023: ¡El modo **Interacción Humano-Agente** ya está disponible! Puedes involucrarte con el equipo de ChatDev asumiendo el rol de revisor <img src='online_log/static/figures/reviewer.png' height=20> y haciendo sugerencias al programador <img src='online_log/static/figures/programmer.png' height=20>;
-  prueba ``python3 run.py --task [description_of_your_idea] --config "Human"``. Consulta la [guía](wiki.md#human-agent-interaction) y el [ejemplo](WareHouse/Gomoku_HumanAgentInteraction_20230920135038).
+  prueba ``python3 run.py --task [description_of_your_idea] --config "Human"``. Consulta la [guía](../wiki.md#human-agent-interaction) y el [ejemplo](../WareHouse/Gomoku_HumanAgentInteraction_20230920135038).
   <p align="center">
   <img src='./misc/Human_intro.png' width=600>
   </p>
 * 1 de septiembre de 2023: ¡El modo **Arte** ya está disponible! Puedes activar al agente de diseño <img src='online_log/static/figures/designer.png' height=20> para generar imágenes utilizadas en el software;
-  prueba ``python3 run.py --task [description_of_your_idea] --config "Art"``. Consulta la [guía](wiki.md#art) y el [ejemplo](WareHouse/gomokugameArtExample_THUNLP_20230831122822).
+  prueba ``python3 run.py --task [description_of_your_idea] --config "Art"``. Consulta la [guía](../wiki.md#art) y el [ejemplo](../WareHouse/gomokugameArtExample_THUNLP_20230831122822).
 * 28 de agosto de 2023: El sistema está disponible al público.
 * 17 de agosto de 2023: La versión v1.0.0 estaba lista para ser lanzada.
 * 30 de julio de 2023: Los usuarios pueden personalizar los ajustes de ChatChain, Phase, y Role. Además, ahora se soportan tanto el modo Log en línea como el modo de repetición.
@@ -40,7 +38,7 @@
 
 ## ❓ ¿Que puede hcaer ChatDev?
 
-![intro](misc/intro.png)
+![intro](../misc/intro.png)
 
 https://github.com/OpenBMB/ChatDev/assets/11889052/80d01d2f-677b-4399-ad8b-f7af9bb62b72
 
@@ -99,7 +97,7 @@ Para comenzar, sigue estos pasos:
 
 ## ✨️ Habilidades Avanzadas
 
-Para obtener información más detallada, por favor refiérese a nuestro [Wiki](wiki.md), donde puede encontrar:
+Para obtener información más detallada, por favor refiérese a nuestro [Wiki](../wiki.md), donde puede encontrar:
 
 - Una introducción a todos los parámetros de ejecución de comandos.
 - Una guía sencilla para configurar una demostración web local, que incluye registros visualizados mejorados, una demostración de repetición y un
@@ -121,7 +119,7 @@ necesitas ayuda!
 
 **Empresa**: Crear tu propia "Empresa ChatDev" personalizada es muy fácil. Esta configuración personalizada involucra tres simples
 archivos JSON de configuración. Echa un vistazo al ejemplo proporcionado en el directorio ``CompanyConfig/Default``. Para instrucciones
-detalladas sobre la personalización, consulta nuestro [Wiki](wiki.md).
+detalladas sobre la personalización, consulta nuestro [Wiki](../wiki.md).
 
 **Software**: Cada vez que desarrolles software usando ChatDev, se generará una carpeta correspondiente que contiene toda la
 información esencial. Compartir tu trabajo con nosotros es tan simple como hacer una solicitud de extracción. Aquí hay un ejemplo: ejecuta el
@@ -134,7 +132,7 @@ un paquete de software y generará una carpeta llamada ``/WareHouse/2048_THUNLP_
 - Un registro comprensivo que detalla el proceso de construcción del software que se puede utilizar para reproducir (``timestamp.log``)
 - El prompt inicial utilizado para crear este software (``2048.prompt``)
 
-**¡Ve el software contribuido por la comunidad [aquí](Contribution.md)!**
+**¡Ve el software contribuido por la comunidad [aquí](../Contribution.md)!**
 
 ## 👨‍💻‍ Software Contributors
 

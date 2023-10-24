@@ -4,9 +4,7 @@
   <img src='./misc/logo1.png' width=550>
 </p>
 
-<p align="center">
-    【<a href="README.md">English</a> | <a href="README-Chinese.md">Chinese</a> | <a href="README-Japanese.md">Japanese</a> | <a href="README-Korean.md">Korean</a> | <a href="README-Filipino.md">Filipino</a> | <a href="README-French.md">French</a> | <a href="README-Slovak.md">Slovak</a> | Portuguese | <a href="README-Spanish.md">Spanish</a> | <a href="README-Dutch.md">Dutch</a>】
-</p>
+
 <p align="center">
     【📚 <a href="wiki.md">Wiki</a> | 🚀 <a href="wiki.md#local-demo">Demo Local</a> | 👥 <a href="Contribution.md">Software Construído pela Comunidade</a> | 🔧 <a href="wiki.md#customization">Personalização</a>】
 </p>
@@ -32,13 +30,13 @@ incluindo tarefas como design, codificação, teste e documentação.
   <img src='./misc/github.png' width=600>
   </p>
 * 20 de setembro de 2023: O modo **Interação Humano-Agent** agora está disponível! Você pode se envolver com a equipe do ChatDev desempenhando o papel de revisor <img src='online_log/static/figures/reviewer.png' height=20> e fazendo sugestões ao programador <img src='online_log/static/figures/programmer.png' height=20>;
-  tente ``python3 run.py --task [descrição_da_sua_ideia] --config "Human"``. Veja [guia](wiki.md#human-agent-interaction) e [exemplo](WareHouse/Gomoku_HumanAgentInteraction_20230920135038).
+  tente ``python3 run.py --task [descrição_da_sua_ideia] --config "Human"``. Veja [guia](../wiki.md#human-agent-interaction) e [exemplo](../WareHouse/Gomoku_HumanAgentInteraction_20230920135038).
 <p align="center">
 <img src='./misc/Human_intro.png' width=600>
 </p>
 
 * 1º de setembro de 2023: O modo **Arte** está disponível agora! Você pode ativar o agente designer <img src='online_log/static/figures/designer.png' height=20> para gerar imagens usadas no software;
-  try ``python3 run.py --task [descrição_da_sua_ideia] --config "Art"``. Veja o [guia](wiki.md#art) e o [exemplo](WareHouse/gomokugameArtExample_THUNLP_20230831122822).
+  try ``python3 run.py --task [descrição_da_sua_ideia] --config "Art"``. Veja o [guia](../wiki.md#art) e o [exemplo](../WareHouse/gomokugameArtExample_THUNLP_20230831122822).
 * 28 de agosto de 2023: O sistema está disponível publicamente.
 * 17 de agosto de 2023: A versão v1.0.0 estava pronta para ser lançada.
 * 30 de julho de 2023: Os usuários podem personalizar as configurações do * ChatChain, Fase e Papel. Além disso, o modo de Log online e o modo de replay * agora são suportados.
@@ -47,7 +45,7 @@ incluindo tarefas como design, codificação, teste e documentação.
 
 ## ❓ O Que o ChatDev Pode Fazer?
 
-![Introdução](misc/intro.png)
+![Introdução](../misc/intro.png)
 
 https://github.com/OpenBMB/ChatDev/assets/11889052/80d01d2f-677b-4399-ad8b-f7af9bb62b72
 
@@ -121,7 +119,7 @@ Para obter informações mais detalhadas, consulte nossa Wiki, onde você pode e
 
 **Código**: Estamos entusiasmados com seu interesse em participar de nosso projeto de código aberto. Se você encontrar algum problema, não hesite em relatá-lo. Sinta-se à vontade para criar uma solicitação pull se tiver alguma dúvida ou se estiver pronto para compartilhar seu trabalho conosco! Suas contribuições são altamente valorizadas. Por favor, avise se houver mais alguma coisa que você precisa de ajuda!
 
-**Empresa**: Criar sua própria "Empresa ChatDev" personalizada é fácil. Essa configuração personalizada envolve três arquivos JSON de configuração simples. Confira o exemplo fornecido no diretório ``CompanyConfig/Default``. Para instruções detalhadas sobre personalização, consulte nossa [Wiki](wiki.md).
+**Empresa**: Criar sua própria "Empresa ChatDev" personalizada é fácil. Essa configuração personalizada envolve três arquivos JSON de configuração simples. Confira o exemplo fornecido no diretório ``CompanyConfig/Default``. Para instruções detalhadas sobre personalização, consulte nossa [Wiki](../wiki.md).
 
 **Software**: Sempre que você desenvolve software usando o ChatDev, é gerada uma pasta correspondente contendo todas as informações essenciais. Compartilhar seu trabalho conosco é tão simples quanto criar uma solicitação pull. Aqui está um exemplo: execute o comando ``python3 run.py --task "design a 2048 game" --name "2048"  --org "THUNLP" --config "Default"``. Isso criará um pacote de software e gerará uma pasta chamada ``/WareHouse/2048_THUNLP_timestamp``. Dentro dela, você encontrará:
 
@@ -130,7 +128,7 @@ Para obter informações mais detalhadas, consulte nossa Wiki, onde você pode e
 - Um registro abrangente detalhando o processo de construção do software que pode ser usado para replay (``timestamp.log``)
 - A prompt inicial usada para criar este software (``2048.prompt``)
 
-**Veja o software contribuído pela comunidade [aqui](Contribution.md)!**
+**Veja o software contribuído pela comunidade [aqui](../Contribution.md)!**
 
 ## 👨‍💻‍ Contribuidores de Software
 
