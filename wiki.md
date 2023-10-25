@@ -294,7 +294,7 @@ then go to [Local Demo Website](http://127.0.0.1:8000/) to see an online visuali
   - Complete ``ArtIntegration`` phase, with a commit message ``Finish Art Integration``.
   - All phases completed, with a commit message ``Final Version``.
 - On the terminal and online log UI you can see the git summary at the end of process.
-  -  <img src='misc/git_summary_terminal.png' height=400>&nbsp;&nbsp;&nbsp;&nbsp;<img src='misc/git_summary_onlinelog.png' height=400>
+  -  <img src='misc/git_summary_terminal.png' height=250>&nbsp;&nbsp;&nbsp;&nbsp;<img src='misc/git_summary_onlinelog.png' height=250>
   - You can also search ``git Information`` in the log file to see when did commit happen.
 - ⚠️ There are a few things worth noting about Git Mode:
   - ChatDev is a git project, and we need to create another git project in the generated software folder, so we use ``git submodule`` to make this "git over git" function. A ``.gitmodule`` file will be created.
