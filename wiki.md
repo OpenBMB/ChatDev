@@ -269,7 +269,7 @@ then go to [Local Demo Website](http://127.0.0.1:8000/) to see an online visuali
 ### Human-Agent Interaction
 ![demo](misc/ChatChain_Visualization_Human.png)
 - Compared to Default, in ***Human-Agent-Interaction*** mode you can play as reviewer and asks programmer agent to modify the code based on your comments.
-- It adds a Phase called HumanAgentInteraction after the CodeReview Phase.
+- It adds a Phase called HumanAgentInteraction after the  dCodeReview Phase.
 - You can use ***Human-Agent-Interaction*** setting using ``python3 run.py --config "Human"``.
 - When chatdev executes to this Phase, on the command interface you will see a hint that ask for input.
 - You can run your software in the ``WareHouse/`` and see if it satisfies your need. Then you can type anything you want (bug fix or new feature) in the command interface, then press Enter:
@@ -282,5 +282,39 @@ then go to [Local Demo Website](http://127.0.0.1:8000/) to see an online visuali
   - Below shows all three versions.
     - <img src='misc/Human_v1.png' height=250>&nbsp;&nbsp;&nbsp;&nbsp;<img src='misc/Human_v2.png' height=250>&nbsp;&nbsp;&nbsp;&nbsp;<img src='misc/Human_v3.png' height=250>
 
+### Git Mode
+- Simply set ``"git_management"`` to ``"True"`` in ``ChatChainConfig.json`` enables the Git Mode, in which ChatDev will make the generated software folder a git repository and automatically make all commits.
+- Every change made on the code of generated software will create a commit, including:
+  - The initial commit, created after the ``Coding`` phase completed, with a commit message ``Finish Coding``.
+  - Complete ``ArtIntegration`` phase, with a commit message ``Finish Art Integration``.
+  - Complete ``CodeComplete`` phase, with a commit message ``Code Complete #1/2/3 Finished``(if the CodeComplete is executed in three loops).
+  - Complete ``CodeReviewModification`` phase, with a commit message ``Review #1/2/3 Finished``(if the CodeReviewModification is executed in three loops).
+  - Complete ``CodeReviewHuman`` phase, with a commit message ``Human Review #1/2/3 Finished``(if the CodeReviewHuman is executed in three loops).
+  - Complete ``TestModification`` phase, with a commit message ``Test #1/2/3 Finished``(if the TestModification is executed in three loops).
+  - Complete ``ArtIntegration`` phase, with a commit message ``Finish Art Integration``.
+  - All phases completed, with a commit message ``Final Version``.
+- On the terminal and online log UI you can see the git summary at the end of process.
+  -  <img src='misc/git_summary_terminal.png' height=400>&nbsp;&nbsp;&nbsp;&nbsp;<img src='misc/git_summary_onlinelog.png' height=400>
+  - You can also search ``git Information`` in the log file to see when did commit happen.
+- ⚠️ There are a few things worth noting about Git Mode:
+  - ChatDev is a git project, and we need to create another git project in the generated software folder, so we use ``git submodule`` to make this "git over git" function. A ``.gitmodule`` file will be created.
+    - under the software folder, you can add/commit/push/checkout the software project just like a normal git project, and your commits would not modify the ChatDev git history.
+    - under the ChatDev folder, the new software has been added to the ChatDev as a whole folder.
+  - The generated log file would not be added into the software git project, since the log is closed and moved to the software folder after the final commit. We have to do this because the log should record all the git commits, including the final one. So the git operations must be done before the log finalized. You will always see a log file to be added and committed in the software folder, like:
+    - ![img.png](misc/the_log_left.png)
+  - When you perform ``git add .`` under the ChatDev project, There will be information like (taking Gomoku for example):
+    ```commandline
+    Changes to be committed:
+        (use "git restore --staged <file>..." to unstage)
+            new file:   .gitmodules
+            new file:   WareHouse/Gomoku_GitMode_20231025184031
 
-
+    Changes not staged for commit:
+        (use "git add <file>..." to update what will be committed)
+        (use "git restore <file>..." to discard changes in working directory)
+        (commit or discard the untracked or modified content in submodules)
+            modified:   WareHouse/Gomoku_GitMode_20231025184031 (untracked content)
+    ```
+    If you add and commit the software log file under the software folder, there will be no ``Changes not staged for commit:``
+  - Some phase executions may not change the code, and thereby there is no commit. For example, the software is tested without problems and there is no modification, so the test phase would leave no commit.
+  
