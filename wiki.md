@@ -291,7 +291,6 @@ then go to [Local Demo Website](http://127.0.0.1:8000/) to see an online visuali
   - Complete ``CodeReviewModification`` phase, with a commit message ``Review #1/2/3 Finished``(if the CodeReviewModification is executed in three loops).
   - Complete ``CodeReviewHuman`` phase, with a commit message ``Human Review #1/2/3 Finished``(if the CodeReviewHuman is executed in three loops).
   - Complete ``TestModification`` phase, with a commit message ``Test #1/2/3 Finished``(if the TestModification is executed in three loops).
-  - Complete ``ArtIntegration`` phase, with a commit message ``Finish Art Integration``.
   - All phases completed, with a commit message ``Final Version``.
 - On the terminal and online log UI you can see the git summary at the end of process.
   -  <img src='misc/git_summary_terminal.png' height=250>&nbsp;&nbsp;&nbsp;&nbsp;<img src='misc/git_summary_onlinelog.png' height=250>
