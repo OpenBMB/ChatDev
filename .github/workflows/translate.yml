@@ -2,40 +2,21 @@ name: Translate Readme
 
 on:
   push:
-    branches: [ main ]
-  workflow_dispatch:
+    branches:
+      - main
+      - master
 
 jobs:
-  translate-readme:
+  build:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      pull-requests: write
-
     steps:
-    - name: Checkout
-      uses: actions/checkout@v3
-
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: 3.8
-
-    - name: Install Dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install requests
-
-    - name: Translate Readme
-      run: python .github/scripts/translate_readme.py
-      env:
-        DEEPL_AUTH_KEY: ${{ secrets.DEEPL_AUTH_KEY }}
-
-    - name: Create Pull Request
-      uses: peter-evans/create-pull-request@v5
-      with:
-        title: New Readme Translations by DeepL
-        body: By GitHub action using DeepL API
-        commit-message: New Readme Translations
-        committer: GitHub <noreply@github.com>
-        branch: docs/readme-translations
+      - uses: actions/checkout@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+      - name: Adding License
+        uses: dephraiim/translate-readme@v1
+        with:
+          LANG: zh-CN # Simplified Chinese
+          # Change the language to your specified language.
