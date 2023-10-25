@@ -49,7 +49,7 @@ class OpenAIModel(ModelBackend):
         self.model_type = model_type
         self.model_config_dict = model_config_dict
         
-    @retry(tries=-1, delay=0, max_delay=None, backoff=1, jitter=0)
+    # @retry(tries=-1, delay=0, max_delay=None, backoff=1, jitter=0)
     def run(self, *args, **kwargs) -> Dict[str, Any]:
         string = "\n".join([message["content"] for message in kwargs["messages"]])
         encoding = tiktoken.encoding_for_model(self.model_type.value)
