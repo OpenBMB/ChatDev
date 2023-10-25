@@ -11,7 +11,7 @@
 
 ## 📖 Overview
 
-- **ChatDev** es una **empresa de software virtual** que opera a través de varios **agentes inteligentes** que desempeñan diferentes roles, incluyendo al Director Ejecutivo <img src='online_log/static/figures/ceo.png' height=20>, Director de Producto <img src='online_log/static/figures/cpo.png' height=20>, Director Tecnológico <img src='online_log/static/figures/cto.png' height=20>, programador <img src='online_log/static/figures/programmer.png' height=20>, revisor <img src='online_log/static/figures/reviewer.png' height=20>, tester <img src='online_log/static/figures/tester.png' height=20>, diseñador de arte <img src='online_log/static/figures/designer.png' height=20>. Estos agentes forman una estructura organizacional multi-agente y están unidos por una misión de "revolucionar el mundo digital a través de la programación." Los agentes dentro de ChatDev **colaboran** participando en seminarios funcionales especializados, incluyendo tareas como diseñar, codificar, probar y documentar.
+- **ChatDev** es una **empresa de software virtual** que opera a través de varios **agentes inteligentes** que desempeñan diferentes roles, incluyendo al Director Ejecutivo <img src='../online_log/static/figures/ceo.png' height=20>, Director de Producto <img src='../online_log/static/figures/cpo.png' height=20>, Director Tecnológico <img src='../online_log/static/figures/cto.png' height=20>, programador <img src='../online_log/static/figures/programmer.png' height=20>, revisor <img src='../online_log/static/figures/reviewer.png' height=20>, tester <img src='../online_log/static/figures/tester.png' height=20>, diseñador de arte <img src='../online_log/static/figures/designer.png' height=20>. Estos agentes forman una estructura organizacional multi-agente y están unidos por una misión de "revolucionar el mundo digital a través de la programación." Los agentes dentro de ChatDev **colaboran** participando en seminarios funcionales especializados, incluyendo tareas como diseñar, codificar, probar y documentar.
 - El objetivo principal de ChatDev es ofrecer un marco de trabajo **fácil de usar**, **altamente personalizable** y **extensible**, que se basa en modelos de grandems modelos de lenguaje (LLMs, por sus siglas en inglés) y sirve como un escenario ideal para estudiar la inteligencia colectiva.
 <p align="center">
   <img src='../misc/company.png' width=600>
@@ -19,16 +19,16 @@
 
 ## 🎉 Noticias
 
-* **25 de septiembre de 2023: La característica **Git** ya está disponible**, permite al programador <img src='online_log/static/figures/programmer.png' height=20> utilizar GitHub para el control de versiones. Para habilitar esta función, simplemente asigna el valor ``"True"`` igual a ``"git_management"`` en ``ChatChainConfig.json``.
+* **25 de septiembre de 2023: La característica **Git** ya está disponible**, permite al programador <img src='../online_log/static/figures/programmer.png' height=20> utilizar GitHub para el control de versiones. Para habilitar esta función, simplemente asigna el valor ``"True"`` igual a ``"git_management"`` en ``ChatChainConfig.json``.
   <p align="center">
   <img src='../misc/github.png' width=600>
   </p>
-* 20 de septiembre de 2023: ¡El modo **Interacción Humano-Agente** ya está disponible! Puedes involucrarte con el equipo de ChatDev asumiendo el rol de revisor <img src='online_log/static/figures/reviewer.png' height=20> y haciendo sugerencias al programador <img src='online_log/static/figures/programmer.png' height=20>;
+* 20 de septiembre de 2023: ¡El modo **Interacción Humano-Agente** ya está disponible! Puedes involucrarte con el equipo de ChatDev asumiendo el rol de revisor <img src='../online_log/static/figures/reviewer.png' height=20> y haciendo sugerencias al programador <img src='../online_log/static/figures/programmer.png' height=20>;
   prueba ``python3 run.py --task [description_of_your_idea] --config "Human"``. Consulta la [guía](../wiki.md#human-agent-interaction) y el [ejemplo](../WareHouse/Gomoku_HumanAgentInteraction_20230920135038).
   <p align="center">
   <img src='../misc/Human_intro.png' width=600>
   </p>
-* 1 de septiembre de 2023: ¡El modo **Arte** ya está disponible! Puedes activar al agente de diseño <img src='online_log/static/figures/designer.png' height=20> para generar imágenes utilizadas en el software;
+* 1 de septiembre de 2023: ¡El modo **Arte** ya está disponible! Puedes activar al agente de diseño <img src='../online_log/static/figures/designer.png' height=20> para generar imágenes utilizadas en el software;
   prueba ``python3 run.py --task [description_of_your_idea] --config "Art"``. Consulta la [guía](../wiki.md#art) y el [ejemplo](../WareHouse/gomokugameArtExample_THUNLP_20230831122822).
 * 28 de agosto de 2023: El sistema está disponible al público.
 * 17 de agosto de 2023: La versión v1.0.0 estaba lista para ser lanzada.
