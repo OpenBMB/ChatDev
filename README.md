@@ -173,6 +173,7 @@ Made with [contrib.rocks](https://contrib.rocks).
       primaryClass={cs.SE}
 }
 ```
+
 ## ⚖️ License
 
 - Source Code Licensing: Our project's source code is licensed under the Apache 2.0 License. This license permits the use, modification, and distribution of the code, subject to certain conditions outlined in the Apache 2.0 License.
