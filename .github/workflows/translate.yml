@@ -12,7 +12,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  synchronize-with-crowdin:
+  Translate:
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -52,16 +52,28 @@ jobs:
           CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
           CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
 
+      - name: Set Git Identity
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+
+      - name: Switch to new branch
+        run: |
+          git checkout l10n_crowdin_translations
+
       - name: Update paths for translated READMEs
         run: |
           find readme -name "README-*.md" -exec sed -i 's|src="\./|src="../|g' {} \;
           find readme -name "README-*.md" -exec sed -i 's|href="\./|href="../|g' {} \;
           find readme -name "README-*.md" -exec sed -i 's|src="\([^http]\)|src="../\1|g' {} \;
           find readme -name "README-*.md" -exec sed -i 's|href="\([^http]\)|href="../\1|g' {} \;
-          git config user.email "github-action@github.com"
-          git config user.name "GitHub Action"
-          git add readme/
-          git commit -m "Updated paths in translated READMEs"
+
+      - name: Commit changes
+        run: |
+          git add -A
+          git commit -m "Update paths in translated READMEs"
+          git push origin l10n_crowdin_translations
+
 
 
       - name: Create PR with new translations
