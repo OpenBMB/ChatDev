@@ -58,8 +58,11 @@ jobs:
           find readme -name "README-*.md" -exec sed -i 's|href="\./|href="../|g' {} \;
           find readme -name "README-*.md" -exec sed -i 's|src="\([^http]\)|src="../\1|g' {} \;
           find readme -name "README-*.md" -exec sed -i 's|href="\([^http]\)|href="../\1|g' {} \;
+          git config user.email "github-action@github.com"
+          git config user.name "GitHub Action"
           git add readme/
           git commit -m "Updated paths in translated READMEs"
+
 
       - name: Create PR with new translations
         uses: crowdin/github-action@v1
