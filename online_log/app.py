@@ -65,4 +65,4 @@ if __name__ == "__main__":
     args = parser.parse_args()
     port.append(args.port)
     print(f"Please visit http://127.0.0.1:{port[-1]}/ for the front-end display page. \nIn the event of a port conflict, please modify the port argument (e.g., python3 app.py --port 8012).")
-    app.run(debug=False, port=port[-1])
+    app.run(host='0.0.0.0', debug=False, port=port[-1])
