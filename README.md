@@ -26,7 +26,11 @@
 
 ## 🎉 News
 
-* **September 25th, 2023: The **Git** feature is now available**, enabling the programmer <img src='online_log/static/figures/programmer.png' height=20> to utilize GitHub for version control. To enable this feature, simply set ``"git_management"`` to ``"True"`` in ``ChatChainConfig.json``. See [guide](wiki.md#git-mode).
+* **October 26th, 2023: ChatDev is now supported with Docker for safe execution** (thanks to contribution from [ManindraDeMel](https://github.com/ManindraDeMel)). Please see [Docker Start Guide](wiki.md#docker-start).
+  <p align="center">
+  <img src='./misc/docker.png' width=400>
+  </p>
+* September 25th, 2023: The **Git** feature is now available, enabling the programmer <img src='online_log/static/figures/programmer.png' height=20> to utilize GitHub for version control. To enable this feature, simply set ``"git_management"`` to ``"True"`` in ``ChatChainConfig.json``. See [guide](wiki.md#git-mode).
   <p align="center">
   <img src='./misc/github.png' width=600>
   </p>
@@ -109,7 +113,7 @@ To get started, follow these steps:
    ```
    
 ### 🐳 Quickstart with Docker
-- We thank [ManindraDeMel](https://github.com/ManindraDeMel) for providing Docker support. Please see [Docker guide](wiki.md#docker-start).
+- We thank [ManindraDeMel](https://github.com/ManindraDeMel) for providing Docker support. Please see [Docker Start Guide](wiki.md#docker-start).
 
 ## ✨️ Advanced Skills
 
