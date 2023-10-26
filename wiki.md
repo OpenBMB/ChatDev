@@ -94,17 +94,17 @@ then go to [Local Demo Website](http://127.0.0.1:8000/) to see an online visuali
 - Take macOS for example,
   - install socat and xquartz, you may need to restart the computer after installing the xquartz
   ```commandline
-        brew install socat xquartz
+  brew install socat xquartz
   ```
   - open xquartz and go into the settings, allow connections from network clients
     - ![xquartz](misc/xquartz.jpg)
   - run following command on the host computer and keep it.
   ```commandline
-        socat TCP-LISTEN:6000,reuseaddr,fork UNIX-CLIENT:\"$DISPLAY\"
+   socat TCP-LISTEN:6000,reuseaddr,fork UNIX-CLIENT:\"$DISPLAY\"
   ```
   - run following command on the host computer to check your ip (the address of inet).
   ```commandline
-        ifconfig en0
+  ifconfig en0
   ```
 
 ### Build Docker images
@@ -122,6 +122,14 @@ then go to [Local Demo Website](http://127.0.0.1:8000/) to see an online visuali
   ⚠️ You need to replace ``YOUR_OPENAI_KEY`` with your key and replace ``YOUR_IP`` with your inet address.
 - Then you can just playing ChatDev with ``python3 run.py``
 - You can run ``python3 online_log/app.py &`` first to start a background program so that you can use online log with a WebUI.
+
+### Copy the generated software out of Docker
+- run 
+    ```commandline
+    docker cp container_id:/path/in/container /path/on/host
+    ```
+### Official Docker Image
+- in preparation
 
 ## Customization
 
