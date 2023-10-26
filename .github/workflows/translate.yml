@@ -56,6 +56,9 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
+          
+      - name: Adjust .git permissions
+        run: sudo chmod -R 777 .git
 
       - name: Switch to new branch
         run: |
