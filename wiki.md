@@ -120,7 +120,7 @@ then go to [Local Demo Website](http://127.0.0.1:8000/) to see an online visuali
     docker run -it -p 8000:8000 -e OPENAI_API_KEY=YOUR_OPENAI_KEY -e DISPLAY=YOUR_IP:0 chatdev:latest
     ```
   ⚠️ You need to replace ``YOUR_OPENAI_KEY`` with your key and replace ``YOUR_IP`` with your inet address.
-- Then you can just playing ChatDev with ``python3 run.py``
+- Then you can just play with ChatDev running ``python3 run.py``.
 - You can run ``python3 online_log/app.py &`` first to start a background program so that you can use online log with a WebUI.
 
 ### Copy the generated software out of Docker
