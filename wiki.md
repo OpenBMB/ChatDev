@@ -84,6 +84,45 @@ then go to [Local Demo Website](http://127.0.0.1:8000/) to see an online visuali
 
 ![Replay](misc/replay.gif)
 
+## Docker Start
+- You can use docker for a quick and safe use of ChatDev. You will need some extra steps to allow executing GUI program in docker since ChatDev often create software with GUI and execute them in the Test Phase.
+
+### Install Docker
+- Please refer to the [Docker Official Website](https://www.docker.com/get-started/) for installing Docker.
+
+### Prepare GUI connection between Host and Docker
+- Take macOS for example,
+  - install socat and xquartz, you may need to restart the computer after installing the xquartz
+  ```commandline
+        brew install socat xquartz
+  ```
+  - open xquartz and go into the settings, allow connections from network clients
+    - ![xquartz](misc/xquartz.jpg)
+  - run following command on the host computer and keep it.
+  ```commandline
+        socat TCP-LISTEN:6000,reuseaddr,fork UNIX-CLIENT:\"$DISPLAY\"
+  ```
+  - run following command on the host computer to check your ip (the address of inet).
+  ```commandline
+        ifconfig en0
+  ```
+
+### Build Docker images
+- under the ChatDev folder, run
+    ```commandline
+    docker build -t chatdev:latest .
+    ```
+  it will generate a 400MB+ docker image named chatdev.
+
+### Run Docker
+- run following command to create and go into a container
+    ```commandline
+    docker run -it -p 8000:8000 -e OPENAI_API_KEY=YOUR_OPENAI_KEY -e DISPLAY=YOUR_IP:0 chatdev:latest
+    ```
+  ⚠️ You need to replace ``YOUR_OPENAI_KEY`` with your key and replace ``YOUR_IP`` with your inet address.
+- Then you can just playing ChatDev with ``python3 run.py``
+- You can run ``python3 online_log/app.py &`` first to start a background program so that you can use online log with a WebUI.
+
 ## Customization
 
 - You can customize your company in three kinds of granularity:

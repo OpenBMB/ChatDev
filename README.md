@@ -52,6 +52,8 @@ https://github.com/OpenBMB/ChatDev/assets/11889052/80d01d2f-677b-4399-ad8b-f7af9
 
 ## ⚡️ Quickstart
 
+### 🖥️ Quickstart with terminal
+
 To get started, follow these steps:
 
 1. **Clone the GitHub Repository:** Begin by cloning the repository using the command:
@@ -105,6 +107,9 @@ To get started, follow these steps:
    cd WareHouse/project_name_DefaultOrganization_timestamp
    python main.py
    ```
+   
+### 🐳 Quickstart with Docker
+- We thank [ManindraDeMel](https://github.com/ManindraDeMel) for providing Docker support. Please see [Docker guide](wiki.md#docker-start).
 
 ## ✨️ Advanced Skills
 
