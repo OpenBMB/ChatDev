@@ -11,17 +11,6 @@
     【📚 <a href="wiki.md">Wiki</a> | 🚀 <a href="wiki.md#local-demo">Local Demo</a> | 👥 <a href="Contribution.md">Community Built Software</a> | 🔧 <a href="wiki.md#customization">Customization</a>】
 </p>
 
-## 📖 Overview
-
-- **ChatDev** stands as a **virtual software company** that operates through various **intelligent agents** holding
-  different roles, including Chief Executive Officer <img src='online_log/static/figures/ceo.png' height=20>, Chief Product Officer <img src='online_log/static/figures/cpo.png' height=20>, Chief Technology Officer <img src='online_log/static/figures/cto.png' height=20>, programmer <img src='online_log/static/figures/programmer.png' height=20>, reviewer <img src='online_log/static/figures/reviewer.png' height=20>, tester <img src='online_log/static/figures/tester.png' height=20>, art designer <img src='online_log/static/figures/designer.png' height=20>. These
-  agents form a multi-agent organizational structure and are united by a mission to "revolutionize the digital world
-  through programming." The agents within ChatDev **collaborate** by participating in specialized functional seminars,
-  including tasks such as designing, coding, testing, and documenting.
-- The primary objective of ChatDev is to offer an **easy-to-use**, **highly customizable** and **extendable** framework,
-  which is based on large language models (LLMs) and serves as an ideal scenario for studying collective intelligence.
-<p align="center">
-  <img src='./misc/company.png' width=600>
 </p>
 
 ## 🎉 News
