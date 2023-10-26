@@ -42,13 +42,26 @@ jobs:
           CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
           CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
 
-      - name: Download from Crowdin & Create PR with new translations
+      - name: Download from Crowdin
         uses: crowdin/github-action@v1
         with:
           download_translations: true
-          # To the specified branch
           localization_branch_name: l10n_crowdin_translations
-          # Create pull request after pushing to branch
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
+          CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
+
+      - name: Update paths for translated READMEs
+        run: |
+          find readme -name "README-*.md" -exec sed -i 's|src="\./|src="../|g' {} \;
+          find readme -name "README-*.md" -exec sed -i 's|href="\./|href="../|g' {} \;
+          find readme -name "README-*.md" -exec sed -i 's|src="\([^http]\)|src="../\1|g' {} \;
+          find readme -name "README-*.md" -exec sed -i 's|href="\([^http]\)|href="../\1|g' {} \;
+
+      - name: Create PR with new translations
+        uses: crowdin/github-action@v1
+        with:
           create_pull_request: true
           pull_request_title: 'New Crowdin Translations'
           pull_request_body: 'New Crowdin translations by [Crowdin GH Action](https://github.com/crowdin/github-action)'
