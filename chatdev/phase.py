@@ -39,7 +39,6 @@ class Phase(ABC):
         self.user_role_prompt = role_prompts[user_role_name]
         self.ceo_prompt = role_prompts["Chief Executive Officer"]
         self.counselor_prompt = role_prompts["Counselor"]
-        self.timeout_seconds = 1.0
         self.max_retries = 3
         self.reflection_prompt = """Here is a conversation between two roles: {conversations} {question}"""
         self.model_type = model_type
