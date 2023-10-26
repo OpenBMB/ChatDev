@@ -56,7 +56,7 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          
+
       - name: Adjust .git permissions
         run: sudo chmod -R 777 .git
 
@@ -66,10 +66,11 @@ jobs:
 
       - name: Update paths for translated READMEs
         run: |
-          find readme -name "README-*.md" -exec sed -i 's|src="\./|src="../|g' {} \;
           find readme -name "README-*.md" -exec sed -i 's|href="\./|href="../|g' {} \;
-          find readme -name "README-*.md" -exec sed -i 's|src="\([^http]\)|src="../\1|g' {} \;
-          find readme -name "README-*.md" -exec sed -i 's|href="\([^http]\)|href="../\1|g' {} \;
+          find readme -name "README-*.md" -exec sed -i 's|src="\./|src="../|g' {} \;
+          find readme -name "README-*.md" -exec sed -i "s|href='\./|href='../|g" {} \;
+          find readme -name "README-*.md" -exec sed -i "s|src='\./|src='../|g" {} \;
+
 
       - name: Commit changes
         run: |
