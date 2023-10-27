@@ -18,16 +18,19 @@ from chatdev.utils import log_and_print_online
 class ChatEnvConfig:
     def __init__(self, clear_structure,
                  gui_design,
-                 git_management):
+                 git_management,
+                 incremental_develop):
         self.clear_structure = clear_structure
         self.gui_design = gui_design
         self.git_management = git_management
+        self.incremental_develop = incremental_develop
 
     def __str__(self):
         string = ""
         string += "ChatEnvConfig.clear_structure: {}\n".format(self.clear_structure)
         string += "ChatEnvConfig.git_management: {}\n".format(self.git_management)
         string += "ChatEnvConfig.gui_design: {}\n".format(self.gui_design)
+        string += "ChatEnvConfig.incremental_develop: {}\n".format(self.incremental_develop)
         return string
 
 
@@ -35,7 +38,10 @@ class ChatEnv:
     def __init__(self, chat_env_config: ChatEnvConfig):
         self.config = chat_env_config
         self.roster: Roster = Roster()
-        self.codes: Codes = Codes()
+        if chat_env_config.incremental_develop:
+            self.codes: Codes = Codes(generated_content="")
+        else:
+            self.codes: Codes = Codes()
         self.proposed_images: Dict[str, str] = {}
         self.incorporated_images: Dict[str, str] = {}
         self.requirements: Documents = Documents()

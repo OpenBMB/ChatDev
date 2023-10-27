@@ -68,6 +68,8 @@ parser.add_argument('--name', type=str, default="Gomoku",
                     help="Name of software, your software will be generated in WareHouse/name_org_timestamp")
 parser.add_argument('--model', type=str, default="GPT_3_5_TURBO",
                     help="GPT Model, choose from {'GPT_3_5_TURBO','GPT_4','GPT_4_32K'}")
+parser.add_argument('--path', type=str, default="",
+                    help="Your file directory, ChatDev will build upon your software in the Incremental mode")
 args = parser.parse_args()
 
 # Start ChatDev
@@ -83,7 +85,8 @@ chat_chain = ChatChain(config_path=config_path,
                        task_prompt=args.task,
                        project_name=args.name,
                        org_name=args.org,
-                       model_type=args2type[args.model])
+                       model_type=args2type[args.model],
+                       code_path=args.path)
 
 # ----------------------------------------
 #          Init Log
