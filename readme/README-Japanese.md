@@ -24,7 +24,11 @@
 
 ## 🎉 ニュース
 
-* **2023年9月25日: **Git** 機能が利用可能になりました**、プログラマー <img src='../online_log/static/figures/programmer.png' height=20> がバージョン管理に GitHub を利用できるようになります。この機能を有効にするには、``ChatChainConfig.json`` で ``"git_management"`` を ``"True"`` に設定するだけです。
+* **2023年10月26日: ChatDev が安全な実行のために Docker に対応しました** ([ManindraDeMel](https://github.com/ManindraDeMel) のコントリビュートに感謝します)。[Docker スタートガイド](../wiki.md#docker-start)を参照してください。
+  <p align="center">
+  <img src='../misc/docker.png' width=400>
+  </p>
+* 2023年9月25日: **Git** 機能が利用可能になりました、プログラマー <img src='../online_log/static/figures/programmer.png' height=20> がバージョン管理に GitHub を利用できるようになります。この機能を有効にするには、``ChatChainConfig.json`` で ``"git_management"`` を ``"True"`` に設定するだけです。
   <p align="center">
   <img src='../misc/github.png' width=600>
   </p>
@@ -48,6 +52,8 @@
 https://github.com/OpenBMB/ChatDev/assets/11889052/80d01d2f-677b-4399-ad8b-f7af9bb62b72
 
 ## ⚡️ クイックスタート
+
+### 🖥️ ターミナルでクイックスタート
 
 開始するには、以下の手順に従ってください:
 
@@ -100,6 +106,9 @@ https://github.com/OpenBMB/ChatDev/assets/11889052/80d01d2f-677b-4399-ad8b-f7af9
    python main.py
    ```
 
+### 🐳 Docker のクイックスタート
+- Docker のサポートを提供してくれた [ManindraDeMel](https://github.com/ManindraDeMel) に感謝します。[Docker スタートガイド](wiki.md#docker-start)を参照してください。
+
 ## ✨️ 高度なスキル
 
 より詳細な情報については、私たちの [Wiki](../wiki.md) を参照してください:
@@ -138,20 +147,11 @@ https://github.com/OpenBMB/ChatDev/assets/11889052/80d01d2f-677b-4399-ad8b-f7af9
 
 ### 👨‍💻 ソフトウェア共有者
 
-<a href="https://github.com/qianc62"><img src="https://avatars.githubusercontent.com/u/48988402?v=4" alt="Contributor" style="width:5%; border-radius: 50%;"/></a>
-<a href="https://github.com/thinkwee"><img src="https://avatars.githubusercontent.com/u/11889052?v=4" alt="Contributor" style="width:5%; border-radius: 50%;"/></a>
-<a href="https://github.com/NA-Wen"><img src="https://avatars.githubusercontent.com/u/92134380?v=4" alt="Contributor" style="width:5%; border-radius: 50%;"/></a>
-<a href="https://github.com/JiahaoLi2003"><img src="https://avatars.githubusercontent.com/u/111221887?v=4" alt="Contributor" style="width:5%; border-radius: 50%;"/></a>
-<a href="https://github.com/Alphamasterliu"><img src="https://avatars.githubusercontent.com/u/110011045?v=4" alt="Contributor" style="width:5%; border-radius: 50%;"/></a>
-<a href="https://github.com/GeekyWizKid"><img src="https://avatars.githubusercontent.com/u/133981481?v=4" alt="Contributor" style="width:5%; border-radius: 50%;"/></a>
-<a href="https://github.com/Munsif-Raza-T"><img src="https://avatars.githubusercontent.com/u/76085202?v=4" alt="Contributor" style="width:5%; border-radius: 50%;"/></a>
-<a href="https://github.com/djbritt"><img src="https://avatars.githubusercontent.com/u/28036018?v=4" alt="Contributor" style="width:5%; border-radius: 50%;"/></a>
-<a href="https://github.com/Classified3939"><img src="https://avatars.githubusercontent.com/u/102702965?v=4" alt="Contributor" style="width:5%; border-radius: 50%;"/></a>
-<a href="https://github.com/chenilim"><img src="https://avatars.githubusercontent.com/u/46905241?v=4" alt="Contributor" style="width:5%; border-radius: 50%;"/></a>
-<a href="https://github.com/delconis"><img src="https://avatars.githubusercontent.com/u/5824478?v=4" alt="Contributor" style="width:5%; border-radius: 50%;"/></a>
-<a href="https://github.com/eMcQuill"><img src="https://avatars.githubusercontent.com/u/139025701?v=4" alt="Contributor" style="width:5%; border-radius: 50%;"/></a>
-<a href="https://github.com/Aizhouym"><img src="https://avatars.githubusercontent.com/u/105852026?v=4" alt="Contributor" style="width:5%; border-radius: 50%;"/></a>
+<a href="https://github.com/OpenBMB/ChatDev/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=OpenBMB/ChatDev" />
+</a>
 
+[contrib.rocks](https://contrib.rocks) を使用して作成。
 ## 🔎 引用
 
 ```
