@@ -38,10 +38,7 @@ class ChatEnv:
     def __init__(self, chat_env_config: ChatEnvConfig):
         self.config = chat_env_config
         self.roster: Roster = Roster()
-        if chat_env_config.incremental_develop:
-            self.codes: Codes = Codes(generated_content="")
-        else:
-            self.codes: Codes = Codes()
+        self.codes: Codes = Codes()
         self.proposed_images: Dict[str, str] = {}
         self.incorporated_images: Dict[str, str] = {}
         self.requirements: Documents = Documents()

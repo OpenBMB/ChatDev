@@ -206,21 +206,16 @@ class ChatChain:
         shutil.copy(self.config_role_path, software_path)
 
         # copy code files to software path in incremental_develop mode
-        ignore_files = ['ChatChainConfig.json',
-                        'PhaseConfig.json',
-                        'RoleConfig.json',
-                        'manual.md',
-                        'meta.txt']
         if check_bool(self.config["incremental_develop"]):
             for root, dirs, files in os.walk(self.code_path):
                 relative_path = os.path.relpath(root, self.code_path)
-                target_dir = os.path.join(software_path, relative_path)
+                target_dir = os.path.join(software_path, 'base', relative_path)
                 os.makedirs(target_dir, exist_ok=True)
                 for file in files:
-                    if file not in ignore_files:
-                        source_file = os.path.join(root, file)
-                        target_file = os.path.join(target_dir, file)
-                        shutil.copy2(source_file, target_file)
+                    source_file = os.path.join(root, file)
+                    target_file = os.path.join(target_dir, file)
+                    shutil.copy2(source_file, target_file)
+            self.chat_env._load_from_hardware(os.path.join(software_path, 'base'))
 
         # write task prompt to software
         with open(os.path.join(software_path, self.project_name + ".prompt"), "w") as f:
@@ -271,7 +266,7 @@ class ChatChain:
             git_info = "**[Git Log]**\n\n"
             import subprocess
 
-            # 执行git log命令
+            # execute git log
             command = "cd {}; git log".format(self.chat_env.env_dict["directory"])
             completed_process = subprocess.run(command, shell=True, text=True, stdout=subprocess.PIPE)
 
