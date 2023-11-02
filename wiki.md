@@ -137,9 +137,18 @@ then go to [Local Demo Website](http://127.0.0.1:8000/) to see an online visuali
     - Customize ChatChain
     - Customize Phase
     - Customize Role
-- Here is the overview architecture of ChatDev, which illustrates the relationships among above three classes:
+- Here is the overview architecture of ChatDev, which illustrates the relationships among the above three classes:
 
 ![arch](misc/arch.png)
+
+- All the configuration content related to ChatDev (such as the background prompt of the agent employee, the work content of each Phase, and how the Phase is combined into a ChatChain), are called a **CompanyConfig** (because ChatDev is like a virtual software company). These CompanyConfigs are in the ChatDev project Under ``CompanyConfig/``. You can check this [directory](https://github.com/OpenBMB/ChatDev/tree/main/CompanyConfig). In this directory, you will see different CompanyConfig (such as Default, Art, Human). Generally speaking, each CompanyConfig will contain 3 configuration files.
+  1. ChatChainConfig.json, which controls the overall development process of ChatDev, including which Phase each step is, how many times each Phase needs to be cycled, whether reflect is needed, etc.
+  2. PhaseConfig.json, which controls each Phase, and corresponds to ``chatdev/phase.py`` or ``chatdev/composed_phase.py`` in the ChatDev project. The Python file realizes the specific working logic of each phase. The json file here contains the configuration of each phase, such as background prompt, which employees are participating in the phase, etc.
+  3. RoleConfig.json contains the configuration of each employee (agent). Currently, it only contains the background prompt of each employee, which is a bunch of text containing placeholders.
+- If a CompanyConfig does not contain all three configuration files (such as Art and Human), it means that the configuration files missing from this CompanyConfig are set according to Default. The official CompanyConfigs currently provided include:
+  1. Default, default configuration
+  2. Art, allows ChatDev to create image files according to needs, automatically generate image description prompts and call the openai Wenshengtu API to generate images
+  3. Human, allowing human users to participate in ChatDev’s code review process
 
 ### Customize ChatChain
 
