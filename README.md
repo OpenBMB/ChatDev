@@ -26,7 +26,7 @@
 
 ## 🎉 News
 
-* **November 2nd, 2023: ChatDev is now supported with incremental development.** Use `--config "incremental" --path "Your folder path" ` to start it. This mode will start with code review base on the existing codes.
+* **November 2nd, 2023: ChatDev is now supported with incremental development.** Try `--config "incremental" --path "Your folder path"` to start it. This mode will start with code review phase base on the existing codes.
 
 * October 26th, 2023: ChatDev is now supported with Docker for safe execution (thanks to contribution from [ManindraDeMel](https://github.com/ManindraDeMel)). Please see [Docker Start Guide](wiki.md#docker-start).
   <p align="center">
