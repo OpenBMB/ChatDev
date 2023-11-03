@@ -131,6 +131,38 @@ then start building a software by ``python3 run.py`` and go to [Visualizer Websi
 ### Official Docker Image
 - in preparation
 
+## Start the Application with Docker Compose
+
+To run your ChatDev application with Docker Compose, simply:
+
+1. Find the `.env.sample` file in the root directory of your ChatDev project.
+2. Copy this file and rename it to `.env`.
+3. Open the `.env` file with the text editor of your choice.
+4. Replace `<Your OpenAI API Key>` with your actual OpenAI API key from OpenAI.
+5. Initiate the application by running:
+   ```commandline
+   docker-compose up
+   ```
+   This command will build the Docker image (if necessary) and start the container. By default, it runs the `online_log/app`.py file.
+
+Any changes you make to the project files on your host machine will sync in real-time inside the container, thanks to the configured bind mount in `docker-compose.yml`.
+
+If you wish to run a different file instead of `online_log/app`.py, you can adjust the `command` value in the `docker-compose.yml` file to point to your desired Python file.
+
+### Stopping the Application
+
+To stop the Docker Compose session:
+
+- Press `Ctrl + C` in the terminal where Docker Compose is actively running.
+
+This will gracefully stop the running services. If you want to remove all the containers, networks, and the default network created by Docker Compose, you can follow up with the command:
+
+```commandline
+docker-compose down
+```
+
+Stopping the containers does not affect the persistency of your files; all your changes remain intact in the local directory on your host machine.
+
 ## Experiential Co-Learning Guide
 ### Co-Tracking
 
