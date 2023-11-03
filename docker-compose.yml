@@ -6,7 +6,7 @@ services:
     command: online_log/app.py
     environment:
       - OPENAI_API_KEY=${OPENAI_API_KEY}
-      - DISPLAY=host.docker.internal:0
+      - DISPLAY=host.docker.internal:0.0
     ports:
       - "${PORT:-8000}:8000"
     stdin_open: true
