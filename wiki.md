@@ -141,7 +141,7 @@ To run your ChatDev application with Docker Compose, simply:
 4. Replace `<Your OpenAI API Key>` with your actual OpenAI API key from OpenAI.
 5. Initiate the application by running:
    ```commandline
-   docker-compose up
+   docker compose up
    ```
    This command will build the Docker image (if necessary) and start the container. By default, it runs the `online_log/app`.py file.
 
@@ -158,7 +158,7 @@ To stop the Docker Compose session:
 This will gracefully stop the running services. If you want to remove all the containers, networks, and the default network created by Docker Compose, you can follow up with the command:
 
 ```commandline
-docker-compose down
+docker compose down
 ```
 
 Stopping the containers does not affect the persistency of your files; all your changes remain intact in the local directory on your host machine.
