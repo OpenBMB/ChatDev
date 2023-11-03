@@ -56,9 +56,9 @@ class ChatChain:
         with open(self.config_role_path, 'r', encoding="utf8") as file:
             self.config_role = json.load(file)
 
-        # init chatchain config and recruitments
+        # init chatchain config and recruits
         self.chain = self.config["chain"]
-        self.recruitments = self.config["recruitments"]
+        self.recruits = self.config["recruits"]
 
         # init default max chat turn
         self.chat_turn_limit_default = 10
@@ -110,7 +110,7 @@ class ChatChain:
         Returns: None
 
         """
-        for employee in self.recruitments:
+        for employee in self.recruits:
             self.chat_env.recruit(agent_name=employee)
 
     def execute_step(self, phase_item: dict):
