@@ -57,20 +57,81 @@ def get_config(company):
     return tuple(config_paths)
 
 
-parser = argparse.ArgumentParser(description='argparse')
-parser.add_argument('--config', type=str, default="Default",
-                    help="Name of config, which is used to load configuration under CompanyConfig/")
-parser.add_argument('--org', type=str, default="DefaultOrganization",
-                    help="Name of organization, your software will be generated in WareHouse/name_org_timestamp")
-parser.add_argument('--task', type=str, default="Develop a basic Gomoku game.",
-                    help="Prompt of software")
-parser.add_argument('--name', type=str, default="Gomoku",
-                    help="Name of software, your software will be generated in WareHouse/name_org_timestamp")
-parser.add_argument('--model', type=str, default="GPT_3_5_TURBO",
-                    help="GPT Model, choose from {'GPT_3_5_TURBO','GPT_4','GPT_4_32K'}")
-parser.add_argument('--path', type=str, default="",
-                    help="Your file directory, ChatDev will build upon your software in the Incremental mode")
+import argparse
+import textwrap
+
+# Initialize the parser
+parser = argparse.ArgumentParser(
+    description='This script configures and initiates the software generation process based on the given parameters.',
+    formatter_class=argparse.RawTextHelpFormatter  # Use RawTextHelpFormatter to respect the text wrapping
+)
+
+# Add arguments to the parser with wrapped help descriptions
+parser.add_argument(
+    '--config',
+    type=str,
+    default="Default",
+    help=textwrap.dedent("""\
+        Name of the configuration profile located under 'CompanyConfig/'.
+        Example: 'production_config'""")
+)
+
+parser.add_argument(
+    '--org',
+    type=str,
+    default="DefaultOrganization",
+    help=textwrap.dedent("""\
+        Name of the organization. The software will be generated in
+        'WareHouse/<name_org>_<timestamp>'. Example: 'AcmeCorp'""")
+)
+
+parser.add_argument(
+    '--task',
+    type=str,
+    default="Develop a basic Gomoku game.",
+    help=textwrap.dedent("""\
+        Description or prompt of the software task.
+        Example: 'Create an AI to play chess.'""")
+)
+
+parser.add_argument(
+    '--name',
+    type=str,
+    default="Gomoku",
+    help=textwrap.dedent("""\
+        Name of the software. The software will be generated in
+        'WareHouse/<name_org>_<timestamp>'. Example: 'ChessMaster'""")
+)
+
+parser.add_argument(
+    '--model',
+    type=str,
+    default="GPT_3_5_TURBO",
+    choices=['GPT_3_5_TURBO', 'GPT_4', 'GPT_4_32K'],
+    help=textwrap.dedent("""\
+        GPT model to be used. Options are:
+        - 'GPT_3_5_TURBO'
+        - 'GPT_4'
+        - 'GPT_4_32K'""")
+)
+
+parser.add_argument(
+    '--path',
+    type=str,
+    default=None,
+    help=textwrap.dedent("""\
+        Directory for the software files. If specified, ChatDev will incrementally build
+        upon the existing software. Leave empty if starting from scratch.""")
+)
+
+# If no arguments were given, print the help message and exit
+if len(sys.argv) == 1:
+    parser.print_help(sys.stderr)
+    sys.exit(1)
+
+# Parse the arguments
 args = parser.parse_args()
+
 
 # Start ChatDev
 
