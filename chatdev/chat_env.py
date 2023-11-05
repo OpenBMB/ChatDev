@@ -18,16 +18,19 @@ from chatdev.utils import log_and_print_online
 class ChatEnvConfig:
     def __init__(self, clear_structure,
                  gui_design,
-                 git_management):
+                 git_management,
+                 incremental_develop):
         self.clear_structure = clear_structure
         self.gui_design = gui_design
         self.git_management = git_management
+        self.incremental_develop = incremental_develop
 
     def __str__(self):
         string = ""
         string += "ChatEnvConfig.clear_structure: {}\n".format(self.clear_structure)
         string += "ChatEnvConfig.git_management: {}\n".format(self.git_management)
         string += "ChatEnvConfig.gui_design: {}\n".format(self.gui_design)
+        string += "ChatEnvConfig.incremental_develop: {}\n".format(self.incremental_develop)
         return string
 
 
