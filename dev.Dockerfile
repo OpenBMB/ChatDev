@@ -14,10 +14,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 # No need to copy the rest of the application code as we use bind mounts
 # COPY . .
 
-# Set the environment variable for OpenAI API key
-# (you'll need to provide the actual key when running the container)
-ENV OPENAI_API_KEY=
-
 # Expose the port for online_log/app.py
 EXPOSE 8000
 
