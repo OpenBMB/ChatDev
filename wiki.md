@@ -128,6 +128,22 @@ then start building a software by ``python3 run.py`` and go to [Visualizer Websi
     ```commandline
     docker cp container_id:/path/in/container /path/on/host
     ```
+
+### Packaging Your Software into a Docker Image
+- Build the image:
+    ```commandline
+    docker build --build-arg "DEFAULT_CMD=python3 online_log/app.py" -t chatdev:latest .
+    ```
+    Make sure you replace:
+    - `online_log/app.py` with the relative path to your Python application's entry point.
+    - `chatdev` with a name that you want to give to your Docker image.
+
+- Test the image:
+    ```commandline
+    docker run -itp 8000:8000 chatdev:latest
+    ```
+    Ensure you replace `chatdev` with the name you used when building the image.
+
 ### Official Docker Image
 - in preparation
 
@@ -138,12 +154,12 @@ To run your ChatDev application with Docker Compose, simply:
 1. Find the `.env.sample` file in the root directory of your ChatDev project.
 2. Copy this file and rename it to `.env`.
 3. Open the `.env` file with the text editor of your choice.
-4. Replace `<Your OpenAI API Key>` with your actual OpenAI API key from OpenAI.
+4. Replace `<Your OpenAI API Key>` with your actual OpenAI API key from OpenAI. Add other environment variables for local development as needed.
 5. Initiate the application by running:
    ```commandline
-   docker compose up
+   docker compose run --service-ports chatdev
    ```
-   This command will build the Docker image (if necessary) and start the container. By default, it runs the `online_log/app`.py file.
+   This command will build the Docker image (if necessary) and start the container.
 
 Any changes you make to the project files on your host machine will sync in real-time inside the container, thanks to the configured bind mount in `docker-compose.yml`.
 
