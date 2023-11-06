@@ -21,5 +21,6 @@ ENV OPENAI_API_KEY=
 # Expose the port for visualizer/app.py
 EXPOSE 8000
 
-ENTRYPOINT ["/usr/local/bin/python3"]
-CMD ["online_log/app.py"]
+ARG DEFAULT_CMD=
+ENV COMMAND=${DEFAULT_CMD:-/bin/bash}
+CMD ${COMMAND}

@@ -17,5 +17,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Expose the port for online_log/app.py
 EXPOSE 8000
 
-ENTRYPOINT ["/usr/local/bin/python3"]
-CMD ["online_log/app.py"]
+CMD ["/bin/bash"]
