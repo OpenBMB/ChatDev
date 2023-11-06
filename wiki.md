@@ -163,8 +163,6 @@ To run your ChatDev application with Docker Compose, simply:
 
 Any changes you make to the project files on your host machine will sync in real-time inside the container, thanks to the configured bind mount in `docker-compose.yml`.
 
-If you wish to run a different file instead of `online_log/app`.py, you can adjust the `command` value in the `docker-compose.yml` file to point to your desired Python file.
-
 ### Stopping the Application
 
 To stop the Docker Compose session:
