@@ -15,7 +15,6 @@ import argparse
 import logging
 import os
 import sys
-from types import ModuleType
 
 from camel.typing import ModelType
 
