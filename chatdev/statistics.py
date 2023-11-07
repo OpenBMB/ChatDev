@@ -12,6 +12,7 @@ def prompt_cost(model_type: str, num_prompt_tokens: float, num_completion_tokens
         "gpt-4": 0.03,
         "gpt-4-0613": 0.03,
         "gpt-4-32k": 0.06,
+        "gpt-4-1106-preview": 0.01,
     }
 
     output_cost_map = {
@@ -22,6 +23,7 @@ def prompt_cost(model_type: str, num_prompt_tokens: float, num_completion_tokens
         "gpt-4": 0.06,
         "gpt-4-0613": 0.06,
         "gpt-4-32k": 0.12,
+        "gpt-4-1106-preview": 0.03,
     }
 
     if model_type not in input_cost_map or model_type not in output_cost_map:
