@@ -1,0 +1,31 @@
+Task:
+Python script: 1 Read the JSON file: The script will begin by opening and reading the JSON file provided as input. 2 Parse the JSON content: It will then parse the content of the JSON file into a Python dictionary. 3 Create directories and Markdown files based on the JSON structure: For each key-value pair in the dictionary:  If the value is a primitive data type (e.g., string, number, boolean), the script will create a Markdown file named after the key and write the value as the content of the file.  If the value is an object, the script will create a directory named after the key. It will then recursively process the object, creating subdirectories and files following the same logic.  If the value is an array, the script will create a Markdown file named after the key. The array items will be written into the file as a list in Markdown syntax.  Handle special characters in keys: The script will sanitize keys to remove or replace characters that are not allowed in file or directory names.  Handle empty values:  For empty objects, an empty directory will be created.  For empty arrays, a Markdown file will be created with the key's name, but it will contain no list items.  Output confirmation: Once the script finishes running, it will output a message indicating the completion of the task and provide the path to the root directory of the created structure. Error Handling: The script will include basic error handling to manage issues such as read/write permissions, invalid JSON formats, and other potential file system errors.
+
+Config:
+ChatEnvConfig.clear_structure: True
+ChatEnvConfig.git_management: False
+ChatEnvConfig.gui_design: True
+ChatEnvConfig.incremental_develop: False
+
+
+Roster:
+Chief Executive Officer, Counselor, Chief Human Resource Officer, Chief Product Officer, Chief Technology Officer, Programmer, Code Reviewer, Software Test Engineer, Chief Creative Officer
+
+Modality:
+python script
+
+Ideas:
+
+
+Language:
+ Python
+
+Code_Version:
+4.0
+
+Proposed_images:
+0
+
+Incorporated_images:
+0
+
