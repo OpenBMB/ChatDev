@@ -16,7 +16,25 @@
 
 ## 📰 뉴스
 
-* **2023년 9월 1일: Art 모드가 출시되었습니다! ``python3 run.py --config "Art"``로 소프트웨어에서 사용되는 이미지를 생성해보세요.** [예제](../WareHouse/gomokugameArtExample_THUNLP_20230831122822)를 참조하세요.
+* **2023년 11월 2일: ChatDev는 새로운 기능으로 에이전트가 기존 코드를 기반으로 개발할 수 있도록 하는 incremental development 을 지원합니다. **`--config "incremental" --path "[source_code_directory_path]"` 로 시도 해보세요..
+  <p align="center">
+  <img src='./misc/increment.png' width=700>
+  </p>
+  
+* 2023년 10월 26일: ChatDev는 안전한 운영을 위해 Docker를 지원합니다. (thanks to contribution from [ManindraDeMel](https://github.com/ManindraDeMel)). 참고 [Docker Start Guide](wiki.md#docker-start).
+  <p align="center">
+  <img src='./misc/docker.png' width=400>
+  </p>
+* 2023년 9월 25일: **Git** 모드 사용 가능, 프로그래머 <img src='online_log/static/figures/programmer.png' height=20> 가 버전컨트롤을 위해 Git 운영을 할 수 있습니다. 이 기능을 활성화 하려면, 간단히 ``"git_management"`` 을 ``"True"`` 로 변경하세요. ``ChatChainConfig.json`` 화일에서. 참고 [guide](wiki.md#git-mode).
+  <p align="center">
+  <img src='./misc/github.png' width=600>
+  </p>
+* 2023년 9월 20일: **Human-Agent-Interaction** 모드 사용 가능! 당신의 리뷰어<img src='online_log/static/figures/reviewer.png' height=20>의 역할을 수행하여 ChatDev team 에 참여 할수 있습니다. 그리고 프로그래머 <img src='online_log/static/figures/programmer.png' height=20>에게 제안 할 수 있습니다.;
+  try ``python3 run.py --task [description_of_your_idea] --config "Human"``. 참고 [guide](wiki.md#human-agent-interaction) and [example](WareHouse/Gomoku_HumanAgentInteraction_20230920135038).
+  <p align="center">
+  <img src='./misc/Human_intro.png' width=600>
+  </p>
+* 2023년 9월 1일: Art 모드가 출시되었습니다! ``python3 run.py --config "Art"``로 소프트웨어에서 사용되는 이미지를 생성해보세요.** [예제](../WareHouse/gomokugameArtExample_THUNLP_20230831122822)를 참조하세요.
 * 2023년 8월 28일: 시스템이 공개되었습니다.
 * 2023년 8월 17일: V1.0.0 버전 출시 준비가 완료되었습니다.
 * 2023년 7월 30일: 사용자가 ChatChain, Phase 및 Role을 설정할 수 있습니다. 또한, Online Log 모드와 Replay 모드가 지원됩니다.
