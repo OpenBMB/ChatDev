@@ -48,6 +48,7 @@ class ModelType(Enum):
     GPT_4 = "gpt-4"
     GPT_4_32k = "gpt-4-32k"
     STUB = "stub"
+    LOCAL = "local"
 
     @property
     def value_for_tiktoken(self):

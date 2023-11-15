@@ -87,7 +87,7 @@ class ChatAgent(BaseAgent):
         self.system_message: SystemMessage = system_message
         self.role_name: str = system_message.role_name
         self.role_type: RoleType = system_message.role_type
-        self.model: ModelType = (model if model is not None else ModelType.GPT_3_5_TURBO)
+        self.model: ModelType = (model if model is not None else ModelType.LOCAL)
         self.model_config: ChatGPTConfig = model_config or ChatGPTConfig()
         self.model_token_limit: int = get_model_token_limit(self.model)
         self.message_window_size: Optional[int] = message_window_size
@@ -154,7 +154,7 @@ class ChatAgent(BaseAgent):
         return self.stored_messages
 
     @retry(wait=wait_exponential(min=5, max=60), stop=stop_after_attempt(5))
-    @openai_api_key_required
+    # @openai_api_key_required
     def step(
             self,
             input_message: ChatMessage,

@@ -21,6 +21,9 @@ from camel.typing import ModelType
 from chatdev.statistics import prompt_cost
 from chatdev.utils import log_and_print_online
 
+from httpx import Timeout
+from openai import AsyncOpenAI, OpenAI
+
 
 class ModelBackend(ABC):
     r"""Base class for different model backends.
@@ -63,13 +66,18 @@ class OpenAIModel(ModelBackend):
             "gpt-4": 8192,
             "gpt-4-0613": 8192,
             "gpt-4-32k": 32768,
+            "local": 2048
         }
         num_max_token = num_max_token_map[self.model_type.value]
         num_max_completion_tokens = num_max_token - num_prompt_tokens
         self.model_config_dict['max_tokens'] = num_max_completion_tokens
 
         try:
-            response = openai.ChatCompletion.create(*args, **kwargs, model=self.model_type.value, **self.model_config_dict)
+            if self.model_type == ModelType.LOCAL:
+                client = OpenAI(api_key="", base_url="http://localhost:8000/v1", organization="here", timeout=Timeout(20),)
+                response = client.chat.completions.create(*args, **kwargs, model=self.model_type.value, **self.model_config_dict)
+            else:
+                response = openai.ChatCompletion.create(*args, **kwargs, model=self.model_type.value, **self.model_config_dict)
         except AttributeError:
             response = openai.chat.completions.create(*args, **kwargs, model=self.model_type.value, **self.model_config_dict)
 
@@ -120,6 +128,7 @@ class ModelFactory:
 
         if model_type in {
             ModelType.GPT_3_5_TURBO, ModelType.GPT_4, ModelType.GPT_4_32k,
+            ModelType.LOCAL,
             None
         }:
             model_class = OpenAIModel
