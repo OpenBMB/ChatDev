@@ -77,8 +77,10 @@ class OpenAIModel(ModelBackend):
 
         try:
             if self.model_type == ModelType.LOCAL:
-                client = OpenAI(api_key="", base_url="http://localhost:8000/v1", organization="here", timeout=Timeout(20),)
-                response = client.chat.completions.create(*args, **kwargs, model=self.model_type.value, **self.model_config_dict)
+                client = OpenAI(api_key="", base_url="http://localhost:8000/v1", 
+                                organization="here", timeout=Timeout(20))
+                response = client.completions.create(*args, **kwargs, model=self.model_type.value, **self.model_config_dict)
+                # response = client.chat.completions.create(*args, **kwargs, model=self.model_type.value, **self.model_config_dict)
             else:
                 response = openai.ChatCompletion.create(*args, **kwargs, model=self.model_type.value, **self.model_config_dict)
         except AttributeError:
