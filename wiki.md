@@ -151,15 +151,15 @@ then start building a software by ``python3 run.py`` and go to [Visualizer Websi
 
 To run your ChatDev application with Docker Compose, simply:
 
-1. Find the `.env.sample` file in the root directory of your ChatDev project.
-2. Copy this file and rename it to `.env`.
-3. Open the `.env` file with the text editor of your choice.
-4. Replace `<Your OpenAI API Key>` with your actual OpenAI API key from OpenAI. Add other environment variables for local development as needed.
-5. Initiate the application by running:
-   ```commandline
+1. In the project root, create a `.env` with your text editor.
+2. Add `OPENAI_API_KEY=<Your OpenAI API Key>` and any other secrets.
+3. Save the file. It's ignored by Git for your security.
+4. Run the application with the specified command.
+
    docker compose run --service-ports chatdev
    ```
    This command will build the Docker image (if necessary) and start the container.
+
 
 Any changes you make to the project files on your host machine will sync in real-time inside the container, thanks to the configured bind mount in `docker-compose.yml`.
 
