@@ -116,7 +116,7 @@ def get_model_token_limit(model: ModelType) -> int:
     elif model == ModelType.STUB:
         return 4096
     elif model == ModelType.LOCAL:
-        return 2048
+        return 4096
     else:
         raise ValueError("Unknown model type")
 

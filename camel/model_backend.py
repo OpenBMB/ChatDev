@@ -69,7 +69,7 @@ class OpenAIModel(ModelBackend):
             "gpt-4": 8192,
             "gpt-4-0613": 8192,
             "gpt-4-32k": 32768,
-            "local": 2048
+            "local": 4096
         }
         num_max_token = num_max_token_map[self.model_type.value]
         num_max_completion_tokens = num_max_token - num_prompt_tokens
@@ -77,14 +77,17 @@ class OpenAIModel(ModelBackend):
 
         try:
             if self.model_type == ModelType.LOCAL:
-                client = OpenAI(api_key="", base_url="http://localhost:8000/v1", 
+                client = OpenAI(api_key="test", base_url="http://localhost:8000/v1", 
                                 organization="here", timeout=Timeout(20))
-                response = client.completions.create(*args, **kwargs, model=self.model_type.value, **self.model_config_dict)
-                # response = client.chat.completions.create(*args, **kwargs, model=self.model_type.value, **self.model_config_dict)
+                response = client.chat.completions.create(*args, **kwargs, model='vicuna-7b-v1.5', **self.model_config_dict)
             else:
                 response = openai.ChatCompletion.create(*args, **kwargs, model=self.model_type.value, **self.model_config_dict)
         except AttributeError:
             response = openai.chat.completions.create(*args, **kwargs, model=self.model_type.value, **self.model_config_dict)
+
+        if not isinstance(response, Dict):
+            print('response is not dict', response)
+            # raise RuntimeError("Unexpected return from OpenAI API")
 
         cost = prompt_cost(
                 self.model_type.value, 
@@ -96,8 +99,6 @@ class OpenAIModel(ModelBackend):
             "**[OpenAI_Usage_Info Receive]**\nprompt_tokens: {}\ncompletion_tokens: {}\ntotal_tokens: {}\ncost: ${:.6f}\n".format(
                 response["usage"]["prompt_tokens"], response["usage"]["completion_tokens"],
                 response["usage"]["total_tokens"], cost))
-        if not isinstance(response, Dict):
-            raise RuntimeError("Unexpected return from OpenAI API")
         return response
 
 
