@@ -17,6 +17,8 @@ from typing import Dict, Optional
 from camel.messages import BaseMessage
 from camel.typing import RoleType
 
+from openai.types.chat.chat_completion_message_tool_call import ChatCompletionMessageToolCall
+from openai.types.chat.chat_completion_message import FunctionCall
 
 @dataclass
 class ChatMessage(BaseMessage):
@@ -36,6 +38,8 @@ class ChatMessage(BaseMessage):
     meta_dict: Optional[Dict[str, str]]
     role: str
     content: str = ""
+    function_call: Optional[FunctionCall] = None
+    tool_calls: Optional[ChatCompletionMessageToolCall] = None
 
     def set_user_role_at_backend(self: BaseMessage):
         return self.__class__(

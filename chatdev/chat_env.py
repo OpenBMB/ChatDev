@@ -216,12 +216,12 @@ class ChatEnv:
                 if desc.endswith(".png"):
                     desc = desc.replace(".png", "")
                 print("{}: {}".format(filename, desc))
-                response = openai.Image.create(
+                response = openai.images.generate(
                     prompt=desc,
                     n=1,
                     size="256x256"
                 )
-                image_url = response['data'][0]['url']
+                image_url = response.data[0].url
                 download(image_url, filename)
 
     def get_proposed_images_from_message(self, messages):
@@ -263,7 +263,7 @@ class ChatEnv:
                     n=1,
                     size="256x256"
                 )
-                image_url = response['data'][0]['url']
+                image_url = response.data[0].url
                 download(image_url, filename)
 
         return images
