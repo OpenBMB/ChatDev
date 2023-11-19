@@ -28,7 +28,7 @@ To get started, follow these steps:
    name:
    ```
    conda create -n sim_env python=3.9 -y
-   conda activate ChatDesim_envv_conda_env
+   conda activate sim_env
    ```
 3. **Install Dependencies:** Move into the `simulation` directory and install the necessary dependencies by running:
    ```
