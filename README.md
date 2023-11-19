@@ -25,12 +25,14 @@
 </p>
 
 ## 🎉 News
-
-* **November 2nd, 2023: ChatDev is now supported with a new feature: incremental development, which allows agents to develop upon existing codes.** Try `--config "incremental" --path "[source_code_directory_path]"` to start it.
+* **November 15th, 2023: We launched ChatDev as a SaaS platform that enables software developers and innovative entrepreneurs to build software efficiently at a very low cost and barrier to entry.** Try it out at https://chatdev.modelbest.cn/.
+  <p align="center">
+  <img src='./misc/saas.png' width=560>
+  </p>
+* November 2nd, 2023: ChatDev is now supported with a new feature: incremental development, which allows agents to develop upon existing codes. Try `--config "incremental" --path "[source_code_directory_path]"` to start it.
   <p align="center">
   <img src='./misc/increment.png' width=700>
   </p>
-  
 * October 26th, 2023: ChatDev is now supported with Docker for safe execution (thanks to contribution from [ManindraDeMel](https://github.com/ManindraDeMel)). Please see [Docker Start Guide](wiki.md#docker-start).
   <p align="center">
   <img src='./misc/docker.png' width=400>
@@ -60,6 +62,10 @@
 https://github.com/OpenBMB/ChatDev/assets/11889052/80d01d2f-677b-4399-ad8b-f7af9bb62b72
 
 ## ⚡️ Quickstart
+
+### 💻️ Quickstart with Web
+
+Access the web page for visualization and configuration use: https://chatdev.modelbest.cn/
 
 ### 🖥️ Quickstart with terminal
 
@@ -117,7 +123,7 @@ To get started, follow these steps:
    python main.py
    ```
    
-### 🐳 Quickstart with Docker
+#### 🐳 Quickstart with Docker
 - We thank [ManindraDeMel](https://github.com/ManindraDeMel) for providing Docker support. Please see [Docker Start Guide](wiki.md#docker-start).
 
 ## ✨️ Advanced Skills
