@@ -22,7 +22,6 @@ from chatdev.statistics import prompt_cost
 from chatdev.utils import log_and_print_online
 
 from httpx import Timeout
-from openai import AsyncOpenAI, OpenAI
 
 
 class ModelBackend(ABC):
@@ -77,17 +76,17 @@ class OpenAIModel(ModelBackend):
 
         try:
             if self.model_type == ModelType.LOCAL:
-                client = OpenAI(api_key="test", base_url="http://localhost:8000/v1", 
-                                organization="here", timeout=Timeout(20))
-                response = client.chat.completions.create(*args, **kwargs, model='vicuna-7b-v1.5', **self.model_config_dict)
+                openai.api_key = "test"
+                openai.api_base = "http://localhost:8000/v1"
+                openai.organization = "here"
+                response = openai.ChatCompletion.create(*args, **kwargs, model='vicuna-7b-v1.5', **self.model_config_dict)
             else:
                 response = openai.ChatCompletion.create(*args, **kwargs, model=self.model_type.value, **self.model_config_dict)
         except AttributeError:
             response = openai.chat.completions.create(*args, **kwargs, model=self.model_type.value, **self.model_config_dict)
 
         if not isinstance(response, Dict):
-            print('response is not dict', response)
-            # raise RuntimeError("Unexpected return from OpenAI API")
+            raise RuntimeError("Unexpected return from OpenAI API")
 
         cost = prompt_cost(
                 self.model_type.value, 
