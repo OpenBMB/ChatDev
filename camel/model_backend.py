@@ -49,7 +49,11 @@ class OpenAIModel(ModelBackend):
         super().__init__()
         self.model_type = model_type
         self.model_config_dict = model_config_dict
-        
+        if self.model_type == ModelType.LOCAL:
+            openai.api_key = "local_key"
+            openai.api_base = "http://localhost:8000/v1"
+            openai.organization = "local"
+
     def run(self, *args, **kwargs) -> Dict[str, Any]:
         string = "\n".join([message["content"] for message in kwargs["messages"]])
         if self.model_type == ModelType.LOCAL:
@@ -68,20 +72,14 @@ class OpenAIModel(ModelBackend):
             "gpt-4": 8192,
             "gpt-4-0613": 8192,
             "gpt-4-32k": 32768,
-            "local": 4096
+            "vicuna-7b-v1.5": 4096
         }
         num_max_token = num_max_token_map[self.model_type.value]
         num_max_completion_tokens = num_max_token - num_prompt_tokens
         self.model_config_dict['max_tokens'] = num_max_completion_tokens
 
         try:
-            if self.model_type == ModelType.LOCAL:
-                openai.api_key = "test"
-                openai.api_base = "http://localhost:8000/v1"
-                openai.organization = "here"
-                response = openai.ChatCompletion.create(*args, **kwargs, model='vicuna-7b-v1.5', **self.model_config_dict)
-            else:
-                response = openai.ChatCompletion.create(*args, **kwargs, model=self.model_type.value, **self.model_config_dict)
+            response = openai.ChatCompletion.create(*args, **kwargs, model=self.model_type.value, **self.model_config_dict)
         except AttributeError:
             response = openai.chat.completions.create(*args, **kwargs, model=self.model_type.value, **self.model_config_dict)
 
