@@ -45,6 +45,21 @@ To get started, follow these steps:
   python -m fastchat.serve.openai_api_server
   ```
 
+6. **Configure Local LLM into ChatDev Arch** You will have to modify the following files and update the reference of your model name if you're using not using model name vicuna-7b. 
+
+   Specify your API endpoint here:
+   https://github.com/sumedhrasal/simulation/blob/main/camel/model_backend.py#L52
+
+   Specify your model name here:
+   https://github.com/sumedhrasal/simulation/blob/main/camel/typing.py#L51
+
+   https://github.com/sumedhrasal/simulation/blob/main/camel/model_backend.py#L75
+
+   Specify your model cost usage here:
+   https://github.com/sumedhrasal/simulation/blob/main/chatdev/statistics.py#L15
+
+   https://github.com/sumedhrasal/simulation/blob/main/chatdev/statistics.py#L26
+
 6. **Build Your Software:** Use the following command to initiate the building of your software,
    replacing `[description_of_your_idea]` with your idea's description and `[project_name]` with your desired project
    name:
