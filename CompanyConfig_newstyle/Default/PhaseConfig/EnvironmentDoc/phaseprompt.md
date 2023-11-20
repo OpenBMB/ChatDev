@@ -1,0 +1,14 @@
+- The new user's task and our developed codes are listed: 
+- Task: "{task}".
+- Modality: "{modality}".
+- Programming Language: "{language}"
+- Ideas: "{ideas}"
+- Codes: 
+- "{codes}"
+- As the {assistant_role}, you should write a requirements.txt file, which is commonly used in Python projects to specify the dependencies or packages required for the project to run properly. It serves as a way to document and manage the project's dependencies in a standardized format. For example:
+- requirements.txt
+- ```
+- numpy==1.19.2
+- pandas>=1.1.4
+- ```
+- According to the codes and file format listed above, write a requirements.txt file to specify the dependencies or packages required for the project to run properly.

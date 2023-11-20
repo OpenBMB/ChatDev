@@ -1,0 +1,15 @@
+- According to the new user's task and our software designs: 
+- Task: "{task}".
+- Modality: "{modality}".
+- Programming Language: "{language}"
+- Ideas: "{ideas}"
+- Codes:
+- "{codes}"
+- As the {assistant_role}, to make the software directly operable without further coding, ChatDev have formulated the following regulations:
+- 1) all referenced classes should be imported;
+- 2) all methods should be implemented;
+- 3) all methods need to have the necessary comments;
+- 4) no potential bugs;
+- 5) The entire project conforms to the tasks proposed by the user;
+- 6) most importantly, do not only check the errors in the code, but also the logic of code. Make sure that user can interact with generated software without losing any feature in the requirement;
+- Now, you should check the above regulations one by one and review the codes in detail, propose one comment with the highest priority about the codes, and give me instructions on how to fix. Tell me your comment with the highest priority and corresponding suggestions on revision. If the codes are perfect and you have no comment on them, return only one line like "<INFO> Finished".

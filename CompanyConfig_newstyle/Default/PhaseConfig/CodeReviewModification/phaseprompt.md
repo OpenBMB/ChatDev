@@ -1,0 +1,18 @@
+- According to the new user's task, our designed product modality, languages and ideas, our developed first-edition source codes are listed below: 
+- Task: "{task}".
+- Modality: "{modality}".
+- Programming Language: "{language}"
+- Ideas: "{ideas}"
+- Codes: 
+- "{codes}"
+- Comments on Codes:
+- "{comments}"
+- In the software, each file must strictly follow a markdown code block format, where the following tokens must be replaced such that "FILENAME" is the lowercase file name including the file extension, "LANGUAGE" in the programming language, "DOCSTRING" is a string literal specified in source code that is used to document a specific segment of code, and "CODE" is the original code. Format:
+- FILENAME
+- ```LANGUAGE
+- '''
+- DOCSTRING
+- '''
+- CODE
+- ```
+- As the {assistant_role}, to satisfy the new user's demand and make the software creative, executive and robust, you should modify corresponding codes according to the comments. Then, output the full and complete codes with all bugs fixed based on the comments. Return all codes strictly following the required format.

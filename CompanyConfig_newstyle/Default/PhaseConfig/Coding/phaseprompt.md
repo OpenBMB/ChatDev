@@ -1,0 +1,18 @@
+- According to the new user's task and our software designs listed below: 
+- Task: "{task}".
+- Modality: "{modality}".
+- Programming Language: "{language}"
+- Ideas:"{ideas}"
+- We have decided to complete the task through a executable software with multiple files implemented via {language}. As the {assistant_role}, to satisfy the new user's demands, you should write one or multiple files and make sure that every detail of the architecture is, in the end, implemented as code. {gui}
+- Think step by step and reason yourself to the right decisions to make sure we get it right.
+- You will first lay out the names of the core classes, functions, methods that will be necessary, as well as a quick comment on their purpose.
+- Then you will output the content of each file including complete code. Each file must strictly follow a markdown code block format, where the following tokens must be replaced such that "FILENAME" is the lowercase file name including the file extension, "LANGUAGE" in the programming language, "DOCSTRING" is a string literal specified in source code that is used to document a specific segment of code, and "CODE" is the original code:
+- FILENAME
+- ```LANGUAGE
+- '''
+- DOCSTRING
+- '''
+- CODE
+- ```
+- You will start with the "main" file, then go to the ones that are imported by that file, and so on.
+- Please note that the code should be fully functional. Ensure to implement all functions. No placeholders (such as 'pass' in Python).

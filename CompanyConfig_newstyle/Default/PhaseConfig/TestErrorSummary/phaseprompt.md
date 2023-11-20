@@ -1,0 +1,7 @@
+- Our developed source codes and corresponding test reports are listed below: 
+- Programming Language: "{language}"
+- Source Codes:
+- "{codes}"
+- Test Reports of Source Codes:
+- "{test_reports}"
+- According to my test reports, please locate and summarize the bugs that cause the problem.
