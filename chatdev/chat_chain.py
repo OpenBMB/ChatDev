@@ -27,7 +27,8 @@ class ChatChain:
                  task_prompt: str = None,
                  project_name: str = None,
                  org_name: str = None,
-                 model_type: ModelType = ModelType.GPT_3_5_TURBO) -> None:
+                 model_type: ModelType = ModelType.GPT_3_5_TURBO,
+                 code_path: str = None) -> None:
         """
 
         Args:
@@ -46,6 +47,7 @@ class ChatChain:
         self.project_name = project_name
         self.org_name = org_name
         self.model_type = model_type
+        self.code_path = code_path
 
         with open(self.config_path, 'r', encoding="utf8") as file:
             self.config = json.load(file)
@@ -64,7 +66,8 @@ class ChatChain:
         # init ChatEnv
         self.chat_env_config = ChatEnvConfig(clear_structure=check_bool(self.config["clear_structure"]),
                                              gui_design=check_bool(self.config["gui_design"]),
-                                             git_management=check_bool(self.config["git_management"]))
+                                             git_management=check_bool(self.config["git_management"]),
+                                             incremental_develop=check_bool(self.config["incremental_develop"]))
         self.chat_env = ChatEnv(self.chat_env_config)
 
         # the user input prompt will be self-improved (if set "self_improve": "True" in ChatChainConfig.json)
@@ -202,7 +205,19 @@ class ChatChain:
         shutil.copy(self.config_phase_path, software_path)
         shutil.copy(self.config_role_path, software_path)
 
-        # write task prompt to software path
+        # copy code files to software path in incremental_develop mode
+        if check_bool(self.config["incremental_develop"]):
+            for root, dirs, files in os.walk(self.code_path):
+                relative_path = os.path.relpath(root, self.code_path)
+                target_dir = os.path.join(software_path, 'base', relative_path)
+                os.makedirs(target_dir, exist_ok=True)
+                for file in files:
+                    source_file = os.path.join(root, file)
+                    target_file = os.path.join(target_dir, file)
+                    shutil.copy2(source_file, target_file)
+            self.chat_env._load_from_hardware(os.path.join(software_path, 'base'))
+
+        # write task prompt to software
         with open(os.path.join(software_path, self.project_name + ".prompt"), "w") as f:
             f.write(self.task_prompt_raw)
 
@@ -251,7 +266,7 @@ class ChatChain:
             git_info = "**[Git Log]**\n\n"
             import subprocess
 
-            # 执行git log命令
+            # execute git log
             command = "cd {}; git log".format(self.chat_env.env_dict["directory"])
             completed_process = subprocess.run(command, shell=True, text=True, stdout=subprocess.PIPE)
 

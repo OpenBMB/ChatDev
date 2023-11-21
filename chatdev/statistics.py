@@ -3,9 +3,37 @@ import os
 import numpy as np
 
 
+def prompt_cost(model_type: str, num_prompt_tokens: float, num_completion_tokens: float):
+    input_cost_map = {
+        "gpt-3.5-turbo": 0.0015,
+        "gpt-3.5-turbo-16k": 0.003,
+        "gpt-3.5-turbo-0613": 0.0015,
+        "gpt-3.5-turbo-16k-0613": 0.003,
+        "gpt-4": 0.03,
+        "gpt-4-0613": 0.03,
+        "gpt-4-32k": 0.06,
+    }
+
+    output_cost_map = {
+        "gpt-3.5-turbo": 0.002,
+        "gpt-3.5-turbo-16k": 0.004,
+        "gpt-3.5-turbo-0613": 0.002,
+        "gpt-3.5-turbo-16k-0613": 0.004,
+        "gpt-4": 0.06,
+        "gpt-4-0613": 0.06,
+        "gpt-4-32k": 0.12,
+    }
+
+    if model_type not in input_cost_map or model_type not in output_cost_map:
+        return -1
+
+    return num_prompt_tokens * input_cost_map[model_type] / 1000.0 + num_completion_tokens * output_cost_map[model_type] / 1000.0
+
+
 def get_info(dir, log_filepath):
     print("dir:", dir)
 
+    model_type = ""
     version_updates = -1
     num_code_files = -1
     num_png_files = -1
@@ -69,6 +97,19 @@ def get_info(dir, log_filepath):
         # print("code_lines:", code_lines)
 
         lines = open(log_filepath, "r", encoding="utf8").read().split("\n")
+        sublines = [line for line in lines if "| **model_type** |" in line]
+        if len(sublines) > 0:
+            model_type = sublines[0].split("| **model_type** | ModelType.")[-1].split(" | ")[0]
+            model_type = model_type[:-2]
+            if model_type == "GPT_3_5_TURBO":
+                model_type = "gpt-3.5-turbo"
+            elif model_type == "GPT_4":
+                model_type = "gpt-4"
+            elif model_type == "GPT_4_32k":
+                model_type = "gpt-4-32k"
+            # print("model_type:", model_type)
+        
+        lines = open(log_filepath, "r", encoding="utf8").read().split("\n")
         start_lines = [line for line in lines if "**[Start Chat]**" in line]
         chat_lines = [line for line in lines if "<->" in line]
         num_utterance = len(start_lines) + len(chat_lines)
@@ -107,10 +148,8 @@ def get_info(dir, log_filepath):
     cost = 0.0
     if num_png_files != -1:
         cost += num_png_files * 0.016
-    if num_prompt_tokens != -1:
-        cost += num_prompt_tokens * 0.003 / 1000.0
-    if num_completion_tokens != -1:
-        cost += num_completion_tokens * 0.004 / 1000.0
+    if prompt_cost(model_type, num_prompt_tokens, num_completion_tokens) != -1:
+        cost += prompt_cost(model_type, num_prompt_tokens, num_completion_tokens)
 
     # info = f"🕑duration={duration}s 💰cost=${cost} 🔨version_updates={version_updates} 📃num_code_files={num_code_files} 🏞num_png_files={num_png_files} 📚num_doc_files={num_doc_files} 📃code_lines={code_lines} 📋env_lines={env_lines} 📒manual_lines={manual_lines} 🗣num_utterances={num_utterance} 🤔num_self_reflections={num_reflection} ❓num_prompt_tokens={num_prompt_tokens} ❗num_completion_tokens={num_completion_tokens} ⁉️num_total_tokens={num_total_tokens}"
 

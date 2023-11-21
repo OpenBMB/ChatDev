@@ -207,7 +207,7 @@ function watchfileInput(files) {
     }
 }
 
-//extract information 
+//extract information
 function extraction(contents) {
     const regex = /\[(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2} \w+)\] ([.\s\S\n\r\d\D\t]*?)(?=\n\[\d|$)/g;
 
@@ -381,7 +381,7 @@ function extraction(contents) {
     return dialog;
 }
 
-//show dailog 
+//show dailog
 function createPara(d, i) {
     const singleDialog = document.createElement("div");
     singleDialog.style.position = "relative";
@@ -399,6 +399,8 @@ function createPara(d, i) {
 
         character.style.backgroundColor = "lightblue";
         character.style.width = "fit-content";
+        character.style.padding = "5px 20px";
+        character.style.marginBottom = "5px";
         character.style.fontSize = "13px ";
         character.style.border = "1px solid rgba(11, 20, 150, .3)";
         character.style.borderRadius = "10px";
@@ -441,6 +443,7 @@ function createPara(d, i) {
         characterimg.style.height = "40px";
         characterimg.style.width = "30px";
         characterimg.style.position = "relative";
+        characterimg.style.marginLeft = "10px";
         character.appendChild(characterimg);
         character.style.width = "fit-content";
 
