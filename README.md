@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-    【English | <a href="readme/README-Bahasa-Indonesia.md">Bahasa Indonesia</a>  | <a href="readme/README-Chinese.md">Chinese</a> | <a href="readme/README-Japanese.md">Japanese</a> | <a href="readme/README-Korean.md">Korean</a> | <a href="readme/README-Filipino.md">Filipino</a> | <a href="readme/README-French.md">French</a> | <a href="readme/README-Slovak.md">Slovak</a> | <a href="readme/README-Portuguese.md">Portuguese</a> | <a href="readme/README-Spanish.md">Spanish</a> | <a href="readme/README-Dutch.md">Dutch</a> | <a href="readme/README-Hindi.md">Hindi</a>】
+    【English   | <a href="readme/README-Chinese.md">Chinese</a> | <a href="readme/README-Japanese.md">Japanese</a> | <a href="readme/README-Korean.md">Korean</a> | <a href="readme/README-Filipino.md">Filipino</a> | <a href="readme/README-French.md">French</a> | <a href="readme/README-Slovak.md">Slovak</a> | <a href="readme/README-Portuguese.md">Portuguese</a> | <a href="readme/README-Spanish.md">Spanish</a> | <a href="readme/README-Dutch.md">Dutch</a> | <a href="readme/README-Hindi.md">Hindi</a>| <a href="readme/README-Bahasa-Indonesia.md">Bahasa Indonesia</a>】
 </p>
 <p align="center">
     【📚 <a href="wiki.md">Wiki</a> | 🚀 <a href="wiki.md#local-demo">Local Demo</a> | 👥 <a href="Contribution.md">Community Built Software</a> | 🔧 <a href="wiki.md#customization">Customization</a>】
@@ -26,8 +26,11 @@
 </p>
 
 ## 🎉 News
-
-- **November 2nd, 2023: ChatDev is now supported with a new feature: incremental development, which allows agents to develop upon existing codes.** Try `--config "incremental" --path "[source_code_directory_path]"` to start it.
+* **November 15th, 2023: We launched ChatDev as a SaaS platform that enables software developers and innovative entrepreneurs to build software efficiently at a very low cost and barrier to entry.** Try it out at https://chatdev.modelbest.cn/.
+  <p align="center">
+  <img src='./misc/saas.png' width=560>
+  </p>
+* November 2nd, 2023: ChatDev is now supported with a new feature: incremental development, which allows agents to develop upon existing codes. Try `--config "incremental" --path "[source_code_directory_path]"` to start it.
   <p align="center">
   <img src='./misc/increment.png' width=700>
   </p>
@@ -61,6 +64,10 @@
 <https://github.com/OpenBMB/ChatDev/assets/11889052/80d01d2f-677b-4399-ad8b-f7af9bb62b72>
 
 ## ⚡️ Quickstart
+
+### 💻️ Quickstart with Web
+
+Access the web page for visualization and configuration use: https://chatdev.modelbest.cn/
 
 ### 🖥️ Quickstart with terminal
 

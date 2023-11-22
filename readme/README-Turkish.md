@@ -4,8 +4,7 @@
   <img src='../misc/logo1.png' width=550>
 </p>
 
-<p align="center">
-    【İngilizce | <a href="readme/README-Chinese.md">Çince</a> | <a href="readme/README-Japanese.md">Japonca</a> | <a href="readme/README-Korean.md">Korece</a> | <a href="readme/README-Filipino.md">Filipince</a> | <a href="readme/README-French.md">Fransızca</a> | <a href="readme/README-Slovak.md">Slovakça</a> | <a href="readme/README-Portekizce.md">Portekizce</a> | <a href="readme/README-İspanyolca.md">İspanyolca</a> | <a href="readme/README-Hollanda.md">Hollandaca</a> | <a href="readme/README-Hintçe.md">Hintçe</a>】
+
 </p>
 <p align="center">
     【📚 <a href="wiki.md">Wiki</a> | 🚀 <a href="wiki.md#yerel-demo">Yerel Demo</a> | 👥 <a href="Katki.md">Topluluk Tarafından Geliştirilen Yazılım</a> | 🔧 <a href="wiki.md#özelleştirme">Özelleştirme</a>】

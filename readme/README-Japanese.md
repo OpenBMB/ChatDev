@@ -24,7 +24,10 @@
 
 ## 🎉 ニュース
 
-* **2023年11月2日: ChatDev がインクリメンタル開発に対応しました。** 起動するには、`--config "incremental" --path "Your folder path"` を試します。このモードでは、既存のコードをベースにしたコードレビューの段階から始まります。
+* **2023年11月2日: ChatDev が新機能でサポートされました: インクリメンタル開発とは、エージェントが既存のコードを基に開発することを可能にするものです。** 起動するには、`--config "incremental" --path "[source_code_directory_path]"` を試してください。
+  <p align="center">
+  <img src='../misc/increment.png' width=700>
+  </p>
 
 * 2023年10月26日: ChatDev が安全な実行のために Docker に対応しました ([ManindraDeMel](https://github.com/ManindraDeMel) のコントリビュートに感謝します)。[Docker スタートガイド](../wiki.md#docker-start)を参照してください。
   <p align="center">
