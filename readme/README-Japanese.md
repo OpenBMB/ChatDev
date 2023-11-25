@@ -6,7 +6,8 @@
 
 
 <p align="center">
-    【📚 <a href="../wiki.md">Wiki</a> | 🚀 <a href="../wiki.md#local-demo">ローカルデモ</a> | 👥 <a href="../Contribution.md">コミュニティにより作られたソフト</a> | 🔧 <a href="../wiki.md#customization">カスタマイズ</a>】
+    【📚 <a href="../wiki.md">Wiki</a> | 🚀 <a href="../wiki.md#local-demo">ローカルデモ</a> | 👥 <a href="../Contribution.md">コミュニティにより作られたソフト</a> | 🔧 <a href="../wiki.md#customization">カスタマイズ</a> | 👾 <a href="https://discord.gg/bn4t2Jy6TT")>Discord</a>】
+
 </p>
 
 ## 📖 概要
@@ -18,13 +19,17 @@
   **共同作業** を行います。
 - ChatDev の主な目的は、**使いやす**く**高度にカスタマイズ可能**で**拡張可能**なフレームワークを提供することであり、
   これは大規模言語モデル（LLM）に基づいており、集合知を研究するための理想的なシナリオとして機能します。
+
 <p align="center">
   <img src='../misc/company.png' width=600>
 </p>
 
 ## 🎉 ニュース
-
-* **2023年11月2日: ChatDev が新機能でサポートされました: インクリメンタル開発とは、エージェントが既存のコードを基に開発することを可能にするものです。** 起動するには、`--config "incremental" --path "[source_code_directory_path]"` を試してください。
+* **2023年11月15日: ChatDev は、ソフトウェア開発者や革新的な起業家が低コストで効率的にソフトウェアを構築できる SaaS プラットフォームです。** https://chatdev.modelbest.cn/ でお試し下さい。
+  <p align="center">
+  <img src='../misc/saas.png' width=560>
+  </p>
+* 2023年11月2日: ChatDev が新機能でサポートされました: インクリメンタル開発とは、エージェントが既存のコードを基に開発することを可能にするものです。起動するには、`--config "incremental" --path "[source_code_directory_path]"` を試してください。
   <p align="center">
   <img src='../misc/increment.png' width=700>
   </p>
@@ -33,85 +38,108 @@
   <p align="center">
   <img src='../misc/docker.png' width=400>
   </p>
-* 2023年9月25日: **Git** 機能が利用可能になりました、プログラマー <img src='../online_log/static/figures/programmer.png' height=20> がバージョン管理に GitHub を利用できるようになります。この機能を有効にするには、``ChatChainConfig.json`` で ``"git_management"`` を ``"True"`` に設定するだけです。
+- 2023年9月25日: **Git** 機能が利用可能になりました、プログラマー <img src='../online_log/static/figures/programmer.png' height=20> がバージョン管理に GitHub を利用できるようになります。この機能を有効にするには、``ChatChainConfig.json`` で ``"git_management"`` を ``"True"`` に設定するだけです。
   <p align="center">
   <img src='../misc/github.png' width=600>
   </p>
-* 2023年9月20日: **Human-Agent-Interaction** モードが利用可能になりました！レビュアー <img src='../online_log/static/figures/reviewer.png' height=20> になってプログラマー <img src='../online_log/static/figures/programmer.png' height=20> に提案することで、ChatDev チームに参加することができます;
+- 2023年9月20日: **Human-Agent-Interaction** モードが利用可能になりました！レビュアー <img src='../online_log/static/figures/reviewer.png' height=20> になってプログラマー <img src='../online_log/static/figures/programmer.png' height=20> に提案することで、ChatDev チームに参加することができます;
   ``python3 run.py --task [description_of_your_idea] --config "Human"`` を試してみてください。また、[ガイド](../wiki.md#human-agent-interaction)と[例](../WareHouse/Gomoku_HumanAgentInteraction_20230920135038)を参照してください。
   <p align="center">
   <img src='../misc/Human_intro.png' width=600>
   </p>
-* 2023年9月1日: **Art** モードが利用可能になりました！デザイナーエージェント <img src='../online_log/static/figures/designer.png' height=20> を有効にすると、ソフトウェアで使用する画像を生成できます;
+- 2023年9月1日: **Art** モードが利用可能になりました！デザイナーエージェント <img src='../online_log/static/figures/designer.png' height=20> を有効にすると、ソフトウェアで使用する画像を生成できます;
   ``python3 run.py --task [description_of_your_idea] --config "Art"`` を試してみてください。また、[ガイド](../wiki.md#art)と[例](../WareHouse/gomokugameArtExample_THUNLP_20230831122822)を参照してください。
-* 2023年8月28日: システムが一般公開されました。
-* 2023年8月17日: v1.0.0 のリリース準備が整いました。
-* 2023年7月30日: ユーザーは、ChatChain、Phase、Role の設定をカスタマイズすることができます。さらに、オンラインログモードとリプレイモードの両方がサポートされました。
-* 2023年7月16日: このプロジェクトに関連した[プレプリント論文](https://arxiv.org/abs/2307.07924)が発表されました。
-* 2023年6月30日: ChatDev リポジトリの初期バージョンがリリースされました。
+- 2023年8月28日: システムが一般公開されました。
+- 2023年8月17日: v1.0.0 のリリース準備が整いました。
+- 2023年7月30日: ユーザーは、ChatChain、Phase、Role の設定をカスタマイズすることができます。さらに、オンラインログモードとリプレイモードの両方がサポートされました。
+- 2023年7月16日: このプロジェクトに関連した[プレプリント論文](https://arxiv.org/abs/2307.07924)が発表されました。
+- 2023年6月30日: ChatDev リポジトリの初期バージョンがリリースされました。
 
 ## ❓ ChatDev は何ができるのか？
 
 ![intro](../misc/intro.png)
 
-https://github.com/OpenBMB/ChatDev/assets/11889052/80d01d2f-677b-4399-ad8b-f7af9bb62b72
+<https://github.com/OpenBMB/ChatDev/assets/11889052/80d01d2f-677b-4399-ad8b-f7af9bb62b72>
 
 ## ⚡️ クイックスタート
+
+### 💻️ Web でクイックスタート
+
+視覚化と設定用のウェブページへのアクセス: https://chatdev.modelbest.cn/
 
 ### 🖥️ ターミナルでクイックスタート
 
 開始するには、以下の手順に従ってください:
 
 1. **GitHub リポジトリのクローン:** コマンドを使ってリポジトリのクローンを作成する:
+
    ```
    git clone https://github.com/OpenBMB/ChatDev.git
    ```
+
 2. **Python 環境のセットアップ:** バージョン 3.9 以上の Python 環境があることを確認してください。`ChatDev_conda_env`
    をお好みの環境名に置き換え、以下のコマンドを使用してこの環境を作成し、有効化することができます:
+
    ```
    conda create -n ChatDev_conda_env python=3.9 -y
    conda activate ChatDev_conda_env
    ```
+
 3. **依存関係のインストール:** `ChatDev` ディレクトリに移動し、以下のコマンドを実行して必要な依存関係をインストールする:
+
    ```
    cd ChatDev
    pip3 install -r requirements.txt
    ```
+
 4. **OpenAI API キーの設定:** OpenAI API key を環境変数としてエクスポートします。`"your_OpenAI_API_key"` を実際の API
    キーに置き換えてください。この環境変数はセッション固有なので、新しいターミナルセッションを開くときに再度設定する必要があることを覚えておいてください。
    Unix/Linux 上では:
+
    ```
    export OPENAI_API_KEY="your_OpenAI_API_key"
    ```
+
    Windows 上では:
+
    ```
    $env:OPENAI_API_KEY="your_OpenAI_API_key"
    ```
+
 5. **ソフトウェアの構築:** 次のコマンドを使用して、ソフトウェアのビルドを開始する。`[description_of_your_idea]`
-   をあなたのアイデアの説明に、`[project_name]` を希望するプロジェクト名に置き換える:
+   をあなたのアイデアの説明に、`[project_name]` を希望するプロジェクト名に置き換えます:
+
    Unix/Linux 上では:
+
    ```
    python3 run.py --task "[description_of_your_idea]" --name "[project_name]"
    ```
+
    Windows 上では:
+
     ```
    python run.py --task "[description_of_your_idea]" --name "[project_name]"
    ```
+
 6. **ソフトウェアの実行:** 生成されたソフトウェアは、`Project_name_DefaultOrganization_timestamp`
    のような特定のプロジェクトフォルダの下の `WareHouse`
    ディレクトリにあります。そのディレクトリで以下のコマンドを使ってソフトウェアを実行してください:
    Unix/Linux 上では:
+
    ```
    cd WareHouse/project_name_DefaultOrganization_timestamp
    python3 main.py
    ```
+
    Windows 上では:
+
    ```
    cd WareHouse/project_name_DefaultOrganization_timestamp
    python main.py
    ```
 
 ### 🐳 Docker のクイックスタート
+
 - Docker のサポートを提供してくれた [ManindraDeMel](https://github.com/ManindraDeMel) に感謝します。[Docker スタートガイド](wiki.md#docker-start)を参照してください。
 
 ## ✨️ 高度なスキル
@@ -123,13 +151,12 @@ https://github.com/OpenBMB/ChatDev/assets/11889052/80d01d2f-677b-4399-ad8b-f7af9
 - ChatDev フレームワークの概要
 - ChatChain 設定の高度なパラメータの包括的な紹介。
 - ChatDev をカスタマイズするためのガイドです:
-    - ChatChain:
-      独自のソフトウェア開発プロセス（または他のプロセス）を設計します。例えば ``DemandAnalysis -> Coding -> Testing -> Manual``
+  - ChatChain: 独自のソフトウェア開発プロセス（または他のプロセス）を設計します。例えば ``DemandAnalysis -> Coding -> Testing -> Manual``
       などです。
-    - Phase: ``DemandAnalysis``のように、ChatChain 内で独自のフェーズを設計する。
-    - Role: 最高経営責任者 ``Chief Executive Officer`` のように、社内の様々なエージェントを定義する。
+  - Phase: ``DemandAnalysis``のように、ChatChain 内で独自のフェーズを設計する。
+  - Role: 最高経営責任者 ``Chief Executive Officer`` のように、社内の様々なエージェントを定義する。
 
-## 🤗 ソフトウェアをシェア！
+## 🤗 ソフトウェアをシェア
 
 **コード**:
 私たちは、あなたが私たちのオープンソースプロジェクトに参加してくださることに熱意をもっています。もし何か問題があれば、遠慮なく報告してください。問い合わせがある場合、または私たちと仕事を共有する用意がある場合は、遠慮なくプルリクエストを作成してください！あなたのコントリビュートは高く評価されます。また、何かありましたらお知らせください！
@@ -157,6 +184,7 @@ https://github.com/OpenBMB/ChatDev/assets/11889052/80d01d2f-677b-4399-ad8b-f7af9
 </a>
 
 [contrib.rocks](https://contrib.rocks) を使用して作成。
+
 ## 🔎 引用
 
 ```
@@ -182,6 +210,7 @@ https://github.com/OpenBMB/ChatDev/assets/11889052/80d01d2f-677b-4399-ad8b-f7af9
 
 
 ## 🤝 謝辞
+
 <a href="http://nlp.csai.tsinghua.edu.cn/"><img src="../misc/thunlp.png" height=50pt></a>&nbsp;&nbsp;
 <a href="https://modelbest.cn/"><img src="../misc/modelbest.png" height=50pt></a>&nbsp;&nbsp;
 <a href="https://github.com/OpenBMB/AgentVerse/"><img src="../misc/agentverse.png" height=50pt></a>&nbsp;&nbsp;
