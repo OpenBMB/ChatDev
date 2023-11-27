@@ -5,10 +5,11 @@
 </p>
 
 <p align="center">
-    【English | <a href="readme/README-Chinese.md">Chinese</a> | <a href="readme/README-Japanese.md">Japanese</a> | <a href="readme/README-Korean.md">Korean</a> | <a href="readme/README-Filipino.md">Filipino</a> | <a href="readme/README-French.md">French</a> | <a href="readme/README-Slovak.md">Slovak</a> | <a href="readme/README-Portuguese.md">Portuguese</a> | <a href="readme/README-Spanish.md">Spanish</a> | <a href="readme/README-Dutch.md">Dutch</a> | <a href="readme/README-Hindi.md">Hindi</a>】
+    【English   | <a href="readme/README-Chinese.md">Chinese</a> | <a href="readme/README-Japanese.md">Japanese</a> | <a href="readme/README-Korean.md">Korean</a> | <a href="readme/README-Filipino.md">Filipino</a> | <a href="readme/README-French.md">French</a> | <a href="readme/README-Slovak.md">Slovak</a> | <a href="readme/README-Portuguese.md">Portuguese</a> | <a href="readme/README-Spanish.md">Spanish</a> | <a href="readme/README-Dutch.md">Dutch</a> | <a href="readme/README-Hindi.md">Hindi</a>| <a href="readme/README-Bahasa-Indonesia.md">Bahasa Indonesia</a>】
 </p>
 <p align="center">
-    【📚 <a href="wiki.md">Wiki</a> | 🚀 <a href="wiki.md#local-demo">Local Demo</a> | 👥 <a href="Contribution.md">Community Built Software</a> | 🔧 <a href="wiki.md#customization">Customization</a>】
+    【📚 <a href="wiki.md">Wiki</a> | 🚀 <a href="wiki.md#local-demo">Local Demo</a> | 👥 <a href="Contribution.md">Community Built Software</a> | 🔧 <a href="wiki.md#customization">Customization</a> | 👾 <a href="https://discord.gg/bn4t2Jy6TT")>Discord</a>】
+
 </p>
 
 ## 📖 Overview
@@ -20,6 +21,7 @@
   including tasks such as designing, coding, testing, and documenting.
 - The primary objective of ChatDev is to offer an **easy-to-use**, **highly customizable** and **extendable** framework,
   which is based on large language models (LLMs) and serves as an ideal scenario for studying collective intelligence.
+
 <p align="center">
   <img src='./misc/company.png' width=600>
 </p>
@@ -33,33 +35,34 @@
   <p align="center">
   <img src='./misc/increment.png' width=700>
   </p>
+
 * October 26th, 2023: ChatDev is now supported with Docker for safe execution (thanks to contribution from [ManindraDeMel](https://github.com/ManindraDeMel)). Please see [Docker Start Guide](wiki.md#docker-start).
   <p align="center">
   <img src='./misc/docker.png' width=400>
   </p>
-* September 25th, 2023: The **Git** mode is now available, enabling the programmer <img src='online_log/static/figures/programmer.png' height=20> to utilize Git for version control. To enable this feature, simply set ``"git_management"`` to ``"True"`` in ``ChatChainConfig.json``. See [guide](wiki.md#git-mode).
+- September 25th, 2023: The **Git** mode is now available, enabling the programmer <img src='online_log/static/figures/programmer.png' height=20> to utilize Git for version control. To enable this feature, simply set ``"git_management"`` to ``"True"`` in ``ChatChainConfig.json``. See [guide](wiki.md#git-mode).
   <p align="center">
   <img src='./misc/github.png' width=600>
   </p>
-* September 20th, 2023: The **Human-Agent-Interaction** mode is now available! You can get involved with the ChatDev team by playing the role of reviewer <img src='online_log/static/figures/reviewer.png' height=20> and making suggestions to the programmer <img src='online_log/static/figures/programmer.png' height=20>;
+- September 20th, 2023: The **Human-Agent-Interaction** mode is now available! You can get involved with the ChatDev team by playing the role of reviewer <img src='online_log/static/figures/reviewer.png' height=20> and making suggestions to the programmer <img src='online_log/static/figures/programmer.png' height=20>;
   try ``python3 run.py --task [description_of_your_idea] --config "Human"``. See [guide](wiki.md#human-agent-interaction) and [example](WareHouse/Gomoku_HumanAgentInteraction_20230920135038).
   <p align="center">
   <img src='./misc/Human_intro.png' width=600>
   </p>
-* September 1st, 2023: The **Art** mode is available now! You can activate the designer agent <img src='online_log/static/figures/designer.png' height=20> to generate images used in the software;
+- September 1st, 2023: The **Art** mode is available now! You can activate the designer agent <img src='online_log/static/figures/designer.png' height=20> to generate images used in the software;
   try ``python3 run.py --task [description_of_your_idea] --config "Art"``. See [guide](wiki.md#art) and [example](WareHouse/gomokugameArtExample_THUNLP_20230831122822).
-* August 28th, 2023: The system is publicly available.
-* August 17th, 2023: The v1.0.0 version was ready for release.
-* July 30th, 2023: Users can customize ChatChain, Phase, and Role settings. Additionally, both online Log mode and replay
+- August 28th, 2023: The system is publicly available.
+- August 17th, 2023: The v1.0.0 version was ready for release.
+- July 30th, 2023: Users can customize ChatChain, Phase, and Role settings. Additionally, both online Log mode and replay
   mode are now supported.
-* July 16th, 2023: The [preprint paper](https://arxiv.org/abs/2307.07924) associated with this project was published.
-* June 30th, 2023: The initial version of the ChatDev repository was released.
+- July 16th, 2023: The [preprint paper](https://arxiv.org/abs/2307.07924) associated with this project was published.
+- June 30th, 2023: The initial version of the ChatDev repository was released.
 
 ## ❓ What Can ChatDev Do?
 
 ![intro](misc/intro.png)
 
-https://github.com/OpenBMB/ChatDev/assets/11889052/80d01d2f-677b-4399-ad8b-f7af9bb62b72
+<https://github.com/OpenBMB/ChatDev/assets/11889052/80d01d2f-677b-4399-ad8b-f7af9bb62b72>
 
 ## ⚡️ Quickstart
 
@@ -72,58 +75,76 @@ Access the web page for visualization and configuration use: https://chatdev.mod
 To get started, follow these steps:
 
 1. **Clone the GitHub Repository:** Begin by cloning the repository using the command:
+
    ```
    git clone https://github.com/OpenBMB/ChatDev.git
    ```
+
 2. **Set Up Python Environment:** Ensure you have a version 3.9 or higher Python environment. You can create and
    activate this environment using the following commands, replacing `ChatDev_conda_env` with your preferred environment
    name:
+
    ```
    conda create -n ChatDev_conda_env python=3.9 -y
    conda activate ChatDev_conda_env
    ```
+
 3. **Install Dependencies:** Move into the `ChatDev` directory and install the necessary dependencies by running:
+
    ```
    cd ChatDev
    pip3 install -r requirements.txt
    ```
+
 4. **Set OpenAI API Key:** Export your OpenAI API key as an environment variable. Replace `"your_OpenAI_API_key"` with
    your actual API key. Remember that this environment variable is session-specific, so you need to set it again if you
    open a new terminal session.
    On Unix/Linux:
+
    ```
    export OPENAI_API_KEY="your_OpenAI_API_key"
    ```
+
    On Windows:
+
    ```
    $env:OPENAI_API_KEY="your_OpenAI_API_key"
    ```
+
 5. **Build Your Software:** Use the following command to initiate the building of your software,
    replacing `[description_of_your_idea]` with your idea's description and `[project_name]` with your desired project
    name:
    On Unix/Linux:
+
    ```
    python3 run.py --task "[description_of_your_idea]" --name "[project_name]"
    ```
+
    On Windows:
+
    ```
    python run.py --task "[description_of_your_idea]" --name "[project_name]"
    ```
+
 6. **Run Your Software:** Once generated, you can find your software in the `WareHouse` directory under a specific
    project folder, such as `project_name_DefaultOrganization_timestamp`. Run your software using the following command
    within that directory:
    On Unix/Linux:
+
    ```
    cd WareHouse/project_name_DefaultOrganization_timestamp
    python3 main.py
    ```
+
    On Windows:
+
    ```
    cd WareHouse/project_name_DefaultOrganization_timestamp
    python main.py
    ```
-   
-#### 🐳 Quickstart with Docker
+
+### 🐳 Quickstart with Docker
+
 - We thank [ManindraDeMel](https://github.com/ManindraDeMel) for providing Docker support. Please see [Docker Start Guide](wiki.md#docker-start).
 
 ## ✨️ Advanced Skills
@@ -136,12 +157,12 @@ For more detailed information, please refer to our [Wiki](wiki.md), where you ca
 - An overview of the ChatDev framework.
 - A comprehensive introduction to all advanced parameters in ChatChain configuration.
 - Guides for customizing ChatDev, including:
-    - ChatChain: Design your own software development process (or any other process), such
+  - ChatChain: Design your own software development process (or any other process), such
       as ``DemandAnalysis -> Coding -> Testing -> Manual``.
-    - Phase: Design your own phase within ChatChain, like ``DemandAnalysis``.
-    - Role: Defining the various agents in your company, such as the ``Chief Executive Officer``.
+  - Phase: Design your own phase within ChatChain, like ``DemandAnalysis``.
+  - Role: Defining the various agents in your company, such as the ``Chief Executive Officer``.
 
-## 🤗 Share Your Software!
+## 🤗 Share Your Software
 
 **Code**: We are enthusiastic about your interest in participating in our open-source project. If you come across any
 problems, don't hesitate to report them. Feel free to create a pull request if you have any inquiries or if you are
@@ -172,11 +193,12 @@ create a software package and generate a folder named ``/WareHouse/2048_THUNLP_t
 </a>
 
 Made with [contrib.rocks](https://contrib.rocks).
+
 ## 🔎 Citation
 
 ```
 @misc{qian2023communicative,
-      title={Communicative Agents for Software Development}, 
+      title={Communicative Agents for Software Development},
       author={Chen Qian and Xin Cong and Wei Liu and Cheng Yang and Weize Chen and Yusheng Su and Yufan Dang and Jiahao Li and Juyuan Xu and Dahai Li and Zhiyuan Liu and Maosong Sun},
       year={2023},
       eprint={2307.07924},
@@ -195,8 +217,8 @@ Made with [contrib.rocks](https://contrib.rocks).
 
 [![Star History Chart](https://api.star-history.com/svg?repos=openbmb/chatdev&type=Date)](https://star-history.com/#openbmb/chatdev&Date)
 
-
 ## 🤝 Acknowledgments
+
 <a href="http://nlp.csai.tsinghua.edu.cn/"><img src="misc/thunlp.png" height=50pt></a>&nbsp;&nbsp;
 <a href="https://modelbest.cn/"><img src="misc/modelbest.png" height=50pt></a>&nbsp;&nbsp;
 <a href="https://github.com/OpenBMB/AgentVerse/"><img src="misc/agentverse.png" height=50pt></a>&nbsp;&nbsp;
