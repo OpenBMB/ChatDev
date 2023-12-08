@@ -99,7 +99,8 @@ class ChatChain:
             self.role_prompts[role] = "\n".join(self.config_role[role])
 
         # init log
-        self.start_time, self.log_filepath = self.get_logfilepath()
+        self.start_time: str = now()
+        self.log_filepath = self.get_logfilepath(self.start_time)
 
         # init SimplePhase instances
         # import all used phases in PhaseConfig.json from chatdev.phase
@@ -180,19 +181,15 @@ class ChatChain:
         for phase_item in self.chain:
             self.execute_step(phase_item)
 
-    def get_logfilepath(self):
+    def get_logfilepath(self, start_time: str) -> str:
         """
-        get the log path (under the software path)
-        Returns:
-            start_time: time for starting making the software
-            log_filepath: path to the log
+        Returns log_filepath as a str path to the log (under the project's path).
         """
-        start_time = now()
         filepath = os.path.dirname(__file__)
         root = os.path.dirname(filepath)
         directory = os.path.join(root, "WareHouse")
-        log_filepath = os.path.join(directory, f"{self.project_name}_{self.org_name}_{self.start_time}.log")
-        return start_time, log_filepath
+        log_filepath = os.path.join(directory, f"{self.project_name}_{self.org_name}_{start_time}.log")
+        return log_filepath
 
     def pre_processing(self):
         """
