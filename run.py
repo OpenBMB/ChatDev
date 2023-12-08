@@ -15,6 +15,7 @@ import argparse
 import logging
 import os
 import sys
+from typing import Tuple, List
 
 from camel.typing import ModelType
 
@@ -24,15 +25,16 @@ sys.path.append(root)
 from chatdev.chat_chain import ChatChain
 
 
-def get_config(company):
+def get_config(company: str) -> Tuple[str, str, str]:
     """
-    return configuration json files for ChatChain
-    user can customize only parts of configuration json files, other files will be left for default
+    Returns configuration JSON files for ChatChain.
+    User can modify certain configuration JSON files, and the Default will be used for the other files.
+    
     Args:
-        company: customized configuration name under CompanyConfig/
+        company: customized configuration name (subdir name in CompanyConfig/)
 
     Returns:
-        path to three configuration jsons: [config_path, config_phase_path, config_role_path]
+        tuple of str paths to three configuration JSON filess: [config_path, config_phase_path, config_role_path]
     """
     config_dir = os.path.join(root, "CompanyConfig", company)
     default_config_dir = os.path.join(root, "CompanyConfig", "Default")
@@ -43,7 +45,7 @@ def get_config(company):
         "RoleConfig.json"
     ]
 
-    config_paths = []
+    config_paths: List[str] = []
 
     for config_file in config_files:
         company_config_path = os.path.join(config_dir, config_file)
@@ -51,10 +53,12 @@ def get_config(company):
 
         if os.path.exists(company_config_path):
             config_paths.append(company_config_path)
-        else:
+        elif os.path.exists(default_config_path):
             config_paths.append(default_config_path)
-
-    return tuple(config_paths)
+        else:
+            raise FileNotFoundError(f"Cannot find {config_file} in config_dir={config_dir} nor default_config_dir={default_config_dir}")
+    
+    return (config_paths[0], config_paths[1], config_paths[2])
 
 
 parser = argparse.ArgumentParser(description='argparse')
