@@ -85,6 +85,7 @@ class ChatChain:
 
         if not check_bool(self.config["incremental_develop"]):
             if self.code_path:
+                # TODO: in this case, the code_path is used as the target (instead of the WareHouse directory)
                 raise RuntimeError("code_path is given, but Phase Config specifies incremental_develop=False. code_path will be ignored.")
 
         # the user input prompt will be self-improved (if set "self_improve": "True" in ChatChainConfig.json)
