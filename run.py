@@ -72,7 +72,7 @@ parser.add_argument('--name', type=str, default="Gomoku",
                     help="Name of software (your software will be generated in WareHouse/name_org_timestamp)")
 parser.add_argument('--model', type=str, default="GPT_3_5_TURBO", choices=['GPT_3_5_TURBO', 'GPT_4', 'GPT_4_32K'],
                     help="GPT Model, choose from {'GPT_3_5_TURBO','GPT_4','GPT_4_32K'}")
-parser.add_argument('--path', type=str, default="",
+parser.add_argument('--path', type=str, default=None,
                     help="Your file directory. If given, ChatDev will build upon your software in the Incremental mode.")
 args = parser.parse_args()
 

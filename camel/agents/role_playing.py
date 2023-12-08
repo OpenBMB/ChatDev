@@ -12,7 +12,7 @@
 # limitations under the License.
 # =========== Copyright 2023 @ CAMEL-AI.org. All Rights Reserved. ===========
 import copy
-from typing import Dict, List, Optional, Sequence, Tuple
+from typing import Dict, List, Optional, Sequence, Tuple, Union
 
 from camel.agents import (
     ChatAgent,
@@ -167,8 +167,8 @@ class RolePlaying:
         else:
             self.critic = None
 
-    def init_chat(self, phase_type: PhaseType = None,
-                  placeholders=None, phase_prompt=None):
+    def init_chat(self, phase_type: Union[PhaseType, None],
+                  placeholders, phase_prompt: str):
         r"""Initializes the chat by resetting both the assistant and user
         agents, and sending the system messages again to the agents using
         chat messages. Returns the assistant's introductory message and the
