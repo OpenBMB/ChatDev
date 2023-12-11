@@ -1,0 +1,27 @@
+# Start with a Python 3.9 base image
+FROM python:3.9-slim
+
+# Set the working directory in the container
+WORKDIR /app
+
+# Copy the current directory contents into the container at /app
+COPY . /app
+
+# Install necessary libraries for GUI support
+RUN apt-get update && apt-get install -y python3-tk x11-apps
+
+# Install the project dependencies
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Install HuggingFace Transformers and Uvicorn server
+RUN pip install transformers uvicorn
+
+# Set the environment variable for OpenAI API key
+# (you'll need to provide the actual key when running the container)
+ENV OPENAI_API_KEY=your_OpenAI_API_key
+
+# Expose the port for Uvicorn server
+EXPOSE 7860
+
+# Command to run the Uvicorn server with your FastAPI application
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "7860"]
