@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<script src="https://libs.baidu.com/jquery/2.1.4/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/markdown-it@13.0.1/dist/markdown-it.min.js"></script>
+<link rel="stylesheet" href="replay/css/use.css">
+<link rel="stylesheet" href="replay/css/github-markdown-dark.css">
+
+<head>
+    <title>chatdev demo </title>
+    <link rel="icon" type="image/png" href="figures/ceo.png">
+</head>
+
+<body style="display: flex;flex: auto; ">
+
+    <div id="operation">
+        <div id="title" style="display: block;position: relative;height: 100px;">
+            <img src="figures/chatdev.png" style="width: 364px;height: 128px; position: relative;top:40px;left:75px;">
+            <p style="color:aliceblue; font-size: larger;font-weight: bolder;position: relative;top:20px;left:40px;text-shadow: 0px 0px 0px rgb(252, 252, 252);">
+                Communicative Agents for Software Development</p>
+        </div>
+        <div id="imgShow">
+            <img src="figures/company.png" alt="chatdev-company" id="chatdev-company">
+            <img src="figures/right.png" id="right" class="blinking-animation" style="display: none;position: relative; width: 40px;height: 40px;top: -360px;left: 420px">
+            <img src="figures/left.png" id="left" class="blinking-animation" style="display: none;width: 40px;height: 40px;position: relative; top: -465px;left: 125px">
+        </div>
+        <div style="position: relative;top:200px;display: flex;">
+            <div> <input type="file" id="fileInput" accept=".log" onchange="watchfileInput(this.files)">
+                <button id="filebutton" class="button">File Upload</button>
+            </div>
+            <div><button id="replay" class="button">Replay</button></div>
+        </div>
+        <div class="markdown-body"><label for="filebutton" id="successupload">
+            </label>
+        </div>
+    </div>
+    <div id="show" style="display: grid;">
+
+        <div id="humanRequest" style="position: relative; overflow: auto; padding: 0 10px">
+            <p id="Requesttext" style=" color:aliceblue; display: block;font-weight: 900; max-height: 18px; max-width: 800px;">Task: </p>
+        </div>
+        <div id="dialogBody" style="top:20px;display: flex;flex-direction: column;">
+        </div>
+        <div id="speedcontrol">
+            <input type="range" id="speed" name="speed" min="0" max="100" onchange="speedchange()">
+            <label for="speed">Replaying Speed</label>
+        </div>
+        <div id="dialogStatistic" style="display: flex;flex-direction: column;">
+            <div style="display: flex;width: 2800px;flex-direction: row;height: 60px;">
+
+                <div class="info">
+                    <label for="version_updates" style="position: relative;">🔨version_updates</label>
+                    <p id="version_updates"></p>
+                </div>
+                <div class="info">
+                    <label for="num_code_files" style="position: relative;">📃num_code_files</label>
+                    <p id="num_code_files"></p>
+                </div>
+
+                <div class="info">
+                    <label for="num_png_files" style="position: relative;"> 🏞num_png_files</label>
+                    <p id="num_png_files"></p>
+                </div>
+                <div class="info">
+                    <label for="num_doc_files" style="position: relative;">📚num_doc_files</label>
+                    <p id="num_doc_files"></p>
+                </div>
+                <div class="info">
+                    <label for="code_lines" style="position: relative;">📃code_lines</label>
+                    <p id="code_lines"></p>
+                </div>
+                <div class="info">
+                    <label for="env_lines" style="position: relative;">📋env_lines</label>
+                    <p id="env_lines"></p>
+                </div>
+                <div class="info">
+                    <label for="manual_lines" style="position: relative;">📒manual_lines</label>
+                    <p id="manual_lines"></p>
+                </div>
+                <div class="info">
+                    <label for="num_utterances" style="position: relative;">🗣num_utterances</label>
+                    <p id="num_utterances"></p>
+                </div>
+
+                <div class="info">
+                    <label for="num_self_reflections" style="position: relative;">🤔num_self_reflections</label>
+                    <p id="num_self_reflections"></p>
+                </div>
+                <div class="info">
+                    <label for="num_prompt_tokens" style="position: relative;">❓num_prompt_tokens</label>
+                    <p id="num_prompt_tokens"></p>
+                </div>
+                <div class="info">
+                    <label for="num_completion_tokens" style="position: relative;">❗num_completion_tokens</label>
+                    <p id="num_completion_tokens"></p>
+                </div>
+                <div class="info">
+                    <label for="num_total_tokens" style="position: relative;">⁉️num_total_tokens</label>
+                    <p id="num_total_tokens"></p>
+                </div>
+                <div class="info">
+                    <label for="cost" style="position: relative;">💰cost</label>
+                    <p id="cost"></p>
+                </div>
+                <div class="info">
+                    <label for="duration" style="position: relative;">🕑duration</label>
+                    <p id="duration"></p>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+    <script src="replay/js/app.js"></script>
+    <!--<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>-->
+</body>
+
+</html>

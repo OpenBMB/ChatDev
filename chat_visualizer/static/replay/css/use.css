@@ -1,0 +1,234 @@
+p,
+div,
+label {
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #23252c;
+}
+
+.button {
+    padding: 16px 15px;
+    background: #e2edf0;
+    color: #0b0c0c;
+    font-weight: 800;
+    font-size: 16px;
+    cursor: pointer;
+    height: 80px;
+    box-shadow: 1px 2px 2px #505757;
+    border-radius: 20px;
+    border: #020202;
+}
+
+.blinking-animation {
+    width: 25px;
+    height: 25px;
+    animation: blink 1s ease infinite;
+}
+
+@keyframes blink {
+    0%,
+    100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0;
+    }
+}
+
+#filebutton {
+    position: relative;
+    left: 50px;
+}
+
+#title>p {
+    font-size: 30px;
+    color: #fefefe;
+    text-shadow: 0 0 0.5em #0ae642, 0 0 0.2em #5c5c5c;
+}
+
+#replay {
+    position: relative;
+    left: 340px;
+    width: 100px;
+}
+
+#successupload {
+    position: absolute;
+    top: 730px;
+    left: 200px;
+    color: antiquewhite;
+    display: none;
+}
+
+#successupload>p {
+    position: relative;
+    left: 20px;
+}
+
+#fileInput {
+    display: none;
+}
+
+#humanRequest {
+    background-color: rgb(30, 39, 46);
+    border: 1px solid #ffffff;
+    border-radius: 10px;
+    box-shadow: 3px 3px 4px black;
+}
+
+#dialogBody,
+#dialogStatistic {
+    width: 790px;
+    height: 570px;
+    background-color: rgb(255, 255, 255);
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 3px 3px 4px black;
+    overflow: auto;
+    padding: 20px;
+    float: right;
+    position: relative;
+    margin-left: auto;
+    top: 10px;
+}
+
+#speed {
+    position: relative;
+    width: 600px;
+    top: 35px;
+    right: -150px;
+}
+
+#speedcontrol>label {
+    display: block;
+    position: relative;
+    top: 15px;
+    width: 200px;
+    color: aliceblue;
+    font-size: medium;
+    font-weight: bold;
+}
+
+[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    margin: 0;
+    outline: 0;
+    background-color: transparent;
+    width: 600px;
+}
+
+[type="range"]::-webkit-slider-runnable-track {
+    height: 4px;
+    background: #eee;
+}
+
+[type="range" i]::-webkit-slider-container {
+    height: 25px;
+    overflow: hidden;
+}
+
+[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 30%;
+    background-color: #ffffff;
+    border: 1px solid transparent;
+    margin-top: -8px;
+    border-image: linear-gradient(#133163, #133163) 0 fill / 8 20 8 0 / 0px 0px 0 2000px;
+}
+
+#dialogStatistic {
+    height: 52px;
+    top: 30px;
+    position: relative;
+}
+
+.message {
+    margin: 10px;
+}
+
+#test {
+    border: 1px solid rgba(130, 133, 186, 0.3);
+    border-radius: 10px;
+    box-shadow: 1px 2px 2px black;
+    width: 100px;
+    font-size: 18px;
+    display: none;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+img {
+    height: 100%;
+    width: 100%;
+}
+
+#imgShow {
+    height: 450px;
+    width: 600px;
+    position: relative;
+    top: 120px;
+}
+
+#successupload {
+    width: 200px;
+}
+
+#show {
+    display: flex;
+    float: right;
+    position: relative;
+    right: -50px;
+}
+
+.info>p {
+    font-size: large;
+    font-weight: 900;
+    position: relative;
+    font-style: inherit;
+    color: rgb(12, 13, 13);
+}
+
+.info>label {
+    height: 17px;
+    position: relative;
+    align-items: center;
+}
+
+.info {
+    display: block;
+    height: 25px;
+    position: relative;
+    width: 200px;
+    color: rgb(30, 39, 46);
+    border-radius: 10px;
+    font-size: small;
+    font-weight: bold;
+    font-style: inherit;
+    display: block;
+    font-weight: 900;
+}
+
+
+/* Optional styles for the text container */
+
+#text-container {
+    font-size: 24px;
+    line-height: 1.5;
+}
+
+
+/* Animation styles */
+
+@keyframes revealText {
+    0% {
+        visibility: hidden;
+    }
+    100% {
+        visibility: visible;
+    }
+}
