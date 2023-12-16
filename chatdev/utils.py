@@ -26,11 +26,7 @@ def log_and_print_online(role, content=None):
             content.meta_dict["content"] = content.content
             for key in content.meta_dict:
                 value = content.meta_dict[key]
-                value = str(value)
-                value = html.unescape(value)
-                value = markdown.markdown(value)
-                value = re.sub(r'<[^>]*>', '', value)
-                value = value.replace("\n", " ")
+                value = escape_string(value)
                 records_kv.append([key, value])
             content = "**[SystemMessage**]\n\n" + convert_to_markdown_table(records_kv)
         else:
@@ -65,11 +61,7 @@ def log_arguments(func):
         for name, value in all_args.items():
             if name in ["self", "chat_env", "task_type"]:
                 continue
-            value = str(value)
-            value = html.unescape(value)
-            value = markdown.markdown(value)
-            value = re.sub(r'<[^>]*>', '', value)
-            value = value.replace("\n", " ")
+            value = escape_string(value)
             records_kv.append([name, value])
         records = f"**[{func.__name__}]**\n\n" + convert_to_markdown_table(records_kv)
         log_and_print_online("System", records)
@@ -77,3 +69,11 @@ def log_arguments(func):
         return func(*args, **kwargs)
 
     return wrapper
+
+def escape_string(value):
+    value = str(value)
+    value = html.unescape(value)
+    value = markdown.markdown(value)
+    value = re.sub(r'<[^>]*>', '', value)
+    value = value.replace("\n", " ")
+    return value
