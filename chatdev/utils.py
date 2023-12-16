@@ -6,7 +6,7 @@ import time
 import markdown
 import inspect
 from camel.messages.system_messages import SystemMessage
-from online_log.app import send_msg
+from chat_visualizer.app import send_msg
 
 
 def now():
