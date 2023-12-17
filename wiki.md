@@ -66,7 +66,7 @@
   ChatChain Visualizer.
 
 ```
-python3 chat_visualizer/app.py
+python3 online_log/app.py
 ```
 
 then go to [Local Demo Website](http://127.0.0.1:8000/) to see an online visualized version of logs such as
@@ -121,7 +121,7 @@ then go to [Local Demo Website](http://127.0.0.1:8000/) to see an online visuali
     ```
   ⚠️ You need to replace ``YOUR_OPENAI_KEY`` with your key and replace ``YOUR_IP`` with your inet address.
 - Then you can just play with ChatDev running ``python3 run.py``.
-- You can run ``python3 chat_visualizer/app.py &`` first to start a background program so that you can use online log with a WebUI.
+- You can run ``python3 online_log/app.py &`` first to start a background program so that you can use online log with a WebUI.
 
 ### Copy the generated software out of Docker
 - run 
@@ -294,7 +294,7 @@ then go to [Local Demo Website](http://127.0.0.1:8000/) to see an online visuali
 ├── camel # Camel RolePlay component
 ├── chatdev # ChatDev core code
 ├── misc # assets of example and demo
-├── chat_visualizer # Demo Folder
+├── online_log # Demo Folder
 ├── run.py # Entry of ChatDev
 ├── requirements.txt
 ├── README.md
