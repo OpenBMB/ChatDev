@@ -6,14 +6,14 @@
 
 
 <p align="center">
-    【📚 <a href="../wiki.md">Wiki</a> | 🚀 <a href="../wiki.md#local-demo">ローカルデモ</a> | 👥 <a href="../Contribution.md">コミュニティにより作られたソフト</a> | 🔧 <a href="../wiki.md#customization">カスタマイズ</a> | 👾 <a href="https://discord.gg/bn4t2Jy6TT")>Discord</a>】
+    【📚 <a href="../wiki.md">Wiki</a> | 🚀 <a href="../wiki.md#visualizer">ローカルデモ</a> | 👥 <a href="../Contribution.md">コミュニティにより作られたソフト</a> | 🔧 <a href="../wiki.md#customization">カスタマイズ</a> | 👾 <a href="https://discord.gg/bn4t2Jy6TT")>Discord</a>】
 
 </p>
 
 ## 📖 概要
 
-- **ChatDev** は、最高経営責任者 <img src='../online_log/static/figures/ceo.png' height=20>、
-  最高製品責任者 <img src='../online_log/static/figures/cpo.png' height=20>、最高技術責任者 <img src='../online_log/static/figures/cto.png' height=20>、プログラマー <img src='../online_log/static/figures/programmer.png' height=20>、レビュアー <img src='../online_log/static/figures/reviewer.png' height=20>、テスター <img src='../online_log/static/figures/tester.png' height=20>、アートデザイナー <img src='../online_log/static/figures/designer.png' height=20> などさまざまな役割を持つさまざまな**インテリジェントエージェント**を擁する**バーチャルソフトウェア企業**である。これらのエージェントはマルチエージェントの組織構造を形成し、
+- **ChatDev** は、最高経営責任者 <img src='../visualizer/static/figures/ceo.png' height=20>、
+  最高製品責任者 <img src='../visualizer/static/figures/cpo.png' height=20>、最高技術責任者 <img src='../visualizer/static/figures/cto.png' height=20>、プログラマー <img src='../visualizer/static/figures/programmer.png' height=20>、レビュアー <img src='../visualizer/static/figures/reviewer.png' height=20>、テスター <img src='../visualizer/static/figures/tester.png' height=20>、アートデザイナー <img src='../visualizer/static/figures/designer.png' height=20> などさまざまな役割を持つさまざまな**インテリジェントエージェント**を擁する**バーチャルソフトウェア企業**である。これらのエージェントはマルチエージェントの組織構造を形成し、
   "プログラミングを通じてデジタル世界に革命を起こす"というミッションで
   結束しています。ChatDev 内のエージェントは、設計、コーディング、テスト、ドキュメント作成などのタスクを含む専門的な機能セミナーに参加することで、
   **共同作業** を行います。
@@ -38,16 +38,16 @@
   <p align="center">
   <img src='../misc/docker.png' width=400>
   </p>
-- 2023年9月25日: **Git** 機能が利用可能になりました、プログラマー <img src='../online_log/static/figures/programmer.png' height=20> がバージョン管理に GitHub を利用できるようになります。この機能を有効にするには、``ChatChainConfig.json`` で ``"git_management"`` を ``"True"`` に設定するだけです。
+- 2023年9月25日: **Git** 機能が利用可能になりました、プログラマー <img src='../visualizer/static/figures/programmer.png' height=20> がバージョン管理に GitHub を利用できるようになります。この機能を有効にするには、``ChatChainConfig.json`` で ``"git_management"`` を ``"True"`` に設定するだけです。
   <p align="center">
   <img src='../misc/github.png' width=600>
   </p>
-- 2023年9月20日: **Human-Agent-Interaction** モードが利用可能になりました！レビュアー <img src='../online_log/static/figures/reviewer.png' height=20> になってプログラマー <img src='../online_log/static/figures/programmer.png' height=20> に提案することで、ChatDev チームに参加することができます;
+- 2023年9月20日: **Human-Agent-Interaction** モードが利用可能になりました！レビュアー <img src='../visualizer/static/figures/reviewer.png' height=20> になってプログラマー <img src='../visualizer/static/figures/programmer.png' height=20> に提案することで、ChatDev チームに参加することができます;
   ``python3 run.py --task [description_of_your_idea] --config "Human"`` を試してみてください。また、[ガイド](../wiki.md#human-agent-interaction)と[例](../WareHouse/Gomoku_HumanAgentInteraction_20230920135038)を参照してください。
   <p align="center">
   <img src='../misc/Human_intro.png' width=600>
   </p>
-- 2023年9月1日: **Art** モードが利用可能になりました！デザイナーエージェント <img src='../online_log/static/figures/designer.png' height=20> を有効にすると、ソフトウェアで使用する画像を生成できます;
+- 2023年9月1日: **Art** モードが利用可能になりました！デザイナーエージェント <img src='../visualizer/static/figures/designer.png' height=20> を有効にすると、ソフトウェアで使用する画像を生成できます;
   ``python3 run.py --task [description_of_your_idea] --config "Art"`` を試してみてください。また、[ガイド](../wiki.md#art)と[例](../WareHouse/gomokugameArtExample_THUNLP_20230831122822)を参照してください。
 - 2023年8月28日: システムが一般公開されました。
 - 2023年8月17日: v1.0.0 のリリース準備が整いました。

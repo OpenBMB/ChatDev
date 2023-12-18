@@ -12,7 +12,7 @@ import requests
 from chatdev.codes import Codes
 from chatdev.documents import Documents
 from chatdev.roster import Roster
-from chatdev.utils import log_and_print_online
+from chatdev.utils import log_visualize
 
 
 class ChatEnvConfig:
@@ -60,7 +60,7 @@ class ChatEnv:
             for match in re.finditer(r"No module named '(\S+)'", test_reports, re.DOTALL):
                 module = match.group(1)
                 subprocess.Popen("pip install {}".format(module), shell=True).wait()
-                log_and_print_online("**[CMD Execute]**\n\n[CMD] pip install {}".format(module))
+                log_visualize("**[CMD Execute]**\n\n[CMD] pip install {}".format(module))
 
     def set_directory(self, directory):
         assert len(self.env_dict['directory']) == 0
