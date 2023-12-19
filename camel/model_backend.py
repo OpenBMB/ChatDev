@@ -19,7 +19,7 @@ import tiktoken
 
 from camel.typing import ModelType
 from chatdev.statistics import prompt_cost
-from chatdev.utils import log_and_print_online
+from chatdev.utils import log_visualize
 
 
 class ModelBackend(ABC):
@@ -79,7 +79,7 @@ class OpenAIModel(ModelBackend):
                 num_completion_tokens=response["usage"]["completion_tokens"]
         )
 
-        log_and_print_online(
+        log_visualize(
             "**[OpenAI_Usage_Info Receive]**\nprompt_tokens: {}\ncompletion_tokens: {}\ntotal_tokens: {}\ncost: ${:.6f}\n".format(
                 response["usage"]["prompt_tokens"], response["usage"]["completion_tokens"],
                 response["usage"]["total_tokens"], cost))
@@ -131,6 +131,6 @@ class ModelFactory:
         if model_type is None:
             model_type = default_model_type
 
-        # log_and_print_online("Model Type: {}".format(model_type))
+        # log_visualize("Model Type: {}".format(model_type))
         inst = model_class(model_type, model_config_dict)
         return inst
