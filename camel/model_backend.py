@@ -21,13 +21,15 @@ from camel.typing import ModelType
 from chatdev.statistics import prompt_cost
 from chatdev.utils import log_visualize
 
+from openai.types.chat import ChatCompletion
+
 
 class ModelBackend(ABC):
     r"""Base class for different model backends.
     May be OpenAI API, a local LLM, a stub for unit tests, etc."""
 
     @abstractmethod
-    def run(self, *args, **kwargs) -> Dict[str, Any]:
+    def run(self, *args, **kwargs) -> ChatCompletion:
         r"""Runs the query to the backend model.
 
         Raises:
@@ -63,27 +65,29 @@ class OpenAIModel(ModelBackend):
             "gpt-4": 8192,
             "gpt-4-0613": 8192,
             "gpt-4-32k": 32768,
+            "gpt-4-1106-preview": 4096,
+            "gpt-4-1106-vision-preview": 4096,
         }
         num_max_token = num_max_token_map[self.model_type.value]
         num_max_completion_tokens = num_max_token - num_prompt_tokens
         self.model_config_dict['max_tokens'] = num_max_completion_tokens
 
         try:
-            response = openai.ChatCompletion.create(*args, **kwargs, model=self.model_type.value, **self.model_config_dict)
+            response = openai.chat.completions.create(*args, **kwargs, model=self.model_type.value, **self.model_config_dict)
         except AttributeError:
             response = openai.chat.completions.create(*args, **kwargs, model=self.model_type.value, **self.model_config_dict)
 
         cost = prompt_cost(
                 self.model_type.value, 
-                num_prompt_tokens=response["usage"]["prompt_tokens"], 
-                num_completion_tokens=response["usage"]["completion_tokens"]
+                num_prompt_tokens=response.usage.prompt_tokens, 
+                num_completion_tokens=response.usage.completion_tokens
         )
 
         log_visualize(
             "**[OpenAI_Usage_Info Receive]**\nprompt_tokens: {}\ncompletion_tokens: {}\ntotal_tokens: {}\ncost: ${:.6f}\n".format(
-                response["usage"]["prompt_tokens"], response["usage"]["completion_tokens"],
-                response["usage"]["total_tokens"], cost))
-        if not isinstance(response, Dict):
+                response.usage.prompt_tokens, response.usage.completion_tokens,
+                response.usage.total_tokens, cost))
+        if not isinstance(response, ChatCompletion):
             raise RuntimeError("Unexpected return from OpenAI API")
         return response
 
@@ -119,7 +123,7 @@ class ModelFactory:
         default_model_type = ModelType.GPT_3_5_TURBO
 
         if model_type in {
-            ModelType.GPT_3_5_TURBO, ModelType.GPT_4, ModelType.GPT_4_32k,
+            ModelType.GPT_3_5_TURBO, ModelType.GPT_4, ModelType.GPT_4_32k, ModelType.GPT_4_TURBO,
             None
         }:
             model_class = OpenAIModel

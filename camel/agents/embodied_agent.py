@@ -27,7 +27,7 @@ class EmbodiedAgent(ChatAgent):
     Args:
         system_message (SystemMessage): The system message for the chat agent.
         model (ModelType, optional): The LLM model to use for generating
-            responses. (default :obj:`ModelType.GPT_4`)
+            responses. (default :obj:`ModelType.GPT_4_TURBO`)
         model_config (Any, optional): Configuration options for the LLM model.
             (default: :obj:`None`)
         message_window_size (int, optional): The maximum number of previous
@@ -43,7 +43,7 @@ class EmbodiedAgent(ChatAgent):
     def __init__(
         self,
         system_message: SystemMessage,
-        model: ModelType = ModelType.GPT_4,
+        model: ModelType = ModelType.GPT_4_TURBO,
         model_config: Optional[Any] = None,
         message_window_size: Optional[int] = None,
         action_space: Optional[List[BaseToolAgent]] = None,
