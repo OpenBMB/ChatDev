@@ -272,7 +272,6 @@ then go to [Visualizer Website](http://127.0.0.1:8000/) to see an online visuali
 ## ChatChain Parameters
 
 - *clear_structure*: Whether to clear non-software files in the WareHouse and cache files in generated software path.
-- *brainstorming*: TBD
 - *gui_design*: Encourage ChatDev generate software with GUI.
 - *git_management*: Whether to use git to manage the creation and changes of generated software.
 - *incremental_develop*: Whether to use incremental develop on an existing project.
