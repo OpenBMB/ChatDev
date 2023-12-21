@@ -65,7 +65,7 @@ class Phase(ABC):
         """
 
         Args:
-            chat_env: global chatchain environment TODO: only for employee detection, can be deleted
+            chat_env: global chatchain environment
             task_prompt: user query prompt for building the software
             assistant_role_name: who receives the chat
             user_role_name: who starts the chat
@@ -103,6 +103,7 @@ class Phase(ABC):
             task_type=task_type,
             with_task_specify=with_task_specify,
             model_type=model_type,
+            background_prompt=chat_env.config.background_prompt
         )
 
         # log_visualize("System", role_play_session.assistant_sys_msg)

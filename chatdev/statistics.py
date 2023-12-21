@@ -105,7 +105,7 @@ def get_info(dir, log_filepath):
         if len(sublines) > 0:
             model_type = sublines[0].split("| **model_type** | ModelType.")[-1].split(" | ")[0]
             model_type = model_type[:-2]
-            if model_type == "GPT_3_5_TURBO":
+            if model_type == "GPT_3_5_TURBO" or model_type == "GPT_3_5_TURBO_NEW":
                 model_type = "gpt-3.5-turbo"
             elif model_type == "GPT_4":
                 model_type = "gpt-4"
@@ -114,7 +114,7 @@ def get_info(dir, log_filepath):
             elif model_type == "GPT_4_TURBO":
                 model_type = "gpt-4-1106-preview"
             # print("model_type:", model_type)
-        
+
         lines = open(log_filepath, "r", encoding="utf8").read().split("\n")
         start_lines = [line for line in lines if "**[Start Chat]**" in line]
         chat_lines = [line for line in lines if "<->" in line]

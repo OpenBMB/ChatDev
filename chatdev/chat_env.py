@@ -27,11 +27,13 @@ class ChatEnvConfig:
     def __init__(self, clear_structure,
                  gui_design,
                  git_management,
-                 incremental_develop):
+                 incremental_develop,
+                 background_prompt):
         self.clear_structure = clear_structure  # Whether to clear non-software files in the WareHouse and cache files in generated software path
         self.gui_design = gui_design  # Encourage ChatDev generate software with GUI
         self.git_management = git_management  # Whether to use git to manage the creation and changes of generated software
         self.incremental_develop = incremental_develop  # Whether to use incremental develop on an existing project
+        self.background_prompt = background_prompt  # background prompt that will be added to every inquiry to LLM
 
     def __str__(self):
         string = ""
@@ -39,6 +41,7 @@ class ChatEnvConfig:
         string += "ChatEnvConfig.git_management: {}\n".format(self.git_management)
         string += "ChatEnvConfig.gui_design: {}\n".format(self.gui_design)
         string += "ChatEnvConfig.incremental_develop: {}\n".format(self.incremental_develop)
+        string += "ChatEnvConfig.background_prompt: {}\n".format(self.background_prompt)
         return string
 
 

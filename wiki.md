@@ -277,6 +277,7 @@ then go to [Visualizer Website](http://127.0.0.1:8000/) to see an online visuali
 - *incremental_develop*: Whether to use incremental develop on an existing project.
 - *self_improve*: flag for self-improvement on user input prompt. It is a special chatting that LLM plays as a prompt engineer to improve the user input prompt. **⚠️ Attention** Model generated prompts contains uncertainty and there may
   be a deviation from the requirement meaning contained in the original prompt.
+- *background_prompt*: background prompt that will be added to every inquiry to LLM
 - params in SimplePhase:
     - *max_turn_step*: Max number of chatting turn. You can increase max_turn_step for better performance but it will
       take longer time to finish the phase.

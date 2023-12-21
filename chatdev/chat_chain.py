@@ -67,7 +67,8 @@ class ChatChain:
         self.chat_env_config = ChatEnvConfig(clear_structure=check_bool(self.config["clear_structure"]),
                                              gui_design=check_bool(self.config["gui_design"]),
                                              git_management=check_bool(self.config["git_management"]),
-                                             incremental_develop=check_bool(self.config["incremental_develop"]))
+                                             incremental_develop=check_bool(self.config["incremental_develop"]),
+                                             background_prompt=self.config["background_prompt"])
         self.chat_env = ChatEnv(self.chat_env_config)
 
         # the user input prompt will be self-improved (if set "self_improve": "True" in ChatChainConfig.json)
