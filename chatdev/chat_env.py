@@ -14,6 +14,14 @@ from chatdev.documents import Documents
 from chatdev.roster import Roster
 from chatdev.utils import log_visualize
 
+try:
+    from openai.types.chat.chat_completion_message_tool_call import ChatCompletionMessageToolCall
+    from openai.types.chat.chat_completion_message import FunctionCall
+
+    openai_new_api = True  # new openai api version
+except ImportError:
+    openai_new_api = False  # old openai api version
+
 
 class ChatEnvConfig:
     def __init__(self, clear_structure,
@@ -216,12 +224,20 @@ class ChatEnv:
                 if desc.endswith(".png"):
                     desc = desc.replace(".png", "")
                 print("{}: {}".format(filename, desc))
-                response = openai.images.generate(
-                    prompt=desc,
-                    n=1,
-                    size="256x256"
-                )
-                image_url = response.data[0].url
+                if openai_new_api:
+                    response = openai.images.generate(
+                        prompt=desc,
+                        n=1,
+                        size="256x256"
+                    )
+                    image_url = response.data[0].url
+                else:
+                    response = openai.Image.create(
+                        prompt=desc,
+                        n=1,
+                        size="256x256"
+                    )
+                    image_url = response['data'][0]['url']
                 download(image_url, filename)
 
     def get_proposed_images_from_message(self, messages):
@@ -258,12 +274,22 @@ class ChatEnv:
                 if desc.endswith(".png"):
                     desc = desc.replace(".png", "")
                 print("{}: {}".format(filename, desc))
-                response = openai.Image.create(
-                    prompt=desc,
-                    n=1,
-                    size="256x256"
-                )
-                image_url = response.data[0].url
+                
+                if openai_new_api:
+                    response = openai.images.generate(
+                        prompt=desc,
+                        n=1,
+                        size="256x256"
+                    )
+                    image_url = response.data[0].url
+                else:
+                    response = openai.Image.create(
+                        prompt=desc,
+                        n=1,
+                        size="256x256"
+                    )
+                    image_url = response['data'][0]['url']
+
                 download(image_url, filename)
 
         return images

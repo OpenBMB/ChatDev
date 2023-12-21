@@ -23,6 +23,18 @@ sys.path.append(root)
 
 from chatdev.chat_chain import ChatChain
 
+try:
+    from openai.types.chat.chat_completion_message_tool_call import ChatCompletionMessageToolCall
+    from openai.types.chat.chat_completion_message import FunctionCall
+
+    openai_new_api = True  # new openai api version
+except ImportError:
+    openai_new_api = False  # old openai api version
+    print(
+        "Warning: Your OpenAI version is outdated. \n "
+        "Please update as specified in requirement.txt. \n "
+        "The old API interface is deprecated and will no longer be supported.")
+
 
 def get_config(company):
     """
@@ -78,8 +90,15 @@ args = parser.parse_args()
 #          Init ChatChain
 # ----------------------------------------
 config_path, config_phase_path, config_role_path = get_config(args.config)
-args2type = {'GPT_3_5_TURBO': ModelType.GPT_3_5_TURBO, 'GPT_4': ModelType.GPT_4, \
-             'GPT_4_32K': ModelType.GPT_4_32k, 'GPT_4_TURBO': ModelType.GPT_4_TURBO}
+args2type = {'GPT_3_5_TURBO': ModelType.GPT_3_5_TURBO,
+             'GPT_4': ModelType.GPT_4,
+             'GPT_4_32K': ModelType.GPT_4_32k,
+             'GPT_4_TURBO': ModelType.GPT_4_TURBO,
+             'GPT_4_TURBO_V': ModelType.GPT_4_TURBO_V
+             }
+if openai_new_api:
+    args2type['GPT_3_5_TURBO'] = ModelType.GPT_3_5_TURBO_NEW
+
 chat_chain = ChatChain(config_path=config_path,
                        config_phase_path=config_phase_path,
                        config_role_path=config_role_path,

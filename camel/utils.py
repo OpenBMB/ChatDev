@@ -83,7 +83,12 @@ def num_tokens_from_messages(
         encoding = tiktoken.get_encoding("cl100k_base")
 
     if model in {
-        ModelType.GPT_3_5_TURBO, ModelType.GPT_4, ModelType.GPT_4_32k, ModelType.GPT_4_TURBO,
+        ModelType.GPT_3_5_TURBO,
+        ModelType.GPT_3_5_TURBO_NEW,
+        ModelType.GPT_4,
+        ModelType.GPT_4_32k,
+        ModelType.GPT_4_TURBO,
+        ModelType.GPT_4_TURBO_V,
         ModelType.STUB
     }:
         return count_tokens_openai_chat_models(messages, encoding)
@@ -108,6 +113,8 @@ def get_model_token_limit(model: ModelType) -> int:
         int: The maximum token limit for the given model.
     """
     if model == ModelType.GPT_3_5_TURBO:
+        return 16384
+    elif model == ModelType.GPT_3_5_TURBO_NEW:
         return 16384
     elif model == ModelType.GPT_4:
         return 8192
