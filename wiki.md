@@ -271,12 +271,12 @@ then go to [Visualizer Website](http://127.0.0.1:8000/) to see an online visuali
 
 ## ChatChain Parameters
 
-- *clear_structure*: clean cache folders.
+- *clear_structure*: Whether to clear non-software files in the WareHouse and cache files in generated software path.
 - *brainstorming*: TBD
-- *gui_design*: whether create gui for software.
-- *git_management*: open git management on software project or not.
-- *self_improve*: flag for self-improvement on user input prompt. It is a special chatting that LLM plays as a prompt
-  engineer to improve the user input prompt. **⚠️ Attention** Model generated prompts contains uncertainty and there may
+- *gui_design*: Encourage ChatDev generate software with GUI.
+- *git_management*: Whether to use git to manage the creation and changes of generated software.
+- *incremental_develop*: Whether to use incremental develop on an existing project.
+- *self_improve*: flag for self-improvement on user input prompt. It is a special chatting that LLM plays as a prompt engineer to improve the user input prompt. **⚠️ Attention** Model generated prompts contains uncertainty and there may
   be a deviation from the requirement meaning contained in the original prompt.
 - params in SimplePhase:
     - *max_turn_step*: Max number of chatting turn. You can increase max_turn_step for better performance but it will

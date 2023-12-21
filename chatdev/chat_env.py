@@ -28,10 +28,10 @@ class ChatEnvConfig:
                  gui_design,
                  git_management,
                  incremental_develop):
-        self.clear_structure = clear_structure
-        self.gui_design = gui_design
-        self.git_management = git_management
-        self.incremental_develop = incremental_develop
+        self.clear_structure = clear_structure  # Whether to clear non-software files in the WareHouse and cache files in generated software path
+        self.gui_design = gui_design  # Encourage ChatDev generate software with GUI
+        self.git_management = git_management  # Whether to use git to manage the creation and changes of generated software
+        self.incremental_develop = incremental_develop  # Whether to use incremental develop on an existing project
 
     def __str__(self):
         string = ""
@@ -81,13 +81,12 @@ class ChatEnv:
             new_directory = "{}.{}".format(directory, time.strftime("%Y%m%d%H%M%S", time.localtime()))
             shutil.copytree(directory, new_directory)
             print("{} Copied to {}".format(directory, new_directory))
-        if self.config.clear_structure:
-            if os.path.exists(self.env_dict['directory']):
-                shutil.rmtree(self.env_dict['directory'])
-                os.mkdir(self.env_dict['directory'])
-                print("{} Created".format(directory))
-            else:
-                os.mkdir(self.env_dict['directory'])
+        if os.path.exists(self.env_dict['directory']):
+            shutil.rmtree(self.env_dict['directory'])
+            os.mkdir(self.env_dict['directory'])
+            print("{} Created".format(directory))
+        else:
+            os.mkdir(self.env_dict['directory'])
 
     def exist_bugs(self) -> tuple[bool, str]:
         directory = self.env_dict['directory']
@@ -274,7 +273,7 @@ class ChatEnv:
                 if desc.endswith(".png"):
                     desc = desc.replace(".png", "")
                 print("{}: {}".format(filename, desc))
-                
+
                 if openai_new_api:
                     response = openai.images.generate(
                         prompt=desc,

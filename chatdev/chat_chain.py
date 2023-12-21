@@ -186,10 +186,11 @@ class ChatChain:
         Returns: None
 
         """
+        filepath = os.path.dirname(__file__)
+        root = os.path.dirname(filepath)
+        directory = os.path.join(root, "WareHouse")
+
         if self.chat_env.config.clear_structure:
-            filepath = os.path.dirname(__file__)
-            root = os.path.dirname(filepath)
-            directory = os.path.join(root, "WareHouse")
             for filename in os.listdir(directory):
                 file_path = os.path.join(directory, filename)
                 # logs with error trials are left in WareHouse/
@@ -259,8 +260,10 @@ class ChatChain:
             self.chat_env.codes.version += 1
             os.system("cd {}; git add .".format(self.chat_env.env_dict["directory"]))
             log_git_info += "cd {}; git add .\n".format(self.chat_env.env_dict["directory"])
-            os.system("cd {}; git commit -m \"v{} Final Version\"".format(self.chat_env.env_dict["directory"], self.chat_env.codes.version))
-            log_git_info += "cd {}; git commit -m \"v{} Final Version\"\n".format(self.chat_env.env_dict["directory"], self.chat_env.codes.version)
+            os.system("cd {}; git commit -m \"v{} Final Version\"".format(self.chat_env.env_dict["directory"],
+                                                                          self.chat_env.codes.version))
+            log_git_info += "cd {}; git commit -m \"v{} Final Version\"\n".format(self.chat_env.env_dict["directory"],
+                                                                                  self.chat_env.codes.version)
             log_visualize(log_git_info)
 
             git_info = "**[Git Log]**\n\n"
@@ -292,8 +295,8 @@ class ChatChain:
         post_info += "ChatDev Starts ({})".format(self.start_time) + "\n\n"
         post_info += "ChatDev Ends ({})".format(now_time) + "\n\n"
 
+        directory = self.chat_env.env_dict['directory']
         if self.chat_env.config.clear_structure:
-            directory = self.chat_env.env_dict['directory']
             for filename in os.listdir(directory):
                 file_path = os.path.join(directory, filename)
                 if os.path.isdir(file_path) and file_path.endswith("__pycache__"):
