@@ -29,7 +29,9 @@ except ImportError:
     openai_new_api = False  # old openai api version
 
 import os
+from dotenv import load_dotenv
 
+load_dotenv()
 OPENAI_API_KEY = os.environ['OPENAI_API_KEY']
 if 'BASE_URL' in os.environ:
     BASE_URL = os.environ['BASE_URL']
