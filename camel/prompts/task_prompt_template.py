@@ -15,6 +15,8 @@ from typing import Any, Dict
 
 from camel.prompts import (
     TextPromptDict,
+    AISocietyPromptTemplateDict,
+    MisalignmentPromptTemplateDict
 )
 from camel.typing import TaskType
 
@@ -33,9 +35,9 @@ class TaskPromptTemplateDict(Dict[Any, TextPromptDict]):
         super().__init__(*args, **kwargs)
         self.update({
             TaskType.AI_SOCIETY: AISocietyPromptTemplateDict(),
-            TaskType.CODE: CodePromptTemplateDict(),
+            # TaskType.CODE: CodePromptTemplateDict(),
             TaskType.MISALIGNMENT: MisalignmentPromptTemplateDict(),
-            TaskType.TRANSLATION: TranslationPromptTemplateDict(),
-            TaskType.EVALUATION: EvaluationPromptTemplateDict(),
-            TaskType.SOLUTION_EXTRACTION: SolutionExtractionPromptTemplateDict(),
+            # TaskType.TRANSLATION: TranslationPromptTemplateDict(),
+            # TaskType.EVALUATION: EvaluationPromptTemplateDict(),
+            # TaskType.SOLUTION_EXTRACTION: SolutionExtractionPromptTemplateDict(),
         })
