@@ -6,13 +6,13 @@
 
 
 <p align="center">
-    【📚 <a href="../wiki.md">Wiki</a> | 🚀 <a href="../wiki.md#local-demo">Démo Locale</a> | 👥 <a href="../Contribution.md">Logiciels de la Communauté</a> | 🔧 <a href="../wiki.md#customization">Personnalisation</a>】
+    【📚 <a href="../wiki.md">Wiki</a> | 🚀 <a href="../wiki.md#visualizer">Démo Locale</a> | 👥 <a href="../Contribution.md">Logiciels de la Communauté</a> | 🔧 <a href="../wiki.md#customization">Personnalisation</a>】
 </p>
 
 ## 📖 Vue d'ensemble
 
 - **ChatDev** se présente comme une **société de logiciels virtuelle** opérant par le biais de divers **agents intelligents** tenant
-  différents rôles, incluant le Directeur Général <img src='../online_log/static/figures/ceo.png' height=20>, le Directeur de Produit <img src='../online_log/static/figures/cpo.png' height=20>, le Directeur Technologique <img src='../online_log/static/figures/cto.png' height=20>, programmeur <img src='../online_log/static/figures/programmer.png' height=20>, l'auditeur <img src='../online_log/static/figures/reviewer.png' height=20>, le testeur <img src='../online_log/static/figures/tester.png' height=20> et le designer graphique <img src='../online_log/static/figures/designer.png' height=20>. Ces agents forment une structure organisationnelle multi-agents et sont unis par une mission de "révolutionner le monde numérique à travers la programmation." Les agents de ChatDev **collaborent** en participant à des séminaires fonctionnels spécialisés, incluant des tâches telles que la conception, le codage, les tests et la documentation.
+  différents rôles, incluant le Directeur Général <img src='../visualizer/static/figures/ceo.png' height=20>, le Directeur de Produit <img src='../visualizer/static/figures/cpo.png' height=20>, le Directeur Technologique <img src='../visualizer/static/figures/cto.png' height=20>, programmeur <img src='../visualizer/static/figures/programmer.png' height=20>, l'auditeur <img src='../visualizer/static/figures/reviewer.png' height=20>, le testeur <img src='../visualizer/static/figures/tester.png' height=20> et le designer graphique <img src='../visualizer/static/figures/designer.png' height=20>. Ces agents forment une structure organisationnelle multi-agents et sont unis par une mission de "révolutionner le monde numérique à travers la programmation." Les agents de ChatDev **collaborent** en participant à des séminaires fonctionnels spécialisés, incluant des tâches telles que la conception, le codage, les tests et la documentation.
 - L'objectif principal de ChatDev est de proposer un cadre **facile à utiliser**, **hautement personnalisable** et **extensible**, basé sur de grands modèles linguistiques (LLMs) et servant de scénario idéal pour étudier l'intelligence collective.
 <p align="center">
   <img src='../misc/company.png' width=600>
@@ -20,16 +20,16 @@
 
 ## 📰 Actualités
 
-* **25 septembre 2023 : La fonctionnalité **Git** est maintenant disponible**, permettant au programmeur <img src='../online_log/static/figures/programmer.png' height=20> d'utiliser GitHub pour le contrôle de version. Pour activer cette fonction, définissez simplement ``"git_management"`` sur ``"True"`` dans ``ChatChainConfig.json``.
+* **25 septembre 2023 : La fonctionnalité **Git** est maintenant disponible**, permettant au programmeur <img src='../visualizer/static/figures/programmer.png' height=20> d'utiliser GitHub pour le contrôle de version. Pour activer cette fonction, définissez simplement ``"git_management"`` sur ``"True"`` dans ``ChatChainConfig.json``.
   <p align="center">
   <img src='../misc/github.png' width=600>
   </p>
-* 20 septembre 2023 : Le mode **Interaction Humain-Agent** est maintenant disponible ! Vous pouvez interagir avec l'équipe ChatDev en jouant le rôle de l'examinateur <img src='../online_log/static/figures/reviewer.png' height=20> et en faisant des suggestions au programmeur <img src='../online_log/static/figures/programmer.png' height=20>;
+* 20 septembre 2023 : Le mode **Interaction Humain-Agent** est maintenant disponible ! Vous pouvez interagir avec l'équipe ChatDev en jouant le rôle de l'examinateur <img src='../visualizer/static/figures/reviewer.png' height=20> et en faisant des suggestions au programmeur <img src='../visualizer/static/figures/programmer.png' height=20>;
   essayez ``python3 run.py --task [description_de_votre_idée] --config "Humain"``. Voir le [guide](../wiki.md#human-agent-interaction) et l'[exemple](../WareHouse/Gomoku_HumanAgentInteraction_20230920135038).
   <p align="center">
   <img src='../misc/Human_intro.png' width=600>
   </p>
-* 1er septembre 2023 : Le mode **Art** est maintenant disponible ! Vous pouvez activer l'agent designer <img src='../online_log/static/figures/designer.png' height=20> pour générer des images utilisées dans le logiciel;
+* 1er septembre 2023 : Le mode **Art** est maintenant disponible ! Vous pouvez activer l'agent designer <img src='../visualizer/static/figures/designer.png' height=20> pour générer des images utilisées dans le logiciel;
   essayez ``python3 run.py --task [description_de_votre_idée] --config "Art"``. Voir le [guide](../wiki.md#art) et l'[exemple](../WareHouse/gomokugameArtExample_THUNLP_20230831122822).
 * 28 août 2023 : Le système est désormais disponible au public.
 * 17 août 2023 : La version v1.0.0 était prête à être publiée.

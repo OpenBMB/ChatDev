@@ -11,7 +11,7 @@ from camel.configs import ChatGPTConfig
 from camel.typing import TaskType, ModelType
 from chatdev.chat_env import ChatEnv, ChatEnvConfig
 from chatdev.statistics import get_info
-from chatdev.utils import log_and_print_online, now
+from chatdev.utils import log_visualize, now
 
 
 def check_bool(s):
@@ -67,7 +67,8 @@ class ChatChain:
         self.chat_env_config = ChatEnvConfig(clear_structure=check_bool(self.config["clear_structure"]),
                                              gui_design=check_bool(self.config["gui_design"]),
                                              git_management=check_bool(self.config["git_management"]),
-                                             incremental_develop=check_bool(self.config["incremental_develop"]))
+                                             incremental_develop=check_bool(self.config["incremental_develop"]),
+                                             background_prompt=self.config["background_prompt"])
         self.chat_env = ChatEnv(self.chat_env_config)
 
         # the user input prompt will be self-improved (if set "self_improve": "True" in ChatChainConfig.json)
@@ -186,10 +187,11 @@ class ChatChain:
         Returns: None
 
         """
+        filepath = os.path.dirname(__file__)
+        root = os.path.dirname(filepath)
+        directory = os.path.join(root, "WareHouse")
+
         if self.chat_env.config.clear_structure:
-            filepath = os.path.dirname(__file__)
-            root = os.path.dirname(filepath)
-            directory = os.path.join(root, "WareHouse")
             for filename in os.listdir(directory):
                 file_path = os.path.join(directory, filename)
                 # logs with error trials are left in WareHouse/
@@ -234,7 +236,7 @@ class ChatChain:
         preprocess_msg += "**Log File**: {}\n\n".format(self.log_filepath)
         preprocess_msg += "**ChatDevConfig**:\n{}\n\n".format(self.chat_env.config.__str__())
         preprocess_msg += "**ChatGPTConfig**:\n{}\n\n".format(chat_gpt_config)
-        log_and_print_online(preprocess_msg)
+        log_visualize(preprocess_msg)
 
         # init task prompt
         if check_bool(self.config['self_improve']):
@@ -254,14 +256,16 @@ class ChatChain:
         root = os.path.dirname(filepath)
 
         if self.chat_env_config.git_management:
-            git_online_log = "**[Git Information]**\n\n"
+            log_git_info = "**[Git Information]**\n\n"
 
             self.chat_env.codes.version += 1
             os.system("cd {}; git add .".format(self.chat_env.env_dict["directory"]))
-            git_online_log += "cd {}; git add .\n".format(self.chat_env.env_dict["directory"])
-            os.system("cd {}; git commit -m \"v{} Final Version\"".format(self.chat_env.env_dict["directory"], self.chat_env.codes.version))
-            git_online_log += "cd {}; git commit -m \"v{} Final Version\"\n".format(self.chat_env.env_dict["directory"], self.chat_env.codes.version)
-            log_and_print_online(git_online_log)
+            log_git_info += "cd {}; git add .\n".format(self.chat_env.env_dict["directory"])
+            os.system("cd {}; git commit -m \"v{} Final Version\"".format(self.chat_env.env_dict["directory"],
+                                                                          self.chat_env.codes.version))
+            log_git_info += "cd {}; git commit -m \"v{} Final Version\"\n".format(self.chat_env.env_dict["directory"],
+                                                                                  self.chat_env.codes.version)
+            log_visualize(log_git_info)
 
             git_info = "**[Git Log]**\n\n"
             import subprocess
@@ -276,7 +280,7 @@ class ChatChain:
                 log_output = "Error when executing " + command
 
             git_info += log_output
-            log_and_print_online(git_info)
+            log_visualize(git_info)
 
         post_info = "**[Post Info]**\n\n"
         now_time = now()
@@ -292,15 +296,15 @@ class ChatChain:
         post_info += "ChatDev Starts ({})".format(self.start_time) + "\n\n"
         post_info += "ChatDev Ends ({})".format(now_time) + "\n\n"
 
+        directory = self.chat_env.env_dict['directory']
         if self.chat_env.config.clear_structure:
-            directory = self.chat_env.env_dict['directory']
             for filename in os.listdir(directory):
                 file_path = os.path.join(directory, filename)
                 if os.path.isdir(file_path) and file_path.endswith("__pycache__"):
                     shutil.rmtree(file_path, ignore_errors=True)
                     post_info += "{} Removed.".format(file_path) + "\n\n"
 
-        log_and_print_online(post_info)
+        log_visualize(post_info)
 
         logging.shutdown()
         time.sleep(1)
@@ -339,14 +343,14 @@ then you should return a message in a format like \"<INFO> revised_version_of_th
             model_type=self.model_type,
         )
 
-        # log_and_print_online("System", role_play_session.assistant_sys_msg)
-        # log_and_print_online("System", role_play_session.user_sys_msg)
+        # log_visualize("System", role_play_session.assistant_sys_msg)
+        # log_visualize("System", role_play_session.user_sys_msg)
 
         _, input_user_msg = role_play_session.init_chat(None, None, self_task_improve_prompt)
         assistant_response, user_response = role_play_session.step(input_user_msg, True)
         revised_task_prompt = assistant_response.msg.content.split("<INFO>")[-1].lower().strip()
-        log_and_print_online(role_play_session.assistant_agent.role_name, assistant_response.msg.content)
-        log_and_print_online(
+        log_visualize(role_play_session.assistant_agent.role_name, assistant_response.msg.content)
+        log_visualize(
             "**[Task Prompt Self Improvement]**\n**Original Task Prompt**: {}\n**Improved Task Prompt**: {}".format(
                 task_prompt, revised_task_prompt))
         return revised_task_prompt

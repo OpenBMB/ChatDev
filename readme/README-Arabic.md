@@ -5,13 +5,13 @@
 </p>
 
 <p align="center">
-    【📚 <a href="wiki.md">الويكي</a> | 🚀 <a href="wiki.md#local-demo">عرض محلي</a> | 👥 <a href="Contribution.md">برامج تم تطويرها من قبل المجتمع</a> | 🔧 <a href="wiki.md#customization">تخصيص</a>】
+    【📚 <a href="wiki.md">الويكي</a> | 🚀 <a href="wiki.md#visualizer">عرض محلي</a> | 👥 <a href="Contribution.md">برامج تم تطويرها من قبل المجتمع</a> | 🔧 <a href="wiki.md#customization">تخصيص</a>】
 </p>
 
 ## 📖 نظرة عامة
 
 - **ChatDev** هي **شركة برمجيات افتراضية** تعمل من خلال مجموعة متنوعة من **وكلاء ذكيين** يشغلون
-  أدوارًا مختلفة، بما في ذلك المدير التنفيذي الرئيسي <img src='../online_log/static/figures/ceo.png' height=20>، المدير التنفيذي للمنتج <img src='../online_log/static/figures/cpo.png' height=20>، المدير التنفيذي للتكنولوجيا <img src='../online_log/static/figures/cto.png' height=20>، مبرمج <img src='../online_log/static/figures/programmer.png' height=20>، مراجع <img src='../online_log/static/figures/reviewer.png' height=20>، اختبار <img src='../online_log/static/figures/tester.png' height=20>، مصمم فني <img src='../online_log/static/figures/designer.png' height=20>. تشكل هؤلاء
+  أدوارًا مختلفة، بما في ذلك المدير التنفيذي الرئيسي <img src='../visualizer/static/figures/ceo.png' height=20>، المدير التنفيذي للمنتج <img src='../visualizer/static/figures/cpo.png' height=20>، المدير التنفيذي للتكنولوجيا <img src='../visualizer/static/figures/cto.png' height=20>، مبرمج <img src='../visualizer/static/figures/programmer.png' height=20>، مراجع <img src='../visualizer/static/figures/reviewer.png' height=20>، اختبار <img src='../visualizer/static/figures/tester.png' height=20>، مصمم فني <img src='../visualizer/static/figures/designer.png' height=20>. تشكل هؤلاء
   الوكلاء هيكل تنظيمي متعدد الوكلاء وموحد من خلال مهمة "ثورة عالم البرمجة الرقمي". يتعاون وكلاء ChatDev
   من خلال المشاركة في ندوات وظيفية متخصصة، بما في ذلك مهام التصميم والبرمجة والاختبار والتوثيق.
 - الهدف الرئيسي لـ ChatDev هو تقديم إطار عمل سهل الاستخدام، قابل للتخصيص بشكل كبير وقابل للتوسيع،
@@ -27,18 +27,18 @@
   <p align="center">
   <img src='../misc/docker.png' width=400>
   </p>
-- 25 سبتمبر 2023: وضع **Git** متاح الآن، مما يتيح للمبرمج <img src='../online_log/static/figures/programmer.png' height=20> استخدام Git لمراقبة الإصدار. لتمكين هذه الميزة، قم ببساطة بتعيين ``"git_management"`` إلى ``"True"`` في ``ChatChainConfig.json``. راجع [الدليل](wiki.md#git-mode).
+- 25 سبتمبر 2023: وضع **Git** متاح الآن، مما يتيح للمبرمج <img src='../visualizer/static/figures/programmer.png' height=20> استخدام Git لمراقبة الإصدار. لتمكين هذه الميزة، قم ببساطة بتعيين ``"git_management"`` إلى ``"True"`` في ``ChatChainConfig.json``. راجع [الدليل](wiki.md#git-mode).
   <p align="center">
   <img src='../misc/github.png' width=600>
   </p>
-- 20 سبتمبر 2023: وضع **تفاعل الإنسان مع الوكيل** متاح الآن! يمكنك المشاركة مع فريق ChatDev من خلال لعب دور المراجع <img src='../online_log/static/figures/reviewer.png' height=20> وتقديم اقتراحات للمبرمج <img src='../online_log/static/figures/programmer.png' height=20>;
+- 20 سبتمبر 2023: وضع **تفاعل الإنسان مع الوكيل** متاح الآن! يمكنك المشاركة مع فريق ChatDev من خلال لعب دور المراجع <img src='../visualizer/static/figures/reviewer.png' height=20> وتقديم اقتراحات للمبرمج <img src='../visualizer/static/figures/programmer.png' height=20>;
   جرب ``python3 run.py --task [وصف فكرتك] --config "Human"``. راجع [الدليل](wiki.md#human-agent-interaction) و[المثال](WareHouse/Gomoku_HumanAgentInteraction_20230920135038).
   <p align="center">
   <img src
 
 ='../misc/Human_intro.png' width=600>
   </p>
-- 1 سبتمبر 2023: وضع **الفن** متاح الآن! يمكنك تنشيط وكيل المصمم <img src='../online_log/static/figures/designer.png' height=20> لإنشاء صور تستخدم في البرمجيات;
+- 1 سبتمبر 2023: وضع **الفن** متاح الآن! يمكنك تنشيط وكيل المصمم <img src='../visualizer/static/figures/designer.png' height=20> لإنشاء صور تستخدم في البرمجيات;
   جرب ``python3 run.py --task [وصف فكرتك] --config "Art"``. راجع [الدليل](wiki.md#art) و[المثال](WareHouse/gomokugameArtExample_THUNLP_20230831122822).
 - 28 أغسطس 2023: النظام متاح الآن للجمهور.
 - 17 أغسطس 2023: الإصدار v1.0.0 كان جاهزًا للإصدار.

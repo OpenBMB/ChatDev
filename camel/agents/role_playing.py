@@ -23,7 +23,7 @@ from camel.agents.chat_agent import ChatAgentResponse
 from camel.messages import ChatMessage, UserChatMessage
 from camel.messages import SystemMessage
 from camel.typing import ModelType, RoleType, TaskType, PhaseType
-from chatdev.utils import log_arguments, log_and_print_online
+from chatdev.utils import log_arguments, log_visualize
 
 
 @log_arguments
@@ -90,6 +90,7 @@ class RolePlaying:
             sys_msg_generator_kwargs: Optional[Dict] = None,
             extend_sys_msg_meta_dicts: Optional[List[Dict]] = None,
             extend_task_specify_meta_dict: Optional[Dict] = None,
+            background_prompt: Optional[str] = ""
     ) -> None:
         self.with_task_specify = with_task_specify
         self.with_task_planner = with_task_planner
@@ -131,9 +132,7 @@ class RolePlaying:
 
         self.task_prompt = task_prompt
 
-        chatdev_prompt_template = "ChatDev is a software company powered by multiple intelligent agents, such as chief executive officer, chief human resources officer, chief product officer, chief technology officer, etc, with a multi-agent organizational structure and the mission of \"changing the digital world through programming\"."
-
-        sys_msg_meta_dicts = [dict(chatdev_prompt=chatdev_prompt_template, task=task_prompt)] * 2
+        sys_msg_meta_dicts = [dict(chatdev_prompt=background_prompt, task=task_prompt)] * 2
         if (extend_sys_msg_meta_dicts is None and self.task_type in [TaskType.AI_SOCIETY, TaskType.MISALIGNMENT,
                                                                      TaskType.CHATDEV]):
             extend_sys_msg_meta_dicts = [dict(assistant_role=assistant_role_name, user_role=user_role_name)] * 2
@@ -199,8 +198,8 @@ class RolePlaying:
         self.user_agent.update_messages(pseudo_msg)
 
         # here we concatenate to store the real message in the log
-        log_and_print_online(self.user_agent.role_name,
-                             "**[Start Chat]**\n\n[" + self.assistant_agent.system_message.content + "]\n\n" + content)
+        log_visualize(self.user_agent.role_name,
+                      "**[Start Chat]**\n\n[" + self.assistant_agent.system_message.content + "]\n\n" + content)
         return None, user_msg
 
     def process_messages(

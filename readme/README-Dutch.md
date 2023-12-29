@@ -5,12 +5,12 @@
 </p>
 
 <p align="center">
-    【📚 <a href="../wiki.md">Wiki</a> | 🚀 <a href="../wiki.md#local-demo">Lokale Demo</a> | 👥 <a href="../Contribution.md">Community Gebouwde Software</a> | 🔧 <a href="../wiki.md#customization">Aanpassing</a>】
+    【📚 <a href="../wiki.md">Wiki</a> | 🚀 <a href="../wiki.md#visualizer">Lokale Demo</a> | 👥 <a href="../Contribution.md">Community Gebouwde Software</a> | 🔧 <a href="../wiki.md#customization">Aanpassing</a>】
 </p>
 
 ## 📖 Overzicht
 
-- **ChatDev** fungeert als een **virtueel softwarebedrijf** dat werkt met verschillende **intelligente agenten** die verschillende rollen vervullen, waaronder Chief Executive Officer <img src='../online_log/static/figures/ceo.png' height=20>, Chief Product Officer <img src='../online_log/static/figures/cpo.png' height=20>, Chief Technology Officer <img src='../online_log/static/figures/cto.png' height=20>, programmeur <img src='../online_log/static/figures/programmer.png' height=20>, recensent <img src='../online_log/static/figures/reviewer.png' height=20>, tester <img src='../online_log/static/figures/tester.png' height=20>, kunstontwerper <img src='../online_log/static/figures/designer.png' height=20>. Deze agenten vormen een multi-agent organisatiestructuur en zijn verenigd door een missie om "de digitale wereld te revolutioneren door middel van programmeren." De agenten binnen ChatDev **werken samen** door deel te nemen aan gespecialiseerde functionele seminars, waaronder taken zoals ontwerpen, coderen, testen en documenteren.
+- **ChatDev** fungeert als een **virtueel softwarebedrijf** dat werkt met verschillende **intelligente agenten** die verschillende rollen vervullen, waaronder Chief Executive Officer <img src='../visualizer/static/figures/ceo.png' height=20>, Chief Product Officer <img src='../visualizer/static/figures/cpo.png' height=20>, Chief Technology Officer <img src='../visualizer/static/figures/cto.png' height=20>, programmeur <img src='../visualizer/static/figures/programmer.png' height=20>, recensent <img src='../visualizer/static/figures/reviewer.png' height=20>, tester <img src='../visualizer/static/figures/tester.png' height=20>, kunstontwerper <img src='../visualizer/static/figures/designer.png' height=20>. Deze agenten vormen een multi-agent organisatiestructuur en zijn verenigd door een missie om "de digitale wereld te revolutioneren door middel van programmeren." De agenten binnen ChatDev **werken samen** door deel te nemen aan gespecialiseerde functionele seminars, waaronder taken zoals ontwerpen, coderen, testen en documenteren.
 - Het primaire doel van ChatDev is het aanbieden van een **eenvoudig te gebruiken**, **zeer aanpasbaar** en **uitbreidbaar** framework, dat is gebaseerd op grote taalmodellen (LLM's) en dient als een ideaal scenario voor het bestuderen van collectieve intelligentie.
 <p align="center">
   <img src='../misc/company.png' width=600>
@@ -18,15 +18,15 @@
 
 ## 🎉 Nieuws
 
-* **25 september 2023: De **Git**-functie is nu beschikbaar**, waardoor de programmeur <img src='../online_log/static/figures/programmer.png' height=20> GitHub kan gebruiken voor versiebeheer. Om deze functie in te schakelen, stelt u eenvoudigweg ``"git_management"`` in op ``"True"`` in ``ChatChainConfig.json``.
+* **25 september 2023: De **Git**-functie is nu beschikbaar**, waardoor de programmeur <img src='../visualizer/static/figures/programmer.png' height=20> GitHub kan gebruiken voor versiebeheer. Om deze functie in te schakelen, stelt u eenvoudigweg ``"git_management"`` in op ``"True"`` in ``ChatChainConfig.json``.
   <p align="center">
   <img src='../misc/github.png' width=600>
   </p>
-* 20 september 2023: De **Human-Agent-Interaction**-modus is nu beschikbaar! U kunt deelnemen aan het ChatDev-team door de rol van recensent <img src='../online_log/static/figures/reviewer.png' height=20> te spelen en suggesties te doen aan de programmeur <img src='../online_log/static/figures/programmer.png' height=20>; probeer ``python3 run.py --task [beschrijving_van_uw_idee] --configuratie "Human"``. Zie [handleiding](../wiki.md#human-agent-interactie) en [voorbeeld](../WareHouse/Gomoku_HumanAgentInteraction_20230920135038).
+* 20 september 2023: De **Human-Agent-Interaction**-modus is nu beschikbaar! U kunt deelnemen aan het ChatDev-team door de rol van recensent <img src='../visualizer/static/figures/reviewer.png' height=20> te spelen en suggesties te doen aan de programmeur <img src='../visualizer/static/figures/programmer.png' height=20>; probeer ``python3 run.py --task [beschrijving_van_uw_idee] --configuratie "Human"``. Zie [handleiding](../wiki.md#human-agent-interactie) en [voorbeeld](../WareHouse/Gomoku_HumanAgentInteraction_20230920135038).
   <p align="center">
   <img src='../misc/Human_intro.png' width=600>
   </p>
-* 1 september 2023: De **Art**-modus is nu beschikbaar! U kunt de ontwerpagent <img src='../online_log/static/figures/designer.png' height=20> activeren om afbeeldingen te genereren die in de software worden gebruikt; probeer ``python3 run.py --task [beschrijving_van_uw_idee] --configuratie "Art"``. Zie [handleiding](../wiki.md#art) en [voorbeeld](../WareHouse/gomokugameArtExample_THUNLP_20230831122822).
+* 1 september 2023: De **Art**-modus is nu beschikbaar! U kunt de ontwerpagent <img src='../visualizer/static/figures/designer.png' height=20> activeren om afbeeldingen te genereren die in de software worden gebruikt; probeer ``python3 run.py --task [beschrijving_van_uw_idee] --configuratie "Art"``. Zie [handleiding](../wiki.md#art) en [voorbeeld](../WareHouse/gomokugameArtExample_THUNLP_20230831122822).
 * 28 augustus 2023: Het systeem is nu openbaar beschikbaar.
 * 17 augustus 2023: De v1.0.0-versie was gereed voor release.
 * 30 juli 2023: Gebruikers kunnen ChatChain-, Fase- en Rolvermeldingen aanpassen. Bovendien worden zowel online Log-modus als herhalingsmodus ondersteund.

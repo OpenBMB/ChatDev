@@ -29,6 +29,13 @@ from camel.utils import (
     openai_api_key_required,
 )
 
+try:
+    from openai.types.chat import ChatCompletion
+
+    openai_new_api = True  # new openai api version
+except ImportError:
+    openai_new_api = False  # old openai api version
+
 
 @dataclass(frozen=True)
 class ChatAgentResponse:
@@ -189,19 +196,34 @@ class ChatAgent(BaseAgent):
 
         if num_tokens < self.model_token_limit:
             response = self.model_backend.run(messages=openai_messages)
-            if not isinstance(response, dict):
-                raise RuntimeError("OpenAI returned unexpected struct")
-            output_messages = [
-                ChatMessage(role_name=self.role_name, role_type=self.role_type,
-                            meta_dict=dict(), **dict(choice["message"]))
-                for choice in response["choices"]
-            ]
-            info = self.get_info(
-                response["id"],
-                response["usage"],
-                [str(choice["finish_reason"]) for choice in response["choices"]],
-                num_tokens,
-            )
+            if openai_new_api:
+                if not isinstance(response, ChatCompletion):
+                    raise RuntimeError("OpenAI returned unexpected struct")
+                output_messages = [
+                    ChatMessage(role_name=self.role_name, role_type=self.role_type,
+                                meta_dict=dict(), **dict(choice.message))
+                    for choice in response.choices
+                ]
+                info = self.get_info(
+                    response.id,
+                    response.usage,
+                    [str(choice.finish_reason) for choice in response.choices],
+                    num_tokens,
+                )
+            else:
+                if not isinstance(response, dict):
+                    raise RuntimeError("OpenAI returned unexpected struct")
+                output_messages = [
+                    ChatMessage(role_name=self.role_name, role_type=self.role_type,
+                                meta_dict=dict(), **dict(choice["message"]))
+                    for choice in response["choices"]
+                ]
+                info = self.get_info(
+                    response["id"],
+                    response["usage"],
+                    [str(choice["finish_reason"]) for choice in response["choices"]],
+                    num_tokens,
+                )
 
             # TODO strict <INFO> check, only in the beginning of the line
             # if "<INFO>" in output_messages[0].content:

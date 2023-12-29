@@ -60,16 +60,16 @@
     python3 main.py
     ```
 
-## Local Demo
+## Visualizer
 
-- you can start a flask app first to get a local demo, including enhanced visualized logs, replay demo, and a simple
-  ChatChain Visualizer.
-
+- you can start a flask app to get a Visualizer, which is local web demo for visualizing real-time logs, replayed logs, and ChatChain.
+- the difference between real-time logs and replayed logs lies in that the former is mainly for debugging, which can print the agent's dialogue information, environment changes and many additional system information in real time during the process of software generation, such as file changes and git information. The latter is used to replay the generated log and only prints the dialogue information of the agent.
+- just run
 ```
-python3 chat_visualizer/app.py
+python3 visualizer/app.py
 ```
 
-then go to [Local Demo Website](http://127.0.0.1:8000/) to see an online visualized version of logs such as
+then go to [Visualizer Website](http://127.0.0.1:8000/) to see an online visualized version of logs such as
 
 ![demo](misc/demo.png)
 
@@ -78,7 +78,7 @@ then go to [Local Demo Website](http://127.0.0.1:8000/) to see an online visuali
 
 ![ChatChain Visualizer](misc/chatchain_vis.png)
 
-- You can also goto the Chat Replay page to replay log file in the software folder
+- You can also goto the [Chat Replay page](http://127.0.0.1:8000/static/replay.html) to replay log file in the software folder
     - click the ``File Upload`` bottom to upload a log, then click ``Replay``
     - The replay only shows the dialogues in natural languages between agents, it will not contain debug logs.
 
@@ -121,7 +121,7 @@ then go to [Local Demo Website](http://127.0.0.1:8000/) to see an online visuali
     ```
   ⚠️ You need to replace ``YOUR_OPENAI_KEY`` with your key and replace ``YOUR_IP`` with your inet address.
 - Then you can just play with ChatDev running ``python3 run.py``.
-- You can run ``python3 chat_visualizer/app.py &`` first to start a background program so that you can use online log with a WebUI.
+- You can run ``python3 visualizer/app.py &`` first to start a background program so that you can use online log with a WebUI.
 
 ### Copy the generated software out of Docker
 - run 
@@ -256,7 +256,7 @@ then go to [Local Demo Website](http://127.0.0.1:8000/) to see an online visuali
 
           def break_cycle(self, phase_env) -> bool:
               if not phase_env['exist_bugs_flag']:
-                  log_and_print_online(f"**[Test Info]**\n\nAI User (Software Test Engineer):\nTest Pass!\n")
+                  log_visualize(f"**[Test Info]**\n\nAI User (Software Test Engineer):\nTest Pass!\n")
                   return True
               else:
                   return False
@@ -271,13 +271,13 @@ then go to [Local Demo Website](http://127.0.0.1:8000/) to see an online visuali
 
 ## ChatChain Parameters
 
-- *clear_structure*: clean cache folders.
-- *brainstorming*: TBD
-- *gui_design*: whether create gui for software.
-- *git_management*: open git management on software project or not.
-- *self_improve*: flag for self-improvement on user input prompt. It is a special chatting that LLM plays as a prompt
-  engineer to improve the user input prompt. **⚠️ Attention** Model generated prompts contains uncertainty and there may
+- *clear_structure*: Whether to clear non-software files in the WareHouse and cache files in generated software path.
+- *gui_design*: Encourage ChatDev generate software with GUI.
+- *git_management*: Whether to use git to manage the creation and changes of generated software.
+- *incremental_develop*: Whether to use incremental develop on an existing project.
+- *self_improve*: flag for self-improvement on user input prompt. It is a special chatting that LLM plays as a prompt engineer to improve the user input prompt. **⚠️ Attention** Model generated prompts contains uncertainty and there may
   be a deviation from the requirement meaning contained in the original prompt.
+- *background_prompt*: background prompt that will be added to every inquiry to LLM
 - params in SimplePhase:
     - *max_turn_step*: Max number of chatting turn. You can increase max_turn_step for better performance but it will
       take longer time to finish the phase.
@@ -294,7 +294,7 @@ then go to [Local Demo Website](http://127.0.0.1:8000/) to see an online visuali
 ├── camel # Camel RolePlay component
 ├── chatdev # ChatDev core code
 ├── misc # assets of example and demo
-├── chat_visualizer # Demo Folder
+├── visualizer # Visualizer Folder
 ├── run.py # Entry of ChatDev
 ├── requirements.txt
 ├── README.md
