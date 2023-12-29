@@ -158,6 +158,15 @@ request一样简单。这是一个示例：执行命令`python3 run.py --task "d
       archivePrefix={arXiv},
       primaryClass={cs.SE}
 }
+
+@misc{qian2023experiential,
+      title={Experiential Co-Learning of Software-Developing Agents}, 
+      author={Chen Qian and Yufan Dang and Jiahao Li and Wei Liu and Weize Chen and Cheng Yang and Zhiyuan Liu and Maosong Sun},
+      year={2023},
+      eprint={2312.17025},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL}
+}
 ```
 
 ## ⚖️ 许可证

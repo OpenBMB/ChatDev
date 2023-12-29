@@ -169,6 +169,15 @@ de ``CompanyConfig/Default``
       archivePrefix={arXiv},
       primaryClass={cs.SE}
 }
+
+@misc{qian2023experiential,
+      title={Experiential Co-Learning of Software-Developing Agents}, 
+      author={Chen Qian and Yufan Dang and Jiahao Li and Wei Liu and Weize Chen and Cheng Yang and Zhiyuan Liu and Maosong Sun},
+      year={2023},
+      eprint={2312.17025},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL}
+}
 ```
 
 ## ⚖️ Licence
