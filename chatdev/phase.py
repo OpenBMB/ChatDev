@@ -324,7 +324,7 @@ class LanguageChoose(Phase):
 
     def update_phase_env(self, chat_env):
         self.phase_env.update({"task": chat_env.env_dict['task_prompt'],
-                               "description":"chat_env.env_dict['task_description']",
+                               "description": chat_env.env_dict['task_description'],
                                "modality": chat_env.env_dict['modality'],
                                "ideas": chat_env.env_dict['ideas']})
 
@@ -346,7 +346,7 @@ class Coding(Phase):
         gui = "" if not chat_env.config.gui_design \
             else "The software should be equipped with graphical user interface (GUI) so that user can visually and graphically use it; so you must choose a GUI framework (e.g., in Python, you can implement GUI via tkinter, Pygame, Flexx, PyGUI, etc,)."
         self.phase_env.update({"task": chat_env.env_dict['task_prompt'],
-                                "description": "chat_env.env_dict['task_description']",
+                               "description": chat_env.env_dict['task_description'],
                                "modality": chat_env.env_dict['modality'],
                                "ideas": chat_env.env_dict['ideas'],
                                "language": chat_env.env_dict['language'],
