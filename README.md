@@ -27,7 +27,11 @@
 </p>
 
 ## 🎉 News
-* **November 15, 2023: We launched ChatDev as a SaaS platform that enables software developers and innovative entrepreneurs to build software efficiently at a very low cost and barrier to entry.** Try it out at https://chatdev.modelbest.cn/.
+* **We present Experiential Co-Learning, an innovative approach where instructor and assistant agents accumulate shortcut-oriented experiences to effectively solve new tasks, reducing repetitive errors and enhancing efficiency.  Check out our preprint paper at https://arxiv.org/abs/2312.17025 and this technique will soon be integrated into ChatDev.**
+  <p align="center">
+  <img src='./misc/ecl.png' width=860>
+  </p>
+* November 15, 2023: We launched ChatDev as a SaaS platform that enables software developers and innovative entrepreneurs to build software efficiently at a very low cost and barrier to entry. Try it out at https://chatdev.modelbest.cn/.
   <p align="center">
   <img src='./misc/saas.png' width=560>
   </p>
