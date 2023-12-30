@@ -181,7 +181,6 @@ vytvorí softvérový balík a vygeneruje priečinok s názvom ``/WareHouse/2048
 ## ⚖️ License
 
 - Licencovanie zdrojového kódu: Zdrojový kód nášho projektu je licencovaný pod licenciou Apache 2.0. Táto licencia povoľuje používanie, modifikáciu a šírenie kódu za určitých podmienok uvedených v licencii Apache 2.0.
-- Stav projektu ako open-source: Projekt je skutočne open-source, toto označenie je však primárne určené na nekomerčné účely. Hoci podporujeme spoluprácu a príspevky komunity na výskum a nekomerčné aplikácie, je dôležité poznamenať, že akékoľvek využitie komponentov projektu na komerčné účely si vyžaduje samostatné licenčné zmluvy.
 - Licencovanie údajov: Súvisiace údaje použité v našom projekte sú licencované pod CC BY-NC 4.0. Táto licencia výslovne povoľuje nekomerčné použitie údajov. Chceli by sme zdôrazniť, že akékoľvek modely vycvičené pomocou týchto súborov údajov by mali striktne dodržiavať obmedzenie nekomerčného použitia a mali by sa používať výlučne na výskumné účely.
 
 ## 🌟 Star Historia

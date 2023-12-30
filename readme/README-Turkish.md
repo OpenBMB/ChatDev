@@ -199,7 +199,6 @@ Daha ayrıntılı bilgi için [Wiki](wiki.md)'mize başvurabilirsiniz, burada ş
 ## ⚖️ Lisans
 
 - Kaynak Kodu Lisansı: Projemizin kaynak kodu Apache 2.0 Lisansı altında lisanslanmıştır. Bu lisans, belirli koşullar dahilinde kodun kullanımını, değiştirilmesini ve dağıtılmasını izin verir.
-- Proje Açık Kaynak Durumu: Proje gerçekten açık kaynaktır; ancak bu tanım öncelikle ticari olmayan amaçlar için tasarlanmıştır. Topluluktan işbirliği ve katkılara teşvik etsek de, projenin bileşenlerinin ticari amaçlar için kullanılması ayrı lisans anlaşmalarını gerektirir.
 - Veri Lisansı: Projemizde kullanılan ilgili veri CC BY-NC 4.0 lisansı altında lisanslanmıştır. Bu lisans verinin ticari olmayan kullanımına açıkça izin verir. Bu veri kullanan modellerin kesinlikle ticari kullanım kısıtlamasına uyması ve sadece araştırma amaçları için kullanılması gerektiğini vurgulamak isteriz.
 
 ## 🌟 Yıldız Geçmişi

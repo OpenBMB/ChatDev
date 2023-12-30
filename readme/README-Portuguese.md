@@ -171,7 +171,6 @@ Para obter informações mais detalhadas, consulte nossa Wiki, onde você pode e
 ## ⚖️ Licença
 
 - Licenciamento de Código Fonte: O código fonte de nosso projeto está licenciado sob a Licença Apache 2.0. Esta licença permite o uso, modificação e distribuição do código, sujeito a certas condições delineadas na Licença Apache 2.0.
-- Status de Código Aberto do Projeto: O projeto é de fato de código aberto; no entanto, essa designação se destina principalmente a fins não comerciais. Embora encorajemos a colaboração e contribuições da comunidade para fins de pesquisa e aplicações não comerciais, é importante observar que qualquer uso dos componentes do projeto para fins comerciais requer acordos de licenciamento separados.
 - Licenciamento de Dados: Os dados relacionados usados em nosso projeto estão licenciados sob CC BY-NC 4.0. Esta licença permite explicitamente o uso não comercial dos dados. Gostaríamos de enfatizar que qualquer modelo treinado usando esses conjuntos de dados deve aderir estritamente à restrição de uso não comercial e deve ser usado exclusivamente para fins de pesquisa.
 
 ## 🌟 Histórico de Estrelas

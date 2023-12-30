@@ -155,7 +155,6 @@ Voor meer gedetailleerde informatie, verwijzen wij u graag naar onze [Wiki](../w
 ## ⚖️ Licentie
 
 - Licentie voor Broncode: De broncode van ons project valt onder de Apache 2.0-licentie. Deze licentie staat het gebruik, de aanpassing en de verspreiding van de code toe, met inachtneming van bepaalde voorwaarden zoals uiteengezet in de Apache 2.0-licentie.
-- Open-Source Status van het Project: Het project is inderdaad open-source, maar deze aanduiding is primair bedoeld voor niet-commerciële doeleinden. Hoewel we samenwerking en bijdragen van de gemeenschap aanmoedigen voor onderzoeks- en niet-commerciële toepassingen, is het belangrijk op te merken dat elke commerciële toepassing van de projectonderdelen afzonderlijke licentieovereenkomsten vereist.
 - Licentie voor Gegevens: De gerelateerde gegevens die in ons project worden gebruikt, vallen onder de CC BY-NC 4.0-licentie. Deze licentie staat uitdrukkelijk het niet-commerciële gebruik van de gegevens toe. Wij willen benadrukken dat modellen die met behulp van deze datasets zijn getraind, strikt moeten voldoen aan de beperkingen voor niet-commercieel gebruik en uitsluitend voor onderzoeksdoeleinden moeten worden ingezet.
 
 ## 🌟 Star Geschiedenis
