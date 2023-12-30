@@ -11,6 +11,7 @@ from camel.configs import ChatGPTConfig
 from camel.typing import TaskType, ModelType
 from chatdev.chat_env import ChatEnv, ChatEnvConfig
 from chatdev.statistics import get_info
+from camel.web_spider import modal_trans
 from chatdev.utils import log_visualize, now
 
 
@@ -59,6 +60,7 @@ class ChatChain:
         # init chatchain config and recruitments
         self.chain = self.config["chain"]
         self.recruitments = self.config["recruitments"]
+        self.web_spider = self.config["web_spider"]
 
         # init default max chat turn
         self.chat_turn_limit_default = 10
@@ -243,6 +245,8 @@ class ChatChain:
             self.chat_env.env_dict['task_prompt'] = self.self_task_improve(self.task_prompt_raw)
         else:
             self.chat_env.env_dict['task_prompt'] = self.task_prompt_raw
+        if(check_bool(self.web_spider)):
+            self.chat_env.env_dict['task_description'] = modal_trans(self.task_prompt_raw)
 
     def post_processing(self):
         """

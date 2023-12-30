@@ -57,6 +57,7 @@ class ChatEnv:
         self.env_dict = {
             "directory": "",
             "task_prompt": "",
+            "task_description":"",
             "modality": "",
             "ideas": "",
             "language": "",
