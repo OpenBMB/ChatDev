@@ -6,7 +6,7 @@
 
 
 <p align="center">
-    【📚 <a href="../wiki.md">Wiki</a> | 🚀 <a href="../wiki.md#visualizer">ローカルデモ</a> | 👥 <a href="../Contribution.md">コミュニティにより作られたソフト</a> | 🔧 <a href="../wiki.md#customization">カスタマイズ</a> | 👾 <a href="https://discord.gg/bn4t2Jy6TT")>Discord</a>】
+    【📚 <a href="../wiki.md">Wiki</a> | 🚀 <a href="../wiki.md#visualizer">ビジュアライザー</a> | 👥 <a href="../Contribution.md">コミュニティにより作られたソフト</a> | 🔧 <a href="../wiki.md#customization">カスタマイズ</a> | 👾 <a href="https://discord.gg/bn4t2Jy6TT")>Discord</a>】
 
 </p>
 
@@ -25,7 +25,11 @@
 </p>
 
 ## 🎉 ニュース
-* **2023年11月15日: ChatDev は、ソフトウェア開発者や革新的な起業家が低コストで効率的にソフトウェアを構築できる SaaS プラットフォームです。** https://chatdev.modelbest.cn/ でお試し下さい。
+* **2023年12月28日: 私達は、インストラクターとアシスタントエージェントが、新しいタスクを効果的に解決するためのショートカット指向の経験を蓄積することで、反復ミスを減らし、効率を高める革新的なアプローチである経験的共学習を紹介します。https://arxiv.org/abs/2312.17025 にてプレプリント論文をチェックしてください。この技術は間もなく ChatDev に統合されます。**
+  <p align="center">
+  <img src='../misc/ecl.png' width=860>
+  </p>
+* 2023年11月15日: ChatDev は、ソフトウェア開発者や革新的な起業家が低コストで効率的にソフトウェアを構築できる SaaS プラットフォームです。 https://chatdev.modelbest.cn/ でお試し下さい。
   <p align="center">
   <img src='../misc/saas.png' width=560>
   </p>
@@ -147,7 +151,7 @@
 より詳細な情報については、私たちの [Wiki](../wiki.md) を参照してください:
 
 - すべてのコマンド実行パラメータの紹介。
-- 強化されたビジュアライズされたログ、リプレイデモ、シンプルな ChatChain ビジュアライザを含む、ローカルウェブデモをセットアップするための簡単なガイド。
+- リアルタイムのログ、再生ログ、ChatChain を可視化することができる、ローカルのウェブビジュアライザーデモをセットアップするための簡単なガイド。
 - ChatDev フレームワークの概要
 - ChatChain 設定の高度なパラメータの包括的な紹介。
 - ChatDev をカスタマイズするためのガイドです:
@@ -198,7 +202,7 @@
 }
 
 @misc{qian2023experiential,
-      title={Experiential Co-Learning of Software-Developing Agents}, 
+      title={Experiential Co-Learning of Software-Developing Agents},
       author={Chen Qian and Yufan Dang and Jiahao Li and Wei Liu and Weize Chen and Cheng Yang and Zhiyuan Liu and Maosong Sun},
       year={2023},
       eprint={2312.17025},
