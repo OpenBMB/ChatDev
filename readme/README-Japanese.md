@@ -216,9 +216,6 @@
 - ソースコードのライセンス 私たちのプロジェクトのソースコードは、Apache 2.0 License の下でライセンスされています。このライセンスは、Apache 2.0 ライセンスに概説されている特定の条件に従い、コードの使用、変更、配布を許可します。
 - データライセンス: このプロジェクトで利用された関連データは、CC BY-NC 4.0 でライセンスされており、このライセンスは、データの非商用利用を明確に許可しています。これらのデータセットを用いて学習されたモデルは、非商用利用の制限を厳守し、研究目的のみに使用されるべきであることを強調しておきます。
 
-## Star History
-
-[![Star History Chart](https://api.star-history.com/svg?repos=openbmb/chatdev&type=Date)](https://star-history.com/#openbmb/chatdev&Date)
 
 
 ## 🤝 謝辞
