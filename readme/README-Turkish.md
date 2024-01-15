@@ -201,9 +201,6 @@ Daha ayrıntılı bilgi için [Wiki](wiki.md)'mize başvurabilirsiniz, burada ş
 - Kaynak Kodu Lisansı: Projemizin kaynak kodu Apache 2.0 Lisansı altında lisanslanmıştır. Bu lisans, belirli koşullar dahilinde kodun kullanımını, değiştirilmesini ve dağıtılmasını izin verir.
 - Veri Lisansı: Projemizde kullanılan ilgili veri CC BY-NC 4.0 lisansı altında lisanslanmıştır. Bu lisans verinin ticari olmayan kullanımına açıkça izin verir. Bu veri kullanan modellerin kesinlikle ticari kullanım kısıtlamasına uyması ve sadece araştırma amaçları için kullanılması gerektiğini vurgulamak isteriz.
 
-## 🌟 Yıldız Geçmişi
-
-[![Yıldız Geçmişi Grafiği](https://api.star-history.com/svg?repos=openbmb/chatdev&type=Date)](https://star-history.com/#openbmb/chatdev&Date)
 
 ## 🤝 Teşekkürler
 
