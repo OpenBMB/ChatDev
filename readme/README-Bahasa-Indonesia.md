@@ -199,9 +199,6 @@ Dibuat dengan [contrib.rocks](https://contrib.rocks).
 - Lisensi Kode Sumber: Kode sumber proyek kami dilisensikan di bawah Lisensi Apache 2.0. Lisensi ini mengizinkan penggunaan, modifikasi, dan distribusi kode, dengan syarat tertentu yang dijelaskan dalam Lisensi Apache 2.0.
 - Lisensi Data: Data terkait yang digunakan dalam proyek kami dilisensikan di bawah CC BY-NC 4.0. Lisensi ini secara eksplisit mengizinkan penggunaan non-komersial data tersebut. Kami ingin menekankan bahwa model-model yang dilatih menggunakan dataset ini harus tunduk secara ketat pada pembatasan penggunaan non-komersial dan hanya boleh digunakan untuk tujuan penelitian.
 
-## 🌟 Riwayat Bintang
-
-[![Grafik Riwayat Bintang](https://api.star-history.com/svg?repos=openbmb/chatdev&type=Date)](https://star-history.com/#openbmb/chatdev&Date)
 
 ## 🤝 Pengakuan
 
