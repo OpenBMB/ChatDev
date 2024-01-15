@@ -185,9 +185,6 @@ de ``CompanyConfig/Default``
 - Licence du code source : Le code source de notre projet est sous licence Apache 2.0. Cette licence autorise l'utilisation, la modification et la distribution du code, sous réserve de certaines conditions définies dans la Licence Apache 2.0.
 - Licence des données : Les données associées utilisées dans notre projet sont sous licence CC BY-NC 4.0. Cette licence permet explicitement l'utilisation non commerciale des données. Nous souhaitons souligner que tout modèle formé à l'aide de ces ensembles de données doit strictement respecter la restriction d'utilisation non commerciale et ne doit être utilisé que pour des fins de recherche.
 
-## Historique des Étoiles
-
-[![Graphique de l'Historique des Étoiles](https://api.star-history.com/svg?repos=openbmb/chatdev&type=Date)](https://star-history.com/#openbmb/chatdev&Date)
 
 ## Contact
 

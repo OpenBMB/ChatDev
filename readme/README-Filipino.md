@@ -164,9 +164,6 @@ primaryClass={cs.SE}
 - Lisensya ng Source Code: Ang source code ng aming proyekto ay may lisensyang Apache 2.0. Ito ay nagbibigay ng pahintulot sa paggamit, pagbabago, at pamamahagi ng code, sa ilalim ng ilang kondisyon na inilahad sa Apache 2.0 License.
 - Lisensya ng Data: Ang kaugnay na datos na ginamit sa aming proyekto ay may lisensyang CC BY-NC 4.0. Ang lisensyang ito ay malinaw na nagpapahintulot sa non-commercial na paggamit ng data. Nais naming bigyang-diin na ang anumang mga modelo na naitrain gamit ang mga datasets na ito ay dapat na mahigpit na sumusunod sa restriction ng non-commercial usage at dapat gamitin lamang para sa layuning pananaliksik.
 
-## Kasaysayan ng Stars
-
-[![Star History Chart](https://api.star-history.com/svg?repos=openbmb/chatdev&type=Date)](https://star-history.com/#openbmb/chatdev&Date)
 
 ## Makipag-ugnay
 

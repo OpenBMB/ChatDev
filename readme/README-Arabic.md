@@ -208,12 +208,7 @@
 
 - ترخيص البيانات: البيانات ذات الصلة المستخدمة في مشروعنا مرخصة بموجب CC BY-NC 4.0. يسمح هذا الترخيص صراحة باستخدام البيانات لأغراض غير تجارية. نحن نود التأكيد على أن أي نماذج تم تدريبها باستخدام هذه البيانات يجب أن تلتزم صارمًا بقيود الاستخدام غير التجاري ويجب استخدامها حصرًا لأغراض البحث.
 
-## 🌟 تاريخ النجوم
-
-[![Star History Chart](https://api.star-history.com/svg?repos=openbmb/chatdev&type=Date)](https://star-history.com/#openbmb/chatdev&Date)
-
 ## 🤝 الشكر
-
 <a href="http://nlp.csai.tsinghua.edu.cn/"><img src="../misc/thunlp.png" height=50pt></a>&nbsp;&nbsp;
 <a href="https://modelbest.cn/"><img src="../misc/modelbest.png" height=50pt></a>&nbsp;&nbsp;
 <a href="https://github.com/OpenBMB/AgentVerse/"><img src="../misc/agentverse.png" height=50pt></a>&nbsp;&nbsp;

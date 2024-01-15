@@ -173,9 +173,6 @@ Para obter informações mais detalhadas, consulte nossa Wiki, onde você pode e
 - Licenciamento de Código Fonte: O código fonte de nosso projeto está licenciado sob a Licença Apache 2.0. Esta licença permite o uso, modificação e distribuição do código, sujeito a certas condições delineadas na Licença Apache 2.0.
 - Licenciamento de Dados: Os dados relacionados usados em nosso projeto estão licenciados sob CC BY-NC 4.0. Esta licença permite explicitamente o uso não comercial dos dados. Gostaríamos de enfatizar que qualquer modelo treinado usando esses conjuntos de dados deve aderir estritamente à restrição de uso não comercial e deve ser usado exclusivamente para fins de pesquisa.
 
-## 🌟 Histórico de Estrelas
-
-[![Star History Chart](https://api.star-history.com/svg?repos=openbmb/chatdev&type=Date)](https://star-history.com/#openbmb/chatdev&Date)
 
 
 ## 🤝 Agradecimentos
