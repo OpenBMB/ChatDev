@@ -174,9 +174,6 @@ request一样简单。这是一个示例：执行命令`python3 run.py --task "d
 - 源代码采用Apache 2.0许可证授权。
 - 数据集采用CC BY NC 4.0许可证授权，仅允许非商业用途。请注意，使用这些数据集训练的任何模型不应用于研究以外的其他目的。
 
-## 星标历史
-
-[![Star History Chart](https://api.star-history.com/svg?repos=openbmb/chatdev&type=Date)](https://star-history.com/#openbmb/chatdev&Date)
 
 ## 联系方式
 
