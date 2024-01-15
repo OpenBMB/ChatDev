@@ -177,9 +177,6 @@ un paquete de software y generará una carpeta llamada ``/WareHouse/2048_THUNLP_
 - Licencia del Código Fuente: El código fuente de nuestro proyecto está licenciado bajo la Licencia Apache 2.0. Esta licencia permite el uso, modificación y distribución del código, sujeto a ciertas condiciones descritas en la Licencia Apache 2.0.
 - Licencia de Datos: Los datos relacionados utilizados en nuestro proyecto están licenciados bajo CC BY-NC 4.0. Esta licencia permite explícitamente el uso no comercial de los datos. Queremos enfatizar que cualquier modelo entrenado utilizando estos conjuntos de datos debe adherirse estrictamente a la restricción de uso no comercial y debe ser empleado exclusivamente para propósitos de investigación.
 
-## 🌟 Historial de Estrellas
-
-[![Gráfico de Historial de Estrellas](https://api.star-history.com/svg?repos=openbmb/chatdev&type=Date)](https://star-history.com/#openbmb/chatdev&Date)
 
 
 ## 🤝 Agradecimientos
