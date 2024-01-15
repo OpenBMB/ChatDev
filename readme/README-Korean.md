@@ -148,9 +148,6 @@ https://github.com/OpenBMB/ChatDev/assets/11889052/80d01d2f-677b-4399-ad8b-f7af9
 - ChatDev의 목적은 오로지 연구 목적입니다.
 - 데이터 세트는 비상업적 용도로만 사용할 수 있는 CC BY NC 4.0에 따라 라이센스가 부여됩니다. 해당 데이터 세트를 사용하여 학습된 모델은 연구 목적 이외의 용도로 사용해서는 안 된다는 점에 유의하세요.
 
-## Star History
-
-[![Star History Chart](https://api.star-history.com/svg?repos=openbmb/chatdev&type=Date)](https://star-history.com/#openbmb/chatdev&Date)
 
 ## 연락처
 
