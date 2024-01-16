@@ -84,7 +84,7 @@ class ChatChain:
         for role in self.config_role:
             if Rate_limit:
                 time.sleep(Rate_limit_time) #chatgpt3.5 rate limite quick hack
-                print("waiting 20s for to bypass ratelimit")
+                print(f"waiting {Rate_limit_time}s for to bypass ratelimit")
             self.role_prompts[role] = "\n".join(self.config_role[role])
 
         # init log
@@ -100,7 +100,7 @@ class ChatChain:
         for phase in self.config_phase:
             if Rate_limit:
                 time.sleep(Rate_limit_time) #chatgpt3.5 rate limite quick hack
-                print("waiting 20s for to bypass ratelimit")
+                print(f"waiting {Rate_limit_time}s for to bypass rate limit")
             assistant_role_name = self.config_phase[phase]['assistant_role_name']
             user_role_name = self.config_phase[phase]['user_role_name']
             phase_prompt = "\n\n".join(self.config_phase[phase]['phase_prompt'])
