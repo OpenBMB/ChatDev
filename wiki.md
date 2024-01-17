@@ -35,7 +35,7 @@
 
 - the generated software is under ``WareHouse/NAME_ORG_timestamp``, including:
     - all the files and manuals of this software
-    - config files of company which made this software, including three config json files
+    - config files of the company that made this software, including three config JSON files
     - full log of the software building process
     - prompt to make this software
 - A case of todo software is just like below, which is located in ``/WareHouse/todo_THUNLP_20230822165503``
@@ -46,14 +46,14 @@
     ├── PhaseConfig.json # Configuration
     ├── RoleConfig.json # Configuration
     ├── todo.prompt # User query prompt
-    ├── meta.txt # Software building meta information
+    ├── meta.txt # Software building metainformation
     ├── main.py # Generated Software Files
     ├── manual.md # Generated Software Files
     ├── todo_app.py # Generated Software Files
     ├── task.py # Generated Software Files
     └── requirements.txt # Generated Software Files
     ```
-- Usually you just need to install requirements and run main.py to use your software
+- Usually, you just need to install requirements and run main.py to use your software
     ```commandline
     cd WareHouse/project_name_DefaultOrganization_timestamp
     pip3 install -r requirements.txt
@@ -62,47 +62,47 @@
 
 ## Visualizer
 
-- you can start a flask app to get a Visualizer, which is local web demo for visualizing real-time logs, replayed logs, and ChatChain.
-- the difference between real-time logs and replayed logs lies in that the former is mainly for debugging, which can print the agent's dialogue information, environment changes and many additional system information in real time during the process of software generation, such as file changes and git information. The latter is used to replay the generated log and only prints the dialogue information of the agent.
+- you can start a Flask app to get a Visualizer, which is a local web demo for visualizing real-time logs, replayed logs, and ChatChain.
+- the difference between real-time logs and replayed logs lies in that the former is mainly for debugging, which can print the agent's dialogue information, environment changes, and many additional system information in real-time during the process of software generation, such as file changes and Git information. The latter is used to replay the generated log and only prints the dialogue information of the agent.
 - just run
 ```
 python3 visualizer/app.py
 ```
 
-then go to [Visualizer Website](http://127.0.0.1:8000/) to see an online visualized version of logs such as
+then start building a software by ``python3 run.py`` and go to [Visualizer Website](http://127.0.0.1:8000/) to see an real-time visualized version of logs such as
 
 ![demo](misc/demo.png)
 
-- You can also goto the [ChatChain Visualizer](http://127.0.0.1:8000/static/chain_visualizer.html) on this page and
+- You can also go to the [ChatChain Visualizer](http://127.0.0.1:8000/static/chain_visualizer.html) on this page and
   upload any ``ChatChainConfig.json`` under ``CompanyConfig/`` to get a visualization on this chain, such as:
 
 ![ChatChain Visualizer](misc/chatchain_vis.png)
 
-- You can also goto the [Chat Replay page](http://127.0.0.1:8000/static/replay.html) to replay log file in the software folder
+- You can also go to the [Chat Replay page](http://127.0.0.1:8000/static/replay.html) to replay the log file in the software folder
     - click the ``File Upload`` bottom to upload a log, then click ``Replay``
     - The replay only shows the dialogues in natural languages between agents, it will not contain debug logs.
 
 ![Replay](misc/replay.gif)
 
 ## Docker Start
-- You can use docker for a quick and safe use of ChatDev. You will need some extra steps to allow executing GUI program in docker since ChatDev often create software with GUI and execute them in the Test Phase.
+- You can use docker for a quick and safe use of ChatDev. You will need some extra steps to allow the execution of the GUI program in docker since ChatDev often creates software with GUI and executes it in the Test Phase.
 
 ### Install Docker
 - Please refer to the [Docker Official Website](https://www.docker.com/get-started/) for installing Docker.
 
 ### Prepare GUI connection between Host and Docker
 - Take macOS for example,
-  - install socat and xquartz, you may need to restart the computer after installing the xquartz
+  - Install Socat and xquartz, you may need to restart the computer after installing the xquartz
   ```commandline
   brew install socat xquartz
   ```
-  - open xquartz and go into the settings, allow connections from network clients
+  - Open Xquartz and go into the settings, allow connections from network clients
     - ![xquartz](misc/xquartz.jpg)
-  - run following command on the host computer and keep it.
+  - run the following command on the host computer and keep it.
   ```commandline
    socat TCP-LISTEN:6000,reuseaddr,fork UNIX-CLIENT:\"$DISPLAY\"
   ```
-  - run following command on the host computer to check your ip (the address of inet).
+  - run the following command on the host computer to check your ip (the address of inet).
   ```commandline
   ifconfig en0
   ```
@@ -115,7 +115,7 @@ then go to [Visualizer Website](http://127.0.0.1:8000/) to see an online visuali
   it will generate a 400MB+ docker image named chatdev.
 
 ### Run Docker
-- run following command to create and go into a container
+- run the following command to create and go into a container
     ```commandline
     docker run -it -p 8000:8000 -e OPENAI_API_KEY=YOUR_OPENAI_KEY -e DISPLAY=YOUR_IP:0 chatdev:latest
     ```
@@ -142,12 +142,12 @@ then go to [Visualizer Website](http://127.0.0.1:8000/) to see an online visuali
 ![arch](misc/arch.png)
 
 - All the configuration content related to ChatDev (such as the background prompt of the agent employee, the work content of each Phase, and how the Phase is combined into a ChatChain), are called a **CompanyConfig** (because ChatDev is like a virtual software company). These CompanyConfigs are in the ChatDev project Under ``CompanyConfig/``. You can check this [directory](https://github.com/OpenBMB/ChatDev/tree/main/CompanyConfig). In this directory, you will see different CompanyConfig (such as Default, Art, Human). Generally speaking, each CompanyConfig will contain 3 configuration files.
-  1. ChatChainConfig.json, which controls the overall development process of ChatDev, including which Phase each step is, how many times each Phase needs to be cycled, whether reflect is needed, etc.
-  2. PhaseConfig.json, which controls each Phase, and corresponds to ``chatdev/phase.py`` or ``chatdev/composed_phase.py`` in the ChatDev project. The Python file realizes the specific working logic of each phase. The json file here contains the configuration of each phase, such as background prompt, which employees are participating in the phase, etc.
+  1. ChatChainConfig.json, which controls the overall development process of ChatDev, including which Phase each step is, how many times each Phase needs to be cycled, whether reflection is needed, etc.
+  2. PhaseConfig.json, which controls each Phase, and corresponds to ``chatdev/phase.py`` or ``chatdev/composed_phase.py`` in the ChatDev project. The Python file realizes the specific working logic of each phase. The JSON file here contains the configuration of each phase, such as the background prompt, which employees are participating in the phase, etc.
   3. RoleConfig.json contains the configuration of each employee (agent). Currently, it only contains the background prompt of each employee, which is a bunch of text containing placeholders.
 - If a CompanyConfig does not contain all three configuration files (such as Art and Human), it means that the configuration files missing from this CompanyConfig are set according to Default. The official CompanyConfigs currently provided include:
   1. Default, default configuration
-  2. Art, allows ChatDev to create image files according to needs, automatically generate image description prompts and call the openai Wenshengtu API to generate images
+  2. Art, allows ChatDev to create image files according to needs, automatically generate image description prompts and call the OpenAI API to generate images
   3. Human, allowing human users to participate in ChatDev’s code review process
 
 ### Customize ChatChain
@@ -155,7 +155,7 @@ then go to [Visualizer Website](http://127.0.0.1:8000/) to see an online visuali
 - see ``CompanyConfig/Default/ChatChainConfig.json``
 - You can easily pick and organize phases to formulate a ChatChain from all phases (from ``chatdev/phase.py``
   or ``chatdev/composed_phase.py``)
-  by modifying the json file
+  by modifying the JSON file
 
 ### Customize Phase
 
@@ -168,15 +168,15 @@ then go to [Visualizer Website](http://127.0.0.1:8000/) to see an online visuali
     - see ``CompanyConfig/Default/PhaseConfig.json`` for configuration, see ``chatdev/phase.py`` for implementing your
       own phase
     - each phase contains three steps:
-        - generate phase environment from the whole chatchain environment
+        - generate phase environment from the whole ChatChain environment
         - use phase environment to control the phase prompt and execute the chatting between roles in this phase (which
           usually does not need to be modified)
-        - get a seminar conclusion from the chatting, and use it to update the whole chatchain environment
-    - below is a simple example phase on choosing the programming language of the software:
-        - generate phase environment: we pick task, modality and ideas from the chatchain environment
+        - get a seminar conclusion from the chatting, and use it to update the whole ChatChain environment
+    - below is a simple example phase of choosing the programming language of the software:
+        - generate phase environment: we pick the task, modality, and ideas from the ChatChain environment
         - execute the phase: no need to implement, which is defined in the Phase class
-        - update chatchain environment: we get seminar conclusion (which language) and update the 'language' key in the
-          chatchain environment
+        - update ChatChain environment: we get the seminar conclusion (which language) and update the 'language' key in the
+          ChatChain environment
           ```python
           class LanguageChoose(Phase):
               def __init__(self, **kwargs):
@@ -271,18 +271,18 @@ then go to [Visualizer Website](http://127.0.0.1:8000/) to see an online visuali
 
 ## ChatChain Parameters
 
-- *clear_structure*: Whether to clear non-software files in the WareHouse and cache files in generated software path.
-- *gui_design*: Encourage ChatDev generate software with GUI.
+- *clear_structure*: Whether to clear non-software files in the WareHouse and cache files in the generated software path.
+- *gui_design*: Encourage ChatDev to generate software with GUI.
 - *git_management*: Whether to use git to manage the creation and changes of generated software.
-- *incremental_develop*: Whether to use incremental develop on an existing project.
-- *self_improve*: flag for self-improvement on user input prompt. It is a special chatting that LLM plays as a prompt engineer to improve the user input prompt. **⚠️ Attention** Model generated prompts contains uncertainty and there may
+- *incremental_develop*: Whether to use incremental development on an existing project.
+- *self_improve*: flag for self-improvement on user input prompt. It is a special chat that LLM plays as a prompt engineer to improve the user input prompt. **⚠️ Attention** Model generated prompts contain uncertainty and there may
   be a deviation from the requirement meaning contained in the original prompt.
 - *background_prompt*: background prompt that will be added to every inquiry to LLM
 - params in SimplePhase:
     - *max_turn_step*: Max number of chatting turn. You can increase max_turn_step for better performance but it will
-      take longer time to finish the phase.
+      take a longer time to finish the phase.
     - *need_reflect*: Flag for reflection. Reflection is a special phase that automatically executes after a phase. It
-      will start a chatting between counselor and CEO to refine the conclusion of phase chatting.
+      will start a chat between the counselor and CEO to refine the conclusion of phase chatting.
 - params in ComposedPhase
     - *cycleNum*: Number of cycles to execute SimplePhase in this ComposedPhase.
 
@@ -305,7 +305,7 @@ then go to [Visualizer Website](http://127.0.0.1:8000/) to see an online visuali
 
 ### Default
 ![demo](misc/ChatChain_Visualization_Default.png)
-- As shown in the ChatChain visualization of Default setting, ChatDev will produce a software in the order of:
+- As shown in the ChatChain visualization of the Default setting, ChatDev will produce software in the order of:
   - Demand Analysis: decide the modality of the software
   - Language Choose: decide the programming language
   - Coding: write the code
@@ -318,28 +318,28 @@ then go to [Visualizer Website](http://127.0.0.1:8000/) to see an online visuali
 
 ### Art
 ![demo](misc/ChatChain_Visualization_Art.png)
-- Compared to Default, Art setting add a phase before CodeCompleteAll called Art
-- The Art phase will first discuss the name and description of the images assets, then use ``openai.Image.create`` to generate the images based on description.
+- Compared to Default, the Art setting adds a phase before CodeCompleteAll called Art
+- The Art phase will first discuss the name and description of the images assets, then use ``openai.Image.create`` to generate the images based on the description.
 - You can use default setting using ``python3 run.py --config "Art"`` or just ignore the config parameter.
 
 ### Human-Agent Interaction
 ![demo](misc/ChatChain_Visualization_Human.png)
-- Compared to Default, in ***Human-Agent-Interaction*** mode you can play as reviewer and asks programmer agent to modify the code based on your comments.
+- Compared to Default, in ***Human-Agent-Interaction*** mode you can play as a reviewer and ask the programmer agent to modify the code based on your comments.
 - It adds a Phase called HumanAgentInteraction after the  dCodeReview Phase.
 - You can use ***Human-Agent-Interaction*** setting using ``python3 run.py --config "Human"``.
-- When chatdev executes to this Phase, on the command interface you will see a hint that ask for input.
-- You can run your software in the ``WareHouse/`` and see if it satisfies your need. Then you can type anything you want (bug fix or new feature) in the command interface, then press Enter:
+- When chatdev executes to this Phase, on the command interface you will see a hint that asks for input.
+- You can run your software in the ``WareHouse/`` and see if it satisfies your needs. Then you can type anything you want (bug fix or new feature) in the command interface, then press Enter:
 ![Human_command](misc/Human_command.png)
 - For example
-  - We first run the ChatDev with task "design a gomoku game"
+  - We first run the ChatDev with the task "design a gomoku game"
   - Then we type "Please add a restart button" in the HumanAgentInteraction Phase, adding the first feature
   - In the second loop of HumanAgentInteraction, we add another feature by typing "Please add a current status bar showing whose turn it is".
   - At last, we early exit this mode by typing "End".
-  - Below shows all three versions.
+  - Below are all three versions.
     - <img src='misc/Human_v1.png' height=250>&nbsp;&nbsp;&nbsp;&nbsp;<img src='misc/Human_v2.png' height=250>&nbsp;&nbsp;&nbsp;&nbsp;<img src='misc/Human_v3.png' height=250>
 
 ### Git Mode
-- Simply set ``"git_management"`` to ``"True"`` in ``ChatChainConfig.json`` enables the Git Mode, in which ChatDev will make the generated software folder a git repository and automatically make all commits.
+- Simply set ``"git_management"`` to ``"True"`` in ``ChatChainConfig.json`` to open the Git Mode, in which ChatDev will make the generated software folder a git repository and automatically make all commits.
 - Every change made on the code of generated software will create a commit, including:
   - The initial commit, created after the ``Coding`` phase completed, with a commit message ``Finish Coding``.
   - Complete ``ArtIntegration`` phase, with a commit message ``Finish Art Integration``.
@@ -348,14 +348,14 @@ then go to [Visualizer Website](http://127.0.0.1:8000/) to see an online visuali
   - Complete ``CodeReviewHuman`` phase, with a commit message ``Human Review #1/2/3 Finished``(if the CodeReviewHuman is executed in three loops).
   - Complete ``TestModification`` phase, with a commit message ``Test #1/2/3 Finished``(if the TestModification is executed in three loops).
   - All phases completed, with a commit message ``Final Version``.
-- On the terminal and online log UI you can see the git summary at the end of process.
+- On the terminal and online log UI you can see the git summary at the end of the process.
   -  <img src='misc/git_summary_terminal.png' height=250>&nbsp;&nbsp;&nbsp;&nbsp;<img src='misc/git_summary_onlinelog.png' height=250>
-  - You can also search ``git Information`` in the log file to see when did commit happen.
+  - You can also search ``git Information`` in the log file to see when did commit happened.
 - ⚠️ There are a few things worth noting about Git Mode:
   - ChatDev is a git project, and we need to create another git project in the generated software folder, so we use ``git submodule`` to make this "git over git" function. A ``.gitmodule`` file will be created.
     - under the software folder, you can add/commit/push/checkout the software project just like a normal git project, and your commits would not modify the ChatDev git history.
     - under the ChatDev folder, the new software has been added to the ChatDev as a whole folder.
-  - The generated log file would not be added into the software git project, since the log is closed and moved to the software folder after the final commit. We have to do this because the log should record all the git commits, including the final one. So the git operations must be done before the log finalized. You will always see a log file to be added and committed in the software folder, like:
+  - The generated log file would not be added into the software git project, since the log is closed and moved to the software folder after the final commit. We have to do this because the log should record all the git commits, including the final one. So the git operations must be done before the log is finalized. You will always see a log file to be added and committed in the software folder, like:
     - ![img.png](misc/the_log_left.png)
   - When you perform ``git add .`` under the ChatDev project, There will be information like (taking Gomoku for example):
     ```commandline
