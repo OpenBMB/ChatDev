@@ -17,7 +17,7 @@
 
 ## 📰 新闻
 * **2024年1月25日: 我们在 ChatDev 中集成更新了 "Experiential Co-Learning" 模块。尽请查阅 [Experiential Co-Learning 指南](../wiki.md#co-tracking).**
-* 2023年12月28日: 我们发布了**Experiential Co-Learning**这一新范式。在这种方法中，instructor和assistant两个智能体可以积累shorcut-oriented的经验，从而减少重复性错误提高效率且有效地解决新任务。 如意兴趣可查看我们的预印本论文： https://arxiv.org/abs/2312.17025 and this technique will soon be integrated into ChatDev.
+* 2023年12月28日: 我们发布了**Experiential Co-Learning**这一新范式。在这种方法中，instructor和assistant两个智能体可以积累shorcut-oriented的经验，从而减少重复性错误提高效率且有效地解决新任务。 如意兴趣可查看我们的预印本论文： https://arxiv.org/abs/2312.17025 并且这个技术将很快合并到ChatDev开源版本。
   <p align="center">
   <img src='../misc/ecl.png' width=860>
   </p>
@@ -30,16 +30,16 @@
   <img src='../misc/increment.png' width=700>
   </p>
 
-- 2023年10月26日: ChatDev现在支持使用Docker进行更安全的简便操作 (感谢贡献者 [ManindraDeMel](https://github.com/ManindraDeMel)). 请参照 [Docker使用指南](wiki.md#docker-start).
+- 2023年10月26日: ChatDev现在支持使用Docker进行更安全的简便操作 (感谢贡献者 [ManindraDeMel](https://github.com/ManindraDeMel)). 请参照 [Docker使用指南](../wiki.md#docker-start).
   <p align="center">
   <img src='../misc/docker.png' width=400>
   </p>
-- 2023年9月25日:  **Git** 模式现在已可用, 可以驱动programmer <img src='visualizer/static/figures/programmer.png' height=20> 去使用Git进行版本控制。 想要尝试这个功能, 可简便地在``ChatChainConfig.json``中，将 ``"git_management"`` 的开关改为 ``"True"`` 。 具体可见 [指引](wiki.md#git-mode).
+- 2023年9月25日:  **Git** 模式现在已可用, 可以驱动programmer <img src='../visualizer/static/figures/programmer.png' height=20> 去使用Git进行版本控制。 想要尝试这个功能, 可简便地在``ChatChainConfig.json``中，将 ``"git_management"`` 的开关改为 ``"True"`` 。 具体可见 [指引](../wiki.md#git-mode).
   <p align="center">
   <img src='../misc/github.png' width=600>
   </p>
-- 2023年9月20日：**Human-Agent-Interaction** 模式现在已可用! 您可以扮演reviewer <img src='visualizer/static/figures/reviewer.png' height=20> 的角色，参与到ChatDev智能体团队的工作流程中，并给在代码上给予programmer <img src='visualizer/static/figures/programmer.png' height=20> 建议；
-  尝试 ``python3 run.py --task [description_of_your_idea] --config "Human"``. 具体见 [指引](wiki.md#human-agent-interaction) 和 [示例](WareHouse/Gomoku_HumanAgentInteraction_20230920135038)。
+- 2023年9月20日：**Human-Agent-Interaction** 模式现在已可用! 您可以扮演reviewer <../img src='../visualizer/static/figures/reviewer.png' height=20> 的角色，参与到ChatDev智能体团队的工作流程中，并给在代码上给予programmer <img src='../visualizer/static/figures/programmer.png' height=20> 建议；
+  尝试 ``python3 run.py --task [description_of_your_idea] --config "Human"``. 具体见 [指引](../wiki.md#human-agent-interaction) 和 [示例](../WareHouse/Gomoku_HumanAgentInteraction_20230920135038)。
   <p align="center">
   <img src='../misc/Human_intro.png' width=600>
   </p>
