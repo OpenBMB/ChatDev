@@ -28,7 +28,7 @@ from camel.utils import (
     num_tokens_from_messages,
     openai_api_key_required,
 )
-
+from chatdev.utils import log_visualize
 try:
     from openai.types.chat import ChatCompletion
 
@@ -74,6 +74,7 @@ class ChatAgent(BaseAgent):
 
     Args:
         system_message (SystemMessage): The system message for the chat agent.
+        with_memory(bool): The memory setting of the chat agent.
         model (ModelType, optional): The LLM model to use for generating
             responses. (default :obj:`ModelType.GPT_3_5_TURBO`)
         model_config (Any, optional): Configuration options for the LLM model.
@@ -86,6 +87,7 @@ class ChatAgent(BaseAgent):
     def __init__(
             self,
             system_message: SystemMessage,
+            memory = None,
             model: Optional[ModelType] = None,
             model_config: Optional[Any] = None,
             message_window_size: Optional[int] = None,
@@ -102,6 +104,10 @@ class ChatAgent(BaseAgent):
         self.terminated: bool = False
         self.info: bool = False
         self.init_messages()
+        if memory !=None and self.role_name in["Code Reviewer","Programmer","Software Test Engineer"]:
+            self.memory = memory.memory_data.get("All")
+        else:
+            self.memory = None
 
     def reset(self) -> List[MessageType]:
         r"""Resets the :obj:`ChatAgent` to its initial state and returns the
@@ -159,6 +165,41 @@ class ChatAgent(BaseAgent):
         """
         self.stored_messages.append(message)
         return self.stored_messages
+    def use_memory(self,input_message) -> List[MessageType]:
+        if self.memory is None :
+            return None
+        else:
+            if self.role_name == "Programmer":
+                result = self.memory.memory_retrieval(input_message,"code")
+                if result != None:
+                    target_memory,distances, mids,task_list,task_dir_list = result
+                    if target_memory != None and len(target_memory) != 0:
+                        target_memory="".join(target_memory)
+                        #self.stored_messages[-1].content = self.stored_messages[-1].content+"Here is some code you've previously completed:"+target_memory+"You can refer to the previous script to complement this task."
+                        log_visualize(self.role_name,
+                                            "thinking back and found some related code: \n--------------------------\n"
+                                            + target_memory)
+                else:
+                    target_memory = None
+                    log_visualize(self.role_name,
+                                         "thinking back but find nothing useful")
+
+            else:
+                result = self.memory.memory_retrieval(input_message, "text")
+                if result != None:
+                    target_memory, distances, mids, task_list, task_dir_list = result
+                    if target_memory != None and len(target_memory) != 0:
+                        target_memory=";".join(target_memory)
+                        #self.stored_messages[-1].content = self.stored_messages[-1].content+"Here are some effective and efficient instructions you have sent to the assistant :"+target_memory+"You can refer to these previous excellent instructions to better instruct assistant here."
+                        log_visualize(self.role_name,
+                                            "thinking back and found some related text: \n--------------------------\n"
+                                            + target_memory)
+                else:
+                    target_memory = None
+                    log_visualize(self.role_name,
+                                         "thinking back but find nothing useful")
+
+        return target_memory
 
     @retry(wait=wait_exponential(min=5, max=60), stop=stop_after_attempt(5))
     @openai_api_key_required

@@ -131,6 +131,62 @@ then start building a software by ``python3 run.py`` and go to [Visualizer Websi
 ### Official Docker Image
 - in preparation
 
+## Experiential Co-Learning Guide
+### Co-Tracking
+
+- **Start Co-Tracking**: Use the following command to initiate the building of software, replacing `[description_of_your_idea]` with task descirption and `[project_name]` with project name. This is the same as starting ChatDev.
+   ```bash 
+   python3 run.py --task "[description_of_your_idea]" --name "[project_name]"
+   ```
+  The software generated in co-tracking phase is ready for the agents' experience pool in the following steps.
+### Co-Memorizing
+- **Initiating Co-Memorizing**: To begin the memorization process for the generated software in a specified directory, run the `ecl.py` script using the following command:
+  ```bash
+    python3 ecl/ecl.py "<path>" "[options]"
+  ```
+  `<path>`: The path to the file or directory to process. 
+  `[options]`: This can be set as `-d`. This flag indicates that the script should process all files in the given directory. If this flag is not set, the script will process the file specified in path.
+After this process, the experiences have been extracted from the production of software and added to the agents' experience pool in `ecl/memory/MemoryCards.json`.
+\
+**For example:**
+  It you want to memorize only one software, you can use:
+  ```bash
+    python3 ecl/ecl.py "<Software Path to file>"
+  ```
+  And the software path should be like `"WareHouse/project_name_DefaultOrganization_timestamp"`.
+  \
+  If you want to memorize all files in a directory, you can use:
+  ```bash
+    python3 ecl/ecl.py "<Software Path to Directory>" -d
+  ```
+  the software path should be like `"WareHouse"`.
+- **Memory Filter**: To get a higher quality experience pool, it is suggested to use `ecl/post_process/memory_filter.py` to filter the `MemoryCards.json`. When running the `memory_filter.py` script, you need to specify three arguments: the filter threshold, the input directory, and the output directory.
+  ```bash
+    python3 ecl/post_process/memory_filter.py "<threshold>" "<directory>" "<filtered_directory>"
+  ```
+  - `<threshold>`: Require a value within the range of 0 to 1 (exclusive). It is used as the threshold to filter experiences by their 'valuegain'. Only experiences with a 'valuegain' that is equal to or greater than this threshold will be considered.
+  - `<directory>`: The file path to the memory directory that you intend to process. 
+  - `<filtered_directory>`: The file path to a directory where you want to store the processed data.
+
+  \
+  **For example:**
+  ```bash
+    python3 ecl/post_process/memory_filter.py 0.9 "ecl/memory/MemoryCards.json" "ecl/memory/MemoryCards_filtered.json"
+  ```
+> **Notice:** By default, the `MemoryCards.json` is set to be empty. You can customize your own experience pool for agents following steps above. And we have also provided our `MemoryCards.json` used in our experiment in [MemoryCards.json](https://drive.google.com/drive/folders/1czsR4swQyqpoN8zwN0-rSFcTVl68zTDY?usp=sharing). You can download the json file through the link and put it under `ecl/memory` folder. This allows you to directly proceed to the Co-Reasoning phase without needing to redo the Co-Tracking and Co-Memorizing steps.
+### Co-Reasoning
+- **Memory Usage Configuration**:
+  In the `CompanyConfig/Default/ChatChainConfig.json` file, the `with_memory` option should be set **True**. \
+  In the `ecl/config.yaml` file, you can adjust the settings for **top k** and **similarity threshold** for both code and text retrieval. 
+  By default, `with_memory` is set as False and the system is configured to retrieve the top 1 result with a similarity threshold of zero for both code and text.
+- **Start Co-Reasoning**: Once you have completed memory usage configuration, similar to the Co-Tracking phase, you can use the command below to start the software building process. Replace `[description_of_your_idea]` with the task description from the test set and `[project_name]` with the project name from the test set:
+   ```
+   python3 run.py --task "[description_of_your_idea]" --name "[project_name]"
+   ```
+   In this process of software development, the agents will engage their experience pool(`MemoryCards.json`) into software development!
+
+Detailed descriptions and experiment results about this **Experiential Co-Learning** Module lies in our preprint paper at https://arxiv.org/abs/2312.17025.
+
 ## Customization
 
 - You can customize your company in three kinds of granularity:
@@ -278,6 +334,7 @@ then start building a software by ``python3 run.py`` and go to [Visualizer Websi
 - *self_improve*: flag for self-improvement on user input prompt. It is a special chat that LLM plays as a prompt engineer to improve the user input prompt. **⚠️ Attention** Model generated prompts contain uncertainty and there may
   be a deviation from the requirement meaning contained in the original prompt.
 - *background_prompt*: background prompt that will be added to every inquiry to LLM
+- *with_memory*: Whether to utilize the experience pool for agents. The experience pool actually lies in in `ecl/memory/MemoryCards.json`.
 - params in SimplePhase:
     - *max_turn_step*: Max number of chatting turn. You can increase max_turn_step for better performance but it will
       take a longer time to finish the phase.
@@ -290,10 +347,11 @@ then start building a software by ``python3 run.py`` and go to [Visualizer Websi
 
 ```commandline
 ├── CompanyConfig # Configuration Files for ChatDev, including ChatChain, Phase and Role config json.
-├── WareHouse # Folder for generated software
-├── camel # Camel RolePlay component
-├── chatdev # ChatDev core code
-├── misc # assets of example and demo
+├── WareHouse # Folder for Generated Software
+├── camel # Camel RolePlay Component
+├── chatdev # ChatDev Core Code
+├── ecl # Experiential Co-Learning Module
+├── misc # Assets of Example and Demo
 ├── visualizer # Visualizer Folder
 ├── run.py # Entry of ChatDev
 ├── requirements.txt

@@ -13,6 +13,7 @@ from chatdev.codes import Codes
 from chatdev.documents import Documents
 from chatdev.roster import Roster
 from chatdev.utils import log_visualize
+from ecl.memory import Memory
 
 try:
     from openai.types.chat.chat_completion_message_tool_call import ChatCompletionMessageToolCall
@@ -28,15 +29,18 @@ class ChatEnvConfig:
                  gui_design,
                  git_management,
                  incremental_develop,
-                 background_prompt):
+                 background_prompt,
+                 with_memory):
         self.clear_structure = clear_structure  # Whether to clear non-software files in the WareHouse and cache files in generated software path
         self.gui_design = gui_design  # Encourage ChatDev generate software with GUI
         self.git_management = git_management  # Whether to use git to manage the creation and changes of generated software
         self.incremental_develop = incremental_develop  # Whether to use incremental develop on an existing project
         self.background_prompt = background_prompt  # background prompt that will be added to every inquiry to LLM
+        self.with_memory = with_memory # Wheter to use memroy in the interaction between agents
 
     def __str__(self):
         string = ""
+        string += "ChatEnvConfig.with_memory: {}\n".format(self.with_memory)
         string += "ChatEnvConfig.clear_structure: {}\n".format(self.clear_structure)
         string += "ChatEnvConfig.git_management: {}\n".format(self.git_management)
         string += "ChatEnvConfig.gui_design: {}\n".format(self.gui_design)
@@ -50,6 +54,7 @@ class ChatEnv:
         self.config = chat_env_config
         self.roster: Roster = Roster()
         self.codes: Codes = Codes()
+        self.memory: Memory = Memory()
         self.proposed_images: Dict[str, str] = {}
         self.incorporated_images: Dict[str, str] = {}
         self.requirements: Documents = Documents()
@@ -91,6 +96,13 @@ class ChatEnv:
             print("{} Created".format(directory))
         else:
             os.mkdir(self.env_dict['directory'])
+    
+    def init_memory(self):
+        self.memory.id_enabled = True
+        self.memory.directory = os.path.join(os.getcwd(),"ecl","memory")
+        if not os.path.exists(self.memory.directory):
+            os.mkdir(self.memory.directory)
+        self.memory.upload()
 
     def exist_bugs(self) -> tuple[bool, str]:
         directory = self.env_dict['directory']
