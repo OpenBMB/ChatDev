@@ -34,12 +34,12 @@ def memorize(directory):
     graph.print()
 
     experience = Experience(graph, directory)
-    if len(graph.nodes)==0 and len(graph.edges) == 0:
-        log_and_print_online("No node or edges constrcuted from the Warehouse, maybe unfinished software production")
-        return 
-    if cfg.experience.reap_zombie:
-        experience.reap_zombie()
-        graph.print()
+    if len(graph.nodes)==0 or len(graph.edges) == 0:
+        log_and_print_online("No node or no edges constrcuted from the task execution process, maybe due to a unfinished software production or sometimes single node appears")
+    else:
+        if cfg.experience.reap_zombie:
+            experience.reap_zombie()
+            graph.print()
     experience.estimate()
     experiences = experience.extract_thresholded_experiences()
 

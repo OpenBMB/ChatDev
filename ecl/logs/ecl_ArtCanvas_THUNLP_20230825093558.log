@@ -1,0 +1,135 @@
+[2024-25-01 11:07:52 INFO] [Config]:{'experience': {'reap_zombie': True, 'threshold': 0, 'upper_limit': 10}, 'codes': {'tmp_directory': 'tmp_codes', 'main_script': 'main.py'}, 'embedding_method': 'OpenAI', 'retrieval': {'top_k_code': 1, 'top_k_text': 1, 'searchcode_thresh': 0, 'searchtext_thresh': 0}}
+[2024-25-01 11:07:52 INFO] log_filename:ArtCanvas_THUNLP_20230825093558.log
+[2024-25-01 11:07:52 INFO] 
+************************************************** Graph **************************************************
+4 Nodes:
+94e7ccc362cb671a4da4026aeb82846d, 0.0, 
+d15577173c6a908f5c787c69b26234d2, 1.0, 
+296caeb939361dcdb44bb49099eb8a50, 2.0, 
+7a2b3666e21805f40a953525e3e301f8, 3.0, 
+6 Edges:
+6cd46e638ebc07a812c5dd558f68b8af: 94e7ccc362cb671a4da4026aeb82846d -> d15577173c6a908f5c787c69b26234d2 (chief technology officer: write one or multiple files and make sure that every detail )
+188e36dc418d7528d235201495b6fec8: d15577173c6a908f5c787c69b26234d2 -> 296caeb939361dcdb44bb49099eb8a50 (code reviewer: the code is missing the import statement for the `canvas` cl)
+98e78da69ac1249f4fe659dae5829580: 296caeb939361dcdb44bb49099eb8a50 -> d15577173c6a908f5c787c69b26234d2 (code reviewer: the code is missing the implementation of the toolbar class.)
+5508d1c5ac8e1c0359bbdd6ba7c87d89: d15577173c6a908f5c787c69b26234d2 -> d15577173c6a908f5c787c69b26234d2 (code reviewer: the code is missing the import statement for the toolbar cla)
+754ca90350d942f934775411666deec7: d15577173c6a908f5c787c69b26234d2 -> 7a2b3666e21805f40a953525e3e301f8 (chief technology officer: write one or multiple files and make sure that every detail )
+0391f5714d99cc404713479f1f5f4994: 7a2b3666e21805f40a953525e3e301f8 -> 7a2b3666e21805f40a953525e3e301f8 (software test engineer: Test Pass!)
+************************************************** Graph **************************************************
+[2024-25-01 11:07:52 INFO] ZOMBIE EDGES: 
+Zombie Edge d15577173c6a908f5c787c69b26234d2 -> 296caeb939361dcdb44bb49099eb8a50 Removed
+Zombie Edge 296caeb939361dcdb44bb49099eb8a50 -> d15577173c6a908f5c787c69b26234d2 Removed
+Zombie Edge d15577173c6a908f5c787c69b26234d2 -> d15577173c6a908f5c787c69b26234d2 Removed
+Zombie Edge 7a2b3666e21805f40a953525e3e301f8 -> 7a2b3666e21805f40a953525e3e301f8 Removed
+
+[2024-25-01 11:07:52 INFO] ZOMBIE NODES: 
+Zombie Node 296caeb939361dcdb44bb49099eb8a50 Removed
+
+[2024-25-01 11:07:52 INFO] 
+************************************************** Graph **************************************************
+3 Nodes:
+94e7ccc362cb671a4da4026aeb82846d, 0.0, 
+d15577173c6a908f5c787c69b26234d2, 1.0, 
+7a2b3666e21805f40a953525e3e301f8, 3.0, 
+2 Edges:
+6cd46e638ebc07a812c5dd558f68b8af: 94e7ccc362cb671a4da4026aeb82846d -> d15577173c6a908f5c787c69b26234d2 (chief technology officer: write one or multiple files and make sure that every detail )
+754ca90350d942f934775411666deec7: d15577173c6a908f5c787c69b26234d2 -> 7a2b3666e21805f40a953525e3e301f8 (chief technology officer: write one or multiple files and make sure that every detail )
+************************************************** Graph **************************************************
+[2024-25-01 11:08:20 INFO] HTTP Request: POST https://yeysai.com/v1/embeddings "HTTP/1.1 200 OK"
+[2024-25-01 11:08:20 INFO] Get code embedding from /var/azureml-app/azureml-models/text-embedding-ada-002-8k/584175/:
+**[OpenAI_Usage_Info Receive]**
+prompt_tokens: 362
+total_tokens: 362
+
+[2024-25-01 11:08:20 INFO] DONE:get node embedding
+time cost:21.40918803215027
+
+[2024-25-01 11:08:22 INFO] HTTP Request: POST https://yeysai.com/v1/embeddings "HTTP/1.1 200 OK"
+[2024-25-01 11:08:22 INFO] Get code embedding from ada:
+**[OpenAI_Usage_Info Receive]**
+prompt_tokens: 363
+total_tokens: 363
+
+[2024-25-01 11:08:22 INFO] DONE:get node embedding
+time cost:2.448246955871582
+
+[2024-25-01 11:08:24 INFO] HTTP Request: POST https://yeysai.com/v1/embeddings "HTTP/1.1 200 OK"
+[2024-25-01 11:08:24 INFO] Get text embedding from ada:
+**[OpenAI_Usage_Info Receive]**
+prompt_tokens: 24
+total_tokens: 24
+
+[2024-25-01 11:08:24 INFO] DONE:get task prompt embedding
+time cost:2.1231791973114014
+
+[2024-25-01 11:08:27 INFO] Init value:{'94e7ccc362cb671a4da4026aeb82846d': 0.0, 'd15577173c6a908f5c787c69b26234d2': 0.4134325174441662, '7a2b3666e21805f40a953525e3e301f8': 1}
+
+Estimated value:{'94e7ccc362cb671a4da4026aeb82846d': 0.0, 'd15577173c6a908f5c787c69b26234d2': 0.4134325174441662, '7a2b3666e21805f40a953525e3e301f8': 1}
+[2024-25-01 11:08:38 INFO] HTTP Request: POST https://yeysai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[2024-25-01 11:08:38 INFO] InstructionStar generation:
+**[OpenAI_Usage_Info Receive]**
+prompt_tokens: 967
+completion_tokens: 692
+total_tokens: 1659
+
+[2024-25-01 11:08:38 INFO] Sorted-and-Truncated Experiences (with instructionStar):94e7ccc362cb671a4da4026aeb82846d -> 7a2b3666e21805f40a953525e3e301f8  valueGain=1.000000 len(instructionPath)=2 instructionStar=To transition from the initial code version to the final version, follow these steps:1. Import the
+[2024-25-01 11:08:38 INFO] [Conclusion]:
+prompt_tokens:967, completion_tokens:692, total_tokens:1659
+[2024-25-01 11:08:38 INFO] [Conclusion]:
+text_prompt_tokens:24, text_total_tokens:24
+code_prompt_tokens:725, code_total_tokens:725
+prompt_tokens:749, total_tokens:749
+[2024-25-01 11:08:41 INFO] HTTP Request: POST https://yeysai.com/v1/embeddings "HTTP/1.1 200 OK"
+[2024-25-01 11:08:41 INFO] Get text embedding from ada:
+**[OpenAI_Usage_Info Receive]**
+prompt_tokens: 18
+total_tokens: 18
+
+[2024-25-01 11:08:41 INFO] DONE: get edge embedding
+time cost:2.973163366317749
+
+[2024-25-01 11:08:43 INFO] HTTP Request: POST https://yeysai.com/v1/embeddings "HTTP/1.1 200 OK"
+[2024-25-01 11:08:43 INFO] Get text embedding from ada:
+**[OpenAI_Usage_Info Receive]**
+prompt_tokens: 18
+total_tokens: 18
+
+[2024-25-01 11:08:43 INFO] DONE: get edge embedding
+time cost:2.3684914112091064
+
+[2024-25-01 11:08:43 INFO] DONE: got all EDGE embeddings
+EDGE embedding time cost:5.343662977218628
+
+[2024-25-01 11:08:46 INFO] HTTP Request: POST https://yeysai.com/v1/embeddings "HTTP/1.1 200 OK"
+[2024-25-01 11:08:46 INFO] Get code embedding from ada:
+**[OpenAI_Usage_Info Receive]**
+prompt_tokens: 357
+total_tokens: 357
+
+[2024-25-01 11:08:46 INFO] DONE: get node embedding
+time cost:2.349684000015259
+
+[2024-25-01 11:08:46 INFO] DONE: got all NODE embeddings
+NODE embedding time cost:2.351797580718994
+
+[2024-25-01 11:08:48 INFO] HTTP Request: POST https://yeysai.com/v1/embeddings "HTTP/1.1 200 OK"
+[2024-25-01 11:08:48 INFO] Get text embedding from ada:
+**[OpenAI_Usage_Info Receive]**
+prompt_tokens: 692
+total_tokens: 692
+
+[2024-25-01 11:08:48 INFO] DONE: get exprience embedding
+time cost:2.284816265106201
+
+[2024-25-01 11:08:48 INFO] DONE: got all EXPERIENCE embeddings
+EXPERIENCE embedding time cost:2.2858166694641113
+
+[2024-25-01 11:08:48 INFO] All embedding DONE
+time cost:9.981277227401733
+
+[2024-25-01 11:08:48 INFO] len(previous_memory)=12
+[2024-25-01 11:08:48 INFO] len(merged_dic)=13
+ merged_dic dumped to C:\Users\Dang_Yufan\ChatDev\ecl\memory\MemoryCards.json
+[2024-25-01 11:08:48 INFO] [Conclusion]:
+text_prompt_tokens:728, text_total_tokens:728
+code_prompt_tokens:357, code_total_tokens:357
+prompt_tokens:1085, total_tokens:1085

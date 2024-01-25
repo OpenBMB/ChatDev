@@ -7,8 +7,8 @@ def filter_valuegain(directory, filtered_directory):
     """filter memory by experience's valueGain, delete experience whose valueGain is smaller than filter_threshold  
 
     Keyword arguments:
-    directory -- the input directory of MemoryCards, like "./mmm/memory/MemoryCards.json"
-    filtered_directory -- the output directory of filtered MemoryCards, like "./mmm/memory/MemoryCards.json"
+    directory -- the input directory of MemoryCards, like "./ecl/memory/MemoryCards.json"
+    filtered_directory -- the output directory of filtered MemoryCards, like "./ecl/memory/MemoryCards.json"
     """
     with open(directory) as file:
         content = json.load(file)
