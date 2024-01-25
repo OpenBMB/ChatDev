@@ -90,13 +90,16 @@ class RolePlaying:
             sys_msg_generator_kwargs: Optional[Dict] = None,
             extend_sys_msg_meta_dicts: Optional[List[Dict]] = None,
             extend_task_specify_meta_dict: Optional[Dict] = None,
-            background_prompt: Optional[str] = ""
+            background_prompt: Optional[str] = "",
+            memory = None,
     ) -> None:
         self.with_task_specify = with_task_specify
         self.with_task_planner = with_task_planner
         self.with_critic_in_the_loop = with_critic_in_the_loop
         self.model_type = model_type
         self.task_type = task_type
+        self.memory = memory
+
 
         if with_task_specify:
             task_specify_meta_dict = dict()
@@ -148,9 +151,9 @@ class RolePlaying:
                                           meta_dict=sys_msg_meta_dicts[1],
                                           content=user_role_prompt.format(**sys_msg_meta_dicts[1]))
 
-        self.assistant_agent: ChatAgent = ChatAgent(self.assistant_sys_msg, model_type,
+        self.assistant_agent: ChatAgent = ChatAgent(self.assistant_sys_msg, memory, model_type,
                                                     **(assistant_agent_kwargs or {}), )
-        self.user_agent: ChatAgent = ChatAgent(self.user_sys_msg, model_type, **(user_agent_kwargs or {}), )
+        self.user_agent: ChatAgent = ChatAgent(self.user_sys_msg,memory, model_type, **(user_agent_kwargs or {}), )
 
         if with_critic_in_the_loop:
             raise ValueError("with_critic_in_the_loop not available")
@@ -187,6 +190,9 @@ class RolePlaying:
         content = phase_prompt.format(
             **({"assistant_role": self.assistant_agent.role_name} | placeholders)
         )
+        retrieval_memory = self.assistant_agent.use_memory(content)
+        if retrieval_memory!= None:
+            placeholders["examples"] = retrieval_memory
         user_msg = UserChatMessage(
             role_name=self.user_sys_msg.role_name,
             role="user",

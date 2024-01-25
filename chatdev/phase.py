@@ -59,6 +59,7 @@ class Phase(ABC):
             need_reflect=False,
             with_task_specify=False,
             model_type=ModelType.GPT_3_5_TURBO,
+            memory=None,
             placeholders=None,
             chat_turn_limit=10
     ) -> str:
@@ -102,6 +103,7 @@ class Phase(ABC):
             task_prompt=task_prompt,
             task_type=task_type,
             with_task_specify=with_task_specify,
+            memory=memory,
             model_type=model_type,
             background_prompt=chat_env.config.background_prompt
         )
@@ -227,6 +229,7 @@ class Phase(ABC):
                           user_role_prompt=self.counselor_prompt,
                           placeholders={"conversations": messages, "question": question},
                           need_reflect=False,
+                          memory=chat_env.memory,
                           chat_turn_limit=1,
                           model_type=self.model_type)
 
@@ -300,6 +303,7 @@ class Phase(ABC):
                           user_role_prompt=self.user_role_prompt,
                           chat_turn_limit=chat_turn_limit,
                           placeholders=self.phase_env,
+                          memory=chat_env.memory,
                           model_type=self.model_type)
         chat_env = self.update_chat_env(chat_env)
         return chat_env
@@ -529,6 +533,7 @@ class CodeReviewHuman(Phase):
                           user_role_prompt=self.user_role_prompt,
                           chat_turn_limit=chat_turn_limit,
                           placeholders=self.phase_env,
+                          memory=chat_env.memory,
                           model_type=self.model_type)
         chat_env = self.update_chat_env(chat_env)
         return chat_env
@@ -579,6 +584,7 @@ class TestErrorSummary(Phase):
                               phase_name=self.phase_name,
                               assistant_role_prompt=self.assistant_role_prompt,
                               user_role_prompt=self.user_role_prompt,
+                              memory=chat_env.memory,
                               chat_turn_limit=chat_turn_limit,
                               placeholders=self.phase_env)
         chat_env = self.update_chat_env(chat_env)

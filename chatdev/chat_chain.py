@@ -70,7 +70,9 @@ class ChatChain:
                                              gui_design=check_bool(self.config["gui_design"]),
                                              git_management=check_bool(self.config["git_management"]),
                                              incremental_develop=check_bool(self.config["incremental_develop"]),
-                                             background_prompt=self.config["background_prompt"])
+                                             background_prompt=self.config["background_prompt"],
+                                             with_memory=check_bool(self.config["with_memory"]))
+                                             
         self.chat_env = ChatEnv(self.chat_env_config)
 
         # the user input prompt will be self-improved (if set "self_improve": "True" in ChatChainConfig.json)
@@ -203,6 +205,9 @@ class ChatChain:
 
         software_path = os.path.join(directory, "_".join([self.project_name, self.org_name, self.start_time]))
         self.chat_env.set_directory(software_path)
+
+        if self.chat_env.config.with_memory is True:
+            self.chat_env.init_memory()
 
         # copy config files to software path
         shutil.copy(self.config_path, software_path)
