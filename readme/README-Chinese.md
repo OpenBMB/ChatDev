@@ -11,7 +11,7 @@
 ## 📖 概述
 
 - **ChatDev** 是一家**虚拟软件公司**，通过各种不同角色的**智能体**
-  运营，包括执行官 <img src='visualizer/static/figures/ceo.png' height=20>，产品官 <img src='visualizer/static/figures/cpo.png' height=20>, 技术官 <img src='visualizer/static/figures/cto.png' height=20>, 程序员 <img src='visualizer/static/figures/programmer.png' height=20>, 审查员 <img src='visualizer/static/figures/reviewer.png' height=20>, 测试员 <img src='visualizer/static/figures/tester.png' height=20>, 艺术设计者 <img src='visualizer/static/figures/designer.png' height=20>等。这些智能体形成了一个多智能体组织结构，其使命是“通过编程改变数字世界”。ChatDev内的智能体通过参加专业的功能研讨会来
+  运营，包括执行官 <img src='../visualizer/static/figures/ceo.png' height=20>，产品官 <img src='../visualizer/static/figures/cpo.png' height=20>, 技术官 <img src='../visualizer/static/figures/cto.png' height=20>, 程序员 <img src='../visualizer/static/figures/programmer.png' height=20>, 审查员 <img src='../visualizer/static/figures/reviewer.png' height=20>, 测试员 <img src='../visualizer/static/figures/tester.png' height=20>, 艺术设计者 <img src='../visualizer/static/figures/designer.png' height=20>等。这些智能体形成了一个多智能体组织结构，其使命是“通过编程改变数字世界”。ChatDev内的智能体通过参加专业的功能研讨会来
   **协作**，包括设计、编码、测试和文档编写等任务。
 - ChatDev的主要目标是提供一个基于大型语言模型（LLM）的**易于使用**、**高度可定制**并且**可扩展**的框架，它是研究群体智能的理想场景。
 
