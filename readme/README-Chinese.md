@@ -16,7 +16,7 @@
 - ChatDev的主要目标是提供一个基于大型语言模型（LLM）的**易于使用**、**高度可定制**并且**可扩展**的框架，它是研究群体智能的理想场景。
 
 ## 📰 新闻
-* **2024年1月25日: 我们在 ChatDev 中集成更新了 "Experiential Co-Learning" 模块。尽请查阅 [Experiential Co-Learning 指南](wiki.md#co-tracking).**
+* **2024年1月25日: 我们在 ChatDev 中集成更新了 "Experiential Co-Learning" 模块。尽请查阅 [Experiential Co-Learning 指南](../wiki.md#co-tracking).**
 * 2023年12月28日: 我们发布了**Experiential Co-Learning**这一新范式。在这种方法中，instructor和assistant两个智能体可以积累shorcut-oriented的经验，从而减少重复性错误提高效率且有效地解决新任务。 如意兴趣可查看我们的预印本论文： https://arxiv.org/abs/2312.17025 and this technique will soon be integrated into ChatDev.
   <p align="center">
   <img src='../misc/ecl.png' width=860>
