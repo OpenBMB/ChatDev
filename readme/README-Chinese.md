@@ -23,7 +23,7 @@
   </p>
 * 2023年11月15日: 我们基于ChatDev发布了SaaS零代码平台，使软件开发人员和创新者能够以极低的成本和门槛高效地构建软件. 网页端链接： https://chatdev.modelbest.cn/。
   <p align="center">
-  <img src='misc/saas.png' width=560>
+  <img src='../misc/saas.png' width=560>
   </p>
 - 2023年11月2号: 现已推出 **Incremental development**模式，允许ChatDev多智能体针对已有代码的文件进行增量开发. 尝试 `--config "incremental" --path "[source_code_directory_path]"` 来驱动。
   <p align="center">
@@ -32,16 +32,16 @@
 
 - 2023年10月26日: ChatDev现在支持使用Docker进行更安全的简便操作 (感谢贡献者 [ManindraDeMel](https://github.com/ManindraDeMel)). 请参照 [Docker使用指南](wiki.md#docker-start).
   <p align="center">
-  <img src='misc/docker.png' width=400>
+  <img src='../misc/docker.png' width=400>
   </p>
 - 2023年9月25日:  **Git** 模式现在已可用, 可以驱动programmer <img src='visualizer/static/figures/programmer.png' height=20> 去使用Git进行版本控制。 想要尝试这个功能, 可简便地在``ChatChainConfig.json``中，将 ``"git_management"`` 的开关改为 ``"True"`` 。 具体可见 [指引](wiki.md#git-mode).
   <p align="center">
-  <img src='misc/github.png' width=600>
+  <img src='../misc/github.png' width=600>
   </p>
 - 2023年9月20日：**Human-Agent-Interaction** 模式现在已可用! 您可以扮演reviewer <img src='visualizer/static/figures/reviewer.png' height=20> 的角色，参与到ChatDev智能体团队的工作流程中，并给在代码上给予programmer <img src='visualizer/static/figures/programmer.png' height=20> 建议；
   尝试 ``python3 run.py --task [description_of_your_idea] --config "Human"``. 具体见 [指引](wiki.md#human-agent-interaction) 和 [示例](WareHouse/Gomoku_HumanAgentInteraction_20230920135038)。
   <p align="center">
-  <img src='misc/Human_intro.png' width=600>
+  <img src='../misc/Human_intro.png' width=600>
   </p>
 - 2023年9月1日：Art模式现已可用！您可以使用智能体生成软件中使用的图像，尝试 `python3 run.py --config "Art"`。**
   请参见此处的[示例](../WareHouse/gomokugameArtExample_THUNLP_20230831122822)。
