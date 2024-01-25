@@ -11,7 +11,7 @@
 ## 📖 概述
 
 - **ChatDev** 是一家**虚拟软件公司**，通过各种不同角色的**智能体**
-  运营，包括执行官 <img src='../visualizer/static/figures/ceo.png' height=20>，产品官 <img src='../visualizer/static/figures/cpo.png' height=20>, 技术官 <img src='../visualizer/static/figures/cto.png' height=20>, 程序员 <img src='../visualizer/static/figures/programmer.png' height=20>, 审查员 <img src='../visualizer/static/figures/reviewer.png' height=20>, 测试员 <img src='../visualizer/static/figures/tester.png' height=20>, 设计师 <img src='../visualizer/static/figures/designer.png' height=20>等。这些智能体形成了一个多智能体组织结构，其使命是“通过编程改变数字世界”。ChatDev内的智能体通过参加专业的功能研讨会来
+  运营，包括执行官<img src='../visualizer/static/figures/ceo.png' height=20>，产品官<img src='../visualizer/static/figures/cpo.png' height=20>，技术官<img src='../visualizer/static/figures/cto.png' height=20>，程序员 <img src='../visualizer/static/figures/programmer.png' height=20>，审查员<img src='../visualizer/static/figures/reviewer.png' height=20>，测试员<img src='../visualizer/static/figures/tester.png' height=20>，设计师<img src='../visualizer/static/figures/designer.png' height=20> 等。这些智能体形成了一个多智能体组织结构，其使命是“通过编程改变数字世界”。ChatDev内的智能体通过参加专业的功能研讨会来
   **协作**，包括设计、编码、测试和文档编写等任务。
 - ChatDev的主要目标是提供一个基于大型语言模型（LLM）的**易于使用**、**高度可定制**并且**可扩展**的框架，它是研究群体智能的理想场景。
 
@@ -34,16 +34,16 @@
   <p align="center">
   <img src='../misc/docker.png' width=400>
   </p>
-- 2023年9月25日:  **Git** 模式现在已可用：使程序员 <img src='../visualizer/static/figures/programmer.png' height=20> 去使用Git进行版本控制。 想要尝试这个功能, 可简便地在``ChatChainConfig.json``中，将 ``"git_management"`` 的开关改为 ``"True"`` 。 具体可见 [指引](../wiki.md#git-mode).
+- 2023年9月25日:  **Git** 模式现在已可用：使程序员<img src='../visualizer/static/figures/programmer.png' height=20> 去使用Git进行版本控制。 想要尝试这个功能, 可简便地在``ChatChainConfig.json``中，将 ``"git_management"`` 的开关改为 ``"True"`` 。 具体可见 [指引](../wiki.md#git-mode).
   <p align="center">
   <img src='../misc/github.png' width=600>
   </p>
-- 2023年9月20日：**Human-Agent-Interaction** 模式现在已可用! 您可以扮演审查员 <../img src='../visualizer/static/figures/reviewer.png' height=20> 的角色，参与到ChatDev智能体团队的工作流程中，给予程序员 <img src='../visualizer/static/figures/programmer.png' height=20> 建议；
+- 2023年9月20日：**Human-Agent-Interaction** 模式现在已可用! 您可以扮演审查员<img src='../visualizer/static/figures/reviewer.png' height=20> 的角色，参与到ChatDev智能体团队的工作流程中，给予程序员<img src='../visualizer/static/figures/programmer.png' height=20> 建议；
   尝试 ``python3 run.py --task [description_of_your_idea] --config "Human"``. 具体见 [指引](../wiki.md#human-agent-interaction) 和 [示例](../WareHouse/Gomoku_HumanAgentInteraction_20230920135038)。
   <p align="center">
   <img src='../misc/Human_intro.png' width=600>
   </p>
-- 2023年9月1日：**Art**模式现已可用！您可以驱动设计师<img src=',,.visualizer/static/figures/designer.png' height=20> 生成软件中所需的图像。可通过 `python3 run.py --config "Art"`尝试。**
+- 2023年9月1日：**Art**模式现已可用！您可以驱动设计师<img src='../visualizer/static/figures/designer.png' height=20> 生成软件中所需的图像。可通过 `python3 run.py --config "Art"`尝试。**
   请参见此处的[示例](../WareHouse/gomokugameArtExample_THUNLP_20230831122822)。
 - 2023年8月28日：系统已公开提供使用。
 - 2023年8月17日：V1.0.0版本已准备好发布。
