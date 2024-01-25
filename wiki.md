@@ -168,11 +168,12 @@ After this process, the experiences have been extracted from the production of s
   - `<directory>`: The file path to the memory directory that you intend to process. 
   - `<filtered_directory>`: The file path to a directory where you want to store the processed data.
 
+  \
   **For example:**
   ```bash
-    python3 ecl/post_process/memory_filter.py 0.5 "ecl/memory/MemoryCards.json" "ecl/memory/MemoryCards_filtered.json"
+    python3 ecl/post_process/memory_filter.py 0.9 "ecl/memory/MemoryCards.json" "ecl/memory/MemoryCards_filtered.json"
   ```
-> **Notice:** Actually, we have provided our `MemoryCards.json` used in our experiment in *link*. You can download the json file and put it in `ecl/memory` folder. This allows you to directly proceed to the Co-Reasoning phase without needing to redo the Co-Tracking and Co-Memorizing steps.
+> **Notice:** By default, the `MemoryCards.json` is set to be empty. You can customize your own experience pool for agents following steps above. And we have also provided our `MemoryCards.json` used in our experiment in [MemoryCards.json](https://drive.google.com/drive/folders/1czsR4swQyqpoN8zwN0-rSFcTVl68zTDY?usp=sharing). You can download the json file through the link and put it under `ecl/memory` folder. This allows you to directly proceed to the Co-Reasoning phase without needing to redo the Co-Tracking and Co-Memorizing steps.
 ### Co-Reasoning
 - **Memory Usage Configuration**:
   In the `CompanyConfig/Default/ChatChainConfig.json` file, the `with_memory` option should be set **True**. \
@@ -184,7 +185,7 @@ After this process, the experiences have been extracted from the production of s
    ```
    In this process of software development, the agents will engage their experience pool(`MemoryCards.json`) into software development!
 
-If you are interested in this **Experiential Co-Learning** Module, please checkout our preprint paper at https://arxiv.org/abs/2312.17025.
+Detailed descriptions and experiment results about this **Experiential Co-Learning** Module lies in our preprint paper at https://arxiv.org/abs/2312.17025.
 
 ## Customization
 
