@@ -25,12 +25,12 @@
   <p align="center">
   <img src='../misc/saas.png' width=560>
   </p>
-- 2023年11月2号: 现已推出 **Incremental development**模式，允许ChatDev多智能体针对已有代码的文件进行增量开发. 尝试 `--config "incremental" --path "[source_code_directory_path]"` 来驱动。
+- 2023年11月2号: 现已推出 **Incremental development**模式，允许ChatDev多智能体针对已有代码的文件进行增量开发。 可尝试 `--config "incremental" --path "[source_code_directory_path]"` 来驱动。
   <p align="center">
   <img src='../misc/increment.png' width=700>
   </p>
 
-- 2023年10月26日: ChatDev现在支持使用Docker进行更安全的简便操作 (感谢贡献者 [ManindraDeMel](https://github.com/ManindraDeMel)). 请参照 [Docker使用指南](../wiki.md#docker-start).
+- 2023年10月26日: ChatDev现在支持使用Docker进行更安全的简便操作 (感谢贡献者 [ManindraDeMel](https://github.com/ManindraDeMel))。 请参照 [Docker使用指南](../wiki.md#docker-start).
   <p align="center">
   <img src='../misc/docker.png' width=400>
   </p>
