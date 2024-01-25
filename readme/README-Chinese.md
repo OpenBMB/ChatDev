@@ -21,7 +21,7 @@
   <p align="center">
   <img src='../misc/ecl.png' width=860>
   </p>
-* 2023年11月15日: 我们基于ChatDev发布了SaaS零代码平台，使软件开发人员和创新者能够以极低的成本和门槛高效地构建软件. 网页端链接： https://chatdev.modelbest.cn/。
+* 2023年11月15日: 我们基于ChatDev发布了SaaS零代码平台，使软件开发人员和创新者能够以极低的成本和门槛高效地构建软件. 网页端链接： https://chatdev.modelbest.cn/
   <p align="center">
   <img src='../misc/saas.png' width=560>
   </p>
