@@ -71,7 +71,7 @@ class ChatChain:
                                              git_management=check_bool(self.config["git_management"]),
                                              incremental_develop=check_bool(self.config["incremental_develop"]),
                                              background_prompt=self.config["background_prompt"],
-                                             with_memory=check_bool(self.config["with_memory"]))
+                                             with_memory=check_bool(self.config["with_memory"]) if "with_memory" in self.config else None)
                                              
         self.chat_env = ChatEnv(self.chat_env_config)
 
@@ -214,16 +214,27 @@ class ChatChain:
         shutil.copy(self.config_phase_path, software_path)
         shutil.copy(self.config_role_path, software_path)
 
-        # copy code files to software path in incremental_develop mode
+        def copy_directory(source, target, exclude=None):
+            if exclude is None:
+                exclude = []
+
+            os.makedirs(target, exist_ok=True)
+            for item in os.listdir(source):
+                if item in exclude:
+                    continue  # Skip the excluded directories
+
+                source_item = os.path.join(source, item)
+                target_item = os.path.join(target, item)
+
+                if os.path.isdir(source_item):
+                    copy_directory(source_item, target_item, exclude)
+                else:
+                    shutil.copy2(source_item, target_item)
+        # copy code files to software path in incremental_develop mode           
         if check_bool(self.config["incremental_develop"]):
-            for root, dirs, files in os.walk(self.code_path):
-                relative_path = os.path.relpath(root, self.code_path)
-                target_dir = os.path.join(software_path, 'base', relative_path)
-                os.makedirs(target_dir, exist_ok=True)
-                for file in files:
-                    source_file = os.path.join(root, file)
-                    target_file = os.path.join(target_dir, file)
-                    shutil.copy2(source_file, target_file)
+            exclude_dirs = ['.git', 'venv', '.venv', '.vscode']  # List of directories to exclude, can be loaded from args
+            target_base_path = os.path.join(software_path, 'base')
+            copy_directory(self.code_path, target_base_path, exclude=exclude_dirs)
             self.chat_env._load_from_hardware(os.path.join(software_path, 'base'))
 
         # write task prompt to software

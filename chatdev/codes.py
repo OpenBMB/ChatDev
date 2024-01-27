@@ -129,9 +129,14 @@ class Codes:
 
     def _load_from_hardware(self, directory) -> None:
         assert len([filename for filename in os.listdir(directory) if filename.endswith(".py")]) > 0
-        for root, directories, filenames in os.walk(directory):
-            for filename in filenames:
-                if filename.endswith(".py"):
-                    code = open(os.path.join(directory, filename), "r", encoding="utf-8").read()
-                    self.codebooks[filename] = self._format_code(code)
+        self._load_python_files(directory, directory)
         log_visualize("{} files read from {}".format(len(self.codebooks.keys()), directory))
+
+    def _load_python_files(self, root_directory, directory):
+        for entry in os.scandir(directory):
+            if entry.is_file() and entry.name.endswith(".py"):
+                code = open(entry.path, "r", encoding="utf-8").read()
+                relative_path = os.path.relpath(entry.path, root_directory)
+                self.codebooks[relative_path] = self._format_code(code)
+            elif entry.is_dir():
+                self._load_python_files(root_directory, entry.path)
