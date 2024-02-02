@@ -19,3 +19,6 @@ Welcome to SRDD (Software Requirement Description Dataset), a large prompted dat
 <p align="center">
   <img src='./SRDD_Category.png' width=800>
 </p>
+
+# License
+The SRDD dataset is licensed under **CC BY-NC 4.0**. This license explicitly permits non-commercial use of the data. We would like to emphasize that any models trained using these datasets should strictly adhere to the non-commercial usage restriction and should be employed exclusively for research purposes.
