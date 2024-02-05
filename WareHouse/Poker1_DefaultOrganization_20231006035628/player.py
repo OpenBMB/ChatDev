@@ -74,13 +74,17 @@ class HumanPlayer(Player):
         else:
             print("Invalid decision. Please enter a valid decision.")
             return self.make_decision(current_bet)
+            
     def get_raise_amount(self, current_bet):
-        try:
-                amount = int(input(f"Enter the raise amount: {current_bet*2} + "))
-                return amount
-        except ValueError:
-            print("Invalid input.")
+    try:
+        amount = int(input(f"Enter the raise amount (minimum {current_bet*2}): "))
+        if amount <= 0:
+            print("Raise amount must be greater than zero.")
             return self.get_raise_amount(current_bet)
+        return amount
+    except ValueError:
+        print("Invalid input.")
+        return self.get_raise_amount(current_bet)
             
 class AIPlayer(Player):
     def make_decision(self, current_bet):
