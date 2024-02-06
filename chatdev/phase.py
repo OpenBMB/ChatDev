@@ -649,3 +649,13 @@ class Manual(Phase):
         chat_env._update_manuals(self.seminar_conclusion)
         chat_env.rewrite_manuals()
         return chat_env
+
+class PartyCreation(Phase):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+    def update_phase_env(self, chat_env):
+        self.phase_env.update({"task": chat_env.env_dict['task_prompt']})
+
+    def update_chat_env(self, chat_env) -> ChatEnv:
+        return chat_env

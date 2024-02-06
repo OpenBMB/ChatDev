@@ -47,7 +47,7 @@ def get_config(company):
         path to three configuration jsons: [config_path, config_phase_path, config_role_path]
     """
     config_dir = os.path.join(root, "CompanyConfig", company)
-    default_config_dir = os.path.join(root, "CompanyConfig", "Default")
+    """default_config_dir = os.path.join(root, "CompanyConfig", "Default")"""
 
     config_files = [
         "ChatChainConfig.json",
@@ -59,11 +59,12 @@ def get_config(company):
 
     for config_file in config_files:
         company_config_path = os.path.join(config_dir, config_file)
-        default_config_path = os.path.join(default_config_dir, config_file)
+        """default_config_path = os.path.join(default_config_dir, config_file)"""
 
         if os.path.exists(company_config_path):
             config_paths.append(company_config_path)
         else:
+            raise Exception("company config not set correctly");
             config_paths.append(default_config_path)
 
     return tuple(config_paths)
