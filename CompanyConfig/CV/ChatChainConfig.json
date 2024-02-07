@@ -2,15 +2,28 @@
     "chain": [
         {
             "phase": "PartyCreation",
+            "phaseType": "ComposedPhase",
+            "cycleNum": 1,
+            "Composition": [{
+                    "phase": "InitialAnalysis",
+                    "phaseType": "SimplePhase",
+                    "max_turn_step": 3,
+                    "need_reflect": "True"
+                }
+            ]
+        },
+        {
+            "phase": "TeamFitAndPersonalityEvaluation",
             "phaseType": "SimplePhase",
-            "max_turn_step": 2,
-            "need_reflect": "False"
+            "max_turn_step": 3,
+            "need_reflect": "True"
         }
     ],
     "recruitments": [
         "Chief Executive Officer",
-        "Party Creator",
-        "Counselor"
+        "Subject Matter Expert AI (SME AI)",
+        "Document Analyst AI",
+        "Cultural Fit Analyst AI"
     ],
     "clear_structure": "True",
     "gui_design": "False",

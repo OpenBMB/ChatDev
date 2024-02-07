@@ -659,3 +659,23 @@ class PartyCreation(Phase):
 
     def update_chat_env(self, chat_env) -> ChatEnv:
         return chat_env
+    
+class InitialAnalysis(Phase):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+    def update_phase_env(self, chat_env):
+        self.phase_env.update({"task": chat_env.env_dict['task_prompt']})
+
+    def update_chat_env(self, chat_env) -> ChatEnv:
+        return chat_env
+    
+class TeamFitAndPersonalityEvaluation(Phase):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+    def update_phase_env(self, chat_env):
+        self.phase_env.update({"task": chat_env.env_dict['task_prompt']})
+
+    def update_chat_env(self, chat_env) -> ChatEnv:
+        return chat_env
