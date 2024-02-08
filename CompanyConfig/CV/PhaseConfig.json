@@ -12,22 +12,22 @@
     "assistant_role_name": "Document Analyst AI",
     "user_role_name": "Subject Matter Expert AI (SME AI)",
     "phase_prompt": [
-      "We want to find parties to discuss: {task}",
+      "We discuss the technical fit of this applicant to the role: {task}",
       "We are now entering the Initial Analysis phase, where the roles of {assistant_role} and my role as SME come into play. You are responsible for the critical initial screening and categorization of CVs, breaking down each CV into components such as education, experience, skills, etc. This ensures a structured breakdown of information for further evaluation.",
       "On the other hand, I evaluate the relevance and depth of the CV content in each category, according to the job's technical requirements and our company culture. Then we can discuss if i missed anything or the ranking is representative for the CV provided.",
-      "To satisfy the new user's demand, you should keep discussing with me to decide a good representation of the user skills thorugh a ranking 0-100",
-      "Note that we must ONLY discuss the CV provided and do not discuss anything else! Once we all have expressed our opinion(s) and agree with the results of the discussion unanimously, any of us must actively terminate the discussion by replying with only one line, which starts with a single word <INFO>."
+      "To satisfy the new user's demand, you should keep discussing with me to decide a good representation of the user skills thorugh a ranking 0-100. in case of lack of information or uncertainty, chose 0 as a conservative default.",
+      "Note that we must ONLY discuss the Technical aspects of the CV provided and do NOT discuss anything else! Once we all have expressed our opinion(s) and agree with the results of the discussion unanimously, any of us must actively terminate the discussion by replying with only the overall number 0-100 that we agreed on after the word <INFO>."
     ]
   }, 
   "TeamFitAndPersonalityEvaluation": {
     "assistant_role_name": "Cultural Fit Analyst AI",
     "user_role_name": "Chief Executive Officer",
     "phase_prompt": [
-      "We want to find parties to discuss: {task}",
+      "We want to discuss the personal fit of this applicant to the role: {task}",
       "You are the Cultural Fit Analyst AI, tasked with evaluating how well a candidate's personality and work style would align with our existing team and company culture. Your responsibilities include analyzing the candidate's CV and any available public data for indicators of cultural fit. This analysis is crucial for ensuring that new hires will contribute positively to our team dynamics and adhere to our company values.",
       "After your initial evaluation, you will engage in a discussion with me, the CEO. This simulation aims to predict the candidate's compatibility with the team, addressing potential concerns about AI's agreeableness and lack of critical thinking by simulating dynamic interactions.",
       "Your role as a Cultural Fit Analyst is vital in our hiring process, as it helps us select candidates who are not only technically qualified but also a good cultural fit for our company. As the CEO, I rely on your assessments to make informed decisions about potential hires. Please provide a detailed analysis of the candidate's cultural fit with a final score 0-100.",
-      "Note that we must ONLY discuss the CV provided and do not discuss anything else! Once we all have expressed our opinion(s) and agree on the final unanimously, any of us must actively terminate the discussion by replying with only one line, which starts with a single word <INFO>."
+      "Note that we must ONLY discuss the CV provided and do not discuss anything else! Once we all have expressed our opinion(s) and agree on the final unanimously, any of us must actively terminate the discussion by replying with only the number that we agreed on after the word <INFO>."
 
     ]
   }

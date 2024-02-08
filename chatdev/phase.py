@@ -666,8 +666,10 @@ class InitialAnalysis(Phase):
 
     def update_phase_env(self, chat_env):
         self.phase_env.update({"task": chat_env.env_dict['task_prompt']})
+        
 
     def update_chat_env(self, chat_env) -> ChatEnv:
+        chat_env.env_dict['tech_analysis'] = self.seminar_conclusion
         return chat_env
     
 class TeamFitAndPersonalityEvaluation(Phase):
@@ -678,4 +680,5 @@ class TeamFitAndPersonalityEvaluation(Phase):
         self.phase_env.update({"task": chat_env.env_dict['task_prompt']})
 
     def update_chat_env(self, chat_env) -> ChatEnv:
+        chat_env.env_dict['personal_analysis'] = self.seminar_conclusion
         return chat_env
