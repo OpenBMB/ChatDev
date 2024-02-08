@@ -47,7 +47,7 @@ def get_config(company):
         path to three configuration jsons: [config_path, config_phase_path, config_role_path]
     """
     config_dir = os.path.join(root, "CompanyConfig", company)
-    """default_config_dir = os.path.join(root, "CompanyConfig", "Default")"""
+    default_config_dir = os.path.join(root, "CompanyConfig", "CV")
 
     config_files = [
         "ChatChainConfig.json",
@@ -59,13 +59,42 @@ def get_config(company):
 
     for config_file in config_files:
         company_config_path = os.path.join(config_dir, config_file)
-        """default_config_path = os.path.join(default_config_dir, config_file)"""
+        default_config_path = os.path.join(default_config_dir, config_file)
 
         if os.path.exists(company_config_path):
             config_paths.append(company_config_path)
         else:
-            raise Exception("company config not set correctly");
             config_paths.append(default_config_path)
+
+    return tuple(config_paths)
+
+
+def get_cv(cv_directory_name):
+    """
+    return input cv
+    Args:
+        cv_directory_name: customized configuration name under CVs/
+
+    Returns:
+        path to three files: [company.txt, cv.pdf, jobpost.txt]
+    """
+    config_dir = os.path.join(root, "CVs", cv_directory_name)
+
+    config_files = [
+        "company.txt",
+        "cv.pdf",
+        "jobpost.txt"
+    ]
+
+    config_paths = []
+
+    for config_file in config_files:
+        company_config_path = os.path.join(config_dir, config_file)
+
+        if os.path.exists(company_config_path):
+            config_paths.append(company_config_path)
+        else:
+            raise Exception("CV file not found: " + company_config_path)
 
     return tuple(config_paths)
 
@@ -83,6 +112,8 @@ parser.add_argument('--model', type=str, default="GPT_3_5_TURBO",
                     help="GPT Model, choose from {'GPT_3_5_TURBO','GPT_4','GPT_4_32K', 'GPT_4_TURBO'}")
 parser.add_argument('--path', type=str, default="",
                     help="Your file directory, ChatDev will build upon your software in the Incremental mode")
+parser.add_argument('--cv_path', type=str, default="default",
+                    help="The directory in which the cv, jobpost and company description is stored")
 args = parser.parse_args()
 
 # Start ChatDev
@@ -91,6 +122,7 @@ args = parser.parse_args()
 #          Init ChatChain
 # ----------------------------------------
 config_path, config_phase_path, config_role_path = get_config(args.config)
+company_path, cv_path, jobpost_path = get_cv(args.cv_path)
 args2type = {'GPT_3_5_TURBO': ModelType.GPT_3_5_TURBO,
              'GPT_4': ModelType.GPT_4,
              'GPT_4_32K': ModelType.GPT_4_32k,
@@ -107,7 +139,10 @@ chat_chain = ChatChain(config_path=config_path,
                        project_name=args.name,
                        org_name=args.org,
                        model_type=args2type[args.model],
-                       code_path=args.path)
+                       code_path=args.path,
+                       company_path=company_path, 
+                       cv_path=cv_path, 
+                       jobpost_path=jobpost_path)
 
 # ----------------------------------------
 #          Init Log

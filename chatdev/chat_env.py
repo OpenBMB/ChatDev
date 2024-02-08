@@ -68,7 +68,10 @@ class ChatEnv:
             "language": "",
             "review_comments": "",
             "error_summary": "",
-            "test_reports": ""
+            "test_reports": "",
+            "cv": "",
+            "jobpost_description": "",
+            "company_description": ""
         }
 
     @staticmethod

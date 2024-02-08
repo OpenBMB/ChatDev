@@ -72,6 +72,9 @@ class RolePlaying:
             user_role_name: str,
             critic_role_name: str = "critic",
             task_prompt: str = "",
+            company_description: str = "",
+            cv_description: str = "",
+            jobpost_description: str = "",
             assistant_role_prompt: str = "",
             user_role_prompt: str = "",
             user_role_type: Optional[RoleType] = None,
@@ -135,7 +138,8 @@ class RolePlaying:
 
         self.task_prompt = task_prompt
 
-        sys_msg_meta_dicts = [dict(chatdev_prompt=background_prompt, task=task_prompt)] * 2
+        sys_msg_meta_dicts = [dict(chatdev_prompt=background_prompt, task=task_prompt,
+            company_description=company_description, cv_description=cv_description, jobpost_description=jobpost_description)] * 2
         if (extend_sys_msg_meta_dicts is None and self.task_type in [TaskType.AI_SOCIETY, TaskType.MISALIGNMENT,
                                                                      TaskType.CHATDEV]):
             extend_sys_msg_meta_dicts = [dict(assistant_role=assistant_role_name, user_role=user_role_name)] * 2
