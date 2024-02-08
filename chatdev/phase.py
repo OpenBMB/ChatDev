@@ -682,3 +682,18 @@ class TeamFitAndPersonalityEvaluation(Phase):
     def update_chat_env(self, chat_env) -> ChatEnv:
         chat_env.env_dict['personal_analysis'] = self.seminar_conclusion
         return chat_env
+    
+class FinalScoringAndCEOReview(Phase):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+    def update_phase_env(self, chat_env):
+        self.phase_env.update({"task": chat_env.env_dict['task_prompt'],
+                               "tech_evaluation": chat_env.env_dict['tech_analysis'],
+                               "personal_fit": chat_env.env_dict['personal_analysis'],
+                               })
+
+    def update_chat_env(self, chat_env) -> ChatEnv:
+        print("Seminar conclusion: ", self.seminar_conclusion)
+        chat_env.env_dict['score'] = self.seminar_conclusion
+        return chat_env

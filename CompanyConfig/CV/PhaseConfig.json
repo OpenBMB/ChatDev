@@ -25,12 +25,27 @@
     "phase_prompt": [
       "We want to discuss the personal fit of this applicant to the role: {task}",
       "You are the Cultural Fit Analyst AI, tasked with evaluating how well a candidate's personality and work style would align with our existing team and company culture. Your responsibilities include analyzing the candidate's CV and any available public data for indicators of cultural fit. This analysis is crucial for ensuring that new hires will contribute positively to our team dynamics and adhere to our company values.",
-      "After your initial evaluation, you will engage in a discussion with me, the CEO. This simulation aims to predict the candidate's compatibility with the team, addressing potential concerns about AI's agreeableness and lack of critical thinking by simulating dynamic interactions.",
-      "Your role as a Cultural Fit Analyst is vital in our hiring process, as it helps us select candidates who are not only technically qualified but also a good cultural fit for our company. As the CEO, I rely on your assessments to make informed decisions about potential hires. Please provide a detailed analysis of the candidate's cultural fit with a final score 0-100.",
-      "Note that we must ONLY discuss the CV provided and do not discuss anything else! Once we all have expressed our opinion(s) and agree on the final unanimously, any of us must actively terminate the discussion by replying with only the number that we agreed on after the word <INFO>."
+      "After an initial evaluation, we will engage in a discussion. This simulation aims to predict the candidate's compatibility with the team, addressing potential concerns about the candidates shortcomings.",
+      "Your role as a Cultural Fit Analyst is vital in our hiring process, culturally qualified. As the CEO, I rely on your assessments to make informed decisions about potential hires. Please provide a detailed analysis of the candidate's cultural fit with a final score 0-100.",
+      "Note that we must ONLY discuss the profiles personal fit and only the personal fit! Ignore all details about the technical fit. Once we all have expressed our opinion(s) and agree on the final unanimously, any of us must actively terminate the discussion by replying with only the number that we agreed on after the word <INFO>."
+
+    ]
+  },
+  "FinalScoringAndCEOReview": {
+    "assistant_role_name": "Scoring AI",
+    "user_role_name": "Chief Executive Officer",
+    "phase_prompt": [
+      "We discuss the technical fit of this applicant to the role: {task}",
+      "Here is the technical evaluation: ",
+      "{tech_evaluation}",
+      "Here is the personal fit: ",
+      "{personal_fit}",
+      "The Scoring AI, responsible for compiling and weighing the input from all previous phases to assign a comprehensive final score to the candidate's CV. This score reflects the candidate's technical abilities, cultural fit, personality compatibility, and overall suitability for the position within our company.",
+      "After calculating the final score, the CEO AI, representing the highest level of decision-making within the company, will review the scoring process and the final score. This review ensures that the evaluation aligns with our company's values, goals, and the specific requirements of the job.",
+      "This phase addresses the need for holistic oversight and serves as a final check to counteract any potential biases or inconsistencies that might have arisen during the evaluation process. It ensures that the candidate selected for the position is truly the best fit, both in terms of capabilities and alignment with our organizational culture. As the Scoring AI, please provide the calculated final score along with a brief rationale for the score. The CEO AI will then conduct the final review to confirm or adjust the decision based on a comprehensive overview of the candidate's evaluation.",
+      "Note that we must ONLY discuss the Candidate scores and do NOT discuss anything else! Once we all have expressed our opinion(s) and agree on the final unanimously, any of us must actively terminate the discussion by replying with only one final number 0-100 after the word <INFO>."
 
     ]
   }
-  
 }
 
