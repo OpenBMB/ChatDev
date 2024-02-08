@@ -13,6 +13,7 @@ from chatdev.chat_env import ChatEnv, ChatEnvConfig
 from chatdev.statistics import get_info
 from camel.web_spider import modal_trans
 from chatdev.utils import log_visualize, now
+from chatdev.pdf_reader import read_pdf
 
 
 def check_bool(s):
@@ -29,7 +30,10 @@ class ChatChain:
                  project_name: str = None,
                  org_name: str = None,
                  model_type: ModelType = ModelType.GPT_3_5_TURBO,
-                 code_path: str = None) -> None:
+                 code_path: str = None,
+                 company_path: str = None, 
+                 cv_path:str = None, 
+                 jobpost_path:str = None) -> None:
         """
 
         Args:
@@ -39,6 +43,9 @@ class ChatChain:
             task_prompt: the user input prompt for software
             project_name: the user input name for software
             org_name: the organization name of the human user
+            company_path: path to the company.txt
+            cv_path: path to the cv.pdf
+            jobpost_path: path to the jobpost.txt
         """
 
         # load config file
@@ -49,6 +56,9 @@ class ChatChain:
         self.org_name = org_name
         self.model_type = model_type
         self.code_path = code_path
+        self.company_path = company_path
+        self.cv_path = cv_path
+        self.jobpost_path = jobpost_path
 
         with open(self.config_path, 'r', encoding="utf8") as file:
             self.config = json.load(file)
@@ -56,6 +66,13 @@ class ChatChain:
             self.config_phase = json.load(file)
         with open(self.config_role_path, 'r', encoding="utf8") as file:
             self.config_role = json.load(file)
+        
+        # reading in cv, jobpost, and company description
+        with open(self.company_path, 'r', encoding='utf8') as file:
+            self.company_description = file.read()
+        self.cv_description = read_pdf(cv_path)
+        with open(self.jobpost_path, 'r', encoding='utf8') as file:
+            self.jobpost_description = file.read()
 
         # init chatchain config and recruitments
         self.chain = self.config["chain"]
@@ -252,6 +269,10 @@ class ChatChain:
             self.chat_env.env_dict['task_prompt'] = self.task_prompt_raw
         if(check_bool(self.web_spider)):
             self.chat_env.env_dict['task_description'] = modal_trans(self.task_prompt_raw)
+            
+        self.chat_env.env_dict['cv_description'] = self.cv_description
+        self.chat_env.env_dict['jobpost_description'] = self.jobpost_description
+        self.chat_env.env_dict['company_description'] = self.company_description
 
     def post_processing(self):
         """
@@ -350,6 +371,9 @@ then you should return a message in a format like \"<INFO> revised_version_of_th
             task_prompt="Do prompt engineering on user query",
             with_task_specify=False,
             model_type=self.model_type,
+            company_description=self.company_description,
+            cv_description=self.cv_description,
+            jobpost_description=self.jobpost_description
         )
 
         # log_visualize("System", role_play_session.assistant_sys_msg)
