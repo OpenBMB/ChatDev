@@ -216,6 +216,8 @@ class Phase(ABC):
             question = """Conclude the programming language being discussed for software development, in the format: "*" where '*' represents a programming language." """
         elif phase_name == "EnvironmentDoc":
             question = """According to the codes and file format listed above, write a requirements.txt file to specify the dependencies or packages required for the project to run properly." """
+        elif phase_name == "FinalScoringAndCEOReview":
+            question = """ Decide whether we have decided on one final number indicating the fit """
         else:
             raise ValueError(f"Reflection of phase {phase_name}: Not Assigned.")
 
@@ -666,14 +668,43 @@ class DataReadInTest(Phase):
     def update_chat_env(self, chat_env) -> ChatEnv:
         return chat_env
     
-class InitialAnalysis(Phase):
+class CompanyNeeds(Phase):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
     def update_phase_env(self, chat_env):
-        self.phase_env.update({"task": chat_env.env_dict['task_prompt']})
+        self.phase_env.update({"task": chat_env.env_dict['task_prompt'],
+                               "jobpost_description": chat_env.env_dict['jobpost_description'],
+                               "company_description": chat_env.env_dict['company_description']})
         
+    def update_chat_env(self, chat_env) -> ChatEnv:
+        chat_env.env_dict['company_needs'] = self.seminar_conclusion
+        return chat_env
 
+class InitialAnalysisDiscuss2(Phase):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+    def update_phase_env(self, chat_env):
+        self.phase_env.update({"task": chat_env.env_dict['task_prompt'],
+                               "cv_description": chat_env.env_dict['cv_description'],
+                               "company_needs": chat_env.env_dict['company_needs'],
+                               "company_description": chat_env.env_dict['company_description']})
+        
+    def update_chat_env(self, chat_env) -> ChatEnv:
+        chat_env.env_dict['tech_analysis'] = self.seminar_conclusion
+        return chat_env
+
+class InitialAnalysisDiscuss_old(Phase):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+    def update_phase_env(self, chat_env):
+        self.phase_env.update({"task": chat_env.env_dict['task_prompt'],
+                               "cv_description": chat_env.env_dict['cv_description'],
+                               "jobpost_description": chat_env.env_dict['jobpost_description'],
+                               "company_description": chat_env.env_dict['company_description']})
+        
     def update_chat_env(self, chat_env) -> ChatEnv:
         chat_env.env_dict['tech_analysis'] = self.seminar_conclusion
         return chat_env
@@ -683,7 +714,10 @@ class TeamFitAndPersonalityEvaluation(Phase):
         super().__init__(**kwargs)
 
     def update_phase_env(self, chat_env):
-        self.phase_env.update({"task": chat_env.env_dict['task_prompt']})
+        self.phase_env.update({"task": chat_env.env_dict['task_prompt'],
+                               "cv_description": chat_env.env_dict['cv_description'],
+                               "jobpost_description": chat_env.env_dict['jobpost_description'],
+                               "company_description": chat_env.env_dict['company_description']})
 
     def update_chat_env(self, chat_env) -> ChatEnv:
         chat_env.env_dict['personal_analysis'] = self.seminar_conclusion
@@ -700,6 +734,5 @@ class FinalScoringAndCEOReview(Phase):
                                })
 
     def update_chat_env(self, chat_env) -> ChatEnv:
-        print("Seminar conclusion: ", self.seminar_conclusion)
         chat_env.env_dict['score'] = self.seminar_conclusion
         return chat_env

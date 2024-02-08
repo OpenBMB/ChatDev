@@ -1,33 +1,33 @@
 {
-  "PartyCreation": {
-    "assistant_role_name": "Party Creator",
-    "user_role_name": "Chief Executive Officer",
+  "InitialAnalysisDiscuss_old": {
+    "assistant_role_name": "Subject Matter Expert AI (SME AI)",
+    "user_role_name": "Document Analyst AI",
     "phase_prompt": [
-      "We want to find parties to discuss: {task}",
-      "As the {assistant_role}, to satisfy the new user's demand and the product should be realizable, you should keep discussing with me to decide which parties we want to use?",
-      "Note that we must ONLY discuss the parties and do not discuss anything else! Once we all have expressed our opinion(s) and agree with the results of the discussion unanimously, any of us must actively terminate the discussion by replying with only one line, which starts with a single word <INFO>."
-    ]
-  },
-  "InitialAnalysis": {
-    "assistant_role_name": "Document Analyst AI",
-    "user_role_name": "Subject Matter Expert AI (SME AI)",
-    "phase_prompt": [
-      "We discuss the technical fit of this applicant to the role: {task}",
+      "We discuss the technical fit of this applicant to the role: {task} with the help of the following information:",
+      "For the company: {company_description}",
+      "For the job: ",
+      "{jobpost_description}",
+      "We consider the following applicant: ",
+      "{cv_description}",
       "We are now entering the Initial Analysis phase, where the roles of {assistant_role} and my role as SME come into play. You are responsible for the critical initial screening and categorization of CVs, breaking down each CV into components such as education, experience, skills, etc. This ensures a structured breakdown of information for further evaluation.",
       "On the other hand, I evaluate the relevance and depth of the CV content in each category, according to the job's technical requirements and our company culture. Then we can discuss if i missed anything or the ranking is representative for the CV provided.",
       "To satisfy the new user's demand, you should keep discussing with me to decide a good representation of the user skills thorugh a ranking 0-100. in case of lack of information or uncertainty, chose 0 as a conservative default.",
-      "Note that we must ONLY discuss the Technical aspects of the CV provided and do NOT discuss anything else! Once we all have expressed our opinion(s) and agree with the results of the discussion unanimously, any of us must actively terminate the discussion by replying with only the overall number 0-100 that we agreed on after the word <INFO>."
+      "Note that we must ONLY discuss the Technical aspects of the CV provided and do NOT discuss anything else! Once we all have expressed our opinion(s) and agree with the results of the discussion unanimously, any of us must actively terminate the discussion by replying with only the overall number 0-100 that we agreed on after the word <INFO>. Like this: <INFO>Number</INFO>"
     ]
   }, 
   "TeamFitAndPersonalityEvaluation": {
     "assistant_role_name": "Cultural Fit Analyst AI",
     "user_role_name": "Chief Executive Officer",
     "phase_prompt": [
-      "We want to discuss the personal fit of this applicant to the role: {task}",
+      "We want to discuss the personal fit of this applicant to the role: {task} with the help of the following information:",
+      "For the company: {company_description}",
+      "For the job: ",
+      "{jobpost_description}",
+      "We consider the following applicant: ",
+      "{cv_description}",
       "You are the Cultural Fit Analyst AI, tasked with evaluating how well a candidate's personality and work style would align with our existing team and company culture. Your responsibilities include analyzing the candidate's CV and any available public data for indicators of cultural fit. This analysis is crucial for ensuring that new hires will contribute positively to our team dynamics and adhere to our company values.",
-      "After an initial evaluation, we will engage in a discussion. This simulation aims to predict the candidate's compatibility with the team, addressing potential concerns about the candidates shortcomings.",
-      "Your role as a Cultural Fit Analyst is vital in our hiring process, culturally qualified. As the CEO, I rely on your assessments to make informed decisions about potential hires. Please provide a detailed analysis of the candidate's cultural fit with a final score 0-100.",
-      "Note that we must ONLY discuss the profiles personal fit and only the personal fit! Ignore all details about the technical fit. Once we all have expressed our opinion(s) and agree on the final unanimously, any of us must actively terminate the discussion by replying with only the number that we agreed on after the word <INFO>."
+      "To satisfy the new user's demand, you should keep discussing with me to decide a good representation of the user skills thorugh a ranking 0-100. In case of lack of insufficient information, chose 0 as a conservative default.",
+      "Note that we must ONLY discuss the profiles personal fit and only the personal fit! Ignore all details about the technical fit. Once we all have expressed our opinion(s) and agree on the final unanimously, any of us must actively terminate the discussion by replying with only the number that we agreed on after the word <INFO>. Like this: <INFO>Number</INFO>"
 
     ]
   },
@@ -43,8 +43,35 @@
       "The Scoring AI, responsible for compiling and weighing the input from all previous phases to assign a comprehensive final score to the candidate's CV. This score reflects the candidate's technical abilities, cultural fit, personality compatibility, and overall suitability for the position within our company.",
       "After calculating the final score, the CEO AI, representing the highest level of decision-making within the company, will review the scoring process and the final score. This review ensures that the evaluation aligns with our company's values, goals, and the specific requirements of the job.",
       "This phase addresses the need for holistic oversight and serves as a final check to counteract any potential biases or inconsistencies that might have arisen during the evaluation process. It ensures that the candidate selected for the position is truly the best fit, both in terms of capabilities and alignment with our organizational culture. As the Scoring AI, please provide the calculated final score along with a brief rationale for the score. The CEO AI will then conduct the final review to confirm or adjust the decision based on a comprehensive overview of the candidate's evaluation.",
-      "Note that we must ONLY discuss the Candidate scores and do NOT discuss anything else! Once we all have expressed our opinion(s) and agree on the final unanimously, any of us must actively terminate the discussion by replying with only one final number 0-100 after the word <INFO>."
+      "Note that we must ONLY discuss the Candidate scores and do NOT discuss anything else! Once we all have expressed our opinion(s) and agree on the final unanimously, any of us must actively terminate the discussion by replying with only one final number 0-100 after the word <INFO>.  Like this: <INFO>Number</INFO>"
 
+    ]
+  },
+  "InitialAnalysisDiscuss2": {
+    "assistant_role_name": "Document Analyst AI2",
+    "user_role_name": "Subject Matter Expert AI (SME AI)2",
+    "phase_prompt": [
+      "Based on these criteria: ",
+      "{company_needs}",
+      "How well would this applicant be able to fullful the job: ",
+      "{cv_description}",
+      "Note that we must ONLY discuss the Technical aspects of the CV provided and do NOT discuss anything else and the technical fit should be quantified as a number 0-100.",
+      "Once everyone has expressed their opinion and there is unanumous consensus, AND ONLY THEN, one of us should terminate the discussion by outputting one single line with looking like: <INFO>[Number 0-100]</INFO>"
+    ]
+  }, 
+  "CompanyNeeds": {
+    "assistant_role_name": "Subject Matter Expert AI (SME AI)",
+    "user_role_name": "Document Analyst AI",
+    "phase_prompt": [
+      "Company: {company_description}",
+      "Job: ",
+      "{jobpost_description}",
+      "For this information extract a list of technical competences / requirements an applicant needs in order to be a good fit for the Job.",
+      "Note you should analyze the document and nothing else. Then output the word <INFO> followed by a list of requirements like this:",
+      "<INFO>",
+      "1. X many years of Y experience", 
+      "2. Proficient in Z technologs",
+      " etc..."
     ]
   }
 }

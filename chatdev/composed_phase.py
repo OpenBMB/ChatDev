@@ -251,7 +251,7 @@ class Test(ComposedPhase):
         else:
             return False
         
-class PartyCreation(ComposedPhase):
+class InitialAnalysis(ComposedPhase):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
