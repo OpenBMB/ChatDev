@@ -105,7 +105,10 @@ class Phase(ABC):
             with_task_specify=with_task_specify,
             memory=memory,
             model_type=model_type,
-            background_prompt=chat_env.config.background_prompt
+            background_prompt=chat_env.config.background_prompt,
+            company_description=chat_env.env_dict['company_description'],
+            cv_description=chat_env.env_dict['cv_description'],
+            jobpost_description=chat_env.env_dict['jobpost_description']
         )
 
         # log_visualize("System", role_play_session.assistant_sys_msg)
@@ -649,13 +652,16 @@ class Manual(Phase):
         chat_env._update_manuals(self.seminar_conclusion)
         chat_env.rewrite_manuals()
         return chat_env
-
-class PartyCreation(Phase):
+    
+class DataReadInTest(Phase):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
     def update_phase_env(self, chat_env):
-        self.phase_env.update({"task": chat_env.env_dict['task_prompt']})
+        self.phase_env.update(
+            {"cv_description": chat_env.env_dict['cv_description'],
+             "jobpost_description": chat_env.env_dict['jobpost_description'],
+             "company_description": chat_env.env_dict['company_description']})
 
     def update_chat_env(self, chat_env) -> ChatEnv:
         return chat_env
