@@ -12,7 +12,7 @@
 ## 📖 Overview
 
 - **ChatDev** es una **empresa de software virtual** que opera a través de varios **agentes inteligentes** que desempeñan diferentes roles, incluyendo al Director Ejecutivo <img src='../visualizer/static/figures/ceo.png' height=20>, Director de Producto <img src='../visualizer/static/figures/cpo.png' height=20>, Director Tecnológico <img src='../visualizer/static/figures/cto.png' height=20>, programador <img src='../visualizer/static/figures/programmer.png' height=20>, revisor <img src='../visualizer/static/figures/reviewer.png' height=20>, tester <img src='../visualizer/static/figures/tester.png' height=20>, diseñador de arte <img src='../visualizer/static/figures/designer.png' height=20>. Estos agentes forman una estructura organizacional multi-agente y están unidos por una misión de "revolucionar el mundo digital a través de la programación." Los agentes dentro de ChatDev **colaboran** participando en seminarios funcionales especializados, incluyendo tareas como diseñar, codificar, probar y documentar.
-- El objetivo principal de ChatDev es ofrecer un marco de trabajo **fácil de usar**, **altamente personalizable** y **extensible**, que se basa en modelos de grandems modelos de lenguaje (LLMs, por sus siglas en inglés) y sirve como un escenario ideal para estudiar la inteligencia colectiva.
+- El objetivo principal de ChatDev es ofrecer un marco de trabajo **fácil de usar**, **altamente personalizable** y **extensible**, que se basa en modelos de grandes modelos de lenguaje (LLMs, por sus siglas en inglés) y sirve como un escenario ideal para estudiar la inteligencia colectiva.
 <p align="center">
   <img src='../misc/company.png' width=600>
 </p>
@@ -36,7 +36,7 @@
 * 16 de julio de 2023: Se publicó el [artículo preprint](https://arxiv.org/abs/2307.07924) asociado con este proyecto.
 * 30 de junio de 2023: Se lanzó la versión inicial del repositorio de ChatDev.
 
-## ❓ ¿Que puede hcaer ChatDev?
+## ❓ ¿Que puede hacer ChatDev?
 
 ![intro](../misc/intro.png)
 
