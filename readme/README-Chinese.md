@@ -11,13 +11,39 @@
 ## 📖 概述
 
 - **ChatDev** 是一家**虚拟软件公司**，通过各种不同角色的**智能体**
-  运营，包括执行官、技术官、程序员、测试员等。这些智能体形成了一个多智能体组织结构，其使命是“通过编程改变数字世界”。ChatDev内的智能体通过参加专业的功能研讨会来
+  运营，包括执行官<img src='../visualizer/static/figures/ceo.png' height=20>，产品官<img src='../visualizer/static/figures/cpo.png' height=20>，技术官<img src='../visualizer/static/figures/cto.png' height=20>，程序员 <img src='../visualizer/static/figures/programmer.png' height=20>，审查员<img src='../visualizer/static/figures/reviewer.png' height=20>，测试员<img src='../visualizer/static/figures/tester.png' height=20>，设计师<img src='../visualizer/static/figures/designer.png' height=20> 等。这些智能体形成了一个多智能体组织结构，其使命是“通过编程改变数字世界”。ChatDev内的智能体通过参加专业的功能研讨会来
   **协作**，包括设计、编码、测试和文档编写等任务。
 - ChatDev的主要目标是提供一个基于大型语言模型（LLM）的**易于使用**、**高度可定制**并且**可扩展**的框架，它是研究群体智能的理想场景。
 
 ## 📰 新闻
+* **2024年1月25日: 已在 ChatDev 中更新了 "Experiential Co-Learning" 模块。尽请查阅 [Experiential Co-Learning 指南](../wiki.md#co-tracking)**。
+* 2023年12月28日: 我们发布了新范式"**Experiential Co-Learning**"。在这个方法中，instructor和assistant两个智能体通过积累以捷径为导向的经验来有效解决新任务，减少重复性错误并提高效率。 如有兴趣可查看我们的[预印本论文](https://arxiv.org/abs/2312.17025), 相关技术我们也会尽快合并到ChatDev的开源版本，敬请期待。
+  <p align="center">
+  <img src='../misc/ecl.png' width=860>
+  </p>
+* 2023年11月15日: 我们基于ChatDev发布了SaaS零代码平台，使软件开发工作者和创新型企业家能以极低的成本和门槛，高效地制作软件。可在网页端注册体验： https://chatdev.modelbest.cn/
+  <p align="center">
+  <img src='../misc/saas.png' width=560>
+  </p>
+- 2023年11月2号: 现已推出 **Incremental development**模式，允许ChatDev在已有代码的基础上进行增量开发。 可尝试 `--config "incremental" --path "[source_code_directory_path]"` 来驱动。
+  <p align="center">
+  <img src='../misc/increment.png' width=700>
+  </p>
 
-- **2023年9月1日：Art模式现已可用！您可以使用智能体生成软件中使用的图像，尝试 `python3 run.py --config "Art"`。**
+- 2023年10月26日: ChatDev现在支持使用Docker来安全地执行程序 (感谢贡献者 [ManindraDeMel](https://github.com/ManindraDeMel))。 请参照 [Docker使用指南](../wiki.md#docker-start).
+  <p align="center">
+  <img src='../misc/docker.png' width=400>
+  </p>
+- 2023年9月25日:  **Git** 模式现在已可用：使程序员<img src='../visualizer/static/figures/programmer.png' height=20> 去使用Git进行版本控制。 想要尝试这个功能, 可简便地在``ChatChainConfig.json``中，将 ``"git_management"`` 的开关改为 ``"True"`` 。 具体可见 [指引](../wiki.md#git-mode).
+  <p align="center">
+  <img src='../misc/github.png' width=600>
+  </p>
+- 2023年9月20日：**Human-Agent-Interaction** 模式现在已可用! 您可以扮演审查员<img src='../visualizer/static/figures/reviewer.png' height=20> 的角色，参与到ChatDev智能体团队的工作流程中，给予程序员<img src='../visualizer/static/figures/programmer.png' height=20> 建议；
+  尝试 ``python3 run.py --task [description_of_your_idea] --config "Human"``. 具体见 [指引](../wiki.md#human-agent-interaction) 和 [示例](../WareHouse/Gomoku_HumanAgentInteraction_20230920135038)。
+  <p align="center">
+  <img src='../misc/Human_intro.png' width=600>
+  </p>
+- 2023年9月1日：**Art**模式现已可用！您可以驱动设计师<img src='../visualizer/static/figures/designer.png' height=20> 生成软件中所需的图像。可通过 `python3 run.py --config "Art"`尝试。**
   请参见此处的[示例](../WareHouse/gomokugameArtExample_THUNLP_20230831122822)。
 - 2023年8月28日：系统已公开提供使用。
 - 2023年8月17日：V1.0.0版本已准备好发布。
@@ -98,6 +124,11 @@ https://github.com/OpenBMB/ChatDev/assets/11889052/80d01d2f-677b-4399-ad8b-f7af9
    cd WareHouse/project_name_DefaultOrganization_timestamp
    python main.py
    ```
+   
+## 🐳 通过Docker执行ChatDev
+
+- 我们感谢 [ManindraDeMel](https://github.com/ManindraDeMel) 提供Docker的支持。具体请参照 [Docker指南](wiki.md#docker-start) 使用。
+
 
 ## ✨️ 进阶技能
 
@@ -131,21 +162,14 @@ request一样简单。这是一个示例：执行命令`python3 run.py --task "d
 
 **参观社区制造分享的[软件](../Contribution.md)!**
 
-### 软件分享者
+## 👨‍💻‍ 软件贡献者
 
-<a href="https://github.com/qianc62"><img src="https://avatars.githubusercontent.com/u/48988402?v=4" alt="Contributor" style="width:5%; border-radius: 50%;"/></a>
-<a href="https://github.com/thinkwee"><img src="https://avatars.githubusercontent.com/u/11889052?v=4" alt="Contributor" style="width:5%; border-radius: 50%;"/></a>
-<a href="https://github.com/NA-Wen"><img src="https://avatars.githubusercontent.com/u/92134380?v=4" alt="Contributor" style="width:5%; border-radius: 50%;"/></a>
-<a href="https://github.com/JiahaoLi2003"><img src="https://avatars.githubusercontent.com/u/111221887?v=4" alt="Contributor" style="width:5%; border-radius: 50%;"/></a>
-<a href="https://github.com/Alphamasterliu"><img src="https://avatars.githubusercontent.com/u/110011045?v=4" alt="Contributor" style="width:5%; border-radius: 50%;"/></a>
-<a href="https://github.com/GeekyWizKid"><img src="https://avatars.githubusercontent.com/u/133981481?v=4" alt="Contributor" style="width:5%; border-radius: 50%;"/></a>
-<a href="https://github.com/Munsif-Raza-T"><img src="https://avatars.githubusercontent.com/u/76085202?v=4" alt="Contributor" style="width:5%; border-radius: 50%;"/></a>
-<a href="https://github.com/djbritt"><img src="https://avatars.githubusercontent.com/u/28036018?v=4" alt="Contributor" style="width:5%; border-radius: 50%;"/></a>
-<a href="https://github.com/Classified3939"><img src="https://avatars.githubusercontent.com/u/102702965?v=4" alt="Contributor" style="width:5%; border-radius: 50%;"/></a>
-<a href="https://github.com/chenilim"><img src="https://avatars.githubusercontent.com/u/46905241?v=4" alt="Contributor" style="width:5%; border-radius: 50%;"/></a>
-<a href="https://github.com/delconis"><img src="https://avatars.githubusercontent.com/u/5824478?v=4" alt="Contributor" style="width:5%; border-radius: 50%;"/></a>
-<a href="https://github.com/eMcQuill"><img src="https://avatars.githubusercontent.com/u/139025701?v=4" alt="Contributor" style="width:5%; border-radius: 50%;"/></a>
-<a href="https://github.com/Aizhouym"><img src="https://avatars.githubusercontent.com/u/105852026?v=4" alt="Contributor" style="width:5%; border-radius: 50%;"/></a>
+<a href="https://github.com/OpenBMB/ChatDev/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=OpenBMB/ChatDev" />
+</a>
+
+由 [contrib.rocks](https://contrib.rocks) 自动生成。
+
 
 ## 📑 引用
 
@@ -173,6 +197,13 @@ request一样简单。这是一个示例：执行命令`python3 run.py --task "d
 
 - 源代码采用Apache 2.0许可证授权。
 - 数据集采用CC BY NC 4.0许可证授权，仅允许非商业用途。请注意，使用这些数据集训练的任何模型不应用于研究以外的其他目的。
+
+## 🤝 致谢
+
+<a href="http://nlp.csai.tsinghua.edu.cn/"><img src="../misc/thunlp.png" height=50pt></a>&nbsp;&nbsp;
+<a href="https://modelbest.cn/"><img src="../misc/modelbest.png" height=50pt></a>&nbsp;&nbsp;
+<a href="https://github.com/OpenBMB/AgentVerse/"><img src="../misc/agentverse.png" height=50pt></a>&nbsp;&nbsp;
+<a href="https://aibrb.com/introducing-herbie-your-super-employee-for-streamlined-productivity/"><img src="https://aibrb.com/wp-content/uploads/2023/09/Featured-on-AIBRB.com-white-1.png"  height=50pt></a>
 
 
 ## 联系方式
