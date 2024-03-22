@@ -1,0 +1,124 @@
+[2024-22-03 20:05:40 INFO] **[Preprocessing]**
+
+**ChatDev Starts** (20240322200540)
+
+**Timestamp**: 20240322200540
+
+**config_path**: C:\Users\temir\Documents\scripts\chatdev_genai\ChatDev\CompanyConfig\Default\ChatChainConfig.json
+
+**config_phase_path**: C:\Users\temir\Documents\scripts\chatdev_genai\ChatDev\CompanyConfig\Default\PhaseConfig.json
+
+**config_role_path**: C:\Users\temir\Documents\scripts\chatdev_genai\ChatDev\CompanyConfig\Default\RoleConfig.json
+
+**task_prompt**: A game where you control a pixelated snake on a rectangular grid and guide it to eat food (represented by dots). As the snake consumes the food, it grows longer, making the game progressively challenging. The game's pace gradually increases, making it more difficult to manoeuvre the snake without running into obstacles. With each successful consumption of food, the player earns points, and the game continues until the snake collides with itself or the boundaries
+
+**project_name**: snake game
+
+**Log File**: C:\Users\temir\Documents\scripts\chatdev_genai\ChatDev\WareHouse\snake game_DefaultOrganization_20240322200540.log
+
+**ChatDevConfig**:
+ChatEnvConfig.with_memory: False
+ChatEnvConfig.clear_structure: True
+ChatEnvConfig.git_management: False
+ChatEnvConfig.gui_design: True
+ChatEnvConfig.incremental_develop: False
+ChatEnvConfig.background_prompt: ChatDev is a software company powered by multiple intelligent agents, such as chief executive officer, chief human resources officer, chief product officer, chief technology officer, etc, with a multi-agent organizational structure and the mission of 'changing the digital world through programming'.
+
+
+**ChatGPTConfig**:
+ChatGPTConfig(temperature=0.2, top_p=1.0, n=1, stream=False, stop=None, max_tokens=None, presence_penalty=0.0, frequency_penalty=0.0, logit_bias={}, user='')
+
+
+
+[2024-22-03 20:05:42 INFO] flask app.py did not start for online log
+[2024-22-03 20:05:42 INFO] System: **[chatting]**
+
+| Parameter | Value |
+| --- | --- |
+| **task_prompt** | A game where you control a pixelated snake on a rectangular grid and guide it to eat food (represented by dots). As the snake consumes the food, it grows longer, making the game progressively challenging. The game's pace gradually increases, making it more difficult to manoeuvre the snake without running into obstacles. With each successful consumption of food, the player earns points, and the game continues until the snake collides with itself or the boundaries |
+| **need_reflect** | True |
+| **assistant_role_name** | Chief Product Officer |
+| **user_role_name** | Chief Executive Officer |
+| **phase_prompt** | ChatDev has made products in the following form before: Image: can present information in line chart, bar chart, flow chart, cloud chart, Gantt chart, etc. Document: can present information via .docx files. PowerPoint: can present information via .pptx files. Excel: can present information via .xlsx files. PDF: can present information via .pdf files. Website: can present personal resume, tutorial, products, or ideas, via .html files. Application: can implement visualized game, software, tool, etc, via python. Dashboard: can display a panel visualizing real-time information. Mind Map: can represent ideas, with related concepts arranged around a core concept. As the {assistant_role}, to satisfy the new user's demand and the product should be realizable, you should keep discussing with me to decide which product modality do we want the product to be? Note that we must ONLY discuss the product modality and do not discuss anything else! Once we all have expressed our opinion(s) and agree with the results of the discussion unanimously, any of us must actively terminate the discussion by replying with only one line, which starts with a single word , followed by our final product modality without any other words, e.g., " PowerPoint". |
+| **phase_name** | DemandAnalysis |
+| **assistant_role_prompt** | {chatdev_prompt} You are Chief Product Officer. we are both working at ChatDev. We share a common interest in collaborating to successfully complete a task assigned by a new customer. You are responsible for all product-related matters in ChatDev. Usually includes product design, product strategy, product vision, product innovation, project management and product marketing. Here is a new customer's task: {task}. To complete the task, you must write a response that appropriately solves the requested instruction based on your expertise and customer's needs. |
+| **user_role_prompt** | {chatdev_prompt} You are Chief Executive Officer. Now, we are both working at ChatDev and we share a common interest in collaborating to successfully complete a task assigned by a new customer. Your main responsibilities include being an active decision-maker on users' demands and other key policy issues, leader, manager, and executor. Your decision-making role involves high-level decisions about policy and strategy; and your communicator role can involve speaking to the organization's management and employees. Here is a new customer's task: {task}. To complete the task, I will give you one or more instructions, and you must help me to write a specific solution that appropriately solves the requested instruction based on your expertise and my needs. |
+| **chat_turn_limit** | 10 |
+| **placeholders** | {} |
+| **memory** | No existed memory |
+| **model_type** | ModelType.GPT_3_5_TURBO_NEW |
+
+[2024-22-03 20:05:44 INFO] flask app.py did not start for online log
+[2024-22-03 20:05:44 INFO] System: **[RolePlaying]**
+
+| Parameter | Value |
+| --- | --- |
+| **assistant_role_name** | Chief Product Officer |
+| **user_role_name** | Chief Executive Officer |
+| **assistant_role_prompt** | {chatdev_prompt} You are Chief Product Officer. we are both working at ChatDev. We share a common interest in collaborating to successfully complete a task assigned by a new customer. You are responsible for all product-related matters in ChatDev. Usually includes product design, product strategy, product vision, product innovation, project management and product marketing. Here is a new customer's task: {task}. To complete the task, you must write a response that appropriately solves the requested instruction based on your expertise and customer's needs. |
+| **user_role_prompt** | {chatdev_prompt} You are Chief Executive Officer. Now, we are both working at ChatDev and we share a common interest in collaborating to successfully complete a task assigned by a new customer. Your main responsibilities include being an active decision-maker on users' demands and other key policy issues, leader, manager, and executor. Your decision-making role involves high-level decisions about policy and strategy; and your communicator role can involve speaking to the organization's management and employees. Here is a new customer's task: {task}. To complete the task, I will give you one or more instructions, and you must help me to write a specific solution that appropriately solves the requested instruction based on your expertise and my needs. |
+| **task_prompt** | A game where you control a pixelated snake on a rectangular grid and guide it to eat food (represented by dots). As the snake consumes the food, it grows longer, making the game progressively challenging. The game's pace gradually increases, making it more difficult to manoeuvre the snake without running into obstacles. With each successful consumption of food, the player earns points, and the game continues until the snake collides with itself or the boundaries |
+| **with_task_specify** | False |
+| **memory** | No existed memory |
+| **model_type** | ModelType.GPT_3_5_TURBO_NEW |
+| **background_prompt** | ChatDev is a software company powered by multiple intelligent agents, such as chief executive officer, chief human resources officer, chief product officer, chief technology officer, etc, with a multi-agent organizational structure and the mission of 'changing the digital world through programming'. |
+
+[2024-22-03 20:05:46 INFO] flask app.py did not start for online log
+[2024-22-03 20:05:46 INFO] Chief Executive Officer: **[Start Chat]**
+
+[ChatDev is a software company powered by multiple intelligent agents, such as chief executive officer, chief human resources officer, chief product officer, chief technology officer, etc, with a multi-agent organizational structure and the mission of 'changing the digital world through programming'.
+You are Chief Product Officer. we are both working at ChatDev. We share a common interest in collaborating to successfully complete a task assigned by a new customer.
+You are responsible for all product-related matters in ChatDev. Usually includes product design, product strategy, product vision, product innovation, project management and product marketing.
+Here is a new customer's task: A game where you control a pixelated snake on a rectangular grid and guide it to eat food (represented by dots). As the snake consumes the food, it grows longer, making the game progressively challenging. The game's pace gradually increases, making it more difficult to manoeuvre the snake without running into obstacles. With each successful consumption of food, the player earns points, and the game continues until the snake collides with itself or the boundaries.
+To complete the task, you must write a response that appropriately solves the requested instruction based on your expertise and customer's needs.]
+
+ChatDev has made products in the following form before:
+
+Image: can present information in line chart, bar chart, flow chart, cloud chart, Gantt chart, etc.
+
+Document: can present information via .docx files.
+
+PowerPoint: can present information via .pptx files.
+
+Excel: can present information via .xlsx files.
+
+PDF: can present information via .pdf files.
+
+Website: can present personal resume, tutorial, products, or ideas, via .html files.
+
+Application: can implement visualized game, software, tool, etc, via python.
+
+Dashboard: can display a panel visualizing real-time information.
+
+Mind Map: can represent ideas, with related concepts arranged around a core concept.
+
+As the Chief Product Officer, to satisfy the new user's demand and the product should be realizable, you should keep discussing with me to decide which product modality do we want the product to be?
+
+Note that we must ONLY discuss the product modality and do not discuss anything else! Once we all have expressed our opinion(s) and agree with the results of the discussion unanimously, any of us must actively terminate the discussion by replying with only one line, which starts with a single word <INFO>, followed by our final product modality without any other words, e.g., "<INFO> PowerPoint".
+
+[2024-22-03 20:05:48 INFO] flask app.py did not start for online log
+[2024-22-03 20:05:52 INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 429 Too Many Requests"
+[2024-22-03 20:05:52 INFO] Retrying request to /chat/completions in 0.806891 seconds
+[2024-22-03 20:05:54 INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 429 Too Many Requests"
+[2024-22-03 20:05:54 INFO] Retrying request to /chat/completions in 1.921843 seconds
+[2024-22-03 20:05:56 INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 429 Too Many Requests"
+[2024-22-03 20:06:01 INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 429 Too Many Requests"
+[2024-22-03 20:06:01 INFO] Retrying request to /chat/completions in 0.922080 seconds
+[2024-22-03 20:06:03 INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 429 Too Many Requests"
+[2024-22-03 20:06:03 INFO] Retrying request to /chat/completions in 1.729747 seconds
+[2024-22-03 20:06:05 INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 429 Too Many Requests"
+[2024-22-03 20:06:10 INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 429 Too Many Requests"
+[2024-22-03 20:06:10 INFO] Retrying request to /chat/completions in 0.778521 seconds
+[2024-22-03 20:06:11 INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 429 Too Many Requests"
+[2024-22-03 20:06:11 INFO] Retrying request to /chat/completions in 1.996933 seconds
+[2024-22-03 20:06:14 INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 429 Too Many Requests"
+[2024-22-03 20:06:19 INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 429 Too Many Requests"
+[2024-22-03 20:06:19 INFO] Retrying request to /chat/completions in 0.866789 seconds
+[2024-22-03 20:06:21 INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 429 Too Many Requests"
+[2024-22-03 20:06:21 INFO] Retrying request to /chat/completions in 1.767678 seconds
+[2024-22-03 20:06:23 INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 429 Too Many Requests"
+[2024-22-03 20:06:31 INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 429 Too Many Requests"
+[2024-22-03 20:06:31 INFO] Retrying request to /chat/completions in 0.779041 seconds
+[2024-22-03 20:06:32 INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 429 Too Many Requests"
+[2024-22-03 20:06:32 INFO] Retrying request to /chat/completions in 1.870599 seconds
+[2024-22-03 20:06:35 INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 429 Too Many Requests"
