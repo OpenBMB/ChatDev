@@ -5,7 +5,7 @@ import sys
 import openai
 import numpy as np
 from codes import Codes
-from utils import get_easyDict_from_filepath,OpenAIModel,log_and_print_online
+from utils import get_easyDict_from_filepath,OpenAIModel,MistralAIModel,log_and_print_online
 from embedding import OpenAIEmbedding
 sys.path.append(os.path.join(os.getcwd(),"ecl"))
 class Shortcut:
@@ -29,7 +29,9 @@ class Experience:
         self.upperLimit = cfg.experience.upper_limit
         self.experiences = []
 
-        self.model = OpenAIModel(model_type="gpt-3.5-turbo-16k")
+        #self.model = OpenAIModel(model_type="gpt-3.5-turbo-16k")
+        #self.embedding_method = OpenAIEmbedding()
+        self.model = MistralAIModel(model_type="Mistral-7B")
         self.embedding_method = OpenAIEmbedding()
 
         for edge in self.graph.edges:
