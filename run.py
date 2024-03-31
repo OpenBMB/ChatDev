@@ -35,6 +35,7 @@ except ImportError:
         "Please update as specified in requirement.txt. \n "
         "The old API interface is deprecated and will no longer be supported.")
 
+mistral_new_api = True  # new mistral api version
 
 def get_config(company):
     """
@@ -78,8 +79,8 @@ parser.add_argument('--task', type=str, default="Develop a basic Gomoku game.",
                     help="Prompt of software")
 parser.add_argument('--name', type=str, default="Gomoku",
                     help="Name of software, your software will be generated in WareHouse/name_org_timestamp")
-parser.add_argument('--model', type=str, default="GPT_3_5_TURBO",
-                    help="GPT Model, choose from {'GPT_3_5_TURBO','GPT_4','GPT_4_32K', 'GPT_4_TURBO'}")
+parser.add_argument('--model', type=str, default="MISTRAL-7B",
+                    help="GPT Model, choose from {'GPT_3_5_TURBO','GPT_4','GPT_4_32K','GPT_4_TURBO','MISTRAL-7B'}")
 parser.add_argument('--path', type=str, default="",
                     help="Your file directory, ChatDev will build upon your software in the Incremental mode")
 args = parser.parse_args()
@@ -94,10 +95,14 @@ args2type = {'GPT_3_5_TURBO': ModelType.GPT_3_5_TURBO,
              'GPT_4': ModelType.GPT_4,
              'GPT_4_32K': ModelType.GPT_4_32k,
              'GPT_4_TURBO': ModelType.GPT_4_TURBO,
-             'GPT_4_TURBO_V': ModelType.GPT_4_TURBO_V
+             'GPT_4_TURBO_V': ModelType.GPT_4_TURBO_V,
+             'MISTRAL-7B': ModelType.MISTRAL_7B
              }
-if openai_new_api:
-    args2type['GPT_3_5_TURBO'] = ModelType.GPT_3_5_TURBO_NEW
+#if openai_new_api:
+#    args2type['GPT_3_5_TURBO'] = ModelType.GPT_3_5_TURBO_NEW
+
+if mistral_new_api:
+    args2type['MISTRAL-7B'] = ModelType.MISTRAL_7B
 
 chat_chain = ChatChain(config_path=config_path,
                        config_phase_path=config_phase_path,
