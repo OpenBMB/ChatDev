@@ -14,28 +14,38 @@
 from abc import ABC, abstractmethod
 from typing import Any, Dict
 
-import openai
+import os
 import tiktoken
 
 from camel.typing import ModelType
 from chatdev.statistics import prompt_cost
 from chatdev.utils import log_visualize
 
-try:
-    from openai.types.chat import ChatCompletion
+USE_OPENAI = False
+if USE_OPENAI == True:
+    import openai
+    try:
+        from openai.types.chat import ChatCompletion
 
-    openai_new_api = True  # new openai api version
-except ImportError:
-    openai_new_api = False  # old openai api version
+        openai_new_api = True  # new openai api version
+    except ImportError:
+        openai_new_api = False  # old openai api version
 
-import os
-
-OPENAI_API_KEY = os.environ['OPENAI_API_KEY']
-if 'BASE_URL' in os.environ:
-    BASE_URL = os.environ['BASE_URL']
+    OPENAI_API_KEY = os.environ['OPENAI_API_KEY']
+    if 'BASE_URL' in os.environ:
+        BASE_URL = os.environ['BASE_URL']
+    else:
+        BASE_URL = None
 else:
-    BASE_URL = None
-
+    import re
+    from urllib.parse import urlencode
+    import subprocess
+    import json
+    import jsonstreams
+    from io import StringIO
+    from contextlib import redirect_stdout
+    BASE_URL = "http://localhost:11434/api/generate"
+    mistral_new_api = True  # new mistral api version
 
 class ModelBackend(ABC):
     r"""Base class for different model backends.
@@ -145,6 +155,107 @@ class OpenAIModel(ModelBackend):
             return response
 
 
+class MistralAIModel(ModelBackend):
+    r"""Mistral API in a unified ModelBackend interface."""
+
+    def __init__(self, model_type: ModelType, model_config_dict: Dict) -> None:
+        super().__init__()
+        self.model_type = model_type
+        self.model_config_dict = model_config_dict
+
+    def generate_stream_json_response(self, prompt):
+        data = json.dumps({"model": "openhermes", "prompt": prompt})
+        process = subprocess.Popen(["curl", "-X", "POST", "-d", data, "http://localhost:11434/api/generate"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        full_response = ""
+        with jsonstreams.Stream(jsonstreams.Type.array, filename='./response_log.txt') as output:
+            while True:
+                line, _ = process.communicate()
+                if not line:
+                    break
+                try:
+                    record = line.decode("utf-8").split("\n")
+                    for i in range(len(record)-1):
+                        data = json.loads(record[i].replace('\0', ''))
+                        if "response" in data:
+                            full_response += data["response"]
+                            with output.subobject() as output_e:
+                                output_e.write('response', data["response"])
+                        else:
+                            return full_response.replace('\0', '')
+                    if len(record)==1:
+                        data = json.loads(record[0].replace('\0', ''))
+                        if "error" in data:
+                            full_response += data["error"]
+                            with output.subobject() as output_e:
+                                output_e.write('error', data["error"])
+                    return full_response.replace('\0', '')
+                except Exception as error:
+                    # handle the exception
+                    print("An exception occurred:", error)
+        return full_response.replace('\0', '')
+
+    def run(self, *args, **kwargs):
+        string = "\n".join([message["content"] for message in kwargs["messages"]])
+        #fake model to enable tiktoken to work with mistral
+        #encoding = tiktoken.encoding_for_model(self.model_type.value)
+        encoding = tiktoken.encoding_for_model(ModelType.GPT_3_5_TURBO.value) #fake model to enable tiktoken to work with mistral
+        num_prompt_tokens = len(encoding.encode(string))
+        gap_between_send_receive = 15 * len(kwargs["messages"])
+        num_prompt_tokens += gap_between_send_receive
+
+        if mistral_new_api:
+            # Experimental, add base_url
+            num_max_token_map = {
+                "Mistral-7B": 8192,
+            }
+            num_max_token = num_max_token_map["Mistral-7B"] #hard coded model to enable tiktoken to work with mistral
+            num_max_completion_tokens = num_max_token - num_prompt_tokens
+            self.model_config_dict['max_tokens'] = num_max_completion_tokens
+
+            #response = client.chat.completions.create(*args, **kwargs, model=self.model_type.value,
+            #                                          **self.model_config_dict)
+            print("DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG")
+            print("args:", args)
+            print("message: ", kwargs["messages"])
+            print("self.model_config_dict:", self.model_config_dict['max_tokens'])
+            print("prompt: ", string)
+            response = self.generate_stream_json_response("<|im_start|>system" + '\n' + string + "<|im_end|>")
+            print("--> ", response)
+            print("DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG")
+            log_visualize(
+                "**[Mistral_Usage_Info Receive]**\ncost: ${:.6f}\n".format(len(response.split())))
+            return response
+        else:
+            num_max_token_map = {
+                "Mistral-7B": 8192,
+            }
+            num_max_token = num_max_token_map[self.model_type.value]
+            num_max_completion_tokens = num_max_token - num_prompt_tokens
+            self.model_config_dict['max_tokens'] = num_max_completion_tokens
+            print("DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG")
+            print("args:", args)
+            print("message: ", kwargs["messages"])
+            print("self.model_config_dict:", self.model_config_dict['max_tokens'])
+            print("prompt: ", string)
+            response = self.generate_stream_json_response("<|im_start|>system" + '\n' + string + '\n' + "And always answer with a number of choices" +"<|im_end|>")
+            print("--> ", response)
+            print("DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG")
+            log_visualize(
+                "**[Mistral_Usage_Info Receive]**\ncost: ${:.6f}\n".format(len(response.split())))
+
+            cost = prompt_cost(
+                self.model_type.value,
+                num_prompt_tokens=len(response.split()),#response["usage"]["prompt_tokens"],
+                num_completion_tokens=len(response.split()) #response["usage"]["completion_tokens"]
+            )
+
+            log_visualize(
+                "**[Mistral_Usage_Info Receive]**\n\ncost: ${:.6f}\n".format(
+                    response["usage"]["total_tokens"], cost))
+
+            return response
+
+
 class StubModel(ModelBackend):
     r"""A dummy model used for unit tests."""
 
@@ -173,7 +284,7 @@ class ModelFactory:
 
     @staticmethod
     def create(model_type: ModelType, model_config_dict: Dict) -> ModelBackend:
-        default_model_type = ModelType.GPT_3_5_TURBO
+        default_model_type = ModelType.MISTRAL_7B
 
         if model_type in {
             ModelType.GPT_3_5_TURBO,
@@ -182,9 +293,10 @@ class ModelFactory:
             ModelType.GPT_4_32k,
             ModelType.GPT_4_TURBO,
             ModelType.GPT_4_TURBO_V,
+            ModelType.MISTRAL_7B,
             None
         }:
-            model_class = OpenAIModel
+            model_class = MistralAIModel
         elif model_type == ModelType.STUB:
             model_class = StubModel
         else:
