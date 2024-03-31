@@ -256,7 +256,8 @@ class ChatAgent(BaseAgent):
                 info = self.get_info(
                     #response.id,
                     #response.usage,
-                    [str(choice.finish_reason) for choice in self.parse_number_bulets(response)],
+                    #[str(choice.finish_reason) for choice in self.parse_number_bulets(response)],
+                    [str(choice) for choice in self.parse_number_bulets(response)],
                     num_tokens,
                 )
             else:
@@ -271,7 +272,8 @@ class ChatAgent(BaseAgent):
                 info = self.get_info(
                     #response["id"],
                     #response["usage"],
-                    [str(choice["finish_reason"]) for choice in self.parse_number_bulets(response)],
+                    #[str(choice["finish_reason"]) for choice in self.parse_number_bulets(response)],
+                    [str(choice) for choice in self.parse_number_bulets(response)],
                     num_tokens,
                 )
 
