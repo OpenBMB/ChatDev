@@ -16,11 +16,24 @@ from tenacity import (
     stop_after_attempt,
     wait_exponential
 )
-OPENAI_API_KEY = os.environ['OPENAI_API_KEY']
-if 'BASE_URL' in os.environ:
-    BASE_URL = os.environ['BASE_URL']
+
+USE_OPENAI = False
+if USE_OPENAI == True:
+    OPENAI_API_KEY = os.environ['OPENAI_API_KEY']
+    if 'BASE_URL' in os.environ:
+        BASE_URL = os.environ['BASE_URL']
+    else:
+        BASE_URL = None
 else:
-    BASE_URL = None
+    import re
+    from urllib.parse import urlencode
+    import subprocess
+    import json
+    import jsonstreams
+    from io import StringIO
+    from contextlib import redirect_stdout
+    BASE_URL = "http://localhost:11434/api/generate"
+    mistral_new_api = True  # new mistral api version
 
 def getFilesFromType(sourceDir, filetype):
     files = []
@@ -51,8 +64,10 @@ def get_easyDict_from_filepath(path: str):
 
 
 def calc_max_token(messages, model):
+    #fake model to enable tiktoken to work with mistral
+    model = "gpt-3.5-turbo-16k"
     string = "\n".join([message["content"] for message in messages])
-    encoding = tiktoken.encoding_for_model(model)
+    encoding = tiktoken.encoding_for_model(model)     #fake model to enable tiktoken to work with mistral
     num_prompt_tokens = len(encoding.encode(string))
     gap_between_send_receive = 50
     num_prompt_tokens += gap_between_send_receive
@@ -65,6 +80,7 @@ def calc_max_token(messages, model):
         "gpt-4": 8192,
         "gpt-4-0613": 8192,
         "gpt-4-32k": 32768,
+        "Mistral-7B": 8192,
     }
     num_max_token = num_max_token_map[model]
     num_max_completion_tokens = num_max_token - num_prompt_tokens
@@ -166,6 +182,104 @@ class OpenAIModel(ModelBackend):
             raise RuntimeError("Unexpected return from OpenAI API")
         return response
 
+
+class MistralAIModel(ModelBackend):
+    r"""Mistral API in a unified ModelBackend interface."""
+
+    def __init__(self, model_type, model_config_dict: Dict=None) -> None:
+        super().__init__()
+        self.model_type = model_type
+        self.model_config_dict = model_config_dict
+        if self.model_config_dict == None:
+            self.model_config_dict = {"temperature": 0.2,
+                                "top_p": 1.0,
+                                "n": 1,
+                                "stream": False,
+                                "frequency_penalty": 0.0,
+                                "presence_penalty": 0.0,
+                                "logit_bias": {},
+                                }
+        self.prompt_tokens = 0
+        self.completion_tokens = 0
+        self.total_tokens = 0
+
+    def generate_stream_json_response(self, prompt):
+        data = json.dumps({"model": "openhermes", "prompt": prompt})
+        process = subprocess.Popen(["curl", "-X", "POST", "-d", data, "http://localhost:11434/api/generate"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        full_response = ""
+        with jsonstreams.Stream(jsonstreams.Type.array, filename='./response_log.txt') as output:
+            while True:
+                line, _ = process.communicate()
+                if not line:
+                    break
+                try:
+                    record = line.decode("utf-8").split("\n")
+                    for i in range(len(record)-1):
+                        data = json.loads(record[i].replace('\0', ''))
+                        if "response" in data:
+                            full_response += data["response"]
+                            with output.subobject() as output_e:
+                                output_e.write('response', data["response"])
+                        else:
+                            return full_response.replace('\0', '')
+                    if len(record)==1:
+                        data = json.loads(record[0].replace('\0', ''))
+                        if "error" in data:
+                            full_response += data["error"]
+                            with output.subobject() as output_e:
+                                output_e.write('error', data["error"])
+                    return full_response.replace('\0', '')
+                except Exception as error:
+                    # handle the exception
+                    print("An exception occurred:", error)
+        return full_response.replace('\0', '')
+
+    #@retry(wait=wait_exponential(min=5, max=60), stop=stop_after_attempt(5))
+    @retry(wait=wait_exponential(min=1, max=1), stop=stop_after_attempt(1))
+    def run(self, messages) :
+        if BASE_URL:
+            client = openai.OpenAI(
+                api_key=OPENAI_API_KEY,
+                base_url=BASE_URL,
+            )
+        else:
+            client = openai.OpenAI(
+                api_key=OPENAI_API_KEY
+            )
+        current_retry = 0
+        max_retry = 1
+
+        string = "\n".join([message["content"] for message in messages])
+        encoding = tiktoken.encoding_for_model(self.model_type)
+        num_prompt_tokens = len(encoding.encode(string))
+        gap_between_send_receive = 15 * len(messages)
+        num_prompt_tokens += gap_between_send_receive
+
+        num_max_token_map = {
+            "Mistral-7B": 8192,
+        }
+        #response = client.chat.completions.create(messages = messages,
+        #model = "gpt-3.5-turbo-16k",
+        #temperature = 0.2,
+        #top_p = 1.0,
+        #n = 1,
+        #stream = False,
+        #frequency_penalty = 0.0,
+        #presence_penalty = 0.0,
+        #logit_bias = {},
+        #).model_dump()
+        response = self.generate_stream_json_response("<|im_start|>user" + '\n' + messages + "<|im_end|>")
+        #response_text = response['choices'][0]['message']['content']
+        response_text = response
+        num_max_token = num_max_token_map[self.model_type]
+        num_max_completion_tokens = num_max_token - num_prompt_tokens
+        self.model_config_dict['max_tokens'] = num_max_completion_tokens
+        log_and_print_online("InstructionStar generation:\n**[Mistral_Usage_Info Receive]**\nprompt_tokens: {}\n".format(len(response.split())))
+        self.prompt_tokens += len(response.split()) #response["usage"]["prompt_tokens"]
+        self.completion_tokens += len(response.split())#response["usage"]["completion_tokens"]
+        self.total_tokens +=len(response.split())# response["usage"]["total_tokens"]
+
+        return response
     
 def now():
     return time.strftime("%Y%m%d%H%M%S", time.localtime())
