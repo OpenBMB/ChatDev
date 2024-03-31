@@ -29,6 +29,7 @@ from camel.utils import (
     openai_api_key_required,
 )
 from chatdev.utils import log_visualize
+import re
 try:
     from openai.types.chat import ChatCompletion
 
@@ -109,6 +110,11 @@ class ChatAgent(BaseAgent):
         else:
             self.memory = None
 
+    def parse_number_bulets(self, text):
+        pattern = r'\d+\.\s+([^\n]+)'
+        matches = re.findall(pattern, text)
+        return matches
+    
     def reset(self) -> List[MessageType]:
         r"""Resets the :obj:`ChatAgent` to its initial state and returns the
         stored messages.
@@ -201,7 +207,7 @@ class ChatAgent(BaseAgent):
 
         return target_memory
 
-    @retry(wait=wait_exponential(min=5, max=60), stop=stop_after_attempt(5))
+    @retry(wait=wait_exponential(min=1, max=1), stop=stop_after_attempt(1))
     @openai_api_key_required
     def step(
             self,
@@ -238,12 +244,14 @@ class ChatAgent(BaseAgent):
         if num_tokens < self.model_token_limit:
             response = self.model_backend.run(messages=openai_messages)
             if openai_new_api:
-                if not isinstance(response, ChatCompletion):
-                    raise RuntimeError("OpenAI returned unexpected struct")
+                #if not isinstance(response, ChatCompletion):
+                #    raise RuntimeError("OpenAI returned unexpected struct")
                 output_messages = [
                     ChatMessage(role_name=self.role_name, role_type=self.role_type,
                                 meta_dict=dict(), **dict(choice.message))
-                    for choice in response.choices
+                    #for choice in response.choices
+                    for choice in self.parse_number_bulets(response)
+
                 ]
                 info = self.get_info(
                     response.id,
@@ -252,12 +260,13 @@ class ChatAgent(BaseAgent):
                     num_tokens,
                 )
             else:
-                if not isinstance(response, dict):
-                    raise RuntimeError("OpenAI returned unexpected struct")
+                #if not isinstance(response, dict):
+                #    raise RuntimeError("OpenAI returned unexpected struct")
                 output_messages = [
                     ChatMessage(role_name=self.role_name, role_type=self.role_type,
                                 meta_dict=dict(), **dict(choice["message"]))
-                    for choice in response["choices"]
+                    #for choice in response["choices"]
+                    for choice in self.parse_number_bulets(response)
                 ]
                 info = self.get_info(
                     response["id"],
