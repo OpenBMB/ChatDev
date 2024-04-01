@@ -20,7 +20,7 @@
   through programming." The agents within ChatDev **collaborate** by participating in specialized functional seminars,
   including tasks such as designing, coding, testing, and documenting.
 - The primary objective of ChatDev is to offer an **easy-to-use**, **highly customizable** and **extendable** framework,
-  which is based on large language models (LLMs) and serves as an ideal scenario for studying collective intelligence.
+  which is based on large language models (this fork uses OpenHermes 2.5 Mistral 7B) and serves as an ideal scenario for studying collective intelligence.
 
 <p align="center">
   <img src='./misc/company.png' width=600>
