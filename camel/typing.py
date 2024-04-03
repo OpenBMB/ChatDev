@@ -50,7 +50,9 @@ class ModelType(Enum):
     GPT_4_32k = "gpt-4-32k"
     GPT_4_TURBO = "gpt-4-1106-preview"
     GPT_4_TURBO_V = "gpt-4-1106-vision-preview"
-
+    CLAUDE_3_SONNET = "claude-3-sonnet"
+    CLAUDE_3_HAIKU = "claude-3-haiku"
+    CLAUDE_3_OPUS = "claude-3-opus"
     STUB = "stub"
 
     @property
