@@ -19,6 +19,7 @@ from typing import Any, Callable, List, Optional, Set, TypeVar
 
 import requests
 import tiktoken
+from camel.bedrock_model import num_tokens_from_string
 
 from camel.messages import OpenAIMessage
 from camel.typing import ModelType, TaskType
@@ -76,6 +77,15 @@ def num_tokens_from_messages(
         - https://platform.openai.com/docs/models/gpt-4
         - https://platform.openai.com/docs/models/gpt-3-5
     """
+    if model in {
+        ModelType.CLAUDE_3_HAIKU,
+        ModelType.CLAUDE_3_OPUS,
+        ModelType.CLAUDE_3_SONNET
+    }: 
+        string = "\n".join([message["content"] for message in messages])
+
+        return num_tokens_from_string(string,model.value)
+    
     try:
         value_for_tiktoken = model.value_for_tiktoken
         encoding = tiktoken.encoding_for_model(value_for_tiktoken)
@@ -89,10 +99,7 @@ def num_tokens_from_messages(
         ModelType.GPT_4_32k,
         ModelType.GPT_4_TURBO,
         ModelType.GPT_4_TURBO_V,
-        ModelType.STUB,
-        ModelType.CLAUDE_3_HAIKU,
-        ModelType.CLAUDE_3_OPUS,
-        ModelType.CLAUDE_3_SONNET
+        ModelType.STUB
     }:
         return count_tokens_openai_chat_models(messages, encoding)
     else:
@@ -158,7 +165,8 @@ def openai_api_key_required(func: F) -> F:
         elif 'OPENAI_API_KEY' in os.environ:
             return func(self, *args, **kwargs)
         else:
-            raise ValueError('OpenAI API key not found.')
+            # raise ValueError('OpenAI API key not found.')
+            return func(self, *args, **kwargs)
 
     return wrapper
 
