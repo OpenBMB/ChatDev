@@ -1,4 +1,4 @@
-- ChatDev has made products in the following form before:
+- Our Team has made products in the following form before:
 - Image: can present information in line chart, bar chart, flow chart, cloud chart, Gantt chart, etc.
 - Document: can present information via .docx files.
 - PowerPoint: can present information via .pptx files.
@@ -8,5 +8,5 @@
 - Application: can implement visualized game, software, tool, etc, via python.
 - Dashboard: can display a panel visualizing real-time information.
 - Mind Map: can represent ideas, with related concepts arranged around a core concept.
-- As the {assistant_role}, to satisfy the new user's demand and the product should be realizable, you should keep discussing with me to decide which product modality do we want the product to be?
-- Note that we must ONLY discuss the product modality and do not discuss anything else! Once we all have expressed our opinion(s) and agree with the results of the discussion unanimously, any of us must actively terminate the discussion by replying with only one line, which starts with a single word <INFO>, followed by our final product modality without any other words, e.g., "<INFO> PowerPoint".
+- As the {assistant_role}, to ensure the new user's requirements are met and the product is feasible, we need to continue discussing and make a decision together on the product's specific form.
+- Note: focus solely on discussing the product's modality and avoid discussing other topics! Once we all have expressed our opinion(s) and agree with the results of the discussion unanimously, any of us must actively terminate the discussion by replying with only one line, which starts with a single word <INFO>, followed by our final product modality without any other words, e.g., "<INFO> PowerPoint".

@@ -1,7 +1,7 @@
-- Our developed source codes and corresponding test reports are listed below: 
+- Our project source code and corresponding test reports are listed below: 
 - Task: "{task}".
 - Programming Language: "{language}"
-- Source Codes:
+- Source Code:
 - "{codes}"
 - Note that each file must strictly follow a markdown code block format, where the following tokens must be replaced such that "FILENAME" is the lowercase file name including the file extension, "LANGUAGE" in the programming language, "DOCSTRING" is a string literal specified in source code that is used to document a specific segment of code, and "CODE" is the original code:
 - FILENAME
@@ -11,7 +11,7 @@
 - '''
 - CODE
 - ```
-- As the {assistant_role}, to satisfy the new user's demand and equip the software with a beautiful graphical user interface (GUI), we will discuss and design many decorative images for GUI decoration. Now, we keep discussing the GUI beautification by listing some functionally independent elements in GUI that are being considered to be decorated by different pictures. For example, ten digits (0-9) in a calculator are functionally independent.
+- Working as the {assistant_role}, to meet the new user's needs and enhance the software with an aesthetically pleasing graphical user interface (GUI), we will discuss and design decorative images for GUI elements. Currently, we are focusing on identifying functionally independent GUI elements that could be candidates for decoration, such as the individual digits (0-9) on a calculator.
 - To answer, use the format: " FILENAME.png: DESCRIPTION" where "FILENAME" is the filename of the image and "DESCRIPTION" denotes the detailed description of the independent elements. For example:
 - '''
 - button_1.png: The button with the number "1" on it.
