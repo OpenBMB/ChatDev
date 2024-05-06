@@ -145,7 +145,7 @@
 
 ### 🐳 Docker のクイックスタート
 
-- Docker のサポートを提供してくれた [ManindraDeMel](https://github.com/ManindraDeMel) に感謝します。[Docker スタートガイド](wiki.md#docker-start)を参照してください。
+- Docker のサポートを提供してくれた [ManindraDeMel](https://github.com/ManindraDeMel) に感謝します。[Docker スタートガイド](../wiki.md#docker-start)を参照してください。
 
 ## ✨️ 高度なスキル
 

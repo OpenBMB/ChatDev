@@ -21,19 +21,19 @@
 
 ## 🎉 Haberler
 
-- **26 Ekim 2023: ChatDev artık güvenli yürütme için Docker ile destekleniyor** (katkı sağlayan [ManindraDeMel](https://github.com/ManindraDeMel) sayesinde). Lütfen [Docker Başlangıç Kılavuzu'na](wiki.md#docker-start) bakınız.
+- **26 Ekim 2023: ChatDev artık güvenli yürütme için Docker ile destekleniyor** (katkı sağlayan [ManindraDeMel](https://github.com/ManindraDeMel) sayesinde). Lütfen [Docker Başlangıç Kılavuzu'na](../wiki.md#docker-start) bakınız.
   <p align="center">
   <img src='../misc/docker.png' width=400>
   </p>
-- 25 Eylül 2023: **Git** modu artık kullanılabilir durumda, programcının <img src='../visualizer/static/figures/programmer.png' height=20> sürüm kontrolü için Git'i kullanmasına izin verir. Bu özelliği etkinleştirmek için sadece ``ChatChainConfig.json`` içinde ``"git_management"`` değerini ``"True"`` olarak ayarlamanız yeterlidir. [Kılavuza](wiki.md#git-mode) bakınız.
+- 25 Eylül 2023: **Git** modu artık kullanılabilir durumda, programcının <img src='../visualizer/static/figures/programmer.png' height=20> sürüm kontrolü için Git'i kullanmasına izin verir. Bu özelliği etkinleştirmek için sadece ``ChatChainConfig.json`` içinde ``"git_management"`` değerini ``"True"`` olarak ayarlamanız yeterlidir. [Kılavuza](../wiki.md#git-mode) bakınız.
   <p align="center">
   <img src='../misc/github.png' width=600>
   </p>
-- 20 Eylül 2023: **İnsan-Ajan-İletişimi** modu artık kullanılabilir! ChatDev ekibine katılarak inceleyici <img src='../visualizer/static/figures/reviewer.png' height=20> rolünü üstlenebilir ve programcıya <img src='../visualizer/static/figures/programmer.png' height=20> önerilerde bulunabilirsiniz; ``python3 run.py --task [fikrinizin açıklaması] --config "İnsan"`` komutunu deneyin. [Kılavuza](wiki.md#human-agent-interaction) ve [örneğe](WareHouse/Gomoku_HumanAgentInteraction_20230920135038) bakınız.
+- 20 Eylül 2023: **İnsan-Ajan-İletişimi** modu artık kullanılabilir! ChatDev ekibine katılarak inceleyici <img src='../visualizer/static/figures/reviewer.png' height=20> rolünü üstlenebilir ve programcıya <img src='../visualizer/static/figures/programmer.png' height=20> önerilerde bulunabilirsiniz; ``python3 run.py --task [fikrinizin açıklaması] --config "İnsan"`` komutunu deneyin. [Kılavuza](../wiki.md#human-agent-interaction) ve [örneğe](../WareHouse/Gomoku_HumanAgentInteraction_20230920135038) bakınız.
   <p align="center">
   <img src='../misc/Human_intro.png' width=600>
   </p>
-- 1 Eylül 2023: **Sanat** modu şimdi kullanılabilir! Yazılımda kullanılan görselleri oluşturmak için tasarımcı ajanını <img src='../visualizer/static/figures/designer.png' height=20> etkinleştirebilirsiniz; ``python3 run.py --task [fikrinizin açıklaması] --config "Sanat"`` komutunu deneyin. [Kılavuza](wiki.md#art) ve [örneğe](WareHouse/gomokugameArtExample_THUNLP_20230831122822) bakınız.
+- 1 Eylül 2023: **Sanat** modu şimdi kullanılabilir! Yazılımda kullanılan görselleri oluşturmak için tasarımcı ajanını <img src='../visualizer/static/figures/designer.png' height=20> etkinleştirebilirsiniz; ``python3 run.py --task [fikrinizin açıklaması] --config "Sanat"`` komutunu deneyin. [Kılavuza](../wiki.md#art) ve [örneğe](../WareHouse/gomokugameArtExample_THUNLP_20230831122822) bakınız.
 - 28 Ağustos 2023: Sistem halka açık durumda.
 - 17 Ağustos 2023: v1.0.0 sürümü hazırlandı.
 - 30 Temmuz 2023: Kullanıcılar ChatChain, Aşama ve Rol ayarlarını özelleştirebilirler. Ayrıca, hem çevrimiçi Log modu hem de yeniden oynatma mod
@@ -136,11 +136,11 @@ Başlamak için şu adımları izleyin:
 
 ### 🐳 Docker ile Hızlı Başlangıç
 
-- Docker desteği sağlayan [ManindraDeMel](https://github.com/ManindraDeMel) için teşekkür ederiz. Lütfen [Docker Başlangıç Kılavuzu'na](wiki.md#docker-start) bakınız.
+- Docker desteği sağlayan [ManindraDeMel](https://github.com/ManindraDeMel) için teşekkür ederiz. Lütfen [Docker Başlangıç Kılavuzu'na](../wiki.md#docker-start) bakınız.
 
 ## ✨️ Gelişmiş Yetenekler
 
-Daha ayrıntılı bilgi için [Wiki](wiki.md)'mize başvurabilirsiniz, burada şunları bulabilirsiniz:
+Daha ayrıntılı bilgi için [Wiki](../wiki.md)'mize başvurabilirsiniz, burada şunları bulabilirsiniz:
 
 - Tüm komut çalıştırma parametrelerine giriş.
 - Gelişmiş görselleştirilmiş günlükler, yeniden oynatma demosu ve basit bir ChatChain Görselleştirici içeren yerel web demo kurulumu için basit bir kılavuz.
@@ -155,7 +155,7 @@ Daha ayrıntılı bilgi için [Wiki](wiki.md)'mize başvurabilirsiniz, burada ş
 
 **Kod**: Açık kaynak projemize katılmak isteğinizden dolayı heyecanlıyız. Herhangi bir sorunla karşılaşırsanız, çekinmeden bildirin. Eğer herhangi bir sorunuz varsa veya çalışmanızı bizimle paylaşmaya hazırsanız, bir çekme isteği oluşturmanızdan çekinmeyin! Katkılarınız büyük bir değere sahiptir. Başka bir ihtiyacınız varsa lütfen bana bildirin!
 
-**Şirket**: Kendi özelleştirilmiş "ChatDev Şirketi"ni oluşturmak çok kolaydır. Bu kişiselleştirilmiş kurulum, üç basit yapılandırma JSON dosyasını içerir. ``CompanyConfig/Default`` dizininde verilen örneğe bakın. Özelleştirme hakkında detaylı talimatlar için [Wiki](wiki.md) sayfamıza göz atın.
+**Şirket**: Kendi özelleştirilmiş "ChatDev Şirketi"ni oluşturmak çok kolaydır. Bu kişiselleştirilmiş kurulum, üç basit yapılandırma JSON dosyasını içerir. ``CompanyConfig/Default`` dizininde verilen örneğe bakın. Özelleştirme hakkında detaylı talimatlar için [Wiki](../wiki.md) sayfamıza göz atın.
 
 **Yazılım**: ChatDev kullanarak yazılım geliştirdiğinizde, ilgili bilgileri içeren bir klasör oluşturulur. Çalışmanızı bizimle paylaşmak, bir çekme isteği oluşturmak kadar basittir. İşte bir örnek: ``python3 run.py --task "2048 oyunu tasarla" --name "2048" --org "THUNLP" --config "Default"`` komutunu çalıştırın. Bu, bir yazılım paketi oluşturur ve ``/WareHouse/2048_THUNLP_timestamp`` adında bir klasör oluşturur. İçinde şunları bulacaksınız:
 
@@ -164,7 +164,7 @@ Daha ayrıntılı bilgi için [Wiki](wiki.md)'mize başvurabilirsiniz, burada ş
 - Yazılımın oluşturulma sürecini ayrıntılı olarak açıklayan kapsamlı bir günlük (``timestamp.log``)
 - Bu yazılımın oluşturulmasında kullanılan ilk prompt (``2048.prompt``)
 
-**Topluluk tarafından sağlanan yazılımları buradan görüntüleyin [burada](Contribution.md)!**
+**Topluluk tarafından sağlanan yazılımları buradan görüntüleyin [burada](../Contribution.md)!**
 
 ## 👨‍💻‍ Katkıda Bulunanlar
 
