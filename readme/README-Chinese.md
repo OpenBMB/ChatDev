@@ -127,7 +127,7 @@ https://github.com/OpenBMB/ChatDev/assets/11889052/80d01d2f-677b-4399-ad8b-f7af9
    
 ## 🐳 通过Docker执行ChatDev
 
-- 我们感谢 [ManindraDeMel](https://github.com/ManindraDeMel) 提供Docker的支持。具体请参照 [Docker指南](wiki.md#docker-start) 使用。
+- 我们感谢 [ManindraDeMel](https://github.com/ManindraDeMel) 提供Docker的支持。具体请参照 [Docker指南](../wiki.md#docker-start) 使用。
 
 
 ## ✨️ 进阶技能

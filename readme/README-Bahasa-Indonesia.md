@@ -22,19 +22,19 @@
 
 ## 🎉 Berita
 
-- **26 Oktober 2023: ChatDev kini didukung oleh Docker untuk eksekusi yang aman** (berkat kontribusi dari [ManindraDeMel](https://github.com/ManindraDeMel)). Silakan lihat [Panduan Memulai Docker](wiki.md#memulai-docker).
+- **26 Oktober 2023: ChatDev kini didukung oleh Docker untuk eksekusi yang aman** (berkat kontribusi dari [ManindraDeMel](https://github.com/ManindraDeMel)). Silakan lihat [Panduan Memulai Docker](../wiki.md#memulai-docker).
   <p align="center">
   <img src='../misc/docker.png' width=400>
   </p>
-- 25 September 2023: Mode **Git** kini tersedia, memungkinkan programmer <img src='../visualizer/static/figures/programmer.png' height=20> untuk menggunakan Git untuk kontrol versi. Untuk mengaktifkan fitur ini, cukup atur ``"git_management"`` menjadi ``"True"`` di ``ChatChainConfig.json``. Lihat [panduan](wiki.md#mode-git).
+- 25 September 2023: Mode **Git** kini tersedia, memungkinkan programmer <img src='../visualizer/static/figures/programmer.png' height=20> untuk menggunakan Git untuk kontrol versi. Untuk mengaktifkan fitur ini, cukup atur ``"git_management"`` menjadi ``"True"`` di ``ChatChainConfig.json``. Lihat [panduan](../wiki.md#mode-git).
   <p align="center">
   <img src='../misc/github.png' width=600>
   </p>
-- 20 September 2023: Mode **Interaksi Manusia-Agen** kini tersedia! Anda dapat terlibat dengan tim ChatDev dengan memainkan peran reviewer <img src='../visualizer/static/figures/reviewer.png' height=20> dan memberikan saran kepada programmer <img src='../visualizer/static/figures/programmer.png' height=20>; coba ``python3 run.py --task [deskripsi_ide_anda] --config "Manusia"``. Lihat [panduan](wiki.md#interaksi-manusia-agen) dan [contoh](WareHouse/Gomoku_HumanAgentInteraction_20230920135038).
+- 20 September 2023: Mode **Interaksi Manusia-Agen** kini tersedia! Anda dapat terlibat dengan tim ChatDev dengan memainkan peran reviewer <img src='../visualizer/static/figures/reviewer.png' height=20> dan memberikan saran kepada programmer <img src='../visualizer/static/figures/programmer.png' height=20>; coba ``python3 run.py --task [deskripsi_ide_anda] --config "Manusia"``. Lihat [panduan](../wiki.md#interaksi-manusia-agen) dan [contoh](../WareHouse/Gomoku_HumanAgentInteraction_20230920135038).
   <p align="center">
   <img src='../misc/Human_intro.png' width=600>
   </p>
-- 1 September 2023: Mode **Seni** kini tersedia! Anda dapat mengaktifkan agen desainer <img src='../visualizer/static/figures/designer.png' height=20> untuk menghasilkan gambar yang digunakan dalam perangkat lunak; coba ``python3 run.py --task [deskripsi_ide_anda] --config "Seni"``. Lihat [panduan](wiki.md#seni) dan [contoh](WareHouse/gomokugameArtExample_THUNLP_20230831122822).
+- 1 September 2023: Mode **Seni** kini tersedia! Anda dapat mengaktifkan agen desainer <img src='../visualizer/static/figures/designer.png' height=20> untuk menghasilkan gambar yang digunakan dalam perangkat lunak; coba ``python3 run.py --task [deskripsi_ide_anda] --config "Seni"``. Lihat [panduan](../wiki.md#seni) dan [contoh](../WareHouse/gomokugameArtExample_THUNLP_20230831122822).
 - 28 Agustus 2023: Sistem tersedia untuk publik.
 - 17 Agustus 2023: Versi v1.0.0 siap untuk dirilis.
 - 30 Juli 2023: Pengguna dapat menyesuaikan pengaturan ChatChain, Fase, dan Peran. Selain itu, mode Log online dan mode pemutaran kini didukung.
@@ -134,11 +134,11 @@ Untuk memulai, ikuti langkah-langkah berikut:
 
 ### 🐳 Memulai dengan Docker
 
-- Kami berterima kasih kepada [ManindraDeMel](https://github.com/ManindraDeMel) atas dukungan Docker. Silakan lihat [Panduan Memulai Docker](wiki.md#memulai-docker).
+- Kami berterima kasih kepada [ManindraDeMel](https://github.com/ManindraDeMel) atas dukungan Docker. Silakan lihat [Panduan Memulai Docker](../wiki.md#memulai-docker).
 
 ## ✨️ Keterampilan Lanjutan
 
-Untuk informasi lebih rinci, silakan merujuk ke [Wiki](wiki.md) kami, di mana Anda dapat menemukan:
+Untuk informasi lebih rinci, silakan merujuk ke [Wiki](../wiki.md) kami, di mana Anda dapat menemukan:
 
 - Pengantar untuk semua parameter jalankan perintah.
 - Panduan yang mudah untuk menyiapkan demo web lokal, yang mencakup log visual yang ditingkatkan, demo pemutaran, dan Visualizer ChatChain sederhana.
@@ -153,7 +153,7 @@ Untuk informasi lebih rinci, silakan merujuk ke [Wiki](wiki.md) kami, di mana An
 
 **Kode**: Kami sangat antusias tentang minat Anda untuk berpartisipasi dalam proyek sumber terbuka kami. Jika Anda mengalami masalah, jangan ragu untuk melaporkannya. Jangan ragu untuk membuat permintaan tarik (pull request) jika Anda memiliki pertanyaan atau jika Anda siap untuk berbagi pekerjaan Anda dengan kami! Kontribusi Anda sangat dihargai. Tolong beri tahu saya jika ada yang perlu Anda bantu!
 
-**Perusahaan**: Membuat "Perusahaan ChatDev" khusus Anda sendiri sangat mudah. Penyiapan ini melibatkan tiga file JSON konfigurasi sederhana. Lihat contoh yang disediakan dalam direktori ``CompanyConfig/Default``. Untuk petunjuk lebih rinci tentang penyesuaian, lihat [Wiki](wiki.md) kami.
+**Perusahaan**: Membuat "Perusahaan ChatDev" khusus Anda sendiri sangat mudah. Penyiapan ini melibatkan tiga file JSON konfigurasi sederhana. Lihat contoh yang disediakan dalam direktori ``CompanyConfig/Default``. Untuk petunjuk lebih rinci tentang penyesuaian, lihat [Wiki](../wiki.md) kami.
 
 **Perangkat Lunak**: Setiap kali Anda mengembangkan perangkat lunak menggunakan ChatDev, folder yang sesuai akan dihasilkan yang berisi semua informasi penting. Berbagi pekerjaan Anda dengan kami sama mudahnya seperti membuat permintaan tarik. Berikut contohnya: jalankan perintah ``python3 run.py --task "mendesain game 2048" --name "2048"  --org "THUNLP" --config "Default"``. Ini akan membuat paket perangkat lunak dan menghasilkan folder bernama ``/WareHouse/2048_THUNLP_timestamp``. Di dalamnya, Anda akan menemukan:
 
@@ -162,7 +162,7 @@ Untuk informasi lebih rinci, silakan merujuk ke [Wiki](wiki.md) kami, di mana An
 - Log komprehensif yang mendetailkan proses pembangunan perangkat lunak yang dapat digunakan untuk pemutaran (``timestamp.log``)
 - Prompt awal yang digunakan untuk membuat perangkat lunak ini (``2048.prompt``)
 
-**Lihat perangkat lunak yang telah disumbangkan oleh komunitas [di sini](Contribution.md)!**
+**Lihat perangkat lunak yang telah disumbangkan oleh komunitas [di sini](../Contribution.md)!**
 
 ## 👨‍💻‍ Kontributor
 
