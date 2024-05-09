@@ -27,7 +27,11 @@
 </p>
 
 ## 🎉 News
-* **January 25, 2024: We have integrated Experiential Co-Learning Module into ChatDev. Please see the [Experiential Co-Learning Guide](wiki.md#co-tracking).**
+* **May 07, 2024, we introduced "Iterative Experience Refinement" (IER), a novel method where instructor and assistant agents enhance shortcut-oriented experiences to efficiently adapt to new tasks. This approach encompasses experience acquisition, utilization, propagation, and elimination across a series of tasks. Our preprint paper is available at https://arxiv.org/abs/2405.04219, and this technique will soon be incorporated into ChatDev.**
+  <p align="center">
+  <img src='./misc/ier.png' width=220>
+  </p>
+* January 25, 2024: We have integrated Experiential Co-Learning Module into ChatDev. Please see the [Experiential Co-Learning Guide](wiki.md#co-tracking).
 * December 28, 2023: We present Experiential Co-Learning, an innovative approach where instructor and assistant agents accumulate shortcut-oriented experiences to effectively solve new tasks, reducing repetitive errors and enhancing efficiency.  Check out our preprint paper at https://arxiv.org/abs/2312.17025 and this technique will soon be integrated into ChatDev.
   <p align="center">
   <img src='./misc/ecl.png' width=860>
@@ -215,6 +219,15 @@ Made with [contrib.rocks](https://contrib.rocks).
       author={Chen Qian and Yufan Dang and Jiahao Li and Wei Liu and Weize Chen and Cheng Yang and Zhiyuan Liu and Maosong Sun},
       year={2023},
       eprint={2312.17025},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL}
+}
+
+@misc{qian2024iterative,
+      title={Iterative Experience Refinement of Software-Developing Agents}, 
+      author={Chen Qian, Jiahao Li, Yufan Dang, Wei Liu, YiFei Wang, Zihao Xie, Weize Chen, Cheng Yang, Yingli Zhang, Zhiyuan Liu, Maosong Sun},
+      year={2024},
+      eprint={2405.04219},
       archivePrefix={arXiv},
       primaryClass={cs.CL}
 }
