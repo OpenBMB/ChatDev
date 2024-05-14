@@ -123,7 +123,7 @@ class OpenAIModel(ModelBackend):
                 "gpt-4": 8192,
                 "gpt-4-0613": 8192,
                 "gpt-4-32k": 32768,
-                "gpt-4o": 8192,
+                "gpt-4o": 4096,
             }
             num_max_token = num_max_token_map[self.model_type.value]
             num_max_completion_tokens = num_max_token - num_prompt_tokens
