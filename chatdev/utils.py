@@ -92,8 +92,11 @@ def escape_string(value):
     return value
 
 def is_url(url):
-  try:
-    result = urlparse(url)
-    return all([result.scheme, result.netloc])
-  except ValueError:
-    return False
+    """
+    Adapted from https://stackoverflow.com/questions/7160737/how-to-validate-a-url-in-python-malformed-or-not
+    """
+    try:
+       result = urlparse(url)
+       return all([result.scheme, result.netloc])
+    except ValueError:
+       return False
