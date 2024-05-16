@@ -69,7 +69,9 @@ class OpenAIModel(ModelBackend):
         num_prompt_tokens = len(encoding.encode(string))
         gap_between_send_receive = 15 * len(kwargs["messages"])
         num_prompt_tokens += gap_between_send_receive
-
+        # Note: a not-so-gentle hack to bypass Claude's Message API restrictions
+        if "claude" in os.environ.get('CHATDEV_CUSTOM_MODEL', ""):
+            kwargs["messages"][1]["role"] = "user"
         if openai_new_api:
             # Experimental, add base_url
             if BASE_URL:
@@ -92,11 +94,11 @@ class OpenAIModel(ModelBackend):
                 "gpt-4-32k": 32768,
                 "gpt-4-turbo": 100000,
             }
-            num_max_token = num_max_token_map[self.model_type.value]
+            num_max_token = num_max_token_map.get(self.model_type.value, os.environ['CHATDEV_NUM_MAX_TOKEN'])
             num_max_completion_tokens = num_max_token - num_prompt_tokens
             self.model_config_dict['max_tokens'] = num_max_completion_tokens
 
-            response = client.chat.completions.create(*args, **kwargs, model=self.model_type.value,
+            response = client.chat.completions.create(*args, **kwargs, model=os.environ.get('CHATDEV_CUSTOM_MODEL', self.model_type.value),
                                                       **self.model_config_dict)
 
             cost = prompt_cost(

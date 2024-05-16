@@ -1,5 +1,6 @@
 import os
 import re
+import base64
 import shutil
 import signal
 import subprocess
@@ -12,7 +13,10 @@ import requests
 from chatdev.codes import Codes
 from chatdev.documents import Documents
 from chatdev.roster import Roster
-from chatdev.utils import log_visualize
+from chatdev.utils import (
+	log_visualize,
+	is_url
+)
 from ecl.memory import Memory
 
 try:
@@ -214,12 +218,15 @@ class ChatEnv:
 
     def generate_images_from_codes(self):
         def download(img_url, file_name):
-            r = requests.get(img_url)
+            if is_url(img_url):
+                content = requests.get(img_url).content
+            else:
+                content = base64.b64decode(img_url)
             filepath = os.path.join(self.env_dict['directory'], file_name)
             if os.path.exists(filepath):
                 os.remove(filepath)
             with open(filepath, "wb") as f:
-                f.write(r.content)
+                f.write(content)
                 print("{} Downloaded".format(filepath))
 
         regex = r"(\w+.png)"
@@ -241,28 +248,39 @@ class ChatEnv:
                 print("{}: {}".format(filename, desc))
                 if openai_new_api:
                     response = openai.images.generate(
+                        model=os.environ.get('CHATDEV_CUSTOM_IMAGE_MODEL', None),
                         prompt=desc,
                         n=1,
                         size="256x256"
                     )
-                    image_url = response.data[0].url
+                    try:
+                        image_url = response.data[0].url
+                    except KeyError:
+                        image_url = response.data['url']
                 else:
                     response = openai.Image.create(
+                        model=os.environ.get('CHATDEV_CUSTOM_IMAGE_MODEL', None),
                         prompt=desc,
                         n=1,
                         size="256x256"
                     )
-                    image_url = response['data'][0]['url']
+                    try:
+                        image_url = response['data'][0]['url']
+                    except KeyError:
+                        image_url = response['data']['url']
                 download(image_url, filename)
 
     def get_proposed_images_from_message(self, messages):
         def download(img_url, file_name):
-            r = requests.get(img_url)
+            if is_url(img_url):
+                content = requests.get(img_url).content
+            else:
+                content = base64.b64decode(img_url)
             filepath = os.path.join(self.env_dict['directory'], file_name)
             if os.path.exists(filepath):
                 os.remove(filepath)
             with open(filepath, "wb") as f:
-                f.write(r.content)
+                f.write(content)
                 print("{} Downloaded".format(filepath))
 
         regex = r"(\w+.png):(.*?)\n"
@@ -292,6 +310,7 @@ class ChatEnv:
 
                 if openai_new_api:
                     response = openai.images.generate(
+                        model=os.environ.get('CHATDEV_CUSTOM_IMAGE_MODEL', None),
                         prompt=desc,
                         n=1,
                         size="256x256"
@@ -299,6 +318,7 @@ class ChatEnv:
                     image_url = response.data[0].url
                 else:
                     response = openai.Image.create(
+                        model=os.environ.get('CHATDEV_CUSTOM_IMAGE_MODEL', None),
                         prompt=desc,
                         n=1,
                         size="256x256"
