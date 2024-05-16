@@ -69,9 +69,6 @@ class OpenAIModel(ModelBackend):
         num_prompt_tokens = len(encoding.encode(string))
         gap_between_send_receive = 15 * len(kwargs["messages"])
         num_prompt_tokens += gap_between_send_receive
-        # Note: a not-so-gentle hack to bypass Claude's Message API restrictions
-        if "claude" in os.environ.get('CHATDEV_CUSTOM_MODEL', ""):
-            kwargs["messages"][1]["role"] = "user"
         if openai_new_api:
             # Experimental, add base_url
             if BASE_URL:
