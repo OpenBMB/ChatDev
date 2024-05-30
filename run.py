@@ -69,72 +69,89 @@ def get_config(company):
     return tuple(config_paths)
 
 
-parser = argparse.ArgumentParser(description='argparse')
-parser.add_argument('--config', type=str, default="Default",
-                    help="Name of config, which is used to load configuration under CompanyConfig/")
-parser.add_argument('--org', type=str, default="DefaultOrganization",
-                    help="Name of organization, your software will be generated in WareHouse/name_org_timestamp")
-parser.add_argument('--task', type=str, default="Develop a basic Gomoku game.",
-                    help="Prompt of software")
-parser.add_argument('--name', type=str, default="Gomoku",
-                    help="Name of software, your software will be generated in WareHouse/name_org_timestamp")
-parser.add_argument('--model', type=str, default="GPT_3_5_TURBO",
-                    help="GPT Model, choose from {'GPT_3_5_TURBO', 'GPT_4', 'GPT_4_TURBO'}")
-parser.add_argument('--path', type=str, default="",
-                    help="Your file directory, ChatDev will build upon your software in the Incremental mode")
-args = parser.parse_args()
+def parse_arguments():
+    parser = argparse.ArgumentParser(description='argparse')
+    parser.add_argument('--config', type=str, default="Default",
+                        help="Name of config, which is used to load configuration under CompanyConfig/")
+    parser.add_argument('--org', type=str, default="DefaultOrganization",
+                        help="Name of organization, your software will be generated in WareHouse/name_org_timestamp")
+    parser.add_argument('--task-md-filepath', type=str, required=True,
+                        help="The md filepath containing the prompt for the software to make")
+    parser.add_argument('--name', type=str, default="Gomoku",
+                        help="Name of software, your software will be generated in WareHouse/name_org_timestamp")
+    parser.add_argument('--model', type=str, default="GPT_3_5_TURBO",
+                        help="GPT Model, choose from {'GPT_3_5_TURBO', 'GPT_4', 'GPT_4_TURBO'}")
+    parser.add_argument('--path', type=str, default="",
+                        help="Your file directory, ChatDev will build upon your software in the Incremental mode")
+    return parser.parse_args()
 
-# Start ChatDev
 
-# ----------------------------------------
-#          Init ChatChain
-# ----------------------------------------
-config_path, config_phase_path, config_role_path = get_config(args.config)
-args2type = {'GPT_3_5_TURBO': ModelType.GPT_3_5_TURBO,
-             'GPT_4': ModelType.GPT_4,
-            #  'GPT_4_32K': ModelType.GPT_4_32k,
-             'GPT_4_TURBO': ModelType.GPT_4_TURBO,
-            #  'GPT_4_TURBO_V': ModelType.GPT_4_TURBO_V
-             }
-if openai_new_api:
-    args2type['GPT_3_5_TURBO'] = ModelType.GPT_3_5_TURBO_NEW
+def read_md_file(path):
+    file = open(path, 'r')
+    contents = file.read()
+    file.close()
 
-chat_chain = ChatChain(config_path=config_path,
-                       config_phase_path=config_phase_path,
-                       config_role_path=config_role_path,
-                       task_prompt=args.task,
-                       project_name=args.name,
-                       org_name=args.org,
-                       model_type=args2type[args.model],
-                       code_path=args.path)
+    return contents
 
-# ----------------------------------------
-#          Init Log
-# ----------------------------------------
-logging.basicConfig(filename=chat_chain.log_filepath, level=logging.INFO,
-                    format='[%(asctime)s %(levelname)s] %(message)s',
-                    datefmt='%Y-%d-%m %H:%M:%S', encoding="utf-8")
 
-# ----------------------------------------
-#          Pre Processing
-# ----------------------------------------
+def main():
+    args = parse_arguments()
+    task_prompt = read_md_file(args.task_md_filepath)
 
-chat_chain.pre_processing()
+    # Start ChatDev
+    # ----------------------------------------
+    #          Init ChatChain
+    # ----------------------------------------
+    config_path, config_phase_path, config_role_path = get_config(args.config)
+    args2type = {'GPT_3_5_TURBO': ModelType.GPT_3_5_TURBO,
+                 'GPT_4': ModelType.GPT_4,
+                 #  'GPT_4_32K': ModelType.GPT_4_32k,
+                 'GPT_4_TURBO': ModelType.GPT_4_TURBO,
+                 #  'GPT_4_TURBO_V': ModelType.GPT_4_TURBO_V
+                 }
+    if openai_new_api:
+        args2type['GPT_3_5_TURBO'] = ModelType.GPT_3_5_TURBO_NEW
 
-# ----------------------------------------
-#          Personnel Recruitment
-# ----------------------------------------
+    chat_chain = ChatChain(config_path=config_path,
+                           config_phase_path=config_phase_path,
+                           config_role_path=config_role_path,
+                           task_prompt=task_prompt,
+                           project_name=args.name,
+                           org_name=args.org,
+                           model_type=args2type[args.model],
+                           code_path=args.path)
 
-chat_chain.make_recruitment()
+    # ----------------------------------------
+    #          Init Log
+    # ----------------------------------------
+    logging.basicConfig(filename=chat_chain.log_filepath, level=logging.INFO,
+                        format='[%(asctime)s %(levelname)s] %(message)s',
+                        datefmt='%Y-%d-%m %H:%M:%S', encoding="utf-8")
 
-# ----------------------------------------
-#          Chat Chain
-# ----------------------------------------
+    # ----------------------------------------
+    #          Pre Processing
+    # ----------------------------------------
 
-chat_chain.execute_chain()
+    chat_chain.pre_processing()
 
-# ----------------------------------------
-#          Post Processing
-# ----------------------------------------
+    # ----------------------------------------
+    #          Personnel Recruitment
+    # ----------------------------------------
 
-chat_chain.post_processing()
+    chat_chain.make_recruitment()
+
+    # ----------------------------------------
+    #          Chat Chain
+    # ----------------------------------------
+
+    chat_chain.execute_chain()
+
+    # ----------------------------------------
+    #          Post Processing
+    # ----------------------------------------
+
+    chat_chain.post_processing()
+
+
+if __name__ == "__main__":
+    main()
