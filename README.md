@@ -27,19 +27,31 @@
 </p>
 
 ## 🎉 News
-* **May 07, 2024, we introduced "Iterative Experience Refinement" (IER), a novel method where instructor and assistant agents enhance shortcut-oriented experiences to efficiently adapt to new tasks. This approach encompasses experience acquisition, utilization, propagation, and elimination across a series of tasks. Our preprint paper is available at https://arxiv.org/abs/2405.04219, and this technique will soon be incorporated into ChatDev.**
+* **June 12, 2024, We introduce Multi-Agent Collaboration Networks (MacNet) 🎉, which utilize directed acyclic graphs to facilitate effective task-oriented collaboration among agents through linguistic interactions 🤖🤖. MacNet supports cooperation across various topologies and among more than a thousand agents without exceeding context limits. More versatile and scalable, MacNet can be considered a more advanced version of ChatDev's chain-shaped topology. Our preprint paper is available at [https://arxiv.org/abs/2406.07155](https://arxiv.org/abs/2406.07155). This technique will soon be incorporated into this repository, enhancing support for diverse organizational structures and offering richer solutions beyond software development (e.g., logical reasoning, data analysis, story generation, and more).**
+  <p align="center">
+  <img src='./misc/macnet.png' width=500>
+  </p>
+
+<details>
+<summary>Old News</summary>
+
+* May 07, 2024, we introduced "Iterative Experience Refinement" (IER), a novel method where instructor and assistant agents enhance shortcut-oriented experiences to efficiently adapt to new tasks. This approach encompasses experience acquisition, utilization, propagation, and elimination across a series of tasks. Our preprint paper is available at https://arxiv.org/abs/2405.04219, and this technique will soon be incorporated into ChatDev.
   <p align="center">
   <img src='./misc/ier.png' width=220>
   </p>
+
 * January 25, 2024: We have integrated Experiential Co-Learning Module into ChatDev. Please see the [Experiential Co-Learning Guide](wiki.md#co-tracking).
+
 * December 28, 2023: We present Experiential Co-Learning, an innovative approach where instructor and assistant agents accumulate shortcut-oriented experiences to effectively solve new tasks, reducing repetitive errors and enhancing efficiency.  Check out our preprint paper at https://arxiv.org/abs/2312.17025 and this technique will soon be integrated into ChatDev.
   <p align="center">
   <img src='./misc/ecl.png' width=860>
   </p>
+
 * November 15, 2023: We launched ChatDev as a SaaS platform that enables software developers and innovative entrepreneurs to build software efficiently at a very low cost and barrier to entry. Try it out at https://chatdev.modelbest.cn/.
   <p align="center">
   <img src='./misc/saas.png' width=560>
   </p>
+
 * November 2, 2023: ChatDev is now supported with a new feature: incremental development, which allows agents to develop upon existing codes. Try `--config "incremental" --path "[source_code_directory_path]"` to start it.
   <p align="center">
   <img src='./misc/increment.png' width=700>
@@ -49,7 +61,7 @@
   <p align="center">
   <img src='./misc/docker.png' width=400>
   </p>
-- September 25, 2023: The **Git** mode is now available, enabling the programmer <img src='visualizer/static/figures/programmer.png' height=20> to utilize Git for version control. To enable this feature, simply set ``"git_management"`` to ``"True"`` in ``ChatChainConfig.json``. See [guide](wiki.md#git-mode).
+* September 25, 2023: The **Git** mode is now available, enabling the programmer <img src='visualizer/static/figures/programmer.png' height=20> to utilize Git for version control. To enable this feature, simply set ``"git_management"`` to ``"True"`` in ``ChatChainConfig.json``. See [guide](wiki.md#git-mode).
   <p align="center">
   <img src='./misc/github.png' width=600>
   </p>
@@ -66,6 +78,7 @@
   mode are now supported.
 - July 16, 2023: The [preprint paper](https://arxiv.org/abs/2307.07924) associated with this project was published.
 - June 30, 2023: The initial version of the ChatDev repository was released.
+</details>
 
 ## ❓ What Can ChatDev Do?
 
@@ -212,24 +225,6 @@ Made with [contrib.rocks](https://contrib.rocks).
       eprint={2307.07924},
       archivePrefix={arXiv},
       primaryClass={cs.SE}
-}
-
-@misc{qian2023experiential,
-      title={Experiential Co-Learning of Software-Developing Agents}, 
-      author={Chen Qian and Yufan Dang and Jiahao Li and Wei Liu and Weize Chen and Cheng Yang and Zhiyuan Liu and Maosong Sun},
-      year={2023},
-      eprint={2312.17025},
-      archivePrefix={arXiv},
-      primaryClass={cs.CL}
-}
-
-@misc{qian2024iterative,
-      title={Iterative Experience Refinement of Software-Developing Agents}, 
-      author={Chen Qian, Jiahao Li, Yufan Dang, Wei Liu, YiFei Wang, Zihao Xie, Weize Chen, Cheng Yang, Yingli Zhang, Zhiyuan Liu, Maosong Sun},
-      year={2024},
-      eprint={2405.04219},
-      archivePrefix={arXiv},
-      primaryClass={cs.CL}
 }
 ```
 
