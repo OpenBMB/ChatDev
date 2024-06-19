@@ -218,13 +218,12 @@ Made with [contrib.rocks](https://contrib.rocks).
 ## 🔎 Citation
 
 ```
-@misc{qian2023communicative,
-      title={Communicative Agents for Software Development},
-      author={Chen Qian and Xin Cong and Wei Liu and Cheng Yang and Weize Chen and Yusheng Su and Yufan Dang and Jiahao Li and Juyuan Xu and Dahai Li and Zhiyuan Liu and Maosong Sun},
-      year={2023},
-      eprint={2307.07924},
-      archivePrefix={arXiv},
-      primaryClass={cs.SE}
+@article{chatdev,
+      title = {ChatDev: Communicative Agents for Software Development},
+      author = {Chen Qian and Wei Liu and Hongzhang Liu and Nuo Chen and Yufan Dang and Jiahao Li and Cheng Yang and Weize Chen and Yusheng Su and Xin Cong and Juyuan Xu and Dahai Li and Zhiyuan Liu and Maosong Sun},
+      journal = {arXiv preprint arXiv:2307.07924},
+      url = {https://arxiv.org/abs/2307.07924},
+      year = {2023}
 }
 ```
 
