@@ -209,4 +209,4 @@ Dibuat dengan [contrib.rocks](https://contrib.rocks).
 
 ## 📬 Kontak
 
-Jika Anda memiliki pertanyaan, umpan balik, atau ingin menghubungi kami, jangan ragu untuk menghubungi kami melalui email di [chatdev.openbmb@outlook.com](mailto:chatdev.openbmb@outlook.com)
+Jika Anda memiliki pertanyaan, umpan balik, atau ingin menghubungi kami, jangan ragu untuk menghubungi kami melalui email di [qianc62@gmail.com](mailto:qianc62@gmail.com)

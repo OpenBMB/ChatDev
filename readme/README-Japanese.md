@@ -228,4 +228,4 @@
 
 ## 📬 お問い合わせ
 
-ご質問、フィードバック、またはお問い合わせがある場合は、[chatdev.openbmb@outlook.com](mailto:chatdev.openbmb@outlook.com) までお気軽にご連絡ください
+ご質問、フィードバック、またはお問い合わせがある場合は、[qianc62@gmail.com](mailto:qianc62@gmail.com) までお気軽にご連絡ください

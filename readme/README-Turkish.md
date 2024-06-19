@@ -211,4 +211,4 @@ Daha ayrıntılı bilgi için [Wiki](../wiki.md)'mize başvurabilirsiniz, burada
 
 ## 📬 İletişim
 
-Herhangi bir sorunuz, geri bildiriminiz veya iletişime geçmek isterseniz, lütfen bize [chatdev.openbmb@outlook.com](mailto:chatdev.openbmb@outlook.com) adresi üzerinden ulaşmaktan çekinmeyin.
+Herhangi bir sorunuz, geri bildiriminiz veya iletişime geçmek isterseniz, lütfen bize [qianc62@gmail.com](mailto:qianc62@gmail.com) adresi üzerinden ulaşmaktan çekinmeyin.
