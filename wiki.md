@@ -149,7 +149,7 @@ then start building a software by ``python3 run.py`` and go to [Visualizer Websi
 After this process, the experiences have been extracted from the production of software and added to the agents' experience pool in `ecl/memory/MemoryCards.json`.
 \
 **For example:**
-  Iff you want to memorize only one software, you can use:
+  If you want to memorize only one software, you can use:
   ```bash
     python3 ecl/ecl.py "<Software Path to file>"
   ```
