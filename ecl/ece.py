@@ -8,7 +8,7 @@ point = 0.95
 eliminate_threshold = 0.95
 
 
-def retrieve_eliminate(directory_Path,directory_Memory,eliminated_directory):
+def retrieve_eliminate(Path_directory,UsedMemory_directory,Evolved_directory):
     experiences_use = []
     content = []
     content1 = []
@@ -17,7 +17,7 @@ def retrieve_eliminate(directory_Path,directory_Memory,eliminated_directory):
     exp_dict = {}
     eliminated_exp = []
 
-    directories = [os.path.join(directory_Path, d) for d in os.listdir(directory_Path) if os.path.isdir(os.path.join(directory_Path, d))]
+    directories = [os.path.join(Path_directory, d) for d in os.listdir(Path_directory) if os.path.isdir(os.path.join(Path_directory, d))]
     for subdir in directories:
         directory = subdir
         logdir = [filename for filename in os.listdir(directory) if filename.endswith(".log")]
@@ -36,7 +36,7 @@ def retrieve_eliminate(directory_Path,directory_Memory,eliminated_directory):
             type = experiences_type[i]
             experiences_use.append((sourceMID,targetMID,type))
 
-    with open(directory_Memory) as file:
+    with open(UsedMemory_directory) as file:
         content1 = json.load(file)
         new_content = []
         for memorypiece in content1:
@@ -80,14 +80,14 @@ def retrieve_eliminate(directory_Path,directory_Memory,eliminated_directory):
         memorypiece["experiences"] = retrieve_eliminated_experienceList
         new_content.append(memorypiece)
 
-    with open(eliminated_directory, 'w') as file:
+    with open(Evolved_directory, 'w') as file:
         json.dump(new_content, file)
 
 
 # Quality score gain Elimination
-def gain_eliminate(directory_NewMemory,eliminated_directory):
+def gain_eliminate(NewMemory_directory,Evolved_directory):
     content2 = []
-    with open(directory_NewMemory) as file:
+    with open(NewMemory_directory) as file:
         content2 = json.load(file)
         new_content2 = []
         for memorypiece in content2:
@@ -108,21 +108,21 @@ def gain_eliminate(directory_NewMemory,eliminated_directory):
                 new_content2.append(memorypiece)
         file.close()
 
-    with open(eliminated_directory, 'r') as file:
+    with open(Evolved_directory, 'r') as file:
         new_content = json.load(file)
 
     new_content = new_content + new_content2
 
-    with open(eliminated_directory, 'w') as file:
+    with open(Evolved_directory, 'w') as file:
         json.dump(new_content, file)
 
 
 
-def recount_experience(eliminated_directory):
-    with open(eliminated_directory, 'r') as file:
+def recount_experience(Evolved_directory):
+    with open(Evolved_directory, 'r') as file:
         content = json.load(file)
 
-    with open(eliminated_directory, 'w') as file:
+    with open(Evolved_directory, 'w') as file:
         i = 0
         for memorypiece in content:
             memorypiece["total"] = i
@@ -131,16 +131,16 @@ def recount_experience(eliminated_directory):
 
 def main():
     parser = argparse.ArgumentParser(description="Process memory with some directories.")
-    parser.add_argument("directory_Path", type = str, help="The directory of software")
-    parser.add_argument("directory_Memory", type=str, help="The directory of MemoryCards")
-    parser.add_argument("directory_NewMemory", type=str, help="The directory of NewMemoryCards")
-    parser.add_argument("eliminated_directory", type= str, help="The directory for output")
+    parser.add_argument("Path_directory", type = str, help="The directory of software")
+    parser.add_argument("UsedMemory_directory", type=str, help="The directory of MemoryCards")
+    parser.add_argument("NewMemory_directory", type=str, help="The directory of NewMemoryCards")
+    parser.add_argument("Evolved_directory", type= str, help="The directory for output")
 
 
     args = parser.parse_args()
-    retrieve_eliminate(args.directory_Path,args.directory_Memory,args.eliminated_directory)
-    gain_eliminate(args.directory_NewMemory,args.eliminated_directory)
-    recount_experience(args.eliminated_directory)
+    retrieve_eliminate(args.Path_directory,args.UsedMemory_directory,args.Evolved_directory)
+    gain_eliminate(args.NewMemory_directory,args.Evolved_directory)
+    recount_experience(args.Evolved_directory)
 
 if __name__ == "__main__":
     main()
