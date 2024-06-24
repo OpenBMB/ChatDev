@@ -127,7 +127,7 @@ https://github.com/OpenBMB/ChatDev/assets/11889052/80d01d2f-677b-4399-ad8b-f7af9
    
 ## 🐳 通过Docker执行ChatDev
 
-- 我们感谢 [ManindraDeMel](https://github.com/ManindraDeMel) 提供Docker的支持。具体请参照 [Docker指南](wiki.md#docker-start) 使用。
+- 我们感谢 [ManindraDeMel](https://github.com/ManindraDeMel) 提供Docker的支持。具体请参照 [Docker指南](../wiki.md#docker-start) 使用。
 
 
 ## ✨️ 进阶技能
@@ -208,4 +208,4 @@ request一样简单。这是一个示例：执行命令`python3 run.py --task "d
 
 ## 联系方式
 
-如果您有任何问题、反馈意见或想要联系我们，欢迎随时通过电子邮件与我们联系： [chatdev.openbmb@outlook.com](mailto:chatdev.openbmb@outlook.com)
+如果您有任何问题、反馈意见或想要联系我们，欢迎随时通过电子邮件与我们联系： [qianc62@gmail.com](mailto:qianc62@gmail.com)

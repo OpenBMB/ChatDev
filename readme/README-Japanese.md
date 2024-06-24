@@ -145,7 +145,7 @@
 
 ### 🐳 Docker のクイックスタート
 
-- Docker のサポートを提供してくれた [ManindraDeMel](https://github.com/ManindraDeMel) に感謝します。[Docker スタートガイド](wiki.md#docker-start)を参照してください。
+- Docker のサポートを提供してくれた [ManindraDeMel](https://github.com/ManindraDeMel) に感謝します。[Docker スタートガイド](../wiki.md#docker-start)を参照してください。
 
 ## ✨️ 高度なスキル
 
@@ -228,4 +228,4 @@
 
 ## 📬 お問い合わせ
 
-ご質問、フィードバック、またはお問い合わせがある場合は、[chatdev.openbmb@outlook.com](mailto:chatdev.openbmb@outlook.com) までお気軽にご連絡ください
+ご質問、フィードバック、またはお問い合わせがある場合は、[qianc62@gmail.com](mailto:qianc62@gmail.com) までお気軽にご連絡ください

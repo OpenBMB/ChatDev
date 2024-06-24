@@ -167,4 +167,4 @@ primaryClass={cs.SE}
 
 ## Makipag-ugnay
 
-Kung mayroon kang anumang mga tanong, puna, o nais makipag-ugnay, huwag kang mag-atubiling makipag-ugnay sa amin sa pamamagitan ng email sa [chatdev.openbmb@outlook.com](mailto:chatdev.openbmb@outlook.com)
+Kung mayroon kang anumang mga tanong, puna, o nais makipag-ugnay, huwag kang mag-atubiling makipag-ugnay sa amin sa pamamagitan ng email sa [qianc62@gmail.com](mailto:qianc62@gmail.com)
