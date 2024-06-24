@@ -166,4 +166,4 @@ Voor meer gedetailleerde informatie, verwijzen wij u graag naar onze [Wiki](../w
 
 ## 📬 Contact
 
-Als je vragen hebt, feedback wilt geven, of contact met ons wilt opnemen, aarzel dan niet om ons te mailen op [chatdev.openbmb@outlook.com](mailto:chatdev.openbmb@outlook.com)
+Als je vragen hebt, feedback wilt geven, of contact met ons wilt opnemen, aarzel dan niet om ons te mailen op [qianc62@gmail.com](mailto:qianc62@gmail.com)

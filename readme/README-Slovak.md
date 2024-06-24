@@ -193,4 +193,4 @@ vytvorí softvérový balík a vygeneruje priečinok s názvom ``/WareHouse/2048
 
 ## 📬 Kontakt
 
-Ak máte akékoľvek otázky, spätnú väzbu alebo by ste nás chceli kontaktovať, neváhajte nás kontaktovať e-mailom na adrese [chatdev.openbmb@outlook.com](mailto:chatdev.openbmb@outlook.com)
+Ak máte akékoľvek otázky, spätnú väzbu alebo by ste nás chceli kontaktovať, neváhajte nás kontaktovať e-mailom na adrese [qianc62@gmail.com](mailto:qianc62@gmail.com)

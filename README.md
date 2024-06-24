@@ -27,15 +27,31 @@
 </p>
 
 ## 🎉 News
-* **January 25, 2024: We have integrated Experiential Co-Learning Module into ChatDev. Please see the [Experiential Co-Learning Guide](wiki.md#co-tracking).**
+* **June 12, 2024, We introduce Multi-Agent Collaboration Networks (MacNet) 🎉, which utilize directed acyclic graphs to facilitate effective task-oriented collaboration among agents through linguistic interactions 🤖🤖. MacNet supports cooperation across various topologies and among more than a thousand agents without exceeding context limits. More versatile and scalable, MacNet can be considered a more advanced version of ChatDev's chain-shaped topology. Our preprint paper is available at [https://arxiv.org/abs/2406.07155](https://arxiv.org/abs/2406.07155). This technique will soon be incorporated into this repository, enhancing support for diverse organizational structures and offering richer solutions beyond software development (e.g., logical reasoning, data analysis, story generation, and more).**
+  <p align="center">
+  <img src='./misc/macnet.png' width=500>
+  </p>
+
+<details>
+<summary>Old News</summary>
+
+* May 07, 2024, we introduced "Iterative Experience Refinement" (IER), a novel method where instructor and assistant agents enhance shortcut-oriented experiences to efficiently adapt to new tasks. This approach encompasses experience acquisition, utilization, propagation, and elimination across a series of tasks. Our preprint paper is available at https://arxiv.org/abs/2405.04219, and this technique will soon be incorporated into ChatDev.
+  <p align="center">
+  <img src='./misc/ier.png' width=220>
+  </p>
+
+* January 25, 2024: We have integrated Experiential Co-Learning Module into ChatDev. Please see the [Experiential Co-Learning Guide](wiki.md#co-tracking).
+
 * December 28, 2023: We present Experiential Co-Learning, an innovative approach where instructor and assistant agents accumulate shortcut-oriented experiences to effectively solve new tasks, reducing repetitive errors and enhancing efficiency.  Check out our preprint paper at https://arxiv.org/abs/2312.17025 and this technique will soon be integrated into ChatDev.
   <p align="center">
   <img src='./misc/ecl.png' width=860>
   </p>
+
 * November 15, 2023: We launched ChatDev as a SaaS platform that enables software developers and innovative entrepreneurs to build software efficiently at a very low cost and barrier to entry. Try it out at https://chatdev.modelbest.cn/.
   <p align="center">
   <img src='./misc/saas.png' width=560>
   </p>
+
 * November 2, 2023: ChatDev is now supported with a new feature: incremental development, which allows agents to develop upon existing codes. Try `--config "incremental" --path "[source_code_directory_path]"` to start it.
   <p align="center">
   <img src='./misc/increment.png' width=700>
@@ -45,7 +61,7 @@
   <p align="center">
   <img src='./misc/docker.png' width=400>
   </p>
-- September 25, 2023: The **Git** mode is now available, enabling the programmer <img src='visualizer/static/figures/programmer.png' height=20> to utilize Git for version control. To enable this feature, simply set ``"git_management"`` to ``"True"`` in ``ChatChainConfig.json``. See [guide](wiki.md#git-mode).
+* September 25, 2023: The **Git** mode is now available, enabling the programmer <img src='visualizer/static/figures/programmer.png' height=20> to utilize Git for version control. To enable this feature, simply set ``"git_management"`` to ``"True"`` in ``ChatChainConfig.json``. See [guide](wiki.md#git-mode).
   <p align="center">
   <img src='./misc/github.png' width=600>
   </p>
@@ -62,6 +78,7 @@
   mode are now supported.
 - July 16, 2023: The [preprint paper](https://arxiv.org/abs/2307.07924) associated with this project was published.
 - June 30, 2023: The initial version of the ChatDev repository was released.
+</details>
 
 ## ❓ What Can ChatDev Do?
 
@@ -201,22 +218,12 @@ Made with [contrib.rocks](https://contrib.rocks).
 ## 🔎 Citation
 
 ```
-@misc{qian2023communicative,
-      title={Communicative Agents for Software Development},
-      author={Chen Qian and Xin Cong and Wei Liu and Cheng Yang and Weize Chen and Yusheng Su and Yufan Dang and Jiahao Li and Juyuan Xu and Dahai Li and Zhiyuan Liu and Maosong Sun},
-      year={2023},
-      eprint={2307.07924},
-      archivePrefix={arXiv},
-      primaryClass={cs.SE}
-}
-
-@misc{qian2023experiential,
-      title={Experiential Co-Learning of Software-Developing Agents}, 
-      author={Chen Qian and Yufan Dang and Jiahao Li and Wei Liu and Weize Chen and Cheng Yang and Zhiyuan Liu and Maosong Sun},
-      year={2023},
-      eprint={2312.17025},
-      archivePrefix={arXiv},
-      primaryClass={cs.CL}
+@article{chatdev,
+      title = {ChatDev: Communicative Agents for Software Development},
+      author = {Chen Qian and Wei Liu and Hongzhang Liu and Nuo Chen and Yufan Dang and Jiahao Li and Cheng Yang and Weize Chen and Yusheng Su and Xin Cong and Juyuan Xu and Dahai Li and Zhiyuan Liu and Maosong Sun},
+      journal = {arXiv preprint arXiv:2307.07924},
+      url = {https://arxiv.org/abs/2307.07924},
+      year = {2023}
 }
 ```
 
@@ -236,4 +243,4 @@ Made with [contrib.rocks](https://contrib.rocks).
 
 ## 📬 Contact
 
-If you have any questions, feedback, or would like to get in touch, please feel free to reach out to us via email at [chatdev.openbmb@outlook.com](mailto:chatdev.openbmb@outlook.com)
+If you have any questions, feedback, or would like to get in touch, please feel free to reach out to us via email at [qianc62@gmail.com](mailto:qianc62@gmail.com)

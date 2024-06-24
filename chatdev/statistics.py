@@ -5,27 +5,25 @@ import numpy as np
 
 def prompt_cost(model_type: str, num_prompt_tokens: float, num_completion_tokens: float):
     input_cost_map = {
-        "gpt-3.5-turbo": 0.0015,
+        "gpt-3.5-turbo": 0.0005,
         "gpt-3.5-turbo-16k": 0.003,
         "gpt-3.5-turbo-0613": 0.0015,
         "gpt-3.5-turbo-16k-0613": 0.003,
         "gpt-4": 0.03,
         "gpt-4-0613": 0.03,
         "gpt-4-32k": 0.06,
-        "gpt-4-1106-preview": 0.01,
-        "gpt-4-1106-vision-preview": 0.01,
+        "gpt-4-turbo": 0.01,
     }
 
     output_cost_map = {
-        "gpt-3.5-turbo": 0.002,
+        "gpt-3.5-turbo": 0.0015,
         "gpt-3.5-turbo-16k": 0.004,
         "gpt-3.5-turbo-0613": 0.002,
         "gpt-3.5-turbo-16k-0613": 0.004,
         "gpt-4": 0.06,
         "gpt-4-0613": 0.06,
         "gpt-4-32k": 0.12,
-        "gpt-4-1106-preview": 0.03,
-        "gpt-4-1106-vision-preview": 0.03,
+        "gpt-4-turbo": 0.03,
     }
 
     if model_type not in input_cost_map or model_type not in output_cost_map:
@@ -112,7 +110,7 @@ def get_info(dir, log_filepath):
             elif model_type == "GPT_4_32k":
                 model_type = "gpt-4-32k"
             elif model_type == "GPT_4_TURBO":
-                model_type = "gpt-4-1106-preview"
+                model_type = "gpt-4-turbo"
             # print("model_type:", model_type)
 
         lines = open(log_filepath, "r", encoding="utf8").read().split("\n")

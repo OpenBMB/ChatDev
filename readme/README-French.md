@@ -188,4 +188,4 @@ de ``CompanyConfig/Default``
 
 ## Contact
 
-Si vous avez des questions, des retours ou souhaitez nous contacter, n'hésitez pas à nous envoyer un email à [chatdev.openbmb@outlook.com](mailto:chatdev.openbmb@outlook.com)
+Si vous avez des questions, des retours ou souhaitez nous contacter, n'hésitez pas à nous envoyer un email à [qianc62@gmail.com](mailto:qianc62@gmail.com)

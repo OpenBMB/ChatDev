@@ -183,4 +183,4 @@ Para obter informações mais detalhadas, consulte nossa Wiki, onde você pode e
 
 ## 📬 Contato
 
-Se você tiver alguma dúvida, feedback ou gostaria de entrar em contato, não hesite em nos enviar um e-mail para [chatdev.openbmb@outlook.com](mailto:chatdev.openbmb@outlook.com)
+Se você tiver alguma dúvida, feedback ou gostaria de entrar em contato, não hesite em nos enviar um e-mail para [qianc62@gmail.com](mailto:qianc62@gmail.com)

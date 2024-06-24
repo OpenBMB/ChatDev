@@ -187,4 +187,4 @@ un paquete de software y generará una carpeta llamada ``/WareHouse/2048_THUNLP_
 
 ## 📬 Contacto
 
-Si tienes alguna pregunta, comentarios, o deseas ponerte en contacto, no dudes en enviarnos un correo electrónico a [chatdev.openbmb@outlook.com](mailto:chatdev.openbmb@outlook.com)
+Si tienes alguna pregunta, comentarios, o deseas ponerte en contacto, no dudes en enviarnos un correo electrónico a [qianc62@gmail.com](mailto:qianc62@gmail.com)
