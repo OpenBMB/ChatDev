@@ -94,7 +94,11 @@ args2type = {'GPT_3_5_TURBO': ModelType.GPT_3_5_TURBO,
              'GPT_4': ModelType.GPT_4,
             #  'GPT_4_32K': ModelType.GPT_4_32k,
              'GPT_4_TURBO': ModelType.GPT_4_TURBO,
-             'GPT_4_TURBO_V': ModelType.GPT_4_TURBO_V
+             'GPT_4_TURBO_V': ModelType.GPT_4_TURBO_V,
+             'GPT_4_TURBO_V': ModelType.GPT_4_TURBO_V,
+             'claude-3-sonnet':ModelType.CLAUDE_3_SONNET,
+             'claude-3-5-sonnet':ModelType.CLAUDE_3_5_SONNET,
+             'claude-3-haiku':ModelType.CLAUDE_3_HAIKU,
              }
 if openai_new_api:
     args2type['GPT_3_5_TURBO'] = ModelType.GPT_3_5_TURBO_NEW
