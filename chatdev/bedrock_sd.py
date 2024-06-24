@@ -49,41 +49,52 @@ def generate_image(model_id, body):
         body=body, modelId=model_id, accept=accept, contentType=content_type
     )
     response_body = json.loads(response.get("body").read())
-
-    base64_image = response_body.get("artifacts")[0].get("base64")
-    base64_bytes = base64_image.encode('ascii')
+    base64_bytes = response_body.get("images")[0].encode('ascii')
     image_bytes = base64.b64decode(base64_bytes)
 
-    finish_reason = response_body.get("artifacts")[0].get("finishReason")
+    finish_reason = response_body.get("error")
 
-    if finish_reason == 'ERROR' or finish_reason == 'CONTENT_FILTERED':
-        raise ImageError(f"Image generation error. Error code is {finish_reason}")
-
-
-    # logger.info("Successfully generated image withvthe SDXL 1.0 model %s", model_id)
+    if finish_reason is not None:
+        raise ImageError(f"Image generation error. Error is {finish_reason}")
 
     return image_bytes
 
-def generate( prompt,style_preset=StyleEnum.Model_3D.value):
-    model_id='stability.stable-diffusion-xl-v1'
-    body=json.dumps({
-        "text_prompts": [
-        {
-        "text": prompt
+def generate( prompt,style_preset=StyleEnum.Photographic.value):
+    # model_id='stability.stable-diffusion-xl-v1'
+    model_id='amazon.titan-image-generator-v1'
+    # body=json.dumps(
+    # {
+    #     "text_prompts": [
+    #     {
+    #     "text": prompt
+    #     }
+    # ],
+    # "cfg_scale": 7,
+    # "seed": 0,
+    # "steps": 30,
+    # "samples" : 1,
+    # "style_preset" : style_preset
+    # })
+    body=json.dumps(
+    {
+        "taskType": "TEXT_IMAGE",
+        "textToImageParams": {
+            "text": prompt
+        },
+        "imageGenerationConfig": {
+            "numberOfImages": 1,
+            "height": 512,
+            "width": 512,
+            "cfgScale": 8.0,
+            "seed": 0
         }
-    ],
-    "cfg_scale": 7,
-    "seed": 0,
-    "steps": 30,
-    "samples" : 1,
-    "style_preset" : style_preset
     })
     image= None
     try:
         image_bytes=generate_image(model_id = model_id,
                                  body = body)
         image = Image.open(io.BytesIO(image_bytes))
-
+        # logger.info("Successfully generated image with the SDXL 1.0 model %s", model_id)
     except ClientError as err:
         message=err.response["Error"]["Message"]
         # logger.error("A client error occurred: %s", message)
@@ -96,6 +107,7 @@ def generate( prompt,style_preset=StyleEnum.Model_3D.value):
         return image
     
 if __name__ == "__main__":
-    image = generate(prompt='transformer diagram',style_preset=StyleEnum.Model_3D.value)
-    image.show()
-    image.save("test.png")
+    image = generate(prompt='a button of upload',style_preset=StyleEnum.Photographic.value)
+    # image.show()
+    if image:
+        image.show()
