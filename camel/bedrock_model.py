@@ -8,12 +8,14 @@ from anthropic_bedrock import AnthropicBedrock
 
 
 BEDROCK_LLM_MODELID_LIST = {'claude-3-sonnet': 'anthropic.claude-3-sonnet-20240229-v1:0',
+                            'claude-3-5-sonnet': 'anthropic.claude-3-5-sonnet-20240620-v1:0',
                             'claude-3-haiku' : 'anthropic.claude-3-haiku-20240307-v1:0'}
 
 
-REGION = os.environ.get('region','us-west-2') 
-
-boto3_bedrock = boto3.client(
+REGION = os.environ.get('region','us-east-1') 
+PROFILE = os.environ.get('profile', 'default')
+session = boto3.Session(profile_name=PROFILE,region_name=REGION)
+boto3_bedrock = session.client(
     service_name="bedrock-runtime",
     region_name=REGION
 )

@@ -78,7 +78,7 @@ parser.add_argument('--task', type=str, default="Develop a basic Gomoku game.",
                     help="Prompt of software")
 parser.add_argument('--name', type=str, default="Gomoku",
                     help="Name of software, your software will be generated in WareHouse/name_org_timestamp")
-parser.add_argument('--model', type=str, default="GPT_3_5_TURBO",
+parser.add_argument('--model', type=str, default="CLAUDE_3_5_SONNET",
                     help="GPT Model, choose from {'GPT_3_5_TURBO','GPT_4','GPT_4_32K', 'GPT_4_TURBO'}")
 parser.add_argument('--path', type=str, default="",
                     help="Your file directory, ChatDev will build upon your software in the Incremental mode")
@@ -96,6 +96,7 @@ args2type = {'GPT_3_5_TURBO': ModelType.GPT_3_5_TURBO,
              'GPT_4_TURBO': ModelType.GPT_4_TURBO,
              'GPT_4_TURBO_V': ModelType.GPT_4_TURBO_V,
              'claude-3-sonnet':ModelType.CLAUDE_3_SONNET,
+             'claude-3-5-sonnet':ModelType.CLAUDE_3_5_SONNET,
              'claude-3-haiku':ModelType.CLAUDE_3_HAIKU,
              }
 if openai_new_api:

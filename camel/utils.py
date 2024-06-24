@@ -80,7 +80,8 @@ def num_tokens_from_messages(
     if model in {
         ModelType.CLAUDE_3_HAIKU,
         ModelType.CLAUDE_3_OPUS,
-        ModelType.CLAUDE_3_SONNET
+        ModelType.CLAUDE_3_SONNET,
+        ModelType.CLAUDE_3_5_SONNET
     }: 
         string = "\n".join([message["content"] for message in messages])
 
@@ -134,7 +135,7 @@ def get_model_token_limit(model: ModelType) -> int:
         return 128000
     elif model == ModelType.STUB:
         return 4096
-    elif model in [ModelType.CLAUDE_3_SONNET,ModelType.CLAUDE_3_HAIKU,ModelType.CLAUDE_3_OPUS]:
+    elif model in [ModelType.CLAUDE_3_SONNET,ModelType.CLAUDE_3_HAIKU,ModelType.CLAUDE_3_OPUS,ModelType.CLAUDE_3_5_SONNET]:
         return 200000
     else:
         raise ValueError("Unknown model type")

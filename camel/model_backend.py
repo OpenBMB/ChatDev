@@ -107,6 +107,7 @@ class OpenAIModel(ModelBackend):
                 "claude-3-sonnet":4096,
                 "claude-3-haiku":4096,
                 "claude-3-opus":4096,
+                 "claude-3-5-sonnet":4096,
             }
         # use_bedrock = True if BEDROCK_MODEL_NAME.startswith('claude') else False
         os.environ['model'] = self.model_type.value if self.model_type.value.startswith('claude') else None
@@ -157,6 +158,7 @@ class OpenAIModel(ModelBackend):
                 "gpt-4-1106-preview": 4096,
                 "gpt-4-1106-vision-preview": 4096,
                 "claude-3-sonnet":4096,
+                "claude-3-5-sonnet":4096,
                 "claude-3-haiku":4096,
                 "claude-3-opus":4096,
             }
@@ -252,6 +254,7 @@ class ModelFactory:
             ModelType.CLAUDE_3_OPUS,
             ModelType.CLAUDE_3_SONNET,
             ModelType.CLAUDE_3_HAIKU,
+            ModelType.CLAUDE_3_5_SONNET,
             None
         }:
             model_class = OpenAIModel
