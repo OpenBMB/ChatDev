@@ -149,7 +149,7 @@ then start building a software by ``python3 run.py`` and go to [Visualizer Websi
 After this process, the experiences have been extracted from the production of software and added to the agents' experience pool in `ecl/memory/MemoryCards.json`.
 \
 **For example:**
-  It you want to memorize only one software, you can use:
+  If you want to memorize only one software, you can use:
   ```bash
     python3 ecl/ecl.py "<Software Path to file>"
   ```
@@ -186,6 +186,25 @@ After this process, the experiences have been extracted from the production of s
    In this process of software development, the agents will engage their experience pool(`MemoryCards.json`) into software development!
 
 Detailed descriptions and experiment results about this **Experiential Co-Learning** Module lies in our preprint paper at https://arxiv.org/abs/2312.17025.
+
+## Experiential Co-Evolving Guide
+- **Using Co-Evolving**: Use the following command to initiate the evolving of experiences, which uses the `ecl/ece.py` to eliminate `ecl/memory/UsedMemory.json` and `ecl/memory/NewMemory.json`. Then it combines the two parts of experiences to form a new experience pool in `ecl/memory/Evolved_directory.json`.
+
+  ```bash
+    python3 ecl/ece.py "<Path_directory>" "<UsedMemory_directory>" "<NewMemory_directory>" "<Evolved_directory>"
+  ```
+  `<Path_directory>`: The path to the directory of software , generated with the memory `UsedMemory_directory`. \
+  `<UsedMemory_directory>`: The path to the directory of UsedMemory, which was used to generate the software in `Path_directory`. \
+  `<NewMemory_directory>`: The path to the directory NewMemory, which acquires from the software in `Path_directory` using `ecl/ecl.py`. \
+  `<Evolved_directory>`: The path to a directory where you want to store the evolved memory.
+  \
+  **For example:**
+  ```bash
+    python3 ecl/ece.py "WareHouse" "ecl/memory/UsedMemory.json" "ecl/memory/NewMemory.json" "ecl/memory/MemoryCards_Evolved.json"
+  ```
+> **Notice:** The software directory and memory directory must correspond. The software in the "<Path_directory>" is generated using "<UsedMemory_directory>", and the "<NewMemory_directory>" is acquired from the software in the  "<Path_directory>". That's because when we calculate the frequency distribution of the experience, we need to ensure that the software corresponds to the experiences, which to eliminate certain experiences to obtain a subset with relatively high retrieval probability.
+
+Detailed descriptions and experiment results about this Experiential Co-Evolving Module lies in our preprint paper at https://arxiv.org/abs/2405.04219.
 
 ## Customization
 
