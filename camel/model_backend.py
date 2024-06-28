@@ -16,10 +16,15 @@ from typing import Any, Dict
 
 import openai
 import tiktoken
-
+import json
+import boto3
 from camel.typing import ModelType
 from chatdev.statistics import prompt_cost
 from chatdev.utils import log_visualize
+from typing import List,Union
+from pydantic import BaseModel
+import time
+from camel.bedrock_model import claude_invoke,num_tokens_from_string
 
 try:
     from openai.types.chat import ChatCompletion
@@ -30,11 +35,34 @@ except ImportError:
 
 import os
 
-OPENAI_API_KEY = os.environ['OPENAI_API_KEY']
+OPENAI_API_KEY = os.environ.get('OPENAI_API_KEY')
 if 'BASE_URL' in os.environ:
     BASE_URL = os.environ['BASE_URL']
 else:
     BASE_URL = None
+
+def reconstruct_to_claude_messages(messages):
+    rec_messages = []
+    system = None
+    for message in messages:
+        if message['role'] =='system' and not system:
+            system = message["content"] 
+            continue
+        if rec_messages:
+            ##如果第一个消息是assitant,则需要更换成user
+            if rec_messages[0]['role'] == 'assistant':
+                rec_messages[0] = {"role":'user',"content":rec_messages[0]['content']}
+            last_msg = rec_messages[-1]
+            last_role = last_msg['role']
+            current_role = message['role']
+            if last_role == current_role:
+                new_content = last_msg['content'] +"\n\n" + message['content']
+                rec_messages[-1] = {"role":last_role,"content":new_content}
+            else:
+                rec_messages.append(message)
+        else:
+            rec_messages.append(message)
+    return system,rec_messages
 
 
 class ModelBackend(ABC):
@@ -54,7 +82,7 @@ class ModelBackend(ABC):
         """
         pass
 
-
+    
 class OpenAIModel(ModelBackend):
     r"""OpenAI API in a unified ModelBackend interface."""
 
@@ -64,13 +92,50 @@ class OpenAIModel(ModelBackend):
         self.model_config_dict = model_config_dict
 
     def run(self, *args, **kwargs):
+        use_bedrock = True if self.model_type.value.startswith('claude') else False
+
         string = "\n".join([message["content"] for message in kwargs["messages"]])
-        encoding = tiktoken.encoding_for_model(self.model_type.value)
-        num_prompt_tokens = len(encoding.encode(string))
+        if use_bedrock:
+            num_prompt_tokens = num_tokens_from_string(string,self.model_type.value)
+        else:
+            encoding = tiktoken.encoding_for_model(self.model_type.value)
+            num_prompt_tokens = len(encoding.encode(string))
+        
         gap_between_send_receive = 15 * len(kwargs["messages"])
         num_prompt_tokens += gap_between_send_receive
+        num_max_token_map = {
+                "claude-3-sonnet":4096,
+                "claude-3-haiku":4096,
+                "claude-3-opus":4096,
+                 "claude-3-5-sonnet":4096,
+            }
+        # use_bedrock = True if BEDROCK_MODEL_NAME.startswith('claude') else False
+        os.environ['model'] = self.model_type.value if self.model_type.value.startswith('claude') else None
+        print('self.model_type.value:',self.model_type.value)
+        # assert self.model_type.value in num_max_token_map
+        if use_bedrock:
+            num_max_token = num_max_token_map[self.model_type.value]
+            num_max_completion_tokens = num_max_token - num_prompt_tokens
+            print('kwargs["messages"]:',len(kwargs["messages"]),[item['role'] for item in kwargs["messages"]])
+            system,new_messages = reconstruct_to_claude_messages(messages=kwargs["messages"])
+            # print('system:',system)
+            print('new_messages:',len(new_messages),[item['role'] for item in new_messages])
+            response = claude_invoke(messages = new_messages,system=system,max_tokens=num_max_completion_tokens,model_name=self.model_type.value)
+            cost = prompt_cost(
+                self.model_type.value,
+                num_prompt_tokens=response.usage.prompt_tokens,
+                num_completion_tokens=response.usage.completion_tokens
+            )
 
-        if openai_new_api:
+            log_visualize(
+                "**[Claude_Usage_Info Receive]**\nprompt_tokens: {}\ncompletion_tokens: {}\ntotal_tokens: {}\ncost: ${:.6f}\n".format(
+                    response.usage.prompt_tokens, response.usage.completion_tokens,
+                    response.usage.total_tokens, cost))
+            # if not isinstance(response, ChatCompletion):
+            #     raise RuntimeError("Unexpected return from OpenAI API")
+            return response
+
+        elif openai_new_api:
             # Experimental, add base_url
             if BASE_URL:
                 client = openai.OpenAI(
@@ -91,6 +156,10 @@ class OpenAIModel(ModelBackend):
                 "gpt-4-0613": 8192,
                 "gpt-4-32k": 32768,
                 "gpt-4-turbo": 100000,
+                "claude-3-sonnet":4096,
+                "claude-3-5-sonnet":4096,
+                "claude-3-haiku":4096,
+                "claude-3-opus":4096,
             }
             num_max_token = num_max_token_map[self.model_type.value]
             num_max_completion_tokens = num_max_token - num_prompt_tokens
@@ -182,6 +251,10 @@ class ModelFactory:
             ModelType.GPT_4_32k,
             ModelType.GPT_4_TURBO,
             ModelType.GPT_4_TURBO_V,
+            ModelType.CLAUDE_3_OPUS,
+            ModelType.CLAUDE_3_SONNET,
+            ModelType.CLAUDE_3_HAIKU,
+            ModelType.CLAUDE_3_5_SONNET,
             None
         }:
             model_class = OpenAIModel
