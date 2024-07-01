@@ -15,7 +15,7 @@ hamburger.addEventListener("click", function () {
   hamburger.src = toggle ? srcClose : srcHam;
   navList.classList.toggle("active");
   logoContainer.classList.toggle('active');
-  document.body.style.position = toggle ? 'fixed' :'static';
+  document.body.style.position = toggle ? 'fixed' : 'static';
 });
 
 tabNavList.forEach((item, index, array) => {
