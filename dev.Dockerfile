@@ -11,12 +11,10 @@ WORKDIR /app
 COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the rest of the application code
-COPY . .
+# No need to copy the rest of the application code as we use bind mounts
+# COPY . .
 
-# Expose the port for visualizer/app.py
+# Expose the port for online_log/app.py
 EXPOSE 8000
 
-ARG DEFAULT_CMD=
-ENV COMMAND=${DEFAULT_CMD:-/bin/bash}
-CMD ${COMMAND}
+CMD ["/bin/bash"]
