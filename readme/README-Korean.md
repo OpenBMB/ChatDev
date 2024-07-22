@@ -193,13 +193,14 @@ Made with [contrib.rocks](https://contrib.rocks).
 - 데이터 라이선스: ChatDev에 사용되는 관련 데이터는 CC BY-NC 4.0라이선스가 부여되어 있습니다. 이 라이선스는 데이터의 비상업적 사용을 명시적으로 허용합니다. 이러한 데이터 세트를 사용하여 훈련된 모든 모델은 비상업적 사용 제한을 철저히 준수해야 하며 연구 목적으로만 사용되어야 한다는 점을 강조하고 싶습니다.
 
 
-## 🤝 Acknowledgments
+## 🤝 감사의 말
 
-<a href="http://nlp.csai.tsinghua.edu.cn/"><img src="misc/thunlp.png" height=50pt></a>&nbsp;&nbsp;
-<a href="https://modelbest.cn/"><img src="misc/modelbest.png" height=50pt></a>&nbsp;&nbsp;
-<a href="https://github.com/OpenBMB/AgentVerse/"><img src="misc/agentverse.png" height=50pt></a>&nbsp;&nbsp;
-<a href="https://github.com/OpenBMB/RepoAgent"><img src="misc/repoagent.png"  height=50pt></a>
-<a href="https://aibrb.com/introducing-herbie-your-super-employee-for-streamlined-productivity/"><img src="https://aibrb.com/wp-content/uploads/2023/09/Featured-on-AIBRB.com-white-1.png"  height=50pt></a>
+<a href="http://nlp.csai.tsinghua.edu.cn/"><img src="../misc/thunlp.png" height=50pt></a>&nbsp;&nbsp;
+<a href="https://modelbest.cn/"><img src="../misc/modelbest.png" height=50pt></a>&nbsp;&nbsp;
+<a href="https://github.com/OpenBMB/AgentVerse/"><img src="../misc/agentverse.png" height=50pt></a>&nbsp;&nbsp;
+<a href="https://github.com/OpenBMB/RepoAgent"><img src="../misc/repoagent.png"  height=50pt></a>
+<!-- <a href="https://aibrb.com/introducing-herbie-your-super-employee-for-streamlined-productivity/"><img src="https://aibrb.com/wp-content/uploads/2023/09/Featured-on-AIBRB.com-white-1.png"  height=50pt></a> -->
+<a href="https://powerbrainai.com/"><img src="https://powerbrainai.com/wp-content/uploads/2024/04/cropped-AI-Chat-logo.png" height=50pt></a>
 
 ## 연락처
 
