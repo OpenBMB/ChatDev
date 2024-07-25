@@ -90,7 +90,9 @@ class OpenAIModel(ModelBackend):
                 "gpt-4": 8192,
                 "gpt-4-0613": 8192,
                 "gpt-4-32k": 32768,
-                "gpt-4-turbo": 100000,
+                "gpt-4-1106-preview": 4096,
+                "gpt-4-1106-vision-preview": 4096,
+                "gpt-4o": 4096,
             }
             num_max_token = num_max_token_map[self.model_type.value]
             num_max_completion_tokens = num_max_token - num_prompt_tokens
@@ -121,7 +123,7 @@ class OpenAIModel(ModelBackend):
                 "gpt-4": 8192,
                 "gpt-4-0613": 8192,
                 "gpt-4-32k": 32768,
-                "gpt-4-turbo": 100000,
+                "gpt-4o": 4096,
             }
             num_max_token = num_max_token_map[self.model_type.value]
             num_max_completion_tokens = num_max_token - num_prompt_tokens
@@ -182,6 +184,7 @@ class ModelFactory:
             ModelType.GPT_4_32k,
             ModelType.GPT_4_TURBO,
             ModelType.GPT_4_TURBO_V,
+            ModelType.GPT_4o,
             None
         }:
             model_class = OpenAIModel
