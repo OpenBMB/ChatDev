@@ -5,19 +5,25 @@ from openai import OpenAI
 import wikipediaapi
 import os
 import time
+from camel.bedrock_model import claude_invoke
 
-self_api_key = os.environ.get('OPENAI_API_KEY')
+self_api_key = os.environ.get('OPENAI_API_KEY','sk-')
 BASE_URL = os.environ.get('BASE_URL')
+BEDROCK_MODEL_NAME = os.environ.get('model')
+use_bedrock = False
+if BEDROCK_MODEL_NAME:
+    use_bedrock = True if BEDROCK_MODEL_NAME.startswith('claude') else False
 
-if BASE_URL:
-    client = openai.OpenAI(
-        api_key=self_api_key,
-        base_url=BASE_URL,
-    )
 else:
-    client = openai.OpenAI(
-        api_key=self_api_key
-    )
+    if BASE_URL:
+        client = openai.OpenAI(
+            api_key=self_api_key,
+            base_url=BASE_URL,
+        )
+    else:
+        client = openai.OpenAI(
+            api_key=self_api_key
+        )
 
 def get_baidu_baike_content(keyword):
     # design api by the baidubaike
@@ -57,30 +63,40 @@ def modal_trans(task_dsp):
         task_in ="'" + task_dsp + \
                "'Just give me the most important keyword about this sentence without explaining it and your answer should be only one keyword."
         messages = [{"role": "user", "content": task_in}]
-        response = client.chat.completions.create(messages=messages,
-        model="gpt-3.5-turbo-16k",
-        temperature=0.2,
-        top_p=1.0,
-        n=1,
-        stream=False,
-        frequency_penalty=0.0,
-        presence_penalty=0.0,
-        logit_bias={})
+        if use_bedrock:
+            response = claude_invoke(messages = messages,
+                                     max_tokens=4096,
+                                     model_name=BEDROCK_MODEL_NAME)
+        else:
+            response = client.chat.completions.create(messages=messages,
+                model="gpt-3.5-turbo-16k",
+                temperature=0.2,
+                top_p=1.0,
+                n=1,
+                stream=False,
+                frequency_penalty=0.0,
+                presence_penalty=0.0,
+                logit_bias={})
         response_text = response.choices[0].message.content
         spider_content = get_wiki_content(response_text)
         # time.sleep(1)
         task_in = "'" + spider_content + \
                "',Summarize this paragraph and return the key information."
         messages = [{"role": "user", "content": task_in}]
-        response = client.chat.completions.create(messages=messages,
-        model="gpt-3.5-turbo-16k",
-        temperature=0.2,
-        top_p=1.0,
-        n=1,
-        stream=False,
-        frequency_penalty=0.0,
-        presence_penalty=0.0,
-        logit_bias={})
+        if use_bedrock:
+            response = claude_invoke(messages = messages,
+                                     max_tokens=4096,
+                                     model_name=BEDROCK_MODEL_NAME)
+        else:
+            response = client.chat.completions.create(messages=messages,
+                        model="gpt-3.5-turbo-16k",
+                        temperature=0.2,
+                        top_p=1.0,
+                        n=1,
+                        stream=False,
+                        frequency_penalty=0.0,
+                        presence_penalty=0.0,
+                        logit_bias={})
         result = response.choices[0].message.content
         print("web spider content:", result)
     except:

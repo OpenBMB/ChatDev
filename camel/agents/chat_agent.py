@@ -238,8 +238,8 @@ class ChatAgent(BaseAgent):
         if num_tokens < self.model_token_limit:
             response = self.model_backend.run(messages=openai_messages)
             if openai_new_api:
-                if not isinstance(response, ChatCompletion):
-                    raise RuntimeError("OpenAI returned unexpected struct")
+                # if not isinstance(response, ChatCompletion):
+                #     raise RuntimeError("OpenAI returned unexpected struct")
                 output_messages = [
                     ChatMessage(role_name=self.role_name, role_type=self.role_type,
                                 meta_dict=dict(), **dict(choice.message))

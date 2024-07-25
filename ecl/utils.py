@@ -16,7 +16,7 @@ from tenacity import (
     stop_after_attempt,
     wait_exponential
 )
-OPENAI_API_KEY = os.environ['OPENAI_API_KEY']
+OPENAI_API_KEY = os.environ.get('OPENAI_API_KEY')
 if 'BASE_URL' in os.environ:
     BASE_URL = os.environ['BASE_URL']
 else:
