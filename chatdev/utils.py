@@ -3,8 +3,11 @@ import logging
 import re
 import time
 
+from urllib.parse import urlparse
+
 import markdown
 import inspect
+
 from camel.messages.system_messages import SystemMessage
 from visualizer.app import send_msg
 
@@ -87,3 +90,13 @@ def escape_string(value):
     value = re.sub(r'<[^>]*>', '', value)
     value = value.replace("\n", " ")
     return value
+
+def is_url(url):
+    """
+    Adapted from https://stackoverflow.com/questions/7160737/how-to-validate-a-url-in-python-malformed-or-not
+    """
+    try:
+       result = urlparse(url)
+       return all([result.scheme, result.netloc])
+    except ValueError:
+       return False
