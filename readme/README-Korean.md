@@ -4,24 +4,76 @@
   <img src='../misc/logo1.png' width=600>
 </p>
 
-
 <p align="center">
-    【📚 <a href="../wiki.md">Wiki</a> | 🚀 <a href="../wiki.md#visualizer">Visualizer</a> | 👥 <a href="../Contribution.md">Community Built Software</a> | 🔧 <a href="../wiki.md#customization">Customization</a>】
+    【📚 <a href="../wiki.md">Wiki</a> | 🚀 <a href="../wiki.md#visualizer">Visualizer</a> | 👥 <a href="../Contribution.md">Community Built Software</a> | 🔧 <a href="../wiki.md#customization">Customization</a> | 👾 <a href="https://discord.gg/bn4t2Jy6TT")>Discord</a>】
+
 </p>
 
 ## 📖 개요
 
-- **ChatDev**는 다양한 최고 경영자, 최고 기술 책임자, 프로그래머, 테스터 등 다양한 역할을 수행하는 **지능형 에이전트**들을 통해 운영되는 **가상 소프트웨어 회사**입니다. 여럿이서 조직 구조를 형성하고 "프로그래밍을 통해 디지털 세상을 혁신한다"는 사명을 가지고 있습니다. ChatDev 내 에이전트들은 디자인, 코딩, 테스트, 문서화를 진행하는 전문 기능 세미나에 참여하여 **협업**합니다.
+- **ChatDev**는 다양한 최고 경영 책임자 <img src='../visualizer/static/figures/ceo.png' height=20>, 최고 생산 책임자 <img src='../visualizer/static/figures/cpo.png' height=20>, 최고 기술 책임자 <img src='../visualizer/static/figures/cto.png' height=20>, 프로그래머 <img src='../visualizer/static/figures/programmer.png' height=20>, 리뷰어 <img src='../visualizer/static/figures/reviewer.png' height=20>, 테스터 <img src='../visualizer/static/figures/tester.png' height=20>, 아트 디자이너 <img src='../visualizer/static/figures/designer.png' height=20>와 같은 다양한 역할을 수행하는 **지능형 에이전트**들을 통해 운영되는 **가상 소프트웨어 회사**입니다. 여럿이서 조직 구조를 형성하고 "프로그래밍을 통해 디지털 세상을 혁신한다"는 사명을 가지고 있습니다. ChatDev 내 에이전트들은 디자인, 코딩, 테스트, 문서화를 진행하는 전문 기능 세미나에 참여하여 **협업**합니다.
 - ChatDev의 주요 목표는 **사용하기 쉽고**, **개조할 수 있으며**, **확장 가능한** 프레임워크를 제공하는 것입니다. 대규모 언어 모델(LLM)을 기반으로 하며 집단 지성을 연구하는 데 이상적인 시나리오를 제공합니다.
 
-## 📰 뉴스
+<p align="center">
+  <img src='../misc/company.png' width=600>
+</p>
 
-* **2023년 9월 1일: Art 모드가 출시되었습니다! ``python3 run.py --config "Art"``로 소프트웨어에서 사용되는 이미지를 생성해보세요.** [예제](../WareHouse/gomokugameArtExample_THUNLP_20230831122822)를 참조하세요.
-* 2023년 8월 28일: 시스템이 공개되었습니다.
-* 2023년 8월 17일: V1.0.0 버전 출시 준비가 완료되었습니다.
-* 2023년 7월 30일: 사용자가 ChatChain, Phase 및 Role을 설정할 수 있습니다. 또한, Online Log 모드와 Replay 모드가 지원됩니다.
-* 2023년 7월 16일: 이 프로젝트와 관련된 [출판 전 논문](https://arxiv.org/abs/2307.07924)이 게시되었습니다.
-* 2023년 6월 30일: `ChatDev` 리포지토리의 초기 버전이 공개되었습니다.
+## 📰 뉴스
+* **2024년 6월 25일: 🎉ChatDev 팀은LLM 기반의 다중 에이전트 협업🤖🤖 및 관련 분야의 발전을 도모하기 위해, [오픈소스](https://github.com/OpenBMB/ChatDev/tree/main/MultiAgentEbook) 대화형 e-book📚 형식으로 제공되는 중요한 논문 모음📄을 선별했습니다. 이제 [Ebook 웹사이트](https://thinkwee.top/multiagent_ebook)에서 최신 발전 사항을 탐색하고 [논문 목록](https://github.com/OpenBMB/ChatDev/blob/main/MultiAgentEbook/papers.csv)을 다운로드할 수 있습니다.**
+  <p align="center">
+  <img src='../misc/ebook.png' width=800>
+  </p>
+* 2024년 6월 12일: 언어 상호 작용을 통한 에이전트 간의 효과적인 작업 지향 협업을 용이하게 하기 위해 방향 비순환 그래프를 활용하는 다중 에이전트 협업 네트워크(MacNet) 🎉을 소개합니다. MacNet은 컨텍스트 제한을 초과하지 않고 다양한 위상과 천 개 이상의 에이전트 간 협력을 지원합니다. 보다 다용도적이고 확장 가능한 MacNet은 ChatDev의 체인 모양 토폴로지의 보다 고급 버전으로 간주될 수 있습니다. 사전 인쇄 논문은 [https://arxiv.org/abs/2406.07155 ](https://arxiv.org/abs/2406.07155) 에서 제공됩니다. 이 기술은 곧 이 저장소에 통합되어 다양한 조직 구조에 대한 지원을 강화하고 소프트웨어 개발(예: 논리 추론, 데이터 분석, 스토리 생성 등)을 넘어 더 풍부한 솔루션을 제공할 것입니다.
+  <p align="center">
+  <img src='../misc/macnet.png' width=500>
+  </p>
+
+<details>
+<summary>오래된 뉴스</summary>
+
+* 2024년 5월 7일, 강사와 보조 에이전트에 단축된 경험을 향상시켜 새로운 작업에 효율적으로 적응하는 새로운 방법인 "Iterative Experience Refinement"(IER)(반복적 경험 개선)을 소개합니다. 이 접근 방식은 일련의 작업들에서 경험, 활용, 전달 및 제거를 포함합니다. 사전 인쇄 논문은 https://arxiv.org/abs/2405.04219 에서 제공되며 이 기술은 곧  ChatDev에 통합될 예정입니다.
+  <p align="center">
+  <img src='../misc/ier.png' width=220>
+  </p>
+
+* 2024년 1월 25일: ChatDev에 체혐형 공동학습 모듈을 통합하였습니다. [체험형 공동학습 가이드](../wiki.md#co-tracking)를 확인하세요.
+
+* 2023년 12월 28일: 강사와 보조 에이전트가 단축형 경험을 축적하여 새로운 작업을 효과적으로 해결하고 반복적인 오류를 줄이고 효율성을 향상시키는 혁신적인 접근 방식인 Experience Co-Learning을 소개합니다. 사전 인쇄된 논문은 https://arxiv.org/abs/2312.17025 에서 확인할 수 있고, 곧 ChatDev에 통합될 것입니다.
+  <p align="center">
+  <img src='../misc/ecl.png' width=860>
+  </p>
+
+* 2023년 11월 15일: 소프트웨어 개발자와 혁신적인 기업가들이 매우 저렴한 비용과 진입 장벽으로 소프트웨어를 효율적으로 구축할 수 있도록 하는 SaaS 플랫폼으로 ChatDev를 출시했습니다. https://chatdev.modelbest.cn/ 에서 시도하세요.
+  <p align="center">
+  <img src='../misc/saas.png' width=560>
+  </p>
+
+* 2023년 11월 2일: ChatDev는 에이전트가 기존 코드를 기반으로 개발할 수 있는 새로운 기능을 지원합니다. `--config "incremental" --path "path "[source_code_directory_path]"`를 시도하세요.
+  <p align="center">
+  <img src='../misc/increment.png' width=700>
+  </p>
+
+* 2023년 10월 26일: ChatDev는 [ManindraDeMel](https://github.com/ManindraDeMel)의 기여 덕분에 Docker를 지원합니다. [도커 시작 가이드](.../wiki.md#docker-start)를 참조하세요.
+  <p align="center">
+  <img src='../misc/docker.png' width=400>
+  </p>
+* 2023년 9월 25일: **Git** 모드가 출시되었으며, 프로그래머 <img src='../visualizer/static/figures/programmer.png' height=20> 가 Git 버전 제어를 사용할 수 있습니다. 이 기능을 사용하려면 ``ChatChainConfig.json`` 에서 ``"git_management"`` 를 ``"True"`` 로 설정해야 합니다 . [가이드](../wiki.md#git-mode)를 참조하세요.
+  <p align="center">
+  <img src='../misc/github.png' width=600>
+  </p>
+- 2023년 9월 20일: **Human-Agent-Interaction** 모드가 출시되었습니다! 검토자 <img src='../visualizer/static/figures/reviewer.png' height=20> 역할을 수행하고 프로그래머<img src='../visualizer/static/figures/programmer.png' height=20>에게 제안하여 ChatDev 팀에 참여할 수 있습니다;
+  ``python3 run.py --task [description_of_your_idea] --config "Human"``. [가이드](../wiki.md#human-agent-interaction)와 [예제](../WareHouse/Gomoku_HumanAgentInteraction_20230920135038)를 참조하세요.
+  <p align="center">
+  <img src='../misc/Human_intro.png' width=600>
+  </p>
+- 2023년 9월 1일: **Art** 모드가 출시되었습니다! 디자이너 <img src='../visualizer/static/figures/designer.png' height=20> 에이전트를 활성화하여  소프트웨어에서 사용되는 이미지를 생성해보세요;
+  ``python3 run.py --task [description_of_your_idea] --config "Art"``. [가이드](../wiki.md#art)와 [예제](../WareHouse/gomokugameArtExample_THUNLP_20230831122822)를 참조하세요.
+- 2023년 8월 28일: 시스템이 공개되었습니다.
+- 2023년 8월 17일: V1.0.0 버전 출시 준비가 완료되었습니다.
+- 2023년 7월 30일: 사용자가 ChatChain, Phase 및 Role을 설정할 수 있습니다. 또한, Online Log 모드와 Replay 모드가 지원됩니다.
+- 2023년 7월 16일: 이 프로젝트와 관련된 [출판 전 논문](https://arxiv.org/abs/2307.07924)이 게시되었습니다.
+- 2023년 6월 30일: `ChatDev` 리포지토리의 초기 버전이 공개되었습니다.
+</details>
 
 ## ❓ ChatDev는 무엇을 할 수 있나요?
 
@@ -30,6 +82,12 @@
 https://github.com/OpenBMB/ChatDev/assets/11889052/80d01d2f-677b-4399-ad8b-f7af9bb62b72
 
 ## ⚡️ 시작하기
+
+### 💻️ 웹을 이용하여 시작하기
+
+시각화와 구성을 위한 웹 페이지 접근: https://chatdev.modelbest.cn/
+
+### 🖥️ 터미널을 이용하여 시작하기
 
 시작하려면 다음 단계를 따르세요:
 
@@ -76,7 +134,11 @@ https://github.com/OpenBMB/ChatDev/assets/11889052/80d01d2f-677b-4399-ad8b-f7af9
    cd WareHouse/project_name_DefaultOrganization_timestamp
    python main.py
    ```
-   
+
+### 🐳 도커를 이용하여 시작하기
+
+- [ManindraDeMel](https://github.com/ManindraDeMel)의 도커 지원에 감사드립니다. [도커 시작 가이드](../wiki.md#docker-start)를 참조하세요.
+
 ## ✨️ 심화 스킬
 
 [위키](../wiki.md)에서 아래 더 자세한 정보를 확인할 수 있습니다:
@@ -105,49 +167,40 @@ https://github.com/OpenBMB/ChatDev/assets/11889052/80d01d2f-677b-4399-ad8b-f7af9
 
 **커뮤니티에서 기여한 소프트웨어를 보려면 [여기](../Contribution.md)를 참조해주세요!**
 
-### 소프트웨어 기여자
+## 👨‍💻‍ 기여자
 
-<a href="https://github.com/qianc62"><img src="https://avatars.githubusercontent.com/u/48988402?v=4" alt="Contributor" style="width:5%; border-radius: 50%;"/></a>
-<a href="https://github.com/thinkwee"><img src="https://avatars.githubusercontent.com/u/11889052?v=4" alt="Contributor" style="width:5%; border-radius: 50%;"/></a>
-<a href="https://github.com/NA-Wen"><img src="https://avatars.githubusercontent.com/u/92134380?v=4" alt="Contributor" style="width:5%; border-radius: 50%;"/></a>
-<a href="https://github.com/JiahaoLi2003"><img src="https://avatars.githubusercontent.com/u/111221887?v=4" alt="Contributor" style="width:5%; border-radius: 50%;"/></a>
-<a href="https://github.com/Alphamasterliu"><img src="https://avatars.githubusercontent.com/u/110011045?v=4" alt="Contributor" style="width:5%; border-radius: 50%;"/></a>
-<a href="https://github.com/GeekyWizKid"><img src="https://avatars.githubusercontent.com/u/133981481?v=4" alt="Contributor" style="width:5%; border-radius: 50%;"/></a>
-<a href="https://github.com/Munsif-Raza-T"><img src="https://avatars.githubusercontent.com/u/76085202?v=4" alt="Contributor" style="width:5%; border-radius: 50%;"/></a>
-<a href="https://github.com/djbritt"><img src="https://avatars.githubusercontent.com/u/28036018?v=4" alt="Contributor" style="width:5%; border-radius: 50%;"/></a>
-<a href="https://github.com/Classified3939"><img src="https://avatars.githubusercontent.com/u/102702965?v=4" alt="Contributor" style="width:5%; border-radius: 50%;"/></a>
-<a href="https://github.com/chenilim"><img src="https://avatars.githubusercontent.com/u/46905241?v=4" alt="Contributor" style="width:5%; border-radius: 50%;"/></a>
-<a href="https://github.com/delconis"><img src="https://avatars.githubusercontent.com/u/5824478?v=4" alt="Contributor" style="width:5%; border-radius: 50%;"/></a>
-<a href="https://github.com/eMcQuill"><img src="https://avatars.githubusercontent.com/u/139025701?v=4" alt="Contributor" style="width:5%; border-radius: 50%;"/></a>
-<a href="https://github.com/Aizhouym"><img src="https://avatars.githubusercontent.com/u/105852026?v=4" alt="Contributor" style="width:5%; border-radius: 50%;"/></a>
+<a href="https://github.com/OpenBMB/ChatDev/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=OpenBMB/ChatDev" />
+</a>
+
+Made with [contrib.rocks](https://contrib.rocks).
 
 ## 📑 인용 문구
 
 ```
-@misc{qian2023communicative,
-      title={Communicative Agents for Software Development}, 
-      author={Chen Qian and Xin Cong and Wei Liu and Cheng Yang and Weize Chen and Yusheng Su and Yufan Dang and Jiahao Li and Juyuan Xu and Dahai Li and Zhiyuan Liu and Maosong Sun},
-      year={2023},
-      eprint={2307.07924},
-      archivePrefix={arXiv},
-      primaryClass={cs.SE}
-}
-
-@misc{qian2023experiential,
-      title={Experiential Co-Learning of Software-Developing Agents}, 
-      author={Chen Qian and Yufan Dang and Jiahao Li and Wei Liu and Weize Chen and Cheng Yang and Zhiyuan Liu and Maosong Sun},
-      year={2023},
-      eprint={2312.17025},
-      archivePrefix={arXiv},
-      primaryClass={cs.CL}
+@article{chatdev,
+      title = {ChatDev: Communicative Agents for Software Development},
+      author = {Chen Qian and Wei Liu and Hongzhang Liu and Nuo Chen and Yufan Dang and Jiahao Li and Cheng Yang and Weize Chen and Yusheng Su and Xin Cong and Juyuan Xu and Dahai Li and Zhiyuan Liu and Maosong Sun},
+      journal = {arXiv preprint arXiv:2307.07924},
+      url = {https://arxiv.org/abs/2307.07924},
+      year = {2023}
 }
 ```
 
 ## ⚖️ 라이선스
 
-- ChatDev의 목적은 오로지 연구 목적입니다.
-- 데이터 세트는 비상업적 용도로만 사용할 수 있는 CC BY NC 4.0에 따라 라이센스가 부여됩니다. 해당 데이터 세트를 사용하여 학습된 모델은 연구 목적 이외의 용도로 사용해서는 안 된다는 점에 유의하세요.
+- 소스코드 라이선스: ChatDev의 소스코드는 아파치 2.0 라이선스가 부여되어 있습니다. 아파치 2.0 라이선스에 명시된 특정 조건에 따라 코드의 사용, 수정 및 배포를 허용합니다.
+- 데이터 라이선스: ChatDev에 사용되는 관련 데이터는 CC BY-NC 4.0라이선스가 부여되어 있습니다. 이 라이선스는 데이터의 비상업적 사용을 명시적으로 허용합니다. 이러한 데이터 세트를 사용하여 훈련된 모든 모델은 비상업적 사용 제한을 철저히 준수해야 하며 연구 목적으로만 사용되어야 한다는 점을 강조하고 싶습니다.
 
+
+## 🤝 감사의 말
+
+<a href="http://nlp.csai.tsinghua.edu.cn/"><img src="../misc/thunlp.png" height=50pt></a>&nbsp;&nbsp;
+<a href="https://modelbest.cn/"><img src="../misc/modelbest.png" height=50pt></a>&nbsp;&nbsp;
+<a href="https://github.com/OpenBMB/AgentVerse/"><img src="../misc/agentverse.png" height=50pt></a>&nbsp;&nbsp;
+<a href="https://github.com/OpenBMB/RepoAgent"><img src="../misc/repoagent.png"  height=50pt></a>
+<a href="https://powerbrainai.com/"><img src="https://powerbrainai.com/wp-content/uploads/2024/04/cropped-AI-Chat-logo.png" height=50pt></a>
+<!-- <a href="https://aibrb.com/introducing-herbie-your-super-employee-for-streamlined-productivity/"><img src="https://aibrb.com/wp-content/uploads/2023/09/Featured-on-AIBRB.com-white-1.png"  height=50pt></a> -->
 
 ## 연락처
 
