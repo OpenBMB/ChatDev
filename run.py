@@ -23,7 +23,6 @@ sys.path.append(root)
 
 from chatdev.chat_chain import ChatChain
 
-
 def get_config(company):
     """
     return configuration json files for ChatChain
@@ -132,6 +131,28 @@ if len(sys.argv) == 1:
 # Parse the arguments
 args = parser.parse_args()
 
+# Detect if API key is set in the environment and if not, print a warning and exit
+if 'OPENAI_API_KEY' not in os.environ:
+    #Color print Blue
+    print("\033[94m \n")
+    print("""Warning: OPENAI_API_KEY environment variable is not set. 
+        \033[0m 
+        Please set the key before launching Startr.Team.
+          
+        To set the API key, run the following command in your terminal:
+          
+            export OPENAI_API_KEY="your-api-key-here"
+            
+        To make the change permanent, add the command to your shell profile file (e.g. ~/.bashrc).
+        Or to you loacl .env file. 
+            
+        If you don't have an API key, you can get one at https://platform.openai.com/signup
+        
+        \033[94m \n
+            TODO: Alternatively use GROQ API key.
+        \033[0m \n
+          """)
+    sys.exit(1)
 
 # Start ChatDev
 
