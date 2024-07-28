@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>ChatDev</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked@3.0.7/marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-markup.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.8/clipboard.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.2.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.8/clipboard.min.js"></script>
+    <script src="static/js/main.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/themes/prism-okaidia.min.css">
+    <link rel="stylesheet" href="static/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.2.0/styles/monokai-sublime.min.css">
+    <style>
+        .custom-text-block {
+            background-color: #f0f0f0;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 20px 0;
+            text-align: center;
+            font-size: 16px;
+            color: #333;
+        }
+
+        .visualizer-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .visualizer-box {
+            width: 30%;
+            text-align: center;
+        }
+
+        .visualizer-info {
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+        }
+    </style>
+    <script>
+        hljs.initHighlightingOnLoad();
+    </script>
+</head>
+
+<body>
+    <div class="d-flex justify-content-center">
+        <img src="static/figures/title.png" alt="ChatDev Title" id="title-image" style="width: 100%; max-width: 300px;">
+    </div>
+    <div class="visualizer-container">
+        <div class="visualizer-box">
+            <br>
+            <a href="static/chain_visualizer.html">
+                <button>ChatChain Visualizer</button>
+            </a>
+            <p class="visualizer-info">Explore all the phases  and settings in ChatChain.</p>
+        </div>
+        <div class="visualizer-box">
+            <br>
+            <a href="static/replay.html">
+                <button>Replay Visualizer</button>
+            </a>
+            <p class="visualizer-info">Replay the agents' dialog from other ChatDev-generated software.</p>
+        </div>
+    </div>
+
+    <!-- Inserted text block -->
+    <div class="custom-text-block">
+        Log Visualizer <br> Visualize the log in real-time when generating software, in agent dialog-style. Execute "python3 run.py" to start.
+    </div>
+
+    <div class="container d-flex flex-column" id="chat-box"></div>
+    <script src="static/js/main.js"></script>
+</body>
+
+</html>

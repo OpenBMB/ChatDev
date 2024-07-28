@@ -6,14 +6,14 @@
 
 
 <p align="center">
-    【📚 <a href="../wiki.md">Wiki</a> | 🚀 <a href="../wiki.md#local-demo">ローカルデモ</a> | 👥 <a href="../Contribution.md">コミュニティにより作られたソフト</a> | 🔧 <a href="../wiki.md#customization">カスタマイズ</a> | 👾 <a href="https://discord.gg/bn4t2Jy6TT")>Discord</a>】
+    【📚 <a href="../wiki.md">Wiki</a> | 🚀 <a href="../wiki.md#visualizer">ビジュアライザー</a> | 👥 <a href="../Contribution.md">コミュニティにより作られたソフト</a> | 🔧 <a href="../wiki.md#customization">カスタマイズ</a> | 👾 <a href="https://discord.gg/bn4t2Jy6TT")>Discord</a>】
 
 </p>
 
 ## 📖 概要
 
-- **ChatDev** は、最高経営責任者 <img src='../online_log/static/figures/ceo.png' height=20>、
-  最高製品責任者 <img src='../online_log/static/figures/cpo.png' height=20>、最高技術責任者 <img src='../online_log/static/figures/cto.png' height=20>、プログラマー <img src='../online_log/static/figures/programmer.png' height=20>、レビュアー <img src='../online_log/static/figures/reviewer.png' height=20>、テスター <img src='../online_log/static/figures/tester.png' height=20>、アートデザイナー <img src='../online_log/static/figures/designer.png' height=20> などさまざまな役割を持つさまざまな**インテリジェントエージェント**を擁する**バーチャルソフトウェア企業**である。これらのエージェントはマルチエージェントの組織構造を形成し、
+- **ChatDev** は、最高経営責任者 <img src='../visualizer/static/figures/ceo.png' height=20>、
+  最高製品責任者 <img src='../visualizer/static/figures/cpo.png' height=20>、最高技術責任者 <img src='../visualizer/static/figures/cto.png' height=20>、プログラマー <img src='../visualizer/static/figures/programmer.png' height=20>、レビュアー <img src='../visualizer/static/figures/reviewer.png' height=20>、テスター <img src='../visualizer/static/figures/tester.png' height=20>、アートデザイナー <img src='../visualizer/static/figures/designer.png' height=20> などさまざまな役割を持つさまざまな**インテリジェントエージェント**を擁する**バーチャルソフトウェア企業**である。これらのエージェントはマルチエージェントの組織構造を形成し、
   "プログラミングを通じてデジタル世界に革命を起こす"というミッションで
   結束しています。ChatDev 内のエージェントは、設計、コーディング、テスト、ドキュメント作成などのタスクを含む専門的な機能セミナーに参加することで、
   **共同作業** を行います。
@@ -25,7 +25,12 @@
 </p>
 
 ## 🎉 ニュース
-* **2023年11月15日: ChatDev は、ソフトウェア開発者や革新的な起業家が低コストで効率的にソフトウェアを構築できる SaaS プラットフォームです。** https://chatdev.modelbest.cn/ でお試し下さい。
+* **2024年1月25日: ChatDev に体験型共学習モジュールを統合しました。[体験型共学習ガイド](../wiki.md#co-tracking)をご覧ください。**
+* 2023年12月28日: 私達は、インストラクターとアシスタントエージェントが、新しいタスクを効果的に解決するためのショートカット指向の経験を蓄積することで、反復ミスを減らし、効率を高める革新的なアプローチである経験的共学習を紹介します。https://arxiv.org/abs/2312.17025 にてプレプリント論文をチェックしてください。この技術は間もなく ChatDev に統合されます。
+  <p align="center">
+  <img src='../misc/ecl.png' width=860>
+  </p>
+* 2023年11月15日: ChatDev は、ソフトウェア開発者や革新的な起業家が低コストで効率的にソフトウェアを構築できる SaaS プラットフォームです。 https://chatdev.modelbest.cn/ でお試し下さい。
   <p align="center">
   <img src='../misc/saas.png' width=560>
   </p>
@@ -38,16 +43,16 @@
   <p align="center">
   <img src='../misc/docker.png' width=400>
   </p>
-- 2023年9月25日: **Git** 機能が利用可能になりました、プログラマー <img src='../online_log/static/figures/programmer.png' height=20> がバージョン管理に GitHub を利用できるようになります。この機能を有効にするには、``ChatChainConfig.json`` で ``"git_management"`` を ``"True"`` に設定するだけです。
+- 2023年9月25日: **Git** 機能が利用可能になりました、プログラマー <img src='../visualizer/static/figures/programmer.png' height=20> がバージョン管理に GitHub を利用できるようになります。この機能を有効にするには、``ChatChainConfig.json`` で ``"git_management"`` を ``"True"`` に設定するだけです。
   <p align="center">
   <img src='../misc/github.png' width=600>
   </p>
-- 2023年9月20日: **Human-Agent-Interaction** モードが利用可能になりました！レビュアー <img src='../online_log/static/figures/reviewer.png' height=20> になってプログラマー <img src='../online_log/static/figures/programmer.png' height=20> に提案することで、ChatDev チームに参加することができます;
+- 2023年9月20日: **Human-Agent-Interaction** モードが利用可能になりました！レビュアー <img src='../visualizer/static/figures/reviewer.png' height=20> になってプログラマー <img src='../visualizer/static/figures/programmer.png' height=20> に提案することで、ChatDev チームに参加することができます;
   ``python3 run.py --task [description_of_your_idea] --config "Human"`` を試してみてください。また、[ガイド](../wiki.md#human-agent-interaction)と[例](../WareHouse/Gomoku_HumanAgentInteraction_20230920135038)を参照してください。
   <p align="center">
   <img src='../misc/Human_intro.png' width=600>
   </p>
-- 2023年9月1日: **Art** モードが利用可能になりました！デザイナーエージェント <img src='../online_log/static/figures/designer.png' height=20> を有効にすると、ソフトウェアで使用する画像を生成できます;
+- 2023年9月1日: **Art** モードが利用可能になりました！デザイナーエージェント <img src='../visualizer/static/figures/designer.png' height=20> を有効にすると、ソフトウェアで使用する画像を生成できます;
   ``python3 run.py --task [description_of_your_idea] --config "Art"`` を試してみてください。また、[ガイド](../wiki.md#art)と[例](../WareHouse/gomokugameArtExample_THUNLP_20230831122822)を参照してください。
 - 2023年8月28日: システムが一般公開されました。
 - 2023年8月17日: v1.0.0 のリリース準備が整いました。
@@ -140,14 +145,14 @@
 
 ### 🐳 Docker のクイックスタート
 
-- Docker のサポートを提供してくれた [ManindraDeMel](https://github.com/ManindraDeMel) に感謝します。[Docker スタートガイド](wiki.md#docker-start)を参照してください。
+- Docker のサポートを提供してくれた [ManindraDeMel](https://github.com/ManindraDeMel) に感謝します。[Docker スタートガイド](../wiki.md#docker-start)を参照してください。
 
 ## ✨️ 高度なスキル
 
 より詳細な情報については、私たちの [Wiki](../wiki.md) を参照してください:
 
 - すべてのコマンド実行パラメータの紹介。
-- 強化されたビジュアライズされたログ、リプレイデモ、シンプルな ChatChain ビジュアライザを含む、ローカルウェブデモをセットアップするための簡単なガイド。
+- リアルタイムのログ、再生ログ、ChatChain を可視化することができる、ローカルのウェブビジュアライザーデモをセットアップするための簡単なガイド。
 - ChatDev フレームワークの概要
 - ChatChain 設定の高度なパラメータの包括的な紹介。
 - ChatDev をカスタマイズするためのガイドです:
@@ -196,17 +201,22 @@
       archivePrefix={arXiv},
       primaryClass={cs.SE}
 }
+
+@misc{qian2023experiential,
+      title={Experiential Co-Learning of Software-Developing Agents},
+      author={Chen Qian and Yufan Dang and Jiahao Li and Wei Liu and Weize Chen and Cheng Yang and Zhiyuan Liu and Maosong Sun},
+      year={2023},
+      eprint={2312.17025},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL}
+}
 ```
 
 ## ⚖️ ライセンス
 
 - ソースコードのライセンス 私たちのプロジェクトのソースコードは、Apache 2.0 License の下でライセンスされています。このライセンスは、Apache 2.0 ライセンスに概説されている特定の条件に従い、コードの使用、変更、配布を許可します。
-- プロジェクトのオープンソース化状況: このプロジェクトは確かにオープンソースです; が、この指定は主に非商業的な目的を意図しています。私たちは、研究や非商業的なアプリケーションのためのコミュニティからの協力や貢献を奨励しますが、商業的な目的でプロジェクトのコンポーネントを利用する場合は、個別のライセンス契約が必要であることに注意することが重要です。
 - データライセンス: このプロジェクトで利用された関連データは、CC BY-NC 4.0 でライセンスされており、このライセンスは、データの非商用利用を明確に許可しています。これらのデータセットを用いて学習されたモデルは、非商用利用の制限を厳守し、研究目的のみに使用されるべきであることを強調しておきます。
 
-## Star History
-
-[![Star History Chart](https://api.star-history.com/svg?repos=openbmb/chatdev&type=Date)](https://star-history.com/#openbmb/chatdev&Date)
 
 
 ## 🤝 謝辞
@@ -218,4 +228,4 @@
 
 ## 📬 お問い合わせ
 
-ご質問、フィードバック、またはお問い合わせがある場合は、[chatdev.openbmb@outlook.com](mailto:chatdev.openbmb@outlook.com) までお気軽にご連絡ください
+ご質問、フィードバック、またはお問い合わせがある場合は、[qianc62@gmail.com](mailto:qianc62@gmail.com) までお気軽にご連絡ください

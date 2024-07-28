@@ -6,13 +6,13 @@
 
 
 <p align="center">
-    【📚 <a href="../wiki.md">Wiki</a> | 🚀 <a href="../wiki.md#local-demo">Demo Local</a> | 👥 <a href="../Contribution.md">Software Construído pela Comunidade</a> | 🔧 <a href="../wiki.md#customization">Personalização</a>】
+    【📚 <a href="../wiki.md">Wiki</a> | 🚀 <a href="../wiki.md#visualizer">Demo Local</a> | 👥 <a href="../Contribution.md">Software Construído pela Comunidade</a> | 🔧 <a href="../wiki.md#customization">Personalização</a>】
 </p>
 
 ## 📖 Overview
 
 - **ChatDev** é uma **empresa de software virtual** que opera por meio de vários **agentes inteligentes** desempenhando
-diferentes papéis, incluindo Diretor Executivo <img src='../online_log/static/figures/ceo.png' height=20>, Diretor de Produtos <img src='../online_log/static/figures/cpo.png' height=20>, Diretor de Tecnologia <img src='../online_log/static/figures/cto.png' height=20>, programador <img src='../online_log/static/figures/programmer.png' height=20>, revisor <img src='../online_log/static/figures/reviewer.png' height=20>, testador <img src='../online_log/static/figures/tester.png' height=20>, designer de arte <img src='../online_log/static/figures/designer.png' height=20>. Esses
+diferentes papéis, incluindo Diretor Executivo <img src='../visualizer/static/figures/ceo.png' height=20>, Diretor de Produtos <img src='../visualizer/static/figures/cpo.png' height=20>, Diretor de Tecnologia <img src='../visualizer/static/figures/cto.png' height=20>, programador <img src='../visualizer/static/figures/programmer.png' height=20>, revisor <img src='../visualizer/static/figures/reviewer.png' height=20>, testador <img src='../visualizer/static/figures/tester.png' height=20>, designer de arte <img src='../visualizer/static/figures/designer.png' height=20>. Esses
 agentes formam uma estrutura organizacional multiagente e estão unidos por uma missão de "revolucionar o mundo digital
 por meio da programação." Os agentes dentro do ChatDev **colaboram** participando de seminários funcionais especializados,
 incluindo tarefas como design, codificação, teste e documentação.
@@ -25,17 +25,17 @@ incluindo tarefas como design, codificação, teste e documentação.
 
 ## 🎉 Notícias
 
-* **25 de setembro de 2023: A funcionalidade Git agora está disponível**, permitindo que o programador <img src='../online_log/static/figures/programmer.png' height=20> utilize o GitHub para controle de versão. Para ativar essa funcionalidade, basta definir ``"git_management"`` para ``"True"`` no arquivo ``ChatChainConfig.json``.
+* **25 de setembro de 2023: A funcionalidade Git agora está disponível**, permitindo que o programador <img src='../visualizer/static/figures/programmer.png' height=20> utilize o GitHub para controle de versão. Para ativar essa funcionalidade, basta definir ``"git_management"`` para ``"True"`` no arquivo ``ChatChainConfig.json``.
   <p align="center">
   <img src='../misc/github.png' width=600>
   </p>
-* 20 de setembro de 2023: O modo **Interação Humano-Agent** agora está disponível! Você pode se envolver com a equipe do ChatDev desempenhando o papel de revisor <img src='../online_log/static/figures/reviewer.png' height=20> e fazendo sugestões ao programador <img src='../online_log/static/figures/programmer.png' height=20>;
+* 20 de setembro de 2023: O modo **Interação Humano-Agent** agora está disponível! Você pode se envolver com a equipe do ChatDev desempenhando o papel de revisor <img src='../visualizer/static/figures/reviewer.png' height=20> e fazendo sugestões ao programador <img src='../visualizer/static/figures/programmer.png' height=20>;
   tente ``python3 run.py --task [descrição_da_sua_ideia] --config "Human"``. Veja [guia](../wiki.md#human-agent-interaction) e [exemplo](../WareHouse/Gomoku_HumanAgentInteraction_20230920135038).
 <p align="center">
 <img src='../misc/Human_intro.png' width=600>
 </p>
 
-* 1º de setembro de 2023: O modo **Arte** está disponível agora! Você pode ativar o agente designer <img src='../online_log/static/figures/designer.png' height=20> para gerar imagens usadas no software;
+* 1º de setembro de 2023: O modo **Arte** está disponível agora! Você pode ativar o agente designer <img src='../visualizer/static/figures/designer.png' height=20> para gerar imagens usadas no software;
   try ``python3 run.py --task [descrição_da_sua_ideia] --config "Art"``. Veja o [guia](../wiki.md#art) e o [exemplo](../WareHouse/gomokugameArtExample_THUNLP_20230831122822).
 * 28 de agosto de 2023: O sistema está disponível publicamente.
 * 17 de agosto de 2023: A versão v1.0.0 estava pronta para ser lançada.
@@ -157,17 +157,22 @@ Para obter informações mais detalhadas, consulte nossa Wiki, onde você pode e
       archivePrefix={arXiv},
       primaryClass={cs.SE}
 }
+
+@misc{qian2023experiential,
+      title={Experiential Co-Learning of Software-Developing Agents}, 
+      author={Chen Qian and Yufan Dang and Jiahao Li and Wei Liu and Weize Chen and Cheng Yang and Zhiyuan Liu and Maosong Sun},
+      year={2023},
+      eprint={2312.17025},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL}
+}
 ```
 
 ## ⚖️ Licença
 
 - Licenciamento de Código Fonte: O código fonte de nosso projeto está licenciado sob a Licença Apache 2.0. Esta licença permite o uso, modificação e distribuição do código, sujeito a certas condições delineadas na Licença Apache 2.0.
-- Status de Código Aberto do Projeto: O projeto é de fato de código aberto; no entanto, essa designação se destina principalmente a fins não comerciais. Embora encorajemos a colaboração e contribuições da comunidade para fins de pesquisa e aplicações não comerciais, é importante observar que qualquer uso dos componentes do projeto para fins comerciais requer acordos de licenciamento separados.
 - Licenciamento de Dados: Os dados relacionados usados em nosso projeto estão licenciados sob CC BY-NC 4.0. Esta licença permite explicitamente o uso não comercial dos dados. Gostaríamos de enfatizar que qualquer modelo treinado usando esses conjuntos de dados deve aderir estritamente à restrição de uso não comercial e deve ser usado exclusivamente para fins de pesquisa.
 
-## 🌟 Histórico de Estrelas
-
-[![Star History Chart](https://api.star-history.com/svg?repos=openbmb/chatdev&type=Date)](https://star-history.com/#openbmb/chatdev&Date)
 
 
 ## 🤝 Agradecimentos
@@ -178,4 +183,4 @@ Para obter informações mais detalhadas, consulte nossa Wiki, onde você pode e
 
 ## 📬 Contato
 
-Se você tiver alguma dúvida, feedback ou gostaria de entrar em contato, não hesite em nos enviar um e-mail para [chatdev.openbmb@outlook.com](mailto:chatdev.openbmb@outlook.com)
+Se você tiver alguma dúvida, feedback ou gostaria de entrar em contato, não hesite em nos enviar um e-mail para [qianc62@gmail.com](mailto:qianc62@gmail.com)

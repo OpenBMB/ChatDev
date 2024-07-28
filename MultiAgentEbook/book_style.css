@@ -1,0 +1,238 @@
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: "Arial Black";
+    color: rgb(25, 25, 25);
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100vh;
+    background-color: rgb(245, 245, 245);
+}
+
+input {
+    display: none;
+}
+
+#flip_book {
+    position: relative;
+    width: 596px;
+    height: 840px;
+    transition-duration: 1s;
+    perspective: 2000px;
+}
+
+.front_cover, .back_cover {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    border-radius: 2.5px 5px 5px 2.5px;
+    background-image: url(./images/flip_book_edge_shading.png);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: rgb(255, 255, 255);
+    box-shadow: 0 0 5px 0 rgb(25, 25, 25, 0.25);
+}
+
+.front_cover {
+    position: absolute;
+    cursor: pointer;
+    transform-origin: center left;
+    transition: transform 0.5s;
+    z-index: 99;
+}
+
+.front_cover label {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
+
+.page {
+    position: absolute;
+    top: 10px;
+    left: 1px;
+    width: 576px;
+    height: 820px;
+    border-radius: 0 5px 5px 0;
+    background-color: white;
+    transform-origin: left;
+    transform-style: preserve-3d;
+    transform: rotateY(0deg);
+    transition-duration: 0.5s;
+}
+
+.front_page {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+}
+
+.front_page label {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    z-index: 100;
+}
+
+.back_page {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    transform: rotateY(180deg);
+    z-index: 100;
+}
+
+.back_page label {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    z-index: 100;
+}
+
+.edge_shading {
+    position: absolute;
+    width: 576px;
+    height: 820px;
+    z-index: 98;
+}
+
+.front_content {
+    position: absolute;
+    top: 1px;
+    width: 574px;
+    height: 796px;
+    border-radius: 0 5px 5px 0;
+    z-index: 97;
+}
+
+.back_content {
+    position: absolute;
+    top: 1px;
+    left: 1px;
+    width: 574px;
+    height: 796px;
+    border-radius: 5px 0 0 5px;
+    z-index: 97;
+}
+
+.back_cover {
+    position: relative;
+    z-index: -1;
+}
+
+
+.welcome_text {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    font-size: 2em;
+    color: rgb(25, 25, 25);
+}
+
+.text_content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: justify;
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+.text_content h1, .text_content p.author {
+    margin: 0;
+    padding: 10px 0;
+}
+
+.text_content p.author {
+    font-style: italic;
+    color: #555;
+}
+
+.text_content p.summary {
+    text-align: justify;
+    text-align-last: left;
+    max-width: 800px;
+    margin: 20px 0;
+    line-height: 1.6;
+    overflow-wrap: break-word;
+    hyphens: auto;
+    font-size: smaller;
+}
+
+.text_content h1 {
+    font-size: 24px; 
+}
+
+
+
+.thank_you_text {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    font-size: 2em;
+    color: rgb(25, 25, 25);
+}
+
+#cover_checkbox:checked~#flip_book {
+    transform: translateX(288px)
+}
+
+#cover_checkbox:checked~#flip_book .front_cover {
+    transform: rotateY(-180deg);
+    transition: transform 1.5s, z-index 0.5s 0.5s;
+    z-index: 0;
+}
+
+#cover_checkbox:checked~#flip_book {
+    transform: translateX(288px);
+}
+
+#cover_checkbox:checked~#flip_book .front_cover {
+    transform: rotateY(-180deg);
+    transition: transform 1.5s, z-index 0.5s 0.5s;
+    z-index: 0;
+}
+
+
+.cover_image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 2.5px 5px 5px 2.5px;
+}
+
+
+.back_cover .cover_image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 2.5px 5px 5px 2.5px;
+}
+
+.text_content_summary {
+    text-align: left;
+    display: inline-block;
+    width: 100%; 
+}

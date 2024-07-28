@@ -6,29 +6,29 @@
 
 
 <p align="center">
-    【📚 <a href="../wiki.md">Wiki</a> | 🚀 <a href="../wiki.md#local-demo">Local Demo</a> | 👥 <a href="../Contribution.md">Community Built Software</a> | 🔧 <a href="../wiki.md#customization">Customization</a>】
+    【📚 <a href="../wiki.md">Wiki</a> | 🚀 <a href="../wiki.md#visualizer">Visualizer</a> | 👥 <a href="../Contribution.md">Community Built Software</a> | 🔧 <a href="../wiki.md#customization">Customization</a>】
 </p>
 
 ## 📖 Overview
 
-- **ChatDev** es una **empresa de software virtual** que opera a través de varios **agentes inteligentes** que desempeñan diferentes roles, incluyendo al Director Ejecutivo <img src='../online_log/static/figures/ceo.png' height=20>, Director de Producto <img src='../online_log/static/figures/cpo.png' height=20>, Director Tecnológico <img src='../online_log/static/figures/cto.png' height=20>, programador <img src='../online_log/static/figures/programmer.png' height=20>, revisor <img src='../online_log/static/figures/reviewer.png' height=20>, tester <img src='../online_log/static/figures/tester.png' height=20>, diseñador de arte <img src='../online_log/static/figures/designer.png' height=20>. Estos agentes forman una estructura organizacional multi-agente y están unidos por una misión de "revolucionar el mundo digital a través de la programación." Los agentes dentro de ChatDev **colaboran** participando en seminarios funcionales especializados, incluyendo tareas como diseñar, codificar, probar y documentar.
-- El objetivo principal de ChatDev es ofrecer un marco de trabajo **fácil de usar**, **altamente personalizable** y **extensible**, que se basa en modelos de grandems modelos de lenguaje (LLMs, por sus siglas en inglés) y sirve como un escenario ideal para estudiar la inteligencia colectiva.
+- **ChatDev** es una **empresa de software virtual** que opera a través de varios **agentes inteligentes** que desempeñan diferentes roles, incluyendo al Director Ejecutivo <img src='../visualizer/static/figures/ceo.png' height=20>, Director de Producto <img src='../visualizer/static/figures/cpo.png' height=20>, Director Tecnológico <img src='../visualizer/static/figures/cto.png' height=20>, programador <img src='../visualizer/static/figures/programmer.png' height=20>, revisor <img src='../visualizer/static/figures/reviewer.png' height=20>, tester <img src='../visualizer/static/figures/tester.png' height=20>, diseñador de arte <img src='../visualizer/static/figures/designer.png' height=20>. Estos agentes forman una estructura organizacional multi-agente y están unidos por una misión de "revolucionar el mundo digital a través de la programación." Los agentes dentro de ChatDev **colaboran** participando en seminarios funcionales especializados, incluyendo tareas como diseñar, codificar, probar y documentar.
+- El objetivo principal de ChatDev es ofrecer un marco de trabajo **fácil de usar**, **altamente personalizable** y **extensible**, que se basa en modelos de grandes modelos de lenguaje (LLMs, por sus siglas en inglés) y sirve como un escenario ideal para estudiar la inteligencia colectiva.
 <p align="center">
   <img src='../misc/company.png' width=600>
 </p>
 
 ## 🎉 Noticias
 
-* **25 de septiembre de 2023: La característica **Git** ya está disponible**, permite al programador <img src='../online_log/static/figures/programmer.png' height=20> utilizar GitHub para el control de versiones. Para habilitar esta función, simplemente asigna el valor ``"True"`` igual a ``"git_management"`` en ``ChatChainConfig.json``.
+* **25 de septiembre de 2023: La característica **Git** ya está disponible**, permite al programador <img src='../visualizer/static/figures/programmer.png' height=20> utilizar GitHub para el control de versiones. Para habilitar esta función, simplemente asigna el valor ``"True"`` igual a ``"git_management"`` en ``ChatChainConfig.json``.
   <p align="center">
   <img src='../misc/github.png' width=600>
   </p>
-* 20 de septiembre de 2023: ¡El modo **Interacción Humano-Agente** ya está disponible! Puedes involucrarte con el equipo de ChatDev asumiendo el rol de revisor <img src='../online_log/static/figures/reviewer.png' height=20> y haciendo sugerencias al programador <img src='../online_log/static/figures/programmer.png' height=20>;
+* 20 de septiembre de 2023: ¡El modo **Interacción Humano-Agente** ya está disponible! Puedes involucrarte con el equipo de ChatDev asumiendo el rol de revisor <img src='../visualizer/static/figures/reviewer.png' height=20> y haciendo sugerencias al programador <img src='../visualizer/static/figures/programmer.png' height=20>;
   prueba ``python3 run.py --task [description_of_your_idea] --config "Human"``. Consulta la [guía](../wiki.md#human-agent-interaction) y el [ejemplo](../WareHouse/Gomoku_HumanAgentInteraction_20230920135038).
   <p align="center">
   <img src='../misc/Human_intro.png' width=600>
   </p>
-* 1 de septiembre de 2023: ¡El modo **Arte** ya está disponible! Puedes activar al agente de diseño <img src='../online_log/static/figures/designer.png' height=20> para generar imágenes utilizadas en el software;
+* 1 de septiembre de 2023: ¡El modo **Arte** ya está disponible! Puedes activar al agente de diseño <img src='../visualizer/static/figures/designer.png' height=20> para generar imágenes utilizadas en el software;
   prueba ``python3 run.py --task [description_of_your_idea] --config "Art"``. Consulta la [guía](../wiki.md#art) y el [ejemplo](../WareHouse/gomokugameArtExample_THUNLP_20230831122822).
 * 28 de agosto de 2023: El sistema está disponible al público.
 * 17 de agosto de 2023: La versión v1.0.0 estaba lista para ser lanzada.
@@ -36,7 +36,7 @@
 * 16 de julio de 2023: Se publicó el [artículo preprint](https://arxiv.org/abs/2307.07924) asociado con este proyecto.
 * 30 de junio de 2023: Se lanzó la versión inicial del repositorio de ChatDev.
 
-## ❓ ¿Que puede hcaer ChatDev?
+## ❓ ¿Que puede hacer ChatDev?
 
 ![intro](../misc/intro.png)
 
@@ -161,17 +161,22 @@ un paquete de software y generará una carpeta llamada ``/WareHouse/2048_THUNLP_
       archivePrefix={arXiv},
       primaryClass={cs.SE}
 }
+
+@misc{qian2023experiential,
+      title={Experiential Co-Learning of Software-Developing Agents}, 
+      author={Chen Qian and Yufan Dang and Jiahao Li and Wei Liu and Weize Chen and Cheng Yang and Zhiyuan Liu and Maosong Sun},
+      year={2023},
+      eprint={2312.17025},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL}
+}
 ```
 
 ## ⚖️ Licencia
 
 - Licencia del Código Fuente: El código fuente de nuestro proyecto está licenciado bajo la Licencia Apache 2.0. Esta licencia permite el uso, modificación y distribución del código, sujeto a ciertas condiciones descritas en la Licencia Apache 2.0.
-- Estado de Código Abierto del Proyecto: El proyecto es de código abierto; sin embargo, esta designación está principalmente destinada para propósitos no comerciales. Aunque alentamos la colaboración y las contribuciones de la comunidad para la investigación y aplicaciones no comerciales, es importante notar que cualquier utilización de los componentes del proyecto para propósitos comerciales requiere acuerdos de licencia separados.
 - Licencia de Datos: Los datos relacionados utilizados en nuestro proyecto están licenciados bajo CC BY-NC 4.0. Esta licencia permite explícitamente el uso no comercial de los datos. Queremos enfatizar que cualquier modelo entrenado utilizando estos conjuntos de datos debe adherirse estrictamente a la restricción de uso no comercial y debe ser empleado exclusivamente para propósitos de investigación.
 
-## 🌟 Historial de Estrellas
-
-[![Gráfico de Historial de Estrellas](https://api.star-history.com/svg?repos=openbmb/chatdev&type=Date)](https://star-history.com/#openbmb/chatdev&Date)
 
 
 ## 🤝 Agradecimientos
@@ -182,4 +187,4 @@ un paquete de software y generará una carpeta llamada ``/WareHouse/2048_THUNLP_
 
 ## 📬 Contacto
 
-Si tienes alguna pregunta, comentarios, o deseas ponerte en contacto, no dudes en enviarnos un correo electrónico a [chatdev.openbmb@outlook.com](mailto:chatdev.openbmb@outlook.com)
+Si tienes alguna pregunta, comentarios, o deseas ponerte en contacto, no dudes en enviarnos un correo electrónico a [qianc62@gmail.com](mailto:qianc62@gmail.com)

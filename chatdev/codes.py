@@ -3,7 +3,7 @@ import os
 import re
 import subprocess
 
-from chatdev.utils import log_and_print_online
+from chatdev.utils import log_visualize
 
 
 class Codes:
@@ -70,7 +70,7 @@ class Codes:
 
 '''\n""" + unified_diff + "\n```"
 
-                log_and_print_online(update_codes_content)
+                log_visualize(update_codes_content)
                 self.codebooks[key] = new_codes.codebooks[key]
 
     def _rewrite_codes(self, git_management, phase_info=None) -> None:
@@ -91,12 +91,12 @@ class Codes:
         if git_management:
             if not phase_info:
                 phase_info = ""
-            git_online_log = "**[Git Information]**\n\n"
+            log_git_info = "**[Git Information]**\n\n"
             if self.version == 1.0:
                 os.system("cd {}; git init".format(self.directory))
-                git_online_log += "cd {}; git init\n".format(self.directory)
+                log_git_info += "cd {}; git init\n".format(self.directory)
             os.system("cd {}; git add .".format(self.directory))
-            git_online_log += "cd {}; git add .\n".format(self.directory)
+            log_git_info += "cd {}; git add .\n".format(self.directory)
 
             # check if there exist diff
             completed_process = subprocess.run("cd {}; git status".format(self.directory), shell=True, text=True,
@@ -106,18 +106,18 @@ class Codes:
                 return
 
             os.system("cd {}; git commit -m \"v{}\"".format(self.directory, str(self.version) + " " + phase_info))
-            git_online_log += "cd {}; git commit -m \"v{}\"\n".format(self.directory,
+            log_git_info += "cd {}; git commit -m \"v{}\"\n".format(self.directory,
                                                                       str(self.version) + " " + phase_info)
             if self.version == 1.0:
                 os.system("cd {}; git submodule add ./{} {}".format(os.path.dirname(os.path.dirname(self.directory)),
                                                                     "WareHouse/" + os.path.basename(self.directory),
                                                                     "WareHouse/" + os.path.basename(self.directory)))
-                git_online_log += "cd {}; git submodule add ./{} {}\n".format(
+                log_git_info += "cd {}; git submodule add ./{} {}\n".format(
                     os.path.dirname(os.path.dirname(self.directory)),
                     "WareHouse/" + os.path.basename(self.directory),
                     "WareHouse/" + os.path.basename(self.directory))
-                log_and_print_online(rewrite_codes_content)
-            log_and_print_online(git_online_log)
+                log_visualize(rewrite_codes_content)
+            log_visualize(log_git_info)
 
     def _get_codes(self) -> str:
         content = ""
@@ -134,4 +134,4 @@ class Codes:
                 if filename.endswith(".py"):
                     code = open(os.path.join(directory, filename), "r", encoding="utf-8").read()
                     self.codebooks[filename] = self._format_code(code)
-        log_and_print_online("{} files read from {}".format(len(self.codebooks.keys()), directory))
+        log_visualize("{} files read from {}".format(len(self.codebooks.keys()), directory))
