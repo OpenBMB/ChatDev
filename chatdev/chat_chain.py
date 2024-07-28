@@ -109,7 +109,7 @@ class ChatChain:
                                          log_filepath=self.log_filepath)
             self.phases[phase] = phase_instance
 
-    def make_recruitment(self):
+    def recruit_team(self):
         """
         recruit all employees
         Returns: None
@@ -241,7 +241,7 @@ class ChatChain:
         preprocess_msg += "**task_prompt**: {}\n\n".format(self.task_prompt_raw)
         preprocess_msg += "**project_name**: {}\n\n".format(self.project_name)
         preprocess_msg += "**Log File**: {}\n\n".format(self.log_filepath)
-        preprocess_msg += "**ChatDevConfig**:\n{}\n\n".format(self.chat_env.config.__str__())
+        preprocess_msg += "**Startr.Team Config**:\n{}\n\n".format(self.chat_env.config.__str__())
         preprocess_msg += "**ChatGPTConfig**:\n{}\n\n".format(chat_gpt_config)
         log_visualize(preprocess_msg)
 

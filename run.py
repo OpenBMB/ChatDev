@@ -108,7 +108,7 @@ if 'OPENAI_API_KEY' not in os.environ:
           """)
     sys.exit(1)
 
-# Start ChatDev
+# Startr.Team
 
 # ----------------------------------------
 #          Init ChatChain
@@ -147,7 +147,7 @@ chat_chain.pre_processing()
 #          Personnel Recruitment
 # ----------------------------------------
 
-chat_chain.make_recruitment()
+chat_chain.recruit_team()
 
 # ----------------------------------------
 #          Chat Chain
