@@ -6,24 +6,26 @@
 <link rel="stylesheet" href="replay/css/github-markdown-dark.css">
 
 <head>
-    <title>chatdev demo </title>
+    <title>Startr.Team</title>
+    <link rel='stylesheet' href='https://startr.style/style.css'>
+    <link rel='stylesheet' href='https://raw.githack.com/opencoca/system7.css/main/style.css'>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   
     <link rel="icon" type="image/png" href="figures/ceo.png">
 </head>
 
-<body style="display: flex;flex: auto; ">
+<body style="--d: flex;--fx: auto; gap: 0.6em ">
 
     <div id="operation">
-        <div id="title" style="display: block;position: relative;height: 100px;">
-            <img src="figures/chatdev.png" style="width: 364px;height: 128px; position: relative;top:40px;left:75px;">
-            <p style="color:aliceblue; font-size: larger;font-weight: bolder;position: relative;top:20px;left:40px;text-shadow: 0px 0px 0px rgb(252, 252, 252);">
-                Communicative Agents for Software Development</p>
+        <div id="title">
+            <h1>Startr.Team</h1>
         </div>
         <div id="imgShow">
             <img src="figures/company.png" alt="chatdev-company" id="chatdev-company">
-            <img src="figures/right.png" id="right" class="blinking-animation" style="display: none;position: relative; width: 40px;height: 40px;top: -360px;left: 420px">
-            <img src="figures/left.png" id="left" class="blinking-animation" style="display: none;width: 40px;height: 40px;position: relative; top: -465px;left: 125px">
+            <img src="figures/right.png" id="right" class="blinking-animation" style="--d: none;--pos: relative; width: 40px;height: 40px;top: -360px;left: 420px">
+            <img src="figures/left.png" id="left" class="blinking-animation" style="--d: none;width: 40px;height: 40px;--pos: relative; top: -465px;left: 125px">
         </div>
-        <div style="position: relative;top:200px;display: flex;">
+        <div style="--pos: relative;top:200px;--d: flex; --fd: column">
             <div> <input type="file" id="fileInput" accept=".log" onchange="watchfileInput(this.files)">
                 <button id="filebutton" class="button">File Upload</button>
             </div>
@@ -33,76 +35,76 @@
             </label>
         </div>
     </div>
-    <div id="show" style="display: grid;">
+    <div id="show" style="--d: grid;">
 
-        <div id="humanRequest" style="position: relative; overflow: auto; padding: 0 10px">
-            <p id="Requesttext" style=" color:aliceblue; display: block;font-weight: 900; max-height: 18px; max-width: 800px;">Task: </p>
+        <div id="humanRequest" style="--pos: relative; overflow: auto; padding: 0 10px">
+            <p id="Requesttext" style=" color:aliceblue; --d: block;font-weight: 900; max-height: 18px; max-width: 800px;">Task: </p>
         </div>
-        <div id="dialogBody" style="top:20px;display: flex;flex-direction: column;">
+        <div id="dialogBody" style="top:20px;--d: flex;flex-direction: column;">
         </div>
         <div id="speedcontrol">
             <input type="range" id="speed" name="speed" min="0" max="100" onchange="speedchange()">
             <label for="speed">Replaying Speed</label>
         </div>
-        <div id="dialogStatistic" style="display: flex;flex-direction: column;">
-            <div style="display: flex;width: 2800px;flex-direction: row;height: 60px;">
+        <div id="dialogStatistic" style="--d: flex;flex-direction: column;">
+            <div style="--d: flex;width: 2800px;flex-direction: row;height: 60px;">
 
                 <div class="info">
-                    <label for="version_updates" style="position: relative;">🔨version_updates</label>
+                    <label for="version_updates" style="--pos: relative;">🔨version_updates</label>
                     <p id="version_updates"></p>
                 </div>
                 <div class="info">
-                    <label for="num_code_files" style="position: relative;">📃num_code_files</label>
+                    <label for="num_code_files" style="--pos: relative;">📃num_code_files</label>
                     <p id="num_code_files"></p>
                 </div>
 
                 <div class="info">
-                    <label for="num_png_files" style="position: relative;"> 🏞num_png_files</label>
+                    <label for="num_png_files" style="--pos: relative;"> 🏞num_png_files</label>
                     <p id="num_png_files"></p>
                 </div>
                 <div class="info">
-                    <label for="num_doc_files" style="position: relative;">📚num_doc_files</label>
+                    <label for="num_doc_files" style="--pos: relative;">📚num_doc_files</label>
                     <p id="num_doc_files"></p>
                 </div>
                 <div class="info">
-                    <label for="code_lines" style="position: relative;">📃code_lines</label>
+                    <label for="code_lines" style="--pos: relative;">📃code_lines</label>
                     <p id="code_lines"></p>
                 </div>
                 <div class="info">
-                    <label for="env_lines" style="position: relative;">📋env_lines</label>
+                    <label for="env_lines" style="--pos: relative;">📋env_lines</label>
                     <p id="env_lines"></p>
                 </div>
                 <div class="info">
-                    <label for="manual_lines" style="position: relative;">📒manual_lines</label>
+                    <label for="manual_lines" style="--pos: relative;">📒manual_lines</label>
                     <p id="manual_lines"></p>
                 </div>
                 <div class="info">
-                    <label for="num_utterances" style="position: relative;">🗣num_utterances</label>
+                    <label for="num_utterances" style="--pos: relative;">🗣num_utterances</label>
                     <p id="num_utterances"></p>
                 </div>
 
                 <div class="info">
-                    <label for="num_self_reflections" style="position: relative;">🤔num_self_reflections</label>
+                    <label for="num_self_reflections" style="--pos: relative;">🤔num_self_reflections</label>
                     <p id="num_self_reflections"></p>
                 </div>
                 <div class="info">
-                    <label for="num_prompt_tokens" style="position: relative;">❓num_prompt_tokens</label>
+                    <label for="num_prompt_tokens" style="--pos: relative;">❓num_prompt_tokens</label>
                     <p id="num_prompt_tokens"></p>
                 </div>
                 <div class="info">
-                    <label for="num_completion_tokens" style="position: relative;">❗num_completion_tokens</label>
+                    <label for="num_completion_tokens" style="--pos: relative;">❗num_completion_tokens</label>
                     <p id="num_completion_tokens"></p>
                 </div>
                 <div class="info">
-                    <label for="num_total_tokens" style="position: relative;">⁉️num_total_tokens</label>
+                    <label for="num_total_tokens" style="--pos: relative;">⁉️num_total_tokens</label>
                     <p id="num_total_tokens"></p>
                 </div>
                 <div class="info">
-                    <label for="cost" style="position: relative;">💰cost</label>
+                    <label for="cost" style="--pos: relative;">💰cost</label>
                     <p id="cost"></p>
                 </div>
                 <div class="info">
-                    <label for="duration" style="position: relative;">🕑duration</label>
+                    <label for="duration" style="--pos: relative;">🕑duration</label>
                     <p id="duration"></p>
                 </div>
 
@@ -111,7 +113,6 @@
         </div>
     </div>
     <script src="replay/js/app.js"></script>
-    <!--<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>-->
 </body>
 
 </html>
