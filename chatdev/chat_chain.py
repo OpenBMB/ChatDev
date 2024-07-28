@@ -59,7 +59,7 @@ class ChatChain:
 
         # init chatchain config and recruits
         self.chain = self.config["chain"]
-        self.recruitments = self.config["recruitments"]
+        self.recruits = self.config["recruits"]
         self.web_spider = self.config["web_spider"]
 
         # init default max chat turn
