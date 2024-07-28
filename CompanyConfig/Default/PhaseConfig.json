@@ -25,8 +25,9 @@
       "Task: \"{task}\".",
       "Modality: \"{modality}\".",
       "Ideas: \"{ideas}\".",
-      "We have decided to complete the task through a executable software implemented via a programming language. ",
-      "As the {assistant_role}, to satisfy the new user's demand and make the software realizable, you should propose a concrete programming language. If python can complete this task via Python, please answer Python; otherwise, answer another programming language (e.g., Java, C++, etc,).",
+      "We have decided to complete the task. ",
+      "As the {assistant_role}, to satisfy the new user's demand and make the software realizable, you should propose a concrete programming language, or stack. If the project can be done in html, css, and, Javascript start there.",
+      "If python can is a better option to complete this task please answer Python; otherwise, answer another with another programming language (e.g., Java, C++, etc,).",
       "Note that we must ONLY discuss the target programming language and do not discuss anything else! Once we all have expressed our opinion(s) and agree with the results of the discussion unanimously, any of us must actively terminate the discussion and conclude the best programming language we have discussed without any other words or reasons, return only one line using the format: \"<INFO> *\" where \"*\" represents a programming language."
     ]
   },
@@ -40,10 +41,13 @@
       "Modality: \"{modality}\".",
       "Programming Language: \"{language}\"",
       "Ideas:\"{ideas}\"",
-      "We have decided to complete the task through a executable software with multiple files implemented via {language}. As the {assistant_role}, to satisfy the new user's demands, you should write one or multiple files and make sure that every detail of the architecture is, in the end, implemented as code. {gui}",
-      "Think step by step and reason yourself to the right decisions to make sure we get it right.",
+      "We have decided to complete the task as a {language} project, with multiple well defined and commented {language} files.",
+      "As the {assistant_role}, working to satisfy our new user's demands, you should write one or multiple files and make sure that every detail of the architecture is, in the end, implemented as code. {gui}",
+      "Think step by step, explaining your rational in comming to the right decisions to make sure we get it right.",
+      "",
       "You will first lay out the names of the core classes, functions, methods that will be necessary, as well as a quick comment on their purpose.",
-      "Then you will output the content of each file including complete code. Each file must strictly follow a markdown code block format, where the following tokens must be replaced such that \"FILENAME\" is the lowercase file name including the file extension, \"LANGUAGE\" in the programming language, \"DOCSTRING\" is a string literal specified in source code that is used to document a specific segment of code, and \"CODE\" is the original code:",
+      "Then you will output the content of each file including complete code.",
+      "Each file must strictly follow the markdown code block format, where the following tokens must be replaced such that \"FILENAME\" is the lowercase file name including the file extension, \"LANGUAGE\" in the programming language, \"DOCSTRING\" is a string literal specified in source code that is used to document a specific segment of code, and \"CODE\" is the original code:",
       "FILENAME",
       "```LANGUAGE",
       "'''",
@@ -52,7 +56,7 @@
       "CODE",
       "```",
       "You will start with the \"main\" file, then go to the ones that are imported by that file, and so on.",
-      "Please note that the code should be fully functional. Ensure to implement all functions. No placeholders (such as 'pass' in Python)."
+      "**NOTE** The code must be fully functional. Implement all functions. Do not No placeholders (such as 'pass' in Python)."
     ]
   },
   "ArtDesign": {
@@ -201,7 +205,10 @@
       "\"{test_reports}\"",
       "Error Summary of Test Reports:",
       "\"{error_summary}\"",
-      "Note that each file must strictly follow a markdown code block format, where the following tokens must be replaced such that \"FILENAME\" is the lowercase file name including the file extension, \"LANGUAGE\" in the programming language, \"DOCSTRING\" is a string literal specified in source code that is used to document a specific segment of code, and \"CODE\" is the original code:",
+      "Note that each file must be in a markdown code block format,",
+      "where the following tokens must be replaced such that \"FILENAME\" is the lowercase file name including the file extension,",
+      "\"LANGUAGE\" in the programming language, \"DOCSTRING\" is a string literal specified in source code that is used to document a specific segment of code,",
+      "and \"CODE\" is the original code:",
       "FILENAME",
       "```LANGUAGE",
       "'''",
@@ -209,7 +216,13 @@
       "'''",
       "CODE",
       "```",
-      "As the {assistant_role}, to satisfy the new user's demand and make the software execute smoothly and robustly, you should modify the codes based on the error summary. Now, use the format exemplified above and modify the problematic codes based on the error summary. Output the codes that you fixed based on the test reported and corresponding explanations (strictly follow the format defined above, including FILENAME, LANGUAGE, DOCSTRING and CODE; incomplete \"TODO\" codes are strictly prohibited). If no bugs are reported, please return only one line like \"<INFO> Finished\"."
+      "",
+      "As the {assistant_role}, working to satisfy the new user's demand and ensure the software executes smoothly,",
+      "you should modify the codes based on the error summary. Now, use the format above and modify the problematic codes based on the error summary.",
+      "Output the codes that you fixed based on the test reported and corresponding explanations.",
+      "",
+       "**NOTE** strictly follow the format defined above, including FILENAME, LANGUAGE, DOCSTRING and CODE; incomplete \"TODO\" codes are strictly prohibited", 
+       "If no bugs are reported, please return only one line like \"<INFO> Finished\"."
     ]
   },
   "EnvironmentDoc": {
@@ -245,9 +258,14 @@
       "\"{codes}\"",
       "Requirements:",
       "\"{requirements}\"",
-      "As the {assistant_role}, by using Markdown, you should write a manual.md file which is a detailed user manual to use the software, including introducing main functions of the software, how to install environment dependencies and how to use/play it. For example:",
+      "As our {assistant_role}, writing in well formated Markdown, you write a manual.md.",
+      "manual.md must be a well formated and detailed user manual explaining how to use the software,",
+      "including introducing main functions of the software, how to install environment dependencies,",
+      "and how to use/play it.",
+      "",
+      "**Example**:",
       "manual.md",
-      "```",
+      "```markdown",
       "# LangChain",
       "Building applications with LLMs through composability",
       "Looking for the JS/TS version? Check out LangChain.js.",
