@@ -85,7 +85,7 @@ then start building a software by ``python3 run.py`` and go to [Visualizer Websi
 ![Replay](misc/replay.gif)
 
 ## Docker Start
-- You can use docker for a quick and safe use of ChatDev. You will need some extra steps to allow the execution of the GUI program in docker since ChatDev often creates software with GUI and executes it in the Test Phase.
+- You can use docker for a quick and safe use of ChatDev. You will need some extra steps to allow the execution of the GUI program in docker since Startr.Team often creates software with GUI and executes it in the Test Phase.
 
 ### Install Docker
 - Please refer to the [Docker Official Website](https://www.docker.com/get-started/) for installing Docker.
@@ -108,7 +108,7 @@ then start building a software by ``python3 run.py`` and go to [Visualizer Websi
   ```
 
 ### Build Docker images
-- under the ChatDev folder, run
+- under the Startr.Team folder, run
     ```commandline
     docker build -t chatdev:latest .
     ```
@@ -120,7 +120,7 @@ then start building a software by ``python3 run.py`` and go to [Visualizer Websi
     docker run -it -p 8000:8000 -e OPENAI_API_KEY=YOUR_OPENAI_KEY -e DISPLAY=YOUR_IP:0 chatdev:latest
     ```
   ⚠️ You need to replace ``YOUR_OPENAI_KEY`` with your key and replace ``YOUR_IP`` with your inet address.
-- Then you can just play with ChatDev running ``python3 run.py``.
+- Then you can just play with Startr.Team running ``python3 run.py``.
 - You can run ``python3 visualizer/app.py &`` first to start a background program so that you can use online log with a WebUI.
 
 ### Copy the generated software out of Docker
@@ -216,13 +216,13 @@ Detailed descriptions and experiment results about this Experiential Co-Evolving
 
 ![arch](misc/arch.png)
 
-- All the configuration content related to ChatDev (such as the background prompt of the agent employee, the work content of each Phase, and how the Phase is combined into a ChatChain), are called a **CompanyConfig** (because ChatDev is like a virtual software company). These CompanyConfigs are in the ChatDev project Under ``CompanyConfig/``. You can check this [directory](https://github.com/OpenBMB/ChatDev/tree/main/CompanyConfig). In this directory, you will see different CompanyConfig (such as Default, Art, Human). Generally speaking, each CompanyConfig will contain 3 configuration files.
+- All the configuration content related to Startr.Team (such as the background prompt of the agent employee, the work content of each Phase, and how the Phase is combined into a ChatChain), are called a **CompanyConfig** (because Startr.Team is like a virtual software company). These CompanyConfigs are in the Startr.Team project Under ``CompanyConfig/``. You can check this [directory](https://github.com/OpenBMB/ChatDev/tree/main/CompanyConfig). In this directory, you will see different CompanyConfig (such as Default, Art, Human). Generally speaking, each CompanyConfig will contain 3 configuration files.
   1. ChatChainConfig.json, which controls the overall development process of ChatDev, including which Phase each step is, how many times each Phase needs to be cycled, whether reflection is needed, etc.
-  2. PhaseConfig.json, which controls each Phase, and corresponds to ``chatdev/phase.py`` or ``chatdev/composed_phase.py`` in the ChatDev project. The Python file realizes the specific working logic of each phase. The JSON file here contains the configuration of each phase, such as the background prompt, which employees are participating in the phase, etc.
+  2. PhaseConfig.json, which controls each Phase, and corresponds to ``chatdev/phase.py`` or ``chatdev/composed_phase.py`` in the Startr.Team project. The Python file realizes the specific working logic of each phase. The JSON file here contains the configuration of each phase, such as the background prompt, which employees are participating in the phase, etc.
   3. RoleConfig.json contains the configuration of each employee (agent). Currently, it only contains the background prompt of each employee, which is a bunch of text containing placeholders.
 - If a CompanyConfig does not contain all three configuration files (such as Art and Human), it means that the configuration files missing from this CompanyConfig are set according to Default. The official CompanyConfigs currently provided include:
   1. Default, default configuration
-  2. Art, allows ChatDev to create image files according to needs, automatically generate image description prompts and call the OpenAI API to generate images
+  2. Art, allows Startr.Team to create image files according to needs, automatically generate image description prompts and call the OpenAI API to generate images
   3. Human, allowing human users to participate in ChatDev’s code review process
 
 ### Customize ChatChain
@@ -347,7 +347,7 @@ Detailed descriptions and experiment results about this Experiential Co-Evolving
 ## ChatChain Parameters
 
 - *clear_structure*: Whether to clear non-software files in the WareHouse and cache files in the generated software path.
-- *gui_design*: Encourage ChatDev to generate software with GUI.
+- *gui_design*: Encourage Startr.Team to generate software with GUI.
 - *git_management*: Whether to use git to manage the creation and changes of generated software.
 - *incremental_develop*: Whether to use incremental development on an existing project.
 - *self_improve*: flag for self-improvement on user input prompt. It is a special chat that LLM plays as a prompt engineer to improve the user input prompt. **⚠️ Attention** Model generated prompts contain uncertainty and there may
@@ -368,7 +368,7 @@ Detailed descriptions and experiment results about this Experiential Co-Evolving
 ├── CompanyConfig # Configuration Files for ChatDev, including ChatChain, Phase and Role config json.
 ├── WareHouse # Folder for Generated Software
 ├── camel # Camel RolePlay Component
-├── chatdev # ChatDev Core Code
+├── chatdev # Startr.Team Core Code
 ├── ecl # Experiential Co-Learning Module
 ├── misc # Assets of Example and Demo
 ├── visualizer # Visualizer Folder
@@ -382,7 +382,7 @@ Detailed descriptions and experiment results about this Experiential Co-Evolving
 
 ### Default
 ![demo](misc/ChatChain_Visualization_Default.png)
-- As shown in the ChatChain visualization of the Default setting, ChatDev will produce software in the order of:
+- As shown in the ChatChain visualization of the Default setting, Startr.Team will produce software in the order of:
   - Demand Analysis: decide the modality of the software
   - Language Choose: decide the programming language
   - Coding: write the code
@@ -408,7 +408,7 @@ Detailed descriptions and experiment results about this Experiential Co-Evolving
 - You can run your software in the ``WareHouse/`` and see if it satisfies your needs. Then you can type anything you want (bug fix or new feature) in the command interface, then press Enter:
 ![Human_command](misc/Human_command.png)
 - For example
-  - We first run the ChatDev with the task "design a gomoku game"
+  - We first run the Startr.Team with the task "design a gomoku game"
   - Then we type "Please add a restart button" in the HumanAgentInteraction Phase, adding the first feature
   - In the second loop of HumanAgentInteraction, we add another feature by typing "Please add a current status bar showing whose turn it is".
   - At last, we early exit this mode by typing "End".
@@ -416,7 +416,7 @@ Detailed descriptions and experiment results about this Experiential Co-Evolving
     - <img src='misc/Human_v1.png' height=250>&nbsp;&nbsp;&nbsp;&nbsp;<img src='misc/Human_v2.png' height=250>&nbsp;&nbsp;&nbsp;&nbsp;<img src='misc/Human_v3.png' height=250>
 
 ### Git Mode
-- Simply set ``"git_management"`` to ``"True"`` in ``ChatChainConfig.json`` to open the Git Mode, in which ChatDev will make the generated software folder a git repository and automatically make all commits.
+- Simply set ``"git_management"`` to ``"True"`` in ``ChatChainConfig.json`` to open the Git Mode, in which Startr.Team will make the generated software folder a git repository and automatically make all commits.
 - Every change made on the code of generated software will create a commit, including:
   - The initial commit, created after the ``Coding`` phase completed, with a commit message ``Finish Coding``.
   - Complete ``ArtIntegration`` phase, with a commit message ``Finish Art Integration``.
@@ -429,12 +429,12 @@ Detailed descriptions and experiment results about this Experiential Co-Evolving
   -  <img src='misc/git_summary_terminal.png' height=250>&nbsp;&nbsp;&nbsp;&nbsp;<img src='misc/git_summary_onlinelog.png' height=250>
   - You can also search ``git Information`` in the log file to see when did commit happened.
 - ⚠️ There are a few things worth noting about Git Mode:
-  - ChatDev is a git project, and we need to create another git project in the generated software folder, so we use ``git submodule`` to make this "git over git" function. A ``.gitmodule`` file will be created.
-    - under the software folder, you can add/commit/push/checkout the software project just like a normal git project, and your commits would not modify the ChatDev git history.
-    - under the ChatDev folder, the new software has been added to the ChatDev as a whole folder.
+  - Startr.Team is a git project, and we need to create another git project in the generated software folder, so we use ``git submodule`` to make this "git over git" function. A ``.gitmodule`` file will be created.
+    - under the software folder, you can add/commit/push/checkout the software project just like a normal git project, and your commits would not modify the Startr.Team git history.
+    - under the Startr.Team folder, the new software has been added to the Startr.Team as a whole folder.
   - The generated log file would not be added into the software git project, since the log is closed and moved to the software folder after the final commit. We have to do this because the log should record all the git commits, including the final one. So the git operations must be done before the log is finalized. You will always see a log file to be added and committed in the software folder, like:
     - ![img.png](misc/the_log_left.png)
-  - When you perform ``git add .`` under the ChatDev project, There will be information like (taking Gomoku for example):
+  - When you perform ``git add .`` under the Startr.Team project, There will be information like (taking Gomoku for example):
     ```commandline
     Changes to be committed:
         (use "git restore --staged <file>..." to unstage)

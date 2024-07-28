@@ -303,7 +303,7 @@ class ChatChain:
                 duration))
 
         post_info += "Startr.Team Starts ({})".format(self.start_time) + "\n\n"
-        post_info += "ChatDev Ends ({})".format(now_time) + "\n\n"
+        post_info += "Startr.Team Ends ({})".format(now_time) + "\n\n"
 
         directory = self.chat_env.env_dict['directory']
         if self.chat_env.config.clear_structure:

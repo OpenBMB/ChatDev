@@ -5,7 +5,7 @@
 - Ideas: "{ideas}"
 - Codes:
 - "{codes}"
-- As the {assistant_role}, to make the software directly operable without further coding, ChatDev have formulated the following regulations:
+- As the {assistant_role}, to make the software directly operable without further coding, Startr.Team have formulated the following regulations:
 - 1) all referenced classes should be imported;
 - 2) all methods should be implemented;
 - 3) all methods need to have the necessary comments;

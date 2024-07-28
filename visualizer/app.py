@@ -51,13 +51,11 @@ def send_message():
     messages.append(message)
     return jsonify(message)
 
-
 def find_avatar_url(role):
     role = role.replace(" ", "%20")
     avatar_filename = f"avatars/{role}.png"
     avatar_url = f"/static/{avatar_filename}"
     return avatar_url
-
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='argparse')

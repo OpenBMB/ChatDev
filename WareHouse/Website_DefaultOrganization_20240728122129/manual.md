@@ -1,4 +1,4 @@
-# ChatDev - Landing Page for Consulting Team
+# Startr.Team - Landing Page for Consulting Team
 
 Thank you for providing the task details. I have reviewed the requirements and the provided code. Based on that, I have created a landing page for a consulting team using the startr.style framework. 
 
