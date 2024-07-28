@@ -17,6 +17,14 @@ from typing import Dict, Optional
 from camel.messages import BaseMessage
 from camel.typing import RoleType
 
+try:
+    from openai.types.chat.chat_completion_message_tool_call import ChatCompletionMessageToolCall
+    from openai.types.chat.chat_completion_message import FunctionCall
+
+    openai_new_api = True  # new openai api version
+except ImportError:
+    openai_new_api = False  # old openai api version
+
 
 @dataclass
 class ChatMessage(BaseMessage):
@@ -36,6 +44,9 @@ class ChatMessage(BaseMessage):
     meta_dict: Optional[Dict[str, str]]
     role: str
     content: str = ""
+    if openai_new_api:
+        function_call: Optional[FunctionCall] = None
+        tool_calls: Optional[ChatCompletionMessageToolCall] = None
 
     def set_user_role_at_backend(self: BaseMessage):
         return self.__class__(

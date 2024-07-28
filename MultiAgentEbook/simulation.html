@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Cache-Control" content="no-store">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <link rel="icon" type="image/png" sizes="32x32" href="./images/logo.png" />
+  <title>§4: Simulation</title>
+  <link rel="preconnect" href="https://fonts.gstatic.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css" />
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+  <style>
+    .table-container {
+      overflow-x: auto;
+    }
+
+    .paper-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+    }
+
+    .paper-table th,
+    .paper-table td {
+      padding: 12px;
+      border: 1px solid #ddd;
+      text-align: left;
+    }
+
+    .paper-table th {
+      cursor: pointer;
+      background-color: #f4f4f4;
+    }
+
+    .paper-table th:hover {
+      background-color: #e0e0e0;
+    }
+
+    .sorting:after {
+      content: ' \25B2';
+    }
+
+    .sorting_asc:after {
+      content: ' \25B2';
+    }
+
+    .sorting_desc:after {
+      content: ' \25BC';
+    }
+
+    #interactiveBookContainer {
+      width: 1250px;
+      height: 850px;
+      margin: 0 auto;
+    }
+
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="container">
+    </div>
+  </header>
+  <section class="paper-list">
+    <div class="container">
+      <div class="container" style="display: flex; align-items: center; position: relative;">
+        <a href="index.html" class="btn clr3" style="position: absolute; left: 0; top: 50%; transform: translateY(-50%);">← Back Homepage</a>
+        <div style="flex: 1; text-align: center;">
+          <h2 class="section-heading" style="display: inline-block; margin: 0;">§4: Simulation</h2>
+        </div>
+      </div>
+      <p class="section-description text-center">
+        Multi-agent social simulations employ agents to <b>create digital mappings</b> of real-world societies, thereby offering insights into various social behaviors and trends to facilitate the <b>analysis and prediction of social phenomena</b>. Click on the ebook below to read.
+      </p>
+      <div id="interactiveBookContainer">
+        <iframe src="./book_simulation_index.html"></iframe>
+      </div>
+
+      <br>
+      <br>
+      <br>
+      <br>
+      <div class="table-container">
+        <table id="paperTable" class="display paper-table">
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Authors</th>
+              <th>Affiliations</th>
+              <th>Link</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+  <div class="attribution">
+    <p>
+      Initiated by the <a href="https://github.com/OpenBMB/ChatDev" target="_blank">ChatDev</a> Group, Tsinghua
+      University
+      <br>Contact us via <a href="mailto:qianc62@gmail.com">qianc62@gmail.com</a>
+    </p>
+  </div>
+  <script>
+    $(document).ready(function () {
+      var keyword = "Simulation";
+  
+      Papa.parse("papers.csv", {
+        download: true,
+        header: true,
+        complete: function (results) {
+          var data = results.data;
+  
+          var filteredData = data
+            .filter(function (row) {
+              return row.AwesomeListCategory && row.AwesomeListCategory === keyword;
+            })
+            .map(function (row, index) {
+              row.originalIndex = index;
+              return row;
+            });
+  
+          $('#paperTable').DataTable({
+            data: filteredData,
+            order: [], 
+            columns: [
+              { "data": "Title" },
+              { "data": "Authors" },
+              { "data": "Affiliation" },
+              { "data": "Url", "render": function (data) { return `<a href="${data}">Link</a>`; } },
+              { "data": "Date" },
+            ],
+            rowCallback: function (row, data, index) {
+              $(row).attr('data-original-index', data.originalIndex);
+            }
+          });
+        }
+      });
+    });
+  </script>
+  
+
+</body>
+
+</html>

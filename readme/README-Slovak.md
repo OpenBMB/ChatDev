@@ -6,13 +6,13 @@
 
 
 <p align="center">
-    【📚 <a href="../wiki.md">Wiki</a> | 🚀 <a href="../wiki.md#local-demo">Lokalne Demo</a> | 👥 <a href="../Contribution.md">Softvér vytvorený komunitou</a> | 🔧 <a href="../wiki.md#customization">Prispôsobenie</a>】
+    【📚 <a href="../wiki.md">Wiki</a> | 🚀 <a href="../wiki.md#visualizer">Lokalne Demo</a> | 👥 <a href="../Contribution.md">Softvér vytvorený komunitou</a> | 🔧 <a href="../wiki.md#customization">Prispôsobenie</a>】
 </p>
 
 ## 📖 Prehľad
 
 - **ChatDev** je **virtuálna softvérová spoločnosť**, ktorá pôsobí prostredníctvom rôznych **inteligentných agentov**.
-  rôznych funkcií, vrátane riaditeľa <img src='../online_log/static/figures/ceo.png' height=20>, produktového riaditeľa <img src='../online_log/static/figures/cpo.png' height=20>, technologického riaditeľa <img src="online_log/static/figures/cto.png" height=20>, programátor <img src='../online_log/static/figures/programmer.png' height=20>, recenzent <img src='../online_log/static/figures/reviewer.png' height=20>, tester <img src='../online_log/static/figures/tester.png' height=20>, výtvarník <img src='../online_log/static/figures/designer.png' height=20>. Týto
+  rôznych funkcií, vrátane riaditeľa <img src='../visualizer/static/figures/ceo.png' height=20>, produktového riaditeľa <img src='../visualizer/static/figures/cpo.png' height=20>, technologického riaditeľa <img src="visualizer/static/figures/cto.png" height=20>, programátor <img src='../visualizer/static/figures/programmer.png' height=20>, recenzent <img src='../visualizer/static/figures/reviewer.png' height=20>, tester <img src='../visualizer/static/figures/tester.png' height=20>, výtvarník <img src='../visualizer/static/figures/designer.png' height=20>. Týto
   agenti tvoria multiagentovú organizačnú štruktúru a spája ich poslanie "revolučne zmeniť digitálny svet
   prostredníctvom programovania." Agenti v rámci ChatDev **spolupracujú** účasťou na špecializovaných funkčných seminároch,
   vrátane úloh, ako je navrhovanie, kódovanie, testovanie a dokumentovanie.
@@ -24,16 +24,16 @@
 
 ## 🎉 Novinky
 
-* september 25. 2023: Teraz je k dispozícii funkcia **Git**, ktorá umožňuje programátorovi <img src='../online_log/static/figures/programmer.png' height=20> využívať GitHub na version control. Ak chcete túto funkciu povoliť, jednoducho nastavte ``"git_management"`` na ``"True"`` v súbore ``ChatChainConfig.json``.
+* september 25. 2023: Teraz je k dispozícii funkcia **Git**, ktorá umožňuje programátorovi <img src='../visualizer/static/figures/programmer.png' height=20> využívať GitHub na version control. Ak chcete túto funkciu povoliť, jednoducho nastavte ``"git_management"`` na ``"True"`` v súbore ``ChatChainConfig.json``.
   <p align="center">
   <img src='../misc/github.png' width=600>
   </p>
-* september 20. 2023: Režim **Human-Agent-Interaction** je teraz k dispozícii! Môžete sa zapojiť do tímu ChatDev tým, že budete hrať úlohu recenzenta <img src='../online_log/static/figures/reviewer.png' height=20> a predkladať návrhy programátorovi <img src='../online_log/static/figures/programmer.png' height=20>;
+* september 20. 2023: Režim **Human-Agent-Interaction** je teraz k dispozícii! Môžete sa zapojiť do tímu ChatDev tým, že budete hrať úlohu recenzenta <img src='../visualizer/static/figures/reviewer.png' height=20> a predkladať návrhy programátorovi <img src='../visualizer/static/figures/programmer.png' height=20>;
   skúste ``python3 run.py --task [description_of_your_idea] --config "Human"``. Pozri [návod](../wiki.md#human-agent-interaction) a [príklad](../WareHouse/Gomoku_HumanAgentInteraction_20230920135038).
   <p align="center">
   <img src='../misc/Human_intro.png' width=600>
   </p>
-* september 1. 2023: Režim **Art** je už k dispozícii! Môžete si aktivovať agenta dizajnéra <img src='../online_log/static/figures/designer.png' height=20> na generovanie obrázkov používaných v programe;
+* september 1. 2023: Režim **Art** je už k dispozícii! Môžete si aktivovať agenta dizajnéra <img src='../visualizer/static/figures/designer.png' height=20> na generovanie obrázkov používaných v programe;
   skúste ``python3 run.py --task [description_of_your_idea] --config "Art"``. Pozri [návod](../wiki.md#art) a [príklad](../WareHouse/gomokugameArtExample_THUNLP_20230831122822).
 * august 28. 2023: Systém je verejne dostupný.
 * august 17. 2023: Verzia v1.0.0 bola pripravená na vydanie.
@@ -167,17 +167,22 @@ vytvorí softvérový balík a vygeneruje priečinok s názvom ``/WareHouse/2048
       archivePrefix={arXiv},
       primaryClass={cs.SE}
 }
+
+@misc{qian2023experiential,
+      title={Experiential Co-Learning of Software-Developing Agents}, 
+      author={Chen Qian and Yufan Dang and Jiahao Li and Wei Liu and Weize Chen and Cheng Yang and Zhiyuan Liu and Maosong Sun},
+      year={2023},
+      eprint={2312.17025},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL}
+}
 ```
 
 ## ⚖️ License
 
 - Licencovanie zdrojového kódu: Zdrojový kód nášho projektu je licencovaný pod licenciou Apache 2.0. Táto licencia povoľuje používanie, modifikáciu a šírenie kódu za určitých podmienok uvedených v licencii Apache 2.0.
-- Stav projektu ako open-source: Projekt je skutočne open-source, toto označenie je však primárne určené na nekomerčné účely. Hoci podporujeme spoluprácu a príspevky komunity na výskum a nekomerčné aplikácie, je dôležité poznamenať, že akékoľvek využitie komponentov projektu na komerčné účely si vyžaduje samostatné licenčné zmluvy.
 - Licencovanie údajov: Súvisiace údaje použité v našom projekte sú licencované pod CC BY-NC 4.0. Táto licencia výslovne povoľuje nekomerčné použitie údajov. Chceli by sme zdôrazniť, že akékoľvek modely vycvičené pomocou týchto súborov údajov by mali striktne dodržiavať obmedzenie nekomerčného použitia a mali by sa používať výlučne na výskumné účely.
 
-## 🌟 Star Historia
-
-[![Star History Chart](https://api.star-history.com/svg?repos=openbmb/chatdev&type=Date)](https://star-history.com/#openbmb/chatdev&Date)
 
 
 ## 🤝 Poďakovania
@@ -188,4 +193,4 @@ vytvorí softvérový balík a vygeneruje priečinok s názvom ``/WareHouse/2048
 
 ## 📬 Kontakt
 
-Ak máte akékoľvek otázky, spätnú väzbu alebo by ste nás chceli kontaktovať, neváhajte nás kontaktovať e-mailom na adrese [chatdev.openbmb@outlook.com](mailto:chatdev.openbmb@outlook.com)
+Ak máte akékoľvek otázky, spätnú väzbu alebo by ste nás chceli kontaktovať, neváhajte nás kontaktovať e-mailom na adrese [qianc62@gmail.com](mailto:qianc62@gmail.com)

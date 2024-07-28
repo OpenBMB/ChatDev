@@ -5,23 +5,25 @@ import numpy as np
 
 def prompt_cost(model_type: str, num_prompt_tokens: float, num_completion_tokens: float):
     input_cost_map = {
-        "gpt-3.5-turbo": 0.0015,
+        "gpt-3.5-turbo": 0.0005,
         "gpt-3.5-turbo-16k": 0.003,
         "gpt-3.5-turbo-0613": 0.0015,
         "gpt-3.5-turbo-16k-0613": 0.003,
         "gpt-4": 0.03,
         "gpt-4-0613": 0.03,
         "gpt-4-32k": 0.06,
+        "gpt-4-turbo": 0.01,
     }
 
     output_cost_map = {
-        "gpt-3.5-turbo": 0.002,
+        "gpt-3.5-turbo": 0.0015,
         "gpt-3.5-turbo-16k": 0.004,
         "gpt-3.5-turbo-0613": 0.002,
         "gpt-3.5-turbo-16k-0613": 0.004,
         "gpt-4": 0.06,
         "gpt-4-0613": 0.06,
         "gpt-4-32k": 0.12,
+        "gpt-4-turbo": 0.03,
     }
 
     if model_type not in input_cost_map or model_type not in output_cost_map:
@@ -101,14 +103,16 @@ def get_info(dir, log_filepath):
         if len(sublines) > 0:
             model_type = sublines[0].split("| **model_type** | ModelType.")[-1].split(" | ")[0]
             model_type = model_type[:-2]
-            if model_type == "GPT_3_5_TURBO":
+            if model_type == "GPT_3_5_TURBO" or model_type == "GPT_3_5_TURBO_NEW":
                 model_type = "gpt-3.5-turbo"
             elif model_type == "GPT_4":
                 model_type = "gpt-4"
             elif model_type == "GPT_4_32k":
                 model_type = "gpt-4-32k"
+            elif model_type == "GPT_4_TURBO":
+                model_type = "gpt-4-turbo"
             # print("model_type:", model_type)
-        
+
         lines = open(log_filepath, "r", encoding="utf8").read().split("\n")
         start_lines = [line for line in lines if "**[Start Chat]**" in line]
         chat_lines = [line for line in lines if "<->" in line]

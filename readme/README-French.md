@@ -6,13 +6,13 @@
 
 
 <p align="center">
-    【📚 <a href="../wiki.md">Wiki</a> | 🚀 <a href="../wiki.md#local-demo">Démo Locale</a> | 👥 <a href="../Contribution.md">Logiciels de la Communauté</a> | 🔧 <a href="../wiki.md#customization">Personnalisation</a>】
+    【📚 <a href="../wiki.md">Wiki</a> | 🚀 <a href="../wiki.md#visualizer">Démo Locale</a> | 👥 <a href="../Contribution.md">Logiciels de la Communauté</a> | 🔧 <a href="../wiki.md#customization">Personnalisation</a>】
 </p>
 
 ## 📖 Vue d'ensemble
 
 - **ChatDev** se présente comme une **société de logiciels virtuelle** opérant par le biais de divers **agents intelligents** tenant
-  différents rôles, incluant le Directeur Général <img src='../online_log/static/figures/ceo.png' height=20>, le Directeur de Produit <img src='../online_log/static/figures/cpo.png' height=20>, le Directeur Technologique <img src='../online_log/static/figures/cto.png' height=20>, programmeur <img src='../online_log/static/figures/programmer.png' height=20>, l'auditeur <img src='../online_log/static/figures/reviewer.png' height=20>, le testeur <img src='../online_log/static/figures/tester.png' height=20> et le designer graphique <img src='../online_log/static/figures/designer.png' height=20>. Ces agents forment une structure organisationnelle multi-agents et sont unis par une mission de "révolutionner le monde numérique à travers la programmation." Les agents de ChatDev **collaborent** en participant à des séminaires fonctionnels spécialisés, incluant des tâches telles que la conception, le codage, les tests et la documentation.
+  différents rôles, incluant le Directeur Général <img src='../visualizer/static/figures/ceo.png' height=20>, le Directeur de Produit <img src='../visualizer/static/figures/cpo.png' height=20>, le Directeur Technologique <img src='../visualizer/static/figures/cto.png' height=20>, programmeur <img src='../visualizer/static/figures/programmer.png' height=20>, l'auditeur <img src='../visualizer/static/figures/reviewer.png' height=20>, le testeur <img src='../visualizer/static/figures/tester.png' height=20> et le designer graphique <img src='../visualizer/static/figures/designer.png' height=20>. Ces agents forment une structure organisationnelle multi-agents et sont unis par une mission de "révolutionner le monde numérique à travers la programmation." Les agents de ChatDev **collaborent** en participant à des séminaires fonctionnels spécialisés, incluant des tâches telles que la conception, le codage, les tests et la documentation.
 - L'objectif principal de ChatDev est de proposer un cadre **facile à utiliser**, **hautement personnalisable** et **extensible**, basé sur de grands modèles linguistiques (LLMs) et servant de scénario idéal pour étudier l'intelligence collective.
 <p align="center">
   <img src='../misc/company.png' width=600>
@@ -20,16 +20,16 @@
 
 ## 📰 Actualités
 
-* **25 septembre 2023 : La fonctionnalité **Git** est maintenant disponible**, permettant au programmeur <img src='../online_log/static/figures/programmer.png' height=20> d'utiliser GitHub pour le contrôle de version. Pour activer cette fonction, définissez simplement ``"git_management"`` sur ``"True"`` dans ``ChatChainConfig.json``.
+* **25 septembre 2023 : La fonctionnalité **Git** est maintenant disponible**, permettant au programmeur <img src='../visualizer/static/figures/programmer.png' height=20> d'utiliser GitHub pour le contrôle de version. Pour activer cette fonction, définissez simplement ``"git_management"`` sur ``"True"`` dans ``ChatChainConfig.json``.
   <p align="center">
   <img src='../misc/github.png' width=600>
   </p>
-* 20 septembre 2023 : Le mode **Interaction Humain-Agent** est maintenant disponible ! Vous pouvez interagir avec l'équipe ChatDev en jouant le rôle de l'examinateur <img src='../online_log/static/figures/reviewer.png' height=20> et en faisant des suggestions au programmeur <img src='../online_log/static/figures/programmer.png' height=20>;
+* 20 septembre 2023 : Le mode **Interaction Humain-Agent** est maintenant disponible ! Vous pouvez interagir avec l'équipe ChatDev en jouant le rôle de l'examinateur <img src='../visualizer/static/figures/reviewer.png' height=20> et en faisant des suggestions au programmeur <img src='../visualizer/static/figures/programmer.png' height=20>;
   essayez ``python3 run.py --task [description_de_votre_idée] --config "Humain"``. Voir le [guide](../wiki.md#human-agent-interaction) et l'[exemple](../WareHouse/Gomoku_HumanAgentInteraction_20230920135038).
   <p align="center">
   <img src='../misc/Human_intro.png' width=600>
   </p>
-* 1er septembre 2023 : Le mode **Art** est maintenant disponible ! Vous pouvez activer l'agent designer <img src='../online_log/static/figures/designer.png' height=20> pour générer des images utilisées dans le logiciel;
+* 1er septembre 2023 : Le mode **Art** est maintenant disponible ! Vous pouvez activer l'agent designer <img src='../visualizer/static/figures/designer.png' height=20> pour générer des images utilisées dans le logiciel;
   essayez ``python3 run.py --task [description_de_votre_idée] --config "Art"``. Voir le [guide](../wiki.md#art) et l'[exemple](../WareHouse/gomokugameArtExample_THUNLP_20230831122822).
 * 28 août 2023 : Le système est désormais disponible au public.
 * 17 août 2023 : La version v1.0.0 était prête à être publiée.
@@ -169,18 +169,23 @@ de ``CompanyConfig/Default``
       archivePrefix={arXiv},
       primaryClass={cs.SE}
 }
+
+@misc{qian2023experiential,
+      title={Experiential Co-Learning of Software-Developing Agents}, 
+      author={Chen Qian and Yufan Dang and Jiahao Li and Wei Liu and Weize Chen and Cheng Yang and Zhiyuan Liu and Maosong Sun},
+      year={2023},
+      eprint={2312.17025},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL}
+}
 ```
 
 ## ⚖️ Licence
 
 - Licence du code source : Le code source de notre projet est sous licence Apache 2.0. Cette licence autorise l'utilisation, la modification et la distribution du code, sous réserve de certaines conditions définies dans la Licence Apache 2.0.
-- Statut Open-Source du Projet : Le projet est effectivement open-source ; cependant, cette désignation est principalement destinée à des fins non commerciales. Bien que nous encouragions la collaboration et les contributions de la communauté pour la recherche et les applications non commerciales, il est important de noter que toute utilisation des composants du projet à des fins commerciales nécessite des accords de licence séparés.
 - Licence des données : Les données associées utilisées dans notre projet sont sous licence CC BY-NC 4.0. Cette licence permet explicitement l'utilisation non commerciale des données. Nous souhaitons souligner que tout modèle formé à l'aide de ces ensembles de données doit strictement respecter la restriction d'utilisation non commerciale et ne doit être utilisé que pour des fins de recherche.
 
-## Historique des Étoiles
-
-[![Graphique de l'Historique des Étoiles](https://api.star-history.com/svg?repos=openbmb/chatdev&type=Date)](https://star-history.com/#openbmb/chatdev&Date)
 
 ## Contact
 
-Si vous avez des questions, des retours ou souhaitez nous contacter, n'hésitez pas à nous envoyer un email à [chatdev.openbmb@outlook.com](mailto:chatdev.openbmb@outlook.com)
+Si vous avez des questions, des retours ou souhaitez nous contacter, n'hésitez pas à nous envoyer un email à [qianc62@gmail.com](mailto:qianc62@gmail.com)

@@ -6,12 +6,12 @@
 
 
 <p align="center">
-    【📚 <a href="../wiki.md">Wiki</a> | 🚀 <a href="../wiki.md#local-demo">Lokal na Demo</a> | 👥 <a href="../Contribution.md">Komunidad ng Kontribusyon sa Software</a> | 🔧 <a href="../wiki.md#customization">Kostomisasyon</a>】
+    【📚 <a href="../wiki.md">Wiki</a> | 🚀 <a href="../wiki.md#visualizer">Lokal na Demo</a> | 👥 <a href="../Contribution.md">Komunidad ng Kontribusyon sa Software</a> | 🔧 <a href="../wiki.md#customization">Kostomisasyon</a>】
 </p>
 
 ## 📖 Pangkalahatan
 
-- Ang **ChatDev** ay isang **birtwal na kumpanya ng software** na nag-ooperate sa pamamagitan ng iba't-ibang **matalinong ahente** na may iba't-ibang mga papel, kabilang ang Chief Executive Officer <img src='../online_log/static/figures/ceo.png' height=20>, Chief Product Officer <img src='../online_log/static/figures/cpo.png' height=20>, Chief Technology Officer <img src='../online_log/static/figures/cto.png' height=20>, programmer <img src='../online_log/static/figures/programmer.png' height=20>, reviewer <img src='../online_log/static/figures/reviewer.png' height=20>, tester <img src='../online_log/static/figures/tester.png' height=20>, at art designer <img src='../online_log/static/figures/designer.png' height=20>. Ang mga ahente na ito ay bumubuo ng isang multi-agent na istruktura ng organisasyon at nagkakaisa sa isang misyon na "baguhin ang digital na mundo sa pamamagitan ng programming." Ang mga ahente sa loob ng ChatDev ay **nagkakaisa** sa pamamagitan ng pagsali sa mga espesyalisadong seminar na may mga gawain tulad ng pagdi-disenyo, pagko-coding, pagte-test, at pagsusuri.
+- Ang **ChatDev** ay isang **birtwal na kumpanya ng software** na nag-ooperate sa pamamagitan ng iba't-ibang **matalinong ahente** na may iba't-ibang mga papel, kabilang ang Chief Executive Officer <img src='../visualizer/static/figures/ceo.png' height=20>, Chief Product Officer <img src='../visualizer/static/figures/cpo.png' height=20>, Chief Technology Officer <img src='../visualizer/static/figures/cto.png' height=20>, programmer <img src='../visualizer/static/figures/programmer.png' height=20>, reviewer <img src='../visualizer/static/figures/reviewer.png' height=20>, tester <img src='../visualizer/static/figures/tester.png' height=20>, at art designer <img src='../visualizer/static/figures/designer.png' height=20>. Ang mga ahente na ito ay bumubuo ng isang multi-agent na istruktura ng organisasyon at nagkakaisa sa isang misyon na "baguhin ang digital na mundo sa pamamagitan ng programming." Ang mga ahente sa loob ng ChatDev ay **nagkakaisa** sa pamamagitan ng pagsali sa mga espesyalisadong seminar na may mga gawain tulad ng pagdi-disenyo, pagko-coding, pagte-test, at pagsusuri.
 - Ang pangunahing layunin ng ChatDev ay mag-alok ng isang **madaling gamitin**, **mabilis ma-customize**, at **napapalawak** na framework, na batay sa malalaking modelo ng wika (LLMs) at naglilingkod bilang isang ideal na scenario para pag-aralan ang kolektibong kaalaman.
 
 <p align="center">
@@ -20,15 +20,15 @@
 
 ## 📰 Balita
 
-* **Setyembre 25, 2023: Ang **Git** na feature ay available na**, nagbibigay-daan sa programmer <img src='../online_log/static/figures/programmer.png' height=20> na gamitin ang GitHub para sa version control. Upang paganahin ang feature na ito, i-set ang ``"git_management"`` sa ``"True"`` sa ``ChatChainConfig.json``.
+* **Setyembre 25, 2023: Ang **Git** na feature ay available na**, nagbibigay-daan sa programmer <img src='../visualizer/static/figures/programmer.png' height=20> na gamitin ang GitHub para sa version control. Upang paganahin ang feature na ito, i-set ang ``"git_management"`` sa ``"True"`` sa ``ChatChainConfig.json``.
   <p align="center">
   <img src='../misc/github.png' width=600>
   </p>
-* Setyembre 20, 2023: Ang **Human-Agent-Interaction** mode ay available na! Maaari kang makilahok sa ChatDev team sa pamamagitan ng pagganap ng papel ng reviewer <img src='../online_log/static/figures/reviewer.png' height=20> at pagbibigay ng mga suhestiyon sa programmer <img src='../online_log/static/figures/programmer.png' height=20>; subukan ang ``python3 run.py --task [description_ng_ideya_mo] --config "Human"``. Tingnan ang [gabay](../wiki.md#human-agent-interaction) at [halimbawa](../WareHouse/Gomoku_HumanAgentInteraction_20230920135038).
+* Setyembre 20, 2023: Ang **Human-Agent-Interaction** mode ay available na! Maaari kang makilahok sa ChatDev team sa pamamagitan ng pagganap ng papel ng reviewer <img src='../visualizer/static/figures/reviewer.png' height=20> at pagbibigay ng mga suhestiyon sa programmer <img src='../visualizer/static/figures/programmer.png' height=20>; subukan ang ``python3 run.py --task [description_ng_ideya_mo] --config "Human"``. Tingnan ang [gabay](../wiki.md#human-agent-interaction) at [halimbawa](../WareHouse/Gomoku_HumanAgentInteraction_20230920135038).
   <p align="center">
   <img src='../misc/Human_intro.png' width=600>
   </p>
-* Setyembre 1, 2023: Ang **Art** mode ay available na! Maaari mong paganahin ang ahenteng designer <img src='../online_log/static/figures/designer.png' height=20> upang lumikha ng mga imahe na ginagamit sa software; subukan ang ``python3 run.py --task [description_ng_ideya_mo] --config "Art"``. Tingnan ang [gabay](../wiki.md#art) at [halimbawa](../WareHouse/gomokugameArtExample_THUNLP_20230831122822).
+* Setyembre 1, 2023: Ang **Art** mode ay available na! Maaari mong paganahin ang ahenteng designer <img src='../visualizer/static/figures/designer.png' height=20> upang lumikha ng mga imahe na ginagamit sa software; subukan ang ``python3 run.py --task [description_ng_ideya_mo] --config "Art"``. Tingnan ang [gabay](../wiki.md#art) at [halimbawa](../WareHouse/gomokugameArtExample_THUNLP_20230831122822).
 * Agosto 28, 2023: Ang sistema ay magagamit na ng publiko.
 * Agosto 17, 2023: Ang bersyon v1.0.0 ay handa na para ilabas.
 * Hulyo 30, 2023: Maaaring baguhin ng mga user ang mga ChatChain, Phase, at Role settings. Bukod dito, sinusuportahan na rin ang online Log mode at replay mode.
@@ -148,18 +148,23 @@ eprint={2307.07924},
 archivePrefix={arXiv},
 primaryClass={cs.SE}
 }
+
+@misc{qian2023experiential,
+      title={Experiential Co-Learning of Software-Developing Agents}, 
+      author={Chen Qian and Yufan Dang and Jiahao Li and Wei Liu and Weize Chen and Cheng Yang and Zhiyuan Liu and Maosong Sun},
+      year={2023},
+      eprint={2312.17025},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL}
+}
 ```
 
 ## ⚖️ Lisensya
 
 - Lisensya ng Source Code: Ang source code ng aming proyekto ay may lisensyang Apache 2.0. Ito ay nagbibigay ng pahintulot sa paggamit, pagbabago, at pamamahagi ng code, sa ilalim ng ilang kondisyon na inilahad sa Apache 2.0 License.
-- Estado ng Open-Source na Proyekto: Ang proyektong ito ay tunay na open-source; gayunpaman, ang designation na ito ay pangunahing para sa mga non-commercial na layunin. Habang inaanyayahan namin ang kolaborasyon at mga kontribusyon mula sa komunidad para sa pagsasaliksik at non-commercial na mga aplikasyon, mahalaga na tandaan na anumang paggamit ng mga bahagi ng proyekto para sa mga layunin ng negosyo ay nangangailangan ng mga hiwalay na kasunduang pang-lisensya.
 - Lisensya ng Data: Ang kaugnay na datos na ginamit sa aming proyekto ay may lisensyang CC BY-NC 4.0. Ang lisensyang ito ay malinaw na nagpapahintulot sa non-commercial na paggamit ng data. Nais naming bigyang-diin na ang anumang mga modelo na naitrain gamit ang mga datasets na ito ay dapat na mahigpit na sumusunod sa restriction ng non-commercial usage at dapat gamitin lamang para sa layuning pananaliksik.
 
-## Kasaysayan ng Stars
-
-[![Star History Chart](https://api.star-history.com/svg?repos=openbmb/chatdev&type=Date)](https://star-history.com/#openbmb/chatdev&Date)
 
 ## Makipag-ugnay
 
-Kung mayroon kang anumang mga tanong, puna, o nais makipag-ugnay, huwag kang mag-atubiling makipag-ugnay sa amin sa pamamagitan ng email sa [chatdev.openbmb@outlook.com](mailto:chatdev.openbmb@outlook.com)
+Kung mayroon kang anumang mga tanong, puna, o nais makipag-ugnay, huwag kang mag-atubiling makipag-ugnay sa amin sa pamamagitan ng email sa [qianc62@gmail.com](mailto:qianc62@gmail.com)
