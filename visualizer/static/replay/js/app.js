@@ -110,6 +110,7 @@ const button = document.getElementById('replay');
 button.addEventListener('click', () => {
     replayDialog(idx);
 });
+
 $(document).ready(function() {
     $('#filebutton').click(function() {
         $('#fileInput').click();
@@ -230,7 +231,7 @@ function extraction(contents) {
     const regex_prompt = /(Prompt Engineer):([\S\s]*)/g
 
     const regex_end = /(AgentTech Ends|ChatDev Ends)/g;
-    const regex_start = /(ChatDev Starts)([\D\s])*(\d*)/g;
+    const regex_start = /(Startr.Team Starts)([\D\s])*(\d*)/g;
 
     const regex_task = /(task_prompt)(.*):(.*)/g;
     const regex_info = /Software Info([\r\n\s\S\t\d\D]*)/g;
@@ -388,7 +389,7 @@ function createPara(d, i) {
     curdialog = singleDialog;
     singleDialog.style.display = "flex";
     singleDialog.style.flexDirection = "column";
-    singleDialog.style.width = "773px";
+    singleDialog.style.width = "96%";
     dialogbody.appendChild(singleDialog);
     var paralen;
     if (d.type && d.character) {
