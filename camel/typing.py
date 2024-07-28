@@ -11,6 +11,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # =========== Copyright 2023 @ CAMEL-AI.org. All Rights Reserved. ===========
+
 from enum import Enum
 
 class ModelType(Enum):
@@ -57,10 +58,6 @@ class RoleType(Enum):
     CHATDEV_REVIEWER = "code reviewer"
     CHATDEV_TESTER = "software test engineer"
     CHATDEV_CCO = "chief creative officer (CCO)"
-
-
-
-
 
 class PhaseType(Enum):
     REFLECTION = "reflection"
