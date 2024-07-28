@@ -341,6 +341,7 @@ here is the short description:\"{}\".
 If the revised prompt is revised_version_of_the_description, 
 then you should return a message in a format like \"<INFO> revised_version_of_the_description\", do not return messages in other formats.""".format(
             task_prompt)
+
         role_play_session = RolePlaying(
             assistant_role_name="Prompt Engineer",
             assistant_role_prompt="You are an professional prompt engineer that can improve user input prompt to make LLM better understand these prompts.",
