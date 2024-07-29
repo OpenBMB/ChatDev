@@ -7,7 +7,7 @@ function append_message(role, text, avatarUrl) {
   if (avatarUrl) {
     avatar_element.css("background-image", `url(${avatarUrl})`);
   } else {
-    avatar_element.css("background-color", "green");
+    avatar_element.css("background-color", "darkcyan");
   }
 
   message_container.append(role_element);

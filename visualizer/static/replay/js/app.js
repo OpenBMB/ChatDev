@@ -456,6 +456,7 @@ function createPara(d, i) {
         paragraph.style.padding = "10px";
         paragraph.style.border = "3px solid #a08D8D";
         paragraph.style.width = "750px";
+        paragraph.style.marginLeft = "0.4rem";
         paragraph.style.border = "1px solid rgba(11, 20, 150, .3)";
         paragraph.style.borderRadius = "10px";
         paragraph.style.boxShadow = "2px 2px 2px black";
@@ -467,7 +468,7 @@ function createPara(d, i) {
         singleDialog.appendChild(emptyparagraph);
 
         if (d.type == "user") {
-            paragraph.style.backgroundColor = "#4b751a";
+            paragraph.style.backgroundColor = "#a02D8D";
         } else {
             paragraph.style.backgroundColor = "#133153";
         }
