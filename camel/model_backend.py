@@ -72,7 +72,6 @@ class OpenAIModel(ModelBackend):
 
         if openai_new_api:
             # Experimental, add base_url
-            # print("BASE_URL:", BASE_URL, "OPENAI_API_KEY", OPENAI_API_KEY)
             if BASE_URL:
                 client = openai.OpenAI(
                     api_key=OPENAI_API_KEY,
@@ -100,7 +99,6 @@ class OpenAIModel(ModelBackend):
 
             response = client.chat.completions.create(*args, **kwargs, model=self.model_type.value,
                                                       **self.model_config_dict)
-            # print("args:", args, "\nkwargs:", kwargs, "\nresonse:", response)
             cost = prompt_cost(
                 self.model_type.value,
                 num_prompt_tokens=response.usage.prompt_tokens,
