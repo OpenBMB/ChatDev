@@ -18,20 +18,20 @@
 
     <div id="operation">
         <div id="title">
-            <h1>Startr.Team</h1>
+            <a href="/"><h1>Startr.Team</h1></a>
         </div>
         <div id="imgShow">
-            <img src="figures/company.png" alt="chatdev-company" id="chatdev-company">
-            <img src="figures/right.png" id="right" class="blinking-animation" style="--d: none;--pos: relative; width: 40px;height: 40px;top: -360px;left: 420px">
-            <img src="figures/left.png" id="left" class="blinking-animation" style="--d: none;width: 40px;height: 40px;--pos: relative; top: -465px;left: 125px">
+            <img src="figures/company.png"  alt="chatdev-company" id="chatdev-company">
+            <img src="figures/right.png" id="right" class="blinking-animation" style="display: none;--pos: relative; width: 40px;height: 40px;top: -360px;left: 420px">
+            <img src="figures/left.png" id="left" class="blinking-animation" style="display: none; --w: 40px;height: 40px;--pos: relative; top: -465px;left: 125px">
         </div>
-        <div style="--pos: relative;top:200px;--d: flex; --fd: column">
+        <div style="--d: flex; --fd: column">
             <div> <input type="file" id="fileInput" accept=".log" onchange="watchfileInput(this.files)">
                 <button id="filebutton" class="button">File Upload</button>
             </div>
             <div><button id="replay" class="button">Replay</button></div>
         </div>
-        <div class="markdown-body"><label for="filebutton" id="successupload">
+        <div style="--br:0.2rem; --mt:0.6rem" class="markdown-body"><label for="filebutton" id="successupload">
             </label>
         </div>
     </div>
