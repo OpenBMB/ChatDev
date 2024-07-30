@@ -51,6 +51,69 @@ def send_message():
     messages.append(message)
     return jsonify(message)
 
+# Define rout to send team a project
+# to run a project we must call run.py 
+# run.py [-h] [--config CONFIG] [--org ORG] [--task TASK] [--name NAME] [--model MODEL] [--path PATH]
+import subprocess
+
+@app.route("/send_project", methods=["POST"])
+def send_project():
+    data = request.get_json()
+    cmd = ["python3", "run.py"]
+    
+    for arg in ["task", "config", "org", "name", "model", "path"]:
+        if data.get(arg):
+            cmd.extend([f"--{arg}", data[arg]])
+    
+    try:
+        subprocess.run(cmd, check=True)
+        return jsonify({"status": "success"}), 200
+    except subprocess.CalledProcessError as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+# Example form for sending a project
+# <form id="send_project" action="/send_project" method="post">
+#     <input type="text" name="org" placeholder="Organization" />
+#     <input type="text" name="task" placeholder="Task" />
+#     <input type="text" name="role" placeholder="Role" />
+#     <input type="text" name="project" placeholder="Project" />
+#     <input type="text" name="port" placeholder="Port" />
+#     <input type="text" name="config" placeholder="Config" />
+#     <button type="submit">Send Project</button>
+# </form>
+# Let's override the default send_project form action and instead use js to send the project
+# document.getElementById("send_project").addEventListener("submit", function(e) {
+#     e.preventDefault();
+#     var org = document.querySelector("input[name=org]").value;
+#     var task = document.querySelector("input[name=task]").value;
+#     var role = document.querySelector("input[name=role]").value;
+#     var project = document.querySelector("input[name=project]").value;
+#     var port = document.querySelector("input[name=port]").value;
+#     var config = document.querySelector("input[name=config]").value;
+#     fetch("/send_project", {
+#         method: "POST",
+#         headers: {
+#             "Content-Type": "application/json"
+#         },
+#         body: JSON.stringify({
+#             org: org,
+#             task: task,
+#             role: role,
+#             project: project,
+#             port: port,
+#             config: config
+#         })
+#     });
+# });
+
+
+
+#Define the favicon route
+@app.route('/favicon.ico')
+def favicon():
+    #Return the favicon found in static folder root
+    return send_from_directory(os.path.join(app.root_path, 'static'),
+                               'favicon.ico', mimetype='image/vnd.microsoft.icon')
 def find_avatar_url(role):
     role = role.replace(" ", "%20")
     avatar_filename = f"avatars/{role}.png"

@@ -3,16 +3,19 @@
 
     <head>
         <title>Startr.Team</title>
-        <script src="/static/js/zepto.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/marked@3.0.7/marked.min.js"></script>
+
+
         <script
             src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.8/clipboard.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.2.0/highlight.min.js"></script>
-        <script src="static/js/main.js"></script>
+        <script src="/static/js/zepto.min.js"></script>
+        <script src="/static/js/markdown-it.min.js"></script>
+        <script src="/static/js/marked.min.js"></script>
+        <script src="/static/js/main.js"></script>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/themes/prism-okaidia.min.css">
-        <link rel="stylesheet" href="static/css/style.css">
+        <link rel="stylesheet" href="/static/css/style.css">
         <link rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.2.0/styles/monokai-sublime.min.css">
 
@@ -76,6 +79,44 @@
         <div class="custom-text-block">
             Log Visualizer Visualize the log in real-time when generating software, in agent dialog-style. Execute
             "python3 run.py" to start.
+
+            # Example form for sending a project
+            <form style="--scale:96%; --scale-hvr:106%;" id="send_project" action="/send_project" method="post">
+                <input type="text" name="task" placeholder="Task" />
+                <input type="text" name="org" placeholder="Organization" />
+                <input type="text" name="config" placeholder="Config" />
+                <button type="submit">Send Project</button>
+            </form>
+
+            <!-- Let's override the default send_project form action and instead use js to send the project -->
+            <script>
+                document.getElementById("send_project").addEventListener("submit", async function (e) {
+                    e.preventDefault();
+
+                    const formData = new FormData(this);
+                    const data = Object.fromEntries(formData.entries());
+
+                    try {
+                        const response = await fetch("/send_project", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify(data)
+                        });
+
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+
+                        alert("Project sent!");
+                        this.reset();
+                    } catch (error) {
+                        console.error("Error sending project:", error);
+                        alert("An error occurred while sending the project. Please try again.");
+                    }
+                });
+            </script>
         </div>
 
         <div style="--h:80vh; --ofy:auto" class="container d-flex flex-column" id="chat-box"></div>
