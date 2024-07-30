@@ -91,6 +91,7 @@ class OpenAIModel(ModelBackend):
                 "gpt-4-0613": 8192,
                 "gpt-4-32k": 32768,
                 "gpt-4-turbo": 100000,
+                "gpt-4o": 4096,
             }
             num_max_token = num_max_token_map[self.model_type.value]
             num_max_completion_tokens = num_max_token - num_prompt_tokens
@@ -98,7 +99,6 @@ class OpenAIModel(ModelBackend):
 
             response = client.chat.completions.create(*args, **kwargs, model=self.model_type.value,
                                                       **self.model_config_dict)
-
             cost = prompt_cost(
                 self.model_type.value,
                 num_prompt_tokens=response.usage.prompt_tokens,
@@ -122,6 +122,7 @@ class OpenAIModel(ModelBackend):
                 "gpt-4-0613": 8192,
                 "gpt-4-32k": 32768,
                 "gpt-4-turbo": 100000,
+                "gpt-4-o": 4096,
             }
             num_max_token = num_max_token_map[self.model_type.value]
             num_max_completion_tokens = num_max_token - num_prompt_tokens
@@ -182,6 +183,7 @@ class ModelFactory:
             ModelType.GPT_4_32k,
             ModelType.GPT_4_TURBO,
             ModelType.GPT_4_TURBO_V,
+            ModelType.GPT_4_O,
             None
         }:
             model_class = OpenAIModel
