@@ -10,12 +10,13 @@
 
 - **Build Your Software:** Use the following command to initiate the building of your software,
   replacing `[description_of_your_idea]` with your idea's description and `[project_name]` with your desired project
+
   name:
    ```
    python3 run.py --task "[description_of_your_idea]" --name "[project_name]"
    ```
 
-- here is the full params of run.py
+- here are the full params of run.py
 
     ```commandline
     usage: run.py [-h] [--config CONFIG] [--org ORG] [--task TASK] [--name NAME] [--model MODEL]
@@ -31,13 +32,15 @@
       --model MODEL    GPT Model, choose from {'GPT_3_5_TURBO','GPT_4','GPT_4_32K'}
     ```
 
-### 3. Check your software
+### 3. Test your software
 
-- the generated software is under ``WareHouse/NAME_ORG_timestamp``, including:
+- the generated software is save to ``WareHouse/NAME_ORG_timestamp``, including:
+
     - all the files and manuals of this software
     - config files of the company that made this software, including three config JSON files
     - full log of the software building process
     - prompt to make this software
+    
 - A case of todo software is just like below, which is located in ``/WareHouse/todo_THUNLP_20230822165503``
     ```
     .
@@ -160,6 +163,7 @@ After this process, the experiences have been extracted from the production of s
     python3 ecl/ecl.py "<Software Path to Directory>" -d
   ```
   the software path should be like `"WareHouse"`.
+
 - **Memory Filter**: To get a higher quality experience pool, it is suggested to use `ecl/post_process/memory_filter.py` to filter the `MemoryCards.json`. When running the `memory_filter.py` script, you need to specify three arguments: the filter threshold, the input directory, and the output directory.
   ```bash
     python3 ecl/post_process/memory_filter.py "<threshold>" "<directory>" "<filtered_directory>"
