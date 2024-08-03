@@ -32,7 +32,7 @@ def count_tokens_openai_chat_models(
         messages: List[OpenAIMessage],
         encoding: Any,
 ) -> int:
-    r"""Counts the number of tokens required to generate an OpenAI chat based
+    """Counts the number of tokens required to generate an OpenAI chat based
     on a given list of messages.
 
     Args:
@@ -58,7 +58,7 @@ def num_tokens_from_messages(
         messages: List[OpenAIMessage],
         model: ModelType,
 ) -> int:
-    r"""Returns the number of tokens used by a list of messages.
+    """Returns the number of tokens used by a list of messages.
 
     Args:
         messages (List[OpenAIMessage]): The list of messages to count the
@@ -129,7 +129,7 @@ def get_model_token_limit(model: ModelType) -> int:
 
 
 def openai_api_key_required(func: F) -> F:
-    r"""Decorator that checks if the OpenAI API key is available in the
+    """Decorator that checks if the OpenAI API key is available in the
     environment variables.
 
     Args:
@@ -159,7 +159,7 @@ def openai_api_key_required(func: F) -> F:
 
 
 def print_text_animated(text, delay: float = 0.005, end: str = ""):
-    r"""Prints the given text with an animated effect.
+    """Prints the given text with an animated effect.
 
     Args:
         text (str): The text to print.
@@ -175,7 +175,7 @@ def print_text_animated(text, delay: float = 0.005, end: str = ""):
 
 
 def get_prompt_template_key_words(template: str) -> Set[str]:
-    r"""Given a string template containing curly braces {}, return a set of
+    """Given a string template containing curly braces {}, return a set of
     the words inside the braces.
 
     Args:
@@ -192,7 +192,7 @@ def get_prompt_template_key_words(template: str) -> Set[str]:
 
 
 def get_first_int(string: str) -> Optional[int]:
-    r"""Returns the first integer number found in the given string.
+    """Returns the first integer number found in the given string.
 
     If no integer number is found, returns None.
 
