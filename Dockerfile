@@ -17,6 +17,10 @@ RUN pip install --no-cache-dir -r requirements.txt
 # (you'll need to provide the actual key when running the container)
 ENV OPENAI_API_KEY=your_OpenAI_API_key
 
+# Set the environment variable for Groq API key
+# (you'll need to provide the actual key when running the container)
+ENV GROQ_API_KEY=your_Groq_API_key
+
 # Expose the port for visualizer/app.py
 EXPOSE 8000
 
