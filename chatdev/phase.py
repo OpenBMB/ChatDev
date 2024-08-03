@@ -212,7 +212,7 @@ class Phase(ABC):
         elif phase_name == "LanguageChoose":
             question = """Conclude the programming language being discussed for software development, in the format: "*" where '*' represents a programming language." """
         elif phase_name == "EnvironmentDoc":
-            question = """According to the codes and file format listed above, write a requirements.txt file to specify the dependencies or packages required for the project to run properly." """
+            question = """Based on our project code and file format listed above, write a requirements.txt file to specify the dependencies or packages required for the project to run properly." """
         else:
             raise ValueError(f"Reflection of phase {phase_name}: Not Assigned.")
 
