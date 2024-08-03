@@ -12,4 +12,4 @@
 - 4) no potential bugs;
 - 5) The entire project conforms to the tasks proposed by the user;
 - 6) most importantly, do not only check the errors in the code, but also the logic of code. Make sure that user can interact with generated software without losing any feature in the requirement;
-- Now, you should check the above regulations one by one and review the codes in detail, propose one comment with the highest priority about the codes, and give me instructions on how to fix. Tell me your comment with the highest priority and corresponding suggestions on revision. If the codes are perfect and you have no comment on them, return only one line like "<INFO> Finished".
+- Now, you should check the above regulations one by one and review the codes in detail, propose one comment with the highest priority about the codes, and give me instructions on how to fix. Tell me your comment with the highest priority and corresponding suggestions on revision. If the code is perfect and you have no comment for any of it, return only one line like "<INFO> Finished".
