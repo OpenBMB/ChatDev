@@ -75,13 +75,7 @@
             </div>
         </nav>
 
-        <!-- Inserted text block -->
-        <div class="custom-text-block">
-            Log Visualizer Visualize the log in real-time when generating software, in agent dialog-style. Execute
-            "python3 run.py" to start.
-
-            # Example form for sending a project
-            <form style="--scale:96%; --scale-hvr:106%;" id="send_project" action="/send_project" method="post">
+            <form style="--scale:94%; --scale-hvr:106%;" id="send_project" action="/send_project" method="post">
                 <input type="text" name="task" placeholder="Task" />
                 <input type="text" name="org" placeholder="Organization" />
                 <input type="text" name="config" placeholder="Config" />
@@ -95,7 +89,8 @@
 
                     const formData = new FormData(this);
                     const data = Object.fromEntries(formData.entries());
-
+                    // Hide the form 
+                    this.style.display = "none";
                     try {
                         const response = await fetch("/send_project", {
                             method: "POST",
@@ -111,15 +106,18 @@
 
                         alert("Project sent!");
                         this.reset();
+                        // Show the form again
+                        this.style.display = "block";
                     } catch (error) {
                         console.error("Error sending project:", error);
+                        // Show the form again
+                        this.style.display = "block";
                         alert("An error occurred while sending the project. Please try again.");
                     }
                 });
             </script>
-        </div>
 
-        <div style="--h:80vh; --ofy:auto" class="container d-flex flex-column" id="chat-box"></div>
+        <div style="--h:74vh; --ofy:auto" class="container d-flex flex-column" id="chat-box"></div>
         <script src="static/js/main.js"></script>
     </body>
 
