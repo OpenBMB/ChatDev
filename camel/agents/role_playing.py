@@ -137,7 +137,7 @@ class RolePlaying:
 
         sys_msg_meta_dicts = [dict(work_prompt=background_prompt, task=task_prompt)] * 2
         if (extend_sys_msg_meta_dicts is None and self.task_type in [TaskType.AI_SOCIETY, TaskType.MISALIGNMENT,
-                                                                     TaskType.CHATDEV]):
+                                                                     TaskType.STARTR_TEAM]):
             extend_sys_msg_meta_dicts = [dict(assistant_role=assistant_role_name, user_role=user_role_name)] * 2
         if extend_sys_msg_meta_dicts is not None:
             sys_msg_meta_dicts = [{**sys_msg_meta_dict, **extend_sys_msg_meta_dict} for
@@ -186,7 +186,7 @@ class RolePlaying:
         self.assistant_agent.reset()
         self.user_agent.reset()
 
-        # refactored ChatDev
+        # refactored Startr.Team
         content = phase_prompt.format(
             **({"assistant_role": self.assistant_agent.role_name} | placeholders)
         )

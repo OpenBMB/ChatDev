@@ -55,7 +55,7 @@ class Phase(ABC):
             phase_name: str,
             assistant_role_prompt: str,
             user_role_prompt: str,
-            task_type=TaskType.CHATDEV,
+            task_type=TaskType.STARTR_TEAM,
             need_reflect=False,
             with_task_specify=False,
             model_type=ModelType.GPT_3_5_TURBO,
