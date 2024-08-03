@@ -103,12 +103,10 @@ if 'OPENAI_API_KEY' not in os.environ or os.environ['OPENAI_API_KEY'] == "":
 #          Init ChatChain
 # ----------------------------------------
 config_path, config_phase_path, config_role_path = get_config(args.config)
-args2type = {'GPT_3_5_TURBO': ModelType.GPT_3_5_TURBO,
+args2type = {'GPT_3_5_TURBO': ModelType.GPT_3_5_TURBO_NEW,
              'GPT_4': ModelType.GPT_4,
              'GPT_4_TURBO': ModelType.GPT_4_TURBO,
              }
-if openai_new_api:
-    args2type['GPT_3_5_TURBO'] = ModelType.GPT_3_5_TURBO_NEW
 
 chat_chain = ChatChain(config_path=config_path,
                        config_phase_path=config_phase_path,
