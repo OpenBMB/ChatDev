@@ -1,5 +1,5 @@
 function append_message(role, text, avatarUrl) {
-  
+
   var message_container = $("<div></div>").addClass("message-container");
   var avatar_element = $("<span></span>").addClass("avatar");
   var role_element = $("<p></p>").addClass("role").text(role);
@@ -27,15 +27,23 @@ function append_message(role, text, avatarUrl) {
 
   copyButton.click(function () {
     copyToClipboard(parsedText);
-    copyButton.text("Copied"); 
+    copyButton.text("Copied");
     setTimeout(function () {
-      copyButton.text("Copy"); 
-    }, 5000); 
+      copyButton.text("Copy");
+    }, 5000);
+
+
   });
 
   message_container.append(copyButton); // Append the copy button
 
   $("#chat-box").append(message_container);
+
+  var chatBox = document.getElementById('chat-box');
+  chatBox.scrollTo({
+    top: chatBox.scrollHeight,
+    behavior: 'smooth'
+  });
 }
 
 function parseCodeBlocks(text, role) {
@@ -57,7 +65,7 @@ function parseCodeBlocks(text, role) {
         parsedText.append(codeBlockHTML);
       }
     } else {
-      parsedText.append(marked(_.escape(part), {breaks: true}));
+      parsedText.append(marked(_.escape(part), { breaks: true }));
     }
   });
   return parsedText;

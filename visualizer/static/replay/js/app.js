@@ -201,7 +201,7 @@ function watchfileInput(files) {
             reader.readAsText(file);
             var filelable = document.getElementById("successupload");
             filelable.style.display = "block";
-            var info = "File uploaded (`" + file.name + "`). Please click **\"Replay\"** to show ChatDev's development process";
+            var info = "File uploaded (`" + file.name + "`). Please click **\"Replay\"** to show Startr.Team's development process";
             filename = file.name;
             filelable.innerHTML = md.render(info);
         }
