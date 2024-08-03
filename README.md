@@ -12,7 +12,7 @@
 
 ## 📖 Overview
 
-- **ChatDev** stands as a **virtual software company** that operates through various **intelligent agents** holding
+- **WEB-AI-Startr.Team** stands as a **virtual software company** that operates through various **intelligent agents** holding
   different roles, including Chief Executive Officer <img src='visualizer/static/figures/ceo.png' height=20>, Chief Product Officer <img src='visualizer/static/figures/cpo.png' height=20>, Chief Technology Officer <img src='visualizer/static/figures/cto.png' height=20>, programmer <img src='visualizer/static/figures/programmer.png' height=20>, reviewer <img src='visualizer/static/figures/reviewer.png' height=20>, tester <img src='visualizer/static/figures/tester.png' height=20>, art designer <img src='visualizer/static/figures/designer.png' height=20>. 
   
   These
@@ -27,11 +27,14 @@
 </p>
 
 ## 🎉 News
-* **June 25, 2024: 🎉To foster development in LLM-powered multi-agent collaboration🤖🤖 and related fields, the Startr.Team team has curated a collection of seminal papers📄 presented in a [open-source](https://github.com/OpenBMB/ChatDev/tree/main/MultiAgentEbook) interactive e-book📚 format. Now you can explore the latest advancements on the [Ebook Website](https://thinkwee.top/multiagent_ebook) and download the [paper list](https://github.com/OpenBMB/ChatDev/blob/main/MultiAgentEbook/papers.csv).**
-  <p align="center">
-  <img src='./misc/ebook.png' width=800>
-  </p>
-* June 12, 2024: We introduce Multi-Agent Collaboration Networks (MacNet) 🎉, which utilize directed acyclic graphs to facilitate effective task-oriented collaboration among agents through linguistic interactions 🤖🤖. MacNet supports cooperation across various topologies and among more than a thousand agents without exceeding context limits. More versatile and scalable, MacNet can be considered a more advanced version of ChatDev's chain-shaped topology. Our preprint paper is available at [https://arxiv.org/abs/2406.07155](https://arxiv.org/abs/2406.07155). This technique will soon be incorporated into this repository, enhancing support for diverse organizational structures and offering richer solutions beyond software development (e.g., logical reasoning, data analysis, story generation, and more).
+
+* June 12, 2024: We introduce Multi-Agent Collaboration Networks (MacNet) 🎉, which utilize directed acyclic graphs 
+to facilitate effective task-oriented collaboration among agents through linguistic interactions 🤖🤖. MacNet supports 
+cooperation across various topologies and among more than a thousand agents without exceeding context limits. More 
+versatile and scalable, MacNet can be considered a more advanced version of WEB-AI-Startr.Team's chain-shaped topology. 
+Our preprint paper is available at [https://arxiv.org/abs/2406.07155](https://arxiv.org/abs/2406.07155). This technique 
+will soon be incorporated into this repository, enhancing support for diverse organizational structures and offering 
+richer solutions beyond software development (e.g., logical reasoning, data analysis, story generation, and more).
   <p align="center">
   <img src='./misc/macnet.png' width=500>
   </p>
@@ -39,22 +42,19 @@
 <details>
 <summary>Old News</summary>
 
-* May 07, 2024, we introduced "Iterative Experience Refinement" (IER), a novel method where instructor and assistant agents enhance shortcut-oriented experiences to efficiently adapt to new tasks. This approach encompasses experience acquisition, utilization, propagation, and elimination across a series of tasks. Our preprint paper is available at https://arxiv.org/abs/2405.04219, and this technique will soon be incorporated into ChatDev.
+* May 07, 2024, we introduced "Iterative Experience Refinement" (IER), a novel method where instructor and assistant agents enhance shortcut-oriented experiences to efficiently adapt to new tasks. This approach encompasses experience acquisition, utilization, propagation, and elimination across a series of tasks. Our preprint paper is available at https://arxiv.org/abs/2405.04219, and this technique will soon be incorporated into WEB-AI-Startr.Team.
   <p align="center">
   <img src='./misc/ier.png' width=220>
   </p>
 
-* January 25, 2024: We have integrated Experiential Co-Learning Module into ChatDev. Please see the [Experiential Co-Learning Guide](wiki.md#co-tracking).
+* January 25, 2024: We have integrated Experiential Co-Learning Module into WEB-AI-Startr.Team. Please see the [Experiential Co-Learning Guide](wiki.md#co-tracking).
 
-* December 28, 2023: We present Experiential Co-Learning, an innovative approach where instructor and assistant agents accumulate shortcut-oriented experiences to effectively solve new tasks, reducing repetitive errors and enhancing efficiency.  Check out our preprint paper at https://arxiv.org/abs/2312.17025 and this technique will soon be integrated into ChatDev.
+* December 28, 2023: We present Experiential Co-Learning, an innovative approach where instructor and assistant agents accumulate shortcut-oriented experiences to effectively solve new tasks, reducing repetitive errors and enhancing efficiency.  Check out our preprint paper at https://arxiv.org/abs/2312.17025 and this technique will soon be integrated into WEB-AI-Startr.Team.
   <p align="center">
   <img src='./misc/ecl.png' width=860>
   </p>
 
-* November 15, 2023: We launched Startr.Team as a SaaS platform that enables software developers and innovative entrepreneurs to build software efficiently at a very low cost and barrier to entry. Try it out at https://chatdev.modelbest.cn/.
-  <p align="center">
-  <img src='./misc/saas.png' width=560>
-  </p>
+* December 15, 2023: We have introduced the **Experiential Co-Learning Module** into WEB-AI-Startr.Team. Please see the [Experiential Co-Learning Guide](wiki.md#co-tracking).
 
 * November 2, 2023: Startr.Team is now supported with a new feature: incremental development, which allows agents to develop upon existing codes. Try `--config "incremental" --path "[source_code_directory_path]"` to start it.
   <p align="center">
@@ -86,15 +86,11 @@
 
 ## ❓ What Can Startr.Team Do?
 
-![intro](misc/intro.png)
-
-<https://github.com/OpenBMB/ChatDev/assets/11889052/80d01d2f-677b-4399-ad8b-f7af9bb62b72>
-
 ## ⚡️ Quickstart
 
 ### 💻️ Quickstart with Web
 
-Access the web page for visualization and configuration use: https://chatdev.modelbest.cn/
+#TODO: Add web start guide
 
 ### 🖥️ Quickstart with terminal
 
@@ -103,28 +99,28 @@ To get started, follow these steps:
 1. **Clone the GitHub Repository:** Begin by cloning the repository using the command:
 
    ```
-   git clone https://github.com/OpenBMB/ChatDev.git
+   git clone 
    ```
 
-2. **Set Up Python Environment:** Ensure you have a version 3.9 or higher Python environment. You can create and
-   activate this environment using the following commands, replacing `ChatDev_conda_env` with your preferred environment
-   name:
+2. **Set Up Python Environment:** 
 
    ```
-   conda create -n ChatDev_conda_env python=3.9 -y
-   conda activate ChatDev_conda_env
-   ```
-
-3. **Install Dependencies:** Move into the `ChatDev` directory and install the necessary dependencies by running:
 
    ```
-   cd ChatDev
-   pip3 install -r requirements.txt
+
+3. **Install Dependencies:** Move into the `Startr.Team` directory and install the necessary dependencies by running:
+
+   ```
+   cd WEB-AI-Startr.Team
+   pipenv install
    ```
 
 4. **Set OpenAI API Key:** Export your OpenAI API key as an environment variable. Replace `"your_OpenAI_API_key"` with
    your actual API key. Remember that this environment variable is session-specific, so you need to set it again if you
    open a new terminal session.
+
+  Alternativly and for a more permanent solution, copy the .env.example file to .env and add your API keys to it.
+
    On Unix/Linux:
 
    ```
@@ -140,38 +136,34 @@ To get started, follow these steps:
 5. **Build Your Software:** Use the following command to initiate the building of your software,
    replacing `[description_of_your_idea]` with your idea's description and `[project_name]` with your desired project
    name:
-   On Unix/Linux:
+ 
 
    ```
-   python3 run.py --task "[description_of_your_idea]" --name "[project_name]"
+   pipenv run python run.py --task "[description_of_your_idea]" --name "[project_name]"
    ```
 
-   On Windows:
-
-   ```
-   python run.py --task "[description_of_your_idea]" --name "[project_name]"
-   ```
+  
 
 6. **Run Your Software:** Once generated, you can find your software in the `WareHouse` directory under a specific
-   project folder, such as `project_name_DefaultOrganization_timestamp`. Run your software using the following command
-   within that directory:
-   On Unix/Linux:
+   project folder, such as `project_name_DefaultOrganization_timestamp`. 
+   
+   It's best to follow the generated README.md file for further instructions.
+
+   For static sites, you can run the following command to start a local server:
 
    ```
-   cd WareHouse/project_name_DefaultOrganization_timestamp
-   python3 main.py
-   ```
+    cd WareHouse/project_name_DefaultOrganization_timestamp
+    python3 -m http.server
+    ```
 
-   On Windows:
-
-   ```
-   cd WareHouse/project_name_DefaultOrganization_timestamp
-   python main.py
-   ```
 
 ### 🐳 Quickstart with Docker
 
-- We thank [ManindraDeMel](https://github.com/ManindraDeMel) for providing Docker support. Please see [Docker Start Guide](wiki.md#docker-start).
+- We use Startr.sh for Docker deployment. To get started, follow these steps:
+
+`bash <(curl -sL startr.sh) run` 
+
+Startr.sh quickly deploys the WEB-AI-Startr.Team Docker container. You can access the web page for visualization and configuration at http://localhost:5000/.
 
 ## ✨️ Advanced Skills
 
@@ -181,7 +173,7 @@ For more detailed information, please refer to our [Wiki](wiki.md), where you ca
 - A straightforward guide for setting up a local web visualizer demo, which can visualize real-time logs, replayed logs, and ChatChain.
 - An overview of the Startr.Team framework.
 - A comprehensive introduction to all advanced parameters in ChatChain configuration.
-- Guides for customizing ChatDev, including:
+- Guides for customizing WEB-AI-Startr.Team, including:
   - ChatChain: Design your own software development process (or any other process), such
       as ``DemandAnalysis -> Coding -> Testing -> Manual``.
   - Phase: Design your own phase within ChatChain, like ``DemandAnalysis``.
@@ -198,7 +190,7 @@ you need assistance!
 configuration JSON files. Check out the example provided in the ``CompanyConfig/Default`` directory. For detailed
 instructions on customization, refer to our [Wiki](wiki.md).
 
-**Software**: Whenever you develop software using ChatDev, a corresponding folder is generated containing all the
+**Software**: Whenever you develop software using WEB-AI-Startr.Team, a corresponding folder is generated containing all the
 essential information. Sharing your work with us is as simple as making a pull request. Here's an example: execute the
 command ``python3 run.py --task "design a 2048 game" --name "2048"  --org "THUNLP" --config "Default"``. This will
 create a software package and generate a folder named ``/WareHouse/2048_THUNLP_timestamp``. Inside, you'll find:
@@ -213,38 +205,24 @@ create a software package and generate a folder named ``/WareHouse/2048_THUNLP_t
 
 ## 👨‍💻‍ Contributors
 
-<a href="https://github.com/OpenBMB/ChatDev/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=OpenBMB/ChatDev" />
+<a href="https://github.com/OpenCoca/WEB-AI-Startr.Team/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=OpenCoca/WEB-AI-Startr.Team" />
 </a>
 
 Made with [contrib.rocks](https://contrib.rocks).
 
 ## 🔎 Citation
 
-```
-@article{chatdev,
-      title = {ChatDev: Communicative Agents for Software Development},
-      author = {Chen Qian and Wei Liu and Hongzhang Liu and Nuo Chen and Yufan Dang and Jiahao Li and Cheng Yang and Weize Chen and Yusheng Su and Xin Cong and Juyuan Xu and Dahai Li and Zhiyuan Liu and Maosong Sun},
-      journal = {arXiv preprint arXiv:2307.07924},
-      url = {https://arxiv.org/abs/2307.07924},
-      year = {2023}
-}
-```
+
 
 ## ⚖️ License
 
-- Source Code Licensing: Our project's source code is licensed under the Apache 2.0 License. This license permits the use, modification, and distribution of the code, subject to certain conditions outlined in the Apache 2.0 License.
-- Data Licensing: The related data utilized in our project is licensed under CC BY-NC 4.0. This license explicitly permits non-commercial use of the data. We would like to emphasize that any models trained using these datasets should strictly adhere to the non-commercial usage restriction and should be employed exclusively for research purposes.
-
+See our LICENSE file for more information.
 
 ## 🤝 Acknowledgments
 
-<a href="http://nlp.csai.tsinghua.edu.cn/"><img src="misc/thunlp.png" height=50pt></a>&nbsp;&nbsp;
-<a href="https://modelbest.cn/"><img src="misc/modelbest.png" height=50pt></a>&nbsp;&nbsp;
-<a href="https://github.com/OpenBMB/AgentVerse/"><img src="misc/agentverse.png" height=50pt></a>&nbsp;&nbsp;
-<a href="https://github.com/OpenBMB/RepoAgent"><img src="misc/repoagent.png"  height=50pt></a>
-<a href="https://aibrb.com/introducing-herbie-your-super-employee-for-streamlined-productivity/"><img src="https://aibrb.com/wp-content/uploads/2023/09/Featured-on-AIBRB.com-white-1.png"  height=50pt></a>
+We would like to express our gratitude to the following individuals and organizations for their contributions to this
 
 ## 📬 Contact
 
-If you have any questions, feedback, or would like to get in touch, please feel free to reach out to us via email at [qianc62@gmail.com](mailto:qianc62@gmail.com)
+If you have any questions, feedback, or would like to get in touch, please feel free to reach out to us via email at [contact.us@startr.team](mailto:contact.us@startr.team).
