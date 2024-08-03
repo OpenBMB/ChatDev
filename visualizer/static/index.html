@@ -91,6 +91,8 @@
                     const data = Object.fromEntries(formData.entries());
                     // Hide the form 
                     this.style.display = "none";
+                    // Clear the chat box
+                    document.getElementById("chat-box").innerHTML = "";
                     try {
                         const response = await fetch("/send_project", {
                             method: "POST",
@@ -104,7 +106,7 @@
                             throw new Error(`HTTP error! status: ${response.status}`);
                         }
 
-                        alert("Project sent!");
+                        alert("Project complete!");
                         this.reset();
                         // Show the form again
                         this.style.display = "block";
