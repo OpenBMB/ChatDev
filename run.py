@@ -18,7 +18,6 @@ import os
 import sys
 from typing import NoReturn, Tuple, List
 
-# Importing from camel.typing our supported Models
 from camel.typing import ModelType
 
 # Constants
@@ -27,19 +26,17 @@ CONFIG_DIR = os.path.join(ROOT_DIR, "CompanyConfig")
 DEFAULT_CONFIG_DIR = os.path.join(CONFIG_DIR, "Default")
 
 CONFIG_FILES = [
-    "ChatChainConfig.json", 
-    "PhaseConfig.json", 
+    "ChatChainConfig.json",
+    "PhaseConfig.json",
     "RoleConfig.json"
-    ]
+]
 
 sys.path.append(ROOT_DIR)
 
 from chatdev.chat_chain import ChatChain
 
 try:
-    from openai.types.chat.chat_completion_message_tool_call import (
-        ChatCompletionMessageToolCall,
-    )
+    from openai.types.chat.chat_completion_message_tool_call import ChatCompletionMessageToolCall
     from openai.types.chat.chat_completion_message import FunctionCall
 
     openai_new_api = True  # new openai api version
@@ -48,8 +45,7 @@ except ImportError:
     print(
         "Warning: Your OpenAI version is outdated. \n "
         "Please update as specified in requirement.txt. \n "
-        "The old API interface is deprecated and will no longer be supported."
-    )
+        "The old API interface is deprecated and will no longer be supported.")
 
 
 def get_model_choices() -> List[str]:
@@ -69,30 +65,24 @@ def parse_arguments() -> argparse.Namespace:
     Returns:
         argparse.Namespace: Parsed command-line arguments.
     """
-    parser = argparse.ArgumentParser(description="Startr.Team ChatChain")
-
+    parser = argparse.ArgumentParser(description='Startr.Team ChatChain')
+    
     args_config = {
-        "config": ("--config", str, "Default", "Specify the configuration file located under CompanyConfig/",),
-        "org":  ("--org", str, "DefaultOrganization", "Name of the organization. The software will be generated in WareHouse/name_org_timestamp.",),
-        "task": ("--task", str, "Develop a basic Website.", "Description of the project task."),
-        "name": ("--name", str,"Website","Name of software, your software will be generated in WareHouse/name_org_timestamp",),
-        "model":("--model", str, "", "GPT Model"),
-        "path": ("--path", str, "", "Directory for your files. Startr.Team will build on your software in the Incremental mode",),
+        'config': ('--config', str, "Default", "Name of config, which is used to load configuration under CompanyConfig/"),
+        'org': ('--org', str, "DefaultOrganization", "Name of organization, your software will be generated in WareHouse/name_org_timestamp"),
+        'task': ('--task', str, "Develop a basic Website.", "Prompt of software"),
+        'name': ('--name', str, "Website", "Name of software, your software will be generated in WareHouse/name_org_timestamp"),
+        'model': ('--model', str, "GPT_3_5_TURBO_NEW", "GPT Model"),
+        'path': ('--path', str, "", "Your file directory, Startr.Team will build upon your software in the Incremental mode"),
     }
-
+    
     for arg, (flag, type_, default, help_text) in args_config.items():
-        if arg == "model":
+        if arg == 'model':
             choices = get_model_choices()
-            parser.add_argument(
-                flag,
-                type=type_,
-                default=default,
-                choices=choices,
-                help=f"{help_text} (choices: {', '.join(choices)})",
-            )
+            parser.add_argument(flag, type=type_, default=default, choices=choices, help=f"{help_text} (choices: {', '.join(choices)})")
         else:
             parser.add_argument(flag, type=type_, default=default, help=help_text)
-
+    
     return parser.parse_args()
 
 
@@ -136,17 +126,13 @@ def check_api_key() -> NoReturn:
     Raises:
         SystemExit: If the API key is not set or is empty.
     """
-    if "OPENAI_API_KEY" not in os.environ or os.environ["OPENAI_API_KEY"] == "":
+    if 'OPENAI_API_KEY' not in os.environ or os.environ['OPENAI_API_KEY'] == "":
         print("\033[94m")
         print("Error: OPENAI_API_KEY environment variable is not set or is empty.")
         print("To fix, please set your OpenAI API key by doing one of the following:")
-        print('  1. Run `export OPENAI_API_KEY="your-api-key-here"` in your terminal.')
-        print("  2. Add `OPENAI_API_KEY=your-api-key-here`")
-        print("     to a new line in a `.env` file in your project's root directory.")
-        print("")
-        print(
-            "If you don't have an API key, sign up at https://platform.openai.com/signup"
-        )
+        print("  1. Run `export OPENAI_API_KEY=\"your-api-key-here\"` in your terminal.")
+        print("  2. Add `OPENAI_API_KEY=your-api-key-here` to a new line in a `.env` file in your project's root directory.")
+        print("If you don't have an API key, sign up at https://platform.openai.com/signup")
         print("\033[0m")
         sys.exit(1)
 
@@ -168,15 +154,15 @@ def main():
         project_name=args.name,
         org_name=args.org,
         model_type=ModelType[args.model],
-        code_path=args.path,
+        code_path=args.path
     )
 
     logging.basicConfig(
         filename=chat_chain.log_filepath,
         level=logging.INFO,
-        format="[%(asctime)s %(levelname)s] %(message)s",
-        datefmt="%Y-%d-%m %H:%M:%S",
-        encoding="utf-8",
+        format='[%(asctime)s %(levelname)s] %(message)s',
+        datefmt='%Y-%d-%m %H:%M:%S',
+        encoding="utf-8"
     )
 
     chat_chain.pre_processing()
