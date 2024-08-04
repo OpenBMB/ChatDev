@@ -11,4 +11,4 @@
 - numpy==1.19.2
 - pandas>=1.1.4
 - ```
-- According to the codes and file format listed above, write a requirements.txt file to specify the dependencies or packages required for the project to run properly.
+- Based on our project code and file format listed above, write a requirements.txt file to specify the dependencies or packages required for the project to run properly.

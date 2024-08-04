@@ -13,7 +13,7 @@ Welcome to SRDD (Software Requirement Description Dataset), a large prompted dat
     -   Category of this software
 - Details
 	-	check.csv # Check Results
-	-	data_ChatDev_format.sh # Data, in the format of executable shell scripts (in ChatDev)
+	-	data_WEB-AI-Startr.Team_format.sh # Data, in the format of executable shell scripts (in WEB-AI-Startr.Team)
 	-	data_attribute_format.csv # Data, in the format of csv, containing three columns, Name/Description/Category
 ## Category
 <p align="center">

@@ -347,7 +347,7 @@ then you should return a message in a format like \"<INFO> revised_version_of_th
             assistant_role_prompt="You are an professional prompt engineer that can improve user input prompt to make LLM better understand these prompts.",
             user_role_prompt="You are an user that want to use LLM to build software.",
             user_role_name="User",
-            task_type=TaskType.CHATDEV,
+            task_type=TaskType.STARTR_TEAM,
             task_prompt="Do prompt engineering on user query",
             with_task_specify=False,
             model_type=self.model_type,

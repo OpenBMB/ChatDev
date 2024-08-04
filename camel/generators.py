@@ -44,28 +44,28 @@ class SystemMessageGenerator:
             self.sys_msg_meta_dict_keys = sys_msg_meta_dict_keys or set()
         else:
             templates = PromptTemplateGenerator()
-            agenttech_prompt_template = templates.get_system_prompt(task_type, RoleType.CHATDEV)
-            counselor_prompt_template = templates.get_system_prompt(task_type, RoleType.CHATDEV_COUNSELOR)
-            ceo_prompt_template = templates.get_system_prompt(task_type, RoleType.CHATDEV_CEO)
-            chro_prompt_template = templates.get_system_prompt(task_type, RoleType.CHATDEV_CHRO)
-            cpo_prompt_template = templates.get_system_prompt(task_type, RoleType.CHATDEV_CPO)
-            cto_prompt_template = templates.get_system_prompt(task_type, RoleType.CHATDEV_CTO)
-            programmer_prompt_template = templates.get_system_prompt(task_type, RoleType.CHATDEV_PROGRAMMER)
-            reviewer_prompt_template = templates.get_system_prompt(task_type, RoleType.CHATDEV_REVIEWER)
-            tester_prompt_template = templates.get_system_prompt(task_type, RoleType.CHATDEV_TESTER)
-            cco_prompt_template = templates.get_system_prompt(task_type, RoleType.CHATDEV_CCO)
+            agenttech_prompt_template = templates.get_system_prompt(task_type, RoleType.STARTR_TEAM)
+            counselor_prompt_template = templates.get_system_prompt(task_type, RoleType.STARTR_TEAM_COUNSELOR)
+            ceo_prompt_template = templates.get_system_prompt(task_type, RoleType.STARTR_TEAM_CEO)
+            chro_prompt_template = templates.get_system_prompt(task_type, RoleType.STARTR_TEAM_CHRO)
+            cpo_prompt_template = templates.get_system_prompt(task_type, RoleType.STARTR_TEAM_CPO)
+            cto_prompt_template = templates.get_system_prompt(task_type, RoleType.STARTR_TEAM_CTO)
+            programmer_prompt_template = templates.get_system_prompt(task_type, RoleType.STARTR_TEAM_PROGRAMMER)
+            reviewer_prompt_template = templates.get_system_prompt(task_type, RoleType.STARTR_TEAM_REVIEWER)
+            tester_prompt_template = templates.get_system_prompt(task_type, RoleType.STARTR_TEAM_TESTER)
+            cco_prompt_template = templates.get_system_prompt(task_type, RoleType.STARTR_TEAM_CCO)
 
             self.sys_prompts = dict()
-            self.sys_prompts[RoleType.CHATDEV] = agenttech_prompt_template
-            self.sys_prompts[RoleType.CHATDEV_COUNSELOR] = counselor_prompt_template
-            self.sys_prompts[RoleType.CHATDEV_CEO] = ceo_prompt_template
-            self.sys_prompts[RoleType.CHATDEV_CHRO] = chro_prompt_template
-            self.sys_prompts[RoleType.CHATDEV_CPO] = cpo_prompt_template
-            self.sys_prompts[RoleType.CHATDEV_CTO] = cto_prompt_template
-            self.sys_prompts[RoleType.CHATDEV_PROGRAMMER] = programmer_prompt_template
-            self.sys_prompts[RoleType.CHATDEV_REVIEWER] = reviewer_prompt_template
-            self.sys_prompts[RoleType.CHATDEV_TESTER] = tester_prompt_template
-            self.sys_prompts[RoleType.CHATDEV_CCO] = cco_prompt_template
+            self.sys_prompts[RoleType.STARTR_TEAM] = agenttech_prompt_template
+            self.sys_prompts[RoleType.STARTR_TEAM_COUNSELOR] = counselor_prompt_template
+            self.sys_prompts[RoleType.STARTR_TEAM_CEO] = ceo_prompt_template
+            self.sys_prompts[RoleType.STARTR_TEAM_CHRO] = chro_prompt_template
+            self.sys_prompts[RoleType.STARTR_TEAM_CPO] = cpo_prompt_template
+            self.sys_prompts[RoleType.STARTR_TEAM_CTO] = cto_prompt_template
+            self.sys_prompts[RoleType.STARTR_TEAM_PROGRAMMER] = programmer_prompt_template
+            self.sys_prompts[RoleType.STARTR_TEAM_REVIEWER] = reviewer_prompt_template
+            self.sys_prompts[RoleType.STARTR_TEAM_TESTER] = tester_prompt_template
+            self.sys_prompts[RoleType.STARTR_TEAM_CCO] = cco_prompt_template
 
             self.sys_msg_meta_dict_keys = (agenttech_prompt_template.key_words |
                                            counselor_prompt_template.key_words |

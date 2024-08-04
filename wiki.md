@@ -2,7 +2,7 @@
 
 ## Quick Start Step By Step
 
-### 1. Install `ChatDev`:
+### 1. Install `WEB-AI-Startr.Team`:
 
 - Visit the [quickstart section](README.md#%EF%B8%8F-quickstart) of readme for installation instructions.
 
@@ -88,7 +88,7 @@ then start building a software by ``python3 run.py`` and go to [Visualizer Websi
 ![Replay](misc/replay.gif)
 
 ## Docker Start
-- You can use docker for a quick and safe use of ChatDev. You will need some extra steps to allow the execution of the GUI program in docker since Startr.Team often creates software with GUI and executes it in the Test Phase.
+- You can use docker for a quick and safe use of WEB-AI-Startr.Team. You will need some extra steps to allow the execution of the GUI program in docker since Startr.Team often creates software with GUI and executes it in the Test Phase.
 
 ### Install Docker
 - Please refer to the [Docker Official Website](https://www.docker.com/get-started/) for installing Docker.
@@ -113,14 +113,14 @@ then start building a software by ``python3 run.py`` and go to [Visualizer Websi
 ### Build Docker images
 - under the Startr.Team folder, run
     ```commandline
-    docker build -t chatdev:latest .
+    docker build -t WEB-AI-Startr.Team:latest .
     ```
-  it will generate a 400MB+ docker image named chatdev.
+  it will generate a 400MB+ docker image named WEB-AI-Startr.Team.
 
 ### Run Docker
 - run the following command to create and go into a container
     ```commandline
-    docker run -it -p 8000:8000 -e OPENAI_API_KEY=YOUR_OPENAI_KEY -e DISPLAY=YOUR_IP:0 chatdev:latest
+    docker run -it -p 8000:8000 -e OPENAI_API_KEY=YOUR_OPENAI_KEY -e DISPLAY=YOUR_IP:0 WEB-AI-Startr.Team:latest
     ```
   ⚠️ You need to replace ``YOUR_OPENAI_KEY`` with your key and replace ``YOUR_IP`` with your inet address.
 - Then you can just play with Startr.Team running ``python3 run.py``.
@@ -137,7 +137,7 @@ then start building a software by ``python3 run.py`` and go to [Visualizer Websi
 ## Experiential Co-Learning Guide
 ### Co-Tracking
 
-- **Start Co-Tracking**: Use the following command to initiate the building of software, replacing `[description_of_your_idea]` with task descirption and `[project_name]` with project name. This is the same as starting ChatDev.
+- **Start Co-Tracking**: Use the following command to initiate the building of software, replacing `[description_of_your_idea]` with task descirption and `[project_name]` with project name. This is the same as starting WEB-AI-Startr.Team.
    ```bash 
    python3 run.py --task "[description_of_your_idea]" --name "[project_name]"
    ```
@@ -216,24 +216,24 @@ Detailed descriptions and experiment results about this Experiential Co-Evolving
     - Customize ChatChain
     - Customize Phase
     - Customize Role
-- Here is the overview architecture of ChatDev, which illustrates the relationships among the above three classes:
+- Here is the overview architecture of WEB-AI-Startr.Team, which illustrates the relationships among the above three classes:
 
 ![arch](misc/arch.png)
 
-- All the configuration content related to Startr.Team (such as the background prompt of the agent employee, the work content of each Phase, and how the Phase is combined into a ChatChain), are called a **CompanyConfig** (because Startr.Team is like a virtual software company). These CompanyConfigs are in the Startr.Team project Under ``CompanyConfig/``. You can check this [directory](https://github.com/OpenBMB/ChatDev/tree/main/CompanyConfig). In this directory, you will see different CompanyConfig (such as Default, Art, Human). Generally speaking, each CompanyConfig will contain 3 configuration files.
-  1. ChatChainConfig.json, which controls the overall development process of ChatDev, including which Phase each step is, how many times each Phase needs to be cycled, whether reflection is needed, etc.
-  2. PhaseConfig.json, which controls each Phase, and corresponds to ``chatdev/phase.py`` or ``chatdev/composed_phase.py`` in the Startr.Team project. The Python file realizes the specific working logic of each phase. The JSON file here contains the configuration of each phase, such as the background prompt, which employees are participating in the phase, etc.
+- All the configuration content related to Startr.Team (such as the background prompt of the agent employee, the work content of each Phase, and how the Phase is combined into a ChatChain), are called a **CompanyConfig** (because Startr.Team is like a virtual software company). These CompanyConfigs are in the Startr.Team project Under ``CompanyConfig/``. You can check this [directory](https://github.com/OpenCoca/WEB-AI-Startr.Team/tree/main/CompanyConfig). In this directory, you will see different CompanyConfig (such as Default, Art, Human). Generally speaking, each CompanyConfig will contain 3 configuration files.
+  1. ChatChainConfig.json, which controls the overall development process of WEB-AI-Startr.Team, including which Phase each step is, how many times each Phase needs to be cycled, whether reflection is needed, etc.
+  2. PhaseConfig.json, which controls each Phase, and corresponds to ``WEB-AI-Startr.Team/phase.py`` or ``WEB-AI-Startr.Team/composed_phase.py`` in the Startr.Team project. The Python file realizes the specific working logic of each phase. The JSON file here contains the configuration of each phase, such as the background prompt, which employees are participating in the phase, etc.
   3. RoleConfig.json contains the configuration of each employee (agent). Currently, it only contains the background prompt of each employee, which is a bunch of text containing placeholders.
 - If a CompanyConfig does not contain all three configuration files (such as Art and Human), it means that the configuration files missing from this CompanyConfig are set according to Default. The official CompanyConfigs currently provided include:
   1. Default, default configuration
   2. Art, allows Startr.Team to create image files according to needs, automatically generate image description prompts and call the OpenAI API to generate images
-  3. Human, allowing human users to participate in ChatDev’s code review process
+  3. Human, allowing human users to participate in WEB-AI-Startr.Team’s code review process
 
 ### Customize ChatChain
 
 - see ``CompanyConfig/Default/ChatChainConfig.json``
-- You can easily pick and organize phases to formulate a ChatChain from all phases (from ``chatdev/phase.py``
-  or ``chatdev/composed_phase.py``)
+- You can easily pick and organize phases to formulate a ChatChain from all phases (from ``WEB-AI-Startr.Team/phase.py``
+  or ``WEB-AI-Startr.Team/composed_phase.py``)
   by modifying the JSON file
 
 ### Customize Phase
@@ -244,7 +244,7 @@ Detailed descriptions and experiment results about this Experiential Co-Evolving
       class
     - config this phase in ``PhaseConfig.json``, including writing phase prompt and assigning roles for this phase
 - Customize SimplePhase
-    - see ``CompanyConfig/Default/PhaseConfig.json`` for configuration, see ``chatdev/phase.py`` for implementing your
+    - see ``CompanyConfig/Default/PhaseConfig.json`` for configuration, see ``WEB-AI-Startr.Team/phase.py`` for implementing your
       own phase
     - each phase contains three steps:
         - generate phase environment from the whole ChatChain environment
@@ -292,7 +292,7 @@ Detailed descriptions and experiment results about this Experiential Co-Evolving
           }
           ```
     - Customize ComposePhase
-        - see ``CompanyConfig/Default/ChatChainConfig.json`` for configuration and see ``chatdev/composed_phase.py`` for
+        - see ``CompanyConfig/Default/ChatChainConfig.json`` for configuration and see ``WEB-AI-Startr.Team/composed_phase.py`` for
           implementation.
         - **⚠️ Attention** We do not support Nested Composition yet so do not put ComposePhase in ComposePhase.
         - ComposePhase contains multiple SimplePhase, and can be conducted in loop.
@@ -369,14 +369,14 @@ Detailed descriptions and experiment results about this Experiential Co-Evolving
 ## Project Structure
 
 ```commandline
-├── CompanyConfig # Configuration Files for ChatDev, including ChatChain, Phase and Role config json.
+├── CompanyConfig # Configuration Files for WEB-AI-Startr.Team, including ChatChain, Phase and Role config json.
 ├── WareHouse # Folder for Generated Software
 ├── camel # Camel RolePlay Component
-├── chatdev # Startr.Team Core Code
+├── WEB-AI-Startr.Team # Startr.Team Core Code
 ├── ecl # Experiential Co-Learning Module
 ├── misc # Assets of Example and Demo
 ├── visualizer # Visualizer Folder
-├── run.py # Entry of ChatDev
+├── run.py # Entry of WEB-AI-Startr.Team
 ├── requirements.txt
 ├── README.md
 └── wiki.md
@@ -408,7 +408,7 @@ Detailed descriptions and experiment results about this Experiential Co-Evolving
 - Compared to Default, in ***Human-Agent-Interaction*** mode you can play as a reviewer and ask the programmer agent to modify the code based on your comments.
 - It adds a Phase called HumanAgentInteraction after the  dCodeReview Phase.
 - You can use ***Human-Agent-Interaction*** setting using ``python3 run.py --config "Human"``.
-- When chatdev executes to this Phase, on the command interface you will see a hint that asks for input.
+- When WEB-AI-Startr.Team executes to this Phase, on the command interface you will see a hint that asks for input.
 - You can run your software in the ``WareHouse/`` and see if it satisfies your needs. Then you can type anything you want (bug fix or new feature) in the command interface, then press Enter:
 ![Human_command](misc/Human_command.png)
 - For example

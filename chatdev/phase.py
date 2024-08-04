@@ -55,7 +55,7 @@ class Phase(ABC):
             phase_name: str,
             assistant_role_prompt: str,
             user_role_prompt: str,
-            task_type=TaskType.CHATDEV,
+            task_type=TaskType.STARTR_TEAM,
             need_reflect=False,
             with_task_specify=False,
             model_type=ModelType.GPT_3_5_TURBO,
@@ -212,7 +212,7 @@ class Phase(ABC):
         elif phase_name == "LanguageChoose":
             question = """Conclude the programming language being discussed for software development, in the format: "*" where '*' represents a programming language." """
         elif phase_name == "EnvironmentDoc":
-            question = """According to the codes and file format listed above, write a requirements.txt file to specify the dependencies or packages required for the project to run properly." """
+            question = """Based on our project code and file format listed above, write a requirements.txt file to specify the dependencies or packages required for the project to run properly." """
         else:
             raise ValueError(f"Reflection of phase {phase_name}: Not Assigned.")
 
