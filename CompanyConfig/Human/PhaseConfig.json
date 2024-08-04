@@ -59,7 +59,7 @@
     "assistant_role_name": "Programmer",
     "user_role_name": "Chief Creative Officer",
     "phase_prompt": [
-      "Our developed source codes and corresponding test reports are listed below: ",
+      "Our developed source code and corresponding test reports are listed below: ",
       "Task: \"{task}\".",
       "Programming Language: \"{language}\"",
       "Source Codes:",
@@ -86,7 +86,7 @@
     "assistant_role_name": "Programmer",
     "user_role_name": "Chief Creative Officer",
     "phase_prompt": [
-      "Our developed source codes and corresponding test reports are listed below: ",
+      "Our developed source code and corresponding test reports are listed below: ",
       "Task: \"{task}\".",
       "Programming Language: \"{language}\"",
       "Source Codes:",
@@ -105,7 +105,7 @@
       "```",
       "self.image = ImageTk.PhotoImage(Image.open(\"./image.png\").resize((50, 50)))",
       "```",
-      "Now, use some or all of the pictures into the GUI to make it more beautiful and creative. Output codes strictly following the required format mentioned above."
+      "Now, use some or all of the pictures into the GUI to make it more beautiful and creative. Output code strictly following the required format mentioned above."
     ]
   },
   "CodeComplete": {
@@ -128,7 +128,7 @@
       "'''",
       "CODE",
       "```",
-      "As the {assistant_role}, to satisfy the complete function of our developed software, you have to implement all methods in the {unimplemented_file} file which contains a unimplemented class. Now, implement all methods of the {unimplemented_file} and all other codes needed, then output the fully implemented codes, strictly following the required format."
+      "As the {assistant_role}, to satisfy the complete function of our developed software, you have to implement all methods in the {unimplemented_file} file which contains a unimplemented class. Now, implement all methods of the {unimplemented_file} and all other code needed, then output the fully implemented codes, strictly following the required format."
     ]
   },
   "CodeReviewComment": {
@@ -149,14 +149,14 @@
       "4) no potential bugs;",
       "5) The entire project conforms to the tasks proposed by the user;",
       "6) most importantly, do not only check the errors in the code, but also the logic of code. Make sure that user can interact with generated software without losing any feature in the requirement;",
-      "Now, you should check the above regulations one by one and review the codes in detail, propose one comment with the highest priority about the codes, and give me instructions on how to fix. Tell me your comment with the highest priority and corresponding suggestions on revision. If the code is perfect and you have no comment for any of it, return only one line like \"<INFO> Finished\"."
+      "Now, you should check the above regulations one by one and review the code in detail, propose one comment with the highest priority about the codes, and give me instructions on how to fix. Tell me your comment with the highest priority and corresponding suggestions on revision. If the code is perfect and you have no comment for any of it, return only one line like \"<INFO> Finished\"."
     ]
   },
   "CodeReviewModification": {
     "assistant_role_name": "Programmer",
     "user_role_name": "Code Reviewer",
     "phase_prompt": [
-      "According to the new user's task, our designed product modality, languages and ideas, our developed first-edition source codes are listed below: ",
+      "According to the new user's task, our designed product modality, languages and ideas, our developed first-edition source code are listed below: ",
       "Task: \"{task}\".",
       "Modality: \"{modality}\".",
       "Programming Language: \"{language}\"",
@@ -173,14 +173,14 @@
       "'''",
       "CODE",
       "```",
-      "As the {assistant_role}, to satisfy the new user's demand and make the software creative, executive and robust, you should modify corresponding codes according to the comments. Then, output the full and complete codes with all bugs fixed based on the comments. Return all codes strictly following the required format."
+      "As the {assistant_role}, to satisfy the new user's demand and make the software creative, executive and robust, you should modify corresponding code according to the comments. Then, output the full and complete code with all bugs fixed based on the comments. Return all code strictly following the required format."
     ]
   },
   "CodeReviewHuman": {
     "assistant_role_name": "Programmer",
     "user_role_name": "Code Reviewer",
     "phase_prompt": [
-      "According to the new user's task, our designed product modality and three creative ideas, our developed first-edition source codes are listed below: ",
+      "According to the new user's task, our designed product modality and three creative ideas, our developed first-edition source code are listed below: ",
       "Task: \"{task}\".",
       "Modality: \"{modality}\".",
       "Programming Language: \"{language}\"",
@@ -197,14 +197,14 @@
       "'''",
       "CODE",
       "```",
-      "As the {assistant_role}, to satisfy the new user's demand and make the software creative, executive and robust, you should modify corresponding codes according to the comments. Then, output the full and complete codes with all bugs fixed based on the comments. Return all codes strictly following the required format."
+      "As the {assistant_role}, to satisfy the new user's demand and make the software creative, executive and robust, you should modify corresponding code according to the comments. Then, output the full and complete code with all bugs fixed based on the comments. Return all code strictly following the required format."
     ]
   },
   "TestErrorSummary": {
     "assistant_role_name": "Programmer",
     "user_role_name": "Software Test Engineer",
     "phase_prompt": [
-      "Our developed source codes and corresponding test reports are listed below: ",
+      "Our developed source code and corresponding test reports are listed below: ",
       "Programming Language: \"{language}\"",
       "Source Codes:",
       "\"{codes}\"",
@@ -217,7 +217,7 @@
     "assistant_role_name": "Programmer",
     "user_role_name": "Software Test Engineer",
     "phase_prompt": [
-      "Our developed source codes and corresponding test reports are listed below: ",
+      "Our developed source code and corresponding test reports are listed below: ",
       "Programming Language: \"{language}\"",
       "Source Codes:",
       "\"{codes}\"",
@@ -233,14 +233,14 @@
       "'''",
       "CODE",
       "```",
-      "As the {assistant_role}, to satisfy the new user's demand and make the software execute smoothly and robustly, you should modify the codes based on the error summary. Now, use the format exemplified above and modify the problematic codes based on the error summary. Output the codes that you fixed based on the test reported and corresponding explanations (strictly follow the format defined above, including FILENAME, LANGUAGE, DOCSTRING and CODE; incomplete \"TODO\" codes are strictly prohibited). If no bugs are reported, please return only one line like \"<INFO> Finished\"."
+      "As the {assistant_role}, to satisfy the new user's demand and make the software execute smoothly and robustly, you should modify the code based on the error summary. Now, use the format exemplified above and modify the problematic code based on the error summary. Output the code that you fixed based on the test reported and corresponding explanations (strictly follow the format defined above, including FILENAME, LANGUAGE, DOCSTRING and CODE; incomplete \"TODO\" code are strictly prohibited). If no bugs are reported, please return only one line like \"<INFO> Finished\"."
     ]
   },
   "EnvironmentDoc": {
     "assistant_role_name": "Programmer",
     "user_role_name": "Chief Technology Officer",
     "phase_prompt": [
-      "The new user's task and our developed codes are listed: ",
+      "The new user's task and our developed code are listed: ",
       "Task: \"{task}\".",
       "Modality: \"{modality}\".",
       "Programming Language: \"{language}\"",
@@ -260,7 +260,7 @@
     "assistant_role_name": "Chief Product Officer",
     "user_role_name": "Chief Executive Officer",
     "phase_prompt": [
-      "The new user's task, our developed codes and required dependencies are listed: ",
+      "The new user's task, our developed code and required dependencies are listed: ",
       "Task: \"{task}\".",
       "Modality: \"{modality}\".",
       "Programming Language: \"{language}\"",
