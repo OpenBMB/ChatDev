@@ -30,9 +30,9 @@ except ImportError:
 
 import os
 
-OPENAI_API_KEY = os.environ['OPENAI_API_KEY']
-if 'BASE_URL' in os.environ:
-    BASE_URL = os.environ['BASE_URL']
+OPENAI_API_KEY = os.environ["OPENAI_API_KEY"]
+if "BASE_URL" in os.environ:
+    BASE_URL = os.environ["BASE_URL"]
 else:
     BASE_URL = None
 
@@ -78,9 +78,7 @@ class OpenAIModel(ModelBackend):
                     base_url=BASE_URL,
                 )
             else:
-                client = openai.OpenAI(
-                    api_key=OPENAI_API_KEY
-                )
+                client = openai.OpenAI(api_key=OPENAI_API_KEY)
 
             num_max_token_map = {
                 "gpt-3.5-turbo": 4096,
@@ -96,21 +94,26 @@ class OpenAIModel(ModelBackend):
             }
             num_max_token = num_max_token_map[self.model_type.value]
             num_max_completion_tokens = num_max_token - num_prompt_tokens
-            self.model_config_dict['max_tokens'] = num_max_completion_tokens
+            self.model_config_dict["max_tokens"] = num_max_completion_tokens
 
-            response = client.chat.completions.create(*args, **kwargs, model=self.model_type.value,
-                                                      **self.model_config_dict)
+            response = client.chat.completions.create(
+                *args, **kwargs, model=self.model_type.value, **self.model_config_dict
+            )
 
             cost = prompt_cost(
                 self.model_type.value,
                 num_prompt_tokens=response.usage.prompt_tokens,
-                num_completion_tokens=response.usage.completion_tokens
+                num_completion_tokens=response.usage.completion_tokens,
             )
 
             log_visualize(
                 "**[OpenAI_Usage_Info Receive]**\nprompt_tokens: {}\ncompletion_tokens: {}\ntotal_tokens: {}\ncost: ${:.6f}\n".format(
-                    response.usage.prompt_tokens, response.usage.completion_tokens,
-                    response.usage.total_tokens, cost))
+                    response.usage.prompt_tokens,
+                    response.usage.completion_tokens,
+                    response.usage.total_tokens,
+                    cost,
+                )
+            )
             if not isinstance(response, ChatCompletion):
                 raise RuntimeError("Unexpected return from OpenAI API")
             return response
@@ -127,21 +130,26 @@ class OpenAIModel(ModelBackend):
             }
             num_max_token = num_max_token_map[self.model_type.value]
             num_max_completion_tokens = num_max_token - num_prompt_tokens
-            self.model_config_dict['max_tokens'] = num_max_completion_tokens
+            self.model_config_dict["max_tokens"] = num_max_completion_tokens
 
-            response = openai.ChatCompletion.create(*args, **kwargs, model=self.model_type.value,
-                                                    **self.model_config_dict)
+            response = openai.ChatCompletion.create(
+                *args, **kwargs, model=self.model_type.value, **self.model_config_dict
+            )
 
             cost = prompt_cost(
                 self.model_type.value,
                 num_prompt_tokens=response["usage"]["prompt_tokens"],
-                num_completion_tokens=response["usage"]["completion_tokens"]
+                num_completion_tokens=response["usage"]["completion_tokens"],
             )
 
             log_visualize(
                 "**[OpenAI_Usage_Info Receive]**\nprompt_tokens: {}\ncompletion_tokens: {}\ntotal_tokens: {}\ncost: ${:.6f}\n".format(
-                    response["usage"]["prompt_tokens"], response["usage"]["completion_tokens"],
-                    response["usage"]["total_tokens"], cost))
+                    response["usage"]["prompt_tokens"],
+                    response["usage"]["completion_tokens"],
+                    response["usage"]["total_tokens"],
+                    cost,
+                )
+            )
             if not isinstance(response, Dict):
                 raise RuntimeError("Unexpected return from OpenAI API")
             return response
@@ -160,8 +168,10 @@ class StubModel(ModelBackend):
             id="stub_model_id",
             usage=dict(),
             choices=[
-                dict(finish_reason="stop",
-                     message=dict(content=ARBITRARY_STRING, role="assistant"))
+                dict(
+                    finish_reason="stop",
+                    message=dict(content=ARBITRARY_STRING, role="assistant"),
+                )
             ],
         )
 
@@ -184,7 +194,7 @@ class ModelFactory:
             ModelType.GPT_4_32k,
             ModelType.GPT_4_TURBO,
             ModelType.GPT_4_TURBO_V,
-            None
+            None,
         }:
             model_class = OpenAIModel
         elif model_type == ModelType.STUB:

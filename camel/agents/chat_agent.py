@@ -29,6 +29,7 @@ from camel.utils import (
     openai_api_key_required,
 )
 from chatdev.utils import log_visualize
+
 try:
     from openai.types.chat import ChatCompletion
 
@@ -57,12 +58,18 @@ class ChatAgentResponse:
     @property
     def msg(self):
         if self.terminated:
-            raise RuntimeError("error in ChatAgentResponse, info:{}".format(str(self.info)))
+            raise RuntimeError(
+                "error in ChatAgentResponse, info:{}".format(str(self.info))
+            )
         if len(self.msgs) > 1:
-            raise RuntimeError("Property msg is only available for a single message in msgs")
+            raise RuntimeError(
+                "Property msg is only available for a single message in msgs"
+            )
         elif len(self.msgs) == 0:
             if len(self.info) > 0:
-                raise RuntimeError("Empty msgs in ChatAgentResponse, info:{}".format(str(self.info)))
+                raise RuntimeError(
+                    "Empty msgs in ChatAgentResponse, info:{}".format(str(self.info))
+                )
             else:
                 # raise RuntimeError("Known issue that msgs is empty and there is no error info, to be fix")
                 return None
@@ -85,26 +92,32 @@ class ChatAgent(BaseAgent):
     """
 
     def __init__(
-            self,
-            system_message: SystemMessage,
-            memory = None,
-            model: Optional[ModelType] = None,
-            model_config: Optional[Any] = None,
-            message_window_size: Optional[int] = None,
+        self,
+        system_message: SystemMessage,
+        memory=None,
+        model: Optional[ModelType] = None,
+        model_config: Optional[Any] = None,
+        message_window_size: Optional[int] = None,
     ) -> None:
 
         self.system_message: SystemMessage = system_message
         self.role_name: str = system_message.role_name
         self.role_type: RoleType = system_message.role_type
-        self.model: ModelType = (model if model is not None else ModelType.GPT_3_5_TURBO)
+        self.model: ModelType = model if model is not None else ModelType.GPT_3_5_TURBO
         self.model_config: ChatGPTConfig = model_config or ChatGPTConfig()
         self.model_token_limit: int = get_model_token_limit(self.model)
         self.message_window_size: Optional[int] = message_window_size
-        self.model_backend: ModelBackend = ModelFactory.create(self.model, self.model_config.__dict__)
+        self.model_backend: ModelBackend = ModelFactory.create(
+            self.model, self.model_config.__dict__
+        )
         self.terminated: bool = False
         self.info: bool = False
         self.init_messages()
-        if memory !=None and self.role_name in["Code Reviewer","Programmer","Software Test Engineer"]:
+        if memory != None and self.role_name in [
+            "Code Reviewer",
+            "Programmer",
+            "Software Test Engineer",
+        ]:
             self.memory = memory.memory_data.get("All")
         else:
             self.memory = None
@@ -121,11 +134,11 @@ class ChatAgent(BaseAgent):
         return self.stored_messages
 
     def get_info(
-            self,
-            id: Optional[str],
-            usage: Optional[Dict[str, int]],
-            termination_reasons: List[str],
-            num_tokens: int,
+        self,
+        id: Optional[str],
+        usage: Optional[Dict[str, int]],
+        termination_reasons: List[str],
+        num_tokens: int,
     ) -> Dict[str, Any]:
         r"""Returns a dictionary containing information about the chat session.
 
@@ -165,47 +178,54 @@ class ChatAgent(BaseAgent):
         """
         self.stored_messages.append(message)
         return self.stored_messages
-    def use_memory(self,input_message) -> List[MessageType]:
-        if self.memory is None :
+
+    def use_memory(self, input_message) -> List[MessageType]:
+        if self.memory is None:
             return None
         else:
             if self.role_name == "Programmer":
-                result = self.memory.memory_retrieval(input_message,"code")
+                result = self.memory.memory_retrieval(input_message, "code")
                 if result != None:
-                    target_memory,distances, mids,task_list,task_dir_list = result
+                    target_memory, distances, mids, task_list, task_dir_list = result
                     if target_memory != None and len(target_memory) != 0:
-                        target_memory="".join(target_memory)
-                        #self.stored_messages[-1].content = self.stored_messages[-1].content+"Here is some code you've previously completed:"+target_memory+"You can refer to the previous script to complement this task."
-                        log_visualize(self.role_name,
-                                            "thinking back and found some related code: \n--------------------------\n"
-                                            + target_memory)
+                        target_memory = "".join(target_memory)
+                        # self.stored_messages[-1].content = self.stored_messages[-1].content+"Here is some code you've previously completed:"+target_memory+"You can refer to the previous script to complement this task."
+                        log_visualize(
+                            self.role_name,
+                            "thinking back and found some related code: \n--------------------------\n"
+                            + target_memory,
+                        )
                 else:
                     target_memory = None
-                    log_visualize(self.role_name,
-                                         "thinking back but find nothing useful")
+                    log_visualize(
+                        self.role_name, "thinking back but find nothing useful"
+                    )
 
             else:
                 result = self.memory.memory_retrieval(input_message, "text")
                 if result != None:
                     target_memory, distances, mids, task_list, task_dir_list = result
                     if target_memory != None and len(target_memory) != 0:
-                        target_memory=";".join(target_memory)
-                        #self.stored_messages[-1].content = self.stored_messages[-1].content+"Here are some effective and efficient instructions you have sent to the assistant :"+target_memory+"You can refer to these previous excellent instructions to better instruct assistant here."
-                        log_visualize(self.role_name,
-                                            "thinking back and found some related text: \n--------------------------\n"
-                                            + target_memory)
+                        target_memory = ";".join(target_memory)
+                        # self.stored_messages[-1].content = self.stored_messages[-1].content+"Here are some effective and efficient instructions you have sent to the assistant :"+target_memory+"You can refer to these previous excellent instructions to better instruct assistant here."
+                        log_visualize(
+                            self.role_name,
+                            "thinking back and found some related text: \n--------------------------\n"
+                            + target_memory,
+                        )
                 else:
                     target_memory = None
-                    log_visualize(self.role_name,
-                                         "thinking back but find nothing useful")
+                    log_visualize(
+                        self.role_name, "thinking back but find nothing useful"
+                    )
 
         return target_memory
 
     @retry(wait=wait_exponential(min=5, max=60), stop=stop_after_attempt(5))
     @openai_api_key_required
     def step(
-            self,
-            input_message: ChatMessage,
+        self,
+        input_message: ChatMessage,
     ) -> ChatAgentResponse:
         r"""Performs a single step in the chat session by generating a response
         to the input message.
@@ -220,10 +240,11 @@ class ChatAgent(BaseAgent):
                 session.
         """
         messages = self.update_messages(input_message)
-        if self.message_window_size is not None and len(
-                messages) > self.message_window_size:
-            messages = [self.system_message
-                        ] + messages[-self.message_window_size:]
+        if (
+            self.message_window_size is not None
+            and len(messages) > self.message_window_size
+        ):
+            messages = [self.system_message] + messages[-self.message_window_size :]
         openai_messages = [message.to_openai_message() for message in messages]
         num_tokens = num_tokens_from_messages(openai_messages, self.model)
 
@@ -241,8 +262,12 @@ class ChatAgent(BaseAgent):
                 if not isinstance(response, ChatCompletion):
                     raise RuntimeError("OpenAI returned unexpected struct")
                 output_messages = [
-                    ChatMessage(role_name=self.role_name, role_type=self.role_type,
-                                meta_dict=dict(), **dict(choice.message))
+                    ChatMessage(
+                        role_name=self.role_name,
+                        role_type=self.role_type,
+                        meta_dict=dict(),
+                        **dict(choice.message),
+                    )
                     for choice in response.choices
                 ]
                 info = self.get_info(
@@ -255,8 +280,12 @@ class ChatAgent(BaseAgent):
                 if not isinstance(response, dict):
                     raise RuntimeError("OpenAI returned unexpected struct")
                 output_messages = [
-                    ChatMessage(role_name=self.role_name, role_type=self.role_type,
-                                meta_dict=dict(), **dict(choice["message"]))
+                    ChatMessage(
+                        role_name=self.role_name,
+                        role_type=self.role_type,
+                        meta_dict=dict(),
+                        **dict(choice["message"]),
+                    )
                     for choice in response["choices"]
                 ]
                 info = self.get_info(

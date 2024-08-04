@@ -44,16 +44,36 @@ class SystemMessageGenerator:
             self.sys_msg_meta_dict_keys = sys_msg_meta_dict_keys or set()
         else:
             templates = PromptTemplateGenerator()
-            agenttech_prompt_template = templates.get_system_prompt(task_type, RoleType.STARTR_TEAM)
-            counselor_prompt_template = templates.get_system_prompt(task_type, RoleType.STARTR_TEAM_COUNSELOR)
-            ceo_prompt_template = templates.get_system_prompt(task_type, RoleType.STARTR_TEAM_CEO)
-            chro_prompt_template = templates.get_system_prompt(task_type, RoleType.STARTR_TEAM_CHRO)
-            cpo_prompt_template = templates.get_system_prompt(task_type, RoleType.STARTR_TEAM_CPO)
-            cto_prompt_template = templates.get_system_prompt(task_type, RoleType.STARTR_TEAM_CTO)
-            programmer_prompt_template = templates.get_system_prompt(task_type, RoleType.STARTR_TEAM_PROGRAMMER)
-            reviewer_prompt_template = templates.get_system_prompt(task_type, RoleType.STARTR_TEAM_REVIEWER)
-            tester_prompt_template = templates.get_system_prompt(task_type, RoleType.STARTR_TEAM_TESTER)
-            cco_prompt_template = templates.get_system_prompt(task_type, RoleType.STARTR_TEAM_CCO)
+            agenttech_prompt_template = templates.get_system_prompt(
+                task_type, RoleType.STARTR_TEAM
+            )
+            counselor_prompt_template = templates.get_system_prompt(
+                task_type, RoleType.STARTR_TEAM_COUNSELOR
+            )
+            ceo_prompt_template = templates.get_system_prompt(
+                task_type, RoleType.STARTR_TEAM_CEO
+            )
+            chro_prompt_template = templates.get_system_prompt(
+                task_type, RoleType.STARTR_TEAM_CHRO
+            )
+            cpo_prompt_template = templates.get_system_prompt(
+                task_type, RoleType.STARTR_TEAM_CPO
+            )
+            cto_prompt_template = templates.get_system_prompt(
+                task_type, RoleType.STARTR_TEAM_CTO
+            )
+            programmer_prompt_template = templates.get_system_prompt(
+                task_type, RoleType.STARTR_TEAM_PROGRAMMER
+            )
+            reviewer_prompt_template = templates.get_system_prompt(
+                task_type, RoleType.STARTR_TEAM_REVIEWER
+            )
+            tester_prompt_template = templates.get_system_prompt(
+                task_type, RoleType.STARTR_TEAM_TESTER
+            )
+            cco_prompt_template = templates.get_system_prompt(
+                task_type, RoleType.STARTR_TEAM_CCO
+            )
 
             self.sys_prompts = dict()
             self.sys_prompts[RoleType.STARTR_TEAM] = agenttech_prompt_template
@@ -62,21 +82,25 @@ class SystemMessageGenerator:
             self.sys_prompts[RoleType.STARTR_TEAM_CHRO] = chro_prompt_template
             self.sys_prompts[RoleType.STARTR_TEAM_CPO] = cpo_prompt_template
             self.sys_prompts[RoleType.STARTR_TEAM_CTO] = cto_prompt_template
-            self.sys_prompts[RoleType.STARTR_TEAM_PROGRAMMER] = programmer_prompt_template
+            self.sys_prompts[
+                RoleType.STARTR_TEAM_PROGRAMMER
+            ] = programmer_prompt_template
             self.sys_prompts[RoleType.STARTR_TEAM_REVIEWER] = reviewer_prompt_template
             self.sys_prompts[RoleType.STARTR_TEAM_TESTER] = tester_prompt_template
             self.sys_prompts[RoleType.STARTR_TEAM_CCO] = cco_prompt_template
 
-            self.sys_msg_meta_dict_keys = (agenttech_prompt_template.key_words |
-                                           counselor_prompt_template.key_words |
-                                           ceo_prompt_template.key_words |
-                                           chro_prompt_template.key_words |
-                                           cpo_prompt_template.key_words |
-                                           cto_prompt_template.key_words |
-                                           programmer_prompt_template.key_words |
-                                           reviewer_prompt_template.key_words |
-                                           tester_prompt_template.key_words |
-                                           cco_prompt_template.key_words)
+            self.sys_msg_meta_dict_keys = (
+                agenttech_prompt_template.key_words
+                | counselor_prompt_template.key_words
+                | ceo_prompt_template.key_words
+                | chro_prompt_template.key_words
+                | cpo_prompt_template.key_words
+                | cto_prompt_template.key_words
+                | programmer_prompt_template.key_words
+                | reviewer_prompt_template.key_words
+                | tester_prompt_template.key_words
+                | cco_prompt_template.key_words
+            )
 
         if RoleType.DEFAULT not in self.sys_prompts:
             self.sys_prompts[RoleType.DEFAULT] = "You are a helpful assistant."
@@ -88,9 +112,11 @@ class SystemMessageGenerator:
             meta_dict (Dict[str, str]): The dictionary to validate.
         """
         if not set(meta_dict.keys()).issubset(self.sys_msg_meta_dict_keys):
-            raise ValueError("The keys of the meta_dict should be in "
-                             f"{self.sys_msg_meta_dict_keys}. "
-                             f"Got {set(meta_dict.keys())} instead.")
+            raise ValueError(
+                "The keys of the meta_dict should be in "
+                f"{self.sys_msg_meta_dict_keys}. "
+                f"Got {set(meta_dict.keys())} instead."
+            )
 
     def from_dict(
         self,
@@ -113,8 +139,12 @@ class SystemMessageGenerator:
         sys_prompt = self.sys_prompts[role_type]
         sys_prompt = sys_prompt.format(**meta_dict)
 
-        return SystemMessage(role_name=role_name, role_type=RoleType.DEFAULT,
-                             meta_dict=meta_dict, content=sys_prompt)
+        return SystemMessage(
+            role_name=role_name,
+            role_type=RoleType.DEFAULT,
+            meta_dict=meta_dict,
+            content=sys_prompt,
+        )
 
     def from_dicts(
         self,
@@ -138,7 +168,8 @@ class SystemMessageGenerator:
         """
         if len(meta_dicts) != len(role_tuples):
             raise ValueError(
-                "The number of meta_dicts and role_types should be the same.")
+                "The number of meta_dicts and role_types should be the same."
+            )
 
         return [
             self.from_dict(meta_dict, role_tuple)
@@ -147,19 +178,19 @@ class SystemMessageGenerator:
 
 
 class RoleNameGenerator:
-
-    def __init__(self, assistant_role_names_path:
-                 str = "data/ai_society/assistant_roles.txt",
-                 user_role_names_path: str = "data/ai_society/user_roles.txt",
-                 assistant_role_names: Optional[List[str]] = None,
-                 user_role_names: Optional[List[str]] = None) -> None:
+    def __init__(
+        self,
+        assistant_role_names_path: str = "data/ai_society/assistant_roles.txt",
+        user_role_names_path: str = "data/ai_society/user_roles.txt",
+        assistant_role_names: Optional[List[str]] = None,
+        user_role_names: Optional[List[str]] = None,
+    ) -> None:
 
         if assistant_role_names is None:
             with open(assistant_role_names_path, "r") as f:
                 assistant_role_names_: List[str] = f.read().splitlines()
                 self.assistant_role_names = [
-                    " ".join(name.split(" ")[1:])
-                    for name in assistant_role_names_
+                    " ".join(name.split(" ")[1:]) for name in assistant_role_names_
                 ]
         else:
             self.assistant_role_names = assistant_role_names
@@ -180,13 +211,13 @@ class RoleNameGenerator:
 
 
 class AISocietyTaskPromptGenerator:
-
     def __init__(
         self,
         num_tasks: int = 10,
     ) -> None:
-        self.generate_tasks_prompt = PromptTemplateGenerator(
-        ).get_generate_tasks_prompt(TaskType.AI_SOCIETY)
+        self.generate_tasks_prompt = (
+            PromptTemplateGenerator().get_generate_tasks_prompt(TaskType.AI_SOCIETY)
+        )
 
         self.num_tasks = num_tasks
 
@@ -194,14 +225,15 @@ class AISocietyTaskPromptGenerator:
     def from_role_files(
         self,
         assistant_role_names_path: str = "data/ai_society/assistant_roles.txt",
-        user_role_names_path: str = "data/ai_society/user_roles.txt"
+        user_role_names_path: str = "data/ai_society/user_roles.txt",
     ) -> Generator[Tuple[str, Tuple[str, str]], None, None]:
         roles_generator = RoleNameGenerator(
-            assistant_role_names_path, user_role_names_path).from_role_files()
+            assistant_role_names_path, user_role_names_path
+        ).from_role_files()
         for role_1, role_2 in roles_generator:
             generate_tasks_prompt = self.generate_tasks_prompt.format(
-                assistant_role=role_1, user_role=role_2,
-                num_tasks=self.num_tasks)
+                assistant_role=role_1, user_role=role_2, num_tasks=self.num_tasks
+            )
 
             yield (generate_tasks_prompt, (role_1, role_2))
 
@@ -210,14 +242,13 @@ class AISocietyTaskPromptGenerator:
     ) -> Generator[Tuple[str, Tuple[str, str]], None, None]:
         for role_1, role_2 in role_generator:
             generate_tasks_prompt = self.generate_tasks_prompt.format(
-                assistant_role=role_1, user_role=role_2,
-                num_tasks=self.num_tasks)
+                assistant_role=role_1, user_role=role_2, num_tasks=self.num_tasks
+            )
 
             yield (generate_tasks_prompt, (role_1, role_2))
 
 
 class SingleTxtGenerator:
-
     def __init__(
         self,
         text_file_path: str,
@@ -225,9 +256,7 @@ class SingleTxtGenerator:
 
         with open(text_file_path, "r") as f:
             data_list: List[str] = f.read().splitlines()
-            self.data_list = [
-                " ".join(name.split(" ")[1:]) for name in data_list
-            ]
+            self.data_list = [" ".join(name.split(" ")[1:]) for name in data_list]
 
     def from_role_files(self) -> Generator[str, None, None]:
         for data in self.data_list:
@@ -235,30 +264,30 @@ class SingleTxtGenerator:
 
 
 class CodeTaskPromptGenerator:
-
     def __init__(
         self,
         num_tasks: int = 50,
     ) -> None:
 
-        self.generate_tasks_prompt = PromptTemplateGenerator(
-        ).get_generate_tasks_prompt(TaskType.CODE)
+        self.generate_tasks_prompt = (
+            PromptTemplateGenerator().get_generate_tasks_prompt(TaskType.CODE)
+        )
 
         self.num_tasks = num_tasks
 
     def from_role_files(
-        self, languages_path: str = "data/code/languages.txt",
-        domains_path: str = "data/code/domains.txt"
+        self,
+        languages_path: str = "data/code/languages.txt",
+        domains_path: str = "data/code/domains.txt",
     ) -> Generator[Tuple[TextPrompt, str, str], None, None]:
-        language_generator = SingleTxtGenerator(
-            languages_path).from_role_files()
+        language_generator = SingleTxtGenerator(languages_path).from_role_files()
 
         for language in language_generator:
-            domains_generator = SingleTxtGenerator(
-                domains_path).from_role_files()
+            domains_generator = SingleTxtGenerator(domains_path).from_role_files()
             for domain in domains_generator:
                 generated_tasks_prompt = self.generate_tasks_prompt.format(
-                    language=language, domain=domain, num_tasks=self.num_tasks)
+                    language=language, domain=domain, num_tasks=self.num_tasks
+                )
                 yield generated_tasks_prompt, language, domain
 
     def from_role_generator(

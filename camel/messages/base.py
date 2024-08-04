@@ -25,7 +25,9 @@ from camel.prompts import CodePrompt, TextPrompt
 from camel.typing import ModelType, RoleType
 
 try:
-    from openai.types.chat.chat_completion_message_tool_call import ChatCompletionMessageToolCall
+    from openai.types.chat.chat_completion_message_tool_call import (
+        ChatCompletionMessageToolCall,
+    )
     from openai.types.chat.chat_completion_message import FunctionCall
 
     openai_new_api = True  # new openai api version
@@ -66,11 +68,9 @@ class BaseMessage:
         Returns:
             Any: The attribute value.
         """
-        delegate_methods = [
-            method for method in dir(str) if not method.startswith('_')
-        ]
+        delegate_methods = [method for method in dir(str) if not method.startswith("_")]
         if name in delegate_methods:
-            content = super().__getattribute__('content')
+            content = super().__getattribute__("content")
             if isinstance(content, str):
                 content_method = getattr(content, name, None)
                 if callable(content_method):
@@ -102,14 +102,13 @@ class BaseMessage:
                             Any: The result of the delegate method.
                         """
                         modified_args = [modify_arg(arg) for arg in args]
-                        modified_kwargs = {
-                            k: modify_arg(v)
-                            for k, v in kwargs.items()
-                        }
-                        output = content_method(*modified_args,
-                                                **modified_kwargs)
-                        return self._create_new_instance(output) if isinstance(
-                            output, str) else output
+                        modified_kwargs = {k: modify_arg(v) for k, v in kwargs.items()}
+                        output = content_method(*modified_args, **modified_kwargs)
+                        return (
+                            self._create_new_instance(output)
+                            if isinstance(output, str)
+                            else output
+                        )
 
                     return wrapper
 
@@ -125,10 +124,13 @@ class BaseMessage:
         Returns:
             BaseMessage: The new instance of :obj:`BaseMessage`.
         """
-        return self.__class__(role_name=self.role_name,
-                              role_type=self.role_type,
-                              meta_dict=self.meta_dict, role=self.role,
-                              content=content)
+        return self.__class__(
+            role_name=self.role_name,
+            role_type=self.role_type,
+            meta_dict=self.meta_dict,
+            role=self.role,
+            content=content,
+        )
 
     def __add__(self, other: Any) -> Union["BaseMessage", Any]:
         r"""Addition operator override for :obj:`BaseMessage`.
@@ -146,7 +148,8 @@ class BaseMessage:
         else:
             raise TypeError(
                 f"Unsupported operand type(s) for +: '{type(self)}' and "
-                f"'{type(other)}'")
+                f"'{type(other)}'"
+            )
         return self._create_new_instance(combined_content)
 
     def __mul__(self, other: Any) -> Union["BaseMessage", Any]:
@@ -164,7 +167,8 @@ class BaseMessage:
         else:
             raise TypeError(
                 f"Unsupported operand type(s) for *: '{type(self)}' and "
-                f"'{type(other)}'")
+                f"'{type(other)}'"
+            )
 
     def __len__(self) -> int:
         r"""Length operator override for :obj:`BaseMessage`.
@@ -197,10 +201,12 @@ class BaseMessage:
             int: The token length of the message.
         """
         from camel.utils import num_tokens_from_messages
+
         return num_tokens_from_messages([self.to_openai_chat_message()], model)
 
     def extract_text_and_code_prompts(
-            self) -> Tuple[List[TextPrompt], List[CodePrompt]]:
+        self,
+    ) -> Tuple[List[TextPrompt], List[CodePrompt]]:
         r"""Extract text and code prompts from the message content.
 
         Returns:
@@ -215,8 +221,7 @@ class BaseMessage:
         idx = 0
         start_idx = 0
         while idx < len(lines):
-            while idx < len(lines) and (
-                    not lines[idx].lstrip().startswith("```")):
+            while idx < len(lines) and (not lines[idx].lstrip().startswith("```")):
                 idx += 1
             text = "\n".join(lines[start_idx:idx]).strip()
             text_prompts.append(TextPrompt(text))
