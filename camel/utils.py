@@ -10,7 +10,13 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-# =========== Copyright 2023 @ CAMEL-AI.org. All Rights Reserved. ===========
+# =========== Copyright 2023 @ CAMEL-AI.org. All Rights Reserved. ==============
+#
+# File: camel/typing.py
+# Description: Enumerations for model, task, role, and phase types.
+# 
+# ==============================================================================
+
 import os
 import re
 import zipfile
@@ -22,11 +28,15 @@ import tiktoken
 
 from camel.messages import OpenAIMessage
 from camel.typing import ModelType, TaskType
+from camel.config_loader import ConfigLoader
 
 F = TypeVar("F", bound=Callable[..., Any])
 
 import time
 
+# Load the model configurations
+config_loader = ConfigLoader()
+model_configs = config_loader.get_all_model_configs()
 
 def count_tokens_openai_chat_models(
     messages: List[OpenAIMessage],
@@ -77,24 +87,21 @@ def num_tokens_from_messages(
         - https://platform.openai.com/docs/models/gpt-3-5
     """
     try:
-        value_for_tiktoken = model.value_for_tiktoken
+        value_for_tiktoken = getattr(model, 'value_for_tiktoken', None)
+        if value_for_tiktoken is None:
+            raise AttributeError("The model does not have the 'value_for_tiktoken' attribute.")
         encoding = tiktoken.encoding_for_model(value_for_tiktoken)
-    except KeyError:
+    except (KeyError, AttributeError) as e:
+        print(f"An error occurred: {e}")
+        print(f"Using default encoding for model {model}")
+        print(f"Dir of model: {dir(model)}")
         encoding = tiktoken.get_encoding("cl100k_base")
 
-    if model in {
-        ModelType.GPT_3_5_TURBO,
-        ModelType.GPT_3_5_TURBO_NEW,
-        ModelType.GPT_4,
-        ModelType.GPT_4_32k,
-        ModelType.GPT_4_TURBO,
-        ModelType.GPT_4_TURBO_V,
-        ModelType.STUB,
-    }:
+    if model.name in model_configs:
         return count_tokens_openai_chat_models(messages, encoding)
     else:
         raise NotImplementedError(
-            f"`num_tokens_from_messages`` is not presently implemented "
+            f"`num_tokens_from_messages` is not presently implemented "
             f"for model {model}. "
             f"See https://github.com/openai/openai-python/blob/main/chatml.md "
             f"for information on how messages are converted to tokens. "
@@ -113,18 +120,9 @@ def get_model_token_limit(model: ModelType) -> int:
     Returns:
         int: The maximum token limit for the given model.
     """
-    if model == ModelType.GPT_3_5_TURBO:
-        return 16384
-    elif model == ModelType.GPT_3_5_TURBO_NEW:
-        return 16384
-    elif model == ModelType.GPT_4:
-        return 8192
-    elif model == ModelType.GPT_4_32k:
-        return 32768
-    elif model == ModelType.GPT_4_TURBO:
-        return 128000
-    elif model == ModelType.STUB:
-        return 4096
+    model_config = model_configs.get(model.name)
+    if model_config:
+        return model_config.get('max_tokens', 0)
     else:
         raise ValueError("Unknown model type")
 
@@ -151,7 +149,7 @@ def openai_api_key_required(func: F) -> F:
         if not isinstance(self, ChatAgent):
             raise ValueError("Expected ChatAgent")
         if self.model == ModelType.STUB:
-            return func(self, *args, **kwargs)
+            return func(self, *args, *kwargs)
         elif "OPENAI_API_KEY" in os.environ:
             return func(self, *args, **kwargs)
         else:

@@ -143,7 +143,6 @@ class ModelFactory:
             ModelType.GPT_3_5_TURBO: OpenAIModel,
             ModelType.GPT_3_5_TURBO_NEW: OpenAIModel,
             ModelType.GPT_4: OpenAIModel,
-            ModelType.GPT_4_32k: OpenAIModel,
             ModelType.GPT_4_TURBO: OpenAIModel,
             ModelType.GPT_4_TURBO_V: OpenAIModel,
             ModelType.STUB: StubModel,
