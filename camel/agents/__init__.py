@@ -20,12 +20,12 @@ from .tool_agents.hugging_face_tool_agent import HuggingFaceToolAgent
 from .role_playing import RolePlaying
 
 __all__ = [
-    'BaseAgent',
-    'ChatAgent',
-    'TaskSpecifyAgent',
-    'TaskPlannerAgent',
-    'CriticAgent',
-    'BaseToolAgent',
-    'HuggingFaceToolAgent',
-    'RolePlaying',
+    "BaseAgent",
+    "ChatAgent",
+    "TaskSpecifyAgent",
+    "TaskPlannerAgent",
+    "CriticAgent",
+    "BaseToolAgent",
+    "HuggingFaceToolAgent",
+    "RolePlaying",
 ]

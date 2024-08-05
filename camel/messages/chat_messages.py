@@ -18,7 +18,9 @@ from camel.messages import BaseMessage
 from camel.typing import RoleType
 
 try:
-    from openai.types.chat.chat_completion_message_tool_call import ChatCompletionMessageToolCall
+    from openai.types.chat.chat_completion_message_tool_call import (
+        ChatCompletionMessageToolCall,
+    )
     from openai.types.chat.chat_completion_message import FunctionCall
 
     openai_new_api = True  # new openai api version
@@ -49,14 +51,16 @@ class ChatMessage(BaseMessage):
     # Conditional attributes for newer OpenAI API features
     if openai_new_api:
         function_call: Optional[FunctionCall] = None  # For function calling feature
-        tool_calls: Optional[ChatCompletionMessageToolCall] = None  # For tool usage feature
+        tool_calls: Optional[
+            ChatCompletionMessageToolCall
+        ] = None  # For tool usage feature
 
     def set_user_role_at_backend(self: BaseMessage) -> BaseMessage:
         """
         Create a new instance of the message with the role set to "user".
 
         This method is useful for converting an assistant message to a user message.
-        
+
         Returns:
             A new BaseMessage instance with the role set to "user".
         """

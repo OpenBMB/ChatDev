@@ -20,13 +20,15 @@ from enum import Enum
 # 3. They make the code more self-documenting, as the names of the enum members describe their purpose.
 # 4. They can be easily extended or modified without changing the underlying logic of the code.
 
+
 class ModelType(Enum):
     """
     Enumeration of different AI model types.
-    
+
     Using an enum for model types ensures that only valid model names are used
     throughout the codebase, reducing the risk of typos or invalid model references.
     """
+
     GPT_3_5_TURBO = "gpt-3.5-turbo-16k-0613"
     GPT_3_5_TURBO_NEW = "gpt-3.5-turbo-16k"
     GPT_4 = "gpt-4"
@@ -45,13 +47,15 @@ class ModelType(Enum):
         """
         return self.value if self.name != "STUB" else "gpt-4o-mini"
 
+
 class TaskType(Enum):
     """
     Enumeration of different task types.
-    
+
     Using an enum for task types allows for easy categorization and filtering of tasks,
     and ensures that all parts of the system use consistent task type identifiers.
     """
+
     AI_SOCIETY = "ai_society"
     CODE = "code"
     MISALIGNMENT = "misalignment"
@@ -61,13 +65,15 @@ class TaskType(Enum):
     STARTR_TEAM = "startr_team"
     DEFAULT = "default"
 
+
 class RoleType(Enum):
     """
     Enumeration of different role types, including general and Startr.Team specific roles.
-    
+
     An enum for roles helps in access control, task assignment, and workflow management
     by providing a standardized set of roles that can be easily referenced and validated.
     """
+
     ASSISTANT = "assistant"
     USER = "user"
     CRITIC = "critic"
@@ -84,13 +90,15 @@ class RoleType(Enum):
     STARTR_TEAM_TESTER = "software test engineer"
     STARTR_TEAM_CCO = "chief creative officer (CCO)"
 
+
 class PhaseType(Enum):
     """
     Enumeration of different phases in a development or task process.
-    
+
     Using an enum for phases allows for clear tracking of the current state of a project,
     enables phase-specific behavior, and facilitates workflow management and reporting.
     """
+
     REFLECTION = "reflection"
     RECRUITING_CHRO = "recruiting CHRO"
     RECRUITING_CPO = "recruiting CPO"
@@ -112,6 +120,7 @@ class PhaseType(Enum):
     ART_ELEMENT_INTEGRATION = "art element integration"
     CREATING_ENVIRONMENT_DOCUMENT = "environment document"
     CREATING_USER_MANUAL = "user manual"
+
 
 # Exports all the enum classes
 # Using __all__ with enums makes it clear which types are intended to be used by other modules,

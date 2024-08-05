@@ -31,11 +31,13 @@ class TaskPromptTemplateDict(Dict[Any, TextPromptDict]):
 
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)
-        self.update({
-            TaskType.AI_SOCIETY: AISocietyPromptTemplateDict(),
-            TaskType.CODE: CodePromptTemplateDict(),
-            TaskType.MISALIGNMENT: MisalignmentPromptTemplateDict(),
-            TaskType.TRANSLATION: TranslationPromptTemplateDict(),
-            TaskType.EVALUATION: EvaluationPromptTemplateDict(),
-            TaskType.SOLUTION_EXTRACTION: SolutionExtractionPromptTemplateDict(),
-        })
+        self.update(
+            {
+                TaskType.AI_SOCIETY: AISocietyPromptTemplateDict(),
+                TaskType.CODE: CodePromptTemplateDict(),
+                TaskType.MISALIGNMENT: MisalignmentPromptTemplateDict(),
+                TaskType.TRANSLATION: TranslationPromptTemplateDict(),
+                TaskType.EVALUATION: EvaluationPromptTemplateDict(),
+                TaskType.SOLUTION_EXTRACTION: SolutionExtractionPromptTemplateDict(),
+            }
+        )
