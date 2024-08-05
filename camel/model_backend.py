@@ -56,103 +56,63 @@ class ModelBackend(ABC):
 
 
 class OpenAIModel(ModelBackend):
-    r"""OpenAI API in a unified ModelBackend interface."""
-
     def __init__(self, model_type: ModelType, model_config_dict: Dict) -> None:
         super().__init__()
         self.model_type = model_type
         self.model_config_dict = model_config_dict
+        self.client = self._setup_client()
+        self.max_tokens = self._get_max_tokens()
+
+    def _setup_client(self):
+        if BASE_URL:
+            return openai.OpenAI(api_key=OPENAI_API_KEY, base_url=BASE_URL)
+        return openai.OpenAI(api_key=OPENAI_API_KEY)
+
+    def _get_max_tokens(self):
+        max_token_map = {
+            "gpt-3.5-turbo": 4096,
+            "gpt-3.5-turbo-16k": 16384,
+            "gpt-3.5-turbo-0613": 4096,
+            "gpt-3.5-turbo-16k-0613": 16384,
+            "gpt-4": 8192,
+            "gpt-4-0613": 8192,
+            "gpt-4-32k": 32768,
+            "gpt-4-turbo": 100000,
+            "gpt-4o:": 100000,
+            "gpt-4o-mini": 100000,
+        }
+        return max_token_map.get(self.model_type.value, 4096)
 
     def run(self, *args, **kwargs):
-        string = "\n".join([message["content"] for message in kwargs["messages"]])
+        messages = kwargs.get("messages", [])
+        prompt = "\n".join(message["content"] for message in messages)
+        
         encoding = tiktoken.encoding_for_model(self.model_type.value)
-        num_prompt_tokens = len(encoding.encode(string))
-        gap_between_send_receive = 15 * len(kwargs["messages"])
-        num_prompt_tokens += gap_between_send_receive
+        prompt_tokens = len(encoding.encode(prompt)) + 15 * len(messages)
+        
+        max_completion_tokens = self.max_tokens - prompt_tokens
+        self.model_config_dict["max_tokens"] = max_completion_tokens
 
-        if openai_new_api:
-            # Experimental, add base_url
-            if BASE_URL:
-                client = openai.OpenAI(
-                    api_key=OPENAI_API_KEY,
-                    base_url=BASE_URL,
-                )
-            else:
-                client = openai.OpenAI(api_key=OPENAI_API_KEY)
+        response = self.client.chat.completions.create(
+            *args, **kwargs, model=self.model_type.value, **self.model_config_dict
+        )
 
-            num_max_token_map = {
-                "gpt-3.5-turbo": 4096,
-                "gpt-3.5-turbo-16k": 16384,
-                "gpt-3.5-turbo-0613": 4096,
-                "gpt-3.5-turbo-16k-0613": 16384,
-                "gpt-4": 8192,
-                "gpt-4-0613": 8192,
-                "gpt-4-32k": 32768,
-                "gpt-4-turbo": 100000,
-                "gpt-4o:": 100000,
-                "gpt-4o-mini": 100000,
-            }
-            num_max_token = num_max_token_map[self.model_type.value]
-            num_max_completion_tokens = num_max_token - num_prompt_tokens
-            self.model_config_dict["max_tokens"] = num_max_completion_tokens
+        self._log_usage(response.usage)
+        return response
 
-            response = client.chat.completions.create(
-                *args, **kwargs, model=self.model_type.value, **self.model_config_dict
-            )
-
-            cost = prompt_cost(
-                self.model_type.value,
-                num_prompt_tokens=response.usage.prompt_tokens,
-                num_completion_tokens=response.usage.completion_tokens,
-            )
-
-            log_visualize(
-                "**[OpenAI_Usage_Info Receive]**\nprompt_tokens: {}\ncompletion_tokens: {}\ntotal_tokens: {}\ncost: ${:.6f}\n".format(
-                    response.usage.prompt_tokens,
-                    response.usage.completion_tokens,
-                    response.usage.total_tokens,
-                    cost,
-                )
-            )
-            if not isinstance(response, ChatCompletion):
-                raise RuntimeError("Unexpected return from OpenAI API")
-            return response
-        else:
-            num_max_token_map = {
-                "gpt-3.5-turbo": 4096,
-                "gpt-3.5-turbo-16k": 16384,
-                "gpt-3.5-turbo-0613": 4096,
-                "gpt-3.5-turbo-16k-0613": 16384,
-                "gpt-4": 8192,
-                "gpt-4-0613": 8192,
-                "gpt-4-32k": 32768,
-                "gpt-4-turbo": 100000,
-            }
-            num_max_token = num_max_token_map[self.model_type.value]
-            num_max_completion_tokens = num_max_token - num_prompt_tokens
-            self.model_config_dict["max_tokens"] = num_max_completion_tokens
-
-            response = openai.ChatCompletion.create(
-                *args, **kwargs, model=self.model_type.value, **self.model_config_dict
-            )
-
-            cost = prompt_cost(
-                self.model_type.value,
-                num_prompt_tokens=response["usage"]["prompt_tokens"],
-                num_completion_tokens=response["usage"]["completion_tokens"],
-            )
-
-            log_visualize(
-                "**[OpenAI_Usage_Info Receive]**\nprompt_tokens: {}\ncompletion_tokens: {}\ntotal_tokens: {}\ncost: ${:.6f}\n".format(
-                    response["usage"]["prompt_tokens"],
-                    response["usage"]["completion_tokens"],
-                    response["usage"]["total_tokens"],
-                    cost,
-                )
-            )
-            if not isinstance(response, Dict):
-                raise RuntimeError("Unexpected return from OpenAI API")
-            return response
+    def _log_usage(self, usage):
+        cost = prompt_cost(
+            self.model_type.value,
+            num_prompt_tokens=usage.prompt_tokens,
+            num_completion_tokens=usage.completion_tokens,
+        )
+        log_visualize(
+            f"**[OpenAI_Usage_Info Receive]**\n"
+            f"prompt_tokens: {usage.prompt_tokens}\n"
+            f"completion_tokens: {usage.completion_tokens}\n"
+            f"total_tokens: {usage.total_tokens}\n"
+            f"cost: ${cost:.6f}\n"
+        )
 
 
 class StubModel(ModelBackend):
@@ -177,34 +137,21 @@ class StubModel(ModelBackend):
 
 
 class ModelFactory:
-    r"""Factory of backend models.
-
-    Raises:
-        ValueError: in case the provided model type is unknown.
-    """
-
     @staticmethod
     def create(model_type: ModelType, model_config_dict: Dict) -> ModelBackend:
-        default_model_type = ModelType.GPT_3_5_TURBO
+        model_map = {
+            ModelType.GPT_3_5_TURBO: OpenAIModel,
+            ModelType.GPT_3_5_TURBO_NEW: OpenAIModel,
+            ModelType.GPT_4: OpenAIModel,
+            ModelType.GPT_4_32k: OpenAIModel,
+            ModelType.GPT_4_TURBO: OpenAIModel,
+            ModelType.GPT_4_TURBO_V: OpenAIModel,
+            ModelType.STUB: StubModel,
+        }
 
-        if model_type in {
-            ModelType.GPT_3_5_TURBO,
-            ModelType.GPT_3_5_TURBO_NEW,
-            ModelType.GPT_4,
-            ModelType.GPT_4_32k,
-            ModelType.GPT_4_TURBO,
-            ModelType.GPT_4_TURBO_V,
-            None,
-        }:
-            model_class = OpenAIModel
-        elif model_type == ModelType.STUB:
-            model_class = StubModel
-        else:
-            raise ValueError("Unknown model")
-
+        model_class = model_map.get(model_type, OpenAIModel)
+        
         if model_type is None:
-            model_type = default_model_type
+            model_type = ModelType.GPT_3_5_TURBO
 
-        # log_visualize("Model Type: {}".format(model_type))
-        inst = model_class(model_type, model_config_dict)
-        return inst
+        return model_class(model_type, model_config_dict)
