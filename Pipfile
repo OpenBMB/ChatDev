@@ -25,9 +25,14 @@ pyyaml = "==6.0"
 easydict = "==1.10"
 
 [dev-packages]
+viztracer = "*"
 
 [requires]
 python_version = "3.9"
 
 [scripts]
-start = "python visualizer/app.py"
+serve = "python visualizer/app.py"
+run = "python run.py"
+dev_serve   = "viztracer --open visualizer/app.py"
+dev_run = "viztracer --open run.py"
+dev_setup = "pipenv sync -d"
