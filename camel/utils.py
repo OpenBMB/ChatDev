@@ -85,17 +85,12 @@ def num_tokens_from_messages(
         - https://github.com/openai/openai-python/blob/main/chatml.md
         - https://platform.openai.com/docs/models/gpt-4
         - https://platform.openai.com/docs/models/gpt-3-5
-    """
-    try:
-        value_for_tiktoken = getattr(model, 'value_for_tiktoken', None)
-        if value_for_tiktoken is None:
-            raise AttributeError("The model does not have the 'value_for_tiktoken' attribute.")
-        encoding = tiktoken.encoding_for_model(value_for_tiktoken)
-    except (KeyError, AttributeError) as e:
-        print(f"An error occurred: {e}")
-        print(f"Using default encoding for model {model}")
-        print(f"Dir of model: {dir(model)}")
-        encoding = tiktoken.get_encoding("cl100k_base")
+    """    
+    
+    print(f"Using default encoding for model {model}")
+    print(f"Dir of model: {dir(model)}")
+    encoding = tiktoken.get_encoding("cl100k_base")
+    print(f"Setting encoding to {encoding}")
 
     if model.name in model_configs:
         return count_tokens_openai_chat_models(messages, encoding)
