@@ -68,6 +68,7 @@ def parse_arguments() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description='Startr.Team ChatChain')
     
     args_config = {
+        'local':('--local',bool, False, "Switch ChatDev to use local Ollama API instead of OpenAI API"),
         'config': ('--config', str, "Default", "Name of config, which is used to load configuration under CompanyConfig/"),
         'org': ('--org', str, "DefaultOrganization", "Name of organization, your software will be generated in WareHouse/name_org_timestamp"),
         'task': ('--task', str, "Develop a basic Website.", "Prompt of software"),
@@ -147,6 +148,7 @@ def main():
     config_path, config_phase_path, config_role_path = get_config(args.config)
 
     chat_chain = ChatChain(
+        use_ollama=args.local,
         config_path=config_path,
         config_phase_path=config_phase_path,
         config_role_path=config_role_path,

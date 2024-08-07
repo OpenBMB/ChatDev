@@ -22,6 +22,7 @@ def check_bool(s):
 class ChatChain:
 
     def __init__(self,
+                 use_ollama: bool = False,
                  config_path: str = None,
                  config_phase_path: str = None,
                  config_role_path: str = None,
