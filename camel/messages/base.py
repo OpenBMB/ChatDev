@@ -54,6 +54,7 @@ class BaseMessage:
     meta_dict: Optional[Dict[str, str]]
     role: str
     content: str
+    refusal: Optional[str] = None # Refusal message for the user
     if openai_new_api:
         function_call: Optional[FunctionCall] = None
         tool_calls: Optional[ChatCompletionMessageToolCall] = None
