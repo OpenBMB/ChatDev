@@ -66,23 +66,44 @@ def parse_arguments() -> argparse.Namespace:
         argparse.Namespace: Parsed command-line arguments.
     """
     parser = argparse.ArgumentParser(description='Startr.Team ChatChain')
-    
+        
+        # Dictionary to hold argument configurations
     args_config = {
-        'local':('--local',bool, False, "Switch ChatDev to use local Ollama API instead of OpenAI API"),
-        'config': ('--config', str, "Default", "Name of config, which is used to load configuration under CompanyConfig/"),
-        'org': ('--org', str, "DefaultOrganization", "Name of organization, your software will be generated in WareHouse/name_org_timestamp"),
-        'task': ('--task', str, "Develop a basic Website.", "Prompt of software"),
-        'name': ('--name', str, "Website", "Name of software, your software will be generated in WareHouse/name_org_timestamp"),
-        'model': ('--model', str, "GPT_3_5_TURBO_NEW", "GPT Model"),
-        'path': ('--path', str, "", "Your file directory, Startr.Team will build upon your software in the Incremental mode"),
+        'local': (bool, False, "Use local Ollama API instead of OpenAI API"),
+        'config': (str, "Default", "Config name for loading settings"),
+        'org': (str, "DefaultOrganization", "Organization name for software generation"),
+        'task': (str, "Develop a basic Website.", "Software prompt"),
+        'name': (str, "Website", "Software name for generation"),
+        'model': (str, "GPT_3_5_TURBO_NEW", "GPT Model (choices: {})".format(", ".join(get_model_choices()))),
+        'path': (str, "", "Directory for incremental mode"),
     }
-    
-    for arg, (flag, type_, default, help_text) in args_config.items():
+
+    # Loop through each argument configuration
+    for arg, (type_, default, help_text) in args_config.items():
+        flag = f'--{arg}'  # Infer long flag based on key name
+        short_flag = f'-{arg[0]}'  # Infer short flag based on the first character of the key name
+        """
         if arg == 'model':
             choices = get_model_choices()
-            parser.add_argument(flag, type=type_, default=default, choices=choices, help=f"{help_text} (choices: {', '.join(choices)})")
+            help_text = f"{help_text}"
+            parser.add_argument(
+                short_flag,
+                flag,
+                type=type_,
+                default=default,
+                help=help_text
+            )
         else:
-            parser.add_argument(flag, type=type_, default=default, help=help_text)
+        """
+            # Add the argument to the parser with the given configuration
+        parser.add_argument(
+            short_flag,
+            flag,
+            type=type_,
+            default=default,
+            help=help_text
+        )
+
     
     return parser.parse_args()
 
