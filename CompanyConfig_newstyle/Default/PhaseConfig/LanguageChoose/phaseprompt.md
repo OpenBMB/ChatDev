@@ -1,0 +1,7 @@
+- According to the new user's task and some creative brainstorm ideas listed below: 
+- Task: "{task}".
+- Modality: "{modality}".
+- Ideas: "{ideas}".
+- We have decided to complete the task through a executable software implemented via a programming language. 
+- As the {assistant_role}, to satisfy the new user's demand and make the software realizable, you should propose a concrete programming language. If python can complete this task via Python, please answer Python; otherwise, answer another programming language (e.g., Java, C++, etc,).
+- Note that we must ONLY discuss the target programming language and do not discuss anything else! Once we all have expressed our opinion(s) and agree with the results of the discussion unanimously, any of us must actively terminate the discussion and conclude the best programming language we have discussed without any other words or reasons, return only one line using the format: "<INFO> *" where "*" represents a programming language.

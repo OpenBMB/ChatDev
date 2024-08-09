@@ -11,6 +11,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # =========== Copyright 2023 @ CAMEL-AI.org. All Rights Reserved. ===========
+#  Enhanced by Startr.Team (2024)
+# =========== Copyright 2024 @  Startr LLC   All Rights Reserved. ===========
 from typing import Any, Dict
 
 from camel.prompts import (
@@ -31,11 +33,13 @@ class TaskPromptTemplateDict(Dict[Any, TextPromptDict]):
 
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)
-        self.update({
-            TaskType.AI_SOCIETY: AISocietyPromptTemplateDict(),
-            TaskType.CODE: CodePromptTemplateDict(),
-            TaskType.MISALIGNMENT: MisalignmentPromptTemplateDict(),
-            TaskType.TRANSLATION: TranslationPromptTemplateDict(),
-            TaskType.EVALUATION: EvaluationPromptTemplateDict(),
-            TaskType.SOLUTION_EXTRACTION: SolutionExtractionPromptTemplateDict(),
-        })
+        self.update(
+            {
+                TaskType.AI_SOCIETY: AISocietyPromptTemplateDict(),
+                TaskType.CODE: CodePromptTemplateDict(),
+                TaskType.MISALIGNMENT: MisalignmentPromptTemplateDict(),
+                TaskType.TRANSLATION: TranslationPromptTemplateDict(),
+                TaskType.EVALUATION: EvaluationPromptTemplateDict(),
+                TaskType.SOLUTION_EXTRACTION: SolutionExtractionPromptTemplateDict(),
+            }
+        )

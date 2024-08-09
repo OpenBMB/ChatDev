@@ -11,6 +11,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # =========== Copyright 2023 @ CAMEL-AI.org. All Rights Reserved. ===========
+#  Enhanced by Startr.Team (2024)
+# =========== Copyright 2024 @  Startr LLC   All Rights Reserved. ===========
 import camel.agents
 import camel.configs
 import camel.generators
@@ -19,9 +21,9 @@ import camel.prompts
 import camel.typing
 import camel.utils
 
-__version__ = '0.1.0'
+__version__ = "0.1.0"
 
 __all__ = [
-    '__version__',
-    'camel',
+    "__version__",
+    "camel",
 ]

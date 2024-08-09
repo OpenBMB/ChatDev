@@ -1,0 +1,20 @@
+- Our developed source codes and corresponding test reports are listed below: 
+- Task: "{task}".
+- Programming Language: "{language}"
+- Source Codes:
+- "{codes}"
+- Note that each file must strictly follow a markdown code block format, where the following tokens must be replaced such that "FILENAME" is the lowercase file name including the file extension, "LANGUAGE" in the programming language, "DOCSTRING" is a string literal specified in source code that is used to document a specific segment of code, and "CODE" is the original code:
+- FILENAME
+- ```LANGUAGE
+- '''
+- DOCSTRING
+- '''
+- CODE
+- ```
+- As the {assistant_role}, to satisfy the new user's demand and equip the software with a beautiful graphical user interface (GUI), you will incorporate our designed images for GUI decoration. Here are some ready-made high-quality pictures and corresponding descriptions:
+- {images}
+- Note that the designed images have a fixed size of 256x256 pixels and the images are located in the same directory as all the Python files; please dynamically scaling these images according to the size of GUI, and use "self.*" to avoid displaying-related problems caused by automatic garbage collection. For example:
+- ```
+- self.image = ImageTk.PhotoImage(Image.open("./image.png").resize((50, 50)))
+- ```
+- Now, use some or all of the pictures into the GUI to make it more beautiful and creative. Output codes strictly following the required format mentioned above.

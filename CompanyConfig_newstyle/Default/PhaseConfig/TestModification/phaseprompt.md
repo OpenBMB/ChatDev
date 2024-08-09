@@ -1,0 +1,17 @@
+- Our developed source codes and corresponding test reports are listed below: 
+- Programming Language: "{language}"
+- Source Codes:
+- "{codes}"
+- Test Reports of Source Codes:
+- "{test_reports}"
+- Error Summary of Test Reports:
+- "{error_summary}"
+- Note that each file must strictly follow a markdown code block format, where the following tokens must be replaced such that "FILENAME" is the lowercase file name including the file extension, "LANGUAGE" in the programming language, "DOCSTRING" is a string literal specified in source code that is used to document a specific segment of code, and "CODE" is the original code:
+- FILENAME
+- ```LANGUAGE
+- '''
+- DOCSTRING
+- '''
+- CODE
+- ```
+- As the {assistant_role}, to satisfy the new user's demand and make the software execute smoothly and robustly, you should modify the codes based on the error summary. Now, use the format exemplified above and modify the problematic codes based on the error summary. Output the codes that you fixed based on the test reported and corresponding explanations (strictly follow the format defined above, including FILENAME, LANGUAGE, DOCSTRING and CODE; incomplete "TODO" codes are strictly prohibited). If no bugs are reported, please return only one line like "<INFO> Finished".

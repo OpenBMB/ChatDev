@@ -32,7 +32,7 @@ class ChatEnvConfig:
                  background_prompt,
                  with_memory):
         self.clear_structure = clear_structure  # Whether to clear non-software files in the WareHouse and cache files in generated software path
-        self.gui_design = gui_design  # Encourage ChatDev generate software with GUI
+        self.gui_design = gui_design  # Encourage Startr.Team generate software with GUI
         self.git_management = git_management  # Whether to use git to manage the creation and changes of generated software
         self.incremental_develop = incremental_develop  # Whether to use incremental develop on an existing project
         self.background_prompt = background_prompt  # background prompt that will be added to every inquiry to LLM

@@ -1,0 +1,17 @@
+- According to the new user's task and our software designs listed below: 
+- Task: "{task}".
+- Modality: "{modality}".
+- Programming Language: "{language}"
+- Codes:
+- "{codes}"
+- Unimplemented File:
+- "{unimplemented_file}"
+- In our software, each file must strictly follow a markdown code block format, where the following tokens must be replaced such that "FILENAME" is the lowercase file name including the file extension, "LANGUAGE" in the programming language, "DOCSTRING" is a string literal specified in source code that is used to document a specific segment of code, and "CODE" is the original code:
+- FILENAME
+- ```LANGUAGE
+- '''
+- DOCSTRING
+- '''
+- CODE
+- ```
+- As the {assistant_role}, to satisfy the complete function of our developed software, you have to implement all methods in the {unimplemented_file} file which contains a unimplemented class. Now, implement all methods of the {unimplemented_file} and all other codes needed, then output the fully implemented codes, strictly following the required format.

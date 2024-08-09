@@ -110,6 +110,7 @@ const button = document.getElementById('replay');
 button.addEventListener('click', () => {
     replayDialog(idx);
 });
+
 $(document).ready(function() {
     $('#filebutton').click(function() {
         $('#fileInput').click();
@@ -200,7 +201,7 @@ function watchfileInput(files) {
             reader.readAsText(file);
             var filelable = document.getElementById("successupload");
             filelable.style.display = "block";
-            var info = "File uploaded (`" + file.name + "`). Please click **\"Replay\"** to show ChatDev's development process";
+            var info = "File uploaded (`" + file.name + "`). Please click **\"Replay\"** to show Startr.Team's development process";
             filename = file.name;
             filelable.innerHTML = md.render(info);
         }
@@ -229,8 +230,8 @@ function extraction(contents) {
     const regex_user = /(.*):(.*)(\[Start Chat\])([.\r\n\s\S\t\d\D]*?)\]([.\r\n\s\S\t\d\D]*)/g;
     const regex_prompt = /(Prompt Engineer):([\S\s]*)/g
 
-    const regex_end = /(AgentTech Ends|ChatDev Ends)/g;
-    const regex_start = /(ChatDev Starts)([\D\s])*(\d*)/g;
+    const regex_end = /(AgentTech Ends|Startr.Team Ends)/g;
+    const regex_start = /(Startr.Team Starts)([\D\s])*(\d*)/g;
 
     const regex_task = /(task_prompt)(.*):(.*)/g;
     const regex_info = /Software Info([\r\n\s\S\t\d\D]*)/g;
@@ -388,7 +389,7 @@ function createPara(d, i) {
     curdialog = singleDialog;
     singleDialog.style.display = "flex";
     singleDialog.style.flexDirection = "column";
-    singleDialog.style.width = "773px";
+    singleDialog.style.width = "96%";
     dialogbody.appendChild(singleDialog);
     var paralen;
     if (d.type && d.character) {
@@ -455,6 +456,7 @@ function createPara(d, i) {
         paragraph.style.padding = "10px";
         paragraph.style.border = "3px solid #a08D8D";
         paragraph.style.width = "750px";
+        paragraph.style.marginLeft = "0.4rem";
         paragraph.style.border = "1px solid rgba(11, 20, 150, .3)";
         paragraph.style.borderRadius = "10px";
         paragraph.style.boxShadow = "2px 2px 2px black";
@@ -466,7 +468,7 @@ function createPara(d, i) {
         singleDialog.appendChild(emptyparagraph);
 
         if (d.type == "user") {
-            paragraph.style.backgroundColor = "#4b751a";
+            paragraph.style.backgroundColor = "#a02D8D";
         } else {
             paragraph.style.backgroundColor = "#133153";
         }

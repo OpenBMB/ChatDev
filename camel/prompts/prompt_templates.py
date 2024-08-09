@@ -11,6 +11,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # =========== Copyright 2023 @ CAMEL-AI.org. All Rights Reserved. ===========
+#  Enhanced by Startr.Team (2024)
+# =========== Copyright 2024 @  Startr LLC   All Rights Reserved. ===========
 import warnings
 from typing import Any, Optional
 
@@ -31,7 +33,9 @@ class PromptTemplateGenerator:
         self,
         task_prompt_template_dict: Optional[TaskPromptTemplateDict] = None,
     ) -> None:
-        self.task_prompt_template_dict = (task_prompt_template_dict or TaskPromptTemplateDict())
+        self.task_prompt_template_dict = (
+            task_prompt_template_dict or TaskPromptTemplateDict()
+        )
 
     def get_prompt_from_key(self, task_type: TaskType, key: Any) -> TextPrompt:
         r"""Generates a text prompt using the specified :obj:`task_type` and
@@ -53,8 +57,10 @@ class PromptTemplateGenerator:
             return self.task_prompt_template_dict[task_type][key]
 
         except KeyError:
-            raise KeyError("Failed to get generate prompt template for "
-                           f"task: {task_type.value} from key: {key}.")
+            raise KeyError(
+                "Failed to get generate prompt template for "
+                f"task: {task_type.value} from key: {key}."
+            )
 
     def get_system_prompt(
         self,
@@ -82,9 +88,11 @@ class PromptTemplateGenerator:
         except KeyError:
             prompt = "You are a helpful assistant."
 
-            warnings.warn("Failed to get system prompt template for "
-                          f"task: {task_type.value}, role: {role_type.value}. "
-                          f"Set template to: {prompt}")
+            warnings.warn(
+                "Failed to get system prompt template for "
+                f"task: {task_type.value}, role: {role_type.value}. "
+                f"Set template to: {prompt}"
+            )
 
         return TextPrompt(prompt)
 

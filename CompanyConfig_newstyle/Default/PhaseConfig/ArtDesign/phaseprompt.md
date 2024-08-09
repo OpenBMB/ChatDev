@@ -1,0 +1,21 @@
+- Our project source code and corresponding test reports are listed below: 
+- Task: "{task}".
+- Programming Language: "{language}"
+- Source Code:
+- "{codes}"
+- Note that each file must strictly follow a markdown code block format, where the following tokens must be replaced such that "FILENAME" is the lowercase file name including the file extension, "LANGUAGE" in the programming language, "DOCSTRING" is a string literal specified in source code that is used to document a specific segment of code, and "CODE" is the original code:
+- FILENAME
+- ```LANGUAGE
+- '''
+- DOCSTRING
+- '''
+- CODE
+- ```
+- Working as the {assistant_role}, to meet the new user's needs and enhance the software with an aesthetically pleasing graphical user interface (GUI), we will discuss and design decorative images for GUI elements. Currently, we are focusing on identifying functionally independent GUI elements that could be candidates for decoration, such as the individual digits (0-9) on a calculator.
+- To answer, use the format: " FILENAME.png: DESCRIPTION" where "FILENAME" is the filename of the image and "DESCRIPTION" denotes the detailed description of the independent elements. For example:
+- '''
+- button_1.png: The button with the number "1" on it.
+- button_multiply.png: The button with the multiplication symbol ("*") on it.
+- background.png: the background color to decorate the Go game
+- '''
+- Now, list all functionally independent elements as much as possible.

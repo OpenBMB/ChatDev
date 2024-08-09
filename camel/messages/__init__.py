@@ -11,6 +11,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # =========== Copyright 2023 @ CAMEL-AI.org. All Rights Reserved. ===========
+#  Enhanced by Startr.Team (2024)
+# =========== Copyright 2024 @  Startr LLC   All Rights Reserved. ===========
 from typing import Dict, Union
 
 OpenAISystemMessage = Dict[str, str]
@@ -21,33 +23,42 @@ OpenAIMessage = Union[OpenAISystemMessage, OpenAIChatMessage]
 
 from .base import BaseMessage  # noqa: E402
 from .system_messages import (  # noqa: E402
-    SystemMessage, AssistantSystemMessage, UserSystemMessage,
+    SystemMessage,
+    AssistantSystemMessage,
+    UserSystemMessage,
 )
 from .chat_messages import (  # noqa: E402
-    ChatMessage, AssistantChatMessage, UserChatMessage,
+    ChatMessage,
+    AssistantChatMessage,
+    UserChatMessage,
 )
 
-MessageType = Union[BaseMessage, SystemMessage, AssistantSystemMessage,
-                    UserSystemMessage, ChatMessage, AssistantChatMessage,
-                    UserChatMessage]
-SystemMessageType = Union[SystemMessage, AssistantSystemMessage,
-                          UserSystemMessage]
+MessageType = Union[
+    BaseMessage,
+    SystemMessage,
+    AssistantSystemMessage,
+    UserSystemMessage,
+    ChatMessage,
+    AssistantChatMessage,
+    UserChatMessage,
+]
+SystemMessageType = Union[SystemMessage, AssistantSystemMessage, UserSystemMessage]
 ChatMessageType = Union[ChatMessage, AssistantChatMessage, UserChatMessage]
 
 __all__ = [
-    'OpenAISystemMessage',
-    'OpenAIAssistantMessage',
-    'OpenAIUserMessage',
-    'OpenAIChatMessage',
-    'OpenAIMessage',
-    'BaseMessage',
-    'SystemMessage',
-    'AssistantSystemMessage',
-    'UserSystemMessage',
-    'ChatMessage',
-    'AssistantChatMessage',
-    'UserChatMessage',
-    'MessageType',
-    'SystemMessageType',
-    'ChatMessageType',
+    "OpenAISystemMessage",
+    "OpenAIAssistantMessage",
+    "OpenAIUserMessage",
+    "OpenAIChatMessage",
+    "OpenAIMessage",
+    "BaseMessage",
+    "SystemMessage",
+    "AssistantSystemMessage",
+    "UserSystemMessage",
+    "ChatMessage",
+    "AssistantChatMessage",
+    "UserChatMessage",
+    "MessageType",
+    "SystemMessageType",
+    "ChatMessageType",
 ]

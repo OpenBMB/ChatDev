@@ -11,6 +11,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # =========== Copyright 2023 @ CAMEL-AI.org. All Rights Reserved. ===========
+#  Enhanced by Startr.Team (2024)
+# =========== Copyright 2024 @  Startr LLC   All Rights Reserved. ===========
 from .base import BaseAgent
 from .chat_agent import ChatAgent
 from .task_agent import TaskPlannerAgent, TaskSpecifyAgent
@@ -20,12 +22,12 @@ from .tool_agents.hugging_face_tool_agent import HuggingFaceToolAgent
 from .role_playing import RolePlaying
 
 __all__ = [
-    'BaseAgent',
-    'ChatAgent',
-    'TaskSpecifyAgent',
-    'TaskPlannerAgent',
-    'CriticAgent',
-    'BaseToolAgent',
-    'HuggingFaceToolAgent',
-    'RolePlaying',
+    "BaseAgent",
+    "ChatAgent",
+    "TaskSpecifyAgent",
+    "TaskPlannerAgent",
+    "CriticAgent",
+    "BaseToolAgent",
+    "HuggingFaceToolAgent",
+    "RolePlaying",
 ]

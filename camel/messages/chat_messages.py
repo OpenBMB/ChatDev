@@ -11,6 +11,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # =========== Copyright 2023 @ CAMEL-AI.org. All Rights Reserved. ===========
+#  Enhanced by Startr.Team (2024)
+# =========== Copyright 2024 @  Startr LLC   All Rights Reserved. ===========
 from dataclasses import dataclass
 from typing import Dict, Optional
 
@@ -18,7 +20,9 @@ from camel.messages import BaseMessage
 from camel.typing import RoleType
 
 try:
-    from openai.types.chat.chat_completion_message_tool_call import ChatCompletionMessageToolCall
+    from openai.types.chat.chat_completion_message_tool_call import (
+        ChatCompletionMessageToolCall,
+    )
     from openai.types.chat.chat_completion_message import FunctionCall
 
     openai_new_api = True  # new openai api version
@@ -39,16 +43,29 @@ class ChatMessage(BaseMessage):
         role (str): The role of the message in OpenAI chat system.
         content (str): The content of the message. (default: :obj:`""`)
     """
-    role_name: str
-    role_type: RoleType
-    meta_dict: Optional[Dict[str, str]]
-    role: str
-    content: str = ""
-    if openai_new_api:
-        function_call: Optional[FunctionCall] = None
-        tool_calls: Optional[ChatCompletionMessageToolCall] = None
+    # Attributes with type annotations
+    role_name: str  # Name of the user or assistant role
+    role_type: RoleType  # Type of role (ASSISTANT or USER)
+    meta_dict: Optional[Dict[str, str]]  # Additional metadata for the message
+    role: str  # Role in OpenAI chat system (e.g., "user", "assistant")
+    content: str = ""  # Content of the message, defaults to empty string
 
-    def set_user_role_at_backend(self: BaseMessage):
+    # Conditional attributes for newer OpenAI API features
+    if openai_new_api:
+        function_call: Optional[FunctionCall] = None  # For function calling feature
+        tool_calls: Optional[
+            ChatCompletionMessageToolCall
+        ] = None  # For tool usage feature
+
+    def set_user_role_at_backend(self: BaseMessage) -> BaseMessage:
+        """
+        Create a new instance of the message with the role set to "user".
+
+        This method is useful for converting an assistant message to a user message.
+
+        Returns:
+            A new BaseMessage instance with the role set to "user".
+        """
         return self.__class__(
             role_name=self.role_name,
             role_type=self.role_type,

@@ -22,6 +22,7 @@ def check_bool(s):
 class ChatChain:
 
     def __init__(self,
+                 use_ollama: bool = False,
                  config_path: str = None,
                  config_phase_path: str = None,
                  config_role_path: str = None,
@@ -57,9 +58,9 @@ class ChatChain:
         with open(self.config_role_path, 'r', encoding="utf8") as file:
             self.config_role = json.load(file)
 
-        # init chatchain config and recruitments
+        # init chatchain config and recruits
         self.chain = self.config["chain"]
-        self.recruitments = self.config["recruitments"]
+        self.recruits = self.config["recruits"]
         self.web_spider = self.config["web_spider"]
 
         # init default max chat turn
@@ -109,13 +110,13 @@ class ChatChain:
                                          log_filepath=self.log_filepath)
             self.phases[phase] = phase_instance
 
-    def make_recruitment(self):
+    def recruit_team(self):
         """
         recruit all employees
         Returns: None
 
         """
-        for employee in self.recruitments:
+        for employee in self.recruits:
             self.chat_env.recruit(agent_name=employee)
 
     def execute_step(self, phase_item: dict):
@@ -233,7 +234,7 @@ class ChatChain:
         preprocess_msg = "**[Preprocessing]**\n\n"
         chat_gpt_config = ChatGPTConfig()
 
-        preprocess_msg += "**ChatDev Starts** ({})\n\n".format(self.start_time)
+        preprocess_msg += "**Startr.Team Starts** ({})\n\n".format(self.start_time)
         preprocess_msg += "**Timestamp**: {}\n\n".format(self.start_time)
         preprocess_msg += "**config_path**: {}\n\n".format(self.config_path)
         preprocess_msg += "**config_phase_path**: {}\n\n".format(self.config_phase_path)
@@ -241,7 +242,7 @@ class ChatChain:
         preprocess_msg += "**task_prompt**: {}\n\n".format(self.task_prompt_raw)
         preprocess_msg += "**project_name**: {}\n\n".format(self.project_name)
         preprocess_msg += "**Log File**: {}\n\n".format(self.log_filepath)
-        preprocess_msg += "**ChatDevConfig**:\n{}\n\n".format(self.chat_env.config.__str__())
+        preprocess_msg += "**Startr.Team Config**:\n{}\n\n".format(self.chat_env.config.__str__())
         preprocess_msg += "**ChatGPTConfig**:\n{}\n\n".format(chat_gpt_config)
         log_visualize(preprocess_msg)
 
@@ -302,8 +303,8 @@ class ChatChain:
             get_info(self.chat_env.env_dict['directory'], self.log_filepath) + "\n\n🕑**duration**={:.2f}s\n\n".format(
                 duration))
 
-        post_info += "ChatDev Starts ({})".format(self.start_time) + "\n\n"
-        post_info += "ChatDev Ends ({})".format(now_time) + "\n\n"
+        post_info += "Startr.Team Starts ({})".format(self.start_time) + "\n\n"
+        post_info += "Startr.Team Ends ({})".format(now_time) + "\n\n"
 
         directory = self.chat_env.env_dict['directory']
         if self.chat_env.config.clear_structure:
@@ -341,12 +342,13 @@ here is the short description:\"{}\".
 If the revised prompt is revised_version_of_the_description, 
 then you should return a message in a format like \"<INFO> revised_version_of_the_description\", do not return messages in other formats.""".format(
             task_prompt)
+
         role_play_session = RolePlaying(
             assistant_role_name="Prompt Engineer",
             assistant_role_prompt="You are an professional prompt engineer that can improve user input prompt to make LLM better understand these prompts.",
             user_role_prompt="You are an user that want to use LLM to build software.",
             user_role_name="User",
-            task_type=TaskType.CHATDEV,
+            task_type=TaskType.STARTR_TEAM,
             task_prompt="Do prompt engineering on user query",
             with_task_specify=False,
             model_type=self.model_type,
