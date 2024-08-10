@@ -1,34 +1,35 @@
 import yaml
+from enum import Enum
+import logging
 
 class ConfigLoader:
     def __init__(self, config_path='model_config.yaml'):
         self.config_path = config_path
-        self.default_config = {
-            'temperature': 0.7,
-            'top_p': 1.0,
-            'n': 1,
-            'stream': False,
-            'stop': None,
-            'presence_penalty': 0.0,
-            'frequency_penalty': 0.0,
-            'max_tokens': 4096,
-            'is_openai': True
-        }
         self.config = self.load_config()
+        self.ModelType = self.create_model_type_enum()
 
     def load_config(self):
         with open(self.config_path, 'r') as file:
-            specific_configs = yaml.safe_load(file)
-        return self.merge_configs(specific_configs)
-
-    def merge_configs(self, specific_configs):
-        models = specific_configs.get('models', {})
-        for model_name, model_config in models.items():
-            models[model_name] = {**self.default_config, **model_config}
-        return {'models': models}
+            return yaml.safe_load(file)
 
     def get_model_config(self, model_name):
-        return self.config['models'].get(model_name)
+        model_config = self.config['models'].get(model_name)
+        if model_config is None:
+            raise ValueError(f"No configuration found for model: {model_name}")
+        return model_config
+
 
     def get_all_model_configs(self):
         return self.config['models']
+
+    def get_default_config(self):
+        return self.config['default_config']
+
+    def create_model_type_enum(self):
+        return Enum('ModelType', {key: value['name'] for key, value in self.config['models'].items()})
+
+# Create a single instance of ConfigLoader
+config_loader = ConfigLoader()
+
+# Use the dynamically created ModelType enum
+ModelType = config_loader.ModelType

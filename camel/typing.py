@@ -1,12 +1,7 @@
 from enum import Enum
-from camel.config_loader import ConfigLoader
+from camel.config_loader import config_loader, ModelType
 
-# Load the model configurations
-config_loader = ConfigLoader()
-model_configs = config_loader.get_all_model_configs()
-
-# Dynamically create ModelType enum from the loaded model configurations
-ModelType = Enum('ModelType', {key: value['name'] for key, value in model_configs.items()})
+# The ModelType enum is now dynamically created in ConfigLoader
 
 class TaskType(Enum):
     """

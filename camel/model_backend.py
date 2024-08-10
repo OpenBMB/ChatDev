@@ -20,6 +20,8 @@ import openai
 import tiktoken
 
 from camel.typing import ModelType
+from camel.config_loader import config_loader
+
 from chatdev.statistics import prompt_cost
 from chatdev.utils import log_visualize
 
@@ -57,46 +59,48 @@ class ModelBackend(ABC):
         pass
 
 
+import logging
+
 class OpenAIModel(ModelBackend):
     def __init__(self, model_type: ModelType, model_config_dict: Dict) -> None:
         super().__init__()
         self.model_type = model_type
-        self.model_config_dict = model_config_dict
+        self.model_config = model_config_dict
         self.client = self._setup_client()
-        self.max_tokens = self._get_max_tokens()
+        self.max_tokens = self.model_config.get('max_tokens')
+        logging.debug(f"Initializing OpenAIModel with model_type: {model_type}, max_tokens: {self.max_tokens}")
+        if self.max_tokens is None:
+            logging.warning(f"max_tokens is None for model {model_type}. Using default value of 4096.")
+            self.max_tokens = 4096
 
     def _setup_client(self):
         if BASE_URL:
             return openai.OpenAI(api_key=OPENAI_API_KEY, base_url=BASE_URL)
         return openai.OpenAI(api_key=OPENAI_API_KEY)
 
-    def _get_max_tokens(self):
-        max_token_map = {
-            "gpt-3.5-turbo": 4096,
-            "gpt-3.5-turbo-16k": 16384,
-            "gpt-3.5-turbo-0613": 4096,
-            "gpt-3.5-turbo-16k-0613": 16384,
-            "gpt-4": 8192,
-            "gpt-4-0613": 8192,
-            "gpt-4-32k": 32768,
-            "gpt-4-turbo": 100000,
-            "gpt-4o:": 100000,
-            "gpt-4o-mini": 100000,
-        }
-        return max_token_map.get(self.model_type.value, 4096)
-
     def run(self, *args, **kwargs):
         messages = kwargs.get("messages", [])
         prompt = "\n".join(message["content"] for message in messages)
-        
+        # Calculate the number of tokens in the prompt
+        # See https://github.com/openai/tiktoken
+        # TODO: This is a hacky way to calculate the number of tokens in the prompt and should be improved 
         encoding = tiktoken.encoding_for_model(self.model_type.value)
         prompt_tokens = len(encoding.encode(prompt)) + 15 * len(messages)
         
-        max_completion_tokens = self.max_tokens - prompt_tokens
-        self.model_config_dict["max_tokens"] = max_completion_tokens
+        logging.debug(f"Running OpenAIModel with max_tokens: {self.max_tokens}, prompt_tokens: {prompt_tokens}")
+        max_completion_tokens = max(0, self.max_tokens - prompt_tokens)  # Ensure non-negative
+        
+        # Merge default config with model-specific config
+        run_config = {**config_loader.get_default_config(), **self.model_config}
+        # Remove 'name' and 'is_openai' from run_config as they're not needed for the API call
+        run_config.pop('name', None)
+        run_config.pop('is_openai', None)
+        
+        # Update max_tokens for this specific run
+        run_config['max_tokens'] = max_completion_tokens
 
         response = self.client.chat.completions.create(
-            *args, **kwargs, model=self.model_type.value, **self.model_config_dict
+            *args, **kwargs, model=self.model_type.value, **run_config
         )
 
         self._log_usage(response.usage)
@@ -140,19 +144,21 @@ class StubModel(ModelBackend):
 
 class ModelFactory:
     @staticmethod
-    def create(model_type: ModelType, model_config_dict: Dict) -> ModelBackend:
-        model_map = {
-            ModelType.GPT_3_5_TURBO: OpenAIModel,
-            ModelType.GPT_3_5_TURBO_NEW: OpenAIModel,
-            ModelType.GPT_4: OpenAIModel,
-            ModelType.GPT_4_TURBO: OpenAIModel,
-            ModelType.GPT_4_TURBO_V: OpenAIModel,
-            ModelType.STUB: StubModel,
-        }
-
-        model_class = model_map.get(model_type, OpenAIModel)
-        
+    def create(model_type: ModelType, model_config_dict: Dict = None) -> ModelBackend:
         if model_type is None:
             model_type = ModelType.GPT_3_5_TURBO
 
-        return model_class(model_type, model_config_dict)
+        if model_config_dict is None:
+            model_config_dict = config_loader.get_model_config(model_type.name)
+        
+        logging.debug(f"Creating model with type: {model_type}, config: {model_config_dict}")
+
+        if not model_config_dict:
+            raise ValueError(f"No configuration found for model type: {model_type}")
+
+        if model_config_dict.get('is_openai', True):
+            return OpenAIModel(model_type, model_config_dict)
+        elif model_type == ModelType.STUB:
+            return StubModel()
+        else:
+            raise ValueError(f"Unsupported model type: {model_type}")
