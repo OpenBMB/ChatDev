@@ -150,6 +150,7 @@ class LocalAI:
 
         self.chat = self.Chat(self)
 
+
 # Test run functionality
 def main():
     local_ai = LocalAI()
@@ -160,6 +161,7 @@ def main():
     result = local_ai.chat.completions.create(user, messages, max_tokens)
     print("Test Run Result:")
     print(result)
+
 
 if __name__ == "__main__":
     main()

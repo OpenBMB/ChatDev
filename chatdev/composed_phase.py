@@ -13,15 +13,16 @@ def check_bool(s):
 
 
 class ComposedPhase(ABC):
-    def __init__(self,
-                 phase_name: str = None,
-                 cycle_num: int = None,
-                 composition: list = None,
-                 config_phase: dict = None,
-                 config_role: dict = None,
-                 model_type: ModelType = ModelType.GPT_3_5_TURBO,
-                 log_filepath: str = ""
-                 ):
+    def __init__(
+        self,
+        phase_name: str = None,
+        cycle_num: int = None,
+        composition: list = None,
+        config_phase: dict = None,
+        config_role: dict = None,
+        model_type: ModelType = ModelType.GPT_3_5_TURBO,
+        log_filepath: str = "",
+    ):
         """
 
         Args:
@@ -55,18 +56,20 @@ class ComposedPhase(ABC):
         # init all SimplePhases instances in this ComposedPhase
         self.phases = dict()
         for phase in self.config_phase:
-            assistant_role_name = self.config_phase[phase]['assistant_role_name']
-            user_role_name = self.config_phase[phase]['user_role_name']
-            phase_prompt = "\n".join(self.config_phase[phase]['phase_prompt'])
+            assistant_role_name = self.config_phase[phase]["assistant_role_name"]
+            user_role_name = self.config_phase[phase]["user_role_name"]
+            phase_prompt = "\n".join(self.config_phase[phase]["phase_prompt"])
             phase_module = importlib.import_module("chatdev.phase")
             phase_class = getattr(phase_module, phase)
-            phase_instance = phase_class(assistant_role_name=assistant_role_name,
-                                         user_role_name=user_role_name,
-                                         phase_prompt=phase_prompt,
-                                         role_prompts=self.role_prompts,
-                                         phase_name=phase,
-                                         model_type=self.model_type,
-                                         log_filepath=self.log_filepath)
+            phase_instance = phase_class(
+                assistant_role_name=assistant_role_name,
+                user_role_name=user_role_name,
+                phase_prompt=phase_prompt,
+                role_prompts=self.role_prompts,
+                phase_name=phase,
+                model_type=self.model_type,
+                log_filepath=self.log_filepath,
+            )
             self.phases[phase] = phase_instance
 
     @abstractmethod
@@ -137,27 +140,36 @@ class ComposedPhase(ABC):
         self.update_phase_env(chat_env)
         for cycle_index in range(1, self.cycle_num + 1):
             for phase_item in self.composition:
-                assert phase_item["phaseType"] == "SimplePhase"  # right now we do not support nested composition
-                phase = phase_item['phase']
-                max_turn_step = phase_item['max_turn_step']
-                need_reflect = check_bool(phase_item['need_reflect'])
+                assert (
+                    phase_item["phaseType"] == "SimplePhase"
+                )  # right now we do not support nested composition
+                phase = phase_item["phase"]
+                max_turn_step = phase_item["max_turn_step"]
+                need_reflect = check_bool(phase_item["need_reflect"])
                 self.phase_env["cycle_index"] = cycle_index
                 log_visualize(
-                    f"**[Execute Detail]**\n\nexecute SimplePhase:[{phase}] in ComposedPhase:[{self.phase_name}], cycle {cycle_index}")
+                    f"**[Execute Detail]**\n\nexecute SimplePhase:[{phase}] in ComposedPhase:[{self.phase_name}], cycle {cycle_index}"
+                )
                 if phase in self.phases:
                     self.phases[phase].phase_env = self.phase_env
                     self.phases[phase].update_phase_env(chat_env)
                     if self.break_cycle(self.phases[phase].phase_env):
                         return chat_env
-                    chat_env = self.phases[phase].execute(chat_env,
-                                                          self.chat_turn_limit_default if max_turn_step <= 0 else max_turn_step,
-                                                          need_reflect)
+                    chat_env = self.phases[phase].execute(
+                        chat_env,
+                        self.chat_turn_limit_default
+                        if max_turn_step <= 0
+                        else max_turn_step,
+                        need_reflect,
+                    )
                     if self.break_cycle(self.phases[phase].phase_env):
                         return chat_env
                 else:
-                    print(f"Phase '{phase}' is not yet implemented. \
+                    print(
+                        f"Phase '{phase}' is not yet implemented. \
                             Please write its config in phaseConfig.json \
-                            and implement it in chatdev.phase")
+                            and implement it in chatdev.phase"
+                    )
         chat_env = self.update_chat_env(chat_env)
         return chat_env
 
@@ -181,20 +193,22 @@ class CodeCompleteAll(ComposedPhase):
         super().__init__(**kwargs)
 
     def update_phase_env(self, chat_env):
-        pyfiles = [filename for filename in os.listdir(chat_env.env_dict['directory']) if filename.endswith(".py")]
+        pyfiles = [
+            filename
+            for filename in os.listdir(chat_env.env_dict["directory"])
+            if filename.endswith(".py")
+        ]
         num_tried = defaultdict(int)
         num_tried.update({filename: 0 for filename in pyfiles})
-        self.phase_env.update({
-            "max_num_implement": 5,
-            "pyfiles": pyfiles,
-            "num_tried": num_tried
-        })
+        self.phase_env.update(
+            {"max_num_implement": 5, "pyfiles": pyfiles, "num_tried": num_tried}
+        )
 
     def update_chat_env(self, chat_env):
         return chat_env
 
     def break_cycle(self, phase_env) -> bool:
-        if phase_env['unimplemented_file'] == "":
+        if phase_env["unimplemented_file"] == "":
             return True
         else:
             return False
@@ -211,7 +225,7 @@ class CodeReview(ComposedPhase):
         return chat_env
 
     def break_cycle(self, phase_env) -> bool:
-        if "<INFO> Finished".lower() in phase_env['modification_conclusion'].lower():
+        if "<INFO> Finished".lower() in phase_env["modification_conclusion"].lower():
             return True
         else:
             return False
@@ -228,7 +242,10 @@ class HumanAgentInteraction(ComposedPhase):
         return chat_env
 
     def break_cycle(self, phase_env) -> bool:
-        if "<INFO> Finished".lower() in phase_env['modification_conclusion'].lower() or phase_env["comments"].lower() == "exit":
+        if (
+            "<INFO> Finished".lower() in phase_env["modification_conclusion"].lower()
+            or phase_env["comments"].lower() == "exit"
+        ):
             return True
         else:
             return False
@@ -245,8 +262,10 @@ class Test(ComposedPhase):
         return chat_env
 
     def break_cycle(self, phase_env) -> bool:
-        if not phase_env['exist_bugs_flag']:
-            log_visualize(f"**[Test Info]**\n\nAI User (Software Test Engineer):\nTest Pass!\n")
+        if not phase_env["exist_bugs_flag"]:
+            log_visualize(
+                f"**[Test Info]**\n\nAI User (Software Test Engineer):\nTest Pass!\n"
+            )
             return True
         else:
             return False

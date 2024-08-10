@@ -43,7 +43,12 @@ class Codes:
                 if filename == "":  # post-processing
                     filename = extract_filename_from_code(code)
                 assert filename != ""
-                if filename is not None and code is not None and len(filename) > 0 and len(code) > 0:
+                if (
+                    filename is not None
+                    and code is not None
+                    and len(filename) > 0
+                    and len(code) > 0
+                ):
                     self.codebooks[filename] = self._format_code(code)
 
     def _format_code(self, code):
@@ -54,21 +59,34 @@ class Codes:
         new_codes = Codes(generated_content)
         differ = difflib.Differ()
         for key in new_codes.codebooks.keys():
-            if key not in self.codebooks.keys() or self.codebooks[key] != new_codes.codebooks[key]:
+            if (
+                key not in self.codebooks.keys()
+                or self.codebooks[key] != new_codes.codebooks[key]
+            ):
                 update_codes_content = "**[Update Codes]**\n\n"
                 update_codes_content += "{} updated.\n".format(key)
-                old_codes_content = self.codebooks[key] if key in self.codebooks.keys() else "# None"
+                old_codes_content = (
+                    self.codebooks[key] if key in self.codebooks.keys() else "# None"
+                )
                 new_codes_content = new_codes.codebooks[key]
 
                 lines_old = old_codes_content.splitlines()
                 lines_new = new_codes_content.splitlines()
 
-                unified_diff = difflib.unified_diff(lines_old, lines_new, lineterm='', fromfile='Old', tofile='New')
-                unified_diff = '\n'.join(unified_diff)
-                update_codes_content = update_codes_content + "\n\n" + """```
+                unified_diff = difflib.unified_diff(
+                    lines_old, lines_new, lineterm="", fromfile="Old", tofile="New"
+                )
+                unified_diff = "\n".join(unified_diff)
+                update_codes_content = (
+                    update_codes_content
+                    + "\n\n"
+                    + """```
 '''
 
-'''\n""" + unified_diff + "\n```"
+'''\n"""
+                    + unified_diff
+                    + "\n```"
+                )
 
                 log_visualize(update_codes_content)
                 self.codebooks[key] = new_codes.codebooks[key]
@@ -99,39 +117,68 @@ class Codes:
             log_git_info += "cd {}; git add .\n".format(self.directory)
 
             # check if there exist diff
-            completed_process = subprocess.run("cd {}; git status".format(self.directory), shell=True, text=True,
-                                               stdout=subprocess.PIPE)
+            completed_process = subprocess.run(
+                "cd {}; git status".format(self.directory),
+                shell=True,
+                text=True,
+                stdout=subprocess.PIPE,
+            )
             if "nothing to commit" in completed_process.stdout:
                 self.version -= 1.0
                 return
 
-            os.system("cd {}; git commit -m \"v{}\"".format(self.directory, str(self.version) + " " + phase_info))
-            log_git_info += "cd {}; git commit -m \"v{}\"\n".format(self.directory,
-                                                                      str(self.version) + " " + phase_info)
+            os.system(
+                'cd {}; git commit -m "v{}"'.format(
+                    self.directory, str(self.version) + " " + phase_info
+                )
+            )
+            log_git_info += 'cd {}; git commit -m "v{}"\n'.format(
+                self.directory, str(self.version) + " " + phase_info
+            )
             if self.version == 1.0:
-                os.system("cd {}; git submodule add ./{} {}".format(os.path.dirname(os.path.dirname(self.directory)),
-                                                                    "WareHouse/" + os.path.basename(self.directory),
-                                                                    "WareHouse/" + os.path.basename(self.directory)))
+                os.system(
+                    "cd {}; git submodule add ./{} {}".format(
+                        os.path.dirname(os.path.dirname(self.directory)),
+                        "WareHouse/" + os.path.basename(self.directory),
+                        "WareHouse/" + os.path.basename(self.directory),
+                    )
+                )
                 log_git_info += "cd {}; git submodule add ./{} {}\n".format(
                     os.path.dirname(os.path.dirname(self.directory)),
                     "WareHouse/" + os.path.basename(self.directory),
-                    "WareHouse/" + os.path.basename(self.directory))
+                    "WareHouse/" + os.path.basename(self.directory),
+                )
                 log_visualize(rewrite_codes_content)
             log_visualize(log_git_info)
 
     def _get_codes(self) -> str:
         content = ""
         for filename in self.codebooks.keys():
-            content += "{}\n```{}\n{}\n```\n\n".format(filename,
-                                                       "python" if filename.endswith(".py") else filename.split(".")[
-                                                           -1], self.codebooks[filename])
+            content += "{}\n```{}\n{}\n```\n\n".format(
+                filename,
+                "python" if filename.endswith(".py") else filename.split(".")[-1],
+                self.codebooks[filename],
+            )
         return content
 
     def _load_from_hardware(self, directory) -> None:
-        assert len([filename for filename in os.listdir(directory) if filename.endswith(".py")]) > 0
+        assert (
+            len(
+                [
+                    filename
+                    for filename in os.listdir(directory)
+                    if filename.endswith(".py")
+                ]
+            )
+            > 0
+        )
         for root, directories, filenames in os.walk(directory):
             for filename in filenames:
                 if filename.endswith(".py"):
-                    code = open(os.path.join(directory, filename), "r", encoding="utf-8").read()
+                    code = open(
+                        os.path.join(directory, filename), "r", encoding="utf-8"
+                    ).read()
                     self.codebooks[filename] = self._format_code(code)
-        log_visualize("{} files read from {}".format(len(self.codebooks.keys()), directory))
+        log_visualize(
+            "{} files read from {}".format(len(self.codebooks.keys()), directory)
+        )

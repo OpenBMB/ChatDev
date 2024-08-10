@@ -1,4 +1,4 @@
-class Roster():
+class Roster:
     def __init__(self) -> None:
         self.agents = list()
 

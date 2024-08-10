@@ -7,9 +7,10 @@ import numpy as np
 from openai import OpenAI
 
 client = OpenAI(
-    api_key='',
+    api_key="",
     base_url="",
 )
+
 
 def getFilesFromType(sourceDir, filetype):
     files = []
@@ -18,6 +19,7 @@ def getFilesFromType(sourceDir, filetype):
             if filename.endswith(filetype):
                 files.append(os.path.join(root, filename))
     return files
+
 
 def get_code(directory):
     def _format_code(code):
@@ -39,19 +41,28 @@ def get_code(directory):
 
     return code.strip()
 
+
 def get_completeness(directory):
     assert os.path.isdir(directory)
     vn = get_code(directory)
     lines = vn.split("\n")
-    lines = [line for line in lines if
-             "password" not in line.lower() and "passenger" not in line.lower() and "passed" not in line.lower() and "passes" not in line.lower()]
+    lines = [
+        line
+        for line in lines
+        if "password" not in line.lower()
+        and "passenger" not in line.lower()
+        and "passed" not in line.lower()
+        and "passes" not in line.lower()
+    ]
     lines = [line for line in lines if "pass" in line.lower() or "todo" in line.lower()]
     if len(lines) > 0:
         return 0.0
     return 1.0
 
+
 def get_executability(directory):
     assert os.path.isdir(directory)
+
     def findFile(directory, target):
         main_py_path = None
         for subroot, _, filenames in os.walk(directory):
@@ -64,9 +75,14 @@ def get_executability(directory):
         assert os.path.isdir(directory)
         success_info = "The software run successfully without errors."
         try:
-            command = "cd \"{}\"; ls -l; python3 main.py;".format(directory)
-            process = subprocess.Popen(command, shell=True, preexec_fn=os.setsid, stdout=subprocess.PIPE,
-                                       stderr=subprocess.PIPE)
+            command = 'cd "{}"; ls -l; python3 main.py;'.format(directory)
+            process = subprocess.Popen(
+                command,
+                shell=True,
+                preexec_fn=os.setsid,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+            )
             time.sleep(3)
 
             error_type = ""
@@ -76,9 +92,9 @@ def get_executability(directory):
             if return_code == 0:
                 return False, success_info, error_type
             else:
-                error_output = process.stderr.read().decode('utf-8')
+                error_output = process.stderr.read().decode("utf-8")
                 try:
-                    error_pattern = r'\w+Error:'
+                    error_pattern = r"\w+Error:"
                     error_matches = re.findall(error_pattern, error_output)
                     error_type = error_matches[0].replace(":", "")
                 except:
@@ -109,8 +125,9 @@ def get_executability(directory):
         error_type = info.replace("\n", "\\n")
 
     if pass_flag:
-        return  1.0
+        return 1.0
     return 0.0
+
 
 def get_consistency(directory):
     def remove_comments(string):
@@ -134,19 +151,25 @@ def get_consistency(directory):
     def get_text_embedding(text: str):
         if text == "":
             text = "None"
-        ada_embedding = client.embeddings.create(input=text, model="text-embedding-ada-002").model_dump()['data'][0]['embedding']
+        ada_embedding = client.embeddings.create(
+            input=text, model="text-embedding-ada-002"
+        ).model_dump()["data"][0]["embedding"]
         return ada_embedding
 
     def get_code_embedding(code: str):
         if code == "":
             code = "#"
-        ada_embedding = client.embeddings.create(input=code, model="text-embedding-ada-002").model_dump()['data'][0]['embedding']
+        ada_embedding = client.embeddings.create(
+            input=code, model="text-embedding-ada-002"
+        ).model_dump()["data"][0]["embedding"]
         return ada_embedding
 
     def get_cosine_similarity(embeddingi, embeddingj):
         embeddingi = np.array(embeddingi)
         embeddingj = np.array(embeddingj)
-        cos_sim = embeddingi.dot(embeddingj) / (np.linalg.norm(embeddingi) * np.linalg.norm(embeddingj))
+        cos_sim = embeddingi.dot(embeddingj) / (
+            np.linalg.norm(embeddingi) * np.linalg.norm(embeddingj)
+        )
         return cos_sim
 
     assert os.path.isdir(directory)
@@ -163,6 +186,7 @@ def get_consistency(directory):
     task_code_alignment = get_cosine_similarity(text_embedding, code_embedding)
 
     return task_code_alignment
+
 
 def main(warehouse_root):
     def write_string(string):
@@ -196,4 +220,5 @@ def main(warehouse_root):
 
             counter += 1
 
-main(warehouse_root = "./WareHouse")
+
+main(warehouse_root="./WareHouse")
