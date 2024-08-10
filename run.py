@@ -18,7 +18,7 @@ import os
 import sys
 from typing import NoReturn, Tuple, List
 
-from camel.typing import ModelType
+from camel.typing import ModelType # imports our models from model_config.yaml
 
 # Constants
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -45,18 +45,86 @@ except ImportError:
     print(
         "Warning: Your OpenAI version is outdated. \n "
         "Please update as specified in requirement.txt. \n "
-        "The old API interface is deprecated and will no longer be supported.")
+        "The old API interface is no longer supported.")
 
 
 def get_model_choices() -> List[str]:
     """
-    Get the list of available model choices from ModelType enum.
+    Get a list of model names from the ModelType enum.
 
     Returns:
-        List[str]: List of available model choices.
+        List[str]: A list of model names as strings.
     """
     return [model.name for model in ModelType]
 
+
+
+
+
+def check_api_key() -> NoReturn:
+    """
+    Check if the OpenAI API key is set and exit if it's not.
+
+    Raises:
+        SystemExit: If the API key is not set or is empty.
+    """
+    if 'OPENAI_API_KEY' not in os.environ or os.environ['OPENAI_API_KEY'] == "":
+        print("\033[94m")
+        print("Error: OPENAI_API_KEY environment variable is not set or is empty.")
+        print("To fix, please set your OpenAI API key by doing one of the following:")
+        print("  1. Run `export OPENAI_API_KEY=\"your-api-key-here\"` in your terminal.")
+        print("  2. Add `OPENAI_API_KEY=your-api-key-here` to a new line in a `.env` file in your project's root directory.")
+        print("If you don't have an API key, sign up at https://platform.openai.com/signup")
+        print("\033[0m")
+        sys.exit(1)
+
+
+def get_config(company: str) -> Tuple[str, str, str]:
+    """
+    Get paths to configuration files for a company.
+
+    This function checks if custom configuration files exist for the given company.
+    If custom files are found, it returns their paths. If not, it returns paths to
+    default configuration files.
+
+    Args:
+        company (str): The name of the company to get configuration files for. 
+                    Custom configurations are stored in a folder named after the company.
+
+    Returns:
+        Tuple[str, str, str]: Paths to three configuration files:
+            - Path to the main config file
+            - Path to the phase config file
+            - Path to the role config file
+
+    Note:
+        Configuration files are in JSON format.
+
+        If a custom file is missing, the function will use the default file instead.
+    """
+    config_dir = os.path.join(CONFIG_DIR, company)
+    config_paths = []
+
+    for config_file in CONFIG_FILES:
+        company_config_path = os.path.join(config_dir, config_file)
+        default_config_path = os.path.join(DEFAULT_CONFIG_DIR, config_file)
+
+        if os.path.exists(company_config_path):
+            config_paths.append(company_config_path)
+        else:
+            config_paths.append(default_config_path)
+
+    return tuple(config_paths)
+
+def get_CompanyConfigs() -> List[str]:
+    """
+    Get a list of company names from the CompanyConfig directory.
+
+    Returns:
+        List[str]: A list of company names as strings.
+    """
+    #return os.listdir(CONFIG_DIR) note we should only return directories
+    return [name for name in os.listdir(CONFIG_DIR) if os.path.isdir(os.path.join(CONFIG_DIR, name))]
 
 def parse_arguments() -> argparse.Namespace:
     """
@@ -70,7 +138,7 @@ def parse_arguments() -> argparse.Namespace:
         # Dictionary to hold argument configurations
     args_config = {
         'local': (bool, False, "Use local Ollama API instead of OpenAI API"),
-        'config': (str, "Default", "Config name for loading settings"),
+        'config': (str, "Default", "CompanyConfig name loading settings(Choices: {})".format(", ".join(get_CompanyConfigs()))),
         'org': (str, "DefaultOrganization", "Organization name for software generation"),
         'task': (str, "Develop a basic Website.", "Software prompt"),
         'name': (str, "Website", "Software name for generation"),
@@ -106,58 +174,6 @@ def parse_arguments() -> argparse.Namespace:
 
     
     return parser.parse_args()
-
-
-def get_config(company: str) -> Tuple[str, str, str]:
-    """
-    Get configuration JSON files for ChatChain.
-
-    This function returns paths to configuration JSON files. It allows for
-    customization of parts of the configuration, falling back to default
-    configurations when custom ones are not provided.
-
-    Args:
-        company (str): Customized configuration name under CompanyConfig/
-
-    Returns:
-        Tuple[str, str, str]: Paths to three configuration JSONs:
-            [config_path, config_phase_path, config_role_path]
-
-    Note:
-        If a custom configuration file doesn't exist, the default one will be used.
-    """
-    config_dir = os.path.join(CONFIG_DIR, company)
-    config_paths = []
-
-    for config_file in CONFIG_FILES:
-        company_config_path = os.path.join(config_dir, config_file)
-        default_config_path = os.path.join(DEFAULT_CONFIG_DIR, config_file)
-
-        if os.path.exists(company_config_path):
-            config_paths.append(company_config_path)
-        else:
-            config_paths.append(default_config_path)
-
-    return tuple(config_paths)
-
-
-def check_api_key() -> NoReturn:
-    """
-    Check if the OpenAI API key is set and exit if it's not.
-
-    Raises:
-        SystemExit: If the API key is not set or is empty.
-    """
-    if 'OPENAI_API_KEY' not in os.environ or os.environ['OPENAI_API_KEY'] == "":
-        print("\033[94m")
-        print("Error: OPENAI_API_KEY environment variable is not set or is empty.")
-        print("To fix, please set your OpenAI API key by doing one of the following:")
-        print("  1. Run `export OPENAI_API_KEY=\"your-api-key-here\"` in your terminal.")
-        print("  2. Add `OPENAI_API_KEY=your-api-key-here` to a new line in a `.env` file in your project's root directory.")
-        print("If you don't have an API key, sign up at https://platform.openai.com/signup")
-        print("\033[0m")
-        sys.exit(1)
-
 
 def main():
     """
