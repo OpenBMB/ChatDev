@@ -53,7 +53,7 @@ def convert_to_markdown_table(records_kv):
     rows = [f"| **{key}** | {value} |" for (key, value) in records_kv]
 
     # Combine the header and rows to form the final Markdown table
-    markdown_table = header + "\n" + '\n'.join(rows)
+    markdown_table = header + "\n" + "\n".join(rows)
 
     return markdown_table
 
@@ -80,10 +80,11 @@ def log_arguments(func):
 
     return wrapper
 
+
 def escape_string(value):
     value = str(value)
     value = html.unescape(value)
     value = markdown.markdown(value)
-    value = re.sub(r'<[^>]*>', '', value)
+    value = re.sub(r"<[^>]*>", "", value)
     value = value.replace("\n", " ")
     return value
