@@ -99,8 +99,14 @@ def get_info(dir, log_filepath):
                 lines = open(os.path.join(dir, filename), "r", encoding="utf8").read().split("\n")
                 code_lines += len([line for line in lines if len(line.strip()) > 0])
         # print("code_lines:", code_lines)
-
-        lines = open(log_filepath, "r", encoding="utf8").read().split("\n")
+        try:
+            lines = open(log_filepath, "r", encoding="utf8").read().split("\n")
+        except Exception as e:
+            print(f"An error occurred: {e}")
+            # creat the log file where expected and set lines
+            open(log_filepath, "w", encoding="utf8").write("")
+            lines = open(log_filepath, "r", encoding="utf8").read().split("\n")
+            
         sublines = [line for line in lines if "| **model_type** |" in line]
         if len(sublines) > 0:
             model_type = sublines[0].split("| **model_type** | ModelType.")[-1].split(" | ")[0]
@@ -113,7 +119,12 @@ def get_info(dir, log_filepath):
                 model_type = "gpt-4-32k"
             elif model_type == "GPT_4_TURBO":
                 model_type = "gpt-4-turbo"
-            # print("model_type:", model_type)
+            elif model_type == "GPT_4O":
+                model_type = "gpt-4o"
+            elif model_type == "GPT_4O_MINI":
+                model_type = "gpt-4o-mini"
+
+        # We really should be importing our models from camel.config_loader
 
         lines = open(log_filepath, "r", encoding="utf8").read().split("\n")
         start_lines = [line for line in lines if "**[Start Chat]**" in line]
