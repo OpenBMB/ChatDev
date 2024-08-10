@@ -129,6 +129,7 @@ def get_CompanyConfigs() -> List[str]:
     #return os.listdir(CONFIG_DIR) note we should only return directories
     return [name for name in os.listdir(CONFIG_DIR) if os.path.isdir(os.path.join(CONFIG_DIR, name))]
 
+
 def parse_arguments() -> argparse.Namespace:
     """
     Parse command-line arguments for the Startr.Team ChatChain.
@@ -137,12 +138,11 @@ def parse_arguments() -> argparse.Namespace:
         argparse.Namespace: Parsed command-line arguments.
     """
     parser = argparse.ArgumentParser(description='Startr.Team ChatChain')
-        
-        # Dictionary to hold argument configurations
+    
+    # Dictionary to hold argument configurations
     args_config = {
-        # Lets start with a debug flag
-        'debug': (bool, False, "Enable debug mode"),
-        'local': (bool, False, "Use local Ollama API instead of OpenAI API"),
+        'debug': ('store_true', False, "Enable debug mode"),
+        'local': ('store_true', False, "Use local Ollama API instead of OpenAI API"),
         'config': (str, "Default", "CompanyConfig name loading settings(Choices: {})".format(", ".join(get_CompanyConfigs()))),
         'org': (str, "DefaultOrganization", "Organization name for software generation"),
         'task': (str, "Develop a basic Website.", "Software prompt"),
@@ -152,33 +152,30 @@ def parse_arguments() -> argparse.Namespace:
     }
 
     # Loop through each argument configuration
-    for arg, (type_, default, help_text) in args_config.items():
+    for arg, (action_or_type, default, help_text) in args_config.items():
         flag = f'--{arg}'  # Infer long flag based on key name
         short_flag = f'-{arg[0]}'  # Infer short flag based on the first character of the key name
-        """
-        if arg == 'model':
-            choices = get_model_choices()
-            help_text = f"{help_text}"
+        
+        if action_or_type == 'store_true':
             parser.add_argument(
                 short_flag,
                 flag,
-                type=type_,
+                action=action_or_type,
                 default=default,
                 help=help_text
             )
         else:
-        """
             # Add the argument to the parser with the given configuration
-        parser.add_argument(
-            short_flag,
-            flag,
-            type=type_,
-            default=default,
-            help=help_text
-        )
+            parser.add_argument(
+                short_flag,
+                flag,
+                type=action_or_type,
+                default=default,
+                help=help_text
+            )
 
-    
     return parser.parse_args()
+
 
 def main():
     """
@@ -186,7 +183,6 @@ def main():
     """
     args = parse_arguments()
 
-    # check debug flag
     if args.debug:
         logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
     else:
