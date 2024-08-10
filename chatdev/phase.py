@@ -586,7 +586,8 @@ class TestErrorSummary(Phase):
                               user_role_prompt=self.user_role_prompt,
                               memory=chat_env.memory,
                               chat_turn_limit=chat_turn_limit,
-                              placeholders=self.phase_env)
+                              placeholders=self.phase_env,
+                              model_type=self.model_type)
         chat_env = self.update_chat_env(chat_env)
         return chat_env
 
