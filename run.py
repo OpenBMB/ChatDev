@@ -20,6 +20,9 @@ from typing import NoReturn, Tuple, List
 
 from camel.typing import ModelType # imports our models from model_config.yaml
 
+import logging
+
+
 # Constants
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 CONFIG_DIR = os.path.join(ROOT_DIR, "CompanyConfig")
@@ -137,6 +140,8 @@ def parse_arguments() -> argparse.Namespace:
         
         # Dictionary to hold argument configurations
     args_config = {
+        # Lets start with a debug flag
+        'debug': (bool, False, "Enable debug mode"),
         'local': (bool, False, "Use local Ollama API instead of OpenAI API"),
         'config': (str, "Default", "CompanyConfig name loading settings(Choices: {})".format(", ".join(get_CompanyConfigs()))),
         'org': (str, "DefaultOrganization", "Organization name for software generation"),
@@ -180,6 +185,14 @@ def main():
     Main function to execute the Startr.Team ChatChain process.
     """
     args = parse_arguments()
+
+    # check debug flag
+    if args.debug:
+        logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
+    else:
+        logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+    
+    
     check_api_key()
 
     config_path, config_phase_path, config_role_path = get_config(args.config)
