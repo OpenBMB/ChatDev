@@ -66,6 +66,19 @@ coordSet["Prompt Engineer"] = {
     "top": "-320px",
     "left": "20px"
 }
+coordSet["System"] = {
+    "character": "System",
+    "imgid": "left",
+    "top": "-405px",
+    "left": "20px"
+}
+coordSet["HTTP Request"] = {
+    "character": "HTTP Request",
+    "imgid": "right",
+    "top": "-405px",
+    "left": "20px"
+}
+
 const Softwareinfo = {
     "duration": "-1",
     "cost": "-1",
@@ -178,6 +191,7 @@ async function replayDialog(idx) {
     }
     if (idx == 0) {
         replaying = 1;
+        console.log("Attempting to replay");
         dialog = extraction(contents);
         var filelable = document.getElementById("successupload");
         filelable.style.display = "block";
@@ -208,179 +222,132 @@ function watchfileInput(files) {
     }
 }
 
-//extract information
 function extraction(contents) {
-    const regex = /\[(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2} \w+)\] ([.\s\S\n\r\d\D\t]*?)(?=\n\[\d|$)/g;
+    console.log("Starting extraction process...");
+
+    // Updated regex to capture log entries with the correct format
+    const regex = /^(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2},\d{3}) - (\w+) - (.*?)$/gm;
 
     var matches = [];
-
     let match;
-    var itemp = 0;
-    while ((match = regex.exec(contents))) {
-        console.log(itemp);
-        itemp++;
+
+    while ((match = regex.exec(contents)) !== null) {
         const timestamp = match[1];
-        const text = match[2];
-        matches.push({
-            timestamp,
-            text
-        });
+        const level = match[2];
+        const text = match[3];
+        matches.push({ timestamp, level, text });
     }
-    const regex_assistant = /(.*):([.\r\n\s\S\t\d\D]*)<->([.\r\n\s\S\t\d\D]*?)\]([.\r\n\s\S\t\d\D]*)/g;
-    const regex_user = /(.*):(.*)(\[Start Chat\])([.\r\n\s\S\t\d\D]*?)\]([.\r\n\s\S\t\d\D]*)/g;
-    const regex_prompt = /(Prompt Engineer):([\S\s]*)/g
 
-    const regex_end = /(AgentTech Ends|Startr.Team Ends)/g;
-    const regex_start = /(Startr.Team Starts)([\D\s])*(\d*)/g;
+    console.log("Total matches found: ", matches.length);
 
-    const regex_task = /(task_prompt)(.*):(.*)/g;
-    const regex_info = /Software Info([\r\n\s\S\t\d\D]*)/g;
+    const dialog = [];
+    let count = 0;
 
-    const regex_system = /System/g;
-    const regex_debug = /DEBUG/g;
+    // Simplified regex patterns for different log entry types
+    const regex_assistant = /(.*?): (.*)/s;
+    const regex_user = /(.*?): (.*)/s;
+    const regex_start = /Startr.Team Starts/s;
+    const regex_end = /Startr.Team Ends/s;
+    const regex_task = /task_prompt: (.*)/s;
+    const regex_info = /Software Info:([\s\S]*)/s;
 
-    var dialog = [];
-    var count = 0;
+    for (let i = 0; i < matches.length; i++) {
+        const { timestamp, text } = matches[i];
+        console.log(`Processing match ${i + 1}/${matches.length} - Timestamp: ${timestamp}`);
+        console.log(`Text content: ${text}`);
 
-    for (let i = 0; i < matches.length; ++i) {
-        var if_break = false;
-        console.log(i);
-        if (i == 159 || i == 198 || i == 223 || i == 260 || i == 416 || i == 537) {
-            //console.log(matches[i]);
-        }
-        while ((match = regex_debug.exec(matches[i].timestamp)) !== null) {
-            if_break = true;
-        }
-        while ((match = regex_system.exec(matches[i].text)) !== null) {
-            if_break = true;
-        }
-        while (((match = regex_prompt.exec(matches[i].text)) !== null)) {
-            const type = "assitant";
-            const character = match[1];
-            const command = match[2];
-            const len = match[2].length;
-            count += 1;
+        let if_break = false;
+
+        if (regex_start.test(text)) {
+            console.log("Matched start of session");
             dialog.push({
-                type,
-                character,
-                command,
-                len,
-                count
+                start: "Startr.Team Starts",
             });
             if_break = true;
         }
-        if (if_break) {
-            continue;
+
+        if (regex_end.test(text)) {
+            console.log("Matched end of session");
+            dialog.push({
+                end: "Startr.Team Ends",
+            });
+            if_break = true;
         }
 
-        while ((match = regex_assistant.exec(matches[i].text)) !== null) {
-            const type = "assitant";
-            const character = match[1];
-            const command = match[4];
-            const len = match[4].length;
-            count += 1;
+        if ((match = regex_assistant.exec(text)) !== null) {
+            console.log("Matched assistant dialog:", match[2]);
             dialog.push({
-                type,
-                character,
-                command,
-                len,
-                count
+                type: "assistant",
+                character: match[1],
+                command: match[2],
+                len: match[2].length,
+                count: ++count
             });
+            if_break = true;
+        }
 
-        }
-        while ((match = regex_user.exec(matches[i].text)) !== null) {
-            const type = "user";
-            const character = match[1];
-            const command = match[5];
-            const len = match[5].length;
-            count += 1;
+        if ((match = regex_user.exec(text)) !== null) {
+            console.log("Matched user dialog:", match[2]);
             dialog.push({
-                type,
-                character,
-                command,
-                len,
-                count
+                type: "user",
+                character: match[1],
+                command: match[2],
+                len: match[2].length,
+                count: ++count
             });
+            if_break = true;
         }
-        while ((match = regex_start.exec(matches[i].text)) !== null) {
-            const start = match[1];
-            const len = match[1].length;
-            dialog.push({
-                start,
-                len,
-            });
 
-        }
-        while ((match = regex_end.exec(matches[i].text)) !== null) {
-            const end = match[1];
-            const len = match[1].length;
+        if ((match = regex_task.exec(text)) !== null) {
+            console.log("Matched task:", match[1]);
             dialog.push({
-                end,
-                len,
+                task: match[1]
             });
-
+            if_break = true;
         }
-        while ((match = regex_task.exec(matches[i].text)) !== null) {
-            const task = match[3];
-            dialog.push({
-                task
-            });
 
-        }
-        while ((match = regex_info.exec(matches[i].text)) !== null) {
+        if ((match = regex_info.exec(text)) !== null) {
+            console.log("Matched software info");
             const info = match[1];
-            if ((/code_lines(?:[\t\n\r\s\D]*?)=(-?(\d*))/g).exec(info) != null) {
-                Softwareinfo.code_lines = (/code_lines(?:[\t\n\r\s\D]*?)=(-?(\d*))/g).exec(info)[1];
-            }
-            if ((/num_code_files(?:[\t\n\r\s\D]*?)=(-?(\d*))/g).exec(info) != null) {
-                Softwareinfo.num_code_files = (/num_code_files(?:[\t\n\r\s\D]*?)=(-?(\d*))/g).exec(info)[1];
-            }
-            if ((/num_png_files(?:[\t\n\r\s\D]*?)=(-?(\d*))/g).exec(info) != null) {
-                Softwareinfo.num_png_files = (/num_png_files(?:[\t\n\r\s\D]*?)=(-?(\d*))/g).exec(info)[1];
-            }
-            if ((/num_doc_files(?:[\t\n\r\s\D]*?)=(-?(\d*))/g).exec(info) != null) {
-                Softwareinfo.num_doc_files = (/num_doc_files(?:[\t\n\r\s\D]*?)=(-?(\d*))/g).exec(info)[1];
-            }
-            if ((/env_lines(?:[\t\n\r\s\D]*?)=(-?(\d*))/g).exec(info) != null) {
-                Softwareinfo.env_lines = (/env_lines(?:[\t\n\r\s\D]*?)=(-?(\d*))/g).exec(info)[1];
-            }
-            if ((/manual_lines(?:[\t\n\r\s\D]*?)=(-?(\d*))/g).exec(info) != null) {
-                Softwareinfo.manual_lines = (/manual_lines(?:[\t\n\r\s\D]*?)=(-?(\d*))/g).exec(info)[1];
-            }
-            if ((/duration(?:[\t\n\r\s\D]*?)=(-?(\d*)(.(\d)*)?s)/g).exec(info) != null) {
-                Softwareinfo.duration = (/duration(?:[\t\n\r\s\D]*?)=(-?(\d*)(.(\d)*)?s)/g).exec(info)[1];
-            }
-            if ((/num_utterances(?:[\t\n\r\s\D]*?)=(-?(\d*))/g).exec(info) != null) {
-                Softwareinfo.num_utterances = (/num_utterances(?:[\t\n\r\s\D]*?)=(-?(\d*))/g).exec(info)[1];
-            }
-            if ((/num_self_reflections(?:[\t\n\r\s\D]*?)=(-?(\d*))/g).exec(info) != null) {
-                Softwareinfo.num_self_reflections = (/num_self_reflections(?:[\t\n\r\s\D]*?)=(-?(\d*))/g).exec(info)[1];
-            }
-            if ((/num_prompt_tokens(?:[\t\n\r\s\D]*?)=(-?(\d*))/g).exec(info) != null) {
-                Softwareinfo.num_prompt_tokens = (/num_prompt_tokens(?:[\t\n\r\s\D]*?)=(-?(\d*))/g).exec(info)[1];
-            }
-            if ((/num_completion_tokens(?:[\t\n\r\s\D]*?)=(-?(\d*))/g).exec(info) != null) {
-                Softwareinfo.num_completion_tokens = (/num_completion_tokens(?:[\t\n\r\s\D]*?)=(-?(\d*))/g).exec(info)[1];
-            }
-            if ((/num_total_tokens(?:[\t\n\r\s\D]*?)=(-?(\d*))/g).exec(info) != null) {
-                Softwareinfo.num_total_tokens = (/num_total_tokens(?:[\t\n\r\s\D]*?)=(-?(\d*))/g).exec(info)[1];
-            }
-            if ((/cost(?:[\t\n\r\s\D]*?)=(.((\d)*\.(\d)*))/g).exec(info) != null) {
-                Softwareinfo.cost = (/cost(?:[\t\n\r\s\D]*?)=(.((\d)*\.(\d)*))/g).exec(info)[1];
-            }
-            if ((/version_updates(?:[\t\n\r\s\D]*?)=(-?\d*)/g).exec(info) != null) {
-                Softwareinfo.version_updates = (/version_updates(?:[\t\n\r\s\D]*?)=(-?\d*)/g).exec(info)[1];
-            }
+            const Softwareinfo = {};
+            
+            const extractInfo = (pattern, key) => {
+                const res = new RegExp(pattern).exec(info);
+                if (res) {
+                    Softwareinfo[key] = res[1];
+                    console.log(`Extracted ${key}: ${Softwareinfo[key]}`);
+                }
+            };
 
-            dialog.push({
-                info,
-                Softwareinfo
-            });
+            extractInfo(/code_lines\s*=\s*(\d+)/, "code_lines");
+            extractInfo(/num_code_files\s*=\s*(\d+)/, "num_code_files");
+            extractInfo(/num_png_files\s*=\s*(\d+)/, "num_png_files");
+            extractInfo(/num_doc_files\s*=\s*(\d+)/, "num_doc_files");
+            extractInfo(/env_lines\s*=\s*(\d+)/, "env_lines");
+            extractInfo(/manual_lines\s*=\s*(\d+)/, "manual_lines");
+            extractInfo(/duration\s*=\s*(\d+(\.\d+)?s)/, "duration");
+            extractInfo(/num_utterances\s*=\s*(\d+)/, "num_utterances");
+            extractInfo(/num_self_reflections\s*=\s*(\d+)/, "num_self_reflections");
+            extractInfo(/num_prompt_tokens\s*=\s*(\d+)/, "num_prompt_tokens");
+            extractInfo(/num_completion_tokens\s*=\s*(\d+)/, "num_completion_tokens");
+            extractInfo(/num_total_tokens\s*=\s*(\d+)/, "num_total_tokens");
+            extractInfo(/cost\s*=\s*([\d.]+)/, "cost");
+            extractInfo(/version_updates\s*=\s*(\d+)/, "version_updates");
 
+            dialog.push({ info, Softwareinfo });
+            if_break = true;
+        }
+
+        if (!if_break) {
+            console.log("No match found for this entry.");
         }
     }
+
+    console.log("Extraction complete. Total dialogs extracted:", dialog.length);
     return dialog;
 }
+
+
 
 //show dailog
 function createPara(d, i) {
@@ -419,6 +386,10 @@ function createPara(d, i) {
         console.log(d.character);
         if (d.character == "Programmer") {
             characterimg.src = "figures/programmer.png";
+        } else if (d.character == "System") {
+            characterimg.src = "figures/System.png";
+        } else if (d.character == "HTTP Request") {
+            characterimg.src = "figures/http.png";
         } else if (d.character == "Code Reviewer") {
             characterimg.src = "figures/reviewer.png";
         } else if (d.character == "Chief Human Resource Officer") {
@@ -514,29 +485,36 @@ function createPara(d, i) {
 
 //update company image
 function updateCompanyWorking(character) {
-    if (character == "end") {
+    if (character === "end") {
         var img1 = document.getElementById("right");
-        img1.style.display = "none";
         var img2 = document.getElementById("left");
-        img2.style.display = "none";
+        if (img1) img1.style.display = "none";
+        if (img2) img2.style.display = "none";
         return;
     }
-    var imgid = coordSet[character].imgid;
-    var left_bias = coordSet[character].left;
-    var top_bias = coordSet[character].top;
+
+    const characterConfig = coordSet[character];
+    if (!characterConfig) {
+        console.error(`Character '${character}' is not defined in coordSet.`);
+        return;
+    }
+
+    var imgid = characterConfig.imgid;
+    var left_bias = characterConfig.left;
+    var top_bias = characterConfig.top;
     var img = document.getElementById(imgid);
+
+    if (!img) {
+        console.error(`Image element with id '${imgid}' not found.`);
+        return;
+    }
 
     img.style.display = "block";
     img.style.left = left_bias;
     img.style.top = top_bias;
 
-    if (imgid == "left") {
-        var another_img = document.getElementById("right");
-        another_img.style.display = "none";
-    } else {
-        var another_img = document.getElementById("left");
-        another_img.style.display = "none";
-    }
+    var another_img = document.getElementById(imgid === "left" ? "right" : "left");
+    if (another_img) another_img.style.display = "none";
 }
 
 async function updateParashow(container, command, index, len) {
