@@ -388,12 +388,12 @@ Detailed descriptions and experiment results about this Experiential Co-Evolving
 ![demo](misc/ChatChain_Visualization_Default.png)
 - As shown in the ChatChain visualization of the Default setting, Startr.Team will produce software in the order of:
   - Demand Analysis: decide the modality of the software
-  - Language Choose: decide the programming language
-  - Coding: write the code
+  - Choose Language: decide what language to build with
+  - CodeThis: write the code
   - CodeThisProject: complete the missing function/class
   - CodeReview: review and modify the code
   - Test: run the software and modify the code based on the test report
-  - EnvironmentDescription: write the environment doc
+  - EnvironmentDescription: write the environment description file
   - Manual: write the manual
 - You can use default setting using ``python3 run.py --config "Default"``.
 
