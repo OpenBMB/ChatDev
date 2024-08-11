@@ -486,7 +486,7 @@ class ArtIntegration(Phase):
         return chat_env
 
 
-class CodeComplete(Phase):
+class CodeThis(Phase):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 

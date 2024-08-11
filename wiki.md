@@ -390,7 +390,7 @@ Detailed descriptions and experiment results about this Experiential Co-Evolving
   - Demand Analysis: decide the modality of the software
   - Language Choose: decide the programming language
   - Coding: write the code
-  - CodeCompleteAll: complete the missing function/class
+  - CodeThisProject: complete the missing function/class
   - CodeReview: review and modify the code
   - Test: run the software and modify the code based on the test report
   - EnvironmentDoc: write the environment doc
@@ -399,7 +399,7 @@ Detailed descriptions and experiment results about this Experiential Co-Evolving
 
 ### Art
 ![demo](misc/ChatChain_Visualization_Art.png)
-- Compared to Default, the Art setting adds a phase before CodeCompleteAll called Art
+- Compared to Default, the Art setting adds a phase before CodeThisProject called Art
 - The Art phase will first discuss the name and description of the images assets, then use ``openai.Image.create`` to generate the images based on the description.
 - You can use default setting using ``python3 run.py --config "Art"`` or just ignore the config parameter.
 
@@ -424,7 +424,7 @@ Detailed descriptions and experiment results about this Experiential Co-Evolving
 - Every change made on the code of generated software will create a commit, including:
   - The initial commit, created after the ``Coding`` phase completed, with a commit message ``Finish Coding``.
   - Complete ``ArtIntegration`` phase, with a commit message ``Finish Art Integration``.
-  - Complete ``CodeComplete`` phase, with a commit message ``Code Complete #1/2/3 Finished``(if the CodeComplete is executed in three loops).
+  - Complete ``CodeThis`` phase, with a commit message ``Code Complete #1/2/3 Finished``(if the CodeThis is executed in three loops).
   - Complete ``CodeReviewModification`` phase, with a commit message ``Review #1/2/3 Finished``(if the CodeReviewModification is executed in three loops).
   - Complete ``CodeReviewHuman`` phase, with a commit message ``Human Review #1/2/3 Finished``(if the CodeReviewHuman is executed in three loops).
   - Complete ``TestModification`` phase, with a commit message ``Test #1/2/3 Finished``(if the TestModification is executed in three loops).

@@ -188,7 +188,7 @@ class Art(ComposedPhase):
         return False
 
 
-class CodeCompleteAll(ComposedPhase):
+class CodeThisProject(ComposedPhase):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
