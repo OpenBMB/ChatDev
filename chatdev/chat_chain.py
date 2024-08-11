@@ -99,20 +99,22 @@ class ChatChain:
 
         # Prepare a dictionary to store phase instances
         self.phases = {}
-        
+
         # Iterate over each phase in the configuration
         for phase_name, phase_config in self.config_phase.items():
             # Retrieve role names for the assistant and user
             assistant_role_name = phase_config["assistant_role_name"]
             user_role_name = phase_config["user_role_name"]
-            
+
             # Retrieve and combine prompts for the current phase into one string
             prompts = phase_config["phase_prompt"]
-            phase_prompt = "\n\n".join(prompts)  # Join prompts with two newlines to separate them
-            
+            phase_prompt = "\n\n".join(
+                prompts
+            )  # Join prompts with two newlines to separate them
+
             # Dynamically get the class associated with the current phase
             phase_class = getattr(self.phase_module, phase_name)
-            
+
             # Create an instance of the phase class with the appropriate parameters
             phase_instance = phase_class(
                 assistant_role_name=assistant_role_name,
@@ -123,10 +125,9 @@ class ChatChain:
                 model_type=self.model_type,
                 log_filepath=self.log_filepath,
             )
-            
+
             # Store the phase instance in the phases dictionary
             self.phases[phase_name] = phase_instance
-
 
     def load_json_configs(self):
         """
@@ -149,12 +150,16 @@ class ChatChain:
 
     def recruit_team(self):
         """
-        recruit all employees
-        Returns: None
+        Recruit all employees listed in 'self.recruits' into the chat environment.
 
+        This method recruits each employee in the 'self.recruits' list by calling
+        the 'recruit' method on the 'chat_env' to add them to the chat environment.
+
+        Returns:
+            None
         """
-        for employee in self.recruits:
-            self.chat_env.recruit(agent_name=employee)
+        # Recruit each employee in the recruits list into the chat environment
+        [self.chat_env.recruit(agent_name=employee) for employee in self.recruits]
 
     def execute_step(self, phase_item: dict):
         """
@@ -208,12 +213,15 @@ class ChatChain:
 
     def execute_chain(self):
         """
-        execute the whole chain based on ChatChainConfig.json
-        Returns: None
+        Execute the entire chain based on the c
+        onfiguration specified in ChatChainConfig.json.
 
+        This method applies the 'execute_step' function to each item
+        in the 'self.chain' list using the 'map()' function.
+
+        The 'list()' function is used to ensure that all steps are executed immediately.
         """
-        for phase_item in self.chain:
-            self.execute_step(phase_item)
+        list(map(self.execute_step, self.chain))
 
     def get_logfilepath(self):
         """
