@@ -20,44 +20,40 @@ def check_bool(s):
 
 
 class ChatChain:
-    def __init__(
-        self,
-        use_ollama: bool = False,
-        config_path: str = None,
-        config_phase_path: str = None,
-        config_role_path: str = None,
-        task_prompt: str = None,
-        project_name: str = None,
-        org_name: str = None,
-        model_type: ModelType = ModelType.GPT_3_5_TURBO,
-        code_path: str = None,
-    ) -> None:
+    def __init__(self, **kwargs) -> None:
+        """
+        Initialize the ChatChain with various settings.
+
+        This class manages configuration paths and user inputs needed for the chat software.
+
+        Args (Keyword Arguments):
+            config_path (str): Path to the main configuration file (ChatChainConfig.json).
+            config_phase_path (str): Path to the phase configuration file (PhaseConfig.json).
+            config_role_path (str): Path to the role configuration file (RoleConfig.json).
+            task_prompt (str): The user input prompt for the software.
+            project_name (str): The name of the project provided by the user.
+            org_name (str): The organization name of the user.
+            model_type (ModelType): The type of model to use (default: GPT-3.5 Turbo).
+            code_path (str): Path to the code used by the software.
+            use_ollama (bool): Whether to use the Ollama service (default: False).
         """
 
-        Args:
-            config_path: path to the ChatChainConfig.json
-            config_phase_path: path to the PhaseConfig.json
-            config_role_path: path to the RoleConfig.json
-            task_prompt: the user input prompt for software
-            project_name: the user input name for software
-            org_name: the organization name of the human user
-        """
+        for key in sorted(kwargs.keys()):
+            value = kwargs[key]
+            setattr(
+                self, key, value
+            )  # Create an instance variable for each key and assign its value
 
-        # load config file
-        self.config_path = config_path
-        self.config_phase_path = config_phase_path
-        self.config_role_path = config_role_path
-        self.project_name = project_name
-        self.org_name = org_name
-        self.model_type = model_type
-        self.code_path = code_path
+        self.load_json_configs()
 
-        with open(self.config_path, "r", encoding="utf8") as file:
-            self.config = json.load(file)
-        with open(self.config_phase_path, "r", encoding="utf8") as file:
-            self.config_phase = json.load(file)
-        with open(self.config_role_path, "r", encoding="utf8") as file:
-            self.config_role = json.load(file)
+        # print dir of self exclusive of __ locals __ and 'self' and ''
+        print(
+            [
+                attr
+                for attr in dir(self)
+                if not attr.startswith("__") and attr != "self" and attr != ""
+            ]
+        )
 
         # init chatchain config and recruits
         self.chain = self.config["chain"]
@@ -81,6 +77,9 @@ class ChatChain:
 
         # the user input prompt will be self-improved (if set "self_improve": "True" in ChatChainConfig.json)
         # the self-improvement is done in self.preprocess
+
+        # init task prompt if task_prompt is not empty
+        task_prompt = self.task_prompt
         self.task_prompt_raw = task_prompt
         self.task_prompt = ""
 
@@ -114,6 +113,25 @@ class ChatChain:
                 log_filepath=self.log_filepath,
             )
             self.phases[phase] = phase_instance
+
+    def load_json_configs(self):
+        """
+        Load JSON data from files into instance variables.
+        Finds attributes that start with 'config_' and end with '_path'.
+        """
+        print("Loading JSON configuration files...")
+        for attr in dir(self):
+            if attr.startswith("config_") and attr.endswith("_path"):
+                print(f"Loading {attr}...")
+                # Remove '_path' from the attribute name and strip trailing underscore if present
+                config_attr = attr.replace("_path", "").rstrip("_")
+
+                # Load the JSON data from the file and set it to the instance variable
+                with open(getattr(self, attr), "r", encoding="utf8") as file:
+                    print(f"Setting {config_attr}...")
+                    setattr(
+                        self, config_attr, json.load(file)
+                    )  # Store JSON data in the instance variable
 
     def recruit_team(self):
         """
