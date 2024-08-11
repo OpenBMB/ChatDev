@@ -223,105 +223,122 @@ class ChatChain:
         """
         list(map(self.execute_step, self.chain))
 
-    def get_logfilepath(self):
+    def get_log_filepath(self):
         """
-        get the log path (under the software path)
-        Returns:
-            start_time: time for starting making the software
-            log_filepath: path to the log
+        Get the log file path under the software's main directory.
 
+        Returns:
+            start_time (str): The time when the software started, formatted as 'YYYYMMDDHHMMSS'.
+            log_filepath (str): The full path to the log file.
         """
+        # Capture the current time as a formatted string (e.g., '20230811142300')
         start_time = now()
-        filepath = os.path.dirname(__file__)
-        # root = "/".join(filepath.split("/")[:-1])
-        root = os.path.dirname(filepath)
-        # directory = root + "/WareHouse/"
+
+        # Get the directory of the current file and move up one level to the root directory
+        root = os.path.dirname(os.path.dirname(__file__))
+
+        # Define the path to the 'WareHouse' directory within the root directory
         directory = os.path.join(root, "WareHouse")
+
+        # Create the full path to the log file using the project name, organization name, and start time
         log_filepath = os.path.join(
-            directory,
-            "{}.log".format("_".join([self.project_name, self.org_name, start_time])),
+            directory, f"{self.project_name}_{self.org_name}_{start_time}.log"
         )
+
         return start_time, log_filepath
+       
 
     def pre_processing(self):
         """
-        remove useless files and log some global config settings
+        Preprocess the environment by removing unnecessary files, 
+        setting up directories, and copying configuration files.
         Returns: None
-
         """
-        filepath = os.path.dirname(__file__)
-        root = os.path.dirname(filepath)
+        # Get the root directory of the software
+        root = os.path.dirname(os.path.dirname(__file__))
         directory = os.path.join(root, "WareHouse")
 
+        # Clear out unnecessary files from the WareHouse directory
         if self.chat_env.config.clear_structure:
             for filename in os.listdir(directory):
                 file_path = os.path.join(directory, filename)
-                # logs with error trials are left in WareHouse/
                 if (
                     os.path.isfile(file_path)
-                    and not filename.endswith(".py")
-                    and not filename.endswith(".log")
+                    and not filename.endswith((".py", ".log"))
                 ):
                     os.remove(file_path)
-                    print("{} Removed.".format(file_path))
+                    print(f"{file_path} Removed.")
 
+        # Set up the directory for storing software-related files
         software_path = os.path.join(
-            directory, "_".join([self.project_name, self.org_name, self.start_time])
+            directory, f"{self.project_name}_{self.org_name}_{self.start_time}"
         )
         self.chat_env.set_directory(software_path)
 
-        if self.chat_env.config.with_memory is True:
+        # Initialize memory if the configuration requires it
+        if self.chat_env.config.with_memory:
             self.chat_env.init_memory()
 
-        # copy config files to software path
-        shutil.copy(self.config_path, software_path)
-        shutil.copy(self.config_phase_path, software_path)
-        shutil.copy(self.config_role_path, software_path)
+        # Copy essential configuration files to the software directory
+        for config_file in [self.config_path, self.config_phase_path, self.config_role_path]:
+            shutil.copy(config_file, software_path)
 
-        # copy code files to software path in incremental_develop mode
+        # If incremental development is enabled, copy code files to the software directory
         if check_bool(self.config["incremental_develop"]):
-            for root, dirs, files in os.walk(self.code_path):
-                relative_path = os.path.relpath(root, self.code_path)
+            for root_dir, dirs, files in os.walk(self.code_path):
+                relative_path = os.path.relpath(root_dir, self.code_path)
                 target_dir = os.path.join(software_path, "base", relative_path)
                 os.makedirs(target_dir, exist_ok=True)
                 for file in files:
-                    source_file = os.path.join(root, file)
-                    target_file = os.path.join(target_dir, file)
-                    shutil.copy2(source_file, target_file)
+                    shutil.copy2(os.path.join(root_dir, file), os.path.join(target_dir, file))
             self.chat_env._load_from_hardware(os.path.join(software_path, "base"))
 
-        # write task prompt to software
-        with open(os.path.join(software_path, self.project_name + ".prompt"), "w") as f:
+        # Write the task prompt to a file in the software directory
+        with open(os.path.join(software_path, f"{self.project_name}.prompt"), "w") as f:
             f.write(self.task_prompt_raw)
 
-        preprocess_msg = "**[Preprocessing]**\n\n"
-        chat_gpt_config = ChatGPTConfig()
+        # Prepare a message summarizing the preprocessing steps and log it
+        preprocess_msg = f"""
+        **[Preprocessing]**
 
-        preprocess_msg += "**Startr.Team Starts** ({})\n\n".format(self.start_time)
-        preprocess_msg += "**Timestamp**: {}\n\n".format(self.start_time)
-        preprocess_msg += "**config_path**: {}\n\n".format(self.config_path)
-        preprocess_msg += "**config_phase_path**: {}\n\n".format(self.config_phase_path)
-        preprocess_msg += "**config_role_path**: {}\n\n".format(self.config_role_path)
-        preprocess_msg += "**task_prompt**: {}\n\n".format(self.task_prompt_raw)
-        preprocess_msg += "**project_name**: {}\n\n".format(self.project_name)
-        preprocess_msg += "**Log File**: {}\n\n".format(self.log_filepath)
-        preprocess_msg += "**Startr.Team Config**:\n{}\n\n".format(
-            self.chat_env.config.__str__()
-        )
-        preprocess_msg += "**ChatGPTConfig**:\n{}\n\n".format(chat_gpt_config)
+        **Startr.Team Starts** ({self.start_time})
+
+        **Timestamp**: {self.start_time}
+
+        **config_path**: {self.config_path}
+
+        **config_phase_path**: {self.config_phase_path}
+
+        **config_role_path**: {self.config_role_path}
+
+        **task_prompt**: {self.task_prompt_raw}
+
+        **project_name**: {self.project_name}
+
+        **Log File**: {self.log_filepath}
+
+        **Startr.Team Config**:
+        {self.chat_env.config}
+
+        **ChatGPTConfig**:
+        {ChatGPTConfig()}
+        """
+        #clean preprocess_msg of preceding whitespace
+        preprocess_msg = "\n".join([line.strip() for line in preprocess_msg.split("\n")])
+        
         log_visualize(preprocess_msg)
 
-        # init task prompt
-        if check_bool(self.config["self_improve"]):
-            self.chat_env.env_dict["task_prompt"] = self.self_task_improve(
-                self.task_prompt_raw
-            )
-        else:
-            self.chat_env.env_dict["task_prompt"] = self.task_prompt_raw
+        # Initialize task prompt based on configuration settings
+        self.chat_env.env_dict["task_prompt"] = (
+            self.self_task_improve(self.task_prompt_raw)
+            if check_bool(self.config["self_improve"])
+            else self.task_prompt_raw
+        )
+
+        # If web spidering is enabled, convert the task prompt for web interaction
         if check_bool(self.web_spider):
-            self.chat_env.env_dict["task_description"] = modal_trans(
-                self.task_prompt_raw
-            )
+            self.chat_env.env_dict["task_description"] = modal_trans(self.task_prompt_raw)
+
 
     def post_processing(self):
         """
