@@ -89,7 +89,7 @@ class ChatChain:
             self.role_prompts[role] = "\n".join(lines)
 
         # Initialize logging and get the start time and log file path
-        self.start_time, self.log_filepath = self.get_logfilepath()
+        self.start_time, self.log_filepath = self.get_log_filepath()
 
         # Import the phase modules
         # SimplePhases are defined in PhaseConfig.json and imported from chatdev.phase
