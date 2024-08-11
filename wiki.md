@@ -393,7 +393,7 @@ Detailed descriptions and experiment results about this Experiential Co-Evolving
   - CodeThisProject: complete the missing function/class
   - CodeReview: review and modify the code
   - Test: run the software and modify the code based on the test report
-  - EnvironmentDoc: write the environment doc
+  - EnvironmentDescription: write the environment doc
   - Manual: write the manual
 - You can use default setting using ``python3 run.py --config "Default"``.
 

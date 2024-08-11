@@ -236,24 +236,27 @@
       "As the {assistant_role}, to satisfy the new user's demand and make the software execute smoothly and robustly, you should modify the code based on the error summary. Now, use the format exemplified above and modify the problematic code based on the error summary. Output the code that you fixed based on the test reported and corresponding explanations (strictly follow the format defined above, including FILENAME, LANGUAGE, DOCSTRING and CODE; incomplete \"TODO\" code are strictly prohibited). If no bugs are reported, please return only one line like \"<INFO> Finished\"."
     ]
   },
-  "EnvironmentDoc": {
+  "EnvironmentDescription": {
     "assistant_role_name": "Programmer",
     "user_role_name": "Chief Technology Officer",
     "phase_prompt": [
-      "The new user's task and our developed code are listed: ",
+      "The new user's task and project code is as follows: ",
+      "",
       "Task: \"{task}\".",
       "Modality: \"{modality}\".",
       "Programming Language: \"{language}\"",
       "Ideas: \"{ideas}\"",
       "Codes: ",
       "\"{codes}\"",
-      "As the {assistant_role}, you should write a requirements.txt file, which is commonly used in Python projects to specify the dependencies or packages required for the project to run properly. It serves as a way to document and manage the project's dependencies in a standardized format. For example:",
+      "As the {assistant_role}, you should write a requirements file, for example with npm and bun it would be a package.json and for python a requirements.txt file, which is commonly used in Python projects to specify the dependencies or packages required for the project to run properly. It serves as a way to document and manage the project's dependencies in a standardized format. For example:",
+      "",
       "requirements.txt",
       "```",
       "numpy==1.19.2",
       "pandas>=1.1.4",
       "```",
-      "Based on our project code and file format listed above, write a requirements.txt file to specify the dependencies or packages required for the project to run properly."
+      "",
+      "Based on our {language} project needs, write a requirements file to specify the dependencies or packages required for the project to run properly."
     ]
   },
   "Manual": {

@@ -184,12 +184,12 @@ class Graph:
         utterances = [utterance for utterance in utterances if
                       "flask app.py" not in utterance and "OpenAI_Usage_Info" not in utterance]
         index = [i for i, utterance in enumerate(utterances) if
-                 "Programmer<->Chief Technology Officer on : EnvironmentDoc" in utterance]
+                 "Programmer<->Chief Technology Officer on : EnvironmentDescription" in utterance]
         if len(index) > 0:
             utterances = utterances[:index[0] - 1]
 
         utterances_code= [utterance for utterance in utterances if
-                           "Programmer<->" in utterance and "EnvironmentDoc" not in utterance and "TestErrorSummary" not in utterance]
+                           "Programmer<->" in utterance and "EnvironmentDescription" not in utterance and "TestErrorSummary" not in utterance]
         print("len(utterances_code):", len(utterances_code))
 
         codebook, fingerprints, pre_mid = {}, set(), ""

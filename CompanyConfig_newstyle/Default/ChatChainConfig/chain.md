@@ -4,5 +4,5 @@
 - {'phase': 'CodeThisProject', 'phaseType': 'ComposedPhase', 'cycleNum': 10, 'Composition': [{'phase': 'CodeThis', 'phaseType': 'SimplePhase', 'max_turn_step': 1, 'need_reflect': 'False'}]}
 - {'phase': 'CodeReview', 'phaseType': 'ComposedPhase', 'cycleNum': 3, 'Composition': [{'phase': 'CodeReviewComment', 'phaseType': 'SimplePhase', 'max_turn_step': 1, 'need_reflect': 'False'}, {'phase': 'CodeReviewModification', 'phaseType': 'SimplePhase', 'max_turn_step': 1, 'need_reflect': 'False'}]}
 - {'phase': 'Test', 'phaseType': 'ComposedPhase', 'cycleNum': 3, 'Composition': [{'phase': 'TestErrorSummary', 'phaseType': 'SimplePhase', 'max_turn_step': 1, 'need_reflect': 'False'}, {'phase': 'TestModification', 'phaseType': 'SimplePhase', 'max_turn_step': 1, 'need_reflect': 'False'}]}
-- {'phase': 'EnvironmentDoc', 'phaseType': 'SimplePhase', 'max_turn_step': 1, 'need_reflect': 'True'}
+- {'phase': 'EnvironmentDescription', 'phaseType': 'SimplePhase', 'max_turn_step': 1, 'need_reflect': 'True'}
 - {'phase': 'Manual', 'phaseType': 'SimplePhase', 'max_turn_step': 1, 'need_reflect': 'False'}

@@ -252,7 +252,7 @@ class Phase(ABC):
             question = """Answer their final product modality in the discussion without any other words, e.g., "PowerPoint" """
         elif phase_name == "ChooseLanguage":
             question = """Conclude the programming language being discussed for software development, in the format: "*" where '*' represents a programming language." """
-        elif phase_name == "EnvironmentDoc":
+        elif phase_name == "EnvironmentDescription":
             question = """Based on our project code and file format listed above, write a requirements.txt file to specify the dependencies or packages required for the project to run properly." """
         else:
             raise ValueError(f"Reflection of phase {phase_name}: Not Assigned.")
@@ -758,7 +758,7 @@ class TestModification(Phase):
         return chat_env
 
 
-class EnvironmentDoc(Phase):
+class EnvironmentDescription(Phase):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
