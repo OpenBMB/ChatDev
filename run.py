@@ -184,13 +184,18 @@ def main():
     args = parse_arguments()
 
     if args.debug:
-        logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
+        # Enable debug mode if the debug flag is set
+        logging_level = logging.DEBUG
     else:
-        logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+        logging_level = logging.INFO
     
     
-    check_api_key()
-
+    try:
+        check_api_key()
+    except SystemExit:
+        # Exit if the API key is not set
+        print("Exiting...")
+    
     config_path, config_phase_path, config_role_path = get_config(args.config)
 
     chat_chain = ChatChain(
@@ -204,10 +209,10 @@ def main():
         model_type=ModelType[args.model],
         code_path=args.path
     )
-
+    
     logging.basicConfig(
         filename=chat_chain.log_filepath,
-        level=logging.INFO,
+        level=logging_level,
         format='[%(asctime)s %(levelname)s] %(message)s',
         datefmt='%Y-%d-%m %H:%M:%S',
         encoding="utf-8"
