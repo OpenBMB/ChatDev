@@ -1,83 +1,30 @@
-const coordSet = [];
-coordSet["Chief Executive Officer"] = {
-    "character": "Chief Executive Officer",
-    "imgid": "right",
-    "top": "-315px",
-    "left": "280px"
-};
-coordSet["Chief Product Officer"] = {
-    "character": "Chief Product Officer",
-    "imgid": "left",
-    "top": "-165px",
-    "left": "110px"
-};
-coordSet["Chief Human Resource Officer"] = {
-    "character": "Chief Human Resource Officer",
-    "imgid": "left",
-    "top": "-305px",
-    "left": "55px"
-};
-coordSet["Code Reviewer"] = {
-    "character": "Code Reviewer",
-    "imgid": "left",
-    "top": "-185px",
-    "left": "500px"
-};
-coordSet["Programmer"] = {
-    "character": "Programmer",
-    "imgid": "right",
-    "top": "-80px",
-    "left": "300px"
-};
-coordSet["Chief Technology Officer"] = {
-    "character": "Chief Technology Officer",
-    "imgid": "right",
-    "top": "-130px",
-    "left": "340px"
-};
-coordSet["Chief Creative Officer"] = {
-    "character": "Chief Creative Officer",
-    "imgid": "right",
-    "top": "-95px",
-    "left": "205px"
-}
-coordSet["Software Test Engineer"] = {
-    "character": "Software Test Engineer",
-    "imgid": "right",
-    "top": "-90px",
-    "left": "470px"
+/**
+ * Creates a coordinate object for a character with the specified properties.
+ *
+ * @param {string} character - The name of the character.
+ * @param {string} imgid - The ID indicating which side (left/right) the character's image should be on.
+ * @param {string} top - The CSS top position for the character.
+ * @param {string} left - The CSS left position for the character.
+ * @returns {Object} A coordinate object with the specified properties.
+ */
+const createCoord = (character, imgid, top, left) => ({ character, imgid, top, left });
 
-}
-coordSet["User"] = {
-    "character": "User",
-    "imgid": "left",
-    "top": "-465px",
-    "left": "125px"
-}
-coordSet["Counselor"] = {
-    "character": "Counselor",
-    "imgid": "right",
-    "top": "-360px",
-    "left": "420px"
-}
-coordSet["Prompt Engineer"] = {
-    "character": "Prompt Engineer",
-    "imgid": "right",
-    "top": "-320px",
-    "left": "20px"
-}
-coordSet["System"] = {
-    "character": "System",
-    "imgid": "left",
-    "top": "-405px",
-    "left": "20px"
-}
-coordSet["HTTP Request"] = {
-    "character": "HTTP Request",
-    "imgid": "right",
-    "top": "-405px",
-    "left": "20px"
-}
+const coordSet = {
+    "Chief Executive Officer": createCoord("Chief Executive Officer", "right", "-315px", "280px"),
+    "Chief Product Officer": createCoord("Chief Product Officer", "left", "-165px", "110px"),
+    "Chief Human Resource Officer": createCoord("Chief Human Resource Officer", "left", "-305px", "55px"),
+    "Code Reviewer": createCoord("Code Reviewer", "left", "-185px", "500px"),
+    "Programmer": createCoord("Programmer", "right", "-80px", "300px"),
+    "Chief Technology Officer": createCoord("Chief Technology Officer", "right", "-130px", "340px"),
+    "Chief Creative Officer": createCoord("Chief Creative Officer", "right", "-95px", "205px"),
+    "Software Test Engineer": createCoord("Software Test Engineer", "right", "-90px", "470px"),
+    "User": createCoord("User", "left", "-465px", "125px"),
+    "Counselor": createCoord("Counselor", "right", "-360px", "420px"),
+    "Prompt Engineer": createCoord("Prompt Engineer", "right", "-320px", "20px"),
+    "System": createCoord("System", "left", "-405px", "20px"),
+    "HTTP Request": createCoord("HTTP Request", "right", "-405px", "20px")
+};
+
 
 const Softwareinfo = {
     "duration": "-1",
@@ -96,27 +43,19 @@ const Softwareinfo = {
     "num_total_tokens": "-1",
 };
 
-//control chars appear speed
-var timeinterval = 5;
-var charinterval = 1;
-var scrollinterval = 40;
+// Configuration for character appearance speed and scrolling behavior
+const config = {
+    timeInterval: 5,
+    charInterval: 1,
+    scrollInterval: 40
+};
 
-var contents;
-var filename;
-var curdialog = '';
-var total_height = 0;
-
-var cur_para = '';
-var cur_command = '';
-var idx = 0;
-var dialog;
-
-var replaying = 0;
-var if_stop = 0;
-let isPaused = false;
-let pauseIntervalId;
-var if_move = true;
-var md = window.markdownit();
+// Variables for managing content and dialog states
+let contents, filename, curDialog = '', totalHeight = 0;
+let curPara = '', curCommand = '', idx = 0, dialog;
+let replaying = 0, ifStop = 0, isPaused = false, pauseIntervalId;
+let ifMove = true;
+const md = window.markdownit();
 
 //watch replay button clicked
 const button = document.getElementById('replay');
@@ -199,6 +138,8 @@ async function replayDialog(idx) {
         filelable.innerHTML = md.render(info);
     }
     for (let i = idx; i < dialog.length; ++i) {
+        console.log("Replaying dialog", i);
+        console.log(dialog[i]);
         await createPara(dialog[i], i);
     }
 }
@@ -319,20 +260,43 @@ function extraction(contents) {
                 }
             };
 
-            extractInfo(/code_lines\s*=\s*(\d+)/, "code_lines");
-            extractInfo(/num_code_files\s*=\s*(\d+)/, "num_code_files");
-            extractInfo(/num_png_files\s*=\s*(\d+)/, "num_png_files");
-            extractInfo(/num_doc_files\s*=\s*(\d+)/, "num_doc_files");
-            extractInfo(/env_lines\s*=\s*(\d+)/, "env_lines");
-            extractInfo(/manual_lines\s*=\s*(\d+)/, "manual_lines");
-            extractInfo(/duration\s*=\s*(\d+(\.\d+)?s)/, "duration");
-            extractInfo(/num_utterances\s*=\s*(\d+)/, "num_utterances");
-            extractInfo(/num_self_reflections\s*=\s*(\d+)/, "num_self_reflections");
-            extractInfo(/num_prompt_tokens\s*=\s*(\d+)/, "num_prompt_tokens");
-            extractInfo(/num_completion_tokens\s*=\s*(\d+)/, "num_completion_tokens");
-            extractInfo(/num_total_tokens\s*=\s*(\d+)/, "num_total_tokens");
-            extractInfo(/cost\s*=\s*([\d.]+)/, "cost");
-            extractInfo(/version_updates\s*=\s*(\d+)/, "version_updates");
+            // An array of objects where each object contains the key, its explanation, and whether it needs a special regex pattern
+            const fields = [
+                { key: "code_lines", explanation: "Number of lines of code" },
+                { key: "num_code_files", explanation: "Number of code files" },
+                { key: "num_png_files", explanation: "Number of PNG files" },
+                { key: "num_doc_files", explanation: "Number of documentation files" },
+                { key: "env_lines", explanation: "Number of environment configuration lines" },
+                { key: "manual_lines", explanation: "Number of lines in the manual" },
+                { key: "duration", explanation: "Duration of the process", special: true },
+                { key: "num_utterances", explanation: "Number of utterances" },
+                { key: "num_self_reflections", explanation: "Number of self reflections" },
+                { key: "num_prompt_tokens", explanation: "Number of prompt tokens" },
+                { key: "num_completion_tokens", explanation: "Number of completion tokens" },
+                { key: "num_total_tokens", explanation: "Total number of tokens" },
+                { key: "version_updates", explanation: "Number of version updates" },
+                { key: "cost", explanation: "Cost associated with the process", special: true }
+            ];
+
+            // Function to generate a regex pattern based on whether the field is special or not
+            const generatePattern = (key, special) => {
+                if (special) {
+                    if (key === "duration") {
+                        return new RegExp(`\\b${key}\\s*=\\s*(\\d+(\\.\\d+)?s)`); // Pattern for duration (e.g., "5.3s")
+                    } else if (key === "cost") {
+                        return new RegExp(`\\b${key}\\s*=\\s*([\\d.]+)`); // Pattern for cost (e.g., "100.50")
+                    }
+                }
+                return new RegExp(`\\b${key}\\s*=\\s*(\\d+)`); // Default pattern for all other keys (e.g., "42")
+            };
+
+            // Iterate over each field, generate the corresponding regex pattern, and extract the information
+            fields.forEach(({ key, explanation, special }) => {
+                console.log(`${key}: ${explanation}`); // Log the explanation (optional)
+                const regex = generatePattern(key, special);
+                extractInfo(regex, key);
+            });
+
 
             dialog.push({ info, Softwareinfo });
             if_break = true;
@@ -369,12 +333,11 @@ function createPara(d, i) {
         character.style.width = "fit-content";
         character.style.padding = "5px 20px";
         character.style.marginBottom = "5px";
-        character.style.fontSize = "13px ";
+        character.style.fontSize = "13px";
         character.style.border = "1px solid rgba(11, 20, 150, .3)";
         character.style.borderRadius = "10px";
         character.style.boxShadow = "2px 2px 2px black";
-        character.style.fontFamily = "'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;";
-
+        character.style.fontFamily = "'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif";
         if (d.type == "user") {
             character.style.position = "relative";
             character.style.marginLeft = "auto";
@@ -423,7 +386,7 @@ function createPara(d, i) {
         var renderedHtml = md.render(d.command);
         const paragraph = document.createElement("div");
         paragraph.className = "markdown-body";
-        //paragraph.innerHTML = renderedHtml;
+        paragraph.innerHTML = renderedHtml;
         paragraph.style.padding = "10px";
         paragraph.style.border = "3px solid #a08D8D";
         paragraph.style.width = "750px";
@@ -528,7 +491,7 @@ async function updateParashow(container, command, index, len) {
             container.innerHTML = md.render(cur_content);
         };
     }
-    if (index % (scrollinterval) == 0 && if_move == true) {
+    if (index % (config.scrollinterval) == 0 && if_move == true) {
         if (curdialog != null && curdialog != '') {
             const newBoxRect = curdialog.getBoundingClientRect();
             total_height += newBoxRect.height;
@@ -541,12 +504,12 @@ async function printCommand(paragraph, command) {
     var paralen = command.length;
     const tasks = [];
 
-    for (let j = 0; j < paralen; j = j + charinterval) {
+    for (let j = 0; j < paralen; j = j + config.charinterval) {
         tasks.push(new Promise(resolve => {
             pauseIntervalId = setTimeout(() => {
                 updateParashow(paragraph, command, j, paralen);
                 resolve();
-            }, timeinterval * j);
+            }, config.timeinterval * j);
         }));
 
         if (isPaused) {
