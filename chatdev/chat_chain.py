@@ -83,36 +83,50 @@ class ChatChain:
         self.task_prompt_raw = task_prompt
         self.task_prompt = ""
 
-        # init role prompts
-        self.role_prompts = dict()
-        for role in self.config_role:
-            self.role_prompts[role] = "\n".join(self.config_role[role])
+        # Initialize role prompts by joining lines for each role into a single string
+        self.role_prompts = {}
+        for role, lines in self.config_role.items():
+            self.role_prompts[role] = "\n".join(lines)
 
-        # init log
+        # Initialize logging and get the start time and log file path
         self.start_time, self.log_filepath = self.get_logfilepath()
 
-        # init SimplePhase instances
-        # import all used phases in PhaseConfig.json from chatdev.phase
-        # note that in PhaseConfig.json there only exist SimplePhases
-        # ComposedPhases are defined in ChatChainConfig.json and will be imported in self.execute_step
-        self.compose_phase_module = importlib.import_module("chatdev.composed_phase")
+        # Import the phase modules
+        # SimplePhases are defined in PhaseConfig.json and imported from chatdev.phase
+        # ComposedPhases are defined in ChatChainConfig.json and will be imported when needed
         self.phase_module = importlib.import_module("chatdev.phase")
-        self.phases = dict()
-        for phase in self.config_phase:
-            assistant_role_name = self.config_phase[phase]["assistant_role_name"]
-            user_role_name = self.config_phase[phase]["user_role_name"]
-            phase_prompt = "\n\n".join(self.config_phase[phase]["phase_prompt"])
-            phase_class = getattr(self.phase_module, phase)
+        self.compose_phase_module = importlib.import_module("chatdev.composed_phase")
+
+        # Prepare a dictionary to store phase instances
+        self.phases = {}
+        
+        # Iterate over each phase in the configuration
+        for phase_name, phase_config in self.config_phase.items():
+            # Retrieve role names for the assistant and user
+            assistant_role_name = phase_config["assistant_role_name"]
+            user_role_name = phase_config["user_role_name"]
+            
+            # Retrieve and combine prompts for the current phase into one string
+            prompts = phase_config["phase_prompt"]
+            phase_prompt = "\n\n".join(prompts)  # Join prompts with two newlines to separate them
+            
+            # Dynamically get the class associated with the current phase
+            phase_class = getattr(self.phase_module, phase_name)
+            
+            # Create an instance of the phase class with the appropriate parameters
             phase_instance = phase_class(
                 assistant_role_name=assistant_role_name,
                 user_role_name=user_role_name,
                 phase_prompt=phase_prompt,
                 role_prompts=self.role_prompts,
-                phase_name=phase,
+                phase_name=phase_name,
                 model_type=self.model_type,
                 log_filepath=self.log_filepath,
             )
-            self.phases[phase] = phase_instance
+            
+            # Store the phase instance in the phases dictionary
+            self.phases[phase_name] = phase_instance
+
 
     def load_json_configs(self):
         """
