@@ -250,7 +250,7 @@ class Phase(ABC):
             question = """Answer their final discussed conclusion (Yes or No) in the discussion without any other words, e.g., "Yes" """
         elif phase_name == "DemandAnalysis":
             question = """Answer their final product modality in the discussion without any other words, e.g., "PowerPoint" """
-        elif phase_name == "LanguageChoose":
+        elif phase_name == "ChooseLanguage":
             question = """Conclude the programming language being discussed for software development, in the format: "*" where '*' represents a programming language." """
         elif phase_name == "EnvironmentDoc":
             question = """Based on our project code and file format listed above, write a requirements.txt file to specify the dependencies or packages required for the project to run properly." """
@@ -370,7 +370,7 @@ class DemandAnalysis(Phase):
         return chat_env
 
 
-class LanguageChoose(Phase):
+class ChooseLanguage(Phase):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 

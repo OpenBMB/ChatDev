@@ -257,7 +257,7 @@ Detailed descriptions and experiment results about this Experiential Co-Evolving
         - update ChatChain environment: we get the seminar conclusion (which language) and update the 'language' key in the
           ChatChain environment
           ```python
-          class LanguageChoose(Phase):
+          class ChooseLanguage(Phase):
               def __init__(self, **kwargs):
                   super().__init__(**kwargs)
 
@@ -277,7 +277,7 @@ Detailed descriptions and experiment results about this Experiential Co-Evolving
           ```
           The configuration of this phase is like:
           ```json
-          "LanguageChoose": {
+          "ChooseLanguage": {
             "assistant_role_name": "Chief Technology Officer",
             "user_role_name": "Chief Executive Officer",
             "phase_prompt": [
