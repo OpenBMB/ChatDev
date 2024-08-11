@@ -38,12 +38,14 @@ class ChatMessage(BaseMessage):
             for the message.
         role (str): The role of the message in OpenAI chat system.
         content (str): The content of the message. (default: :obj:`""`)
+        refusal (str): The refusal to build argument.
     """
     role_name: str
     role_type: RoleType
     meta_dict: Optional[Dict[str, str]]
     role: str
     content: str = ""
+    refusal: str = None
     if openai_new_api:
         function_call: Optional[FunctionCall] = None
         tool_calls: Optional[ChatCompletionMessageToolCall] = None
@@ -55,6 +57,7 @@ class ChatMessage(BaseMessage):
             meta_dict=self.meta_dict,
             role="user",
             content=self.content,
+            refusal=self.refusal,
         )
 
 
@@ -72,12 +75,14 @@ class AssistantChatMessage(ChatMessage):
         role (str): The role of the message in OpenAI chat system.
             (default: :obj:`"assistant"`)
         content (str): The content of the message. (default: :obj:`""`)
+        refusal (str): The refusal to build argument.
     """
     role_name: str
     role_type: RoleType = RoleType.ASSISTANT
     meta_dict: Optional[Dict[str, str]] = None
     role: str = "user"
     content: str = ""
+    refusal: str = None
 
 
 @dataclass
@@ -92,9 +97,11 @@ class UserChatMessage(ChatMessage):
         role (str): The role of the message in OpenAI chat system.
             (default: :obj:`"user"`)
         content (str): The content of the message. (default: :obj:`""`)
+        refusal (str): The refusal to build argument.
     """
     role_name: str
     role_type: RoleType = RoleType.USER
     meta_dict: Optional[Dict[str, str]] = None
     role: str = "user"
     content: str = ""
+    refusal: str = None
