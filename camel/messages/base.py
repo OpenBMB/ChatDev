@@ -29,11 +29,15 @@ from camel.prompts import CodePrompt, TextPrompt
 from camel.typing import ModelType, RoleType
 
 try:
-    from openai.types.chat.chat_completion_message_tool_call import ChatCompletionMessageToolCall
+    from openai.types.chat.chat_completion_message_tool_call import (
+        ChatCompletionMessageToolCall,
+    )
     from openai.types.chat.chat_completion_message import FunctionCall
+
     openai_new_api = True
 except ImportError:
     openai_new_api = False
+
 
 @dataclass
 class BaseMessage:
@@ -49,6 +53,7 @@ class BaseMessage:
         function_call (Optional[FunctionCall]): Function call info for new API.
         tool_calls (Optional[ChatCompletionMessageToolCall]): Tool call info.
     """
+
     role_name: str
     role_type: RoleType
     meta_dict: Optional[Dict[str, str]]
@@ -129,9 +134,12 @@ class BaseMessage:
     def token_len(self, model: ModelType = ModelType.GPT_3_5_TURBO) -> int:
         """Calculate the token length of the message for the specified model."""
         from camel.utils import num_tokens_from_messages
+
         return num_tokens_from_messages([self.to_openai_chat_message()], model)
 
-    def extract_text_and_code_prompts(self) -> Tuple[List[TextPrompt], List[CodePrompt]]:
+    def extract_text_and_code_prompts(
+        self,
+    ) -> Tuple[List[TextPrompt], List[CodePrompt]]:
         """Extract text and code prompts from the message content."""
         text_prompts = []
         code_prompts = []

@@ -3,6 +3,7 @@ from camel.config_loader import config_loader, ModelType
 
 # The ModelType enum is now dynamically created in ConfigLoader
 
+
 class TaskType(Enum):
     """
     Enumeration of different task types.

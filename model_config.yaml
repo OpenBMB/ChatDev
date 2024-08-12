@@ -7,7 +7,8 @@ default_config: &default_config
   presence_penalty: 0.0
   frequency_penalty: 0.0
   is_openai: true
-  max_tokens: 4096 
+  max_tokens: 4096
+  base_url: https://api.openai.com/v1/ 
 
 models:
   GPT_3_5_TURBO:
@@ -55,3 +56,10 @@ models:
     name: "stub"
     max_tokens: 4096
     is_openai: false
+
+  LLAMA_31_8B:
+    <<: *default_config
+    name: "llama-31-8b"
+    max_tokens: 100000
+    is_openai: false
+    base_url: https://api.groq.com/openai/v1 

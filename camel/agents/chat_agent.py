@@ -250,7 +250,7 @@ class ChatAgent(BaseAgent):
         openai_messages = [message.to_openai_message() for message in messages]
         num_tokens = num_tokens_from_messages(openai_messages, self.model)
 
-        #TODO: explore the openai_messages
+        # TODO: explore the openai_messages
         # for openai_message in openai_messages:
         #     # print("{}\t{}".format(openai_message.role, openai_message.content))
         #     print("{}\t{}\t{}".format(openai_message["role"], hash(openai_message["content"]), openai_message["content"][:60].replace("\n", "")))

@@ -1,6 +1,7 @@
 from dataclasses import dataclass, field
 from typing import Dict, Optional, Sequence, Union
 
+
 @dataclass(frozen=True)
 class ChatGPTConfig:
     """
@@ -28,6 +29,7 @@ class ChatGPTConfig:
             Default is an empty dictionary.
         user (str): User ID to help OpenAI monitor and prevent misuse. Default is an empty string.
     """
+
     temperature: float = 0.2
     top_p: float = 1.0
     n: int = 1
