@@ -1,0 +1,408 @@
+ArtDesign:
+  assistant_role_name: Programmer
+  phase_prompt:
+  - 'Our developed source code and corresponding test reports are listed below: '
+  - 'Task: "{task}".'
+  - 'Programming Language: "{language}"'
+  - 'Source Codes:'
+  - '"{codes}"'
+  - ''
+  - '**Note** that each file must strictly follow a markdown code block format,'
+  - where the following tokens must be replaced such that "FILENAME" is the lowercase
+    file name including the file extension,
+  - ' "LANGUAGE" in the programming language, "DOCSTRING" is a string literal specified
+    in source'
+  - 'code that is used to document a specific segment of code, and "CODE" is the original
+    code:'
+  - ''
+  - FILENAME
+  - '```LANGUAGE'
+  - ''''''''
+  - DOCSTRING
+  - ''''''''
+  - CODE
+  - '```'
+  - As the {assistant_role}, to satisfy the new user's demand and equip the software
+    with a beautiful graphical user interface (GUI), we will discuss and design many
+    decorative images for GUI decoration. Now, we keep discussing the GUI beautification
+    by listing some functionally independent elements in GUI that are being considered
+    to be decorated by different pictures. For example, ten digits (0-9) in a calculator
+    are functionally independent.
+  - 'To answer, use the format: " FILENAME.png: DESCRIPTION" where "FILENAME" is the
+    filename of the image and "DESCRIPTION" denotes the detailed description of the
+    independent elements. For example:'
+  - ''''''''
+  - 'button_1.png: The button with the number "1" on it.'
+  - 'button_multiply.png: The button with the multiplication symbol ("*") on it.'
+  - 'background.png: the background color to decorate the Go game'
+  - ''''''''
+  - Now, list all functionally independent elements as much as possible.
+  user_role_name: Chief Creative Officer
+ArtIntegration:
+  assistant_role_name: Programmer
+  phase_prompt:
+  - 'Our developed source code and corresponding test reports are listed below: '
+  - 'Task: "{task}".'
+  - 'Programming Language: "{language}"'
+  - 'Source Codes:'
+  - '"{codes}"'
+  - ''
+  - '**Note:** Each file must follow the markdown code block format exactly.'
+  - 'Replace the following tokens as described:'
+  - '- "FILENAME" with the lowercase file name, including the file extension.'
+  - '- "LANGUAGE" with the programming language.'
+  - '- "DOCSTRING" with a string in the source code that explains a specific part
+    of the code.'
+  - '- "CODE" with the original code.'
+  - ''
+  - FILENAME
+  - '```LANGUAGE'
+  - ''''''''
+  - DOCSTRING
+  - ''''''''
+  - CODE
+  - '```'
+  - As our team {assistant_role}, working to satisfy the new user's demand and equip
+    the software with
+  - a beautiful graphical user interface (GUI), you will incorporate our designed
+    images for GUI decoration.
+  - 'Here are some ready-made high-quality pictures and corresponding descriptions:'
+  - ''
+  - '{images}'
+  - '**Note** that the designed images have a fixed size of 256x256 pixels and the
+    images are located in the'
+  - same directory as all the Python files; please dynamically scaling these images
+    according to the size of GUI,
+  - 'and use "self.*" to avoid displaying-related problems caused by automatic garbage
+    collection. For example:'
+  - ''
+  - '```'
+  - self.image = ImageTk.PhotoImage(Image.open("./image.png").resize((50, 50)))
+  - '```'
+  - ''
+  - Now, use some or all of the pictures into the GUI to make it more beautiful and
+    creative.
+  - Output code strictly following the required format mentioned above.
+  user_role_name: Chief Creative Officer
+ChooseLanguage:
+  assistant_role_name: Chief Technology Officer
+  phase_prompt:
+  - 'According to user''s task and some creative brainstorm ideas listed below: '
+  - 'Task: "{task}".'
+  - 'Modality: "{modality}".'
+  - 'Ideas: "{ideas}".'
+  - 'We have decided to complete the task. '
+  - As the {assistant_role}, working to satisfy the new user's demand and make the
+    software
+  - realizable, you should propose a concrete programming language, or stack.
+  - ''
+  - If the project can be built in html, css, and, Javascript start there.
+  - If python can is a better option to complete this task please answer Python;
+  - otherwise, answer another with another programming language (e.g., Java, C++,
+    etc,).
+  - ''
+  - '**Note** that we must ONLY discuss the target programming language'
+  - do not discuss anything else!
+  - Once we all have expressed our opinion(s) and agree with the results of the discussion
+  - unanimously, any of us must actively terminate the discussion and conclude the
+  - best programming language we have discussed without any other words or reasons,
+  - 'return only one line using the format: "<INFO> *" '
+  - where "*" represents a programming language.
+  user_role_name: Chief Executive Officer
+CodeReviewComment:
+  assistant_role_name: Code Reviewer
+  phase_prompt:
+  - 'According to the new user''s task and our software designs: '
+  - 'Task: "{task}".'
+  - 'Modality: "{modality}".'
+  - 'Programming Language: "{language}"'
+  - 'Ideas: "{ideas}"'
+  - 'Codes:'
+  - '"{codes}"'
+  - 'As the {assistant_role}, to make the software directly operable without further
+    coding, Startr.Team have formulated the following rules:'
+  - 1) all referenced classes should be imported;
+  - 2) all methods should be implemented;
+  - 3) all methods need to have the necessary comments;
+  - 4) no potential bugs;
+  - 5) The entire project conforms to the tasks proposed by the user;
+  - 6) most importantly, do not only check the errors in the code, but also the logic
+    of code. Make sure that user can interact with generated software without losing
+    any feature in the requirement;
+  - Now, you should check the above rules one by one and review the project code in
+    detail, propose one comment with the highest priority about the code, and give
+    me instructions on how to fix. Tell me your comment with the highest priority
+    and corresponding suggestions on revision. If the code is perfect and you have
+    no comment for any of it, return only one line like "<INFO> Finished".
+  user_role_name: Programmer
+CodeReviewModification:
+  assistant_role_name: Programmer
+  phase_prompt:
+  - 'According to the new user''s task, our designed product modality, languages and
+    ideas, our developed first-edition source code are listed below: '
+  - 'Task: "{task}".'
+  - 'Modality: "{modality}".'
+  - 'Programming Language: "{language}"'
+  - 'Ideas: "{ideas}"'
+  - 'Codes: '
+  - '"{codes}"'
+  - 'Comments on Codes:'
+  - '"{comments}"'
+  - In the software, each file must strictly follow a markdown code block format,
+  - 'where the following tokens must be replaced such that "FILENAME" is the lowercase
+    file name including the file extension, "LANGUAGE" in the programming language,
+    "DOCSTRING" is a string literal specified in source code that is used to document
+    a specific segment of code, and "CODE" is the original code. Format:'
+  - FILENAME
+  - '```LANGUAGE'
+  - ''''''''
+  - DOCSTRING
+  - ''''''''
+  - CODE
+  - '```'
+  - As the {assistant_role}, to satisfy the new user's demand and make the software
+    creative, executive and robust, you should modify corresponding code according
+    to the comments. Then, output the full and complete code with all bugs fixed based
+    on the comments. Return all code strictly following the required format.
+  user_role_name: Code Reviewer
+CodeThis:
+  assistant_role_name: Programmer
+  phase_prompt:
+  - 'According to the new user''s task and our software designs listed below: '
+  - 'Task: "{task}".'
+  - 'Modality: "{modality}".'
+  - 'Programming Language: "{language}"'
+  - 'Codes:'
+  - '"{codes}"'
+  - 'Unimplemented File:'
+  - '"{unimplemented_file}"'
+  - In our software, each file must strictly follow a markdown code block format,
+  - 'where the following tokens must be replaced such that "FILENAME" is the lowercase
+    file name including the file extension, "LANGUAGE" in the programming language,
+    "DOCSTRING" is a string literal specified in source code that is used to document
+    a specific segment of code, and "CODE" is the original code:'
+  - FILENAME
+  - '```LANGUAGE'
+  - ''''''''
+  - DOCSTRING
+  - ''''''''
+  - CODE
+  - '```'
+  - As the {assistant_role}, to satisfy the complete function of our developed software,
+    you have to implement all methods in the {unimplemented_file} file which contains
+    a unimplemented class. Now, implement all methods of the {unimplemented_file}
+    and all other code needed, then output the fully implemented codes, strictly following
+    the required format.
+  user_role_name: Chief Technology Officer
+Coding:
+  assistant_role_name: Programmer
+  phase_prompt:
+  - 'According to the new user''s task and our software designs listed below: '
+  - 'Task: "{task}".'
+  - 'Task description: "{description}".'
+  - 'Modality: "{modality}".'
+  - 'Programming Language: "{language}"'
+  - Ideas:"{ideas}"
+  - We have decided to complete the task as a {language} project, with multiple well
+    defined
+  - and commented {language} files.
+  - ''
+  - As our {assistant_role}, working to satisfy our new user's demands, write one
+    or multiple files
+  - make sure that every detail of the architecture is, in the end, implemented as
+    code. {gui}
+  - ''
+  - Think step by step, correctly explaining your rational.
+  - Comming to the right decisions to make sure we get it right.
+  - ''
+  - You will first lay out the names of the core classes, functions, and any methods
+    needed
+  - '**NOTE** provide a brief comment for each.'
+  - ''
+  - Then you will output the content of each file including complete code.
+  - ''
+  - Each file must strictly follow the markdown code block format, where the following
+    tokens
+  - must be replaced so that "FILENAME" is the lowercase file name including the file
+    extension,
+  - '"LANGUAGE" in the programming language, "DOCSTRING" is a string literal specified
+    in source'
+  - 'code that is used to document a specific segment of code, and "CODE" is the original
+    code:'
+  - ''
+  - FILENAME
+  - '```LANGUAGE'
+  - ''''''''
+  - DOCSTRING
+  - ''''''''
+  - CODE
+  - '```'
+  - ''
+  - You will start with the "main" or if html "index" file, then go to the ones that
+    are imported
+  - by that file, and so on.
+  - ''
+  - '**NOTE** The code must be fully functional.'
+  - Implement all functions. Do not No placeholders (such as 'pass' in Python).
+  user_role_name: Chief Technology Officer
+DemandAnalysis:
+  assistant_role_name: Chief Product Officer
+  phase_prompt:
+  - 'Startr.Team has created products in these forms before:'
+  - ' '
+  - 'Image: Information presented as iluatrations or in line, bar, flow, cloud, etc.'
+  - 'GANT: Information presented in a GANT chart (This is useful timeline information).'
+  - 'Document: Information presented via .markdown files.'
+  - 'PowerPoint: Information presented via .pptx files.'
+  - 'Excel: Information presented via .xlsx files.'
+  - 'PDF: Information presented via .pdf files.'
+  - 'Website: Personal resumes, tutorials, products, or ideas presented via .html
+    files.'
+  - 'Application: Visualized games, software, or tools implemented via Python.'
+  - 'Dashboard: Real-time information displayed on a panel.'
+  - 'Mind Map: Ideas represented with related concepts around a core concept.'
+  - ' '
+  - As our {assistant_role}, working to meet our new user's demand(s) and ensuring
+    the product
+  - is feasible let us discuss which product modality we should implement.
+  - ' '
+  - '**NOTE**: ONLY discuss the product modality and nothing else!'
+  - Once we all agree, any of us must end the discussion by replying with one line.
+  - Start with <INFO>, followed by our final product modality, e.g., "<INFO> PowerPoint".
+  user_role_name: Chief Executive Officer
+EnvironmentDescription:
+  assistant_role_name: Programmer
+  phase_prompt:
+  - 'The new user''s task and our developed code are listed: '
+  - 'Task: "{task}".'
+  - 'Modality: "{modality}".'
+  - 'Programming Language: "{language}"'
+  - 'Ideas: "{ideas}"'
+  - 'Codes: '
+  - '"{codes}"'
+  - 'As the {assistant_role}, you should write a requirements.txt file, which is commonly
+    used in Python projects to specify the dependencies or packages required for the
+    project to run properly. It serves as a way to document and manage the project''s
+    dependencies in a standardized format. For example:'
+  - requirements.txt
+  - '```'
+  - numpy==1.19.2
+  - pandas>=1.1.4
+  - '```'
+  - Based on our project code and file format listed above, write a requirements.txt
+    file to specify the dependencies or packages required for the project to run properly.
+  user_role_name: Chief Technology Officer
+Manual:
+  assistant_role_name: Chief Product Officer
+  phase_prompt:
+  - 'The new user''s task, our developed code and required dependencies are listed: '
+  - 'Task: "{task}".'
+  - 'Modality: "{modality}".'
+  - 'Programming Language: "{language}"'
+  - 'Ideas: "{ideas}"'
+  - 'Codes: '
+  - '"{codes}"'
+  - 'Requirements:'
+  - '"{requirements}"'
+  - As our {assistant_role}, writing in well formated Markdown, you write a manual.md.
+  - manual.md must be a well formated and detailed user manual explaining how to use
+    the software,
+  - including introducing main functions of the software, how to install environment
+    dependencies,
+  - and how to use/play it.
+  - ''
+  - '**Example**:'
+  - manual.md
+  - '```markdown'
+  - '# LangChain'
+  - Building applications with LLMs through composability
+  - Looking for the JS/TS version? Check out LangChain.js.
+  - '**Production Support:** As you move your LangChains into production,'
+  - we'd love to offer more comprehensive support.
+  - ''
+  - Please fill out this form and we'll set up a dedicated support Slack channel.
+  - ''
+  - '## Quick Install'
+  - '`pip install langchain`'
+  - or
+  - '`conda install langchain -c conda-forge`'
+  - ''
+  - "## \U0001F914 What is this?"
+  - ''
+  - Large language models (LLMs) are emerging as a transformative technology, enabling
+    developers
+  - to build applications that they previously could not. However, using these LLMs
+    in isolation is
+  - often insufficient for creating powerful apps
+  - '*real* power comes when you can combine them with other sources of computation
+    or knowledge.'
+  - ''
+  - This library aims to assist in the development of those types of applications.
+  - 'Common examples of these applications include:'
+  - ''
+  - "**\u2753 Question Answering over specific documents**"
+  - ''
+  - '- Documentation'
+  - '- End-to-end Example: Question Answering over Notion Database'
+  - ''
+  - "**\U0001F916 Agents**"
+  - '- Documentation'
+  - '- End-to-end Example: GPT+WolframAlpha'
+  - ''
+  - "## \U0001F4D6 Documentation"
+  - ''
+  - 'Please see [here](https://startr.team) for full documentation on:'
+  - '- Getting started (installation, setting up the environment, simple examples)'
+  - '- How-To examples (demos, integrations, helper functions)'
+  - '- Reference (full API docs)'
+  - '- Resources (high-level explanation of core concepts)'
+  - '```'
+  user_role_name: Chief Executive Officer
+TestErrorSummary:
+  assistant_role_name: Programmer
+  phase_prompt:
+  - 'Our developed source code and corresponding test reports are listed below: '
+  - 'Programming Language: "{language}"'
+  - 'Source Codes:'
+  - '"{codes}"'
+  - 'Test Reports of Source Codes:'
+  - '"{test_reports}"'
+  - According to my test reports, please locate and summarize the bugs that cause
+    the problem.
+  user_role_name: Software Test Engineer
+TestModification:
+  assistant_role_name: Programmer
+  phase_prompt:
+  - 'Our developed source code and corresponding test reports are listed below:'
+  - 'Programming Language: "{language}"'
+  - 'Source Codes:'
+  - '"{codes}"'
+  - 'Test Reports of Source Codes:'
+  - '"{test_reports}"'
+  - 'Error Summary of Test Reports:'
+  - '"{error_summary}"'
+  - 'Each file must be in a markdown code block format:'
+  - 'Replace the following tokens accordingly:'
+  - 1. "FILENAME" with the lowercase file name including the extension.
+  - 2. "LANGUAGE" with the programming language.
+  - 3. "DOCSTRING" with the documentation string.
+  - 4. "CODE" with the original code.
+  - 'The format is as follows:'
+  - FILENAME
+  - '```LANGUAGE'
+  - ''''''''
+  - DOCSTRING
+  - ''''''''
+  - CODE
+  - '```'
+  - ''
+  - As the {assistant_role_name}, your task is to modify the code based on the error
+    summary to ensure smooth execution.
+  - Use the format above to modify the problematic code based on the error summary.
+  - Output the fixed code along with corresponding explanations.
+  - ''
+  - '**NOTE**: Strictly follow the defined format including FILENAME, LANGUAGE, DOCSTRING,
+    and CODE.'
+  - Incomplete "TODO" code is strictly prohibited.
+  - 'If no bugs are reported, please return only one line: "<INFO> Finished".'
+  user_role_name: Software Test Engineer
