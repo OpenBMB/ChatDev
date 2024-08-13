@@ -79,3 +79,7 @@ setup_dev_environment = "pipenv sync -d"
 clean_project = "git clean --exclude=!.env -Xdf"
 clean_pipenv = "pipenv run pip freeze > requirements.txt && pipenv install -r requirements.txt && rm requirements.txt"
 trace_report = "vizviewer result.json"
+
+patch_release = "git flow release start v$(git describe --tags --abbrev=0 | awk -F'[v.]' '{printf "%d.%d.%d", $2, $3, $4+1}')+build.$(date +'%Y%m%d')"
+minor_release = "git flow release start v$(git describe --tags --abbrev=0 | awk -F'[v.]' '{printf "%d.%d.%d", $2, $3+1, 0}')+build.$(date +'%Y%m%d')"
+major_release = "git flow release start v$(git describe --tags --abbrev=0 | awk -F'[v.]' '{printf "%d.%d.%d", $2+1, 0, 0}')+build.$(date +'%Y%m%d')"
