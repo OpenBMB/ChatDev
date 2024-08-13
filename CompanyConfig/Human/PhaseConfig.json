@@ -34,16 +34,16 @@
     "assistant_role_name": "Programmer",
     "user_role_name": "Chief Technology Officer",
     "phase_prompt": [
-      "According to the new user's task and our software designs listed below: ",
+      "Based on the new user's task and our software designs listed below:",
       "Task: \"{task}\".",
-      "Task description: \"{description}\".",
+      "Task Description: \"{description}\".",
       "Modality: \"{modality}\".",
       "Programming Language: \"{language}\"",
-      "Ideas:\"{ideas}\"",
-      "We have decided to complete the task through a executable software with multiple files implemented via {language}. As the {assistant_role}, to satisfy the new user's demands, you should write one or multiple files and make sure that every detail of the architecture is, in the end, implemented as code. {gui}",
-      "Think step by step and reason yourself to the right decisions to make sure we get it right.",
-      "You will first lay out the names of the core classes, functions, methods that will be necessary, as well as a quick comment on their purpose.",
-      "Then you will output the content of each file including complete code. Each file must strictly follow a markdown code block format, where the following tokens must be replaced such that \"FILENAME\" is the lowercase file name including the file extension, \"LANGUAGE\" in the programming language, \"DOCSTRING\" is a string literal specified in source code that is used to document a specific segment of code, and \"CODE\" is the original code:",
+      "Ideas: \"{ideas}\"",
+      "We'll complete this task with an executable software made up of multiple files written in {language}. As the {assistant_role}, your job is to meet the user's demands by writing one or more files and ensuring every part of the architecture is fully implemented as code. {gui}",
+      "Think through each step and make the right decisions to get it done correctly.",
+      "First, list the names of the core classes, functions, and methods needed, along with a brief comment on their purpose.",
+      "Then, output the content of each file, including the full code. Each file must follow this markdown code block format, replacing the following tokens: \"FILENAME\" with the lowercase file name and extension, \"LANGUAGE\" with the programming language, \"DOCSTRING\" with a string literal documenting a specific part of the code, and \"CODE\" with the actual code:",
       "FILENAME",
       "```LANGUAGE",
       "'''",
@@ -51,8 +51,10 @@
       "'''",
       "CODE",
       "```",
-      "You will start with the \"main\" file, then go to the ones that are imported by that file, and so on.",
-      "Please note that the code should be fully functional. Ensure to implement all functions. No placeholders (such as 'pass' in Python)."
+      "",
+      "**NOTE**: When writing in languages other than Python, ensure comments or docstrings are included to explain the code, but the syntax may differ, eg. JavaScript uses // for comments, html uses <!-- -->, etc.",
+      "Remember to follow the correct order of file creation and code implementation. Start with the \"main\" file, then move to the files imported by that one, and so on.",
+      "Finally, ensure the code is fully functional. Implement all functions—no placeholders like 'pass' in Python."
     ]
   },
   "ArtDesign": {
