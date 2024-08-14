@@ -65,6 +65,7 @@ zipp = "==3.19.2"
 
 [dev-packages]
 viztracer = "*"
+autoflake = "*"
 
 [requires]
 python_version = "3.9"
@@ -79,4 +80,3 @@ setup_dev_environment = "pipenv sync -d"
 clean_project = "git clean --exclude=!.env -Xdf"
 clean_pipenv = "pipenv run pip freeze > requirements.txt && pipenv install -r requirements.txt && rm requirements.txt"
 trace_report = "vizviewer result.json"
-
