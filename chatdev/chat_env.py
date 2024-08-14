@@ -16,10 +16,7 @@ from chatdev.utils import log_visualize
 from ecl.memory import Memory
 
 try:
-    from openai.types.chat.chat_completion_message_tool_call import (
-        ChatCompletionMessageToolCall,
-    )
-    from openai.types.chat.chat_completion_message import FunctionCall
+    pass
 
     openai_new_api = True  # new openai api version
 except ImportError:
