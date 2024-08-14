@@ -8,7 +8,7 @@ from datetime import datetime
 
 from camel.agents import RolePlaying
 from camel.configs import ChatGPTConfig
-from camel.typing import TaskType, ModelType
+from camel.typing import TaskType
 from chatdev.chat_env import ChatEnv, ChatEnvConfig
 from chatdev.statistics import get_info
 from camel.web_spider import modal_trans
