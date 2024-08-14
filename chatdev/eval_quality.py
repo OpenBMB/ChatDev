@@ -208,7 +208,7 @@ def main(warehouse_root):
     completeness_list, executability_list, consistency_list = [], [], []
     with open(tsv_file, "a", encoding="utf-8") as writer:
         for i, directory in enumerate(directories):
-            directory_basename = os.path.basename(directory)
+            os.path.basename(directory)
 
             completeness = get_completeness(directory)
             executability = get_executability(directory)

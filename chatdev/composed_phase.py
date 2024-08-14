@@ -87,7 +87,6 @@ class ComposedPhase(ABC):
         Returns: None
 
         """
-        pass
 
     @abstractmethod
     def update_chat_env(self, chat_env) -> ChatEnv:
@@ -105,7 +104,6 @@ class ComposedPhase(ABC):
             chat_env: updated global chat chain environment
 
         """
-        pass
 
     @abstractmethod
     def break_cycle(self, phase_env) -> bool:
@@ -117,7 +115,6 @@ class ComposedPhase(ABC):
         Returns: None
 
         """
-        pass
 
     def execute(self, chat_env) -> ChatEnv:
         """

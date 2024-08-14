@@ -57,7 +57,7 @@ class Codes:
 
     def _update_codes(self, generated_content):
         new_codes = Codes(generated_content)
-        differ = difflib.Differ()
+        difflib.Differ()
         for key in new_codes.codebooks.keys():
             if (
                 key not in self.codebooks.keys()

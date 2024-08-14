@@ -297,7 +297,6 @@ class Phase(ABC):
         Returns: None
 
         """
-        pass
 
     @abstractmethod
     def update_chat_env(self, chat_env) -> ChatEnv:
@@ -315,7 +314,6 @@ class Phase(ABC):
             chat_env: updated global chat chain environment
 
         """
-        pass
 
     def execute(self, chat_env, chat_turn_limit, need_reflect) -> ChatEnv:
         """
