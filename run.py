@@ -145,46 +145,35 @@ def parse_arguments() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Startr.Team ChatChain")
 
     # Dictionary to hold argument configurations
+    # fmt: off
     args_config = {
         "debug": ("store_true", False, "Enable debug mode"),
         "local": ("store_true", False, "Use local Ollama API instead of OpenAI API"),
-        "config": (
-            str,
-            "Default",
-            "CompanyConfig name loading settings(Choices: {})".format(
-                ", ".join(get_CompanyConfigs())
-            ),
-        ),
-        "org": (
-            str,
-            "DefaultOrganization",
-            "Organization name for software generation",
-        ),
-        "task": (str, "Develop a basic Website.", "Software prompt"),
+        "config": (str,   "Default"  ,"CompanyConfig name loading settings(Choices: {})".format(", ".join(get_CompanyConfigs())),),
+        "org": ( str,"DefaultOrganization",  "Organization name for software generation",),
+        "task": (str, "Develop simple static Website using only html and css.", "Software prompt"),
         "name": (str, "Website", "Software name for generation"),
-        "model": (
-            str,
-            "GPT_3_5_TURBO_NEW",
-            "GPT Model (choices: {})".format(", ".join(get_model_choices())),
-        ),
+        "model": ( str, "LLAMA_31_8B", "GPT Model (choices: {})".format(", ".join(get_model_choices())),),
         "path": (str, "", "Directory for incremental mode"),
     }
+    # fmt: on
 
     # Loop through each argument configuration
     for arg, (action_or_type, default, help_text) in args_config.items():
         flag = f"--{arg}"  # Infer long flag based on key name
         short_flag = f"-{arg[0]}"  # Infer short flag based on the first character of the key name
-
         if action_or_type == "store_true":
             parser.add_argument(
-                short_flag, flag, action=action_or_type, default=default, help=help_text
+                short_flag, flag, action=action_or_type, default=default, 
+                help=f"{help_text} (default: {default})"
             )
         else:
             # Add the argument to the parser with the given configuration
             parser.add_argument(
-                short_flag, flag, type=action_or_type, default=default, help=help_text
+                short_flag, flag, type=action_or_type, default=default, 
+                help=f"{help_text} (default: {default})"
             )
-
+    
     return parser.parse_args()
 
 
