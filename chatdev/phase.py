@@ -257,8 +257,7 @@ class Phase(ABC):
         else:
             raise ValueError(f"Reflection of phase {phase_name}: Not Assigned.")
 
-        # Reflections actually is a special phase between CEO and counselor
-        # They read the whole chatting history of this phase and give refined conclusion of this phase
+        # Reflections are a unique phase where the CEO and Counselor review the entire chat history, drawing clear conclusions.
         reflected_content = self.chatting(
             chat_env=chat_env,
             task_prompt=task_prompt,
@@ -285,17 +284,20 @@ class Phase(ABC):
     @abstractmethod
     def update_phase_env(self, chat_env):
         """
-        update self.phase_env (if needed) using chat_env, then the chatting will use self.phase_env to follow the context and fill placeholders in phase prompt
-        must be implemented in customized phase
-        the usual format is just like:
-        ```
-            self.phase_env.update({key:chat_env[key]})
-        ```
+        Update the phase environment with info from the chat environment.
+
+        This method must be implemented in custom phase classes. It updates
+        self.phase_env using chat_env. The updated phase environment
+        is then used for context in chat prompts.
+
+        A typical implementation might look like this:
+        self.phase_env.update({key: chat_env[key]})
+
         Args:
-            chat_env: global chat chain environment
+            chat_env (dict): The global chat chain environment.
 
-        Returns: None
-
+        Returns:
+            None
         """
 
     @abstractmethod
