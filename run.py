@@ -153,7 +153,7 @@ def parse_arguments() -> argparse.Namespace:
         "org": ( str,"DefaultOrganization",  "Organization name for software generation",),
         "task": (str, "Develop simple static Website using only html and css.", "Software prompt"),
         "name": (str, "Website", "Software name for generation"),
-        "model": ( str, "LLAMA_31_8B", "GPT Model (choices: {})".format(", ".join(get_model_choices())),),
+        "model": ( str, "LLAMA_3", "GPT Model (choices: {})".format(", ".join(get_model_choices())),),
         "path": (str, "", "Directory for incremental mode"),
     }
     # fmt: on
