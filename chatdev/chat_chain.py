@@ -170,65 +170,112 @@ class ChatChain:
         Returns:
             None
         """
-        # Recruit each employee in the recruits list into the chat environment
-        [self.chat_env.recruit(agent_name=employee) for employee in self.recruits]
+        # Loop through each employee in the recruits list
+        for employee in self.recruits:
+            # Recruit the employee into the chat environment
+            self.chat_env.recruit(agent_name=employee)
 
     def execute_step(self, phase_item: dict):
         """
-        execute single phase in the chain
+        Execute a single phase in the chain.
+
         Args:
-            phase_item: single phase configuration in the ChatChainConfig.json
+            phase_item: A dictionary containing the configuration for one phase 
+                        from the ChatChainConfig.json file.
 
         Returns:
-
+            None
         """
 
+        # Extract the phase name and type from the phase_item dictionary
         phase = phase_item["phase"]
         phase_type = phase_item["phaseType"]
-        # For SimplePhase, just look it up from self.phases and conduct 
-        # "Phase.execute" method
+
+        # Handle SimplePhase execution
         if phase_type == "SimplePhase":
-            max_turn_step = phase_item["max_turn_step"]
-            need_reflect = check_bool(phase_item["need_reflect"])
-            if phase in self.phases:
-                self.chat_env = self.phases[phase].execute(
-                    self.chat_env,
-                    self.chat_turn_limit_default
-                    if max_turn_step <= 0
-                    else max_turn_step,
-                    need_reflect,
-                )
-            else:
-                raise RuntimeError(
-                    f"Phase '{phase}' is not yet implemented in chatdev.phase"
-                )
-        # For ComposedPhase, we create instance here then conduct 
-        # "ComposedPhase.execute" method
-        elif phase_type == "ComposedPhase":
-            cycle_num = phase_item["cycleNum"]
-            composition = phase_item["Composition"]
-            compose_phase_class = getattr(self.compose_phase_module, phase)
-            if not compose_phase_class:
-                raise RuntimeError(
-                    f"Phase '{phase}' is not yet implemented in chatdev.compose_phase"
-                )
-            compose_phase_instance = compose_phase_class(
-                phase_name=phase,
-                cycle_num=cycle_num,
-                composition=composition,
-                config_phase=self.config_phase,
-                config_role=self.config_role,
-                model_type=self.model_type,
-                log_filepath=self.log_filepath,
+            self._execute_phase(
+                phase, 
+                phase_item["max_turn_step"], 
+                check_bool(phase_item["need_reflect"])
             )
-            self.chat_env = compose_phase_instance.execute(self.chat_env)
+        
+        # Handle ComposedPhase execution
+        elif phase_type == "ComposedPhase":
+            self._execute_composed_phase(
+                phase, 
+                phase_item["cycleNum"], 
+                phase_item["Composition"]
+            )
+        
+        # If the phase type is not recognized, raise an error
         else:
-            raise RuntimeError(f"PhaseType '{phase_type}' is not yet implemented.")
+            self._raise_not_implemented_error(f"PhaseType '{phase_type}'")
+
+    def _execute_phase(self, phase, max_turn_step, need_reflect):
+        """
+        Execute a SimplePhase using the provided parameters.
+
+        Args:
+            phase: The name of the phase to execute.
+            max_turn_step: The maximum number of turns for this phase.
+            need_reflect: A boolean indicating whether reflection is needed.
+
+        Returns:
+            None
+        """
+        if phase in self.phases:
+            self.chat_env = self.phases[phase].execute(
+                self.chat_env,
+                self.chat_turn_limit_default if max_turn_step <= 0 else max_turn_step,
+                need_reflect,
+            )
+        else:
+            self._raise_not_implemented_error(f"Phase '{phase}' in chatdev.phase")
+
+    def _execute_composed_phase(self, phase, cycle_num, composition):
+        """
+        Execute a ComposedPhase using the provided parameters.
+
+        Args:
+            phase: The name of the composed phase to execute.
+            cycle_num: The number of cycles for the composed phase.
+            composition: The composition details for the composed phase.
+
+        Returns:
+            None
+        """
+        compose_phase_class = getattr(self.compose_phase_module, phase, None)
+        if not compose_phase_class:
+            self._raise_not_implemented_error(f"Phase '{phase}' in chatdev.compose_phase")
+
+        compose_phase_instance = compose_phase_class(
+            phase_name=phase,
+            cycle_num=cycle_num,
+            composition=composition,
+            config_phase=self.config_phase,
+            config_role=self.config_role,
+            model_type=self.model_type,
+            log_filepath=self.log_filepath,
+        )
+        self.chat_env = compose_phase_instance.execute(self.chat_env)
+
+    def _raise_not_implemented_error(self, message):
+        """
+        Raise a RuntimeError indicating a phase or phase type is not implemented.
+
+        Args:
+            message: The error message to include in the RuntimeError.
+
+        Returns:
+            None
+        """
+        raise RuntimeError(message)
+
 
     def execute_chain(self):
         """
-        Execute the entire chain based on the c
-        onfiguration specified in ChatChainConfig.json.
+        Execute the entire chain based on the 
+        configuration specified in ChatChainConfig.json.
 
         This method applies the 'execute_step' function to each item
         in the 'self.chain' list using the 'map()' function.
