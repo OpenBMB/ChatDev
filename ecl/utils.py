@@ -108,7 +108,7 @@ class OpenAIModel(ModelBackend):
         self.completion_tokens = 0
         self.total_tokens = 0
 
-    @retry(wait=wait_exponential(min=5, max=60), stop=stop_after_attempt(5))
+    @retry(wait=wait_exponential(multiplier=1, min=4, max=10), stop=stop_after_attempt(5))
     def run(self, messages) :
         if BASE_URL:
             client = openai.OpenAI(
