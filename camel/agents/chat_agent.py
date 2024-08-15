@@ -223,7 +223,7 @@ class ChatAgent(BaseAgent):
 
         return target_memory
 
-    @retry(wait=wait_exponential(min=5, max=60), stop=stop_after_attempt(5))
+    @retry(wait=wait_exponential(multiplier=1, min=4, max=10), stop=stop_after_attempt(5))
     @openai_api_key_required
     def step(
         self,
