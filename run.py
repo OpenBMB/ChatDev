@@ -92,6 +92,7 @@ args = parser.parse_args()
 config_path, config_phase_path, config_role_path = get_config(args.config)
 args2type = {'GPT_3_5_TURBO': ModelType.GPT_3_5_TURBO,
              'GPT_4': ModelType.GPT_4,
+             'GPT_4o': ModelType.GPT_4o,
             #  'GPT_4_32K': ModelType.GPT_4_32k,
              'GPT_4_TURBO': ModelType.GPT_4_TURBO,
             #  'GPT_4_TURBO_V': ModelType.GPT_4_TURBO_V

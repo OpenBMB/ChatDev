@@ -50,7 +50,7 @@ class ModelType(Enum):
     GPT_4_32k = "gpt-4-32k"
     GPT_4_TURBO = "gpt-4-turbo"
     GPT_4_TURBO_V = "gpt-4-turbo"
-
+    GPT_4o = "gpt-4o"
     STUB = "stub"
 
     @property

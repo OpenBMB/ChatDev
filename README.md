@@ -248,3 +248,32 @@ Made with [contrib.rocks](https://contrib.rocks).
 ## 📬 Contact
 
 If you have any questions, feedback, or would like to get in touch, please feel free to reach out to us via email at [qianc62@gmail.com](mailto:qianc62@gmail.com)
+
+
+## For Mac OSx
+
+### Tell dev team to build your task
+git clone <this repo, this branch>
+cd ChatDev
+brew install pyenv
+brew install pyenv-virtualenv
+pyenv install 3.11.4
+pyenv virtualenv 3.11.4 chatdev
+pyenv activate chatdev
+pip install -r requirements.txt
+
+export OPENAI_API_KEY=<yourkey>
+python run.py --task "Design a pong game" --name "pong"
+
+pyenv activate --unset
+
+### Run your dev team's newly built app
+cd Warehouse/<your newapp>
+
+  ### If new app built in python
+  pyenv virtualenv-delete -f newapp
+  pyenv virtualenv 3.12.5 newapp
+  pyenv activate newapp
+  pip install -r requirements.txt
+  python main.py
+

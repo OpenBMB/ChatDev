@@ -44,6 +44,7 @@ class ChatMessage(BaseMessage):
     meta_dict: Optional[Dict[str, str]]
     role: str
     content: str = ""
+    refusal: str = None
     if openai_new_api:
         function_call: Optional[FunctionCall] = None
         tool_calls: Optional[ChatCompletionMessageToolCall] = None

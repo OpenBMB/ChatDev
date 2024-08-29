@@ -182,6 +182,7 @@ class ModelFactory:
             ModelType.GPT_4_32k,
             ModelType.GPT_4_TURBO,
             ModelType.GPT_4_TURBO_V,
+            ModelType.GPT_4o,
             None
         }:
             model_class = OpenAIModel
