@@ -3,8 +3,9 @@
 <p align="center">
   <img src='../misc/logo1.png' width=550>
 </p>
-
-
+<p align="center">
+    【English   | <a href="readme/README-Chinese.md">Chinese</a> | <a href="readme/README-Japanese.md">Japanese</a> | <a href="readme/README-Korean.md">Korean</a> | <a href="readme/README-Filipino.md">Filipino</a> | <a href="readme/README-French.md">French</a> | <a href="readme/README-Slovak.md">Slovak</a> | <a href="readme/README-Portuguese.md">Portuguese</a> | <a href="readme/README-Spanish.md">Spanish</a> | <a href="readme/README-Dutch.md">Dutch</a> | <a href="readme/README-Turkish.md">Turkish</a> | <a href="readme/README-Hindi.md">Hindi</a> | <a href="readme/README-Bahasa-Indonesia.md">Bahasa Indonesia</a> | <a href="readme/README-Russian.md">Russian</a> | <a href="readme/README-Urdu.md">Urdu</a>】
+</p>
 <p align="center">
     【📚 <a href="../wiki.md">विकि</a> | 🚀 <a href="../wiki.md#visualizer">स्थानीय डेमो</a> | 👥 <a href="../Contribution.md">समुदाय निर्मित सॉफ्टवेयर</a> | 🔧 <a href="../wiki.md#customization">अनुकूलन</a>】
 </p>
