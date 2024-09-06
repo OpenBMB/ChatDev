@@ -250,3 +250,20 @@ class Test(ComposedPhase):
             return True
         else:
             return False
+
+
+class ClientRepInteraction(ComposedPhase):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+    def update_phase_env(self, chat_env):
+        self.phase_env.update({"modification_conclusion": "", "comments": ""})
+
+    def update_chat_env(self, chat_env):
+        return chat_env
+
+    def break_cycle(self, phase_env) -> bool:
+        if "<INFO> Finished".lower() in phase_env['modification_conclusion'].lower() or phase_env["comments"].lower() == "exit":
+            return True
+        else:
+            return False

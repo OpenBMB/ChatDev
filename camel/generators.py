@@ -45,6 +45,7 @@ class SystemMessageGenerator:
         else:
             templates = PromptTemplateGenerator()
             agenttech_prompt_template = templates.get_system_prompt(task_type, RoleType.CHATDEV)
+            clientrep_prompt_template = templates.get_system_prompt(task_type, RoleType.CHATDEV_CLIENTREP)
             counselor_prompt_template = templates.get_system_prompt(task_type, RoleType.CHATDEV_COUNSELOR)
             ceo_prompt_template = templates.get_system_prompt(task_type, RoleType.CHATDEV_CEO)
             chro_prompt_template = templates.get_system_prompt(task_type, RoleType.CHATDEV_CHRO)
@@ -57,6 +58,7 @@ class SystemMessageGenerator:
 
             self.sys_prompts = dict()
             self.sys_prompts[RoleType.CHATDEV] = agenttech_prompt_template
+            self.sys_prompts[RoleType.CHATDEV_CLIENTREP] = clientrep_prompt_template
             self.sys_prompts[RoleType.CHATDEV_COUNSELOR] = counselor_prompt_template
             self.sys_prompts[RoleType.CHATDEV_CEO] = ceo_prompt_template
             self.sys_prompts[RoleType.CHATDEV_CHRO] = chro_prompt_template
@@ -68,6 +70,7 @@ class SystemMessageGenerator:
             self.sys_prompts[RoleType.CHATDEV_CCO] = cco_prompt_template
 
             self.sys_msg_meta_dict_keys = (agenttech_prompt_template.key_words |
+                                           clientrep_prompt_template.key_words |
                                            counselor_prompt_template.key_words |
                                            ceo_prompt_template.key_words |
                                            chro_prompt_template.key_words |

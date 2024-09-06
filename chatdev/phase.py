@@ -314,7 +314,8 @@ class DemandAnalysis(Phase):
         super().__init__(**kwargs)
 
     def update_phase_env(self, chat_env):
-        pass
+        self.phase_env.update({"task": chat_env.env_dict['task_prompt'],
+                               "description": chat_env.env_dict['task_description']})
 
     def update_chat_env(self, chat_env) -> ChatEnv:
         if len(self.seminar_conclusion) > 0:
@@ -649,4 +650,75 @@ class Manual(Phase):
     def update_chat_env(self, chat_env) -> ChatEnv:
         chat_env._update_manuals(self.seminar_conclusion)
         chat_env.rewrite_manuals()
+        return chat_env
+
+
+class AssessmentHuman(Phase):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+    def update_phase_env(self, chat_env):
+        self.phase_env.update({"task": chat_env.env_dict['task_prompt'],
+                               "description": chat_env.env_dict['task_description']})
+
+    def update_chat_env(self, chat_env) -> ChatEnv:
+        if len(self.seminar_conclusion) > 0  and self.seminar_conclusion.startswith("<INFO>"):
+            chat_env.env_dict['task_description'] = self.seminar_conclusion.strip().split("<INFO>")[-1]
+            log_visualize(
+                "**[Task Refinement]**:\n\n Task:\n{}\n\n Description:\n{}\n".format(chat_env.env_dict['task_prompt'], chat_env.env_dict['task_description']))
+        return chat_env
+
+    def execute(self, chat_env, chat_turn_limit, need_reflect) -> ChatEnv:
+        self.update_phase_env(chat_env)
+        log_visualize(
+            f"**[Task Refinement-Interaction]**\n\n"
+            f"Now you can participate in the development of the software!\n"
+            f"The task is:  {chat_env.env_dict['task_prompt']}\n"
+            f"Please input your feedback (in multiple lines). It can be bug report or new feature requirement.\n"
+            f"You are currently in the #{self.phase_env['cycle_index']} human Assessment with a total of {self.phase_env['cycle_num']} feedbacks\n"
+            f"Type 'end' on a separate line to submit.\n"
+            f"You can type \"Exit\" to quit this mode at any time.\n"
+        )
+        provided_comments = []
+        user_input = ""
+        while True:
+            user_input = input(">>>>>>")
+            if user_input.strip().lower() == "end":
+                break
+            if user_input.strip().lower() == "done":
+                break
+            if user_input.strip().lower() == "abort":
+                raise ValueError("Abort the task.")
+            if user_input.strip().lower() == "exit":
+                provided_comments = ["exit"]
+                break
+            provided_comments.append(user_input)
+        if user_input.strip().lower() == "done":
+            self.seminar_conclusion = "<INFO>" + '\n'.join(provided_comments)
+            chat_env = self.update_chat_env(chat_env)
+            self.phase_env['comments'] = "exit"
+            return chat_env
+        if user_input.strip().lower() == "end":
+            self.phase_env["comments"] += '\n'.join(provided_comments)
+        log_visualize(
+            f"**[User Provided Comments]**\n\n In the #{self.phase_env['cycle_index']} of total {self.phase_env['cycle_num']} comments: \n\n" +
+            self.phase_env["comments"])
+        if self.phase_env["comments"].strip().lower() == "exit":
+            return chat_env
+
+        self.seminar_conclusion = \
+            self.chatting(chat_env=chat_env,
+                          task_prompt=chat_env.env_dict['task_prompt'],
+                          need_reflect=need_reflect,
+                          assistant_role_name=self.assistant_role_name,
+                          user_role_name=self.user_role_name,
+                          phase_prompt=self.phase_prompt,
+                          phase_name=self.phase_name,
+                          assistant_role_prompt=self.assistant_role_prompt,
+                          user_role_prompt=self.user_role_prompt,
+                          chat_turn_limit=chat_turn_limit,
+                          placeholders=self.phase_env,
+                          memory=chat_env.memory,
+                          model_type=self.model_type)
+        chat_env = self.update_chat_env(chat_env)
         return chat_env

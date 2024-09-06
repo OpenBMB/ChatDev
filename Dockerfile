@@ -1,6 +1,9 @@
 # Start with a Python 3.9 base image
 FROM python:3.9-slim
 
+# set up a folder for sharing with host
+RUN mkdir /pub
+
 # Set the working directory in the container
 WORKDIR /app
 

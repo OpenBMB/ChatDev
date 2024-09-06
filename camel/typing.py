@@ -32,6 +32,7 @@ class RoleType(Enum):
     EMBODIMENT = "embodiment"
     DEFAULT = "default"
     CHATDEV = "AgentTech"
+    CHATDEV_CLIENTREP = "client representative"
     CHATDEV_COUNSELOR = "counselor"
     CHATDEV_CEO = "chief executive officer (CEO)"
     CHATDEV_CHRO = "chief human resource officer (CHRO)"
@@ -62,6 +63,7 @@ class ModelType(Enum):
 
 class PhaseType(Enum):
     REFLECTION = "reflection"
+    RECRUITING_CLIENTREP = "recruiting client representative"
     RECRUITING_CHRO = "recruiting CHRO"
     RECRUITING_CPO = "recruiting CPO"
     RECRUITING_CTO = "recruiting CTO"
