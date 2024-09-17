@@ -28,7 +28,17 @@
       --org ORG        Name of organization, your software will be generated in WareHouse/name_org_timestamp
       --task TASK      Prompt of your idea
       --name NAME      Name of software, your software will be generated in WareHouse/name_org_timestamp
-      --model MODEL    GPT Model, choose from {'GPT_3_5_TURBO','GPT_4','GPT_4_32K'}
+      --model MODEL    GPT Model, choose from {'GPT_3_5_TURBO','GPT_4','GPT_4_32K', 'OLLAMA'}
+    ```
+
+#### 2.1 To use Ollama(Local model):
+
+- **choose local model** Use the following command to use ollama model
+  replacing `[your_local_model]` with your local model (llama3.1:latest, etc.):
+    `export MODEL_NAME=[your_local_model]`
+  and run command:
+    ```
+    python3 run.py --task "[description of your idea]" --name "[project name]" --model "OLLAMA"
     ```
 
 ### 3. Check your software
