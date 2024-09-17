@@ -152,7 +152,21 @@ To get started, follow these steps:
     $env:MODEL_NAME="[model]"
     ```
 
-6. **Build Your Software:** Use the following command to initiate the building of your software,
+6. **Use Huggingface API:** If you want to use huggingface model, export your huggingface model id as an environment variable. Replace `"[hf_model_id]"` with huggingface model id.
+
+    On Unix/Linux:
+
+    ```
+    export HF_MODEL_ID="[hf_model_id]"
+    ```
+
+    On Windows:
+
+    ```
+    $env:HF_MODEL_ID="[hf_model_id]"
+    ```
+
+7. **Build Your Software:** Use the following command to initiate the building of your software,
    replacing `[description_of_your_idea]` with your idea's description and `[project_name]` with your desired project
    name:
    On Unix/Linux:
@@ -168,8 +182,10 @@ To get started, follow these steps:
    ```
 
    if you using ollama, `--model OLLAMA` is required
+   
+   if you using huggingface, `--model HUGGINGFACE` is required
 
-7. **Run Your Software:** Once generated, you can find your software in the `WareHouse` directory under a specific
+8. **Run Your Software:** Once generated, you can find your software in the `WareHouse` directory under a specific
    project folder, such as `project_name_DefaultOrganization_timestamp`. Run your software using the following command
    within that directory:
    On Unix/Linux:

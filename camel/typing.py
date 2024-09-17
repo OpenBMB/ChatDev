@@ -54,6 +54,7 @@ class ModelType(Enum):
     GPT_4O_MINI = "gpt-4o-mini"
     
     OLLAMA = "ollama"
+    HUGGINGFACE = "huggingface"
 
     STUB = "stub"
 

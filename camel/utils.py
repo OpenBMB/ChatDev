@@ -92,7 +92,8 @@ def num_tokens_from_messages(
         ModelType.GPT_4O,
         ModelType.GPT_4O_MINI,
         ModelType.STUB,
-        ModelType.OLLAMA
+        ModelType.OLLAMA,
+        ModelType.HUGGINGFACE
     }:
         return count_tokens_openai_chat_models(messages, encoding)
     else:
@@ -133,6 +134,8 @@ def get_model_token_limit(model: ModelType) -> int:
         return 128000
     elif model == ModelType.OLLAMA:
         return 20000
+    elif model == ModelType.HUGGINGFACE:
+        return 20000
     else:
         raise ValueError("Unknown model type")
 
@@ -159,7 +162,7 @@ def openai_api_key_required(func: F) -> F:
             raise ValueError("Expected ChatAgent")
         if self.model == ModelType.STUB:
             return func(self, *args, **kwargs)
-        elif self.model == ModelType.OLLAMA:
+        elif self.model in {ModelType.OLLAMA, ModelType.HUGGINGFACE}:
             return func(self, *args, **kwargs)
         elif 'OPENAI_API_KEY' in os.environ:
             return func(self, *args, **kwargs)
