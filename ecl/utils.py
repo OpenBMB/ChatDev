@@ -16,11 +16,14 @@ from tenacity import (
     stop_after_attempt,
     wait_exponential
 )
-OPENAI_API_KEY = os.environ['OPENAI_API_KEY']
-if 'BASE_URL' in os.environ:
-    BASE_URL = os.environ['BASE_URL']
-else:
-    BASE_URL = None
+
+
+if "OPENAI_API_KEY" in os.environ:
+    OPENAI_API_KEY = os.environ['OPENAI_API_KEY']
+    if 'BASE_URL' in os.environ:
+        BASE_URL = os.environ['BASE_URL']
+    else:
+        BASE_URL = None
 
 def getFilesFromType(sourceDir, filetype):
     files = []

@@ -13,9 +13,12 @@
 # =========== Copyright 2023 @ CAMEL-AI.org. All Rights Reserved. ===========
 from abc import ABC, abstractmethod
 from typing import Any, Dict
+import requests
 
 import openai
 import tiktoken
+import torch
+from transformers import pipeline, BitsAndBytesConfig
 
 from camel.typing import ModelType
 from chatdev.statistics import prompt_cost
@@ -30,11 +33,137 @@ except ImportError:
 
 import os
 
-OPENAI_API_KEY = os.environ['OPENAI_API_KEY']
-if 'BASE_URL' in os.environ:
-    BASE_URL = os.environ['BASE_URL']
-else:
-    BASE_URL = None
+if "OPENAI_API_KEY" in os.environ:
+    OPENAI_API_KEY = os.environ['OPENAI_API_KEY']
+    if 'BASE_URL' in os.environ:
+        BASE_URL = os.environ['BASE_URL']
+    else:
+        BASE_URL = None
+        
+
+def convert_ollama_to_openai(output):
+    openai_output = {
+        "choices": [
+            {
+                "content_filter_results": {
+                    "hate": {"filtered": False, "severity": "safe"},
+                    "self_harm": {"filtered": False, "severity": "safe"},
+                    "sexual": {"filtered": False, "severity": "safe"},
+                    "violence": {"filtered": False, "severity": "safe"},
+                },
+                "finish_reason": "stop",
+                "index": 0,
+                "message": {
+                    "content": str(output["message"]["content"]),
+                    "role": "user",
+                },
+            }
+        ],
+        "created": 1716105669,
+        "id": "chatcmpl-9QVldRhe4q0z7qIz3uZ6oFq7E5lvw",
+        "model": output["model"],
+        "object": "chat.completion",
+        "prompt_filter_results": [
+            {
+                "prompt_index": 0,
+                "content_filter_results": {
+                    "hate": {"filtered": False, "severity": "safe"},
+                    "self_harm": {"filtered": False, "severity": "safe"},
+                    "sexual": {"filtered": False, "severity": "safe"},
+                    "violence": {"filtered": False, "severity": "safe"},
+                },
+            }
+        ],
+        "system_fingerprint": None,
+        "usage": {"completion_tokens": -1, "prompt_tokens": -1, "total_tokens": -1},
+    }
+
+    return openai_output
+
+
+def convert_hf_to_openai(output):
+    openai_output = {
+        "choices": [
+            {
+                "content_filter_results": {
+                    "hate": {"filtered": False, "severity": "safe"},
+                    "self_harm": {"filtered": False, "severity": "safe"},
+                    "sexual": {"filtered": False, "severity": "safe"},
+                    "violence": {"filtered": False, "severity": "safe"},
+                },
+                "finish_reason": "stop",
+                "index": 0,
+                "message": {
+                    "content": str(output["generated_text"][-1]["content"]),
+                    "role": "user",
+                },
+            }
+        ],
+        "created": 1716105669,
+        "id": "chatcmpl-9QVldRhe4q0z7qIz3uZ6oFq7E5lvw",
+        "model": output["model"],
+        "object": "chat.completion",
+        "prompt_filter_results": [
+            {
+                "prompt_index": 0,
+                "content_filter_results": {
+                    "hate": {"filtered": False, "severity": "safe"},
+                    "self_harm": {"filtered": False, "severity": "safe"},
+                    "sexual": {"filtered": False, "severity": "safe"},
+                    "violence": {"filtered": False, "severity": "safe"},
+                },
+            }
+        ],
+        "system_fingerprint": None,
+        "usage": {"completion_tokens": -1, "prompt_tokens": -1, "total_tokens": -1},
+    }
+
+    return openai_output
+
+
+def convert_claude_to_openai(claude_output):
+    openai_output = {
+        "choices": [
+            {
+                "content_filter_results": {
+                    "hate": {"filtered": False, "severity": "safe"},
+                    "self_harm": {"filtered": False, "severity": "safe"},
+                    "sexual": {"filtered": False, "severity": "safe"},
+                    "violence": {"filtered": False, "severity": "safe"},
+                },
+                "finish_reason": "stop",
+                "index": 0,
+                "message": {
+                    "content": str(claude_output.content[0].text),
+                    "role": "user",
+                },
+            }
+        ],
+        "created": 1716105669,
+        "id": "chatcmpl-9QVldRhe4q0z7qIz3uZ6oFq7E5lvw",
+        "model": claude_output.model,
+        "object": "chat.completion",
+        "prompt_filter_results": [
+            {
+                "prompt_index": 0,
+                "content_filter_results": {
+                    "hate": {"filtered": False, "severity": "safe"},
+                    "self_harm": {"filtered": False, "severity": "safe"},
+                    "sexual": {"filtered": False, "severity": "safe"},
+                    "violence": {"filtered": False, "severity": "safe"},
+                },
+            }
+        ],
+        "system_fingerprint": None,
+        "usage": {
+            "completion_tokens": claude_output.usage.input_tokens,
+            "prompt_tokens": claude_output.usage.output_tokens,
+            "total_tokens": claude_output.usage.input_tokens
+            + claude_output.usage.output_tokens,
+        },
+    }
+
+    return openai_output
 
 
 class ModelBackend(ABC):
@@ -166,6 +295,76 @@ class StubModel(ModelBackend):
                      message=dict(content=ARBITRARY_STRING, role="assistant"))
             ],
         )
+        
+
+class Ollama(ModelBackend):
+    r"""OLLAMA API in a unified ModelBackend interface."""
+
+    def __init__(self, model_type: ModelType, model_config_dict: Dict) -> None:
+        super().__init__()
+        self.model_type = model_type
+        self.model_config_dict = model_config_dict
+
+    def run(self, *args, **kwargs) -> Dict[str, Any]:
+        string = "\n".join([message["content"] for message in kwargs["messages"]])
+        encoding = tiktoken.get_encoding("cl100k_base")
+        num_prompt_tokens = len(encoding.encode(string))
+        gap_between_send_receive = 15 * len(kwargs["messages"])
+        num_prompt_tokens += gap_between_send_receive
+        _model_name = os.environ["MODEL_NAME"]
+
+        kwargs["model"] = _model_name
+        url = "http://localhost:11434/api/chat"
+        data = {"model": _model_name, "messages": kwargs["messages"], "stream": False}
+        response = requests.post(url, json=data).json()
+        response = convert_ollama_to_openai(response)
+        if not isinstance(response, Dict):
+            raise RuntimeError("Unexpected return from OLLAMA API")
+        return response
+    
+
+class Huggingface(ModelBackend):
+    r"""HuggingFace API in a unified ModelBackend interface."""
+
+    def __init__(self, model_type: ModelType, model_config_dict: Dict) -> None:
+        super().__init__()
+        self.model_type = model_type
+        self.model_config_dict = model_config_dict
+
+    def run(self, *args, **kwargs) -> Dict[str, Any]:
+        string = "\n".join([message["content"] for message in kwargs["messages"]])
+        encoding = tiktoken.get_encoding("cl100k_base")
+        num_prompt_tokens = len(encoding.encode(string))
+        gap_between_send_receive = 15 * len(kwargs["messages"])
+        num_prompt_tokens += gap_between_send_receive
+        _model_name = os.environ["HF_MODEL_ID"]
+        quantization_config = BitsAndBytesConfig(
+            load_in_4bit=True,
+            bnb_4bit_use_double_quant=True,
+            bnb_4bit_quant_type="nf4",
+            bnb_4bit_compute_dtype=torch.bfloat16,
+        )
+
+        try:
+            pipe = pipeline(
+                "text-generation",
+                model=_model_name,
+                model_kwargs={
+                    "quantization_config": quantization_config,
+                    "low_cpu_mem_usage": True,
+                },
+                max_new_tokens=20000,
+            )
+        except Exception as e:
+            print("set HUGGINGFACE_TOKEN in to .env or check the HF_MODEL_ID is valid")
+            print(e)
+            
+        response = pipe(kwargs["messages"])[0]
+        response["model"] = _model_name
+        response = convert_hf_to_openai(response)
+        if not isinstance(response, Dict):
+            raise RuntimeError("Unexpected return from Huggingface API")
+        return response
 
 
 class ModelFactory:
@@ -193,6 +392,10 @@ class ModelFactory:
             model_class = OpenAIModel
         elif model_type == ModelType.STUB:
             model_class = StubModel
+        elif model_type == ModelType.OLLAMA:
+            model_class = Ollama
+        elif model_type == ModelType.HUGGINGFACE:
+            model_class = Huggingface
         else:
             raise ValueError("Unknown model")
 
