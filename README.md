@@ -125,6 +125,7 @@ To get started, follow these steps:
 4. **Set OpenAI API Key:** Export your OpenAI API key as an environment variable. Replace `"your_OpenAI_API_key"` with
    your actual API key. Remember that this environment variable is session-specific, so you need to set it again if you
    open a new terminal session.
+
    On Unix/Linux:
 
    ```
@@ -137,7 +138,35 @@ To get started, follow these steps:
    $env:OPENAI_API_KEY="your_OpenAI_API_key"
    ```
 
-5. **Build Your Software:** Use the following command to initiate the building of your software,
+5. **Use Ollama API:** If you want to use ollama(local model), export your ollama model as an environment variable. Replace `"[model]"` with your ollama model.
+
+    On Unix/Linux:
+
+    ```
+    export MODEL_NAME="[model]"
+    ```
+
+    On Windows:
+
+    ```
+    $env:MODEL_NAME="[model]"
+    ```
+
+6. **Use Huggingface API:** If you want to use huggingface model, export your huggingface model id as an environment variable. Replace `"[hf_model_id]"` with huggingface model id.
+
+    On Unix/Linux:
+
+    ```
+    export HF_MODEL_ID="[hf_model_id]"
+    ```
+
+    On Windows:
+
+    ```
+    $env:HF_MODEL_ID="[hf_model_id]"
+    ```
+
+7. **Build Your Software:** Use the following command to initiate the building of your software,
    replacing `[description_of_your_idea]` with your idea's description and `[project_name]` with your desired project
    name:
    On Unix/Linux:
@@ -152,7 +181,11 @@ To get started, follow these steps:
    python run.py --task "[description_of_your_idea]" --name "[project_name]"
    ```
 
-6. **Run Your Software:** Once generated, you can find your software in the `WareHouse` directory under a specific
+   if you using ollama, `--model OLLAMA` is required
+   
+   if you using huggingface, `--model HUGGINGFACE` is required
+
+8. **Run Your Software:** Once generated, you can find your software in the `WareHouse` directory under a specific
    project folder, such as `project_name_DefaultOrganization_timestamp`. Run your software using the following command
    within that directory:
    On Unix/Linux:
