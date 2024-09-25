@@ -35,7 +35,10 @@ import os
 
 if "OPENAI_API_KEY" in os.environ:
     OPENAI_API_KEY = os.environ['OPENAI_API_KEY']
-    if 'BASE_URL' in os.environ:
+if 'BASE_URL' in os.environ:
+    BASE_URL = os.environ['BASE_URL']
+else:
+    if "MODEL_NAME" in os.environ:
         BASE_URL = os.environ['BASE_URL']
     else:
         BASE_URL = None
@@ -314,7 +317,7 @@ class Ollama(ModelBackend):
         _model_name = os.environ["MODEL_NAME"]
 
         kwargs["model"] = _model_name
-        url = "http://localhost:11434/api/chat"
+        url = f"{BASE_URL}/api/chat"
         data = {"model": _model_name, "messages": kwargs["messages"], "stream": False}
         response = requests.post(url, json=data).json()
         response = convert_ollama_to_openai(response)
