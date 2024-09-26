@@ -38,10 +38,7 @@ if "OPENAI_API_KEY" in os.environ:
 if 'BASE_URL' in os.environ:
     BASE_URL = os.environ['BASE_URL']
 else:
-    if "MODEL_NAME" in os.environ:
-        BASE_URL = os.environ['BASE_URL']
-    else:
-        BASE_URL = None
+    BASE_URL = None
         
 
 def convert_ollama_to_openai(output):
@@ -302,7 +299,7 @@ class StubModel(ModelBackend):
 
 class Ollama(ModelBackend):
     r"""OLLAMA API in a unified ModelBackend interface."""
-
+    BASE_URL = "http://127.0.0.1:11434" if BASE_URL is None else BASE_URL
     def __init__(self, model_type: ModelType, model_config_dict: Dict) -> None:
         super().__init__()
         self.model_type = model_type
@@ -317,7 +314,7 @@ class Ollama(ModelBackend):
         _model_name = os.environ["MODEL_NAME"]
 
         kwargs["model"] = _model_name
-        url = f"{BASE_URL}/api/chat"
+        url = f"{self.BASE_URL}/api/chat"
         data = {"model": _model_name, "messages": kwargs["messages"], "stream": False}
         response = requests.post(url, json=data).json()
         response = convert_ollama_to_openai(response)
