@@ -92,6 +92,8 @@ class RolePlaying:
             extend_task_specify_meta_dict: Optional[Dict] = None,
             background_prompt: Optional[str] = "",
             memory = None,
+            base_url: str = None,
+            model_name: str = None
     ) -> None:
         self.with_task_specify = with_task_specify
         self.with_task_planner = with_task_planner
@@ -99,6 +101,8 @@ class RolePlaying:
         self.model_type = model_type
         self.task_type = task_type
         self.memory = memory
+        self.base_url = base_url
+        self.model_name = model_name
 
 
         if with_task_specify:
@@ -151,9 +155,9 @@ class RolePlaying:
                                           meta_dict=sys_msg_meta_dicts[1],
                                           content=user_role_prompt.format(**sys_msg_meta_dicts[1]))
 
-        self.assistant_agent: ChatAgent = ChatAgent(self.assistant_sys_msg, memory, model_type,
+        self.assistant_agent: ChatAgent = ChatAgent(self.assistant_sys_msg, memory, model_type, self.model_name, self.base_url,
                                                     **(assistant_agent_kwargs or {}), )
-        self.user_agent: ChatAgent = ChatAgent(self.user_sys_msg,memory, model_type, **(user_agent_kwargs or {}), )
+        self.user_agent: ChatAgent = ChatAgent(self.user_sys_msg,memory, model_type, self.model_name, self.base_url, **(user_agent_kwargs or {}), )
 
         if with_critic_in_the_loop:
             raise ValueError("with_critic_in_the_loop not available")

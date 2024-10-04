@@ -30,6 +30,7 @@ class ChatEnvConfig:
                  git_management,
                  incremental_develop,
                  background_prompt,
+                 with_memory,
                  target_email_address):
         self.clear_structure = clear_structure  # Whether to clear non-software files in the WareHouse and cache files in generated software path
         self.gui_design = gui_design  # Encourage ChatDev generate software with GUI

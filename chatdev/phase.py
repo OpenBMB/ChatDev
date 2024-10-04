@@ -19,7 +19,10 @@ class Phase(ABC):
                  role_prompts,
                  phase_name,
                  model_type,
+                 log_filepath,
                  target_email_address,
+                 model_name:str,
+                 base_url:str = None):
         """
 
         Args:
@@ -44,6 +47,8 @@ class Phase(ABC):
         self.model_type = model_type
         self.log_filepath = log_filepath
         self.target_email_address = target_email_address
+        self.model_name = model_name
+        self.base_url = base_url
 
     @log_arguments
     def chatting(
@@ -106,7 +111,9 @@ class Phase(ABC):
             with_task_specify=with_task_specify,
             memory=memory,
             model_type=model_type,
-            background_prompt=chat_env.config.background_prompt
+            background_prompt=chat_env.config.background_prompt,
+            model_name=self.model_name,
+            base_url=self.base_url
         )
 
         # log_visualize("System", role_play_session.assistant_sys_msg)

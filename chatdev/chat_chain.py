@@ -22,6 +22,9 @@ def check_bool(s):
 class ChatChain:
 
     def __init__(self,
+                 model_name: str,
+                 user_token: str = None,
+                 base_url:str = None,
                  config_path: str = None,
                  config_phase_path: str = None,
                  config_role_path: str = None,
@@ -42,6 +45,9 @@ class ChatChain:
         """
 
         # load config file
+        self.model_name = model_name
+        self.user_token = user_token
+        self.base_url = base_url
         self.config_path = config_path
         self.config_phase_path = config_phase_path
         self.config_role_path = config_role_path
@@ -72,6 +78,7 @@ class ChatChain:
                                              git_management=check_bool(self.config["git_management"]),
                                              incremental_develop=check_bool(self.config["incremental_develop"]),
                                              background_prompt=self.config["background_prompt"],
+                                             with_memory=check_bool(self.config["with_memory"]),
                                              target_email_address=self.config["target_email_address"])
                                              
         self.chat_env = ChatEnv(self.chat_env_config)
@@ -107,8 +114,10 @@ class ChatChain:
                                          role_prompts=self.role_prompts,
                                          phase_name=phase,
                                          model_type=self.model_type,
+                                         log_filepath=self.log_filepath,
                                          target_email_address=self.target_email_address,
                                          model_name=self.model_name,
+                                         base_url=self.base_url)
             self.phases[phase] = phase_instance
 
     def make_recruitment(self):
@@ -155,7 +164,9 @@ class ChatChain:
                                                          config_phase=self.config_phase,
                                                          config_role=self.config_role,
                                                          model_type=self.model_type,
-                                                         log_filepath=self.log_filepath)
+                                                         log_filepath=self.log_filepath,
+                                                         model_name=self.model_name,
+                                                         base_url=self.base_url)
             self.chat_env = compose_phase_instance.execute(self.chat_env)
         else:
             raise RuntimeError(f"PhaseType '{phase_type}' is not yet implemented.")
@@ -195,7 +206,11 @@ class ChatChain:
         """
         filepath = os.path.dirname(__file__)
         root = os.path.dirname(filepath)
-        directory = os.path.join(root, "WareHouse")
+        if self.user_token is not None:
+            directory = os.path.join(root, "WareHouse", self.user_token)
+            os.makedirs(directory, exist_ok=True)
+        else:
+            directory = os.path.join(root, 'WareHouse')
 
         if self.chat_env.config.clear_structure:
             for filename in os.listdir(directory):
@@ -321,7 +336,7 @@ class ChatChain:
         time.sleep(1)
 
         shutil.move(self.log_filepath,
-                    os.path.join(root + "/WareHouse", "_".join([self.project_name, self.org_name, self.start_time]),
+                    os.path.join(root + "/WareHouse" + f"/{self.user_token}", "_".join([self.project_name, self.org_name, self.start_time]),
                                  os.path.basename(self.log_filepath)))
 
     # @staticmethod
@@ -352,6 +367,7 @@ then you should return a message in a format like \"<INFO> revised_version_of_th
             task_prompt="Do prompt engineering on user query",
             with_task_specify=False,
             model_type=self.model_type,
+            base_url=self.base_url
         )
 
         # log_visualize("System", role_play_session.assistant_sys_msg)

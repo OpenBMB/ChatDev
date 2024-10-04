@@ -20,7 +20,9 @@ class ComposedPhase(ABC):
                  config_phase: dict = None,
                  config_role: dict = None,
                  model_type: ModelType = ModelType.GPT_3_5_TURBO,
-                 log_filepath: str = ""
+                 log_filepath: str = "",
+                 model_name: str = None,
+                 base_url: str = None
                  ):
         """
 
@@ -51,6 +53,9 @@ class ComposedPhase(ABC):
         self.role_prompts = dict()
         for role in self.config_role:
             self.role_prompts[role] = "\n".join(self.config_role[role])
+        
+        self.model_name = model_name
+        self.base_url = base_url
 
         # init all SimplePhases instances in this ComposedPhase
         self.phases = dict()
@@ -66,7 +71,9 @@ class ComposedPhase(ABC):
                                          role_prompts=self.role_prompts,
                                          phase_name=phase,
                                          model_type=self.model_type,
-                                         log_filepath=self.log_filepath)
+                                         log_filepath=self.log_filepath,
+                                         model_name=self.model_name,
+                                         base_url=self.base_url)
             self.phases[phase] = phase_instance
 
     @abstractmethod

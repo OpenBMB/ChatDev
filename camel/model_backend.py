@@ -299,10 +299,11 @@ class StubModel(ModelBackend):
 
 class Ollama(ModelBackend):
     r"""OLLAMA API in a unified ModelBackend interface."""
-    BASE_URL = "http://127.0.0.1:11434" if BASE_URL is None else BASE_URL
-    def __init__(self, model_type: ModelType, model_config_dict: Dict) -> None:
+    def __init__(self, model_type: ModelType, model_config_dict: Dict, model_name:str, base_url: str=None) -> None:
         super().__init__()
         self.model_type = model_type
+        self.base_url = "http://127.0.0.1:11434" if base_url is None else base_url
+        self.model_name = model_name
         self.model_config_dict = model_config_dict
 
     def run(self, *args, **kwargs) -> Dict[str, Any]:
@@ -311,10 +312,10 @@ class Ollama(ModelBackend):
         num_prompt_tokens = len(encoding.encode(string))
         gap_between_send_receive = 15 * len(kwargs["messages"])
         num_prompt_tokens += gap_between_send_receive
-        _model_name = os.environ["MODEL_NAME"]
+        _model_name = self.model_name
 
         kwargs["model"] = _model_name
-        url = f"{self.BASE_URL}/api/chat"
+        url = f"{self.base_url}/api/chat"
         data = {"model": _model_name, "messages": kwargs["messages"], "stream": False}
         response = requests.post(url, json=data).json()
         response = convert_ollama_to_openai(response)
@@ -375,7 +376,7 @@ class ModelFactory:
     """
 
     @staticmethod
-    def create(model_type: ModelType, model_config_dict: Dict) -> ModelBackend:
+    def create(model_type: ModelType, model_name: str, base_url: str, model_config_dict: Dict) -> ModelBackend:
         default_model_type = ModelType.GPT_3_5_TURBO
 
         if model_type in {
@@ -403,5 +404,5 @@ class ModelFactory:
             model_type = default_model_type
 
         # log_visualize("Model Type: {}".format(model_type))
-        inst = model_class(model_type, model_config_dict)
+        inst = model_class(model_type, model_config_dict, model_name, base_url)
         return inst
