@@ -175,8 +175,7 @@ class GeminiModel(ModelBackend):
         num_prompt_tokens = model.count_tokens(string).total_tokens
         num_max_token_map = {
             "gemini-1.5-pro": 1000000,
-            "gemini-1.5-flash": 1000000,
-            "gemini-pro-vision": 12288,
+            "gemini-1.5-flash": 1000000
         }
         num_max_token = num_max_token_map[self.model_type.value]
         num_max_completion_tokens = num_max_token - num_prompt_tokens
