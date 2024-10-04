@@ -19,7 +19,7 @@ class Phase(ABC):
                  role_prompts,
                  phase_name,
                  model_type,
-                 log_filepath):
+                 target_email_address,
         """
 
         Args:
@@ -43,6 +43,7 @@ class Phase(ABC):
         self.reflection_prompt = """Here is a conversation between two roles: {conversations} {question}"""
         self.model_type = model_type
         self.log_filepath = log_filepath
+        self.target_email_address = target_email_address
 
     @log_arguments
     def chatting(
@@ -649,4 +650,16 @@ class Manual(Phase):
     def update_chat_env(self, chat_env) -> ChatEnv:
         chat_env._update_manuals(self.seminar_conclusion)
         chat_env.rewrite_manuals()
+        return chat_env
+    
+    
+class Email(Phase):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        
+    def update_phase_env(self, chat_env):
+        self.phase_env.update({"task": chat_env.env_dict["task_prompt"]})
+    
+    def update_chat_env(self, chat_env) -> ChatEnv:
+        chat_env.send_done_email(to=self.target_email_address, seminar_conclusion=self.seminar_conclusion)
         return chat_env

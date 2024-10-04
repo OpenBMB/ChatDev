@@ -61,6 +61,7 @@ class ChatChain:
         self.chain = self.config["chain"]
         self.recruitments = self.config["recruitments"]
         self.web_spider = self.config["web_spider"]
+        self.target_email_address = self.config["target_email_address"]
 
         # init default max chat turn
         self.chat_turn_limit_default = 10
@@ -71,7 +72,7 @@ class ChatChain:
                                              git_management=check_bool(self.config["git_management"]),
                                              incremental_develop=check_bool(self.config["incremental_develop"]),
                                              background_prompt=self.config["background_prompt"],
-                                             with_memory=check_bool(self.config["with_memory"]))
+                                             target_email_address=self.config["target_email_address"])
                                              
         self.chat_env = ChatEnv(self.chat_env_config)
 
@@ -106,7 +107,8 @@ class ChatChain:
                                          role_prompts=self.role_prompts,
                                          phase_name=phase,
                                          model_type=self.model_type,
-                                         log_filepath=self.log_filepath)
+                                         target_email_address=self.target_email_address,
+                                         model_name=self.model_name,
             self.phases[phase] = phase_instance
 
     def make_recruitment(self):
