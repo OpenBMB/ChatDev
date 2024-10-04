@@ -6,8 +6,20 @@ import wikipediaapi
 import os
 import time
 
-self_api_key = os.environ.get('OPENAI_API_KEY')
-BASE_URL = os.environ.get('BASE_URL')
+if 'OPENAI_API_KEY' in os.environ:
+    self_api_key = os.environ['OPENAI_API_KEY']
+else:
+    self_api_key = None
+    
+if 'BASE_URL' in os.environ:
+    BASE_URL = os.environ['BASE_URL']
+else:
+    BASE_URL = None
+
+if 'GEMINI_API_KEY' in os.environ:
+    self_api_key = os.environ['GEMINI_API_KEY']
+else:
+    self_api_key = None   
 
 if BASE_URL:
     client = openai.OpenAI(

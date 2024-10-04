@@ -249,7 +249,7 @@ class BaseMessage:
             OpenAIMessage: The converted :obj:`OpenAIMessage` object.
         """
         role = role or self.role
-        if role not in {"system", "user", "assistant"}:
+        if role not in {"system", "user", "assistant", "model"}:
             raise ValueError(f"Unrecognized role: {role}")
         return {"role": role, "content": self.content}
 

@@ -91,7 +91,9 @@ def num_tokens_from_messages(
         ModelType.GPT_4_TURBO_V,
         ModelType.GPT_4O,
         ModelType.GPT_4O_MINI,
-        ModelType.STUB
+        ModelType.STUB,
+        ModelType.GEMINI_1_5_FLASH,
+        ModelType.GEMINI_1_5_PRO
     }:
         return count_tokens_openai_chat_models(messages, encoding)
     else:
@@ -130,6 +132,10 @@ def get_model_token_limit(model: ModelType) -> int:
         return 128000
     elif model == ModelType.GPT_4O_MINI:
         return 128000
+    elif model == ModelType.GEMINI_1_5_FLASH:
+        return 1000000
+    elif model == ModelType.GEMINI_1_5_PRO:
+        return 1000000
     else:
         raise ValueError("Unknown model type")
 
@@ -158,6 +164,8 @@ def openai_api_key_required(func: F) -> F:
             return func(self, *args, **kwargs)
         elif 'OPENAI_API_KEY' in os.environ:
             return func(self, *args, **kwargs)
+        elif 'GEMINI_API_KEY' in os.environ:
+            return func(self, *args, **kwargs);
         else:
             raise ValueError('OpenAI API key not found.')
 

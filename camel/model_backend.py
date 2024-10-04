@@ -20,6 +20,7 @@ import tiktoken
 from camel.typing import ModelType
 from chatdev.statistics import prompt_cost
 from chatdev.utils import log_visualize
+import google.generativeai as genai
 
 try:
     from openai.types.chat import ChatCompletion
@@ -30,11 +31,20 @@ except ImportError:
 
 import os
 
-OPENAI_API_KEY = os.environ['OPENAI_API_KEY']
+if 'OPENAI_API_KEY' in os.environ:
+    OPENAI_API_KEY = os.environ['OPENAI_API_KEY']
+else:
+    OPENAI_API_KEY = None
+    
 if 'BASE_URL' in os.environ:
     BASE_URL = os.environ['BASE_URL']
 else:
     BASE_URL = None
+
+if 'GEMINI_API_KEY' in os.environ:
+    GEMINI_API_KEY = os.environ['GEMINI_API_KEY']
+else:
+    GEMINI_API_KEY = None    
 
 
 class ModelBackend(ABC):
@@ -148,6 +158,67 @@ class OpenAIModel(ModelBackend):
                 raise RuntimeError("Unexpected return from OpenAI API")
             return response
 
+class GeminiModel(ModelBackend):
+    r"""Gemini API in a unified ModelBackend interface."""
+
+    def __init__(self, model_type: ModelType, model_config_dict: Dict) -> None:
+        super().__init__()
+        self.model_type = model_type
+        self.model_config_dict = model_config_dict
+        genai.configure(api_key=os.environ["GEMINI_API_KEY"])
+
+    def run(self, *args, **kwargs):
+        genai.configure(api_key=os.environ["GEMINI_API_KEY"])
+        string = "\n".join([message["content"] for message in kwargs["messages"]])
+        model = genai.GenerativeModel(self.model_type.value)
+        chat = model.start_chat()
+        num_prompt_tokens = model.count_tokens(string).total_tokens
+        num_max_token_map = {
+            "gemini-1.5-pro": 1000000,
+            "gemini-1.5-flash": 1000000,
+            "gemini-pro-vision": 12288,
+        }
+        num_max_token = num_max_token_map[self.model_type.value]
+        num_max_completion_tokens = num_max_token - num_prompt_tokens
+
+        # print("Positional arguments (*args):", args)
+
+        # print("Keyword arguments (**kwargs):", kwargs)
+        # # print("Values:", type(kwargs['messages'][0]))
+
+        # for openai_message in kwargs['messages']:
+        #     # print("{}\t{}".format(openai_message.role, openai_message.content))
+        #     print("{}\t{}\t{}".format(openai_message["role"], hash(openai_message["content"]), openai_message["content"][:60].replace("\n", "")))
+        
+        messages=[]
+
+        for openai_message in kwargs['messages']:
+            if openai_message["role"]=='user' or openai_message["role"]=='system':
+                role='user'
+            else:
+                role='model'
+
+            if len(messages)==0:
+                messages.append({'role':role,'parts':[{'text': openai_message["content"].replace("\n", "")}]})
+            elif role==messages[-1]['role']:
+                messages[-1]['parts'][0]['text']=messages[-1]['parts'][0]['text'] + openai_message["content"].replace("\n", "")
+            else:
+                messages.append({'role':role,'parts':[{'text': openai_message["content"].replace("\n", "")}]})
+
+        response = model.generate_content(*args, contents=messages)
+
+        cost = prompt_cost(
+                self.model_type.value,
+                num_prompt_tokens=response.usage_metadata.prompt_token_count,
+                num_completion_tokens=response.usage_metadata.candidates_token_count
+            )
+
+        log_visualize(
+            "**[Gemini_Usage_Info Receive]**\nprompt_tokens: {}\ncompletion_tokens: {}\ntotal_tokens: {}\ncost: ${:.6f}\n".format(
+                response.usage_metadata.prompt_token_count,response.usage_metadata.candidates_token_count,
+                response.usage_metadata.total_token_count, cost))
+
+        return response
 
 class StubModel(ModelBackend):
     r"""A dummy model used for unit tests."""
@@ -191,6 +262,11 @@ class ModelFactory:
             None
         }:
             model_class = OpenAIModel
+        elif model_type in {
+            ModelType.GEMINI_1_5_FLASH,
+            ModelType.GEMINI_1_5_PRO
+        }:
+            model_class = GeminiModel
         elif model_type == ModelType.STUB:
             model_class = StubModel
         else:

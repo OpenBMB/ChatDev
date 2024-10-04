@@ -36,6 +36,7 @@ try:
 except ImportError:
     openai_new_api = False  # old openai api version
 
+from google.generativeai.types import GenerateContentResponse
 
 @dataclass(frozen=True)
 class ChatAgentResponse:
@@ -237,7 +238,25 @@ class ChatAgent(BaseAgent):
 
         if num_tokens < self.model_token_limit:
             response = self.model_backend.run(messages=openai_messages)
-            if openai_new_api:
+            if isinstance(response, GenerateContentResponse):
+                candidate = response.candidates[0]
+
+                output_messages = [
+                    ChatMessage(role_name=self.role_name, role_type=self.role_type, 
+                                meta_dict=dict(), role=candidate.content.role, content=part.text)
+                    for part in candidate.content.parts
+                ]
+                info = self.get_info(
+                    candidate.index,
+                    {
+                        "total_tokens": response.usage_metadata.total_token_count,
+                        "prompt_tokens": response.usage_metadata.prompt_token_count,
+                        "completion_tokens": response.usage_metadata.candidates_token_count,
+                    },
+                    candidate.finish_reason,
+                    num_tokens,
+                )
+            elif openai_new_api:
                 if not isinstance(response, ChatCompletion):
                     raise RuntimeError("OpenAI returned unexpected struct")
                 output_messages = [
