@@ -89,6 +89,8 @@ class ChatAgent(BaseAgent):
             system_message: SystemMessage,
             memory = None,
             model: Optional[ModelType] = None,
+            model_name: str = None,
+            base_url: str = None,
             model_config: Optional[Any] = None,
             message_window_size: Optional[int] = None,
     ) -> None:
@@ -97,10 +99,12 @@ class ChatAgent(BaseAgent):
         self.role_name: str = system_message.role_name
         self.role_type: RoleType = system_message.role_type
         self.model: ModelType = (model if model is not None else ModelType.GPT_3_5_TURBO)
+        self.model_name = model_name
+        self.base_url: str = base_url
         self.model_config: ChatGPTConfig = model_config or ChatGPTConfig()
         self.model_token_limit: int = get_model_token_limit(self.model)
         self.message_window_size: Optional[int] = message_window_size
-        self.model_backend: ModelBackend = ModelFactory.create(self.model, self.model_config.__dict__)
+        self.model_backend: ModelBackend = ModelFactory.create(self.model, self.model_name, self.base_url, self.model_config.__dict__)
         self.terminated: bool = False
         self.info: bool = False
         self.init_messages()

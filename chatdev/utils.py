@@ -26,7 +26,7 @@ def log_visualize(role, content=None):
     """
     if not content:
         logging.info(role + "\n")
-        send_msg("System", role)
+        # send_msg("System", role)
         print(role + "\n")
     else:
         print(str(role) + ": " + str(content) + "\n")
@@ -42,7 +42,7 @@ def log_visualize(role, content=None):
         else:
             role = str(role)
             content = str(content)
-        send_msg(role, content)
+        # send_msg(role, content)
 
 
 def convert_to_markdown_table(records_kv):

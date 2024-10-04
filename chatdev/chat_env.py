@@ -30,13 +30,15 @@ class ChatEnvConfig:
                  git_management,
                  incremental_develop,
                  background_prompt,
-                 with_memory):
+                 with_memory,
+                 target_email_address):
         self.clear_structure = clear_structure  # Whether to clear non-software files in the WareHouse and cache files in generated software path
         self.gui_design = gui_design  # Encourage ChatDev generate software with GUI
         self.git_management = git_management  # Whether to use git to manage the creation and changes of generated software
         self.incremental_develop = incremental_develop  # Whether to use incremental develop on an existing project
         self.background_prompt = background_prompt  # background prompt that will be added to every inquiry to LLM
         self.with_memory = with_memory # Wheter to use memroy in the interaction between agents
+        self.target_email_address = target_email_address
 
     def __str__(self):
         string = ""
@@ -46,6 +48,7 @@ class ChatEnvConfig:
         string += "ChatEnvConfig.gui_design: {}\n".format(self.gui_design)
         string += "ChatEnvConfig.incremental_develop: {}\n".format(self.incremental_develop)
         string += "ChatEnvConfig.background_prompt: {}\n".format(self.background_prompt)
+        string += "ChatEnvConfig.target_email_address: {}\n".format(self.target_email_address)
         return string
 
 
@@ -308,3 +311,22 @@ class ChatEnv:
                 download(image_url, filename)
 
         return images
+    
+    def send_done_email(self, to:str, seminar_conclusion:str):
+        from email.mime.text import MIMEText
+        import smtplib
+        sender =  "onebottlekick@gmail.com"
+        to = "gksqudcks97@gmail.com"
+        subject, content = seminar_conclusion.split("###")
+        subject = subject.split("SUBJECT: ")[-1].strip().replace('\r', '')
+        content = content.strip().strip("'''").replace("\n", "\r\n")
+        msg = MIMEText(content)
+        msg['From'] = sender
+        msg['To'] = to
+        msg['Subject'] = subject
+        print("message: ", msg)
+        # with smtplib.SMTP_SSL(host="smtp.gmail.com", port=587) as server:
+        #     server.login(user=sender, password="")
+        #     server.sendmail(sender, to, msg.as_string())
+            
+        print(f"email sent to {to}")
