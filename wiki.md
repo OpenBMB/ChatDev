@@ -128,8 +128,54 @@ then start building a software by ``python3 run.py`` and go to [Visualizer Websi
     ```commandline
     docker cp container_id:/path/in/container /path/on/host
     ```
+
+### Packaging Your Software into a Docker Image
+- Build the image:
+    ```commandline
+    docker build --build-arg "DEFAULT_CMD=python3 online_log/app.py" -t chatdev:latest .
+    ```
+    Make sure you replace:
+    - `online_log/app.py` with the relative path to your Python application's entry point.
+    - `chatdev` with a name that you want to give to your Docker image.
+
+- Test the image:
+    ```commandline
+    docker run -itp 8000:8000 chatdev:latest
+    ```
+    Ensure you replace `chatdev` with the name you used when building the image.
+
 ### Official Docker Image
 - in preparation
+
+## Start the Application with Docker Compose
+
+To run your ChatDev application with Docker Compose, simply:
+
+1. In the project root, create a `.env` with your text editor.
+2. Add `OPENAI_API_KEY=<Your OpenAI API Key>` and any other secrets.
+3. Save the file. It's ignored by Git for your security.
+4. Run the application with the specified command.
+
+   docker compose run --service-ports chatdev
+   ```
+   This command will build the Docker image (if necessary) and start the container.
+
+
+Any changes you make to the project files on your host machine will sync in real-time inside the container, thanks to the configured bind mount in `docker-compose.yml`.
+
+### Stopping the Application
+
+To stop the Docker Compose session:
+
+- Press `Ctrl + C` in the terminal where Docker Compose is actively running.
+
+This will gracefully stop the running services. If you want to remove all the containers, networks, and the default network created by Docker Compose, you can follow up with the command:
+
+```commandline
+docker compose down
+```
+
+Stopping the containers does not affect the persistency of your files; all your changes remain intact in the local directory on your host machine.
 
 ## Experiential Co-Learning Guide
 ### Co-Tracking
