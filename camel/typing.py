@@ -52,6 +52,8 @@ class ModelType(Enum):
     GPT_4_TURBO_V = "gpt-4-turbo"
     GPT_4O = "gpt-4o"
     GPT_4O_MINI = "gpt-4o-mini"
+    GEMINI_1_5_PRO="gemini-1.5-pro"
+    GEMINI_1_5_FLASH = "gemini-1.5-flash"
 
     STUB = "stub"
 
