@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-    【English   | <a href="readme/README-Chinese.md">Chinese</a> | <a href="readme/README-Japanese.md">Japanese</a> | <a href="readme/README-Korean.md">Korean</a> | <a href="readme/README-Filipino.md">Filipino</a> | <a href="readme/README-French.md">French</a> | <a href="readme/README-Slovak.md">Slovak</a> | <a href="readme/README-Portuguese.md">Portuguese</a> | <a href="readme/README-Spanish.md">Spanish</a> | <a href="readme/README-Dutch.md">Dutch</a> | <a href="readme/README-Turkish.md">Turkish</a> | <a href="readme/README-Hindi.md">Hindi</a> | <a href="readme/README-Bahasa-Indonesia.md">Bahasa Indonesia</a> | <a href="readme/README-Russian.md">Russian</a> | <a href="readme/README-Urdu.md">Urdu</a>】
+    【English original(default) | <a href="readme/README-Chinese.md">Chinese</a> | <a href="readme/README-Japanese.md">Japanese</a> | <a href="readme/README-Korean.md">Korean</a> | <a href="readme/README-Filipino.md">Filipino</a> | <a href="readme/README-French.md">French</a> | <a href="readme/README-Slovak.md">Slovak</a> | <a href="readme/README-Portuguese.md">Portuguese</a> | <a href="readme/README-Spanish.md">Spanish</a> | <a href="readme/README-Dutch.md">Dutch</a> | <a href="readme/README-Turkish.md">Turkish</a> | <a href="readme/README-Hindi.md">Hindi</a> | <a href="readme/README-Bahasa-Indonesia.md">Bahasa Indonesia</a> | <a href="readme/README-Russian.md">Russian</a> | <a href="readme/README-Urdu.md">Urdu</a>】
 </p>
 <p align="center">
     【📚 <a href="wiki.md">Wiki</a> | 🚀 <a href="wiki.md#visualizer">Visualizer</a> | 👥 <a href="Contribution.md">Community Built Software</a> | 🔧 <a href="wiki.md#customization">Customization</a> | 👾 <a href="https://discord.gg/bn4t2Jy6TT")>Discord</a>】
@@ -15,23 +15,24 @@
 ## 📖 Overview
 
 - **ChatDev** stands as a **virtual software company** that operates through various **intelligent agents** holding
-  different roles, including Chief Executive Officer <img src='visualizer/static/figures/ceo.png' height=20>, Chief Product Officer <img src='visualizer/static/figures/cpo.png' height=20>, Chief Technology Officer <img src='visualizer/static/figures/cto.png' height=20>, programmer <img src='visualizer/static/figures/programmer.png' height=20>, reviewer <img src='visualizer/static/figures/reviewer.png' height=20>, tester <img src='visualizer/static/figures/tester.png' height=20>, art designer <img src='visualizer/static/figures/designer.png' height=20>. These
+  different roles, including Chief Executive Officer <img src='visualizer/static/figures/ceo.png' height=20>, Chief Product Officer <img src='visualizer/static/figures/cpo.png' height=20>, Chief Technology Officer <img src='visualizer/static/figures/cto.png' height=20>, Programmer <img src='visualizer/static/figures/programmer.png' height=20>, Reviewer <img src='visualizer/static/figures/reviewer.png' height=20>, Tester <img src='visualizer/static/figures/tester.png' height=20>, Art designer <img src='visualizer/static/figures/designer.png' height=20>. These
   agents form a multi-agent organizational structure and are united by a mission to "revolutionize the digital world
   through programming." The agents within ChatDev **collaborate** by participating in specialized functional seminars,
-  including tasks such as designing, coding, testing, and documenting.
+  including tasks such as designing, coding, testing and documenting.
 - The primary objective of ChatDev is to offer an **easy-to-use**, **highly customizable** and **extendable** framework,
-  which is based on large language models (LLMs) and serves as an ideal scenario for studying collective intelligence.
+  which is based on large language models (LLMs) and serves as an ideal scenario for studying and understanding collective intelligence.
 
 <p align="center">
   <img src='./misc/company.png' width=600>
 </p>
 
 ## 🎉 News
-* **June 25, 2024: 🎉To foster development in LLM-powered multi-agent collaboration🤖🤖 and related fields, the ChatDev team has curated a collection of seminal papers📄 presented in a [open-source](https://github.com/OpenBMB/ChatDev/tree/main/MultiAgentEbook) interactive e-book📚 format. Now you can explore the latest advancements on the [Ebook Website](https://thinkwee.top/multiagent_ebook) and download the [paper list](https://github.com/OpenBMB/ChatDev/blob/main/MultiAgentEbook/papers.csv).**
+**•June 25, 2024: 🎉To foster development in LLM-powered multi-agent collaboration🤖🤖 and related fields, the ChatDev team has curated a collection of seminal papers📄 presented in a [open-source](https://github.com/OpenBMB/ChatDev/tree/main/MultiAgentEbook) interactive e-book📚 format. Now you can explore the latest advancements on the [Ebook Website](https://thinkwee.top/multiagent_ebook) and download the [paper list](https://github.com/OpenBMB/ChatDev/blob/main/MultiAgentEbook/papers.csv).**
   <p align="center">
   <img src='./misc/ebook.png' width=800>
   </p>
-* June 12, 2024: We introduce Multi-Agent Collaboration Networks (MacNet) 🎉, which utilize directed acyclic graphs to facilitate effective task-oriented collaboration among agents through linguistic interactions 🤖🤖. MacNet supports cooperation across various topologies and among more than a thousand agents without exceeding context limits. More versatile and scalable, MacNet can be considered a more advanced version of ChatDev's chain-shaped topology. Our preprint paper is available at [https://arxiv.org/abs/2406.07155](https://arxiv.org/abs/2406.07155). This technique will soon be incorporated into this repository, enhancing support for diverse organizational structures and offering richer solutions beyond software development (e.g., logical reasoning, data analysis, story generation, and more).
+  
+•June 12, 2024: We introduced Multi-Agent Collaboration Networks (MacNet) 🎉, which utilize directed acyclic graphs to facilitate effective task-oriented collaboration among agents through linguistic interactions 🤖🤖. MacNet supports co-operation across various topologies and among more than a thousand agents without exceeding context limits. More versatile and scalable, MacNet can be considered as a more advanced version of ChatDev's chain-shaped topology. Our preprint paper is available at [https://arxiv.org/abs/2406.07155](https://arxiv.org/abs/2406.07155). This technique will soon be incorporated into this repository, enhancing support for diverse organizational structures and offering richer solutions beyond software development (e.g., logical reasoning, data analysis, story generation, and more).
   <p align="center">
   <img src='./misc/macnet.png' width=500>
   </p>
@@ -39,49 +40,48 @@
 <details>
 <summary>Old News</summary>
 
-* May 07, 2024, we introduced "Iterative Experience Refinement" (IER), a novel method where instructor and assistant agents enhance shortcut-oriented experiences to efficiently adapt to new tasks. This approach encompasses experience acquisition, utilization, propagation, and elimination across a series of tasks. Our preprint paper is available at https://arxiv.org/abs/2405.04219, and this technique will soon be incorporated into ChatDev.
+• May 07, 2024, we introduced "Iterative Experience Refinement" (IER), a novel method where instructor and assistant agents enhance shortcut-oriented experiences to efficiently adapt to new tasks. This approach encompasses experience acquisition, utilization, propagation and elimination across a series of tasks and making the pricess shorter and efficient. Our preprint paper is available at https://arxiv.org/abs/2405.04219, and this technique will soon be incorporated into ChatDev.
   <p align="center">
   <img src='./misc/ier.png' width=220>
   </p>
 
-* January 25, 2024: We have integrated Experiential Co-Learning Module into ChatDev. Please see the [Experiential Co-Learning Guide](wiki.md#co-tracking).
+• January 25, 2024: We have integrated Experiential Co-Learning Module into ChatDev. Please see the [Experiential Co-Learning Guide](wiki.md#co-tracking).
 
-* December 28, 2023: We present Experiential Co-Learning, an innovative approach where instructor and assistant agents accumulate shortcut-oriented experiences to effectively solve new tasks, reducing repetitive errors and enhancing efficiency.  Check out our preprint paper at https://arxiv.org/abs/2312.17025 and this technique will soon be integrated into ChatDev.
+• December 28, 2023: We present Experiential Co-Learning, an innovative approach where instructor and assistant agents accumulate shortcut-oriented experiences to effectively solve new tasks, reducing repetitive errors and enhancing efficiency.  Check out our preprint paper at https://arxiv.org/abs/2312.17025 and this technique will soon be integrated into ChatDev.
   <p align="center">
   <img src='./misc/ecl.png' width=860>
   </p>
-
-* November 15, 2023: We launched ChatDev as a SaaS platform that enables software developers and innovative entrepreneurs to build software efficiently at a very low cost and barrier to entry. Try it out at https://chatdev.modelbest.cn/.
+• November 15, 2023: We launched ChatDev as a SaaS platform that enables software developers and innovative entrepreneurs to build software efficiently at a very low cost and remove the barrier to entry. Try it out at https://chatdev.modelbest.cn/.
   <p align="center">
   <img src='./misc/saas.png' width=560>
   </p>
 
-* November 2, 2023: ChatDev is now supported with a new feature: incremental development, which allows agents to develop upon existing codes. Try `--config "incremental" --path "[source_code_directory_path]"` to start it.
+• November 2, 2023: ChatDev is now supported with a new feature: incremental development, which allows agents to develop upon existing codes. Try ```--config "incremental" --path "[source_code_directory_path]"``` to start it.
   <p align="center">
   <img src='./misc/increment.png' width=700>
   </p>
 
-* October 26, 2023: ChatDev is now supported with Docker for safe execution (thanks to contribution from [ManindraDeMel](https://github.com/ManindraDeMel)). Please see [Docker Start Guide](wiki.md#docker-start).
+• October 26, 2023: ChatDev is now supported with Docker for safe execution (thanks to contribution from [ManindraDeMel](https://github.com/ManindraDeMel)). Please see [Docker Start Guide](wiki.md#docker-start).
   <p align="center">
   <img src='./misc/docker.png' width=400>
   </p>
-* September 25, 2023: The **Git** mode is now available, enabling the programmer <img src='visualizer/static/figures/programmer.png' height=20> to utilize Git for version control. To enable this feature, simply set ``"git_management"`` to ``"True"`` in ``ChatChainConfig.json``. See [guide](wiki.md#git-mode).
+• September 25, 2023: The **Git** mode is now available, enabling the programmer <img src='visualizer/static/figures/programmer.png' height=20> to utilize Git for version control. To enable this feature, simply set ``"git_management"`` to ``"True"`` in ``ChatChainConfig.json``. See [guide](wiki.md#git-mode).
   <p align="center">
   <img src='./misc/github.png' width=600>
   </p>
-- September 20, 2023: The **Human-Agent-Interaction** mode is now available! You can get involved with the ChatDev team by playing the role of reviewer <img src='visualizer/static/figures/reviewer.png' height=20> and making suggestions to the programmer <img src='visualizer/static/figures/programmer.png' height=20>;
+• September 20, 2023: The **Human-Agent-Interaction** mode is now available! You can get involved with the ChatDev team by playing the role of reviewer <img src='visualizer/static/figures/reviewer.png' height=20> and making suggestions to the programmer <img src='visualizer/static/figures/programmer.png' height=20>;
   try ``python3 run.py --task [description_of_your_idea] --config "Human"``. See [guide](wiki.md#human-agent-interaction) and [example](WareHouse/Gomoku_HumanAgentInteraction_20230920135038).
   <p align="center">
   <img src='./misc/Human_intro.png' width=600>
   </p>
-- September 1, 2023: The **Art** mode is available now! You can activate the designer agent <img src='visualizer/static/figures/designer.png' height=20> to generate images used in the software;
+• September 1, 2023: The **Art** mode is available now! You can activate the designer agent <img src='visualizer/static/figures/designer.png' height=20> to generate images used in the software;
   try ``python3 run.py --task [description_of_your_idea] --config "Art"``. See [guide](wiki.md#art) and [example](WareHouse/gomokugameArtExample_THUNLP_20230831122822).
-- August 28, 2023: The system is publicly available.
-- August 17, 2023: The v1.0.0 version was ready for release.
-- July 30, 2023: Users can customize ChatChain, Phase, and Role settings. Additionally, both online Log mode and replay
+• August 28, 2023: The system is publicly available.
+• August 17, 2023: The v1.0.0 version was ready for release.
+• July 30, 2023: Users can customize ChatChain, Phasea and Role settings. Additionally, both online Log mode and replay
   mode are now supported.
-- July 16, 2023: The [preprint paper](https://arxiv.org/abs/2307.07924) associated with this project was published.
-- June 30, 2023: The initial version of the ChatDev repository was released.
+• July 16, 2023: The [preprint paper](https://arxiv.org/abs/2307.07924) associated with this project was published.
+• June 30, 2023: The initial version of the ChatDev repository was released.
 </details>
 
 ## ❓ What Can ChatDev Do?
@@ -138,8 +138,7 @@ To get started, follow these steps:
    ```
 
 5. **Build Your Software:** Use the following command to initiate the building of your software,
-   replacing `[description_of_your_idea]` with your idea's description and `[project_name]` with your desired project
-   name:
+   replacing `[description_of_your_idea]` with your idea's description and `[project_name]` with your desired project name:
    On Unix/Linux:
 
    ```
@@ -190,8 +189,7 @@ For more detailed information, please refer to our [Wiki](wiki.md), where you ca
 ## 🤗 Share Your Software
 
 **Code**: We are enthusiastic about your interest in participating in our open-source project. If you come across any
-problems, don't hesitate to report them. Feel free to create a pull request if you have any inquiries or if you are
-prepared to share your work with us! Your contributions are highly valued. Please let me know if there's anything else
+problems, don't hesitate to report them. Feel free to create a pull request if you have any inquiries or if you are prepared to share your work with us! Your contributions are highly valued. Please let me know if there's anything else
 you need assistance!
 
 **Company**: Creating your own customized "ChatDev Company" is a breeze. This personalized setup involves three simple
@@ -248,3 +246,5 @@ Made with [contrib.rocks](https://contrib.rocks).
 ## 📬 Contact
 
 If you have any questions, feedback, or would like to get in touch, please feel free to reach out to us via email at [qianc62@gmail.com](mailto:qianc62@gmail.com)
+
+We ❤️ you! Keep contributing....
