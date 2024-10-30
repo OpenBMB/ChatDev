@@ -41,7 +41,7 @@ class ChatChain:
             org_name: the organization name of the human user
         """
 
-        # load config file
+        # 加载配置文件
         self.config_path = config_path
         self.config_phase_path = config_phase_path
         self.config_role_path = config_role_path
