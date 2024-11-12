@@ -14,6 +14,7 @@
 from dataclasses import dataclass
 from typing import Any, Dict, List, Optional, Tuple, Union
 
+import openai
 from camel.messages import (
     OpenAIAssistantMessage,
     OpenAIChatMessage,
@@ -24,13 +25,9 @@ from camel.messages import (
 from camel.prompts import CodePrompt, TextPrompt
 from camel.typing import ModelType, RoleType
 
-try:
-    from openai.types.chat.chat_completion_message_tool_call import ChatCompletionMessageToolCall
-    from openai.types.chat.chat_completion_message import FunctionCall
-
-    openai_new_api = True  # new openai api version
-except ImportError:
-    openai_new_api = False  # old openai api version
+from openai.types.chat.chat_completion_message_tool_call import ChatCompletionMessageToolCall
+from openai.types.chat.chat_completion_message import FunctionCall
+from openai.types.chat.chat_completion_content_part_refusal_param import ChatCompletionContentPartRefusalParam
 
 
 @dataclass
@@ -52,9 +49,12 @@ class BaseMessage:
     meta_dict: Optional[Dict[str, str]]
     role: str
     content: str
-    if openai_new_api:
-        function_call: Optional[FunctionCall] = None
-        tool_calls: Optional[ChatCompletionMessageToolCall] = None
+    name: str = ""
+    tool_call_id: str = ""
+    function_call: Optional[FunctionCall] = None
+    tool_calls: Optional[ChatCompletionMessageToolCall] = None
+    # phase_name: str = ''
+    refusal: Optional[ChatCompletionContentPartRefusalParam] = None
 
     def __getattribute__(self, name: str) -> Any:
         r"""Get attribute override to delegate string methods to the
@@ -112,7 +112,6 @@ class BaseMessage:
                             output, str) else output
 
                     return wrapper
-
         return super().__getattribute__(name)
 
     def _create_new_instance(self, content: str) -> "BaseMessage":

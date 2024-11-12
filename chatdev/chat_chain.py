@@ -11,8 +11,8 @@ from camel.configs import ChatGPTConfig
 from camel.typing import TaskType, ModelType
 from chatdev.chat_env import ChatEnv, ChatEnvConfig
 from chatdev.statistics import get_info
-from camel.web_spider import modal_trans
-from chatdev.utils import log_visualize, now
+from chatdev.utils import log_macnet, now
+from chatdev.waiting import Pool
 
 
 def check_bool(s):
@@ -28,13 +28,17 @@ class ChatChain:
                  task_prompt: str = None,
                  project_name: str = None,
                  org_name: str = None,
-                 model_type: ModelType = ModelType.GPT_3_5_TURBO,
-                 code_path: str = None) -> None:
+                 t_num: int = 0,
+                 unit_num: int = 0,
+                 time: int = 0,
+                 wait_flag=True,
+                 cc: str = '',
+                 model_type: ModelType = ModelType.GPT_3_5_TURBO) -> None:
         """
 
         Args:
-            config_path: path to the ChatChainConfig.json
-            config_phase_path: path to the PhaseConfig.json
+            config_path: path to the ChatChainConfig.txt
+            config_phase_path: path to the PhaseConfig.txt
             config_role_path: path to the RoleConfig.json
             task_prompt: the user input prompt for software
             project_name: the user input name for software
@@ -42,13 +46,54 @@ class ChatChain:
         """
 
         # load config file
+        self.pool = None
+        self.pool_response = None
         self.config_path = config_path
         self.config_phase_path = config_phase_path
         self.config_role_path = config_role_path
         self.project_name = project_name
         self.org_name = org_name
+        self.t_num = t_num
+        self.unit_num = unit_num
+        self.time = time
+        self.wait_flag = True
+        self.cc = cc
         self.model_type = model_type
-        self.code_path = code_path
+
+        parent_path = os.path.dirname(config_path)
+        if cc == 'on':
+            path_all = ["./Coding", "./CodeComplete", "./tmp/improved_codes", "task_record"]
+            for folder_path in path_all:
+                if not os.path.exists(folder_path):
+                    os.makedirs(folder_path)
+            diff_phase_path = os.path.join(parent_path, 'Different_Phase/ChatChainConfig_cc.txt')
+            with open(diff_phase_path, 'r', encoding="utf8") as file:
+                chain_content = file.read()
+            chain = json.loads(chain_content)
+            with open(self.config_path, 'w') as json_file:
+                json.dump(chain, json_file, indent=2)
+
+            diff_phase_path = os.path.join(parent_path, 'Different_Phase/PhaseConfig_cc.txt')
+            with open(diff_phase_path, 'r', encoding="utf8") as file:
+                phase_content = file.read()
+            phase = json.loads(phase_content)
+            with open(self.config_phase_path, 'w') as json_file:
+                json.dump(phase, json_file, indent=2)
+
+        else:
+            diff_phase_path = os.path.join(parent_path, 'Different_Phase/ChatChainConfig.txt')
+            with open(diff_phase_path, 'r', encoding="utf8") as file:
+                chain_content = file.read()
+            chain = json.loads(chain_content)
+            with open(self.config_path, 'w') as json_file:
+                json.dump(chain, json_file, indent=2)
+
+            diff_phase_path = os.path.join(parent_path, 'Different_Phase/PhaseConfig.txt')
+            with open(diff_phase_path, 'r', encoding="utf8") as file:
+                phase_content = file.read()
+            phase = json.loads(phase_content)
+            with open(self.config_phase_path, 'w') as json_file:
+                json.dump(phase, json_file, indent=2)
 
         with open(self.config_path, 'r', encoding="utf8") as file:
             self.config = json.load(file)
@@ -67,15 +112,13 @@ class ChatChain:
 
         # init ChatEnv
         self.chat_env_config = ChatEnvConfig(clear_structure=check_bool(self.config["clear_structure"]),
+                                             brainstorming=check_bool(self.config["brainstorming"]),
                                              gui_design=check_bool(self.config["gui_design"]),
                                              git_management=check_bool(self.config["git_management"]),
-                                             incremental_develop=check_bool(self.config["incremental_develop"]),
-                                             background_prompt=self.config["background_prompt"],
                                              with_memory=check_bool(self.config["with_memory"]))
-                                             
         self.chat_env = ChatEnv(self.chat_env_config)
 
-        # the user input prompt will be self-improved (if set "self_improve": "True" in ChatChainConfig.json)
+        # the user input prompt will be self-improved (if set "self_improve": "True" in ChatChainConfig.txt)
         # the self-improvement is done in self.preprocess
         self.task_prompt_raw = task_prompt
         self.task_prompt = ""
@@ -89,9 +132,9 @@ class ChatChain:
         self.start_time, self.log_filepath = self.get_logfilepath()
 
         # init SimplePhase instances
-        # import all used phases in PhaseConfig.json from chatdev.phase
-        # note that in PhaseConfig.json there only exist SimplePhases
-        # ComposedPhases are defined in ChatChainConfig.json and will be imported in self.execute_step
+        # import all used phases in PhaseConfig.txt from chatdev.phase
+        # note that in PhaseConfig.txt there only exist SimplePhases
+        # ComposedPhases are defined in ChatChainConfig.txt and will be imported in self.execute_step
         self.compose_phase_module = importlib.import_module("chatdev.composed_phase")
         self.phase_module = importlib.import_module("chatdev.phase")
         self.phases = dict()
@@ -122,14 +165,16 @@ class ChatChain:
         """
         execute single phase in the chain
         Args:
-            phase_item: single phase configuration in the ChatChainConfig.json
+            phase_item: single phase configuration in the ChatChainConfig.txt
 
         Returns:
 
         """
-
         phase = phase_item['phase']
         phase_type = phase_item['phaseType']
+
+        if phase in ['Coding_wait', 'CodeComplete_wait'] and not self.chat_env.env_dict['wait_flag']:
+            return
         # For SimplePhase, just look it up from self.phases and conduct the "Phase.execute" method
         if phase_type == "SimplePhase":
             max_turn_step = phase_item['max_turn_step']
@@ -143,6 +188,8 @@ class ChatChain:
         # For ComposedPhase, we create instance here then conduct the "ComposedPhase.execute" method
         elif phase_type == "ComposedPhase":
             cycle_num = phase_item['cycleNum']
+            multiplicityExitNum = phase_item[
+                'multiplicityExitNum'] if "multiplicityExitNum" in phase_item.keys() else None
             composition = phase_item['Composition']
             compose_phase_class = getattr(self.compose_phase_module, phase)
             if not compose_phase_class:
@@ -153,14 +200,26 @@ class ChatChain:
                                                          config_phase=self.config_phase,
                                                          config_role=self.config_role,
                                                          model_type=self.model_type,
-                                                         log_filepath=self.log_filepath)
+                                                         log_filepath=self.log_filepath,
+                                                         multiplicityExitNum=multiplicityExitNum)
             self.chat_env = compose_phase_instance.execute(self.chat_env)
+            if phase == 'CodeCompleteAll' and self.cc == 'on':
+                with open(os.path.join(self.chat_env.env_dict['directory'], 'team_name.txt'), 'r') as f:
+                    file_name = f.read()
+                file = '{}.txt'.format(file_name)
+                file_path = './CodeComplete'
+                for key in self.chat_env.codes.codebooks.keys():
+                    print(key)
+                if not os.path.exists(os.path.join(file_path, file)):
+                    with open(os.path.join(file_path, file), "a") as f:
+                        for key in self.chat_env.codes.codebooks.keys():
+                            f.write(str(key) + '\n\n' + self.chat_env.codes.codebooks[key] + '\n\n')
         else:
             raise RuntimeError(f"PhaseType '{phase_type}' is not yet implemented.")
 
     def execute_chain(self):
         """
-        execute the whole chain based on ChatChainConfig.json
+        execute the whole chain based on ChatChainConfig.txt
         Returns: None
 
         """
@@ -191,21 +250,25 @@ class ChatChain:
         Returns: None
 
         """
-        filepath = os.path.dirname(__file__)
-        root = os.path.dirname(filepath)
-        directory = os.path.join(root, "WareHouse")
-
         if self.chat_env.config.clear_structure:
+            filepath = os.path.dirname(__file__)
+            root = os.path.dirname(filepath)
+            directory = os.path.join(root, "WareHouse")
             for filename in os.listdir(directory):
                 file_path = os.path.join(directory, filename)
                 # logs with error trials are left in WareHouse/
                 if os.path.isfile(file_path) and not filename.endswith(".py") and not filename.endswith(".log"):
                     os.remove(file_path)
                     print("{} Removed.".format(file_path))
-
         software_path = os.path.join(directory, "_".join([self.project_name, self.org_name, self.start_time]))
         self.chat_env.set_directory(software_path)
 
+        self.chat_env.env_dict['t_num'] = self.t_num
+        self.chat_env.env_dict['unit_num'] = self.unit_num
+        self.chat_env.env_dict['time'] = self.time
+        self.chat_env.env_dict['cc'] = self.cc
+
+        # upload the past memory
         if self.chat_env.config.with_memory is True:
             self.chat_env.init_memory()
 
@@ -214,19 +277,7 @@ class ChatChain:
         shutil.copy(self.config_phase_path, software_path)
         shutil.copy(self.config_role_path, software_path)
 
-        # copy code files to software path in incremental_develop mode
-        if check_bool(self.config["incremental_develop"]):
-            for root, dirs, files in os.walk(self.code_path):
-                relative_path = os.path.relpath(root, self.code_path)
-                target_dir = os.path.join(software_path, 'base', relative_path)
-                os.makedirs(target_dir, exist_ok=True)
-                for file in files:
-                    source_file = os.path.join(root, file)
-                    target_file = os.path.join(target_dir, file)
-                    shutil.copy2(source_file, target_file)
-            self.chat_env._load_from_hardware(os.path.join(software_path, 'base'))
-
-        # write task prompt to software
+        # write task prompt to software path
         with open(os.path.join(software_path, self.project_name + ".prompt"), "w") as f:
             f.write(self.task_prompt_raw)
 
@@ -243,15 +294,14 @@ class ChatChain:
         preprocess_msg += "**Log File**: {}\n\n".format(self.log_filepath)
         preprocess_msg += "**ChatDevConfig**:\n{}\n\n".format(self.chat_env.config.__str__())
         preprocess_msg += "**ChatGPTConfig**:\n{}\n\n".format(chat_gpt_config)
-        log_visualize(preprocess_msg)
+        preprocess_msg += "**Team_Number**:\n{}\n\n".format(self.t_num)
+        log_macnet(preprocess_msg)
 
         # init task prompt
         if check_bool(self.config['self_improve']):
             self.chat_env.env_dict['task_prompt'] = self.self_task_improve(self.task_prompt_raw)
         else:
             self.chat_env.env_dict['task_prompt'] = self.task_prompt_raw
-        if(check_bool(self.web_spider)):
-            self.chat_env.env_dict['task_description'] = modal_trans(self.task_prompt_raw)
 
     def post_processing(self):
         """
@@ -263,33 +313,6 @@ class ChatChain:
         self.chat_env.write_meta()
         filepath = os.path.dirname(__file__)
         root = os.path.dirname(filepath)
-
-        if self.chat_env_config.git_management:
-            log_git_info = "**[Git Information]**\n\n"
-
-            self.chat_env.codes.version += 1
-            os.system("cd {}; git add .".format(self.chat_env.env_dict["directory"]))
-            log_git_info += "cd {}; git add .\n".format(self.chat_env.env_dict["directory"])
-            os.system("cd {}; git commit -m \"v{} Final Version\"".format(self.chat_env.env_dict["directory"],
-                                                                          self.chat_env.codes.version))
-            log_git_info += "cd {}; git commit -m \"v{} Final Version\"\n".format(self.chat_env.env_dict["directory"],
-                                                                                  self.chat_env.codes.version)
-            log_visualize(log_git_info)
-
-            git_info = "**[Git Log]**\n\n"
-            import subprocess
-
-            # execute git log
-            command = "cd {}; git log".format(self.chat_env.env_dict["directory"])
-            completed_process = subprocess.run(command, shell=True, text=True, stdout=subprocess.PIPE)
-
-            if completed_process.returncode == 0:
-                log_output = completed_process.stdout
-            else:
-                log_output = "Error when executing " + command
-
-            git_info += log_output
-            log_visualize(git_info)
 
         post_info = "**[Post Info]**\n\n"
         now_time = now()
@@ -305,15 +328,45 @@ class ChatChain:
         post_info += "ChatDev Starts ({})".format(self.start_time) + "\n\n"
         post_info += "ChatDev Ends ({})".format(now_time) + "\n\n"
 
-        directory = self.chat_env.env_dict['directory']
         if self.chat_env.config.clear_structure:
+            directory = self.chat_env.env_dict['directory']
             for filename in os.listdir(directory):
                 file_path = os.path.join(directory, filename)
                 if os.path.isdir(file_path) and file_path.endswith("__pycache__"):
                     shutil.rmtree(file_path, ignore_errors=True)
                     post_info += "{} Removed.".format(file_path) + "\n\n"
 
-        log_visualize(post_info)
+        if self.chat_env_config.git_management:
+            git_online_log = "**[Git Information]**\n\n"
+
+            self.chat_env.codes.version += 1
+            os.system("cd {} && echo version >> v{:.1f}".format(self.chat_env.env_dict["directory"],
+                                                                self.chat_env.codes.version))
+            git_online_log += "cd {} && echo version >> v{:.1f}\n".format(self.chat_env.env_dict["directory"],
+                                                                          self.chat_env.codes.version)
+            os.system("cd {} && git add .".format(self.chat_env.env_dict["directory"]))
+            git_online_log += "cd {} && git add .\n".format(self.chat_env.env_dict["directory"])
+            os.system("cd {} && git commit -m \"v{} Final Version\"".format(self.chat_env.env_dict["directory"],
+                                                                            self.chat_env.codes.version))
+            git_online_log += "cd {} && git commit -m \"v{} Final Version\"\n".format(
+                self.chat_env.env_dict["directory"], self.chat_env.codes.version)
+            log_macnet(git_online_log)
+
+            git_info = "**[Git Log]**\n\n"
+            import subprocess
+
+            command = "cd {} && git log".format(self.chat_env.env_dict["directory"])
+            completed_process = subprocess.run(command, shell=True, text=True, stdout=subprocess.PIPE)
+
+            if completed_process.returncode == 0:
+                log_output = completed_process.stdout
+            else:
+                log_output = "Error when executing " + command
+
+            git_info += log_output
+            log_macnet(git_info)
+
+        log_macnet(post_info)
 
         logging.shutdown()
         time.sleep(1)
@@ -352,14 +405,14 @@ then you should return a message in a format like \"<INFO> revised_version_of_th
             model_type=self.model_type,
         )
 
-        # log_visualize("System", role_play_session.assistant_sys_msg)
-        # log_visualize("System", role_play_session.user_sys_msg)
+        # log_macnet("System", role_play_session.assistant_sys_msg)
+        # log_macnet("System", role_play_session.user_sys_msg)
 
         _, input_user_msg = role_play_session.init_chat(None, None, self_task_improve_prompt)
         assistant_response, user_response = role_play_session.step(input_user_msg, True)
         revised_task_prompt = assistant_response.msg.content.split("<INFO>")[-1].lower().strip()
-        log_visualize(role_play_session.assistant_agent.role_name, assistant_response.msg.content)
-        log_visualize(
+        log_macnet(role_play_session.assistant_agent.role_name, assistant_response.msg.content)
+        log_macnet(
             "**[Task Prompt Self Improvement]**\n**Original Task Prompt**: {}\n**Improved Task Prompt**: {}".format(
                 task_prompt, revised_task_prompt))
         return revised_task_prompt

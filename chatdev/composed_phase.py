@@ -5,7 +5,7 @@ from collections import defaultdict
 
 from camel.typing import ModelType
 from chatdev.chat_env import ChatEnv
-from chatdev.utils import log_visualize
+from chatdev.utils import log_macnet
 
 
 def check_bool(s):
@@ -20,7 +20,8 @@ class ComposedPhase(ABC):
                  config_phase: dict = None,
                  config_role: dict = None,
                  model_type: ModelType = ModelType.GPT_3_5_TURBO,
-                 log_filepath: str = ""
+                 log_filepath: str = "",
+                 multiplicityExitNum: int = None
                  ):
         """
 
@@ -34,6 +35,7 @@ class ComposedPhase(ABC):
 
         self.phase_name = phase_name
         self.cycle_num = cycle_num
+        self.multiplicityExitNum = multiplicityExitNum
         self.composition = composition
         self.model_type = model_type
         self.log_filepath = log_filepath
@@ -135,14 +137,14 @@ class ComposedPhase(ABC):
 
         """
         self.update_phase_env(chat_env)
-        for cycle_index in range(1, self.cycle_num + 1):
+        for cycle_index in range(self.cycle_num):
             for phase_item in self.composition:
                 assert phase_item["phaseType"] == "SimplePhase"  # right now we do not support nested composition
                 phase = phase_item['phase']
                 max_turn_step = phase_item['max_turn_step']
                 need_reflect = check_bool(phase_item['need_reflect'])
                 self.phase_env["cycle_index"] = cycle_index
-                log_visualize(
+                log_macnet(
                     f"**[Execute Detail]**\n\nexecute SimplePhase:[{phase}] in ComposedPhase:[{self.phase_name}], cycle {cycle_index}")
                 if phase in self.phases:
                     self.phases[phase].phase_env = self.phase_env
@@ -158,6 +160,7 @@ class ComposedPhase(ABC):
                     print(f"Phase '{phase}' is not yet implemented. \
                             Please write its config in phaseConfig.json \
                             and implement it in chatdev.phase")
+
         chat_env = self.update_chat_env(chat_env)
         return chat_env
 
@@ -196,13 +199,22 @@ class CodeCompleteAll(ComposedPhase):
     def break_cycle(self, phase_env) -> bool:
         if phase_env['unimplemented_file'] == "":
             return True
-        else:
-            return False
+
+        if "code_fingerprint_list" in phase_env.keys():
+            cntMap = {}
+            for fingerprint in phase_env["code_fingerprint_list"]:
+                if fingerprint not in cntMap.keys():
+                    cntMap[fingerprint] = 0
+                cntMap[fingerprint] += 1
+                if cntMap[fingerprint] >= self.multiplicityExitNum * 2:
+                    return True
+        return False
 
 
 class CodeReview(ComposedPhase):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+
 
     def update_phase_env(self, chat_env):
         self.phase_env.update({"modification_conclusion": ""})
@@ -211,10 +223,20 @@ class CodeReview(ComposedPhase):
         return chat_env
 
     def break_cycle(self, phase_env) -> bool:
-        if "<INFO> Finished".lower() in phase_env['modification_conclusion'].lower():
-            return True
-        else:
-            return False
+        # if "<INFO> Finished".lower() in phase_env['modification_conclusion'].lower():
+        #     return True
+        # else:
+        #     return False
+
+        if "code_fingerprint_list" in phase_env.keys():
+            cntMap = {}
+            for fingerprint in phase_env["code_fingerprint_list"]:
+                if fingerprint not in cntMap.keys():
+                    cntMap[fingerprint] = 0
+                cntMap[fingerprint] += 1
+                if cntMap[fingerprint] >= self.multiplicityExitNum * 2: 
+                    return True
+        return False
 
 
 class HumanAgentInteraction(ComposedPhase):
@@ -228,7 +250,7 @@ class HumanAgentInteraction(ComposedPhase):
         return chat_env
 
     def break_cycle(self, phase_env) -> bool:
-        if "<INFO> Finished".lower() in phase_env['modification_conclusion'].lower() or phase_env["comments"].lower() == "exit":
+        if "<INFO> Finished".lower() in phase_env['modification_conclusion'].lower() or phase_env["comments"].lower() == "end":
             return True
         else:
             return False
@@ -246,7 +268,15 @@ class Test(ComposedPhase):
 
     def break_cycle(self, phase_env) -> bool:
         if not phase_env['exist_bugs_flag']:
-            log_visualize(f"**[Test Info]**\n\nAI User (Software Test Engineer):\nTest Pass!\n")
+            log_macnet(f"**[Test Info]**\n\nAI User (Software Test Engineer):\nTest Pass!\n")
             return True
-        else:
-            return False
+
+        if "code_fingerprint_list" in phase_env.keys():
+            cntMap = {}
+            for fingerprint in phase_env["code_fingerprint_list"]:
+                if fingerprint not in cntMap.keys():
+                    cntMap[fingerprint] = 0
+                cntMap[fingerprint] += 1
+                if cntMap[fingerprint] >= self.multiplicityExitNum * 2:
+                    return True
+        return False

@@ -28,14 +28,8 @@ from camel.utils import (
     num_tokens_from_messages,
     openai_api_key_required,
 )
-from chatdev.utils import log_visualize
-try:
-    from openai.types.chat import ChatCompletion
-
-    openai_new_api = True  # new openai api version
-except ImportError:
-    openai_new_api = False  # old openai api version
-
+from openai.types.chat import ChatCompletion
+from chatdev.utils import log_macnet
 
 @dataclass(frozen=True)
 class ChatAgentResponse:
@@ -74,7 +68,7 @@ class ChatAgent(BaseAgent):
 
     Args:
         system_message (SystemMessage): The system message for the chat agent.
-        with_memory(bool): The memory setting of the chat agent.
+        with_memory(bool): The momory setting of the chat agent
         model (ModelType, optional): The LLM model to use for generating
             responses. (default :obj:`ModelType.GPT_3_5_TURBO`)
         model_config (Any, optional): Configuration options for the LLM model.
@@ -91,25 +85,29 @@ class ChatAgent(BaseAgent):
             model: Optional[ModelType] = None,
             model_config: Optional[Any] = None,
             message_window_size: Optional[int] = None,
+            temperature: float = 0.2
     ) -> None:
 
         self.system_message: SystemMessage = system_message
         self.role_name: str = system_message.role_name
         self.role_type: RoleType = system_message.role_type
         self.model: ModelType = (model if model is not None else ModelType.GPT_3_5_TURBO)
-        self.model_config: ChatGPTConfig = model_config or ChatGPTConfig()
+        self.model_config: ChatGPTConfig = model_config or ChatGPTConfig(temperature)
         self.model_token_limit: int = get_model_token_limit(self.model)
         self.message_window_size: Optional[int] = message_window_size
         self.model_backend: ModelBackend = ModelFactory.create(self.model, self.model_config.__dict__)
         self.terminated: bool = False
         self.info: bool = False
         self.init_messages()
+
+
         if memory !=None and self.role_name in["Code Reviewer","Programmer","Software Test Engineer"]:
             self.memory = memory.memory_data.get("All")
         else:
             self.memory = None
 
     def reset(self) -> List[MessageType]:
+
         r"""Resets the :obj:`ChatAgent` to its initial state and returns the
         stored messages.
 
@@ -127,6 +125,7 @@ class ChatAgent(BaseAgent):
             termination_reasons: List[str],
             num_tokens: int,
     ) -> Dict[str, Any]:
+
         r"""Returns a dictionary containing information about the chat session.
 
         Args:
@@ -140,12 +139,13 @@ class ChatAgent(BaseAgent):
         Returns:
             Dict[str, Any]: The chat session information.
         """
+
         return {
             "id": id,
             "usage": usage,
             "termination_reasons": termination_reasons,
             "num_tokens": num_tokens,
-        }
+    }
 
     def init_messages(self) -> None:
         r"""Initializes the stored messages list with the initial system
@@ -165,6 +165,7 @@ class ChatAgent(BaseAgent):
         """
         self.stored_messages.append(message)
         return self.stored_messages
+
     def use_memory(self,input_message) -> List[MessageType]:
         if self.memory is None :
             return None
@@ -175,13 +176,16 @@ class ChatAgent(BaseAgent):
                     target_memory,distances, mids,task_list,task_dir_list = result
                     if target_memory != None and len(target_memory) != 0:
                         target_memory="".join(target_memory)
-                        #self.stored_messages[-1].content = self.stored_messages[-1].content+"Here is some code you've previously completed:"+target_memory+"You can refer to the previous script to complement this task."
-                        log_visualize(self.role_name,
+                        log_macnet(self.role_name,
                                             "thinking back and found some related code: \n--------------------------\n"
-                                            + target_memory)
+                                            + target_memory + "\n--------------------------\n"
+                                            +"And the similarity is "+distances
+                                            +", the target code MIDs is "+";".join(mids)
+                                            +"\nThe task is " + ";".join(task_list).replace('\n', '')
+                                            + "\nThe task dir is "+ ";".join(task_dir_list).replace('\n', ''))
                 else:
                     target_memory = None
-                    log_visualize(self.role_name,
+                    log_macnet(self.role_name,
                                          "thinking back but find nothing useful")
 
             else:
@@ -190,13 +194,16 @@ class ChatAgent(BaseAgent):
                     target_memory, distances, mids, task_list, task_dir_list = result
                     if target_memory != None and len(target_memory) != 0:
                         target_memory=";".join(target_memory)
-                        #self.stored_messages[-1].content = self.stored_messages[-1].content+"Here are some effective and efficient instructions you have sent to the assistant :"+target_memory+"You can refer to these previous excellent instructions to better instruct assistant here."
-                        log_visualize(self.role_name,
+                        log_macnet(self.role_name,
                                             "thinking back and found some related text: \n--------------------------\n"
-                                            + target_memory)
+                                            + target_memory + "\n--------------------------\n"
+                                            +"And the similarity is "+distances
+                                            +", the source code MIDs is "+";".join(mids)
+                                            +"\nThe task is " + ";".join(task_list).replace('\n', '')
+                                            + "\nThe task dir is "+ ";".join(task_dir_list).replace('\n', ''))
                 else:
                     target_memory = None
-                    log_visualize(self.role_name,
+                    log_macnet(self.role_name,
                                          "thinking back but find nothing useful")
 
         return target_memory
@@ -227,47 +234,25 @@ class ChatAgent(BaseAgent):
         openai_messages = [message.to_openai_message() for message in messages]
         num_tokens = num_tokens_from_messages(openai_messages, self.model)
 
-        # for openai_message in openai_messages:
-        #     # print("{}\t{}".format(openai_message.role, openai_message.content))
-        #     print("{}\t{}\t{}".format(openai_message["role"], hash(openai_message["content"]), openai_message["content"][:60].replace("\n", "")))
-        # print()
-
         output_messages: Optional[List[ChatMessage]]
         info: Dict[str, Any]
 
         if num_tokens < self.model_token_limit:
             response = self.model_backend.run(messages=openai_messages)
-            if openai_new_api:
-                if not isinstance(response, ChatCompletion):
-                    raise RuntimeError("OpenAI returned unexpected struct")
-                output_messages = [
-                    ChatMessage(role_name=self.role_name, role_type=self.role_type,
-                                meta_dict=dict(), **dict(choice.message))
-                    for choice in response.choices
-                ]
-                info = self.get_info(
-                    response.id,
-                    response.usage,
-                    [str(choice.finish_reason) for choice in response.choices],
-                    num_tokens,
-                )
-            else:
-                if not isinstance(response, dict):
-                    raise RuntimeError("OpenAI returned unexpected struct")
-                output_messages = [
-                    ChatMessage(role_name=self.role_name, role_type=self.role_type,
-                                meta_dict=dict(), **dict(choice["message"]))
-                    for choice in response["choices"]
-                ]
-                info = self.get_info(
-                    response["id"],
-                    response["usage"],
-                    [str(choice["finish_reason"]) for choice in response["choices"]],
-                    num_tokens,
-                )
+            if not isinstance(response, ChatCompletion):
+                raise RuntimeError("OpenAI returned unexpected struct")
+            output_messages = [
+                ChatMessage(role_name=self.role_name, role_type=self.role_type,
+                            meta_dict=dict(), **dict(choice.message))
+                for choice in response.choices
+            ]
+            info = self.get_info(
+                response.id,
+                response.usage,
+                [str(choice.finish_reason) for choice in response.choices],
+                num_tokens,
+            )
 
-            # TODO strict <INFO> check, only in the beginning of the line
-            # if "<INFO>" in output_messages[0].content:
             if output_messages[0].content.split("\n")[-1].startswith("<INFO>"):
                 self.info = True
         else:

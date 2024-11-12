@@ -1,9 +1,10 @@
 import difflib
 import os
 import re
+import shutil
 import subprocess
 
-from chatdev.utils import log_visualize
+from chatdev.utils import log_macnet
 
 
 class Codes:
@@ -42,7 +43,7 @@ class Codes:
                     filename = "main.py"
                 if filename == "":  # post-processing
                     filename = extract_filename_from_code(code)
-                assert filename != ""
+                assert filename != "" and filename != ".py", print(group1, generated_content)
                 if filename is not None and code is not None and len(filename) > 0 and len(code) > 0:
                     self.codebooks[filename] = self._format_code(code)
 
@@ -70,7 +71,7 @@ class Codes:
 
 '''\n""" + unified_diff + "\n```"
 
-                log_visualize(update_codes_content)
+                log_macnet(update_codes_content)
                 self.codebooks[key] = new_codes.codebooks[key]
 
     def _rewrite_codes(self, git_management, phase_info=None) -> None:
@@ -91,33 +92,31 @@ class Codes:
         if git_management:
             if not phase_info:
                 phase_info = ""
-            log_git_info = "**[Git Information]**\n\n"
-            if self.version == 1.0:
-                os.system("cd {}; git init".format(self.directory))
-                log_git_info += "cd {}; git init\n".format(self.directory)
-            os.system("cd {}; git add .".format(self.directory))
-            log_git_info += "cd {}; git add .\n".format(self.directory)
 
-            # check if there exist diff
-            completed_process = subprocess.run("cd {}; git status".format(self.directory), shell=True, text=True,
-                                               stdout=subprocess.PIPE)
-            if "nothing to commit" in completed_process.stdout:
-                self.version -= 1.0
-                return
+            git_online_log = "**[Git Information]**\n\n"
 
-            os.system("cd {}; git commit -m \"v{}\"".format(self.directory, str(self.version) + " " + phase_info))
-            log_git_info += "cd {}; git commit -m \"v{}\"\n".format(self.directory,
-                                                                      str(self.version) + " " + phase_info)
+            os.system("cd {} && echo version >> v{:.1f}".format(self.directory, self.version))
+            git_online_log += "cd {} && echo version >> v{:.1f}\n".format(self.directory, self.version)
+
             if self.version == 1.0:
-                os.system("cd {}; git submodule add ./{} {}".format(os.path.dirname(os.path.dirname(self.directory)),
-                                                                    "WareHouse/" + os.path.basename(self.directory),
-                                                                    "WareHouse/" + os.path.basename(self.directory)))
-                log_git_info += "cd {}; git submodule add ./{} {}\n".format(
+                os.system("cd {} && git init".format(self.directory))
+                git_online_log += "cd {} && git init\n".format(self.directory)
+            os.system("cd {} && git add .".format(self.directory))
+            git_online_log += "cd {} && git add .\n".format(self.directory)
+
+            os.system("cd {} && git commit -m \"v{}\"".format(self.directory, str(self.version) + " " + phase_info))
+            git_online_log += "cd {} && git commit -m \"v{}\"\n".format(self.directory,
+                                                                        str(self.version) + " " + phase_info)
+            if self.version == 1.0:
+                os.system("cd {} && git submodule add ./{} {}".format(os.path.dirname(os.path.dirname(self.directory)),
+                                                                      "WareHouse/" + os.path.basename(self.directory),
+                                                                      "WareHouse/" + os.path.basename(self.directory)))
+                git_online_log += "cd {} && git submodule add ./{} {}\n".format(
                     os.path.dirname(os.path.dirname(self.directory)),
                     "WareHouse/" + os.path.basename(self.directory),
                     "WareHouse/" + os.path.basename(self.directory))
-                log_visualize(rewrite_codes_content)
-            log_visualize(log_git_info)
+                log_macnet(rewrite_codes_content)
+            log_macnet(git_online_log)
 
     def _get_codes(self) -> str:
         content = ""
@@ -134,4 +133,17 @@ class Codes:
                 if filename.endswith(".py"):
                     code = open(os.path.join(directory, filename), "r", encoding="utf-8").read()
                     self.codebooks[filename] = self._format_code(code)
-        log_visualize("{} files read from {}".format(len(self.codebooks.keys()), directory))
+        log_macnet("{} files read from {}".format(len(self.codebooks.keys()), directory))
+
+    def write_codes_to_hardware(self, name):
+        directory = f"./WareHouse/{name}"
+        if not os.path.exists(f"{directory}"):
+            os.mkdir(f"{directory}")
+        for filename in self.codebooks.keys():
+            filepath = os.path.join(directory, filename)
+            with open(filepath, "w", encoding="utf-8") as writer:
+                writer.write(self.codebooks[filename])
+        files = os.listdir(directory)
+        for file in files:
+            if file not in self.codebooks.keys():
+                shutil.rmtree(os.path.join(directory, file)) if os.path.isdir(os.path.join(directory, file)) else os.remove(os.path.join(directory, file))

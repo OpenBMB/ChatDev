@@ -17,14 +17,6 @@ from typing import Dict, Optional
 from camel.messages import BaseMessage
 from camel.typing import RoleType
 
-try:
-    from openai.types.chat.chat_completion_message_tool_call import ChatCompletionMessageToolCall
-    from openai.types.chat.chat_completion_message import FunctionCall
-
-    openai_new_api = True  # new openai api version
-except ImportError:
-    openai_new_api = False  # old openai api version
-
 
 @dataclass
 class ChatMessage(BaseMessage):
@@ -38,26 +30,22 @@ class ChatMessage(BaseMessage):
             for the message.
         role (str): The role of the message in OpenAI chat system.
         content (str): The content of the message. (default: :obj:`""`)
-        refusal (str): The refusal to build argument.
     """
     role_name: str
     role_type: RoleType
     meta_dict: Optional[Dict[str, str]]
     role: str
     content: str = ""
-    refusal: str = None
-    if openai_new_api:
-        function_call: Optional[FunctionCall] = None
-        tool_calls: Optional[ChatCompletionMessageToolCall] = None
+    phase_name: str = ""
 
     def set_user_role_at_backend(self: BaseMessage):
         return self.__class__(
             role_name=self.role_name,
             role_type=self.role_type,
             meta_dict=self.meta_dict,
+            # phase_name=self.phase_name,
             role="user",
             content=self.content,
-            refusal=self.refusal,
         )
 
 
@@ -75,14 +63,12 @@ class AssistantChatMessage(ChatMessage):
         role (str): The role of the message in OpenAI chat system.
             (default: :obj:`"assistant"`)
         content (str): The content of the message. (default: :obj:`""`)
-        refusal (str): The refusal to build argument.
     """
     role_name: str
     role_type: RoleType = RoleType.ASSISTANT
     meta_dict: Optional[Dict[str, str]] = None
     role: str = "user"
     content: str = ""
-    refusal: str = None
 
 
 @dataclass
@@ -97,11 +83,9 @@ class UserChatMessage(ChatMessage):
         role (str): The role of the message in OpenAI chat system.
             (default: :obj:`"user"`)
         content (str): The content of the message. (default: :obj:`""`)
-        refusal (str): The refusal to build argument.
     """
     role_name: str
     role_type: RoleType = RoleType.USER
     meta_dict: Optional[Dict[str, str]] = None
     role: str = "user"
     content: str = ""
-    refusal: str = None

@@ -19,7 +19,7 @@ import tiktoken
 
 from camel.typing import ModelType
 from chatdev.statistics import prompt_cost
-from chatdev.utils import log_visualize
+from chatdev.utils import log_macnet
 
 try:
     from openai.types.chat import ChatCompletion
@@ -107,10 +107,10 @@ class OpenAIModel(ModelBackend):
                 num_completion_tokens=response.usage.completion_tokens
             )
 
-            log_visualize(
-                "**[OpenAI_Usage_Info Receive]**\nprompt_tokens: {}\ncompletion_tokens: {}\ntotal_tokens: {}\ncost: ${:.6f}\n".format(
-                    response.usage.prompt_tokens, response.usage.completion_tokens,
-                    response.usage.total_tokens, cost))
+            # log_macnet(
+            #     "\n**[OpenAI_Usage_Info Receive]**\nprompt_tokens: {}\ncompletion_tokens: {}\ntotal_tokens: {}\ncost: ${:.6f}\n".format(
+            #         response.usage.prompt_tokens, response.usage.completion_tokens,
+            #         response.usage.total_tokens, cost))
             if not isinstance(response, ChatCompletion):
                 raise RuntimeError("Unexpected return from OpenAI API")
             return response
@@ -140,10 +140,10 @@ class OpenAIModel(ModelBackend):
                 num_completion_tokens=response["usage"]["completion_tokens"]
             )
 
-            log_visualize(
-                "**[OpenAI_Usage_Info Receive]**\nprompt_tokens: {}\ncompletion_tokens: {}\ntotal_tokens: {}\ncost: ${:.6f}\n".format(
-                    response["usage"]["prompt_tokens"], response["usage"]["completion_tokens"],
-                    response["usage"]["total_tokens"], cost))
+            # log_macnet(
+            #     "\n**[OpenAI_Usage_Info Receive]**\nprompt_tokens: {}\ncompletion_tokens: {}\ntotal_tokens: {}\ncost: ${:.6f}\n".format(
+            #         response["usage"]["prompt_tokens"], response["usage"]["completion_tokens"],
+            #         response["usage"]["total_tokens"], cost))
             if not isinstance(response, Dict):
                 raise RuntimeError("Unexpected return from OpenAI API")
             return response

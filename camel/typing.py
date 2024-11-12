@@ -57,7 +57,7 @@ class ModelType(Enum):
 
     @property
     def value_for_tiktoken(self):
-        return self.value if self.name != "STUB" else "gpt-3.5-turbo-16k-0613"
+        return self.value if self.name != "STUB" else "gpt-4o-mini"
 
 
 class PhaseType(Enum):
@@ -66,6 +66,7 @@ class PhaseType(Enum):
     RECRUITING_CPO = "recruiting CPO"
     RECRUITING_CTO = "recruiting CTO"
     DEMAND_ANALYSIS = "demand analysis"
+    BRAINSTORMING = "brainstorming"
     CHOOSING_LANGUAGE = "choosing language"
     RECRUITING_PROGRAMMER = "recruiting programmer"
     RECRUITING_REVIEWER = "recruiting reviewer"

@@ -38,7 +38,7 @@ class Documents():
         for filename in self.docbooks.keys():
             with open(os.path.join(directory, filename), "w", encoding="utf-8") as writer:
                 writer.write(self.docbooks[filename])
-                print(os.path.join(directory, filename), "Writen")
+                print(os.path.join(directory, filename), "Wrote")
 
     def _get_docs(self):
         content = ""

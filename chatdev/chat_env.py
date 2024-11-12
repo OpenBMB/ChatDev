@@ -6,46 +6,39 @@ import subprocess
 import time
 from typing import Dict
 
-import openai
+from openai import OpenAI
+import os
+
+OPENAI_API_KEY = os.environ['OPENAI_API_KEY']
+client = OpenAI(
+    api_key=OPENAI_API_KEY,
+    base_url="",
+)
 import requests
 
 from chatdev.codes import Codes
 from chatdev.documents import Documents
 from chatdev.roster import Roster
-from chatdev.utils import log_visualize
-from ecl.memory import Memory
-
-try:
-    from openai.types.chat.chat_completion_message_tool_call import ChatCompletionMessageToolCall
-    from openai.types.chat.chat_completion_message import FunctionCall
-
-    openai_new_api = True  # new openai api version
-except ImportError:
-    openai_new_api = False  # old openai api version
+from chatdev.utils import log_macnet
+from mmm.memory import Memory
 
 
 class ChatEnvConfig:
     def __init__(self, clear_structure,
+                 brainstorming,
                  gui_design,
-                 git_management,
-                 incremental_develop,
-                 background_prompt,
-                 with_memory):
-        self.clear_structure = clear_structure  # Whether to clear non-software files in the WareHouse and cache files in generated software path
-        self.gui_design = gui_design  # Encourage ChatDev generate software with GUI
-        self.git_management = git_management  # Whether to use git to manage the creation and changes of generated software
-        self.incremental_develop = incremental_develop  # Whether to use incremental develop on an existing project
-        self.background_prompt = background_prompt  # background prompt that will be added to every inquiry to LLM
-        self.with_memory = with_memory # Wheter to use memroy in the interaction between agents
+                 git_management, with_memory):
+        self.clear_structure = clear_structure
+        self.brainstorming = brainstorming
+        self.gui_design = gui_design
+        self.git_management = git_management
+        self.with_memory = with_memory
 
     def __str__(self):
         string = ""
-        string += "ChatEnvConfig.with_memory: {}\n".format(self.with_memory)
         string += "ChatEnvConfig.clear_structure: {}\n".format(self.clear_structure)
-        string += "ChatEnvConfig.git_management: {}\n".format(self.git_management)
-        string += "ChatEnvConfig.gui_design: {}\n".format(self.gui_design)
-        string += "ChatEnvConfig.incremental_develop: {}\n".format(self.incremental_develop)
-        string += "ChatEnvConfig.background_prompt: {}\n".format(self.background_prompt)
+        string += "ChatEnvConfig.brainstorming: {}\n".format(self.brainstorming)
+        string += "ChatEnvConfig.with_memory: {}\n".format(self.with_memory)
         return string
 
 
@@ -68,8 +61,15 @@ class ChatEnv:
             "language": "",
             "review_comments": "",
             "error_summary": "",
-            "test_reports": ""
+            "test_reports": "",
+            "examples": "",
+            "t_num": 0,
+            "unit_num": 0,
+            "wait_flag": True,
+            "time": 0,
+            "cc": ''
         }
+
 
     @staticmethod
     def fix_module_not_found_error(test_reports):
@@ -77,7 +77,7 @@ class ChatEnv:
             for match in re.finditer(r"No module named '(\S+)'", test_reports, re.DOTALL):
                 module = match.group(1)
                 subprocess.Popen("pip install {}".format(module), shell=True).wait()
-                log_visualize("**[CMD Execute]**\n\n[CMD] pip install {}".format(module))
+                log_macnet("**[CMD Execute]**\n\n[CMD] pip install {}".format(module))
 
     def set_directory(self, directory):
         assert len(self.env_dict['directory']) == 0
@@ -90,23 +90,22 @@ class ChatEnv:
             new_directory = "{}.{}".format(directory, time.strftime("%Y%m%d%H%M%S", time.localtime()))
             shutil.copytree(directory, new_directory)
             print("{} Copied to {}".format(directory, new_directory))
-        if os.path.exists(self.env_dict['directory']):
-            shutil.rmtree(self.env_dict['directory'])
-            os.mkdir(self.env_dict['directory'])
-            print("{} Created".format(directory))
-        else:
-            os.mkdir(self.env_dict['directory'])
-    
+        if self.config.clear_structure:
+            if os.path.exists(self.env_dict['directory']):
+                shutil.rmtree(self.env_dict['directory'])
+                os.mkdir(self.env_dict['directory'])
+                print("{} Created".format(directory))
+            else:
+                os.mkdir(self.env_dict['directory'])
     def init_memory(self):
         self.memory.id_enabled = True
-        self.memory.directory = os.path.join(os.getcwd(),"ecl","memory")
+        self.memory.directory = os.path.join(os.getcwd(),"mmm","memory")
         if not os.path.exists(self.memory.directory):
             os.mkdir(self.memory.directory)
         self.memory.upload()
 
     def exist_bugs(self) -> tuple[bool, str]:
         directory = self.env_dict['directory']
-
         success_info = "The software run successfully without errors."
         try:
 
@@ -133,11 +132,17 @@ class ChatEnv:
             # Check if the software is still running
             if process.poll() is None:
                 if "killpg" in dir(os):
-                    os.killpg(os.getpgid(process.pid), signal.SIGTERM)
+                    timeout = 10
+                    try:
+                        os.killpg(os.getpgid(process.pid), signal.SIGTERM)
+                        process.wait(timeout=timeout)
+                    except subprocess.TimeoutExpired:
+                        os.killpg(os.getpgid(process.pid), signal.SIGKILL)
+                        process.wait()
                 else:
                     os.kill(process.pid, signal.SIGTERM)
                     if process.poll() is None:
-                        os.kill(process.pid, signal.CTRL_BREAK_EVENT)
+                        os.kill(process.pid,signal.CTRL_BREAK_EVENT)
 
             if return_code == 0:
                 return False, success_info
@@ -156,6 +161,16 @@ class ChatEnv:
 
         return False, success_info
 
+    def exist_pass(self) -> bool:
+        directory = self.env_dict['directory']
+        filenames = os.listdir(directory)
+        filenames = [filename for filename in filenames if filename.endswith(".py")]
+        code_content = "\n\n".join([open(os.path.join(directory, filename)).read() for filename in filenames])
+        lines = [line.strip() for line in code_content.split("\n") if line.strip() == "pass"]
+        if len(lines) > 0:
+            return True
+        return False
+
     def recruit(self, agent_name: str):
         self.roster._recruit(agent_name)
 
@@ -168,8 +183,8 @@ class ChatEnv:
     def update_codes(self, generated_content):
         self.codes._update_codes(generated_content)
 
-    def rewrite_codes(self, phase_info=None) -> None:
-        self.codes._rewrite_codes(self.config.git_management, phase_info)
+    def rewrite_codes(self) -> None:
+        self.codes._rewrite_codes(self.config.git_management)
 
     def get_codes(self) -> str:
         return self.codes._get_codes()
@@ -239,21 +254,17 @@ class ChatEnv:
                 if desc.endswith(".png"):
                     desc = desc.replace(".png", "")
                 print("{}: {}".format(filename, desc))
-                if openai_new_api:
-                    response = openai.images.generate(
-                        prompt=desc,
-                        n=1,
-                        size="256x256"
-                    )
-                    image_url = response.data[0].url
-                else:
-                    response = openai.Image.create(
-                        prompt=desc,
-                        n=1,
-                        size="256x256"
-                    )
+                try:
+                    response = client.images.generate(prompt=desc,
+                    n=1,
+                    size="256x256")
                     image_url = response['data'][0]['url']
-                download(image_url, filename)
+                    download(image_url, filename)
+                except:
+                    pseudo_filepath = os.path.join(self.env_dict['directory'], "..", "..", "pseudo.png")
+                    assert os.path.exists(pseudo_filepath)
+                    shutil.copyfile(pseudo_filepath, os.path.join(self.env_dict['directory'], filename))
+                    log_macnet("Generate pseudo.png")
 
     def get_proposed_images_from_message(self, messages):
         def download(img_url, file_name):
@@ -289,22 +300,16 @@ class ChatEnv:
                 if desc.endswith(".png"):
                     desc = desc.replace(".png", "")
                 print("{}: {}".format(filename, desc))
-
-                if openai_new_api:
-                    response = openai.images.generate(
-                        prompt=desc,
-                        n=1,
-                        size="256x256"
-                    )
-                    image_url = response.data[0].url
-                else:
-                    response = openai.Image.create(
-                        prompt=desc,
-                        n=1,
-                        size="256x256"
-                    )
+                try:
+                    response = client.images.generate(prompt=desc,
+                    n=1,
+                    size="256x256")
                     image_url = response['data'][0]['url']
-
-                download(image_url, filename)
+                    download(image_url, filename)
+                except:
+                    pseudo_filepath = os.path.join(self.env_dict['directory'], "..", "..", "pseudo.png")
+                    assert os.path.exists(pseudo_filepath)
+                    shutil.copyfile(pseudo_filepath, os.path.join(self.env_dict['directory'], filename))
+                    log_macnet("Generate pseudo.png")
 
         return images

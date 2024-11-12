@@ -14,16 +14,12 @@
 import copy
 from typing import Dict, List, Optional, Sequence, Tuple
 
-from camel.agents import (
-    ChatAgent,
-    TaskPlannerAgent,
-    TaskSpecifyAgent,
-)
+from camel.agents import ChatAgent
 from camel.agents.chat_agent import ChatAgentResponse
 from camel.messages import ChatMessage, UserChatMessage
 from camel.messages import SystemMessage
 from camel.typing import ModelType, RoleType, TaskType, PhaseType
-from chatdev.utils import log_arguments, log_visualize
+from chatdev.utils import log_arguments, log_macnet
 
 
 @log_arguments
@@ -90,8 +86,8 @@ class RolePlaying:
             sys_msg_generator_kwargs: Optional[Dict] = None,
             extend_sys_msg_meta_dicts: Optional[List[Dict]] = None,
             extend_task_specify_meta_dict: Optional[Dict] = None,
-            background_prompt: Optional[str] = "",
             memory = None,
+            placeholders = None
     ) -> None:
         self.with_task_specify = with_task_specify
         self.with_task_planner = with_task_planner
@@ -99,7 +95,6 @@ class RolePlaying:
         self.model_type = model_type
         self.task_type = task_type
         self.memory = memory
-
 
         if with_task_specify:
             task_specify_meta_dict = dict()
@@ -135,7 +130,9 @@ class RolePlaying:
 
         self.task_prompt = task_prompt
 
-        sys_msg_meta_dicts = [dict(chatdev_prompt=background_prompt, task=task_prompt)] * 2
+        chatdev_prompt_template = "ChatDev is a software company powered by multiple intelligent agents, such as chief executive officer, chief human resources officer, chief product officer, chief technology officer, etc, with a multi-agent organizational structure and the mission of \"changing the digital world through programming\"."
+
+        sys_msg_meta_dicts = [dict(chatdev_prompt=chatdev_prompt_template, task=task_prompt)] * 2
         if (extend_sys_msg_meta_dicts is None and self.task_type in [TaskType.AI_SOCIETY, TaskType.MISALIGNMENT,
                                                                      TaskType.CHATDEV]):
             extend_sys_msg_meta_dicts = [dict(assistant_role=assistant_role_name, user_role=user_role_name)] * 2
@@ -153,19 +150,10 @@ class RolePlaying:
 
         self.assistant_agent: ChatAgent = ChatAgent(self.assistant_sys_msg, memory, model_type,
                                                     **(assistant_agent_kwargs or {}), )
-        self.user_agent: ChatAgent = ChatAgent(self.user_sys_msg,memory, model_type, **(user_agent_kwargs or {}), )
+        self.user_agent: ChatAgent = ChatAgent(self.user_sys_msg, memory,model_type,**(user_agent_kwargs or {}), )
 
         if with_critic_in_the_loop:
             raise ValueError("with_critic_in_the_loop not available")
-            # if critic_role_name.lower() == "human":
-            #     self.critic = Human(**(critic_kwargs or {}))
-            # else:
-            #     critic_criteria = (critic_criteria or "improving the task performance")
-            #     critic_msg_meta_dict = dict(critic_role=critic_role_name, criteria=critic_criteria,
-            #                                 **sys_msg_meta_dicts[0])
-            #     self.critic_sys_msg = sys_msg_generator.from_dict(critic_msg_meta_dict,
-            #                                                       role_tuple=(critic_role_name, RoleType.CRITIC), )
-            #     self.critic = CriticAgent(self.critic_sys_msg, model_type, **(critic_kwargs or {}), )
         else:
             self.critic = None
 
@@ -185,14 +173,18 @@ class RolePlaying:
             placeholders = {}
         self.assistant_agent.reset()
         self.user_agent.reset()
-
-        # refactored ChatDev
+        placeholders["examples"] = ' '
         content = phase_prompt.format(
             **({"assistant_role": self.assistant_agent.role_name} | placeholders)
         )
         retrieval_memory = self.assistant_agent.use_memory(content)
         if retrieval_memory!= None:
             placeholders["examples"] = retrieval_memory
+
+        # refactored ChatDev
+        content = phase_prompt.format(
+            **({"assistant_role": self.assistant_agent.role_name} | placeholders)
+        )
         user_msg = UserChatMessage(
             role_name=self.user_sys_msg.role_name,
             role="user",
@@ -203,9 +195,14 @@ class RolePlaying:
         pseudo_msg.role = "assistant"
         self.user_agent.update_messages(pseudo_msg)
 
+        #user_msg_rst = user_msg.set_user_role_at_backend()
+
+        # user_msg.phase_name = phase_name
+
         # here we concatenate to store the real message in the log
-        log_visualize(self.user_agent.role_name,
-                      "**[Start Chat]**\n\n[" + self.assistant_agent.system_message.content + "]\n\n" + content)
+        log_macnet(self.user_agent.role_name,
+                             "**[Start Chat]**\n\n[" + self.assistant_agent.system_message.content + "]\n\n" + content)
+
         return None, user_msg
 
     def process_messages(

@@ -1,0 +1,66 @@
+graph: ['2->3', '3->5', '3->4', '2->4', '4->5', '1->2', '2->6', '1->3', '5->6', '1->6', '0->7', '4->6', '3->7', '1->7', '0->3', '0->1', '4->7', '0->4']
+Model: "GPT_4O" # choose from ["GPT_3_5_TURBO","GPT_4","GPT_4_TURBO","GPT_4O","GPT_4O_MINI"]
+Node_in_id: -1
+Node_out_id: -2
+Aggregate_retry_limit: 4
+Aggregate_unit_num: 2
+Agent:
+  instructor_prompt:
+            "According to the new user's task and our software designs: \
+            Task: \"{}\".\n\
+            Codes:\n\
+            \"{}\"\n\
+            As the reviewer, to make the software directly operable without further coding, we have formulated the following regulations:\
+            1) all referenced classes should be imported;\n\
+            2) all methods should be implemented;\n\
+            3) all methods need to have the necessary comments;\n\
+            4) no potential bugs;\n\
+            5) The entire project conforms to the tasks proposed by the user;\n\
+            6) use python as the programming language;\n\
+            7) most importantly, do not only check the errors in the code, but also the logic of code. Make sure that user can interact with generated software without losing any feature in the requirement;\n\          
+            Now, you should check the above regulations one by one and review the codes in detail, propose one comment with the highest priority about the codes, and give me instructions on how to fix. Tell me your comment with the highest priority and corresponding suggestions on revision. If the codes are perfect and you have no comment on them, return only one line like \"<INFO> Finished\".\n\
+            You may use the compiler to check the errors in the code (only when necessary). Output '<API>compile()</API>\n' at the beginning of your comment to indicate that you are calling the compiler.\n\
+            Do not call the compiler if a feedback from the compiler and a 'pre_comments' are already given. Instead, eliminate the contradictions between them, paraphrase and combine them into one comment following the requirements above.\n\
+            ----------"
+  assistant_prompt:
+            "According to the new user's task, our designed product modality and languages, our developed first-edition source codes are listed below: \
+            Task: \"{}\".\n\
+            Codes: \n\
+            \"{}\"\n\
+            Language: python\n\
+            Comments on Codes:\n\
+            \"{}\"\n\
+            In the software, each file must strictly follow a markdown code block format, where the following tokens must be replaced such that \"FILENAME\" is the lowercase file name including the file extension, \"LANGUAGE\" in the programming language, \"DOCSTRING\" is a string literal specified in source code that is used to document a specific segment of code, and \"CODE\" is the original code. Format:\
+            FILENAME\n
+            ```LANGUAGE\n
+            '''\n
+            DOCSTRING\n
+            '''\n
+            CODE\n
+            ```\n
+            As the programmer, to satisfy the new user's demand and make the software creative, executive and robust, you should modify corresponding codes according to the comments. Then, output the full and complete codes with all bugs fixed based on the comments. Return all codes strictly following the required format.DO NOT output any explanation or clarification.DO NOT output characters('#','/',etc.) before any token.OUTPUT executable codes instead of 'pass' or '...'. Remember, ALL of your code files should end with '.py'. Keep in mind, a file named 'main.py' should ALWAYS be included your solution. \n"
+
+
+  System_prompt:
+    ["You are Programmer. You can write/create computer software or applications by providing a specific programming language to the computer.",
+    "You have extensive computing and coding experience in many varieties of programming languages and platforms, such as Python, Java, C, C++, HTML, CSS, JavaScript, XML, SQL, PHP, etc,.",
+    "To complete tasks, you must write a response that appropriately solves the requested instruction based on your expertise and customer's needs."]
+  Role_name: "AI assistant"
+  cc_prompt:
+    ["You are an experienced and meticulous software analyst and developer, trusted by others to optimize and enhance their code. Now there are several programs that serve the same purpose and are currently competing in the software development field.",
+    "Now you need to carefully analyze and compare these programs to identify their strengths and weaknesses and explain them. Subsequently, you must generate only one new, improved, and runnable program. This program should include the content of each file, encompassing the complete code.",
+    "There may be two kinds of situations that you need to handle with:",
+    "1. a task and a single corresponding solution as input. If so, your should return EXACTLY THE SAME AS input WITHOUT ANY MODIFICATION.",
+    "2. a task and multiple corresponding solutions as input. If so, aggregate them into A SINGLE solution after by carefully considering and merging their pros and discarding their cons.",
+    "Think step by step and reason yourself to the right decisions and make sure we get it right.",
+    "Each file must strictly adhere to a markdown code block format. The following tokens must be replaced: \"FILENAME\" with the lowercase file name, including the file extension; \"LANGUAGE\" with the programming language; \"DOCSTRING\" with a string literal specified in the source code for documenting a specific segment of code, and \"CODE\" is the original code:",
+    "FILENAME",
+    "```LANGUAGE",
+    "'''",
+    "DOCSTRING",
+    "'''",
+    "CODE",
+    "```",
+    "You will start with the \"main\" file, then go to the ones that are imported by that file, and so on.",
+    "This new program should combine the advantages obtained from the competition between different teams and eliminate all weaknesses.",
+    "Please bear in mind that even if some parts of the improved code may similar to the previous program, do not omit them. Instead, clearly write out each line of the improved code. Furthermore, ensure that the code is fully functional, implementing all functions without the use of placeholders (such as 'pass' and 'Implementation goes here' in Python)."]

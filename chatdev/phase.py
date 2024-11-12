@@ -1,5 +1,7 @@
 import os
 import re
+import time
+import shutil
 from abc import ABC, abstractmethod
 
 from camel.agents import RolePlaying
@@ -7,7 +9,11 @@ from camel.messages import ChatMessage
 from camel.typing import TaskType, ModelType
 from chatdev.chat_env import ChatEnv
 from chatdev.statistics import get_info
-from chatdev.utils import log_visualize, log_arguments
+from chatdev.utils import log_macnet, log_arguments
+import hashlib
+from chatdev.waiting import Pool
+from chatdev.test_unfinished_function import FunctionTest
+from chatdev.codes import Codes
 
 
 class Phase(ABC):
@@ -29,6 +35,8 @@ class Phase(ABC):
             role_prompts: prompts of all roles
             phase_name: name of this phase
         """
+        self.pool_response = None
+        self.pool = None
         self.seminar_conclusion = None
         self.assistant_role_name = assistant_role_name
         self.user_role_name = user_role_name
@@ -39,6 +47,7 @@ class Phase(ABC):
         self.user_role_prompt = role_prompts[user_role_name]
         self.ceo_prompt = role_prompts["Chief Executive Officer"]
         self.counselor_prompt = role_prompts["Counselor"]
+        self.timeout_seconds = 1.0
         self.max_retries = 3
         self.reflection_prompt = """Here is a conversation between two roles: {conversations} {question}"""
         self.model_type = model_type
@@ -58,15 +67,15 @@ class Phase(ABC):
             task_type=TaskType.CHATDEV,
             need_reflect=False,
             with_task_specify=False,
-            model_type=ModelType.GPT_3_5_TURBO,
             memory=None,
+            model_type=ModelType.GPT_3_5_TURBO,
             placeholders=None,
             chat_turn_limit=10
     ) -> str:
         """
 
         Args:
-            chat_env: global chatchain environment
+            chat_env: global chatchain environment TODO: only for employee detection, can be deleted
             task_prompt: user query prompt for building the software
             assistant_role_name: who receives the chat
             user_role_name: who starts the chat
@@ -105,14 +114,15 @@ class Phase(ABC):
             with_task_specify=with_task_specify,
             memory=memory,
             model_type=model_type,
-            background_prompt=chat_env.config.background_prompt
+            placeholders=placeholders
         )
 
-        # log_visualize("System", role_play_session.assistant_sys_msg)
-        # log_visualize("System", role_play_session.user_sys_msg)
+        # log_macnet("System", role_play_session.assistant_sys_msg)
+        # log_macnet("System", role_play_session.user_sys_msg)
 
         # start the chat
         _, input_user_msg = role_play_session.init_chat(None, placeholders, phase_prompt)
+        # _, input_user_msg = role_play_session.init_chat(None, placeholders, phase_prompt, phase_name)
         seminar_conclusion = None
 
         # handle chats
@@ -132,14 +142,14 @@ class Phase(ABC):
             # the first interaction is logged in role_play_session.init_chat
             assistant_response, user_response = role_play_session.step(input_user_msg, chat_turn_limit == 1)
 
-            conversation_meta = "**" + assistant_role_name + "<->" + user_role_name + " on : " + str(
-                phase_name) + ", turn " + str(i) + "**\n\n"
+            # conversation_meta = "**" + assistant_role_name + "<->" + user_role_name + " on : " + str(
+            #     phase_name) + ", turn " + str(i) + "**\n\n"
 
             # TODO: max_tokens_exceeded errors here
             if isinstance(assistant_response.msg, ChatMessage):
                 # we log the second interaction here
-                log_visualize(role_play_session.assistant_agent.role_name,
-                              conversation_meta + "[" + role_play_session.user_agent.system_message.content + "]\n\n" + assistant_response.msg.content)
+                # log_macnet(role_play_session.assistant_agent.role_name,
+                #                      conversation_meta + "[" + role_play_session.user_agent.system_message.content + "]\n\n" + assistant_response.msg.content)
                 if role_play_session.assistant_agent.info:
                     seminar_conclusion = assistant_response.msg.content
                     break
@@ -148,8 +158,8 @@ class Phase(ABC):
 
             if isinstance(user_response.msg, ChatMessage):
                 # here is the result of the second interaction, which may be used to start the next chat turn
-                log_visualize(role_play_session.user_agent.role_name,
-                              conversation_meta + "[" + role_play_session.assistant_agent.system_message.content + "]\n\n" + user_response.msg.content)
+                # log_macnet(role_play_session.user_agent.role_name,
+                #                      conversation_meta + "[" + role_play_session.assistant_agent.system_message.content + "]\n\n" + user_response.msg.content)
                 if role_play_session.user_agent.info:
                     seminar_conclusion = user_response.msg.content
                     break
@@ -178,9 +188,12 @@ class Phase(ABC):
         else:
             seminar_conclusion = assistant_response.msg.content
 
-        log_visualize("**[Seminar Conclusion]**:\n\n {}".format(seminar_conclusion))
+        log_macnet("**[Seminar Conclusion]**:\n\n {}".format(seminar_conclusion))
         seminar_conclusion = seminar_conclusion.split("<INFO>")[-1]
         return seminar_conclusion
+
+    def self_retrieval(self, target_memory, chat_env):
+        pass
 
     def self_reflection(self,
                         task_prompt: str,
@@ -209,6 +222,8 @@ class Phase(ABC):
             question = """Answer their final discussed conclusion (Yes or No) in the discussion without any other words, e.g., "Yes" """
         elif phase_name == "DemandAnalysis":
             question = """Answer their final product modality in the discussion without any other words, e.g., "PowerPoint" """
+        # elif phase_name in [PhaseType.BRAINSTORMING]:
+        #     question = """Conclude three most creative and imaginative brainstorm ideas from the whole discussion, in the format: "1) *; 2) *; 3) *; where '*' represents a suggestion." """
         elif phase_name == "LanguageChoose":
             question = """Conclude the programming language being discussed for software development, in the format: "*" where '*' represents a programming language." """
         elif phase_name == "EnvironmentDoc":
@@ -306,6 +321,19 @@ class Phase(ABC):
                           memory=chat_env.memory,
                           model_type=self.model_type)
         chat_env = self.update_chat_env(chat_env)
+        if self.phase_name == 'Coding' and chat_env.env_dict['cc'] == 'on':
+            index = 0
+            file = 'A.txt'
+            file_path = './Coding'
+            while os.path.exists(os.path.join(file_path, file)):
+                index += 1
+                file = '{}.txt'.format(chr(ord('A') + index))
+            file_name = os.path.splitext(file)[0]
+            with open(os.path.join(file_path, file), "a") as f:
+                for key in chat_env.codes.codebooks.keys():
+                    f.write(str(key) + '\n\n' + chat_env.codes.codebooks[key] + '\n\n')
+            with open(os.path.join(chat_env.env_dict['directory'], 'team_name.txt'), 'w') as f:
+                f.write(file_name)
         return chat_env
 
 
@@ -328,7 +356,7 @@ class LanguageChoose(Phase):
 
     def update_phase_env(self, chat_env):
         self.phase_env.update({"task": chat_env.env_dict['task_prompt'],
-                               "description": chat_env.env_dict['task_description'],
+                               "description": "chat_env.env_dict['task_description']",
                                "modality": chat_env.env_dict['modality'],
                                "ideas": chat_env.env_dict['ideas']})
 
@@ -350,9 +378,9 @@ class Coding(Phase):
         gui = "" if not chat_env.config.gui_design \
             else "The software should be equipped with graphical user interface (GUI) so that user can visually and graphically use it; so you must choose a GUI framework (e.g., in Python, you can implement GUI via tkinter, Pygame, Flexx, PyGUI, etc,)."
         self.phase_env.update({"task": chat_env.env_dict['task_prompt'],
-                               "description": chat_env.env_dict['task_description'],
                                "modality": chat_env.env_dict['modality'],
                                "ideas": chat_env.env_dict['ideas'],
+                               "description": "chat_env.env_dict['task_description']",
                                "language": chat_env.env_dict['language'],
                                "gui": gui})
 
@@ -360,8 +388,62 @@ class Coding(Phase):
         chat_env.update_codes(self.seminar_conclusion)
         if len(chat_env.codes.codebooks.keys()) == 0:
             raise ValueError("No Valid Codes.")
-        chat_env.rewrite_codes("Finish Coding")
-        log_visualize(
+        chat_env.rewrite_codes()
+        log_macnet(
+            "**[Software Info]**:\n\n {}".format(get_info(chat_env.env_dict['directory'], self.log_filepath)))
+        return chat_env
+
+
+class Coding_wait(Phase):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+    def update_phase_env(self, chat_env):
+        gui = "" if not chat_env.config.gui_design \
+            else ("The software should be equipped with graphical user interface (GUI) so that user can visually and "
+                  "graphically use it; so you must choose a GUI framework (e.g., in Python, you can implement GUI via "
+                  "tkinter, Pygame, Flexx, PyGUI, etc,).")
+        self.phase_env.update({"task": chat_env.env_dict['task_prompt'],
+                               "modality": chat_env.env_dict['modality'],
+                               "ideas": chat_env.env_dict['ideas'],
+                               "description": "chat_env.env_dict['task_description']",
+                               "language": chat_env.env_dict['language'],
+                               "gui": gui})
+
+    def update_chat_env(self, chat_env) -> ChatEnv:
+        team_number = chat_env.env_dict['t_num']
+        unit_number = chat_env.env_dict['unit_num']
+        directory = chat_env.env_dict['directory']
+        start_time = time.time()
+        max_duration = chat_env.env_dict['time']
+        task_prompt = chat_env.env_dict['task_prompt']
+        wait_time = chat_env.env_dict['time']
+        self.pool = Pool(team_number, unit_number, directory, self.model_type)
+        while True:
+            new_codes = self.pool.state_pool_add(self.phase_name, self.phase_prompt, wait_time, task_prompt,
+                                                 chat_env.codes)
+            if new_codes is not None:
+                if chat_env.codes.codebooks != {} and len(new_codes.codebooks.keys()) != 0:
+                    chat_env.codes.codebooks = new_codes.codebooks
+                    print('replacement succeed.')
+                else:
+                    print('Codebook is empty.')
+                break
+            else:
+                time.sleep(1)
+                current_time = time.time()
+                elapsed_time = current_time - start_time
+                print("I have slept at Coding_wait for {:.2f} seconds, continue.".format(elapsed_time),
+                      end='\r')
+                if elapsed_time >= max_duration:
+                    print("{} phase has waited more than a minute, continue.".format('Coding'))
+                    break
+                continue
+
+        if len(chat_env.codes.codebooks.keys()) == 0:
+            raise ValueError("No Valid Codes.")
+        chat_env.rewrite_codes()
+        log_macnet(
             "**[Software Info]**:\n\n {}".format(get_info(chat_env.env_dict['directory'], self.log_filepath)))
         return chat_env
 
@@ -378,7 +460,7 @@ class ArtDesign(Phase):
 
     def update_chat_env(self, chat_env) -> ChatEnv:
         chat_env.proposed_images = chat_env.get_proposed_images_from_message(self.seminar_conclusion)
-        log_visualize(
+        log_macnet(
             "**[Software Info]**:\n\n {}".format(get_info(chat_env.env_dict['directory'], self.log_filepath)))
         return chat_env
 
@@ -397,9 +479,9 @@ class ArtIntegration(Phase):
 
     def update_chat_env(self, chat_env) -> ChatEnv:
         chat_env.update_codes(self.seminar_conclusion)
-        chat_env.rewrite_codes("Finish Art Integration")
+        chat_env.rewrite_codes()
         # chat_env.generate_images_from_codes()
-        log_visualize(
+        log_macnet(
             "**[Software Info]**:\n\n {}".format(get_info(chat_env.env_dict['directory'], self.log_filepath)))
         return chat_env
 
@@ -415,22 +497,132 @@ class CodeComplete(Phase):
                                "language": chat_env.env_dict['language'],
                                "codes": chat_env.get_codes(),
                                "unimplemented_file": ""})
+
+        if "code_fingerprint_list" not in self.phase_env.keys():
+            self.phase_env["code_fingerprint_list"] = []
+        self.phase_env["code_fingerprint_list"].append(
+            hashlib.md5(chat_env.get_codes().encode(encoding='UTF-8')).hexdigest())
+
         unimplemented_file = ""
-        for filename in self.phase_env['pyfiles']:
-            code_content = open(os.path.join(chat_env.env_dict['directory'], filename)).read()
-            lines = [line.strip() for line in code_content.split("\n") if line.strip() == "pass"]
-            if len(lines) > 0 and self.phase_env['num_tried'][filename] < self.phase_env['max_num_implement']:
+        pyfiles_list = []
+        for key in chat_env.codes.codebooks.keys():
+            pyfiles_list.append(key)
+        self.phase_env['pyfiles'] = pyfiles_list.copy()
+        folder_path = chat_env.env_dict['directory']
+        all_files = os.listdir(folder_path)
+        for file_name in all_files:
+            file_path = os.path.join(folder_path, file_name)
+            if file_name.endswith('.py') and file_name not in pyfiles_list:
+                os.remove(file_path)
+
+        function_test = FunctionTest(chat_env.env_dict['directory'])
+        need_complete = function_test.extract_function_name()
+        if len(need_complete) > 0:
+            for filename, function in need_complete.items():
                 unimplemented_file = filename
+                unfinished_function = '\n'
+                index = 0
+                for per_function in need_complete[filename]:
+                    unfinished_function += str(index) + ': def ' + per_function + '\n'
+                    index += 1
+                self.phase_env['unimplemented_functions'] = unfinished_function
+                self.phase_env['num_tried'][unimplemented_file] += 1
+                self.phase_env['unimplemented_file'] = unimplemented_file
                 break
-        self.phase_env['num_tried'][unimplemented_file] += 1
-        self.phase_env['unimplemented_file'] = unimplemented_file
+
+        if len(need_complete) == 0 and chat_env.env_dict['cc'] == 'on' and self.phase_env['cycle_index'] == 0:
+            CodeComplete_path = os.path.dirname(os.path.dirname(chat_env.env_dict['directory']))
+            with open(os.path.join(chat_env.env_dict['directory'], 'team_name.txt'), 'r') as f:
+                file_name = f.read()
+            empty_txt_path = CodeComplete_path + '/CodeComplete/{}.txt'.format(file_name)
+            with open(empty_txt_path, 'w') as f:
+                pass
+            chat_env.env_dict['wait_flag'] = False
 
     def update_chat_env(self, chat_env) -> ChatEnv:
         chat_env.update_codes(self.seminar_conclusion)
         if len(chat_env.codes.codebooks.keys()) == 0:
             raise ValueError("No Valid Codes.")
-        chat_env.rewrite_codes("Code Complete #" + str(self.phase_env["cycle_index"]) + " Finished")
-        log_visualize(
+        chat_env.rewrite_codes()
+        log_macnet(
+            "**[Software Info]**:\n\n {}".format(get_info(chat_env.env_dict['directory'], self.log_filepath)))
+        return chat_env
+
+
+class CodeComplete_wait(Phase):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+    def update_phase_env(self, chat_env):
+        self.phase_env.update({"task": chat_env.env_dict['task_prompt'],
+                               "modality": chat_env.env_dict['modality'],
+                               "ideas": chat_env.env_dict['ideas'],
+                               "language": chat_env.env_dict['language'],
+                               "codes": chat_env.get_codes(),
+                               "unimplemented_file": ""})
+
+    def update_chat_env(self, chat_env) -> ChatEnv:
+        team_number = chat_env.env_dict['t_num']
+        unit_number = chat_env.env_dict['unit_num']
+        directory = chat_env.env_dict['directory']
+        self.pool = Pool(team_number, unit_number, directory, self.model_type)
+        start_time = time.time()
+        max_duration = chat_env.env_dict['time']
+        while True:
+            folder_path = './CodeComplete'
+            all_files = os.listdir(folder_path)
+            txt_files = [file for file in all_files if file.endswith('.txt')]
+            txt_files_count = len(txt_files)
+            if txt_files_count == chat_env.env_dict['t_num']:
+                improved_path = './tmp/improved_codes'
+                files = os.listdir(improved_path)
+                for file in files:
+                    file_path = os.path.join(improved_path, file)
+                    if os.path.isfile(file_path):
+                        try:
+                            os.remove(file_path)
+                        except Exception as e:
+                            print(f"Failed to delete file: {e}")
+                break
+            else:
+                time.sleep(1)
+                current_time = time.time()
+                elapsed_time = current_time - start_time
+                print("I have slept at CodeComplete_wait for {:.2f} seconds, continue.".format(elapsed_time),
+                      end='\r')
+                if elapsed_time >= max_duration:
+                    print("{} phase has waited more than a minute, continue.".format('Coding'))
+                    break
+        start_time = time.time()
+        max_duration = chat_env.env_dict['time']
+        task_prompt = chat_env.env_dict['task_prompt']
+        wait_time = chat_env.env_dict['time']
+        while True:
+            new_codes = self.pool.state_pool_add(self.phase_name, self.phase_prompt, wait_time, task_prompt,
+                                                 chat_env.codes)
+            if new_codes is not None:
+                if chat_env.codes.codebooks != {} and len(new_codes.codebooks.keys()) != 0:
+                    chat_env.codes.codebooks = new_codes.codebooks
+                    print('replacement succeed.')
+                else:
+                    print('Codebook is empty.')
+                break
+            else:
+                time.sleep(1)
+                print("I have slept at CodeComplete_wait for {:.2f} seconds, continue.".format(elapsed_time),
+                      end='\r')
+                current_time = time.time()
+                elapsed_time = current_time - start_time
+                if elapsed_time >= max_duration:
+                    print("{} phase has waited more than a minute, continue.".format('Coding'))
+                    break
+                continue
+
+        # chat_env.update_codes(self.seminar_conclusion)
+        if len(chat_env.codes.codebooks.keys()) == 0:
+            raise ValueError("No Valid Codes.")
+        chat_env.rewrite_codes()
+        log_macnet(
             "**[Software Info]**:\n\n {}".format(get_info(chat_env.env_dict['directory'], self.log_filepath)))
         return chat_env
 
@@ -465,11 +657,16 @@ class CodeReviewModification(Phase):
                                "codes": chat_env.get_codes(),
                                "comments": chat_env.env_dict['review_comments']})
 
+        if "code_fingerprint_list" not in self.phase_env.keys():
+            self.phase_env["code_fingerprint_list"] = []
+        self.phase_env["code_fingerprint_list"].append(
+            hashlib.md5(chat_env.get_codes().encode(encoding='UTF-8')).hexdigest())
+
     def update_chat_env(self, chat_env) -> ChatEnv:
         if "```".lower() in self.seminar_conclusion.lower():
             chat_env.update_codes(self.seminar_conclusion)
-            chat_env.rewrite_codes("Review #" + str(self.phase_env["cycle_index"]) + " Finished")
-            log_visualize(
+            chat_env.rewrite_codes()
+            log_macnet(
                 "**[Software Info]**:\n\n {}".format(get_info(chat_env.env_dict['directory'], self.log_filepath)))
         self.phase_env['modification_conclusion'] = self.seminar_conclusion
         return chat_env
@@ -489,36 +686,27 @@ class CodeReviewHuman(Phase):
     def update_chat_env(self, chat_env) -> ChatEnv:
         if "```".lower() in self.seminar_conclusion.lower():
             chat_env.update_codes(self.seminar_conclusion)
-            chat_env.rewrite_codes("Human Review #" + str(self.phase_env["cycle_index"]) + " Finished")
-            log_visualize(
+            chat_env.rewrite_codes()
+            log_macnet(
                 "**[Software Info]**:\n\n {}".format(get_info(chat_env.env_dict['directory'], self.log_filepath)))
         return chat_env
 
     def execute(self, chat_env, chat_turn_limit, need_reflect) -> ChatEnv:
         self.update_phase_env(chat_env)
-        log_visualize(
+        log_macnet(
             f"**[Human-Agent-Interaction]**\n\n"
             f"Now you can participate in the development of the software!\n"
             f"The task is:  {chat_env.env_dict['task_prompt']}\n"
-            f"Please input your feedback (in multiple lines). It can be bug report or new feature requirement.\n"
-            f"You are currently in the #{self.phase_env['cycle_index']} human feedback with a total of {self.phase_env['cycle_num']} feedbacks\n"
-            f"Type 'end' on a separate line to submit.\n"
-            f"You can type \"Exit\" to quit this mode at any time.\n"
+            f"Please input your feedback (in one line). It can be bug report or new feature requirement.\n"
+            f"You are currently in the #{self.phase_env['cycle_index'] + 1} human feedback with a total of {self.phase_env['cycle_num']} feedbacks\n"
+            f"Press [Enter] to submit.\n"
+            f"You can type \"End\" to quit this mode at any time.\n"
         )
-        provided_comments = []
-        while True:
-            user_input = input(">>>>>>")
-            if user_input.strip().lower() == "end":
-                break
-            if user_input.strip().lower() == "exit":
-                provided_comments = ["exit"]
-                break
-            provided_comments.append(user_input)
-        self.phase_env["comments"] = '\n'.join(provided_comments)
-        log_visualize(
-            f"**[User Provided Comments]**\n\n In the #{self.phase_env['cycle_index']} of total {self.phase_env['cycle_num']} comments: \n\n" +
-            self.phase_env["comments"])
-        if self.phase_env["comments"].strip().lower() == "exit":
+        provided_comments = input(">>> ")
+        self.phase_env["comments"] = provided_comments
+        log_macnet(
+            f"**[User Provided Comments]**\n\n In the #{self.phase_env['cycle_index'] + 1} of total {self.phase_env['cycle_num']} comments: \n\n" + provided_comments)
+        if provided_comments.lower() == "end":
             return chat_env
 
         self.seminar_conclusion = \
@@ -553,7 +741,7 @@ class TestErrorSummary(Phase):
                                "codes": chat_env.get_codes(),
                                "test_reports": test_reports,
                                "exist_bugs_flag": exist_bugs_flag})
-        log_visualize("**[Test Reports]**:\n\n{}".format(test_reports))
+        log_macnet("**[Test Reports]**:\n\n{}".format(test_reports))
 
     def update_chat_env(self, chat_env) -> ChatEnv:
         chat_env.env_dict['error_summary'] = self.seminar_conclusion
@@ -565,13 +753,13 @@ class TestErrorSummary(Phase):
         self.update_phase_env(chat_env)
         if "ModuleNotFoundError" in self.phase_env['test_reports']:
             chat_env.fix_module_not_found_error(self.phase_env['test_reports'])
-            log_visualize(
+            log_macnet(
                 f"Software Test Engineer found ModuleNotFoundError:\n{self.phase_env['test_reports']}\n")
             pip_install_content = ""
             for match in re.finditer(r"No module named '(\S+)'", self.phase_env['test_reports'], re.DOTALL):
                 module = match.group(1)
                 pip_install_content += "{}\n```{}\n{}\n```\n".format("cmd", "bash", f"pip install {module}")
-                log_visualize(f"Programmer resolve ModuleNotFoundError by:\n{pip_install_content}\n")
+                log_macnet(f"Programmer resolve ModuleNotFoundError by:\n{pip_install_content}\n")
             self.seminar_conclusion = "nothing need to do"
         else:
             self.seminar_conclusion = \
@@ -584,10 +772,9 @@ class TestErrorSummary(Phase):
                               phase_name=self.phase_name,
                               assistant_role_prompt=self.assistant_role_prompt,
                               user_role_prompt=self.user_role_prompt,
-                              memory=chat_env.memory,
                               chat_turn_limit=chat_turn_limit,
-                              placeholders=self.phase_env,
-                              model_type=self.model_type)
+                              memory=chat_env.memory,
+                              placeholders=self.phase_env)
         chat_env = self.update_chat_env(chat_env)
         return chat_env
 
@@ -606,11 +793,16 @@ class TestModification(Phase):
                                "codes": chat_env.get_codes()
                                })
 
+        if "code_fingerprint_list" not in self.phase_env.keys():
+            self.phase_env["code_fingerprint_list"] = []
+        self.phase_env["code_fingerprint_list"].append(
+            hashlib.md5(chat_env.get_codes().encode(encoding='UTF-8')).hexdigest())
+
     def update_chat_env(self, chat_env) -> ChatEnv:
         if "```".lower() in self.seminar_conclusion.lower():
             chat_env.update_codes(self.seminar_conclusion)
-            chat_env.rewrite_codes("Test #" + str(self.phase_env["cycle_index"]) + " Finished")
-            log_visualize(
+            chat_env.rewrite_codes()
+            log_macnet(
                 "**[Software Info]**:\n\n {}".format(get_info(chat_env.env_dict['directory'], self.log_filepath)))
         return chat_env
 
@@ -629,7 +821,7 @@ class EnvironmentDoc(Phase):
     def update_chat_env(self, chat_env) -> ChatEnv:
         chat_env._update_requirements(self.seminar_conclusion)
         chat_env.rewrite_requirements()
-        log_visualize(
+        log_macnet(
             "**[Software Info]**:\n\n {}".format(get_info(chat_env.env_dict['directory'], self.log_filepath)))
         return chat_env
 
