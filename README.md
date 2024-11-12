@@ -72,13 +72,39 @@ To get started with MacNet, follow these steps:
 ## 🔎 Citation
 
 ```
-@article{qian2024scaling,
-  title={Scaling Large-Language-Model-based Multi-Agent Collaboration},
-  author={Chen Qian and Zihao Xie and Yifei Wang and Wei Liu and Yufan Dang and Zhuoyun Du and Weize Chen and Cheng Yang and Zhiyuan Liu and Maosong Sun}
-  journal={arXiv preprint arXiv:2406.07155},
-  year={2024}
+@article{macnet,
+    title={Scaling Large-Language-Model-based Multi-Agent Collaboration},
+    author={Chen Qian and Zihao Xie and Yifei Wang and Wei Liu and Yufan Dang and Zhuoyun Du and Weize Chen and Cheng Yang and Zhiyuan Liu and Maosong Sun}
+    journal={arXiv preprint arXiv:2406.07155},
+    url = {https://arxiv.org/abs/2406.07155},
+    year={2024}
+}
+
+@article{chatdev,
+    title = {ChatDev: Communicative Agents for Software Development},
+    author = {Chen Qian and Wei Liu and Hongzhang Liu and Nuo Chen and Yufan Dang and Jiahao Li and Cheng Yang and Weize Chen and Yusheng Su and Xin Cong and Juyuan Xu and Dahai Li and Zhiyuan Liu and Maosong Sun},
+    journal = {arXiv preprint arXiv:2307.07924},
+    url = {https://arxiv.org/abs/2307.07924},
+    year = {2023}
+}
+
+@article{colearning,
+    title = {Experiential Co-Learning of Software-Developing Agents},
+    author = {Chen Qian and Yufan Dang and Jiahao Li and Wei Liu and Zihao Xie and Yifei Wang and Weize Chen and Cheng Yang and Xin Cong and Xiaoyin Che and Zhiyuan Liu and Maosong Sun},
+    journal = {arXiv preprint arXiv:2312.17025},
+    url = {https://arxiv.org/abs/2312.17025},
+    year = {2023}
+}
+
+@article{iagents,
+    title={Autonomous Agents for Collaborative Task under Information Asymmetry},
+    author={Wei Liu and Chenxi Wang and Yifei Wang and Zihao Xie and Rennai Qiu and Yufan Dnag and Zhuoyun Du and Weize Chen and Cheng Yang and Chen Qian},
+    journal={arXiv preprint arXiv:2406.14928},
+    url = {https://arxiv.org/abs/2406.14928},
+    year={2024}
 }
 ```
+More research from our lab can be accessed [here](https://thinkwee.top/multiagent_ebook/#more-works).
 
 ## 🤝 Acknowledgments
 
