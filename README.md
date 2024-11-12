@@ -32,7 +32,7 @@
   <img src='./misc/ebook.png' width=800>
   </p>
   
-•June 12, 2024: We introduced Multi-Agent Collaboration Networks (MacNet) 🎉, which utilize directed acyclic graphs to facilitate effective task-oriented collaboration among agents through linguistic interactions 🤖🤖. MacNet supports co-operation across various topologies and among more than a thousand agents without exceeding context limits. More versatile and scalable, MacNet can be considered as a more advanced version of ChatDev's chain-shaped topology. Our preprint paper is available at [https://arxiv.org/abs/2406.07155](https://arxiv.org/abs/2406.07155). This technique will soon be incorporated into this repository, enhancing support for diverse organizational structures and offering richer solutions beyond software development (e.g., logical reasoning, data analysis, story generation, and more).
+•June 12, 2024: We introduced Multi-Agent Collaboration Networks (MacNet) 🎉, which utilize directed acyclic graphs to facilitate effective task-oriented collaboration among agents through linguistic interactions 🤖🤖. MacNet supports co-operation across various topologies and among more than a thousand agents without exceeding context limits. More versatile and scalable, MacNet can be considered as a more advanced version of ChatDev's chain-shaped topology. Our preprint paper is available at [https://arxiv.org/abs/2406.07155](https://arxiv.org/abs/2406.07155). This technique has been incorporated into the [macnet](https://github.com/OpenBMB/ChatDev/tree/macnet) branch, enhancing support for diverse organizational structures and offering richer solutions beyond software development (e.g., logical reasoning, data analysis, story generation, and more).
   <p align="center">
   <img src='./misc/macnet.png' width=500>
   </p>
@@ -221,13 +221,38 @@ Made with [contrib.rocks](https://contrib.rocks).
 
 ```
 @article{chatdev,
-      title = {ChatDev: Communicative Agents for Software Development},
-      author = {Chen Qian and Wei Liu and Hongzhang Liu and Nuo Chen and Yufan Dang and Jiahao Li and Cheng Yang and Weize Chen and Yusheng Su and Xin Cong and Juyuan Xu and Dahai Li and Zhiyuan Liu and Maosong Sun},
-      journal = {arXiv preprint arXiv:2307.07924},
-      url = {https://arxiv.org/abs/2307.07924},
-      year = {2023}
+    title = {ChatDev: Communicative Agents for Software Development},
+    author = {Chen Qian and Wei Liu and Hongzhang Liu and Nuo Chen and Yufan Dang and Jiahao Li and Cheng Yang and Weize Chen and Yusheng Su and Xin Cong and Juyuan Xu and Dahai Li and Zhiyuan Liu and Maosong Sun},
+    journal = {arXiv preprint arXiv:2307.07924},
+    url = {https://arxiv.org/abs/2307.07924},
+    year = {2023}
+}
+
+@article{colearning,
+    title = {Experiential Co-Learning of Software-Developing Agents},
+    author = {Chen Qian and Yufan Dang and Jiahao Li and Wei Liu and Zihao Xie and Yifei Wang and Weize Chen and Cheng Yang and Xin Cong and Xiaoyin Che and Zhiyuan Liu and Maosong Sun},
+    journal = {arXiv preprint arXiv:2312.17025},
+    url = {https://arxiv.org/abs/2312.17025},
+    year = {2023}
+}
+
+@article{macnet,
+    title={Scaling Large-Language-Model-based Multi-Agent Collaboration},
+    author={Chen Qian and Zihao Xie and Yifei Wang and Wei Liu and Yufan Dang and Zhuoyun Du and Weize Chen and Cheng Yang and Zhiyuan Liu and Maosong Sun}
+    journal={arXiv preprint arXiv:2406.07155},
+    url = {https://arxiv.org/abs/2406.07155},
+    year={2024}
+}
+
+@article{iagents,
+    title={Autonomous Agents for Collaborative Task under Information Asymmetry},
+    author={Wei Liu and Chenxi Wang and Yifei Wang and Zihao Xie and Rennai Qiu and Yufan Dnag and Zhuoyun Du and Weize Chen and Cheng Yang and Chen Qian},
+    journal={arXiv preprint arXiv:2406.14928},
+    url = {https://arxiv.org/abs/2406.14928},
+    year={2024}
 }
 ```
+More research from our lab can be accessed [here](https://thinkwee.top/multiagent_ebook/#more-works).
 
 ## ⚖️ License
 
