@@ -108,8 +108,9 @@ class Graph:
         llist = self.get_list(reverse)
         for (u, v) in llist:
             graph_viz.edge(str(u), str(v))
-        graph_viz.render(directory="./tmp/generated_graphs", filename="graph_{}_{}_{}".format(self.name, self.node_num, time.strftime("%Y%m%d%H%M%S", time.localtime())))
-        self.display_image_with_imgcat(f"./tmp/generated_graphs/graph_{self.name}_{self.node_num}_{time.strftime('%Y%m%d%H%M%S', time.localtime())}.png")
+        timestamp = time.strftime("%Y%m%d%H%M%S", time.localtime())
+        graph_viz.render(directory="./tmp/generated_graphs", filename="graph_{}_{}_{}".format(self.name, self.node_num, timestamp))
+        self.display_image_with_imgcat(f"./tmp/generated_graphs/graph_{self.name}_{self.node_num}_{timestamp}.png")
         return self
 
     def generate_graph(self, reverse=False):
