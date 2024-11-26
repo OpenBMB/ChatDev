@@ -264,7 +264,7 @@ class Graph:
             if len(line) == 1:  # In case there is only one layer
                 for node_id in range(line[0][0][0], line[0][0][1] + 1):
                     if node_id not in self.nodes:
-                        self.add_node(Node(node_id), model=self.config.get("Model"))
+                        self.add_node(Node(node_id, model=self.config.get("Model")))
             for i in range(len(line) - 1):
                 from_node_list = line[i]
                 to_node_list = line[i + 1]
