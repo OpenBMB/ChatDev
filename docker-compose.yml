@@ -1,0 +1,16 @@
+services:
+  chatdev:
+    build:
+      context: .
+      dockerfile: dev.Dockerfile
+    command: ${DEFAULT_CMD:-/bin/bash}
+    environment:
+      - DISPLAY=host.docker.internal:0.0
+    env_file:
+      - ./.env
+    ports:
+      - "${PORT:-8000}:8000"
+    stdin_open: true
+    tty: true
+    volumes:
+      - .:/app
