@@ -348,9 +348,9 @@ class Graph:
                                 to_node_tuple[0], to_node_tuple[1] + 1
                             ):
                                 if from_node_id not in self.nodes:
-                                    self.add_node(Node(from_node_id, model=self.model))
+                                    self.add_node(Node(from_node_id, model=self.model,config=self.config))
                                 if to_node_id not in self.nodes:
-                                    self.add_node(Node(to_node_id, model=self.model))
+                                    self.add_node(Node(to_node_id, model=self.model,config=self.config))
                                 self.add_edge(from_node_id, to_node_id)
         self.input_layer = self.get_input_layer()
         self.output_layer = self.get_output_layer()
