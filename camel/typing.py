@@ -12,6 +12,7 @@
 # limitations under the License.
 # =========== Copyright 2023 @ CAMEL-AI.org. All Rights Reserved. ===========
 from enum import Enum
+import json
 
 
 class TaskType(Enum):
@@ -43,21 +44,27 @@ class RoleType(Enum):
     CHATDEV_CCO = "chief creative officer (CCO)"
 
 
-class ModelType(Enum):
-    GPT_3_5_TURBO = "gpt-3.5-turbo-16k-0613"
-    GPT_3_5_TURBO_NEW = "gpt-3.5-turbo-16k"
-    GPT_4 = "gpt-4"
-    GPT_4_32k = "gpt-4-32k"
-    GPT_4_TURBO = "gpt-4-turbo"
-    GPT_4_TURBO_V = "gpt-4-turbo"
-    GPT_4O = "gpt-4o"
-    GPT_4O_MINI = "gpt-4o-mini"
+class ModelType:
 
-    STUB = "stub"
+    def __init__(self, name: str, num_tokens: int):
+        self.name = name
+        self.num_tokens = num_tokens
+        return
 
-    @property
-    def value_for_tiktoken(self):
-        return self.value if self.name != "STUB" else "gpt-4o-mini"
+    # GPT_3_5_TURBO = "gpt-3.5-turbo-16k-0613"
+    # GPT_3_5_TURBO_NEW = "gpt-3.5-turbo-16k"
+    # GPT_4 = "gpt-4"
+    # GPT_4_32k = "gpt-4-32k"
+    # GPT_4_TURBO = "gpt-4-turbo"
+    # GPT_4_TURBO_V = "gpt-4-turbo"
+    # GPT_4O = "gpt-4o"
+    # GPT_4O_MINI = "gpt-4o-mini"
+    # CUSTOM = "custom"
+    # STUB = "stub"
+
+    # @property
+    # def value_for_tiktoken(self):
+    #     return self.value["name"] if self.name != "STUB" else "gpt-4o-mini"
 
 
 class PhaseType(Enum):

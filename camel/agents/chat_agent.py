@@ -24,12 +24,12 @@ from camel.messages import ChatMessage, MessageType, SystemMessage
 from camel.model_backend import ModelBackend, ModelFactory
 from camel.typing import ModelType, RoleType
 from camel.utils import (
-    get_model_token_limit,
     num_tokens_from_messages,
     openai_api_key_required,
 )
 from openai.types.chat import ChatCompletion
 from chatdev.utils import log_macnet
+
 
 @dataclass(frozen=True)
 class ChatAgentResponse:
@@ -44,6 +44,7 @@ class ChatAgentResponse:
             to terminate the chat session.
         info (Dict[str, Any]): Extra information about the chat message.
     """
+
     msgs: List[ChatMessage]
     terminated: bool
     info: Dict[str, Any]
@@ -51,12 +52,18 @@ class ChatAgentResponse:
     @property
     def msg(self):
         if self.terminated:
-            raise RuntimeError("error in ChatAgentResponse, info:{}".format(str(self.info)))
+            raise RuntimeError(
+                "error in ChatAgentResponse, info:{}".format(str(self.info))
+            )
         if len(self.msgs) > 1:
-            raise RuntimeError("Property msg is only available for a single message in msgs")
+            raise RuntimeError(
+                "Property msg is only available for a single message in msgs"
+            )
         elif len(self.msgs) == 0:
             if len(self.info) > 0:
-                raise RuntimeError("Empty msgs in ChatAgentResponse, info:{}".format(str(self.info)))
+                raise RuntimeError(
+                    "Empty msgs in ChatAgentResponse, info:{}".format(str(self.info))
+                )
             else:
                 # raise RuntimeError("Known issue that msgs is empty and there is no error info, to be fix")
                 return None
@@ -79,35 +86,41 @@ class ChatAgent(BaseAgent):
     """
 
     def __init__(
-            self,
-            system_message: SystemMessage,
-            memory = None,
-            model: Optional[ModelType] = None,
-            model_config: Optional[Any] = None,
-            message_window_size: Optional[int] = None,
-            temperature: float = 0.2
+        self,
+        system_message: SystemMessage,
+        memory=None,
+        model: Optional[ModelType] = None,
+        model_config: Optional[Any] = None,
+        message_window_size: Optional[int] = None,
+        temperature: float = 0.2,
     ) -> None:
 
         self.system_message: SystemMessage = system_message
         self.role_name: str = system_message.role_name
         self.role_type: RoleType = system_message.role_type
-        self.model: ModelType = (model if model is not None else ModelType.GPT_3_5_TURBO)
+        self.model: ModelType = (
+            model if model is not None else ModelType("stub", 100000)
+        )
         self.model_config: ChatGPTConfig = model_config or ChatGPTConfig(temperature)
-        self.model_token_limit: int = get_model_token_limit(self.model)
+        self.model_token_limit: int = self.model.num_tokens
         self.message_window_size: Optional[int] = message_window_size
-        self.model_backend: ModelBackend = ModelFactory.create(self.model, self.model_config.__dict__)
+        self.model_backend: ModelBackend = ModelFactory.create(
+            self.model, self.model_config.__dict__
+        )
         self.terminated: bool = False
         self.info: bool = False
         self.init_messages()
 
-
-        if memory !=None and self.role_name in["Code Reviewer","Programmer","Software Test Engineer"]:
+        if memory != None and self.role_name in [
+            "Code Reviewer",
+            "Programmer",
+            "Software Test Engineer",
+        ]:
             self.memory = memory.memory_data.get("All")
         else:
             self.memory = None
 
     def reset(self) -> List[MessageType]:
-
         r"""Resets the :obj:`ChatAgent` to its initial state and returns the
         stored messages.
 
@@ -119,13 +132,12 @@ class ChatAgent(BaseAgent):
         return self.stored_messages
 
     def get_info(
-            self,
-            id: Optional[str],
-            usage: Optional[Dict[str, int]],
-            termination_reasons: List[str],
-            num_tokens: int,
+        self,
+        id: Optional[str],
+        usage: Optional[Dict[str, int]],
+        termination_reasons: List[str],
+        num_tokens: int,
     ) -> Dict[str, Any]:
-
         r"""Returns a dictionary containing information about the chat session.
 
         Args:
@@ -145,7 +157,7 @@ class ChatAgent(BaseAgent):
             "usage": usage,
             "termination_reasons": termination_reasons,
             "num_tokens": num_tokens,
-    }
+        }
 
     def init_messages(self) -> None:
         r"""Initializes the stored messages list with the initial system
@@ -166,53 +178,65 @@ class ChatAgent(BaseAgent):
         self.stored_messages.append(message)
         return self.stored_messages
 
-    def use_memory(self,input_message) -> List[MessageType]:
-        if self.memory is None :
+    def use_memory(self, input_message) -> List[MessageType]:
+        if self.memory is None:
             return None
         else:
             if self.role_name == "Programmer":
-                result = self.memory.memory_retrieval(input_message,"code")
+                result = self.memory.memory_retrieval(input_message, "code")
                 if result != None:
-                    target_memory,distances, mids,task_list,task_dir_list = result
+                    target_memory, distances, mids, task_list, task_dir_list = result
                     if target_memory != None and len(target_memory) != 0:
-                        target_memory="".join(target_memory)
-                        log_macnet(self.role_name,
-                                            "thinking back and found some related code: \n--------------------------\n"
-                                            + target_memory + "\n--------------------------\n"
-                                            +"And the similarity is "+distances
-                                            +", the target code MIDs is "+";".join(mids)
-                                            +"\nThe task is " + ";".join(task_list).replace('\n', '')
-                                            + "\nThe task dir is "+ ";".join(task_dir_list).replace('\n', ''))
+                        target_memory = "".join(target_memory)
+                        log_macnet(
+                            self.role_name,
+                            "thinking back and found some related code: \n--------------------------\n"
+                            + target_memory
+                            + "\n--------------------------\n"
+                            + "And the similarity is "
+                            + distances
+                            + ", the target code MIDs is "
+                            + ";".join(mids)
+                            + "\nThe task is "
+                            + ";".join(task_list).replace("\n", "")
+                            + "\nThe task dir is "
+                            + ";".join(task_dir_list).replace("\n", ""),
+                        )
                 else:
                     target_memory = None
-                    log_macnet(self.role_name,
-                                         "thinking back but find nothing useful")
+                    log_macnet(self.role_name, "thinking back but find nothing useful")
 
             else:
                 result = self.memory.memory_retrieval(input_message, "text")
                 if result != None:
                     target_memory, distances, mids, task_list, task_dir_list = result
                     if target_memory != None and len(target_memory) != 0:
-                        target_memory=";".join(target_memory)
-                        log_macnet(self.role_name,
-                                            "thinking back and found some related text: \n--------------------------\n"
-                                            + target_memory + "\n--------------------------\n"
-                                            +"And the similarity is "+distances
-                                            +", the source code MIDs is "+";".join(mids)
-                                            +"\nThe task is " + ";".join(task_list).replace('\n', '')
-                                            + "\nThe task dir is "+ ";".join(task_dir_list).replace('\n', ''))
+                        target_memory = ";".join(target_memory)
+                        log_macnet(
+                            self.role_name,
+                            "thinking back and found some related text: \n--------------------------\n"
+                            + target_memory
+                            + "\n--------------------------\n"
+                            + "And the similarity is "
+                            + distances
+                            + ", the source code MIDs is "
+                            + ";".join(mids)
+                            + "\nThe task is "
+                            + ";".join(task_list).replace("\n", "")
+                            + "\nThe task dir is "
+                            + ";".join(task_dir_list).replace("\n", ""),
+                        )
                 else:
                     target_memory = None
-                    log_macnet(self.role_name,
-                                         "thinking back but find nothing useful")
+                    log_macnet(self.role_name, "thinking back but find nothing useful")
 
         return target_memory
 
     @retry(wait=wait_exponential(min=5, max=60), stop=stop_after_attempt(5))
     @openai_api_key_required
     def step(
-            self,
-            input_message: ChatMessage,
+        self,
+        input_message: ChatMessage,
     ) -> ChatAgentResponse:
         r"""Performs a single step in the chat session by generating a response
         to the input message.
@@ -227,10 +251,11 @@ class ChatAgent(BaseAgent):
                 session.
         """
         messages = self.update_messages(input_message)
-        if self.message_window_size is not None and len(
-                messages) > self.message_window_size:
-            messages = [self.system_message
-                        ] + messages[-self.message_window_size:]
+        if (
+            self.message_window_size is not None
+            and len(messages) > self.message_window_size
+        ):
+            messages = [self.system_message] + messages[-self.message_window_size :]
         openai_messages = [message.to_openai_message() for message in messages]
         num_tokens = num_tokens_from_messages(openai_messages, self.model)
 
@@ -241,11 +266,19 @@ class ChatAgent(BaseAgent):
             response = self.model_backend.run(messages=openai_messages)
             if not isinstance(response, ChatCompletion):
                 raise RuntimeError("OpenAI returned unexpected struct")
-            output_messages = [
-                ChatMessage(role_name=self.role_name, role_type=self.role_type,
-                            meta_dict=dict(), **dict(choice.message))
-                for choice in response.choices
-            ]
+            output_messages = []
+
+            for choice in response.choices:
+                try:
+                    msg = ChatMessage(
+                        role_name=self.role_name,
+                        role_type=self.role_type,
+                        meta_dict=dict(),
+                        **dict(choice.message),
+                    )
+                except TypeError:
+                    print(f"...caused by:\n{choice.message}\n")
+                output_messages.append(msg)
             info = self.get_info(
                 response.id,
                 response.usage,

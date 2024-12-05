@@ -30,9 +30,9 @@ except ImportError:
 
 import os
 
-OPENAI_API_KEY = os.environ['OPENAI_API_KEY']
-if 'BASE_URL' in os.environ:
-    BASE_URL = os.environ['BASE_URL']
+OPENAI_API_KEY = os.environ["OPENAI_API_KEY"]
+if "BASE_URL" in os.environ:
+    BASE_URL = os.environ["BASE_URL"]
 else:
     BASE_URL = None
 
@@ -65,10 +65,13 @@ class OpenAIModel(ModelBackend):
 
     def run(self, *args, **kwargs):
         string = "\n".join([message["content"] for message in kwargs["messages"]])
-        encoding = tiktoken.encoding_for_model(self.model_type.value)
-        num_prompt_tokens = len(encoding.encode(string))
-        gap_between_send_receive = 15 * len(kwargs["messages"])
-        num_prompt_tokens += gap_between_send_receive
+        try:
+            encoding = tiktoken.encoding_for_model(self.model_type.name)
+            num_prompt_tokens = len(encoding.encode(string))
+            gap_between_send_receive = 15 * len(kwargs["messages"])
+            num_prompt_tokens += gap_between_send_receive
+        except:
+            num_prompt_tokens = 0
 
         if openai_new_api:
             # Experimental, add base_url
@@ -78,34 +81,20 @@ class OpenAIModel(ModelBackend):
                     base_url=BASE_URL,
                 )
             else:
-                client = openai.OpenAI(
-                    api_key=OPENAI_API_KEY
-                )
+                client = openai.OpenAI(api_key=OPENAI_API_KEY)
 
-            num_max_token_map = {
-                "gpt-3.5-turbo": 4096,
-                "gpt-3.5-turbo-16k": 16384,
-                "gpt-3.5-turbo-0613": 4096,
-                "gpt-3.5-turbo-16k-0613": 16384,
-                "gpt-4": 8192,
-                "gpt-4-0613": 8192,
-                "gpt-4-32k": 32768,
-                "gpt-4-turbo": 100000,
-                "gpt-4o": 4096, #100000
-                "gpt-4o-mini": 16384, #100000
-            }
-            num_max_token = num_max_token_map[self.model_type.value]
+            num_max_token = self.model_type.num_tokens
             num_max_completion_tokens = num_max_token - num_prompt_tokens
-            self.model_config_dict['max_tokens'] = num_max_completion_tokens
+            self.model_config_dict["max_tokens"] = num_max_completion_tokens
 
-            response = client.chat.completions.create(*args, **kwargs, model=self.model_type.value,
-                                                      **self.model_config_dict)
-
-            cost = prompt_cost(
-                self.model_type.value,
-                num_prompt_tokens=response.usage.prompt_tokens,
-                num_completion_tokens=response.usage.completion_tokens
+            response = client.chat.completions.create(
+                *args, **kwargs, model=self.model_type.name, **self.model_config_dict
             )
+            # cost = prompt_cost(
+            #     self.model_type.name,
+            #     num_prompt_tokens=response.usage.prompt_tokens,
+            #     num_completion_tokens=response.usage.completion_tokens,
+            # )
 
             # log_macnet(
             #     "\n**[OpenAI_Usage_Info Receive]**\nprompt_tokens: {}\ncompletion_tokens: {}\ntotal_tokens: {}\ncost: ${:.6f}\n".format(
@@ -115,30 +104,19 @@ class OpenAIModel(ModelBackend):
                 raise RuntimeError("Unexpected return from OpenAI API")
             return response
         else:
-            num_max_token_map = {
-                "gpt-3.5-turbo": 4096,
-                "gpt-3.5-turbo-16k": 16384,
-                "gpt-3.5-turbo-0613": 4096,
-                "gpt-3.5-turbo-16k-0613": 16384,
-                "gpt-4": 8192,
-                "gpt-4-0613": 8192,
-                "gpt-4-32k": 32768,
-                "gpt-4-turbo": 100000,
-                "gpt-4o": 4096, #100000
-                "gpt-4o-mini": 16384, #100000
-            }
-            num_max_token = num_max_token_map[self.model_type.value]
+            num_max_token = self.model_type.num_tokens
             num_max_completion_tokens = num_max_token - num_prompt_tokens
-            self.model_config_dict['max_tokens'] = num_max_completion_tokens
+            self.model_config_dict["max_tokens"] = num_max_completion_tokens
 
-            response = openai.ChatCompletion.create(*args, **kwargs, model=self.model_type.value,
-                                                    **self.model_config_dict)
-
-            cost = prompt_cost(
-                self.model_type.value,
-                num_prompt_tokens=response["usage"]["prompt_tokens"],
-                num_completion_tokens=response["usage"]["completion_tokens"]
+            response = openai.ChatCompletion.create(
+                *args, **kwargs, model=self.model_type.value, **self.model_config_dict
             )
+
+            # cost = prompt_cost(
+            #     self.model_type.name,
+            #     num_prompt_tokens=response["usage"]["prompt_tokens"],
+            #     num_completion_tokens=response["usage"]["completion_tokens"],
+            # )
 
             # log_macnet(
             #     "\n**[OpenAI_Usage_Info Receive]**\nprompt_tokens: {}\ncompletion_tokens: {}\ntotal_tokens: {}\ncost: ${:.6f}\n".format(
@@ -162,8 +140,10 @@ class StubModel(ModelBackend):
             id="stub_model_id",
             usage=dict(),
             choices=[
-                dict(finish_reason="stop",
-                     message=dict(content=ARBITRARY_STRING, role="assistant"))
+                dict(
+                    finish_reason="stop",
+                    message=dict(content=ARBITRARY_STRING, role="assistant"),
+                )
             ],
         )
 
@@ -177,27 +157,10 @@ class ModelFactory:
 
     @staticmethod
     def create(model_type: ModelType, model_config_dict: Dict) -> ModelBackend:
-        default_model_type = ModelType.GPT_3_5_TURBO
 
-        if model_type in {
-            ModelType.GPT_3_5_TURBO,
-            ModelType.GPT_3_5_TURBO_NEW,
-            ModelType.GPT_4,
-            ModelType.GPT_4_32k,
-            ModelType.GPT_4_TURBO,
-            ModelType.GPT_4_TURBO_V,
-            ModelType.GPT_4O,
-            ModelType.GPT_4O_MINI,
-            None
-        }:
-            model_class = OpenAIModel
-        elif model_type == ModelType.STUB:
-            model_class = StubModel
-        else:
-            raise ValueError("Unknown model")
-
-        if model_type is None:
-            model_type = default_model_type
+        model_class = (
+            OpenAIModel if model_type and model_type.name != "stub" else StubModel
+        )
 
         # log_visualize("Model Type: {}".format(model_type))
         inst = model_class(model_type, model_config_dict)

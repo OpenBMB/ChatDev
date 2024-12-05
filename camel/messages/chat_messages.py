@@ -31,12 +31,14 @@ class ChatMessage(BaseMessage):
         role (str): The role of the message in OpenAI chat system.
         content (str): The content of the message. (default: :obj:`""`)
     """
+
     role_name: str
     role_type: RoleType
     meta_dict: Optional[Dict[str, str]]
     role: str
     content: str = ""
     phase_name: str = ""
+    audio: str = ""
 
     def set_user_role_at_backend(self: BaseMessage):
         return self.__class__(
@@ -64,6 +66,7 @@ class AssistantChatMessage(ChatMessage):
             (default: :obj:`"assistant"`)
         content (str): The content of the message. (default: :obj:`""`)
     """
+
     role_name: str
     role_type: RoleType = RoleType.ASSISTANT
     meta_dict: Optional[Dict[str, str]] = None
@@ -84,6 +87,7 @@ class UserChatMessage(ChatMessage):
             (default: :obj:`"user"`)
         content (str): The content of the message. (default: :obj:`""`)
     """
+
     role_name: str
     role_type: RoleType = RoleType.USER
     meta_dict: Optional[Dict[str, str]] = None

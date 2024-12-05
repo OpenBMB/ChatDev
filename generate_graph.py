@@ -4,26 +4,33 @@ import math
 from graphviz import Digraph
 import subprocess
 
+
 class Edge:
     """Represents an edge in a graph with a source and target node."""
+
     def __init__(self, source: int, target: int):
         self.source = source
         self.target = target
 
+
 class Graph:
     """Represents a directed graph with various methods to generate and analyze graph structures."""
-    def __init__(self, node_num: int, topo: str):
+
+    def __init__(self, node_num: int, topo: str, config: str = "config.yaml"):
         self.name = topo
         self.node_num = node_num
         self.edges = []
-    
+        self.config = config
+
     def display_image_with_imgcat(self, image_path):
         """Display the image with imgcat"""
         subprocess.run(["imgcat", image_path])
 
     def exists_edge(self, source: int, target: int) -> bool:
         """Checks if an edge exists between the source and target nodes."""
-        return any(edge.source == source and edge.target == target for edge in self.edges)
+        return any(
+            edge.source == source and edge.target == target for edge in self.edges
+        )
 
     def generate_chain(self):
         """Generates a chain graph with the specified number of nodes."""
@@ -83,8 +90,12 @@ class Graph:
     def generate_random(self):
         """Generates a random graph with the specified number of nodes."""
         self.name = "random"
-        edge_num = random.randint(self.node_num-1, self.node_num*(self.node_num-1)/2)
-        edges_space = [(u, v) for u in range(self.node_num) for v in range(self.node_num) if u < v]
+        edge_num = random.randint(
+            self.node_num - 1, self.node_num * (self.node_num - 1) / 2
+        )
+        edges_space = [
+            (u, v) for u in range(self.node_num) for v in range(self.node_num) if u < v
+        ]
         random.shuffle(edges_space)
 
         for i in range(edge_num):
@@ -95,7 +106,10 @@ class Graph:
 
     def get_list(self, reverse=False):
         """Returns a list of edges in the graph, optionally reversed."""
-        return [(edge.target, edge.source) if reverse else (edge.source, edge.target) for edge in self.edges]
+        return [
+            (edge.target, edge.source) if reverse else (edge.source, edge.target)
+            for edge in self.edges
+        ]
 
     def reverse(self):
         """Reverses the direction of all edges in the graph."""
@@ -104,13 +118,25 @@ class Graph:
 
     def view(self, reverse=False):
         """Visualizes the graph using Graphviz and saves it to a file."""
-        graph_viz = Digraph(format="png", node_attr={"shape": "circle"}, edge_attr={"arrowhead": "normal"})
+        graph_viz = Digraph(
+            format="png",
+            node_attr={"shape": "circle"},
+            edge_attr={"arrowhead": "normal"},
+        )
         llist = self.get_list(reverse)
-        for (u, v) in llist:
+        for u, v in llist:
             graph_viz.edge(str(u), str(v))
-        timestamp = time.strftime("%Y%m%d%H%M%S", time.localtime())
-        graph_viz.render(directory="./tmp/generated_graphs", filename="graph_{}_{}_{}".format(self.name, self.node_num, timestamp))
-        self.display_image_with_imgcat(f"./tmp/generated_graphs/graph_{self.name}_{self.node_num}_{timestamp}.png")
+        graph_viz.render(
+            directory="./tmp/generated_graphs",
+            filename="graph_{}_{}_{}".format(
+                self.name,
+                self.node_num,
+                time.strftime("%Y%m%d%H%M%S", time.localtime()),
+            ),
+        )
+        self.display_image_with_imgcat(
+            f"./tmp/generated_graphs/graph_{self.name}_{self.node_num}_{time.strftime('%Y%m%d%H%M%S', time.localtime())}.png"
+        )
         return self
 
     def generate_graph(self, reverse=False):
@@ -133,30 +159,49 @@ class Graph:
         # Generate graph structure for config.yaml
         edges = self.get_list(reverse)
         graph_structure = [f"{edge[0]}->{edge[1]}" for edge in edges]
-        
+
         # Read existing config.yaml and update the graph field
-        with open("config.yaml", "r") as config_file:
+        with open(self.config, "r") as config_file:
             config_data = config_file.readlines()
 
-        with open("config.yaml", "w") as config_file:
+        with open(self.config, "w") as config_file:
             for line in config_data:
                 if line.startswith("graph:"):
-                    config_file.write(f'graph: {graph_structure}\n')
+                    config_file.write(f"graph: {graph_structure}\n")
                 else:
                     config_file.write(line)
-        
+
         return graph_structure
+
 
 if __name__ == "__main__":
     import argparse
 
-    parser = argparse.ArgumentParser(description="Generate a graph based on specified parameters.")
-    parser.add_argument("--node_num", type=int, required=True, help="Number of nodes in the graph.")
-    parser.add_argument("--topology", type=str, required=True, choices=["chain", "star", "tree", "net", "mlp", "random"], help="Type of graph topology to generate.")
-    parser.add_argument("--reverse", action='store_true', required=False, help="Whether or not reverse the graph.")
+    parser = argparse.ArgumentParser(
+        description="Generate a graph based on specified parameters."
+    )
+    parser.add_argument(
+        "--config", type=str, default="config.yaml", help="Configuration file"
+    )
+    parser.add_argument(
+        "--node_num", type=int, required=True, help="Number of nodes in the graph."
+    )
+    parser.add_argument(
+        "--topology",
+        type=str,
+        required=True,
+        choices=["chain", "star", "tree", "net", "mlp", "random"],
+        help="Type of graph topology to generate.",
+    )
+    parser.add_argument(
+        "--reverse",
+        action="store_true",
+        required=False,
+        help="Whether or not reverse the graph.",
+    )
     args = parser.parse_args()
 
-    graph = Graph(node_num=args.node_num, topo=args.topology)
+    graph = Graph(config=args.config, node_num=args.node_num, topo=args.topology)
     graph_structure = graph.generate_graph(args.reverse)
     print("graph:", graph_structure)  # This will replace the graph field in config.yaml
     graph.view(args.reverse)
