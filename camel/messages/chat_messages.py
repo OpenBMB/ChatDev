@@ -39,6 +39,7 @@ class ChatMessage(BaseMessage):
         role (str): The role of the message in OpenAI chat system.
         content (str): The content of the message. (default: :obj:`""`)
         refusal (str): The refusal to build argument.
+        audio (object): The audio contains data about the audio response from the model.
     """
     role_name: str
     role_type: RoleType
@@ -46,6 +47,7 @@ class ChatMessage(BaseMessage):
     role: str
     content: str = ""
     refusal: str = None
+    audio: object = None
     if openai_new_api:
         function_call: Optional[FunctionCall] = None
         tool_calls: Optional[ChatCompletionMessageToolCall] = None
@@ -76,6 +78,7 @@ class AssistantChatMessage(ChatMessage):
             (default: :obj:`"assistant"`)
         content (str): The content of the message. (default: :obj:`""`)
         refusal (str): The refusal to build argument.
+        audio (object): The audio contains data about the audio response from the model.
     """
     role_name: str
     role_type: RoleType = RoleType.ASSISTANT
@@ -83,6 +86,7 @@ class AssistantChatMessage(ChatMessage):
     role: str = "user"
     content: str = ""
     refusal: str = None
+    audio: object = None
 
 
 @dataclass
@@ -98,6 +102,7 @@ class UserChatMessage(ChatMessage):
             (default: :obj:`"user"`)
         content (str): The content of the message. (default: :obj:`""`)
         refusal (str): The refusal to build argument.
+        audio (object): The audio contains data about the audio response from the model.
     """
     role_name: str
     role_type: RoleType = RoleType.USER
@@ -105,3 +110,4 @@ class UserChatMessage(ChatMessage):
     role: str = "user"
     content: str = ""
     refusal: str = None
+    audio: object = None
