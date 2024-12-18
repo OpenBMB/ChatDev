@@ -1,11 +1,20 @@
 import os
 import openai
 from openai import OpenAI
-OPENAI_API_KEY = os.environ['OPENAI_API_KEY']
+if 'OPENAI_API_KEY' in os.environ:
+    OPENAI_API_KEY = os.environ['OPENAI_API_KEY']
+else:
+    OPENAI_API_KEY = None
+    
 if 'BASE_URL' in os.environ:
     BASE_URL = os.environ['BASE_URL']
 else:
     BASE_URL = None
+
+if 'GEMINI_API_KEY' in os.environ:
+    GEMINI_API_KEY = os.environ['GEMINI_API_KEY']
+else:
+    GEMINI_API_KEY = None   
 import sys
 import time
 from tenacity import (
