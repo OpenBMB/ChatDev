@@ -1,0 +1,1 @@
+// Add your JavaScript code for handling game actions and updating the UI here

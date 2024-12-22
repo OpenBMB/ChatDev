@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Task Manager</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Task Manager</h1>
+    <h2>Add Task</h2>
+    <form method="POST" action="/">
+        {{ form.csrf_token }}
+        {{ form.task.label }} {{ form.task }}
+        <input type="hidden" name="action" value="add">
+        <button type="submit">Add</button>
+    </form>
+    <h2>Tasks</h2>
+    <ul>
+        {% for task in tasks %}
+        <li>
+            {{ task }}
+            <form method="POST" action="/">
+                {{ form.csrf_token }}
+                <input type="hidden" name="task" value="{{ task }}">
+                <input type="hidden" name="action" value="edit">
+                <input type="text" name="new_task" placeholder="New Task" required>
+                <button type="submit">Edit</button>
+            </form>
+            <form method="POST" action="/">
+                {{ form.csrf_token }}
+                <input type="hidden" name="task" value="{{ task }}">
+                <input type="hidden" name="action" value="delete">
+                <button type="submit">Delete</button>
+            </form>
+            <form method="POST" action="/">
+                {{ form.csrf_token }}
+                <input type="hidden" name="task" value="{{ task }}">
+                <input type="hidden" name="action" value="complete">
+                <button type="submit">Complete</button>
+            </form>
+        </li>
+        {% endfor %}
+    </ul>
+    <h2>Completed Tasks</h2>
+    <ul>
+        {% for task in completed_tasks %}
+        <li>{{ task }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
