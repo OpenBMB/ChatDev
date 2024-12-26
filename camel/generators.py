@@ -110,10 +110,10 @@ class SystemMessageGenerator:
         """
         self.validate_meta_dict_keys(meta_dict)
         role_name, role_type = role_tuple
-        sys_prompt = self.sys_prompts[role_type]
+        sys_prompt = self.sys_prompts.get(role_type, self.sys_prompts[RoleType.DEFAULT])  # Updated to use get method
         sys_prompt = sys_prompt.format(**meta_dict)
 
-        return SystemMessage(role_name=role_name, role_type=RoleType.DEFAULT,
+        return SystemMessage(role_name=role_name, role_type=role_type,  # Updated to use role_type
                              meta_dict=meta_dict, content=sys_prompt)
 
     def from_dicts(
@@ -265,3 +265,4 @@ class CodeTaskPromptGenerator:
         self, role_generator: Generator[Tuple, None, None]
     ) -> Generator[str, None, None]:
         raise NotImplementedError
+
