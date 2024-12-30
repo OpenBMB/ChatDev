@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChatDev数字博物馆</title>
+    <!-- CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Ma+Yen+Kai&display=swap" rel="stylesheet">
+    <style>
+        .bookshelf-container {
+            padding: 50px 20px;
+            background: rgba(244, 241, 234, 0.9);
+            min-height: 100vh;
+        }
+
+        .bookshelf-row {
+            position: relative;
+            margin-bottom: 60px;
+            height: 270px;
+            overflow: hidden;
+            display: flex;
+            gap: 30px;
+            padding: 0 20px;
+        }
+
+        .books-track {
+            display: flex;
+            gap: 30px;
+            position: absolute;
+            left: 20px;
+            animation: slideTrack 20s linear infinite;
+        }
+
+        .books-track-reverse {
+            animation: slideTrackReverse 20s linear infinite;
+        }
+
+        .book {
+            width: 180px;
+            height: 270px;
+            flex-shrink: 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .book:hover {
+            transform: translateY(-10px);
+        }
+
+        .book-cover {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #8B4513, #5C3D2E);
+            border-radius: 5px;
+            border-left: 15px solid #3A2820;
+            box-shadow: 
+                -5px 5px 15px rgba(0, 0, 0, 0.3),
+                inset -1px 0 2px rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+        }
+
+        /* 添加书脊纹理 */
+        .book-cover::before {
+            content: '';
+            position: absolute;
+            left: -15px;
+            top: 0;
+            width: 15px;
+            height: 100%;
+            background: linear-gradient(to right,
+                rgba(58, 40, 32, 1) 0%,
+                rgba(89, 61, 43, 1) 50%,
+                rgba(58, 40, 32, 1) 100%
+            );
+            box-shadow: 
+                inset -1px 0 2px rgba(255, 255, 255, 0.1),
+                inset 1px 0 1px rgba(0, 0, 0, 0.2);
+        }
+
+        .book-cover::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -15px;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(to bottom,
+                rgba(255, 255, 255, 0.1) 0%,
+                transparent 100%
+            );
+        }
+
+        .book-image {
+            width: 100%;
+            height: 80%;
+            object-fit: cover;
+            border-radius: 5px 5px 0 0;
+            border-bottom: 2px solid rgba(0, 0, 0, 0.2);
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .book-title {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #F4E4BC;
+            text-align: center;
+            width: 90%;
+            font-size: 1.1em;
+            font-family: 'Ma Yen Kai', serif;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+            padding: 5px;
+            background: linear-gradient(to bottom,
+                rgba(0, 0, 0, 0) 0%,
+                rgba(0, 0, 0, 0.1) 100%
+            );
+        }
+
+        .book:hover .book-cover {
+            box-shadow: 
+                -8px 8px 20px rgba(0, 0, 0, 0.4),
+                inset -1px 0 3px rgba(255, 255, 255, 0.2);
+        }
+
+        .book:hover .book-title {
+            color: #FFE4BC;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+        }
+
+        @keyframes slideTrack {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(calc(-210px * 6));  /* (180px + 30px) × 6 */
+            }
+        }
+
+        @keyframes slideTrackReverse {
+            0% {
+                transform: translateX(calc(-210px * 6));
+            }
+            100% {
+                transform: translateX(0);
+            }
+        }
+
+        .books-track:hover {
+            animation-play-state: paused;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5em;
+            color: #3A2820;
+            margin-bottom: 60px;
+            font-family: 'Ma Yen Kai', serif;
+        }
+
+        @media (max-width: 1200px) {
+            .bookshelf-row {
+                gap: 20px;
+            }
+            .book {
+                width: 160px;
+                height: 240px;
+            }
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            position: relative;
+            max-width: 80%;
+            max-height: 80%;
+        }
+
+        .modal-image {
+            max-width: 100%;
+            max-height: 80vh;
+            object-fit: contain;
+        }
+
+        .close-modal {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            color: white;
+            font-size: 30px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 10px;
+        }
+
+        .modal-title {
+            position: fixed;
+            bottom: 20px;
+            left: 0;
+            color: white;
+            font-size: 20px;
+            width: 100%;
+            text-align: center;
+        }
+
+        @keyframes slideBooks {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+        @keyframes slideBooksReverse {
+            0% {
+                transform: translateX(-50%);
+            }
+            100% {
+                transform: translateX(0);
+            }
+        }
+
+        .books-wrapper:hover {
+            animation-play-state: paused;
+        }
+    </style>
+</head>
+<body>
+    <div class="scroll-container">
+        <div class="chinese-scroll">
+            <div class="bamboo-content">
+                <div class="pattern-overlay"></div>
+                
+                <header>
+                    <nav>
+                        <div class="logo">ChatDev数字博物馆</div>
+                        <ul>
+                            <li><a href="index.html" class="magnetic-link"><span>返回首页</span></a></li>
+                        </ul>
+                    </nav>
+                </header>
+
+                <main>
+                    <div class="bookshelf-container">
+                        <h2 class="section-title" data-aos="fade-up">文物考察</h2>
+                        
+                        <div class="bookshelf-row">
+                            <div class="books-track">
+                                <div class="book">
+                                    <div class="book-cover">
+                                        <img src="images/examination/7.png" alt="复原竹简拼图" class="book-image" data-title="复原竹简拼图">
+                                        <div class="book-title">复原竹简拼图</div>
+                                    </div>
+                                </div>
+                                <div class="book">
+                                    <div class="book-cover">
+                                        <img src="images/examination/8.png" alt="集体会读史料" class="book-image" data-title="集体会读史料">
+                                        <div class="book-title">集体会读史料</div>
+                                    </div>
+                                </div>
+                                <div class="book">
+                                    <div class="book-cover">
+                                        <img src="images/examination/4.png" alt="解读竹简文脉" class="book-image" data-title="解读竹简文脉">
+                                        <div class="book-title">解读竹简文脉</div>
+                                    </div>
+                                </div>
+                                <div class="book">
+                                    <div class="book-cover">
+                                        <img src="images/examination/5.png" alt="古文字研究" class="book-image" data-title="古文字研究">
+                                        <div class="book-title">古文字研究</div>
+                                    </div>
+                                </div>
+                                <div class="book">
+                                    <div class="book-cover">
+                                        <img src="images/examination/1.png" alt="出土文献整理" class="book-image" data-title="出土文献整理">
+                                        <div class="book-title">出土文献整理</div>
+                                    </div>
+                                </div>
+                                <div class="book">
+                                    <div class="book-cover">
+                                        <img src="images/examination/6.png" alt="清华简史料研讨" class="book-image" data-title="清华简史料研讨">
+                                        <div class="book-title">清华简史料研讨</div>
+                                    </div>
+                                </div>
+                                <div class="book">
+                                    <div class="book-cover">
+                                        <img src="images/examination/7.png" alt="复原竹简拼图" class="book-image" data-title="复原竹简拼图">
+                                        <div class="book-title">复原竹简拼图</div>
+                                    </div>
+                                </div>
+                                <div class="book">
+                                    <div class="book-cover">
+                                        <img src="images/examination/8.png" alt="集体会读史料" class="book-image" data-title="集体会读史料">
+                                        <div class="book-title">集体会读史料</div>
+                                    </div>
+                                </div>
+                                <div class="book">
+                                    <div class="book-cover">
+                                        <img src="images/examination/4.png" alt="解读竹简文脉" class="book-image" data-title="解读竹简文脉">
+                                        <div class="book-title">解读竹简文脉</div>
+                                    </div>
+                                </div>
+                                <div class="book">
+                                    <div class="book-cover">
+                                        <img src="images/examination/5.png" alt="古文字研究" class="book-image" data-title="古文字研究">
+                                        <div class="book-title">古文字研究</div>
+                                    </div>
+                                </div>
+                                <div class="book">
+                                    <div class="book-cover">
+                                        <img src="images/examination/1.png" alt="出土文献整理" class="book-image" data-title="出土文献整理">
+                                        <div class="book-title">出土文献整理</div>
+                                    </div>
+                                </div>
+                                <div class="book">
+                                    <div class="book-cover">
+                                        <img src="images/examination/6.png" alt="清华简史料研讨" class="book-image" data-title="清华简史料研讨">
+                                        <div class="book-title">清华简史料研讨</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bookshelf-row">
+                            <div class="books-track books-track-reverse">
+                                <div class="book">
+                                    <div class="book-cover">
+                                        <img src="images/examination/3.png" alt="竹简修复技术" class="book-image" data-title="竹简修复技术">
+                                        <div class="book-title">竹简修复技术</div>
+                                    </div>
+                                </div>
+                                <div class="book">
+                                    <div class="book-cover">
+                                        <img src="images/examination/9.png" alt="挖掘算表奥秘" class="book-image" data-title="挖掘算表奥秘">
+                                        <div class="book-title">挖掘算表奥秘</div>
+                                    </div>
+                                </div>
+                                <div class="book">
+                                    <div class="book-cover">
+                                        <img src="images/examination/13.png" alt="当代文物传承" class="book-image" data-title="当代文物传承">
+                                        <div class="book-title">当代文物传承</div>
+                                    </div>
+                                </div>
+                                <div class="book">
+                                    <div class="book-cover">
+                                        <img src="images/examination/14.png" alt="文物成果发布" class="book-image" data-title="文物成果发布">
+                                        <div class="book-title">文物成果发布</div>
+                                    </div>
+                                </div>
+                                <div class="book">
+                                    <div class="book-cover">
+                                        <img src="images/examination/15.png" alt="文物历史探秘" class="book-image" data-title="文物历史探秘">
+                                        <div class="book-title">文物历史探秘</div>
+                                    </div>
+                                </div>
+                                <div class="book">
+                                    <div class="book-cover">
+                                        <img src="images/examination/11.png" alt="数字化保护" class="book-image" data-title="数字化保护">
+                                        <div class="book-title">数字化保护</div>
+                                    </div>
+                                </div>
+                                <div class="book">
+                                    <div class="book-cover">
+                                        <img src="images/examination/3.png" alt="竹简修复技术" class="book-image" data-title="竹简修复技术">
+                                        <div class="book-title">竹简修复技术</div>
+                                    </div>
+                                </div>
+                                <div class="book">
+                                    <div class="book-cover">
+                                        <img src="images/examination/9.png" alt="挖掘算表奥秘" class="book-image" data-title="挖掘算表奥秘">
+                                        <div class="book-title">挖掘算表奥秘</div>
+                                    </div>
+                                </div>
+                                <div class="book">
+                                    <div class="book-cover">
+                                        <img src="images/examination/13.png" alt="当代文物传承" class="book-image" data-title="当代文物传承">
+                                        <div class="book-title">当代文物传承</div>
+                                    </div>
+                                </div>
+                                <div class="book">
+                                    <div class="book-cover">
+                                        <img src="images/examination/14.png" alt="文物成果发布" class="book-image" data-title="文物成果发布">
+                                        <div class="book-title">文物成果发布</div>
+                                    </div>
+                                </div>
+                                <div class="book">
+                                    <div class="book-cover">
+                                        <img src="images/examination/15.png" alt="文物历史探秘" class="book-image" data-title="文物历史探秘">
+                                        <div class="book-title">文物历史探秘</div>
+                                    </div>
+                                </div>
+                                <div class="book">
+                                    <div class="book-cover">
+                                        <img src="images/examination/11.png" alt="数字化保护" class="book-image" data-title="数字化保护">
+                                        <div class="book-title">数字化保护</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+
+                <footer>
+                    <div class="footer-content">
+                        <div class="footer-left">
+                            <img src="images/logo/chatdev-logo.png" alt="ChatDev Logo" class="footer-logo">
+                            <div class="contact" data-aos="fade-up">
+                                <p>ChatDev数字博物馆</p>
+                                <p>https://github.com/OpenBMB/ChatDev</p>
+                            </div>
+                        </div>
+                        <div class="opening-hours" data-aos="fade-up" data-aos-delay="100">
+                            <p>以上内容由AI生成，可能存在偏差，请谨慎使用</p>
+                        </div>
+                    </div>
+                </footer>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="imageModal">
+        <div class="modal-content">
+            <button class="close-modal">&times;</button>
+            <img src="" alt="" class="modal-image">
+            <div class="modal-title"></div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({
+            duration: 1000,
+            once: true
+        });
+
+        const modal = document.getElementById('imageModal');
+        const modalImage = modal.querySelector('.modal-image');
+        const modalTitle = modal.querySelector('.modal-title');
+        const closeButton = modal.querySelector('.close-modal');
+
+        document.querySelectorAll('.book-image').forEach(image => {
+            image.addEventListener('click', () => {
+                modalImage.src = image.src;
+                modalTitle.textContent = image.dataset.title;
+                modal.classList.add('active');
+            });
+        });
+
+        closeButton.addEventListener('click', () => {
+            modal.classList.remove('active');
+        });
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>
+

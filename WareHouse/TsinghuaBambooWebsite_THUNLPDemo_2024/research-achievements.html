@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChatDev数字博物馆</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Ma+Yen+Kai&display=swap" rel="stylesheet">
+    <style>
+        .achievements-container {
+            padding: 50px 20px;
+            background: rgba(244, 241, 234, 0.9);
+            min-height: 100vh;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5em;
+            color: #4A3728;
+            margin-bottom: 60px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .scroll-gallery {
+            position: relative;
+            max-width: 1800px;
+            margin: 0 auto;
+            height: calc(800px * 3);
+            display: flex;
+            gap: 20px;
+            padding: 20px;
+            overflow: hidden;
+        }
+
+        .scroll-column {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            animation-timing-function: linear;
+            animation-iteration-count: infinite;
+            animation-fill-mode: both;
+            will-change: transform;
+        }
+
+        .scroll-column:nth-child(1) {
+            animation-name: scrollDown;
+            animation-duration: 17.5s;
+            transform: translateY(-40%);
+        }
+
+        .scroll-column:nth-child(2) {
+            animation-name: scrollUp;
+            animation-duration: 22.5s;
+            transform: translateY(-30%);
+        }
+
+        .scroll-column:nth-child(3) {
+            animation-name: scrollDown;
+            animation-duration: 20s;
+            transform: translateY(-50%);
+        }
+
+        .scroll-column:nth-child(4) {
+            animation-name: scrollUp;
+            animation-duration: 25s;
+            transform: translateY(-20%);
+        }
+
+        .scroll-column:nth-child(5) {
+            animation-name: scrollDown;
+            animation-duration: 19s;
+            transform: translateY(-35%);
+        }
+
+        @keyframes scrollUp {
+            0% {
+                transform: translateY(0);
+            }
+            100% {
+                transform: translateY(-50%);
+            }
+        }
+
+        @keyframes scrollDown {
+            0% {
+                transform: translateY(-50%);
+            }
+            100% {
+                transform: translateY(0);
+            }
+        }
+
+        .scroll-column:hover {
+            animation-play-state: paused;
+        }
+
+        .scroll-item {
+            position: relative;
+            height: 800px;
+            min-width: 250px;
+            background: #FFF;
+            border-radius: 15px;
+            overflow: hidden;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.4s ease;
+            flex-shrink: 0;
+        }
+
+        .scroll-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+            z-index: 10;
+        }
+
+        .scroll-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+
+        .scroll-item:hover .scroll-image {
+            transform: scale(1.05);
+        }
+
+        .scroll-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+            padding: 20px;
+            color: #FFF;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.4s ease;
+        }
+
+        .scroll-item:hover .scroll-overlay {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .scroll-title {
+            font-size: 1.4em;
+            margin-bottom: 10px;
+            color: #F4E4BC;
+        }
+
+        .scroll-date {
+            font-size: 0.9em;
+            color: #DEB887;
+            margin-bottom: 10px;
+        }
+
+        .expanded-view {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 1000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .expanded-view.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .expanded-content {
+            position: relative;
+            width: 90%;
+            max-width: 1200px;
+            height: 90%;
+            display: flex;
+            gap: 30px;
+            color: #FFF;
+            transform: scale(0.9);
+            transition: transform 0.5s ease;
+        }
+
+        .expanded-view.active .expanded-content {
+            transform: scale(1);
+        }
+
+        .expanded-image {
+            flex: 1;
+            max-width: 70%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .expanded-info {
+            flex: 0 0 30%;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .close-expanded {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: #FFF;
+            font-size: 30px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            z-index: 1;
+        }
+
+        .scroll-item:nth-child(3n+1),
+        .scroll-item:nth-child(3n+2),
+        .scroll-item:nth-child(3n+3) {
+            transform-origin: center;
+        }
+
+        @media (max-width: 1200px) {
+            .scroll-gallery {
+                gap: 15px;
+                height: calc(700px * 3);
+            }
+            .scroll-item {
+                height: 700px;
+                min-width: 200px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .scroll-gallery {
+                gap: 10px;
+                height: calc(600px * 3);
+            }
+            .scroll-item {
+                height: 600px;
+                min-width: 150px;
+            }
+        }
+
+        .scroll-indicator {
+            position: fixed;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 100;
+        }
+
+        .indicator-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(139, 69, 19, 0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .indicator-dot.active {
+            background: #8B4513;
+            transform: scale(1.5);
+        }
+    </style>
+</head>
+<body>
+    <div class="scroll-container">
+        <div class="chinese-scroll">
+            <div class="bamboo-content">
+                <div class="pattern-overlay"></div>
+                
+                <header>
+                    <nav>
+                        <div class="logo">ChatDev数字博物馆</div>
+                        <ul>
+                            <li><a href="index.html" class="magnetic-link"><span>返回首页</span></a></li>
+                        </ul>
+                    </nav>
+                </header>
+
+                <main>
+                    <div class="achievements-container">
+                        <h2 class="section-title" data-aos="fade-up">全辑整理</h2>
+                        
+                        <div class="scroll-gallery">
+                            <div class="scroll-column">
+                                <div class="scroll-item">
+                                    <img src="images/research-achievements/1.png" alt="清华简第一辑" class="scroll-image">
+                                    <div class="scroll-overlay">
+                                        <h3 class="scroll-title">《清华简》第一辑</h3>
+                                        <div class="scroll-date">2010年12月</div>
+                                    </div>
+                                </div>
+                                <div class="scroll-item">
+                                    <img src="images/research-achievements/2.png" alt="清华简第二辑" class="scroll-image">
+                                    <div class="scroll-overlay">
+                                        <h3 class="scroll-title">《清华简》第二辑</h3>
+                                        <div class="scroll-date">2011年12月</div>
+                                    </div>
+                                </div>
+                                <div class="scroll-item">
+                                    <img src="images/research-achievements/3.png" alt="清华简第三辑" class="scroll-image">
+                                    <div class="scroll-overlay">
+                                        <h3 class="scroll-title">《清华简》第三辑</h3>
+                                        <div class="scroll-date">2012年12月</div>
+                                    </div>
+                                </div>
+                                <div class="scroll-item">
+                                    <img src="images/research-achievements/4.png" alt="清华简第四辑" class="scroll-image">
+                                    <div class="scroll-overlay">
+                                        <h3 class="scroll-title">《清华简》第四辑</h3>
+                                        <div class="scroll-date">2013年12月</div>
+                                    </div>
+                                </div>
+                                <div class="scroll-item">
+                                    <img src="images/research-achievements/5.png" alt="清华简第五辑" class="scroll-image">
+                                    <div class="scroll-overlay">
+                                        <h3 class="scroll-title">《清华简》第五辑</h3>
+                                        <div class="scroll-date">2015年4月</div>
+                                    </div>
+                                </div>
+                                <div class="scroll-item">
+                                    <img src="images/research-achievements/6.png" alt="清华简第六辑" class="scroll-image">
+                                    <div class="scroll-overlay">
+                                        <h3 class="scroll-title">《清华简》第六辑</h3>
+                                        <div class="scroll-date">2016年</div>
+                                    </div>
+                                </div>
+                                <div class="scroll-item">
+                                    <img src="images/research-achievements/7.png" alt="清华简第七辑" class="scroll-image">
+                                    <div class="scroll-overlay">
+                                        <h3 class="scroll-title">《清华简》第七辑</h3>
+                                        <div class="scroll-date">2017年</div>
+                                    </div>
+                                </div>
+                                <div class="scroll-item">
+                                    <img src="images/research-achievements/8.png" alt="清华简第八辑" class="scroll-image">
+                                    <div class="scroll-overlay">
+                                        <h3 class="scroll-title">《清华简》第八辑</h3>
+                                        <div class="scroll-date">2018年</div>
+                                    </div>
+                                </div>
+                                <div class="scroll-item">
+                                    <img src="images/research-achievements/9.png" alt="清华简第九辑" class="scroll-image">
+                                    <div class="scroll-overlay">
+                                        <h3 class="scroll-title">《清华简》第九辑</h3>
+                                        <div class="scroll-date">2019年</div>
+                                    </div>
+                                </div>
+                                <div class="scroll-item">
+                                    <img src="images/research-achievements/10.png" alt="清华简第十辑" class="scroll-image">
+                                    <div class="scroll-overlay">
+                                        <h3 class="scroll-title">《清华简》第十辑</h3>
+                                        <div class="scroll-date">2020年</div>
+                                    </div>
+                                </div>
+                                <div class="scroll-item">
+                                    <img src="images/research-achievements/11.png" alt="清华简第十一辑" class="scroll-image">
+                                    <div class="scroll-overlay">
+                                        <h3 class="scroll-title">《清华简》第十一辑</h3>
+                                        <div class="scroll-date">2021年</div>
+                                    </div>
+                                </div>
+                                <div class="scroll-item">
+                                    <img src="images/research-achievements/12.png" alt="清华简第十二辑" class="scroll-image">
+                                    <div class="scroll-overlay">
+                                        <h3 class="scroll-title">《清华简》第十二辑</h3>
+                                        <div class="scroll-date">2022年</div>
+                                    </div>
+                                </div>
+                                <div class="scroll-item">
+                                    <img src="images/research-achievements/13.png" alt="清华简第十三辑" class="scroll-image">
+                                    <div class="scroll-overlay">
+                                        <h3 class="scroll-title">《清华简》第十三辑</h3>
+                                        <div class="scroll-date">2022年</div>
+                                    </div>
+                                </div>
+                                <div class="scroll-item">
+                                    <img src="images/research-achievements/14.png" alt="清华简第十四辑" class="scroll-image">
+                                    <div class="scroll-overlay">
+                                        <h3 class="scroll-title">《清华简》第十四辑</h3>
+                                        <div class="scroll-date">2023年</div>
+                                    </div>
+                                </div>
+                                <div class="scroll-item">
+                                    <img src="images/research-achievements/15.png" alt="清华简第一辑" class="scroll-image">
+                                    <div class="scroll-overlay">
+                                        <h3 class="scroll-title">《清华简》第一辑</h3>
+                                        <div class="scroll-date">2010年12月</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="scroll-column">
+                                <div class="scroll-item">
+                                    <img src="images/research-achievements/14.png" alt="清华简第二辑" class="scroll-image">
+                                    <div class="scroll-overlay">
+                                        <h3 class="scroll-title">《清华简》第二辑</h3>
+                                        <div class="scroll-date">2011年12月</div>
+                                    </div>
+                                </div>
+                                <div class="scroll-item">
+                                    <img src="images/research-achievements/13.png" alt="清华简第三辑" class="scroll-image">
+                                    <div class="scroll-overlay">
+                                        <h3 class="scroll-title">《清华简》第三辑</h3>
+                                        <div class="scroll-date">2012年12月</div>
+                                    </div>
+                                </div>
+                                <div class="scroll-item">
+                                    <img src="images/research-achievements/12.png" alt="清华简第四辑" class="scroll-image">
+                                    <div class="scroll-overlay">
+                                        <h3 class="scroll-title">《清华简》第四辑</h3>
+                                        <div class="scroll-date">2013年12月</div>
+                                    </div>
+                                </div>
+                                <div class="scroll-item">
+                                    <img src="images/research-achievements/11.png" alt="清华简第五辑" class="scroll-image">
+                                    <div class="scroll-overlay">
+                                        <h3 class="scroll-title">《清华简》第五辑</h3>
+                                        <div class="scroll-date">2015年4月</div>
+                                    </div>
+                                </div>
+                                <div class="scroll-item">
+                                    <img src="images/research-achievements/10.png" alt="清华简第六辑" class="scroll-image">
+                                    <div class="scroll-overlay">
+                                        <h3 class="scroll-title">《清华简》第六辑</h3>
+                                        <div class="scroll-date">2016年</div>
+                                    </div>
+                                </div>
+                                <div class="scroll-item">
+                                    <img src="images/research-achievements/9.png" alt="清华简第七辑" class="scroll-image">
+                                    <div class="scroll-overlay">
+                                        <h3 class="scroll-title">《清华简》第七辑</h3>
+                                        <div class="scroll-date">2017年</div>
+                                    </div>
+                                </div>
+                                <div class="scroll-item">
+                                    <img src="images/research-achievements/8.png" alt="清华简第八辑" class="scroll-image">
+                                    <div class="scroll-overlay">
+                                        <h3 class="scroll-title">《清华简》第八辑</h3>
+                                        <div class="scroll-date">2018年</div>
+                                    </div>
+                                </div>
+                                <div class="scroll-item">
+                                    <img src="images/research-achievements/7.png" alt="清华简第九辑" class="scroll-image">
+                                    <div class="scroll-overlay">
+                                        <h3 class="scroll-title">《清华简》第九辑</h3>
+                                        <div class="scroll-date">2019年</div>
+                                    </div>
+                                </div>
+                                <div class="scroll-item">
+                                    <img src="images/research-achievements/6.png" alt="清华简第十辑" class="scroll-image">
+                                    <div class="scroll-overlay">
+                                        <h3 class="scroll-title">《清华简》第十辑</h3>
+                                        <div class="scroll-date">2020年</div>
+                                    </div>
+                                </div>
+                                <div class="scroll-item">
+                                    <img src="images/research-achievements/5.png" alt="清华简第十一辑" class="scroll-image">
+                                    <div class="scroll-overlay">
+                                        <h3 class="scroll-title">《清华简》第十一辑</h3>
+                                        <div class="scroll-date">2021年</div>
+                                    </div>
+                                </div>
+                                <div class="scroll-item">
+                                    <img src="images/research-achievements/4.png" alt="清华简第十二辑" class="scroll-image">
+                                    <div class="scroll-overlay">
+                                        <h3 class="scroll-title">《清华简》第十二辑</h3>
+                                        <div class="scroll-date">2022年</div>
+                                    </div>
+                                </div>
+                                <div class="scroll-item">
+                                    <img src="images/research-achievements/3.png" alt="清华简第十三辑" class="scroll-image">
+                                    <div class="scroll-overlay">
+                                        <h3 class="scroll-title">《清华简》第十三辑</h3>
+                                        <div class="scroll-date">2022年</div>
+                                    </div>
+                                </div>
+                                <div class="scroll-item">
+                                    <img src="images/research-achievements/2.png" alt="清华简第十四辑" class="scroll-image">
+                                    <div class="scroll-overlay">
+                                        <h3 class="scroll-title">《清华简》第十四辑</h3>
+                                        <div class="scroll-date">2023年</div>
+                                    </div>
+                                </div>
+                                <div class="scroll-item">
+                                    <img src="images/research-achievements/1.png" alt="清华简第二辑" class="scroll-image">
+                                    <div class="scroll-overlay">
+                                        <h3 class="scroll-title">《清华简》第二辑</h3>
+                                        <div class="scroll-date">2011年12月</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="scroll-column">
+                                <div class="scroll-item">
+                                    <img src="images/research-achievements/2.png" alt="清华简第三辑" class="scroll-image">
+                                    <div class="scroll-overlay">
+                                        <h3 class="scroll-title">《清华简》第三辑</h3>
+                                        <div class="scroll-date">2012年12月</div>
+                                    </div>
+                                </div>
+                                <div class="scroll-item">
+                                    <img src="images/research-achievements/3.png" alt="清华简第四辑" class="scroll-image">
+                                    <div class="scroll-overlay">
+                                        <h3 class="scroll-title">《清华简》第四辑</h3>
+                                        <div class="scroll-date">2013年12月</div>
+                                    </div>
+                                </div>
+                                <div class="scroll-item">
+                                    <img src="images/research-achievements/4.png" alt="清华简第五辑" class="scroll-image">
+                                    <div class="scroll-overlay">
+                                        <h3 class="scroll-title">《清华简》第五辑</h3>
+                                        <div class="scroll-date">2015年4月</div>
+                                    </div>
+                                </div>
+                                <div class="scroll-item">
+                                    <img src="images/research-achievements/5.png" alt="清华简第六辑" class="scroll-image">
+                                    <div class="scroll-overlay">
+                                        <h3 class="scroll-title">《清华简》第六辑</h3>
+                                        <div class="scroll-date">2016年</div>
+                                    </div>
+                                </div>
+                                <div class="scroll-item">
+                                    <img src="images/research-achievements/6.png" alt="清华简第七辑" class="scroll-image">
+                                    <div class="scroll-overlay">
+                                        <h3 class="scroll-title">《清华简》第七辑</h3>
+                                        <div class="scroll-date">2017年</div>
+                                    </div>
+                                </div>
+                                <div class="scroll-item">
+                                    <img src="images/research-achievements/7.png" alt="清华简第八辑" class="scroll-image">
+                                    <div class="scroll-overlay">
+                                        <h3 class="scroll-title">《清华简》第八辑</h3>
+                                        <div class="scroll-date">2018年</div>
+                                    </div>
+                                </div>
+                                <div class="scroll-item">
+                                    <img src="images/research-achievements/8.png" alt="清华简第九辑" class="scroll-image">
+                                    <div class="scroll-overlay">
+                                        <h3 class="scroll-title">《清华简》第九辑</h3>
+                                        <div class="scroll-date">2019年</div>
+                                    </div>
+                                </div>
+                                <div class="scroll-item">
+                                    <img src="images/research-achievements/9.png" alt="清华简第十辑" class="scroll-image">
+                                    <div class="scroll-overlay">
+                                        <h3 class="scroll-title">《清华简》第十辑</h3>
+                                        <div class="scroll-date">2020年</div>
+                                    </div>
+                                </div>
+                                <div class="scroll-item">
+                                    <img src="images/research-achievements/10.png" alt="清华简第十一辑" class="scroll-image">
+                                    <div class="scroll-overlay">
+                                        <h3 class="scroll-title">《清华简》第十一辑</h3>
+                                        <div class="scroll-date">2021年</div>
+                                    </div>
+                                </div>
+                                <div class="scroll-item">
+                                    <img src="images/research-achievements/11.png" alt="清华简第十二辑" class="scroll-image">
+                                    <div class="scroll-overlay">
+                                        <h3 class="scroll-title">《清华简》第十二辑</h3>
+                                        <div class="scroll-date">2022年</div>
+                                    </div>
+                                </div>
+                                <div class="scroll-item">
+                                    <img src="images/research-achievements/12.png" alt="清华简第十三辑" class="scroll-image">
+                                    <div class="scroll-overlay">
+                                        <h3 class="scroll-title">《清华简》第十三辑</h3>
+                                        <div class="scroll-date">2022年</div>
+                                    </div>
+                                </div>
+                                <div class="scroll-item">
+                                    <img src="images/research-achievements/13.png" alt="清华简第十四辑" class="scroll-image">
+                                    <div class="scroll-overlay">
+                                        <h3 class="scroll-title">《清华简》第十四辑</h3>
+                                        <div class="scroll-date">2023年</div>
+                                    </div>
+                                </div>
+                                <div class="scroll-item">
+                                    <img src="images/research-achievements/14.png" alt="清华简第三辑" class="scroll-image">
+                                    <div class="scroll-overlay">
+                                        <h3 class="scroll-title">《清华简》第三辑</h3>
+                                        <div class="scroll-date">2012年12月</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="scroll-column">
+                                <div class="scroll-item">
+                                    <img src="images/research-achievements/15.png" alt="清华简第四辑" class="scroll-image">
+                                    <div class="scroll-overlay">
+                                        <h3 class="scroll-title">《清华简》第四辑</h3>
+                                        <div class="scroll-date">2013年12月</div>
+                                    </div>
+                                </div>
+                                <div class="scroll-item">
+                                    <img src="images/research-achievements/14.png" alt="清华简第五辑" class="scroll-image">
+                                    <div class="scroll-overlay">
+                                        <h3 class="scroll-title">《清华简》第五辑</h3>
+                                        <div class="scroll-date">2015年4月</div>
+                                    </div>
+                                </div>
+                                <div class="scroll-item">
+                                    <img src="images/research-achievements/13.png" alt="清华简第六辑" class="scroll-image">
+                                    <div class="scroll-overlay">
+                                        <h3 class="scroll-title">《清华简》第六辑</h3>
+                                        <div class="scroll-date">2016年</div>
+                                    </div>
+                                </div>
+                                <div class="scroll-item">
+                                    <img src="images/research-achievements/12.png" alt="清华简第七辑" class="scroll-image">
+                                    <div class="scroll-overlay">
+                                        <h3 class="scroll-title">《清华简》第七辑</h3>
+                                        <div class="scroll-date">2017年</div>
+                                    </div>
+                                </div>
+                                <div class="scroll-item">
+                                    <img src="images/research-achievements/11.png" alt="清华简第八辑" class="scroll-image">
+                                    <div class="scroll-overlay">
+                                        <h3 class="scroll-title">《清华简》第八辑</h3>
+                                        <div class="scroll-date">2018年</div>
+                                    </div>
+                                </div>
+                                <div class="scroll-item">
+                                    <img src="images/research-achievements/10.png" alt="清华简第九辑" class="scroll-image">
+                                    <div class="scroll-overlay">
+                                        <h3 class="scroll-title">《清华简》第九辑</h3>
+                                        <div class="scroll-date">2019年</div>
+                                    </div>
+                                </div>
+                                <div class="scroll-item">
+                                    <img src="images/research-achievements/9.png" alt="清华简第十辑" class="scroll-image">
+                                    <div class="scroll-overlay">
+                                        <h3 class="scroll-title">《清华简》第十辑</h3>
+                                        <div class="scroll-date">2020年</div>
+                                    </div>
+                                </div>
+                                <div class="scroll-item">
+                                    <img src="images/research-achievements/8.png" alt="清华简第十一辑" class="scroll-image">
+                                    <div class="scroll-overlay">
+                                        <h3 class="scroll-title">《清华简》第十一辑</h3>
+                                        <div class="scroll-date">2021年</div>
+                                    </div>
+                                </div>
+                                <div class="scroll-item">
+                                    <img src="images/research-achievements/7.png" alt="清华简第十二辑" class="scroll-image">
+                                    <div class="scroll-overlay">
+                                        <h3 class="scroll-title">《清华简》第十二辑</h3>
+                                        <div class="scroll-date">2022年</div>
+                                    </div>
+                                </div>
+                                <div class="scroll-item">
+                                    <img src="images/research-achievements/6.png" alt="清华简第十三辑" class="scroll-image">
+                                    <div class="scroll-overlay">
+                                        <h3 class="scroll-title">《清华简》第十三辑</h3>
+                                        <div class="scroll-date">2022年</div>
+                                    </div>
+                                </div>
+                                <div class="scroll-item">
+                                    <img src="images/research-achievements/5.png" alt="清华简第十四辑" class="scroll-image">
+                                    <div class="scroll-overlay">
+                                        <h3 class="scroll-title">《清华简》第十四辑</h3>
+                                        <div class="scroll-date">2023年</div>
+                                    </div>
+                                </div>
+                                <div class="scroll-item">
+                                    <img src="images/research-achievements/4.png" alt="清华简第四辑" class="scroll-image">
+                                    <div class="scroll-overlay">
+                                        <h3 class="scroll-title">《清华简》第四辑</h3>
+                                        <div class="scroll-date">2013年12月</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="scroll-column">
+                                <div class="scroll-item">
+                                    <img src="images/research-achievements/3.png" alt="清华简第五辑" class="scroll-image">
+                                    <div class="scroll-overlay">
+                                        <h3 class="scroll-title">《清华简》第五辑</h3>
+                                        <div class="scroll-date">2015年4月</div>
+                                    </div>
+                                </div>
+                                <div class="scroll-item">
+                                    <img src="images/research-achievements/2.png" alt="清华简第六辑" class="scroll-image">
+                                    <div class="scroll-overlay">
+                                        <h3 class="scroll-title">《清华简》第六辑</h3>
+                                        <div class="scroll-date">2016年</div>
+                                    </div>
+                                </div>
+                                <div class="scroll-item">
+                                    <img src="images/research-achievements/1.png" alt="清华简第七辑" class="scroll-image">
+                                    <div class="scroll-overlay">
+                                        <h3 class="scroll-title">《清华简》第七辑</h3>
+                                        <div class="scroll-date">2017年</div>
+                                    </div>
+                                </div>
+                                <div class="scroll-item">
+                                    <img src="images/research-achievements/2.png" alt="清华简第八辑" class="scroll-image">
+                                    <div class="scroll-overlay">
+                                        <h3 class="scroll-title">《清华简》第八辑</h3>
+                                        <div class="scroll-date">2018年</div>
+                                    </div>
+                                </div>
+                                <div class="scroll-item">
+                                    <img src="images/research-achievements/3.png" alt="清华简第九辑" class="scroll-image">
+                                    <div class="scroll-overlay">
+                                        <h3 class="scroll-title">《清华简》第九辑</h3>
+                                        <div class="scroll-date">2019年</div>
+                                    </div>
+                                </div>
+                                <div class="scroll-item">
+                                    <img src="images/research-achievements/4.png" alt="清华简第十辑" class="scroll-image">
+                                    <div class="scroll-overlay">
+                                        <h3 class="scroll-title">《清华简》第十辑</h3>
+                                        <div class="scroll-date">2020年</div>
+                                    </div>
+                                </div>
+                                <div class="scroll-item">
+                                    <img src="images/research-achievements/5.png" alt="清华简第十一辑" class="scroll-image">
+                                    <div class="scroll-overlay">
+                                        <h3 class="scroll-title">《清华简》第十一辑</h3>
+                                        <div class="scroll-date">2021年</div>
+                                    </div>
+                                </div>
+                                <div class="scroll-item">
+                                    <img src="images/research-achievements/6.png" alt="清华简第十二辑" class="scroll-image">
+                                    <div class="scroll-overlay">
+                                        <h3 class="scroll-title">《清华简》第十二辑</h3>
+                                        <div class="scroll-date">2022年</div>
+                                    </div>
+                                </div>
+                                <div class="scroll-item">
+                                    <img src="images/research-achievements/7.png" alt="清华简第十三辑" class="scroll-image">
+                                    <div class="scroll-overlay">
+                                        <h3 class="scroll-title">《清华简》第十三辑</h3>
+                                        <div class="scroll-date">2022年</div>
+                                    </div>
+                                </div>
+                                <div class="scroll-item">
+                                    <img src="images/research-achievements/8.png" alt="清华简第十四辑" class="scroll-image">
+                                    <div class="scroll-overlay">
+                                        <h3 class="scroll-title">《清华简》第十四辑</h3>
+                                        <div class="scroll-date">2023年</div>
+                                    </div>
+                                </div>
+                                <div class="scroll-item">
+                                    <img src="images/research-achievements/9.png" alt="清华简第五辑" class="scroll-image">
+                                    <div class="scroll-overlay">
+                                        <h3 class="scroll-title">《清华简》第五辑</h3>
+                                        <div class="scroll-date">2015年4月</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+
+                <footer>
+                    <div class="footer-content">
+                        <div class="footer-left">
+                            <img src="images/logo/chatdev-logo.png" alt="ChatDev Logo" class="footer-logo">
+                            <div class="contact" data-aos="fade-up">
+                                <p>ChatDev数字博物馆</p>
+                                <p>https://github.com/OpenBMB/ChatDev</p>
+                            </div>
+                        </div>
+                        <div class="opening-hours" data-aos="fade-up" data-aos-delay="100">
+                            <p>以上内容由AI生成，可能存在偏差，请谨慎使用</p>
+                        </div>
+                    </div>
+                </footer>
+            </div>
+        </div>
+    </div>
+
+    <div class="expanded-view">
+        <button class="close-expanded">&times;</button>
+        <div class="expanded-content">
+            <img src="" alt="" class="expanded-image">
+            <div class="expanded-info">
+                <h2 class="expanded-title"></h2>
+                <div class="expanded-date"></div>
+                <div class="expanded-description"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({
+            duration: 1000,
+            once: true
+        });
+
+        const scrollItems = document.querySelectorAll('.scroll-item');
+        const expandedView = document.querySelector('.expanded-view');
+        const expandedImage = expandedView.querySelector('.expanded-image');
+        const expandedTitle = expandedView.querySelector('.expanded-title');
+        const expandedDate = expandedView.querySelector('.expanded-date');
+        const expandedDescription = expandedView.querySelector('.expanded-description');
+        const closeExpanded = expandedView.querySelector('.close-expanded');
+
+        const descriptions = [
+            "收录《周武王有疾周公所自以代王之志》《皇门》等重要文献为研究周代历史提供新材料。",
+            "包含《系年》等重要历史文献，为战国时期编年史研究提供重要参考。",
+            "收录《赵简子》《祭公》等文献，展现先秦时期政治制度与礼仪文化。",
+            "包含《郑文公》《克殷》等篇章，丰富了我们对商周之际历史的认识。",
+            "收录《湯處》《厚父》等重要文献，展现商周时期的政治思想。",
+            "包含多篇重要历史文献，进一步丰富了先秦历史研究资料。",
+            "展现了战国时期的政治、文化等多个方面的珍贵史料。",
+            "记载了大量先秦时期的重要历史事件和文化现象。",
+            "为研究先秦历史提供了新的文献依据和研究视角。",
+            "展现了战国时期的文化特征和历史发展脉络。",
+            "记录了大量珍贵的历史资料和文化遗产。",
+            "为研究先秦历史提供了重要的文献支持。",
+            "包含多篇重要的历史文献和文化记载。",
+            "展现了战国时期丰富的历史文化内涵。"
+        ];
+
+        scrollItems.forEach((item, index) => {
+            item.addEventListener('click', () => {
+                const image = item.querySelector('.scroll-image');
+                const title = item.querySelector('.scroll-title');
+                const date = item.querySelector('.scroll-date');
+
+                expandedImage.src = image.src.replace('600x800', '1200x1600');
+                expandedTitle.textContent = title.textContent;
+                expandedDate.textContent = date.textContent;
+                const randomIndex = Math.floor(Math.random() * descriptions.length);
+                expandedDescription.textContent = descriptions[randomIndex];
+
+                expandedView.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            });
+        });
+
+        closeExpanded.addEventListener('click', () => {
+            expandedView.classList.remove('active');
+            document.body.style.overflow = '';
+        });
+
+        expandedView.addEventListener('click', (e) => {
+            if (e.target === expandedView) {
+                expandedView.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && expandedView.classList.contains('active')) {
+                expandedView.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        });
+    </script>
+</body>
+</html> 

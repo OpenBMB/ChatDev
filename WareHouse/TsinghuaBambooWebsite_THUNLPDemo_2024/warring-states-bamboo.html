@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChatDev数字博物馆</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Ma+Yen+Kai&display=swap" rel="stylesheet">
+    <style>
+        .bamboo-container {
+            padding: 50px 20px;
+            background: rgba(244, 241, 234, 0.9);
+            min-height: 100vh;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5em;
+            color: #4A3728;
+            margin-bottom: 60px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .gallery-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 40px;
+            margin-bottom: 60px;
+        }
+
+        .gallery-item {
+            position: relative;
+            background: #DEB887;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .gallery-item:hover {
+            transform: translateY(-10px);
+        }
+
+        .gallery-image {
+            width: 100%;
+            height: 500px;
+            object-fit: cover;
+            border-radius: 15px 15px 0 0;
+            transition: transform 0.3s ease;
+        }
+
+        .gallery-item:hover .gallery-image {
+            transform: scale(1.05);
+        }
+
+        .gallery-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(89, 44, 12, 0.95), transparent);
+            padding: 30px;
+            color: #FFFFFF;
+            transform: translateY(70%);
+            transition: transform 0.3s ease;
+        }
+
+        .gallery-item:hover .gallery-overlay {
+            transform: translateY(0);
+        }
+
+        .gallery-title {
+            font-size: 1.8em;
+            margin-bottom: 15px;
+            color: #FFE4B5;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .gallery-description {
+            font-size: 1.1em;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            opacity: 1;
+            color: #FFFFFF;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+        }
+
+        .gallery-details {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            font-size: 0.95em;
+        }
+
+        .gallery-details ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .gallery-details li {
+            margin-bottom: 8px;
+            padding-left: 20px;
+            position: relative;
+            color: #FFE4B5;
+        }
+
+        .gallery-details li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: #FFE4B5;
+        }
+
+        .featured-section {
+            position: relative;
+            height: 600px;
+            margin-bottom: 60px;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .featured-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .featured-content {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 40px;
+            background: linear-gradient(to top, rgba(89, 44, 12, 0.95), transparent);
+            color: #FFFFFF;
+        }
+
+        .featured-title {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            color: #FFE4B5;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .featured-description {
+            font-size: 1.2em;
+            line-height: 1.8;
+            max-width: 800px;
+            color: #FFFFFF;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+            opacity: 1;
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            transition: background-color 0.5s ease-in-out;
+        }
+
+        .modal.active {
+            display: flex;
+            background-color: rgba(0, 0, 0, 0.9);
+        }
+
+        .modal-content {
+            position: relative;
+            max-width: 90%;
+            max-height: 90vh;
+        }
+
+        .modal-image {
+            max-width: 100%;
+            max-height: 90vh;
+            object-fit: contain;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            color: white;
+            font-size: 30px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .gallery-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .gallery-image {
+                height: 400px;
+            }
+
+            .featured-section {
+                height: 400px;
+            }
+
+            .featured-title {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="scroll-container">
+        <div class="chinese-scroll">
+            <div class="bamboo-content">
+                <!-- Chinese Pattern Overlay -->
+                <div class="pattern-overlay"></div>
+                
+                <header>
+                    <nav>
+                        <div class="logo">ChatDev数字博物馆</div>
+                        <ul>
+                            <li><a href="index.html" class="magnetic-link"><span>返回首页</span></a></li>
+                        </ul>
+                    </nav>
+                </header>
+
+                <main>
+                    <div class="bamboo-container">
+                        <h2 class="section-title" data-aos="fade-up">战国文化</h2>
+                        
+                        <div class="gallery-container">
+                            <div class="featured-section" data-aos="fade-up">
+                                <img src="./images/warring-states-bamboo-1.png" alt="清华简" class="featured-image">
+                                <div class="featured-content">
+                                    <h2 class="featured-title">清华简 - 战国时期的文化瑰宝</h2>
+                                    <p class="featured-description">2008年入藏清华大学的2500余枚战国竹简，是迄今为止最重要的先秦文献发现之一，为研究中国古代历史提供了珍贵的第一手资料。</p>
+                                </div>
+                            </div>
+
+                            <div class="gallery-grid">
+                                <div class="gallery-item" data-aos="fade-up">
+                                    <img src="./images/warring-states-bamboo-sub1.png" alt="礼仪记录" class="gallery-image">
+                                    <div class="gallery-overlay">
+                                        <h3 class="gallery-title">礼仪记录</h3>
+                                        <p class="gallery-description">两篇文献编连成卷，竹简长约46厘米，宽约0.6厘米，详细记载了楚国大夫饮食礼仪制度。</p>
+                                        <div class="gallery-details">
+                                            <ul>
+                                                <li>《大夫食礼》51支简，《大夫食礼记》14支简</li>
+                                                <li>简背有刻画痕迹，各简均有编号</li>
+                                                <li>前者记载食礼内容，后者论述执事者职责</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="gallery-item" data-aos="fade-up" data-aos-delay="100">
+                                    <img src="./images/warring-states-bamboo-sub2.png" alt="八卦图" class="gallery-image">
+                                    <div class="gallery-overlay">
+                                        <h3 class="gallery-title">八卦占卜</h3>
+                                        <p class="gallery-description">战国时期楚国独特的占筮方法，是目前所见最早的《易》图。</p>
+                                        <div class="gallery-details">
+                                            <ul>
+                                                <li>保存完好，维持原来成卷状态</li>
+                                                <li>分栏书写，附有插图和表格</li>
+                                                <li>首次展现八卦分置八方的卦位图</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="gallery-item" data-aos="fade-up" data-aos-delay="200">
+                                    <img src="./images/warring-states-bamboo-sub3.png" alt="算表" class="gallery-image">
+                                    <div class="gallery-overlay">
+                                        <h3 class="gallery-title">数学算表</h3>
+                                        <p class="gallery-description">形成于公元前305年左右的古代数学文献，比里耶秦简九九表更早。</p>
+                                        <div class="gallery-details">
+                                            <ul>
+                                                <li>21支竹简构成21行20列的计算表</li>
+                                                <li>可用于两位数乘除法运算</li>
+                                                <li>支持含分数1/2的两位数乘法</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+
+                <footer>
+                    <div class="footer-content">
+                        <div class="footer-left">
+                            <img src="images/logo/chatdev-logo.png" alt="ChatDev Logo" class="footer-logo">
+                            <div class="contact" data-aos="fade-up">
+                                <p>ChatDev数字博物馆</p>
+                                <p>https://github.com/OpenBMB/ChatDev</p>
+                            </div>
+                        </div>
+                        <div class="opening-hours" data-aos="fade-up" data-aos-delay="100">
+                            <p>以上内容由AI生成，可能存在偏差，请谨慎使用</p>
+                        </div>
+                    </div>
+                </footer>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="imageModal">
+        <div class="modal-content">
+            <button class="close-modal">&times;</button>
+            <img src="" alt="" class="modal-image">
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({
+            duration: 1000,
+            once: true
+        });
+
+        const modal = document.getElementById('imageModal');
+        const modalImage = modal.querySelector('.modal-image');
+        const closeButton = modal.querySelector('.close-modal');
+        const images = document.querySelectorAll('.gallery-image, .featured-image');
+
+        images.forEach(image => {
+            image.addEventListener('click', () => {
+                modalImage.src = image.src.replace('600x800', '1200x1600').replace('1400x600', '2800x1200');
+                modal.classList.add('active');
+            });
+        });
+
+        closeButton.addEventListener('click', () => {
+            modal.classList.remove('active');
+        });
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.classList.remove('active');
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modal.classList.contains('active')) {
+                modal.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html> 

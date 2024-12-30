@@ -1,0 +1,90 @@
+{
+    "chain": [
+        {
+            "phase": "Coding",
+            "phaseType": "SimplePhase",
+            "max_turn_step": 1,
+            "need_reflect": "False"
+        },
+        {
+            "phase": "CodeCompleteAll",
+            "phaseType": "ComposedPhase",
+            "cycleNum": 10,
+            "Composition": [{
+                "phase": "CodeComplete",
+                "phaseType": "SimplePhase",
+                "max_turn_step": 1,
+                "need_reflect": "False"
+            }]
+        },
+        {
+            "phase": "CodeReview",
+            "phaseType": "ComposedPhase",
+            "cycleNum": 2,
+            "Composition": [{
+                    "phase": "CodeReviewComment",
+                    "phaseType": "SimplePhase",
+                    "max_turn_step": 1,
+                    "need_reflect": "False"
+                },
+                {
+                    "phase": "CodeReviewModification",
+                    "phaseType": "SimplePhase",
+                    "max_turn_step": 1,
+                    "need_reflect": "False"
+                }
+            ]
+        },
+        {
+            "phase": "Test",
+            "phaseType": "ComposedPhase",
+            "cycleNum": 2,
+            "Composition": [
+              {
+                "phase": "TestErrorSummary",
+                "phaseType": "SimplePhase",
+                "max_turn_step": 1,
+                "need_reflect": "False"
+              },
+              {
+                "phase": "TestModification",
+                "phaseType": "SimplePhase",
+                "max_turn_step": 1,
+                "need_reflect": "False"
+              }
+            ]
+        },
+        {
+            "phase": "HumanAgentInteraction",
+            "phaseType": "ComposedPhase",
+            "cycleNum": 1,
+            "Composition": [
+                {
+                    "phase": "CodeReviewHuman",
+                    "phaseType": "SimplePhase",
+                    "max_turn_step": 2,
+                    "need_reflect": "False"
+                }
+            ]
+        }
+    ],
+    "recruitments": [
+        "Chief Executive Officer",
+        "Counselor",
+        "Chief Human Resource Officer",
+        "Chief Product Officer",
+        "Chief Technology Officer",
+        "Programmer",
+        "Code Reviewer",
+        "Software Test Engineer",
+        "Chief Creative Officer"
+    ],
+    "clear_structure": "True",
+    "gui_design": "True",
+    "git_management": "False",
+    "web_spider": "False",
+    "self_improve": "False",
+    "incremental_develop": "False",
+    "with_memory": "False",
+    "background_prompt": "ChatDev is a virtual LLM Agent software company aiming to build the best software with simple but robust code, maximizing the controllability and visual effect of the software in pure python."
+}

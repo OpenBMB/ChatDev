@@ -12,13 +12,38 @@
 </thead>
 <tbody>
   <tr>
-    <td rowspan="5"><a href="https://github.com/qianc62" target="_blank" rel="noopener noreferrer">https://github.com/qianc62</a></td>
-    <td><a href="WareHouse/Website_THUNLP_20230725154612" target="_blank" rel="noopener noreferrer">A simple website</a></td>
-    <td><img src="misc/website.png" width="200px"></td>
+    <td rowspan="5"><a href="https://github.com/THUNLP" target="_blank" rel="noopener noreferrer">https://github.com/THUNLP</a></td>
+    <td><a href="WareHouse/TsinghuaBambooWebsite_THUNLPDemo_2024" target="_blank" rel="noopener noreferrer">Tsinghua Bamboo Website</a></td>
+    <td><img src="misc/tsinghua_bamboo_website.png" width="200px"></td>
     <td>Perfect</td>
-    <td>GPT3.5</td>
+    <td></td>
+  </tr>
+    <tr>
+    <td><a href="WareHouse/tetris_THUNLPDemo_2024" target="_blank" rel="noopener noreferrer">A Tetris Game</a></td>
+    <td><img src="misc/tetris.png" width="200px"></td>  
+    <td>Perfect</td>
+    <td></td>
   </tr>
   <tr>
+    <td><a href="WareHouse/pvz_THUNLPDemo_2024" target="_blank" rel="noopener noreferrer">A Plant vs Zombie Game</a></td>
+    <td><img src="misc/pvz.png" width="200px"></td>  
+    <td>Perfect</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td><a href="WareHouse/car_THUNLPDemo_2024" target="_blank" rel="noopener noreferrer">A Race Car Game</a></td>
+    <td><img src="misc/car_game.png" width="200px"></td>
+    <td>Perfect</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td><a href="WareHouse/snake_THUNLPDemo_2024" target="_blank" rel="noopener noreferrer">A Snake Game</a></td>
+    <td><img src="misc/snake_game.png" width="200px"></td>
+    <td>Perfect</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td rowspan="4"><a href="https://github.com/qianc62" target="_blank" rel="noopener noreferrer">https://github.com/qianc62</a></td>
     <td><a href="WareHouse/FlappyBird_THUNLP_20230726121145" target="_blank" rel="noopener noreferrer">FlappyBirds Game</a></td>
     <td><img src="misc/flappy_bird.png" width="200px"></td>
     <td>Perfect</td>
