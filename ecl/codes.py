@@ -42,7 +42,7 @@ class Codes:
                 group1 = match.group(1)
                 filename = extract_filename_from_line(group1)
                 if "__main__" in code:
-                    filename = "main.py"
+                    filename = self.main_script
                 if filename == "":  # post-processing
                     filename = extract_filename_from_code(code)
                 assert filename != ""
