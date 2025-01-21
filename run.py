@@ -15,9 +15,10 @@ import argparse
 import logging
 import os
 import sys
+from dotenv import load_dotenv
+load_dotenv()# Load environment variables
 
 from camel.typing import ModelType
-
 root = os.path.dirname(__file__)
 sys.path.append(root)
 
