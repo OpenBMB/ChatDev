@@ -21,6 +21,9 @@ from camel.typing import ModelType
 from chatdev.statistics import prompt_cost
 from chatdev.utils import log_visualize
 
+import google.generativeai as genai
+from camel import utils
+
 try:
     from openai.types.chat import ChatCompletion
 
@@ -35,6 +38,11 @@ if 'BASE_URL' in os.environ:
     BASE_URL = os.environ['BASE_URL']
 else:
     BASE_URL = None
+
+# we configure the google.generativeai using the api key.
+# we must set our gemini api key as a value to OPENAI_API_KEY in the enviroment.
+genai.configure(api_key=OPENAI_API_KEY) # so its okay to reference as OPENAI_API_KEY here 
+
 
 
 class ModelBackend(ABC):
@@ -65,8 +73,21 @@ class OpenAIModel(ModelBackend):
 
     def run(self, *args, **kwargs):
         string = "\n".join([message["content"] for message in kwargs["messages"]])
-        encoding = tiktoken.encoding_for_model(self.model_type.value)
-        num_prompt_tokens = len(encoding.encode(string))
+
+        # if the model is a gemini model then we use the count_tokens function in the 
+        # google.generativeai.GenerativeModel to get the token required for the message
+        # remove any 'None' key-value pair in the self.model_config_dict
+
+        if utils.is_gemini_model(self.model_type):
+            gemini_model = genai.GenerativeModel(self.model_type.value)
+            num_prompt_tokens = gemini_model.count_tokens(string).total_tokens
+            
+            # Filter out None values from the config dictionary
+            self.model_config_dict = {k:v for k, v in self.model_config_dict.items() if v is not None}
+        else:
+            encoding = tiktoken.encoding_for_model(self.model_type.value)
+            num_prompt_tokens = len(encoding.encode(string))
+
         gap_between_send_receive = 15 * len(kwargs["messages"])
         num_prompt_tokens += gap_between_send_receive
 
@@ -83,6 +104,7 @@ class OpenAIModel(ModelBackend):
                 )
 
             num_max_token_map = {
+                # OpenAI models
                 "gpt-3.5-turbo": 4096,
                 "gpt-3.5-turbo-16k": 16384,
                 "gpt-3.5-turbo-0613": 4096,
@@ -92,7 +114,15 @@ class OpenAIModel(ModelBackend):
                 "gpt-4-32k": 32768,
                 "gpt-4-turbo": 100000,
                 "gpt-4o": 4096, #100000
-                "gpt-4o-mini": 16384, #100000
+                "gpt-4o-mini": 16384, #100000,
+
+                # gemini models
+                "gemini-2.0-flash-001" : 1056768,
+                "gemini-2.0-flash-lite-preview-02-05": 1056768,
+                "gemini-1.5-flash": 1056768,
+                "gemini-1.5-flash-8b": 1056768,
+                "gemini-1.5-pro" :2105344,
+                
             }
             num_max_token = num_max_token_map[self.model_type.value]
             num_max_completion_tokens = num_max_token - num_prompt_tokens
@@ -126,6 +156,14 @@ class OpenAIModel(ModelBackend):
                 "gpt-4-turbo": 100000,
                 "gpt-4o": 4096, #100000
                 "gpt-4o-mini": 16384, #100000
+
+                # gemini models
+                "gemini-2.0-flash-001" : 1056768,
+                "gemini-2.0-flash-lite-preview-02-05": 1056768,
+                "gemini-1.5-flash": 1056768,
+                "gemini-1.5-flash-8b": 1056768,
+                "gemini-1.5-pro" :2105344,
+                
             }
             num_max_token = num_max_token_map[self.model_type.value]
             num_max_completion_tokens = num_max_token - num_prompt_tokens
@@ -188,6 +226,12 @@ class ModelFactory:
             ModelType.GPT_4_TURBO_V,
             ModelType.GPT_4O,
             ModelType.GPT_4O_MINI,
+            
+            ModelType.GEMINI_2_0_FLASH_001,
+            ModelType.GEMINI_2_0_FLASH_LITE_PREVIEW_02_05,
+            ModelType.GEMINI_1_5_FLASH,
+            ModelType.GEMINI_1_5_FLASH_8B,
+            ModelType.GEMINI_1_5_PRO,
             None
         }:
             model_class = OpenAIModel

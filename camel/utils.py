@@ -27,6 +27,12 @@ F = TypeVar('F', bound=Callable[..., Any])
 
 import time
 
+import google.generativeai as genai
+# it is required to configure the google.generativeai api with a GEMINI_API_KEY.
+# Because we are using the openAI api, and provided we have to set an OPENAI_API_KEY using our
+# gemini key ...
+genai.configure(api_key=os.environ['OPENAI_API_KEY']) # so its okay to reference as OPENAI_API_KEY here 
+
 
 def count_tokens_openai_chat_models(
         messages: List[OpenAIMessage],
@@ -48,6 +54,31 @@ def count_tokens_openai_chat_models(
         num_tokens += 4
         for key, value in message.items():
             num_tokens += len(encoding.encode(value))
+            if key == "name":  # if there's a name, the role is omitted
+                num_tokens += -1  # role is always 1 token
+    num_tokens += 2  # every reply is primed with <im_start>assistant
+    return num_tokens
+
+def count_tokens_genai_chat_models(
+        messages: List[OpenAIMessage],
+        genai_model,
+) -> int:
+    r"""Counts the number of tokens required to generate a google.GenerativeModel chat based
+    on a given list of messages.
+
+    Args:
+        messages (List[OpenAIMessage]): The list of messages.
+        genai_model google.GenerativeModel: The model instance
+
+    Returns:
+        int: The number of tokens required.
+    """
+    num_tokens = 0
+    for message in messages:
+        # message follows <im_start>{role/name}\n{content}<im_end>\n
+        num_tokens += 4
+        for key, value in message.items():
+            num_tokens += genai_model.count_tokens(value).total_tokens
             if key == "name":  # if there's a name, the role is omitted
                 num_tokens += -1  # role is always 1 token
     num_tokens += 2  # every reply is primed with <im_start>assistant
@@ -91,9 +122,19 @@ def num_tokens_from_messages(
         ModelType.GPT_4_TURBO_V,
         ModelType.GPT_4O,
         ModelType.GPT_4O_MINI,
-        ModelType.STUB
+        ModelType.STUB,
+
     }:
         return count_tokens_openai_chat_models(messages, encoding)
+    elif model in {
+        ModelType.GEMINI_2_0_FLASH_001,
+        ModelType.GEMINI_2_0_FLASH_LITE_PREVIEW_02_05,
+        ModelType.GEMINI_1_5_FLASH,
+        ModelType.GEMINI_1_5_FLASH_8B,
+        ModelType.GEMINI_1_5_PRO,
+    }:
+        gemini_model = genai.GenerativeModel(model.value)
+        return count_tokens_genai_chat_models(messages, gemini_model)
     else:
         raise NotImplementedError(
             f"`num_tokens_from_messages`` is not presently implemented "
@@ -114,6 +155,7 @@ def get_model_token_limit(model: ModelType) -> int:
     Returns:
         int: The maximum token limit for the given model.
     """
+    #OpenAI models
     if model == ModelType.GPT_3_5_TURBO:
         return 16384
     elif model == ModelType.GPT_3_5_TURBO_NEW:
@@ -130,6 +172,18 @@ def get_model_token_limit(model: ModelType) -> int:
         return 128000
     elif model == ModelType.GPT_4O_MINI:
         return 128000
+    
+    #GeminiAI models
+    elif model == ModelType.GEMINI_2_0_FLASH_001:
+        return 1056768
+    elif model == ModelType.GEMINI_2_0_FLASH_LITE_PREVIEW_02_05:
+        return 1056768
+    elif model == ModelType.GEMINI_1_5_FLASH:
+        return 1056768
+    elif model == ModelType.GEMINI_1_5_FLASH_8B:
+        return 1056768
+    elif model == ModelType.GEMINI_1_5_PRO:
+        return 2105344
     else:
         raise ValueError("Unknown model type")
 
@@ -233,3 +287,16 @@ def download_tasks(task: TaskType, folder_path: str) -> None:
 
     # Delete the zip file
     os.remove(zip_file_path)
+
+def is_gemini_model(model_name:ModelType) -> bool:
+    """Check if a ModelType is a gemini model
+    """
+    if model_name.value in [
+        "gemini-2.0-flash-001",
+        "gemini-2.0-flash-lite-preview-02-05",
+        "gemini-1.5-flash",
+        "gemini-1.5-flash-8b",
+        "gemini-1.5-pro",]:
+
+        return True
+    return False

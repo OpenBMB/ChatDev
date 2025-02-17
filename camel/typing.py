@@ -44,6 +44,7 @@ class RoleType(Enum):
 
 
 class ModelType(Enum):
+    # Gpt models
     GPT_3_5_TURBO = "gpt-3.5-turbo-16k-0613"
     GPT_3_5_TURBO_NEW = "gpt-3.5-turbo-16k"
     GPT_4 = "gpt-4"
@@ -54,6 +55,13 @@ class ModelType(Enum):
     GPT_4O_MINI = "gpt-4o-mini"
 
     STUB = "stub"
+
+    # Gemini Models
+    GEMINI_2_0_FLASH_001 = "gemini-2.0-flash-001"
+    GEMINI_2_0_FLASH_LITE_PREVIEW_02_05 = "gemini-2.0-flash-lite-preview-02-05"
+    GEMINI_1_5_FLASH = "gemini-1.5-flash"
+    GEMINI_1_5_FLASH_8B = "gemini-1.5-flash-8b"
+    GEMINI_1_5_PRO = "gemini-1.5-pro"
 
     @property
     def value_for_tiktoken(self):

@@ -19,7 +19,7 @@ from tenacity.stop import stop_after_attempt
 from tenacity.wait import wait_exponential
 
 from camel.agents import BaseAgent
-from camel.configs import ChatGPTConfig
+from camel.configs import ChatGPTConfig, GeminiConfig
 from camel.messages import ChatMessage, MessageType, SystemMessage
 from camel.model_backend import ModelBackend, ModelFactory
 from camel.typing import ModelType, RoleType
@@ -27,6 +27,7 @@ from camel.utils import (
     get_model_token_limit,
     num_tokens_from_messages,
     openai_api_key_required,
+    is_gemini_model
 )
 from chatdev.utils import log_visualize
 try:
@@ -97,7 +98,10 @@ class ChatAgent(BaseAgent):
         self.role_name: str = system_message.role_name
         self.role_type: RoleType = system_message.role_type
         self.model: ModelType = (model if model is not None else ModelType.GPT_3_5_TURBO)
-        self.model_config: ChatGPTConfig = model_config or ChatGPTConfig()
+        if is_gemini_model(model):
+            self.model_config = GeminiConfig()
+        else:
+            self.model_config: ChatGPTConfig = model_config or ChatGPTConfig()
         self.model_token_limit: int = get_model_token_limit(self.model)
         self.message_window_size: Optional[int] = message_window_size
         self.model_backend: ModelBackend = ModelFactory.create(self.model, self.model_config.__dict__)
