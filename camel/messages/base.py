@@ -186,7 +186,7 @@ class BaseMessage:
         """
         return item in self.content
 
-    def token_len(self, model: ModelType = ModelType.GPT_3_5_TURBO) -> int:
+    def token_len(self, model: ModelType = ModelType.DEEPSEEK_CHAT) -> int:
         r"""Calculate the token length of the message for the specified model.
 
         Args:

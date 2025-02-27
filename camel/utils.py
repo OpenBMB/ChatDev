@@ -80,7 +80,10 @@ def num_tokens_from_messages(
         value_for_tiktoken = model.value_for_tiktoken
         encoding = tiktoken.encoding_for_model(value_for_tiktoken)
     except KeyError:
-        encoding = tiktoken.get_encoding("cl100k_base")
+        if value_for_tiktoken == 'deepseek-chat':
+            encoding = tiktoken.get_encoding("cl100k_base")
+        else:
+            encoding = tiktoken.encoding_for_model(value_for_tiktoken)
 
     if model in {
         ModelType.GPT_3_5_TURBO,
@@ -91,9 +94,11 @@ def num_tokens_from_messages(
         ModelType.GPT_4_TURBO_V,
         ModelType.GPT_4O,
         ModelType.GPT_4O_MINI,
-        ModelType.STUB
+        ModelType.STUB,
     }:
         return count_tokens_openai_chat_models(messages, encoding)
+    elif model == ModelType.DEEPSEEK_CHAT:
+         return len(messages) * 0.4
     else:
         raise NotImplementedError(
             f"`num_tokens_from_messages`` is not presently implemented "
@@ -129,6 +134,8 @@ def get_model_token_limit(model: ModelType) -> int:
     elif model == ModelType.GPT_4O:
         return 128000
     elif model == ModelType.GPT_4O_MINI:
+        return 128000
+    elif model == ModelType.DEEPSEEK_CHAT:
         return 128000
     else:
         raise ValueError("Unknown model type")
