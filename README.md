@@ -72,12 +72,12 @@ To get started with MacNet, follow these steps:
 ## 🔎 Citation
 
 ```
-@article{macnet,
-    title={Scaling Large-Language-Model-based Multi-Agent Collaboration},
-    author={Chen Qian and Zihao Xie and Yifei Wang and Wei Liu and Yufan Dang and Zhuoyun Du and Weize Chen and Cheng Yang and Zhiyuan Liu and Maosong Sun}
-    journal={arXiv preprint arXiv:2406.07155},
-    url = {https://arxiv.org/abs/2406.07155},
-    year={2024}
+@inproceedings{qian2025scaling,
+    title={Scaling Large Language Model-based Multi-Agent Collaboration},
+    author={Chen Qian and Zihao Xie and YiFei Wang and Wei Liu and Kunlun Zhu and Hanchen Xia and Yufan Dang and Zhuoyun Du and Weize Chen and Cheng Yang and Zhiyuan Liu and Maosong Sun},
+    booktitle={The Thirteenth International Conference on Learning Representations},
+    year={2025},
+    url={https://openreview.net/forum?id=K3n5jPkrU6}
 }
 
 @article{chatdev,
