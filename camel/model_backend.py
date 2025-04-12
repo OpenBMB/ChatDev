@@ -191,7 +191,7 @@ class ModelFactory:
             ModelType.GPT_4_TURBO_V,
             ModelType.GPT_4O,
             ModelType.GPT_4O_MINI,
-            ModelType.LLAMA_3_1_70B_VERSATILE,
+            ModelType.CUSTOM_MODEL,
             None
         }:
             model_class = OpenAIModel

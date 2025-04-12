@@ -121,7 +121,7 @@ def get_info(dir, log_filepath):
                 model_type = "gpt-4o"
             elif model_type == "GPT_4O_MINI":
                 model_type = "gpt-4o-mini"
-            elif model_type == "LLAMA_3_1_70B_VERSATILE":
+            elif model_type == "CUSTOM_MODEL":
                 model_type = "llama3-8b-8192"
             # print("model_type:", model_type)
 
