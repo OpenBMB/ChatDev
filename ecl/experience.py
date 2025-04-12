@@ -29,7 +29,8 @@ class Experience:
         self.upperLimit = cfg.experience.upper_limit
         self.experiences = []
 
-        self.model = OpenAIModel(model_type="gpt-3.5-turbo-16k")
+        # self.model = OpenAIModel(model_type="gpt-3.5-turbo-16k")
+        self.model = OpenAIModel(model_type="llama3-8b-8192")
         self.embedding_method = OpenAIEmbedding()
 
         for edge in self.graph.edges:
