@@ -13,6 +13,7 @@
 # =========== Copyright 2023 @ CAMEL-AI.org. All Rights Reserved. ===========
 import os
 import re
+from dotenv import load_dotenv
 import zipfile
 from functools import wraps
 from typing import Any, Callable, List, Optional, Set, TypeVar
@@ -22,6 +23,8 @@ import tiktoken
 
 from camel.messages import OpenAIMessage
 from camel.typing import ModelType, TaskType
+
+load_dotenv()
 
 F = TypeVar('F', bound=Callable[..., Any])
 
@@ -120,7 +123,7 @@ def get_model_token_limit(model: ModelType) -> int:
     elif model == ModelType.GPT_3_5_TURBO_NEW:
         return 16384
     elif model == ModelType.GPT_4:
-        return 8192
+        return int(os.getenv("MODEL_TOKEN_LIMIT"))
     elif model == ModelType.GPT_4_32k:
         return 32768
     elif model == ModelType.GPT_4_TURBO:
@@ -132,7 +135,7 @@ def get_model_token_limit(model: ModelType) -> int:
     elif model == ModelType.GPT_4O_MINI:
         return 128000
     elif model == ModelType.CUSTOM_MODEL:
-        return 8192
+        return int(os.getenv("MODEL_TOKEN_LIMIT"))
     else:
         raise ValueError("Unknown model type")
 
