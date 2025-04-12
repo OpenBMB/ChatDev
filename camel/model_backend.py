@@ -21,6 +21,11 @@ from camel.typing import ModelType
 from chatdev.statistics import prompt_cost
 from chatdev.utils import log_visualize
 
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
 try:
     from openai.types.chat import ChatCompletion
 
@@ -94,7 +99,7 @@ class OpenAIModel(ModelBackend):
                 "gpt-4-turbo": 100000,
                 "gpt-4o": 4096, #100000
                 "gpt-4o-mini": 16384, #100000,
-                "llama3-8b-8192": 8192,
+                os.getenv("MODEL_NAME"): 8192,
             }
             num_max_token = num_max_token_map[self.model_type.value]
             num_max_completion_tokens = num_max_token - num_prompt_tokens
@@ -128,7 +133,7 @@ class OpenAIModel(ModelBackend):
                 "gpt-4-turbo": 100000,
                 "gpt-4o": 4096, #100000
                 "gpt-4o-mini": 16384, #100000,
-                "llama3-8b-8192": 8192,
+                os.getenv("MODEL_NAME"): 8192,
             }
             num_max_token = num_max_token_map[self.model_type.value]
             num_max_completion_tokens = num_max_token - num_prompt_tokens
