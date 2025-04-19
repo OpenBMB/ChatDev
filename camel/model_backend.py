@@ -21,6 +21,11 @@ from camel.typing import ModelType
 from chatdev.statistics import prompt_cost
 from chatdev.utils import log_visualize
 
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
 try:
     from openai.types.chat import ChatCompletion
 
@@ -65,7 +70,8 @@ class OpenAIModel(ModelBackend):
 
     def run(self, *args, **kwargs):
         string = "\n".join([message["content"] for message in kwargs["messages"]])
-        encoding = tiktoken.encoding_for_model(self.model_type.value)
+        # encoding = tiktoken.encoding_for_model(self.model_type.value)
+        encoding = tiktoken.get_encoding("cl100k_base")
         num_prompt_tokens = len(encoding.encode(string))
         gap_between_send_receive = 15 * len(kwargs["messages"])
         num_prompt_tokens += gap_between_send_receive
@@ -92,7 +98,8 @@ class OpenAIModel(ModelBackend):
                 "gpt-4-32k": 32768,
                 "gpt-4-turbo": 100000,
                 "gpt-4o": 4096, #100000
-                "gpt-4o-mini": 16384, #100000
+                "gpt-4o-mini": 16384, #100000,
+                os.getenv("MODEL_NAME"): 8192,
             }
             num_max_token = num_max_token_map[self.model_type.value]
             num_max_completion_tokens = num_max_token - num_prompt_tokens
@@ -125,7 +132,8 @@ class OpenAIModel(ModelBackend):
                 "gpt-4-32k": 32768,
                 "gpt-4-turbo": 100000,
                 "gpt-4o": 4096, #100000
-                "gpt-4o-mini": 16384, #100000
+                "gpt-4o-mini": 16384, #100000,
+                os.getenv("MODEL_NAME"): 8192,
             }
             num_max_token = num_max_token_map[self.model_type.value]
             num_max_completion_tokens = num_max_token - num_prompt_tokens
@@ -188,6 +196,7 @@ class ModelFactory:
             ModelType.GPT_4_TURBO_V,
             ModelType.GPT_4O,
             ModelType.GPT_4O_MINI,
+            ModelType.CUSTOM_MODEL,
             None
         }:
             model_class = OpenAIModel

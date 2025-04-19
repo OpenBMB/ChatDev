@@ -10,12 +10,18 @@ import numpy as np
 import os
 from abc import ABC, abstractmethod
 import tiktoken
+
 from typing import Any, Dict
 from tenacity import (
     retry,
     stop_after_attempt,
     wait_exponential
 )
+
+from dotenv import load_dotenv
+
+load_dotenv()
+
 OPENAI_API_KEY = os.environ['OPENAI_API_KEY']
 if 'BASE_URL' in os.environ:
     BASE_URL = os.environ['BASE_URL']
@@ -66,7 +72,8 @@ def calc_max_token(messages, model):
         "gpt-4-0613": 8192,
         "gpt-4-32k": 32768,
         "gpt-4o": 4096, #100000
-        "gpt-4o-mini": 16384, #100000
+        "gpt-4o-mini": 16384, #100000,
+        os.getenv("MODEL_NAME"): int(os.getenv("MODEL_TOKEN_LIMIT")),
     }
     num_max_token = num_max_token_map[model]
     num_max_completion_tokens = num_max_token - num_prompt_tokens
@@ -139,10 +146,12 @@ class OpenAIModel(ModelBackend):
             "gpt-4-0613": 8192,
             "gpt-4-32k": 32768,
             "gpt-4o": 4096, #100000
-            "gpt-4o-mini": 16384, #100000
+            "gpt-4o-mini": 16384, #100000,
+            os.getenv("MODEL_NAME"): int(os.getenv("MODEL_TOKEN_LIMIT")),
         }
         response = client.chat.completions.create(messages = messages,
-        model = "gpt-3.5-turbo-16k",
+        # model = "gpt-3.5-turbo-16k",
+        model = os.getenv("MODEL_NAME"),
         temperature = 0.2,
         top_p = 1.0,
         n = 1,

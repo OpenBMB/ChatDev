@@ -7,6 +7,10 @@ import numpy as np
 from codes import Codes
 from utils import get_easyDict_from_filepath,OpenAIModel,log_and_print_online
 from embedding import OpenAIEmbedding
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 sys.path.append(os.path.join(os.getcwd(),"ecl"))
 class Shortcut:
     def __init__(self, sourceMID, targetMID, valueGain,instructionStar,edgeIDPath):
@@ -29,7 +33,8 @@ class Experience:
         self.upperLimit = cfg.experience.upper_limit
         self.experiences = []
 
-        self.model = OpenAIModel(model_type="gpt-3.5-turbo-16k")
+        # self.model = OpenAIModel(model_type="gpt-3.5-turbo-16k")
+        self.model = OpenAIModel(model_type=os.getenv("MODEL_NAME"))
         self.embedding_method = OpenAIEmbedding()
 
         for edge in self.graph.edges:

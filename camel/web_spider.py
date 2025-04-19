@@ -4,7 +4,10 @@ import openai
 from openai import OpenAI
 import wikipediaapi
 import os
+from dotenv import load_dotenv
 import time
+
+load_dotenv()
 
 self_api_key = os.environ.get('OPENAI_API_KEY')
 BASE_URL = os.environ.get('BASE_URL')
@@ -58,7 +61,8 @@ def modal_trans(task_dsp):
                "'Just give me the most important keyword about this sentence without explaining it and your answer should be only one keyword."
         messages = [{"role": "user", "content": task_in}]
         response = client.chat.completions.create(messages=messages,
-        model="gpt-3.5-turbo-16k",
+        # model="gpt-3.5-turbo-16k",
+        model=os.getenv("MODEL_NAME"),
         temperature=0.2,
         top_p=1.0,
         n=1,
@@ -73,7 +77,8 @@ def modal_trans(task_dsp):
                "',Summarize this paragraph and return the key information."
         messages = [{"role": "user", "content": task_in}]
         response = client.chat.completions.create(messages=messages,
-        model="gpt-3.5-turbo-16k",
+        # model="gpt-3.5-turbo-16k",
+        model=os.getenv("MODEL_NAME"),
         temperature=0.2,
         top_p=1.0,
         n=1,

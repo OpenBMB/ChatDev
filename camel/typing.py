@@ -12,6 +12,9 @@
 # limitations under the License.
 # =========== Copyright 2023 @ CAMEL-AI.org. All Rights Reserved. ===========
 from enum import Enum
+import os
+from dotenv import load_dotenv
+load_dotenv()
 
 
 class TaskType(Enum):
@@ -52,6 +55,7 @@ class ModelType(Enum):
     GPT_4_TURBO_V = "gpt-4-turbo"
     GPT_4O = "gpt-4o"
     GPT_4O_MINI = "gpt-4o-mini"
+    CUSTOM_MODEL = os.getenv("MODEL_NAME")
 
     STUB = "stub"
 
