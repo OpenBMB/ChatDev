@@ -123,7 +123,7 @@ def get_model_token_limit(model: ModelType) -> int:
     elif model == ModelType.GPT_3_5_TURBO_NEW:
         return 16384
     elif model == ModelType.GPT_4:
-        return int(os.getenv("MODEL_TOKEN_LIMIT"))
+        return 8192
     elif model == ModelType.GPT_4_32k:
         return 32768
     elif model == ModelType.GPT_4_TURBO:
@@ -135,7 +135,7 @@ def get_model_token_limit(model: ModelType) -> int:
     elif model == ModelType.GPT_4O_MINI:
         return 128000
     elif model == ModelType.CUSTOM_MODEL:
-        return int(os.getenv("MODEL_TOKEN_LIMIT"))
+        return int(os.getenv("MODEL_CONTEXT_WINDOW"))
     else:
         raise ValueError("Unknown model type")
 

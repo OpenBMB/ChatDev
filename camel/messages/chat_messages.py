@@ -51,6 +51,8 @@ class ChatMessage(BaseMessage):
     if openai_new_api:
         function_call: Optional[FunctionCall] = None
         tool_calls: Optional[ChatCompletionMessageToolCall] = None
+    annotations: object = None
+    reasoning_content: object = None
 
     def set_user_role_at_backend(self: BaseMessage):
         return self.__class__(
