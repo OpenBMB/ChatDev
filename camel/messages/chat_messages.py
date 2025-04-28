@@ -48,6 +48,7 @@ class ChatMessage(BaseMessage):
     content: str = ""
     refusal: str = None
     audio: object = None
+    annotations: str = None
     if openai_new_api:
         function_call: Optional[FunctionCall] = None
         tool_calls: Optional[ChatCompletionMessageToolCall] = None
