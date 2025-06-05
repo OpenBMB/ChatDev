@@ -124,8 +124,9 @@ Croto is a specialized branch of [ChatDev](https://github.com/OpenBMB/ChatDev) t
 
 @article{croto,
   title={Multi-Agent Collaboration via Cross-Team Orchestration},
-  author={Zhuoyun Du and Chen Qian and Wei Liu and Zihao Xie and YiFei Wang and Rennai Qiu and Yufan Dang and Weize Chen and Cheng Yang and Ye Tian and Xuantang Xiong and Lei Han },
+  author={Zhuoyun Du and Chen Qian and Wei Liu and Zihao Xie and YiFei Wang and Rennai Qiu and Yufan Dang and Weize Chen and Cheng Yang and Ye Tian and Xuantang Xiong and Lei Han},
   journal={arXiv preprint arXiv:2406.08979},
+  url = {https://arxiv.org/abs/2406.08979},
   year={2024}
 }
 
