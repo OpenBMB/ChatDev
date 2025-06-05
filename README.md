@@ -69,6 +69,48 @@ To get started with MacNet, follow these steps:
   <img src='./misc/software_example.png' width=800>
 </p>
 
+# Multi-Agent Collaboration via Cross-Team Orchestration
+
+<p align="center">
+  <img src='./misc/croto.png' width=700>
+</p>
+
+## 📖 Overview
+
+Croto is a specialized branch of [ChatDev](https://github.com/OpenBMB/ChatDev) that orchestrates multiple agent teams to jointly propose diverse task-oriented solutions and collaborate through strategic cross-team interactions at key phases. It enables teams to maintain their independence while leveraging collective insights for superior solution generation. The methods used in Croto—including greedy aggregation, hierarchy partitioning, and pruning strategy—are well integrated into MacNet codebase, specifically in `chatdev.waiting` and the aggregation function in `graph.py`.
+
+```python
+def aggregate(self, prompt: str, retry_limit: int, unit_num: int, layer_directory: str, graph_depth: int,
+               store_dir: str) -> int:
+     """Aggregate solutions from predecessors."""
+     logging.info(f"Node {self.id} is aggregating with {len(self.pre_solutions)} solutions")
+
+     with open("config.yaml", "r", encoding="utf-8") as f:
+         cc_prompt = "\n\n".join(yaml.load(f.read(), Loader=yaml.FullLoader).get("Agent").get("cc_prompt"))
+         cc_prompt = self.system_message + cc_prompt
+
+     for file in self.pre_solutions:
+         with open(layer_directory + "/solution_{}.txt".format(file), "w") as f:
+             for key in self.pre_solutions[file].codebooks.keys():
+                 f.write(str(key) + '\n\n' + self.pre_solutions[file].codebooks[key] + '\n\n')
+
+     self.pool = Pool(len(self.pre_solutions), unit_num, layer_directory, self.model)
+     for i in range(retry_limit):
+         new_codes = self.pool.state_pool_add(layer_directory, cc_prompt, 6000000, prompt,
+                                              Codes(),
+                                              store_dir,
+                                              temperature=1 - self.depth / graph_depth,
+                                              )
+         if new_codes is None:
+             logging.info(f"Retry Aggregation at round {i}!")
+         else:
+             self.solution = new_codes
+             logging.info(f"Node {self.id} has finished aggregation!")
+             return 0
+     print(f"ERROR: Node {self.id} has reached the retry limit!\n")
+     return 1
+```
+
 ## 🔎 Citation
 
 ```
@@ -78,6 +120,14 @@ To get started with MacNet, follow these steps:
     booktitle={The Thirteenth International Conference on Learning Representations},
     year={2025},
     url={https://openreview.net/forum?id=K3n5jPkrU6}
+}
+
+@article{croto,
+  title={Multi-Agent Collaboration via Cross-Team Orchestration},
+  author={Zhuoyun Du and Chen Qian and Wei Liu and Zihao Xie and YiFei Wang and Rennai Qiu and Yufan Dang and Weize Chen and Cheng Yang and Ye Tian and Xuantang Xiong and Lei Han},
+  journal={arXiv preprint arXiv:2406.08979},
+  url = {https://arxiv.org/abs/2406.08979},
+  year={2024}
 }
 
 @article{chatdev,
@@ -108,7 +158,7 @@ More research from our lab can be accessed [here](https://thinkwee.top/multiagen
 
 ## 🤝 Acknowledgments
 
-MacNet is built upon the foundation of [ChatDev](https://github.com/OpenBMB/ChatDev), a project that aims to revolutionize software development through communicative agents.
+MacNet and Croto are built upon the foundation of [ChatDev](https://github.com/OpenBMB/ChatDev), a project that aims to revolutionize software development through communicative agents.
 
 ## 📬 Contact
 
