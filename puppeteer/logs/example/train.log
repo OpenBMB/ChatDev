@@ -1,0 +1,126 @@
+[10:09:45 INFO]
+[Init Policy Forward]
+[10:09:51 INFO]
+Action probs: tensor([[0.0779, 0.0669, 0.0669, 0.0814, 0.0775, 0.0822, 0.0629, 0.0748, 0.0587,
+         0.0713, 0.0784, 0.0755, 0.0634, 0.0623]], device='cuda:0',
+       grad_fn=<SoftmaxBackward0>)
+[10:09:56 INFO]
+Following Policy Forward
+[10:09:56 INFO]
+Prior action probs: None
+[10:09:56 INFO]
+Action probs: tensor([[0.0779, 0.0669, 0.0669, 0.0814, 0.0775, 0.0822, 0.0629, 0.0748, 0.0587,
+         0.0713, 0.0784, 0.0755, 0.0634, 0.0623]], device='cuda:0',
+       grad_fn=<SoftmaxBackward0>)
+[10:09:59 INFO]
+Following Policy Forward
+[10:09:59 INFO]
+Prior action probs: None
+[10:09:59 INFO]
+Action probs: tensor([[0.0779, 0.0669, 0.0669, 0.0814, 0.0775, 0.0822, 0.0629, 0.0748, 0.0587,
+         0.0713, 0.0784, 0.0755, 0.0634, 0.0623]], device='cuda:0',
+       grad_fn=<SoftmaxBackward0>)
+[10:10:53 INFO]
+Update
+[10:10:53 INFO]
+Executed trajectories: [[[{'prob': tensor(0.0775, device='cuda:0', grad_fn=<SelectBackward0>), 'log_prob': tensor([-2.5581], device='cuda:0', grad_fn=<SqueezeBackward1>), 'state_identifier': ((None, None, -1),), 'action': 'TerminatorAgent', 'reward': tensor(-1.0368, device='cuda:0'), 'reward_model': 0, 'prior_prob': None, 'total_tokens': 0, 'total_cost': 0, 'finalized': True, 'metrics': {}}], [{'prob': tensor(0.0587, device='cuda:0', grad_fn=<SelectBackward0>), 'log_prob': tensor([-2.8345], device='cuda:0', grad_fn=<SqueezeBackward1>), 'state_identifier': ((None, None, -1),), 'action': 'CriticAgent_gpt4o', 'reward': tensor(-0.2341, device='cuda:0'), 'reward_model': 0, 'prior_prob': None}, {'prob': tensor(0.0629, device='cuda:0', grad_fn=<SelectBackward0>), 'log_prob': tensor([-2.7661], device='cuda:0', grad_fn=<SqueezeBackward1>), 'state_identifier': (('CriticAgent_gpt4o', 'critique', 1),), 'action': 'PlannerAgent_gpt4o', 'reward': tensor(-0.2258, device='cuda:0'), 'reward_model': 0, 'prior_prob': None}, {'prob': tensor(0.0775, device='cuda:0', grad_fn=<SelectBackward0>), 'log_prob': tensor([-2.5581], device='cuda:0', grad_fn=<SqueezeBackward1>), 'state_identifier': (('CriticAgent_gpt4o', 'critique', 1), ('PlannerAgent_gpt4o', 'planning', 1)), 'action': 'TerminatorAgent', 'reward': tensor(-1.0500, device='cuda:0'), 'reward_model': 0, 'finalized': True, 'total_tokens': 1211, 'total_cost': 484400, 'metrics': {}}], [{'prob': tensor(0.0634, device='cuda:0', grad_fn=<SelectBackward0>), 'log_prob': tensor([-2.7575], device='cuda:0', grad_fn=<SqueezeBackward1>), 'state_identifier': ((None, None, -1),), 'action': 'ConcluderAgent_gpt4o', 'reward': tensor(-0.1345, device='cuda:0'), 'reward_model': 0, 'prior_prob': None}, {'prob': tensor(0.0822, device='cuda:0', grad_fn=<SelectBackward0>), 'log_prob': tensor([-2.4987], device='cuda:0', grad_fn=<SqueezeBackward1>), 'state_identifier': (('ConcluderAgent_gpt4o', 'conclude', 1),), 'action': 'PythonAgent_gpt4o', 'reward': tensor(-0.2482, device='cuda:0'), 'reward_model': 0, 'prior_prob': None}, {'prob': tensor(0.0775, device='cuda:0', grad_fn=<SelectBackward0>), 'log_prob': tensor([-2.5581], device='cuda:0', grad_fn=<SqueezeBackward1>), 'state_identifier': (('ConcluderAgent_gpt4o', 'conclude', 1), ('PythonAgent_gpt4o', 'run_python', 1)), 'action': 'TerminatorAgent', 'reward': tensor(-1.0500, device='cuda:0'), 'reward_model': 0, 'finalized': True, 'total_tokens': 1292, 'total_cost': 516800, 'metrics': {}}], [{'prob': tensor(0.0587, device='cuda:0', grad_fn=<CloneBackward0>), 'log_prob': tensor([-2.8345], device='cuda:0', grad_fn=<CloneBackward0>), 'state_identifier': ((None, None, -1),), 'action': 'CriticAgent_gpt4o', 'reward': tensor(-0.2341, device='cuda:0'), 'reward_model': 0, 'prior_prob': None}, {'prob': tensor(0.0755, device='cuda:0', grad_fn=<SelectBackward0>), 'log_prob': tensor([-2.5842], device='cuda:0', grad_fn=<SqueezeBackward1>), 'state_identifier': (('CriticAgent_gpt4o', 'critique', 1),), 'action': 'SummarizerAgent_gpt4o', 'reward': tensor(-0.1834, device='cuda:0'), 'reward_model': 0, 'prior_prob': None}, {'prob': tensor(0.0775, device='cuda:0', grad_fn=<SelectBackward0>), 'log_prob': tensor([-2.5581], device='cuda:0', grad_fn=<SqueezeBackward1>), 'state_identifier': (('CriticAgent_gpt4o', 'critique', 1), ('SummarizerAgent_gpt4o', 'summarize', 1)), 'action': 'TerminatorAgent', 'reward': tensor(-1.0500, device='cuda:0'), 'reward_model': 0, 'finalized': True, 'total_tokens': 1067, 'total_cost': 426800, 'metrics': {}}], [{'prob': tensor(0.0587, device='cuda:0', grad_fn=<CloneBackward0>), 'log_prob': tensor([-2.8345], device='cuda:0', grad_fn=<CloneBackward0>), 'state_identifier': ((None, None, -1),), 'action': 'CriticAgent_gpt4o', 'reward': tensor(-0.2341, device='cuda:0'), 'reward_model': 0, 'prior_prob': None}, {'prob': tensor(0.0623, device='cuda:0', grad_fn=<SelectBackward0>), 'log_prob': tensor([-2.7757], device='cuda:0', grad_fn=<SqueezeBackward1>), 'state_identifier': (('CriticAgent_gpt4o', 'critique', 1),), 'action': 'Modifier_gpt4o', 'reward': tensor(-0.2379, device='cuda:0'), 'reward_model': 0, 'prior_prob': None}, {'prob': tensor(0.0775, device='cuda:0', grad_fn=<SelectBackward0>), 'log_prob': tensor([-2.5581], device='cuda:0', grad_fn=<SqueezeBackward1>), 'state_identifier': (('CriticAgent_gpt4o', 'critique', 1), ('Modifier_gpt4o', 'modify', 1)), 'action': 'TerminatorAgent', 'reward': tensor(-1.0500, device='cuda:0'), 'reward_model': 0, 'finalized': True, 'total_tokens': 1252, 'total_cost': 500800, 'metrics': {}}], [{'prob': tensor(0.0634, device='cuda:0', grad_fn=<CloneBackward0>), 'log_prob': tensor([-2.7575], device='cuda:0', grad_fn=<CloneBackward0>), 'state_identifier': ((None, None, -1),), 'action': 'ConcluderAgent_gpt4o', 'reward': tensor(-0.1345, device='cuda:0'), 'reward_model': 0, 'prior_prob': None}, {'prob': tensor(0.0587, device='cuda:0', grad_fn=<SelectBackward0>), 'log_prob': tensor([-2.8345], device='cuda:0', grad_fn=<SqueezeBackward1>), 'state_identifier': (('ConcluderAgent_gpt4o', 'conclude', 1),), 'action': 'CriticAgent_gpt4o', 'reward': tensor(-0.2591, device='cuda:0'), 'reward_model': 0, 'prior_prob': None}, {'prob': tensor(0.0775, device='cuda:0', grad_fn=<SelectBackward0>), 'log_prob': tensor([-2.5581], device='cuda:0', grad_fn=<SqueezeBackward1>), 'state_identifier': (('ConcluderAgent_gpt4o', 'conclude', 1), ('CriticAgent_gpt4o', 'critique', 1)), 'action': 'TerminatorAgent', 'reward': tensor(1.0500, device='cuda:0'), 'reward_model': 0, 'finalized': True, 'total_tokens': 1329, 'total_cost': 531600, 'metrics': {}}], [{'prob': tensor(0.0634, device='cuda:0', grad_fn=<CloneBackward0>), 'log_prob': tensor([-2.7575], device='cuda:0', grad_fn=<CloneBackward0>), 'state_identifier': ((None, None, -1),), 'action': 'ConcluderAgent_gpt4o', 'reward': tensor(-0.1345, device='cuda:0'), 'reward_model': 0, 'prior_prob': None}, {'prob': tensor(0.0748, device='cuda:0', grad_fn=<SelectBackward0>), 'log_prob': tensor([-2.5933], device='cuda:0', grad_fn=<SqueezeBackward1>), 'state_identifier': (('ConcluderAgent_gpt4o', 'conclude', 1),), 'action': 'ReasoningAgent_gpt4o', 'reward': tensor(-0.0737, device='cuda:0'), 'reward_model': 0, 'prior_prob': None}]]]
+[10:10:53 INFO]
+Update with sample size 1
+[10:10:53 INFO]
+Trajectory: [{'prob': tensor(0.0775, device='cuda:0', grad_fn=<SelectBackward0>), 'log_prob': tensor([-2.5581], device='cuda:0', grad_fn=<SqueezeBackward1>), 'state_identifier': ((None, None, -1),), 'action': 'TerminatorAgent', 'reward': tensor(-1.0368, device='cuda:0'), 'reward_model': 0, 'prior_prob': None, 'total_tokens': 0, 'total_cost': 0, 'finalized': True, 'metrics': {}}]
+[10:10:53 INFO]
+Trajectory returns: tensor([-1.0368], device='cuda:0')
+[10:10:53 INFO]
+No KL loss: 0
+[10:10:53 INFO]
+loss for one sample: [tensor([-2.6523], device='cuda:0', grad_fn=<AddBackward0>)]
+[10:10:53 INFO]
+Trajectory: [{'prob': tensor(0.0587, device='cuda:0', grad_fn=<SelectBackward0>), 'log_prob': tensor([-2.8345], device='cuda:0', grad_fn=<SqueezeBackward1>), 'state_identifier': ((None, None, -1),), 'action': 'CriticAgent_gpt4o', 'reward': tensor(-0.2341, device='cuda:0'), 'reward_model': 0, 'prior_prob': None}, {'prob': tensor(0.0629, device='cuda:0', grad_fn=<SelectBackward0>), 'log_prob': tensor([-2.7661], device='cuda:0', grad_fn=<SqueezeBackward1>), 'state_identifier': (('CriticAgent_gpt4o', 'critique', 1),), 'action': 'PlannerAgent_gpt4o', 'reward': tensor(-0.2258, device='cuda:0'), 'reward_model': 0, 'prior_prob': None}, {'prob': tensor(0.0775, device='cuda:0', grad_fn=<SelectBackward0>), 'log_prob': tensor([-2.5581], device='cuda:0', grad_fn=<SqueezeBackward1>), 'state_identifier': (('CriticAgent_gpt4o', 'critique', 1), ('PlannerAgent_gpt4o', 'planning', 1)), 'action': 'TerminatorAgent', 'reward': tensor(-1.0500, device='cuda:0'), 'reward_model': 0, 'finalized': True, 'total_tokens': 1211, 'total_cost': 484400, 'metrics': {}}]
+[10:10:53 INFO]
+Trajectory returns: tensor([-1.4867, -1.2653, -1.0500], device='cuda:0')
+[10:10:53 INFO]
+No KL loss: 0
+[10:10:53 INFO]
+loss for one sample: [tensor([-2.6523], device='cuda:0', grad_fn=<AddBackward0>), tensor([-4.2142], device='cuda:0', grad_fn=<AddBackward0>)]
+[10:10:53 INFO]
+No KL loss: 0
+[10:10:53 INFO]
+loss for one sample: [tensor([-2.6523], device='cuda:0', grad_fn=<AddBackward0>), tensor([-4.2142], device='cuda:0', grad_fn=<AddBackward0>), tensor([-3.5000], device='cuda:0', grad_fn=<AddBackward0>)]
+[10:10:53 INFO]
+No KL loss: 0
+[10:10:54 INFO]
+loss for one sample: [tensor([-2.6523], device='cuda:0', grad_fn=<AddBackward0>), tensor([-4.2142], device='cuda:0', grad_fn=<AddBackward0>), tensor([-3.5000], device='cuda:0', grad_fn=<AddBackward0>), tensor([-2.6860], device='cuda:0', grad_fn=<AddBackward0>)]
+[10:10:54 INFO]
+Trajectory: [{'prob': tensor(0.0634, device='cuda:0', grad_fn=<SelectBackward0>), 'log_prob': tensor([-2.7575], device='cuda:0', grad_fn=<SqueezeBackward1>), 'state_identifier': ((None, None, -1),), 'action': 'ConcluderAgent_gpt4o', 'reward': tensor(-0.1345, device='cuda:0'), 'reward_model': 0, 'prior_prob': None}, {'prob': tensor(0.0822, device='cuda:0', grad_fn=<SelectBackward0>), 'log_prob': tensor([-2.4987], device='cuda:0', grad_fn=<SqueezeBackward1>), 'state_identifier': (('ConcluderAgent_gpt4o', 'conclude', 1),), 'action': 'PythonAgent_gpt4o', 'reward': tensor(-0.2482, device='cuda:0'), 'reward_model': 0, 'prior_prob': None}, {'prob': tensor(0.0775, device='cuda:0', grad_fn=<SelectBackward0>), 'log_prob': tensor([-2.5581], device='cuda:0', grad_fn=<SqueezeBackward1>), 'state_identifier': (('ConcluderAgent_gpt4o', 'conclude', 1), ('PythonAgent_gpt4o', 'run_python', 1)), 'action': 'TerminatorAgent', 'reward': tensor(-1.0500, device='cuda:0'), 'reward_model': 0, 'finalized': True, 'total_tokens': 1292, 'total_cost': 516800, 'metrics': {}}]
+[10:10:54 INFO]
+Trajectory returns: tensor([-1.4093, -1.2877, -1.0500], device='cuda:0')
+[10:10:54 INFO]
+No KL loss: 0
+[10:10:54 INFO]
+loss for one sample: [tensor([-2.6523], device='cuda:0', grad_fn=<AddBackward0>), tensor([-4.2142], device='cuda:0', grad_fn=<AddBackward0>), tensor([-3.5000], device='cuda:0', grad_fn=<AddBackward0>), tensor([-2.6860], device='cuda:0', grad_fn=<AddBackward0>), tensor([-3.8862], device='cuda:0', grad_fn=<AddBackward0>)]
+[10:10:54 INFO]
+No KL loss: 0
+[10:10:54 INFO]
+loss for one sample: [tensor([-2.6523], device='cuda:0', grad_fn=<AddBackward0>), tensor([-4.2142], device='cuda:0', grad_fn=<AddBackward0>), tensor([-3.5000], device='cuda:0', grad_fn=<AddBackward0>), tensor([-2.6860], device='cuda:0', grad_fn=<AddBackward0>), tensor([-3.8862], device='cuda:0', grad_fn=<AddBackward0>), tensor([-3.2176], device='cuda:0', grad_fn=<AddBackward0>)]
+[10:10:54 INFO]
+No KL loss: 0
+[10:10:54 INFO]
+loss for one sample: [tensor([-2.6523], device='cuda:0', grad_fn=<AddBackward0>), tensor([-4.2142], device='cuda:0', grad_fn=<AddBackward0>), tensor([-3.5000], device='cuda:0', grad_fn=<AddBackward0>), tensor([-2.6860], device='cuda:0', grad_fn=<AddBackward0>), tensor([-3.8862], device='cuda:0', grad_fn=<AddBackward0>), tensor([-3.2176], device='cuda:0', grad_fn=<AddBackward0>), tensor([-2.6860], device='cuda:0', grad_fn=<AddBackward0>)]
+[10:10:54 INFO]
+Trajectory: [{'prob': tensor(0.0587, device='cuda:0', grad_fn=<CloneBackward0>), 'log_prob': tensor([-2.8345], device='cuda:0', grad_fn=<CloneBackward0>), 'state_identifier': ((None, None, -1),), 'action': 'CriticAgent_gpt4o', 'reward': tensor(-0.2341, device='cuda:0'), 'reward_model': 0, 'prior_prob': None}, {'prob': tensor(0.0755, device='cuda:0', grad_fn=<SelectBackward0>), 'log_prob': tensor([-2.5842], device='cuda:0', grad_fn=<SqueezeBackward1>), 'state_identifier': (('CriticAgent_gpt4o', 'critique', 1),), 'action': 'SummarizerAgent_gpt4o', 'reward': tensor(-0.1834, device='cuda:0'), 'reward_model': 0, 'prior_prob': None}, {'prob': tensor(0.0775, device='cuda:0', grad_fn=<SelectBackward0>), 'log_prob': tensor([-2.5581], device='cuda:0', grad_fn=<SqueezeBackward1>), 'state_identifier': (('CriticAgent_gpt4o', 'critique', 1), ('SummarizerAgent_gpt4o', 'summarize', 1)), 'action': 'TerminatorAgent', 'reward': tensor(-1.0500, device='cuda:0'), 'reward_model': 0, 'finalized': True, 'total_tokens': 1067, 'total_cost': 426800, 'metrics': {}}]
+[10:10:54 INFO]
+Trajectory returns: tensor([-1.4447, -1.2229, -1.0500], device='cuda:0')
+[10:10:54 INFO]
+No KL loss: 0
+[10:10:54 INFO]
+loss for one sample: [tensor([-2.6523], device='cuda:0', grad_fn=<AddBackward0>), tensor([-4.2142], device='cuda:0', grad_fn=<AddBackward0>), tensor([-3.5000], device='cuda:0', grad_fn=<AddBackward0>), tensor([-2.6860], device='cuda:0', grad_fn=<AddBackward0>), tensor([-3.8862], device='cuda:0', grad_fn=<AddBackward0>), tensor([-3.2176], device='cuda:0', grad_fn=<AddBackward0>), tensor([-2.6860], device='cuda:0', grad_fn=<AddBackward0>), tensor([-4.0951], device='cuda:0', grad_fn=<AddBackward0>)]
+[10:10:54 INFO]
+No KL loss: 0
+[10:10:54 INFO]
+loss for one sample: [tensor([-2.6523], device='cuda:0', grad_fn=<AddBackward0>), tensor([-4.2142], device='cuda:0', grad_fn=<AddBackward0>), tensor([-3.5000], device='cuda:0', grad_fn=<AddBackward0>), tensor([-2.6860], device='cuda:0', grad_fn=<AddBackward0>), tensor([-3.8862], device='cuda:0', grad_fn=<AddBackward0>), tensor([-3.2176], device='cuda:0', grad_fn=<AddBackward0>), tensor([-2.6860], device='cuda:0', grad_fn=<AddBackward0>), tensor([-4.0951], device='cuda:0', grad_fn=<AddBackward0>), tensor([-3.1601], device='cuda:0', grad_fn=<AddBackward0>)]
+[10:10:54 INFO]
+No KL loss: 0
+[10:10:54 INFO]
+loss for one sample: [tensor([-2.6523], device='cuda:0', grad_fn=<AddBackward0>), tensor([-4.2142], device='cuda:0', grad_fn=<AddBackward0>), tensor([-3.5000], device='cuda:0', grad_fn=<AddBackward0>), tensor([-2.6860], device='cuda:0', grad_fn=<AddBackward0>), tensor([-3.8862], device='cuda:0', grad_fn=<AddBackward0>), tensor([-3.2176], device='cuda:0', grad_fn=<AddBackward0>), tensor([-2.6860], device='cuda:0', grad_fn=<AddBackward0>), tensor([-4.0951], device='cuda:0', grad_fn=<AddBackward0>), tensor([-3.1601], device='cuda:0', grad_fn=<AddBackward0>), tensor([-2.6860], device='cuda:0', grad_fn=<AddBackward0>)]
+[10:10:54 INFO]
+Trajectory: [{'prob': tensor(0.0587, device='cuda:0', grad_fn=<CloneBackward0>), 'log_prob': tensor([-2.8345], device='cuda:0', grad_fn=<CloneBackward0>), 'state_identifier': ((None, None, -1),), 'action': 'CriticAgent_gpt4o', 'reward': tensor(-0.2341, device='cuda:0'), 'reward_model': 0, 'prior_prob': None}, {'prob': tensor(0.0623, device='cuda:0', grad_fn=<SelectBackward0>), 'log_prob': tensor([-2.7757], device='cuda:0', grad_fn=<SqueezeBackward1>), 'state_identifier': (('CriticAgent_gpt4o', 'critique', 1),), 'action': 'Modifier_gpt4o', 'reward': tensor(-0.2379, device='cuda:0'), 'reward_model': 0, 'prior_prob': None}, {'prob': tensor(0.0775, device='cuda:0', grad_fn=<SelectBackward0>), 'log_prob': tensor([-2.5581], device='cuda:0', grad_fn=<SqueezeBackward1>), 'state_identifier': (('CriticAgent_gpt4o', 'critique', 1), ('Modifier_gpt4o', 'modify', 1)), 'action': 'TerminatorAgent', 'reward': tensor(-1.0500, device='cuda:0'), 'reward_model': 0, 'finalized': True, 'total_tokens': 1252, 'total_cost': 500800, 'metrics': {}}]
+[10:10:54 INFO]
+Trajectory returns: tensor([-1.4987, -1.2774, -1.0500], device='cuda:0')
+[10:10:54 INFO]
+No KL loss: 0
+[10:10:54 INFO]
+loss for one sample: [tensor([-2.6523], device='cuda:0', grad_fn=<AddBackward0>), tensor([-4.2142], device='cuda:0', grad_fn=<AddBackward0>), tensor([-3.5000], device='cuda:0', grad_fn=<AddBackward0>), tensor([-2.6860], device='cuda:0', grad_fn=<AddBackward0>), tensor([-3.8862], device='cuda:0', grad_fn=<AddBackward0>), tensor([-3.2176], device='cuda:0', grad_fn=<AddBackward0>), tensor([-2.6860], device='cuda:0', grad_fn=<AddBackward0>), tensor([-4.0951], device='cuda:0', grad_fn=<AddBackward0>), tensor([-3.1601], device='cuda:0', grad_fn=<AddBackward0>), tensor([-2.6860], device='cuda:0', grad_fn=<AddBackward0>), tensor([-4.2481], device='cuda:0', grad_fn=<AddBackward0>)]
+[10:10:54 INFO]
+No KL loss: 0
+[10:10:54 INFO]
+loss for one sample: [tensor([-2.6523], device='cuda:0', grad_fn=<AddBackward0>), tensor([-4.2142], device='cuda:0', grad_fn=<AddBackward0>), tensor([-3.5000], device='cuda:0', grad_fn=<AddBackward0>), tensor([-2.6860], device='cuda:0', grad_fn=<AddBackward0>), tensor([-3.8862], device='cuda:0', grad_fn=<AddBackward0>), tensor([-3.2176], device='cuda:0', grad_fn=<AddBackward0>), tensor([-2.6860], device='cuda:0', grad_fn=<AddBackward0>), tensor([-4.0951], device='cuda:0', grad_fn=<AddBackward0>), tensor([-3.1601], device='cuda:0', grad_fn=<AddBackward0>), tensor([-2.6860], device='cuda:0', grad_fn=<AddBackward0>), tensor([-4.2481], device='cuda:0', grad_fn=<AddBackward0>), tensor([-3.5456], device='cuda:0', grad_fn=<AddBackward0>)]
+[10:10:54 INFO]
+No KL loss: 0
+[10:10:54 INFO]
+loss for one sample: [tensor([-2.6523], device='cuda:0', grad_fn=<AddBackward0>), tensor([-4.2142], device='cuda:0', grad_fn=<AddBackward0>), tensor([-3.5000], device='cuda:0', grad_fn=<AddBackward0>), tensor([-2.6860], device='cuda:0', grad_fn=<AddBackward0>), tensor([-3.8862], device='cuda:0', grad_fn=<AddBackward0>), tensor([-3.2176], device='cuda:0', grad_fn=<AddBackward0>), tensor([-2.6860], device='cuda:0', grad_fn=<AddBackward0>), tensor([-4.0951], device='cuda:0', grad_fn=<AddBackward0>), tensor([-3.1601], device='cuda:0', grad_fn=<AddBackward0>), tensor([-2.6860], device='cuda:0', grad_fn=<AddBackward0>), tensor([-4.2481], device='cuda:0', grad_fn=<AddBackward0>), tensor([-3.5456], device='cuda:0', grad_fn=<AddBackward0>), tensor([-2.6860], device='cuda:0', grad_fn=<AddBackward0>)]
+[10:10:54 INFO]
+Trajectory: [{'prob': tensor(0.0634, device='cuda:0', grad_fn=<CloneBackward0>), 'log_prob': tensor([-2.7575], device='cuda:0', grad_fn=<CloneBackward0>), 'state_identifier': ((None, None, -1),), 'action': 'ConcluderAgent_gpt4o', 'reward': tensor(-0.1345, device='cuda:0'), 'reward_model': 0, 'prior_prob': None}, {'prob': tensor(0.0587, device='cuda:0', grad_fn=<SelectBackward0>), 'log_prob': tensor([-2.8345], device='cuda:0', grad_fn=<SqueezeBackward1>), 'state_identifier': (('ConcluderAgent_gpt4o', 'conclude', 1),), 'action': 'CriticAgent_gpt4o', 'reward': tensor(-0.2591, device='cuda:0'), 'reward_model': 0, 'prior_prob': None}, {'prob': tensor(0.0775, device='cuda:0', grad_fn=<SelectBackward0>), 'log_prob': tensor([-2.5581], device='cuda:0', grad_fn=<SqueezeBackward1>), 'state_identifier': (('ConcluderAgent_gpt4o', 'conclude', 1), ('CriticAgent_gpt4o', 'critique', 1)), 'action': 'TerminatorAgent', 'reward': tensor(1.0500, device='cuda:0'), 'reward_model': 0, 'finalized': True, 'total_tokens': 1329, 'total_cost': 531600, 'metrics': {}}]
+[10:10:54 INFO]
+Trajectory returns: tensor([0.6381, 0.7804, 1.0500], device='cuda:0')
+[10:10:54 INFO]
+No KL loss: 0
+[10:10:54 INFO]
+loss for one sample: [tensor([-2.6523], device='cuda:0', grad_fn=<AddBackward0>), tensor([-4.2142], device='cuda:0', grad_fn=<AddBackward0>), tensor([-3.5000], device='cuda:0', grad_fn=<AddBackward0>), tensor([-2.6860], device='cuda:0', grad_fn=<AddBackward0>), tensor([-3.8862], device='cuda:0', grad_fn=<AddBackward0>), tensor([-3.2176], device='cuda:0', grad_fn=<AddBackward0>), tensor([-2.6860], device='cuda:0', grad_fn=<AddBackward0>), tensor([-4.0951], device='cuda:0', grad_fn=<AddBackward0>), tensor([-3.1601], device='cuda:0', grad_fn=<AddBackward0>), tensor([-2.6860], device='cuda:0', grad_fn=<AddBackward0>), tensor([-4.2481], device='cuda:0', grad_fn=<AddBackward0>), tensor([-3.5456], device='cuda:0', grad_fn=<AddBackward0>), tensor([-2.6860], device='cuda:0', grad_fn=<AddBackward0>), tensor([1.7596], device='cuda:0', grad_fn=<AddBackward0>)]
+[10:10:54 INFO]
+No KL loss: 0
+[10:10:54 INFO]
+loss for one sample: [tensor([-2.6523], device='cuda:0', grad_fn=<AddBackward0>), tensor([-4.2142], device='cuda:0', grad_fn=<AddBackward0>), tensor([-3.5000], device='cuda:0', grad_fn=<AddBackward0>), tensor([-2.6860], device='cuda:0', grad_fn=<AddBackward0>), tensor([-3.8862], device='cuda:0', grad_fn=<AddBackward0>), tensor([-3.2176], device='cuda:0', grad_fn=<AddBackward0>), tensor([-2.6860], device='cuda:0', grad_fn=<AddBackward0>), tensor([-4.0951], device='cuda:0', grad_fn=<AddBackward0>), tensor([-3.1601], device='cuda:0', grad_fn=<AddBackward0>), tensor([-2.6860], device='cuda:0', grad_fn=<AddBackward0>), tensor([-4.2481], device='cuda:0', grad_fn=<AddBackward0>), tensor([-3.5456], device='cuda:0', grad_fn=<AddBackward0>), tensor([-2.6860], device='cuda:0', grad_fn=<AddBackward0>), tensor([1.7596], device='cuda:0', grad_fn=<AddBackward0>), tensor([2.2120], device='cuda:0', grad_fn=<AddBackward0>)]
+[10:10:54 INFO]
+No KL loss: 0
+[10:10:54 INFO]
+loss for one sample: [tensor([-2.6523], device='cuda:0', grad_fn=<AddBackward0>), tensor([-4.2142], device='cuda:0', grad_fn=<AddBackward0>), tensor([-3.5000], device='cuda:0', grad_fn=<AddBackward0>), tensor([-2.6860], device='cuda:0', grad_fn=<AddBackward0>), tensor([-3.8862], device='cuda:0', grad_fn=<AddBackward0>), tensor([-3.2176], device='cuda:0', grad_fn=<AddBackward0>), tensor([-2.6860], device='cuda:0', grad_fn=<AddBackward0>), tensor([-4.0951], device='cuda:0', grad_fn=<AddBackward0>), tensor([-3.1601], device='cuda:0', grad_fn=<AddBackward0>), tensor([-2.6860], device='cuda:0', grad_fn=<AddBackward0>), tensor([-4.2481], device='cuda:0', grad_fn=<AddBackward0>), tensor([-3.5456], device='cuda:0', grad_fn=<AddBackward0>), tensor([-2.6860], device='cuda:0', grad_fn=<AddBackward0>), tensor([1.7596], device='cuda:0', grad_fn=<AddBackward0>), tensor([2.2120], device='cuda:0', grad_fn=<AddBackward0>), tensor([2.6860], device='cuda:0', grad_fn=<AddBackward0>)]
+[10:10:54 INFO]
+Policy loss: [tensor([-2.6523], device='cuda:0', grad_fn=<AddBackward0>), tensor([-4.2142], device='cuda:0', grad_fn=<AddBackward0>), tensor([-3.5000], device='cuda:0', grad_fn=<AddBackward0>), tensor([-2.6860], device='cuda:0', grad_fn=<AddBackward0>), tensor([-3.8862], device='cuda:0', grad_fn=<AddBackward0>), tensor([-3.2176], device='cuda:0', grad_fn=<AddBackward0>), tensor([-2.6860], device='cuda:0', grad_fn=<AddBackward0>), tensor([-4.0951], device='cuda:0', grad_fn=<AddBackward0>), tensor([-3.1601], device='cuda:0', grad_fn=<AddBackward0>), tensor([-2.6860], device='cuda:0', grad_fn=<AddBackward0>), tensor([-4.2481], device='cuda:0', grad_fn=<AddBackward0>), tensor([-3.5456], device='cuda:0', grad_fn=<AddBackward0>), tensor([-2.6860], device='cuda:0', grad_fn=<AddBackward0>), tensor([1.7596], device='cuda:0', grad_fn=<AddBackward0>), tensor([2.2120], device='cuda:0', grad_fn=<AddBackward0>), tensor([2.6860], device='cuda:0', grad_fn=<AddBackward0>)]
+[10:10:54 INFO]
+Policy loss stack: -36.60536193847656
+[10:10:54 INFO]
+Policy loss with entropy: -44.50580596923828
+[10:10:57 INFO]
+metrics: {'reasoning/action_probs': tensor([0.2337, 0.2008, 0.2006, 0.2441, 0.2324, 0.2466, 0.1887, 0.2243, 0.1762,
+        0.2139, 0.2351, 0.2264, 0.1903, 0.1869], device='cuda:0',
+       grad_fn=<SumBackward1>), 'reasoning/reward_from_rm': 0, 'reasoning/acc': 0.16666666666666666, 'reasoning/tokens': 1025.1666666666667, 'reasoning/cost': 410066.6666666667, 'training/policy_loss': -44.50580596923828, 'reasoning/mean_return': -2.2768404483795166, 'reasoning/mean_episode_length': 2.6666666666666665, 'reasoning/mean_last_reward': -0.6978079676628113, 'training/mean_kl_loss': 0.0, 'training/entropy': 2.633481979370117}

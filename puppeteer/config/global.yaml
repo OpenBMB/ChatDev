@@ -1,0 +1,19 @@
+logging:
+  level:  # logging level, e.g., INFO
+  logpath:  # the path to the folder for storing log files
+model_weight_path: # the path to the folder containing model weights of the puppeteer model base
+api_keys:
+  openai_api_key:  # openai api key
+  openai_base_url:  # openai base url, e.g., https://api.openai.com/v1/
+  bing_api_key: # bing api key for web search
+
+max_retry_times:  # maximum number of times to retry API calls
+max_json_reformat_turns:  # maximum number of times to retry JSON parsing/reformatting
+external_tools_enabled: True # whether to enable external tools like web search, file search, etc.
+
+file_path:
+  root_file_path: # the path to the folder containing all the files which agents might need
+
+graph:
+  max_parallel_paths:  # maximum number of parallel paths to explore in the graph
+  max_step_num:  # maximum number of steps (nodes) in each path

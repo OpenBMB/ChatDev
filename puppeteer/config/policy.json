@@ -1,0 +1,56 @@
+{
+    "device": {
+        "type": "cuda"
+    },
+    "paths": {
+        "checkpoint_path": "checkpoint/MMLU-Pro_test",
+        "model_path": "checkpoint/gsm-hard_validation/policy_net_20250414_105845.pt"
+    },
+    "training": {
+        "loading": false,
+        "training": true,
+        "learning_rate": 0.0001,
+        "sample_size": 1,
+        "gamma": 0.99,
+        "lambda_kl_loss": 0.0
+    },
+    "agent": {
+        "max_num_agents": 3,
+        "next_num_agents": 3,
+        "max_path": 6,
+        "threshold": 0.5,
+        "reward_factors": {
+            "default": -1.0,
+            "terminator": 0.5,
+            "web_search": -1.5
+        }
+    },
+    "llm": {
+        "prior": false,
+        "prior_redistribution": false,
+        "redistribution_weight": 0.1
+    },
+    "cost": {
+        "scale": 0.1,
+        "growth_rate": 1.0,
+        "inverse": false
+    },
+    "visualization": {
+        "base_path": "results",
+        "dpi": 300,
+        "figure_sizes": {
+            "policy_loss": [
+                12,
+                6
+            ],
+            "entropy": [
+                10,
+                6
+            ],
+            "action_probs": [
+                20,
+                10
+            ]
+        }
+    }
+}
