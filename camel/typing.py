@@ -52,6 +52,7 @@ class ModelType(Enum):
     GPT_4_TURBO_V = "gpt-4-turbo"
     GPT_4O = "gpt-4o"
     GPT_4O_MINI = "gpt-4o-mini"
+    GPT_5 = "gpt-5"
 
     STUB = "stub"
 
