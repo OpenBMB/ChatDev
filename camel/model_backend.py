@@ -65,22 +65,30 @@ class OpenAIModel(ModelBackend):
 
     def run(self, *args, **kwargs):
         string = "\n".join([message["content"] for message in kwargs["messages"]])
-        encoding = tiktoken.encoding_for_model(self.model_type.value)
+        # Be robust to unknown model names in tiktoken
+        try:
+            encoding = tiktoken.encoding_for_model(self.model_type.value)
+        except Exception:
+            encoding = tiktoken.get_encoding("cl100k_base")
         num_prompt_tokens = len(encoding.encode(string))
         gap_between_send_receive = 15 * len(kwargs["messages"])
         num_prompt_tokens += gap_between_send_receive
 
         if openai_new_api:
             # Experimental, add base_url
-            if BASE_URL:
-                client = openai.OpenAI(
-                    api_key=OPENAI_API_KEY,
-                    base_url=BASE_URL,
-                )
-            else:
-                client = openai.OpenAI(
-                    api_key=OPENAI_API_KEY
-                )
+            try:
+                if BASE_URL:
+                    client = openai.OpenAI(
+                        api_key=OPENAI_API_KEY,
+                        base_url=BASE_URL,
+                    )
+                else:
+                    client = openai.OpenAI(
+                        api_key=OPENAI_API_KEY
+                    )
+            except Exception as e:
+                print(f"OpenAI client initialization failed: {e}")
+                raise RuntimeError(f"Failed to initialize OpenAI client: {e}")
 
             num_max_token_map = {
                 "gpt-3.5-turbo": 4096,
@@ -91,15 +99,56 @@ class OpenAIModel(ModelBackend):
                 "gpt-4-0613": 8192,
                 "gpt-4-32k": 32768,
                 "gpt-4-turbo": 100000,
-                "gpt-4o": 4096, #100000
-                "gpt-4o-mini": 16384, #100000
+                "gpt-4o": 100000,
+                "gpt-4o-mini": 100000,
             }
-            num_max_token = num_max_token_map[self.model_type.value]
-            num_max_completion_tokens = num_max_token - num_prompt_tokens
-            self.model_config_dict['max_tokens'] = num_max_completion_tokens
+            num_max_token = num_max_token_map.get(self.model_type.value, 100000)
+            # Compute a safe completion limit (non-GPT-5 only)
+            num_max_completion_tokens = max(1, num_max_token - max(0, num_prompt_tokens))
+            safe_cap = 2048
+            is_gpt5 = str(self.model_type.value).startswith("gpt-5")
+            if is_gpt5:
+                # For gpt-5, do NOT send any token parameter and avoid sending
+                # legacy fields from ChatGPTConfig (temperature, max_tokens, etc.).
+                send_config = {}
+            else:
+                token_param = "max_tokens"
+                send_config = dict(self.model_config_dict)
+                send_config.pop("max_completion_tokens", None)
+                send_config[token_param] = min(num_max_completion_tokens, safe_cap)
+            try:
+                log_visualize(
+                    "System",
+                    f"Using {token_param}={send_config[token_param]} for model {self.model_type.value}"
+                )
+            except Exception:
+                pass
 
-            response = client.chat.completions.create(*args, **kwargs, model=self.model_type.value,
-                                                      **self.model_config_dict)
+            # Extra parameters for GPT-5 style models
+            extra_body = None
+            create_kwargs = {}
+            if is_gpt5:
+                # response_format is a first-class arg, others go via extra_body
+                create_kwargs["response_format"] = {"type": "text"}
+                extra_body = {
+                    "verbosity": "medium",
+                    "reasoning_effort": "high",
+                }
+            try:
+                response = client.chat.completions.create(
+                    *args,
+                    **kwargs,
+                    model=self.model_type.value,
+                    **send_config,
+                    **create_kwargs,
+                    extra_body=extra_body,
+                )
+            except Exception as e:
+                log_visualize(
+                    "System",
+                    f"OpenAI chat.completions.create failed: {e}"
+                )
+                raise
 
             cost = prompt_cost(
                 self.model_type.value,
@@ -124,15 +173,35 @@ class OpenAIModel(ModelBackend):
                 "gpt-4-0613": 8192,
                 "gpt-4-32k": 32768,
                 "gpt-4-turbo": 100000,
-                "gpt-4o": 4096, #100000
-                "gpt-4o-mini": 16384, #100000
+                "gpt-4o": 100000,
+                "gpt-4o-mini": 100000,
             }
-            num_max_token = num_max_token_map[self.model_type.value]
-            num_max_completion_tokens = num_max_token - num_prompt_tokens
-            self.model_config_dict['max_tokens'] = num_max_completion_tokens
+            num_max_token = num_max_token_map.get(self.model_type.value, 100000)
+            num_max_completion_tokens = max(1, num_max_token - max(0, num_prompt_tokens))
+            safe_cap = 2048
+            send_config = dict(self.model_config_dict)
+            send_config['max_tokens'] = min(num_max_completion_tokens, safe_cap)
+            try:
+                log_visualize(
+                    "System",
+                    f"Using max_tokens={send_config['max_tokens']} for model {self.model_type.value}"
+                )
+            except Exception:
+                pass
 
-            response = openai.ChatCompletion.create(*args, **kwargs, model=self.model_type.value,
-                                                    **self.model_config_dict)
+            try:
+                response = openai.ChatCompletion.create(
+                    *args,
+                    **kwargs,
+                    model=self.model_type.value,
+                    **send_config,
+                )
+            except Exception as e:
+                log_visualize(
+                    "System",
+                    f"OpenAI ChatCompletion.create failed: {e}"
+                )
+                raise
 
             cost = prompt_cost(
                 self.model_type.value,
@@ -188,6 +257,7 @@ class ModelFactory:
             ModelType.GPT_4_TURBO_V,
             ModelType.GPT_4O,
             ModelType.GPT_4O_MINI,
+            ModelType.GPT_5,
             None
         }:
             model_class = OpenAIModel
