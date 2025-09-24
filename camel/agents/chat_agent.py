@@ -240,11 +240,37 @@ class ChatAgent(BaseAgent):
             if openai_new_api:
                 if not isinstance(response, ChatCompletion):
                     raise RuntimeError("OpenAI returned unexpected struct")
-                output_messages = [
-                    ChatMessage(role_name=self.role_name, role_type=self.role_type,
-                                meta_dict=dict(), **dict(choice.message))
-                    for choice in response.choices
-                ]
+                output_messages = []
+                for choice in response.choices:
+                    msg = choice.message
+                    # Only pass fields ChatMessage supports; ignore extras like annotations/reasoning
+                    role = getattr(msg, "role", "assistant")
+                    content = getattr(msg, "content", None)
+                    if content is None:
+                        content = ""
+                    # Optional fields supported by ChatMessage
+                    payload = {
+                        "role": role,
+                        "content": content,
+                    }
+                    # pass through refusal/audio if present
+                    if hasattr(msg, "refusal") and getattr(msg, "refusal") is not None:
+                        payload["refusal"] = msg.refusal
+                    if hasattr(msg, "audio") and getattr(msg, "audio") is not None:
+                        payload["audio"] = msg.audio
+                    # function_call and tool_calls if present and compatible
+                    if hasattr(msg, "function_call") and getattr(msg, "function_call") is not None:
+                        payload["function_call"] = msg.function_call
+                    if hasattr(msg, "tool_calls") and getattr(msg, "tool_calls") is not None:
+                        payload["tool_calls"] = msg.tool_calls
+                    output_messages.append(
+                        ChatMessage(
+                            role_name=self.role_name,
+                            role_type=self.role_type,
+                            meta_dict=dict(),
+                            **payload,
+                        )
+                    )
                 info = self.get_info(
                     response.id,
                     response.usage,
@@ -254,11 +280,28 @@ class ChatAgent(BaseAgent):
             else:
                 if not isinstance(response, dict):
                     raise RuntimeError("OpenAI returned unexpected struct")
-                output_messages = [
-                    ChatMessage(role_name=self.role_name, role_type=self.role_type,
-                                meta_dict=dict(), **dict(choice["message"]))
-                    for choice in response["choices"]
-                ]
+                output_messages = []
+                for choice in response["choices"]:
+                    msg = choice.get("message", {})
+                    role = msg.get("role", "assistant")
+                    content = msg.get("content") or ""
+                    payload = {"role": role, "content": content}
+                    if "refusal" in msg and msg["refusal"] is not None:
+                        payload["refusal"] = msg["refusal"]
+                    if "audio" in msg and msg["audio"] is not None:
+                        payload["audio"] = msg["audio"]
+                    if "function_call" in msg and msg["function_call"] is not None:
+                        payload["function_call"] = msg["function_call"]
+                    if "tool_calls" in msg and msg["tool_calls"] is not None:
+                        payload["tool_calls"] = msg["tool_calls"]
+                    output_messages.append(
+                        ChatMessage(
+                            role_name=self.role_name,
+                            role_type=self.role_type,
+                            meta_dict=dict(),
+                            **payload,
+                        )
+                    )
                 info = self.get_info(
                     response["id"],
                     response["usage"],
