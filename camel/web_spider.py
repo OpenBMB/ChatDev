@@ -9,15 +9,19 @@ import time
 self_api_key = os.environ.get('OPENAI_API_KEY')
 BASE_URL = os.environ.get('BASE_URL')
 
-if BASE_URL:
-    client = openai.OpenAI(
-        api_key=self_api_key,
-        base_url=BASE_URL,
-    )
-else:
-    client = openai.OpenAI(
-        api_key=self_api_key
-    )
+try:
+    if BASE_URL:
+        client = openai.OpenAI(
+            api_key=self_api_key,
+            base_url=BASE_URL,
+        )
+    else:
+        client = openai.OpenAI(
+            api_key=self_api_key
+        )
+except Exception as e:
+    print(f"Warning: OpenAI client initialization failed: {e}")
+    client = None
 
 def get_baidu_baike_content(keyword):
     # design api by the baidubaike
@@ -53,6 +57,10 @@ def get_wiki_content(keyword):
 
 
 def modal_trans(task_dsp):
+    if client is None:
+        print("OpenAI client not available, skipping web spider")
+        return ''
+    
     try:
         task_in ="'" + task_dsp + \
                "'Just give me the most important keyword about this sentence without explaining it and your answer should be only one keyword."
