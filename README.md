@@ -180,6 +180,17 @@ To get started, follow these steps:
 
 - We thank [ManindraDeMel](https://github.com/ManindraDeMel) for providing Docker support. Please see [Docker Start Guide](wiki.md#docker-start).
 
+## 📚 Complete Tutorial
+
+**New to ChatDev?** Start with our comprehensive [TUTORIAL.md](TUTORIAL.md) guide that covers:
+- Step-by-step installation for all platforms
+- Model configuration for OpenAI, Gemini, DeepSeek, and more
+- Global accessibility setup
+- Troubleshooting common issues
+- Best practices and tips
+
+For model-specific configuration, see [MODEL_CONFIGURATION.md](MODEL_CONFIGURATION.md).
+
 ## ✨️ Advanced Skills
 
 For more detailed information, please refer to our [Wiki](wiki.md), where you can find:

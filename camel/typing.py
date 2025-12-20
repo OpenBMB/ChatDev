@@ -44,6 +44,7 @@ class RoleType(Enum):
 
 
 class ModelType(Enum):
+    # OpenAI Models
     GPT_3_5_TURBO = "gpt-3.5-turbo-16k-0613"
     GPT_3_5_TURBO_NEW = "gpt-3.5-turbo-16k"
     GPT_4 = "gpt-4"
@@ -52,12 +53,41 @@ class ModelType(Enum):
     GPT_4_TURBO_V = "gpt-4-turbo"
     GPT_4O = "gpt-4o"
     GPT_4O_MINI = "gpt-4o-mini"
+    
+    # Google Gemini Models
+    GEMINI_PRO = "gemini-pro"
+    GEMINI_PRO_VISION = "gemini-pro-vision"
+    GEMINI_1_5_PRO = "gemini-1.5-pro"
+    GEMINI_1_5_FLASH = "gemini-1.5-flash"
+    
+    # DeepSeek Models
+    DEEPSEEK_CHAT = "deepseek-chat"
+    DEEPSEEK_CODER = "deepseek-coder"
+    DEEPSEEK_CHAT_V2 = "deepseek-chat-v2"
+    
+    # Anthropic Claude (via OpenAI-compatible API)
+    CLAUDE_3_OPUS = "claude-3-opus-20240229"
+    CLAUDE_3_SONNET = "claude-3-sonnet-20240229"
+    CLAUDE_3_HAIKU = "claude-3-haiku-20240307"
+    CLAUDE_3_5_SONNET = "claude-3-5-sonnet-20241022"
+    
+    # Other OpenAI-compatible models
+    LLAMA_3_70B = "llama-3-70b"
+    LLAMA_3_8B = "llama-3-8b"
+    MISTRAL_LARGE = "mistral-large"
+    MISTRAL_MEDIUM = "mistral-medium"
+    MISTRAL_SMALL = "mistral-small"
 
     STUB = "stub"
 
     @property
     def value_for_tiktoken(self):
-        return self.value if self.name != "STUB" else "gpt-3.5-turbo-16k-0613"
+        if self.name == "STUB":
+            return "gpt-3.5-turbo-16k-0613"
+        # For non-OpenAI models, use a default encoding
+        if self.value.startswith("gemini") or self.value.startswith("deepseek") or self.value.startswith("claude"):
+            return "gpt-3.5-turbo-16k-0613"  # Fallback encoding
+        return self.value
 
 
 class PhaseType(Enum):

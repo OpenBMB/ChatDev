@@ -79,7 +79,10 @@ parser.add_argument('--task', type=str, default="Develop a basic Gomoku game.",
 parser.add_argument('--name', type=str, default="Gomoku",
                     help="Name of software, your software will be generated in WareHouse/name_org_timestamp")
 parser.add_argument('--model', type=str, default="GPT_3_5_TURBO",
-                    help="GPT Model, choose from {'GPT_3_5_TURBO', 'GPT_4', 'GPT_4_TURBO', 'GPT_4O', 'GPT_4O_MINI'}")
+                    help="AI Model, choose from OpenAI: {'GPT_3_5_TURBO', 'GPT_4', 'GPT_4_TURBO', 'GPT_4O', 'GPT_4O_MINI'}, "
+                         "Gemini: {'GEMINI_PRO', 'GEMINI_1_5_PRO', 'GEMINI_1_5_FLASH'}, "
+                         "DeepSeek: {'DEEPSEEK_CHAT', 'DEEPSEEK_CODER', 'DEEPSEEK_CHAT_V2'}, "
+                         "or other OpenAI-compatible models")
 parser.add_argument('--path', type=str, default="",
                     help="Your file directory, ChatDev will build upon your software in the Incremental mode")
 args = parser.parse_args()
@@ -90,16 +93,35 @@ args = parser.parse_args()
 #          Init ChatChain
 # ----------------------------------------
 config_path, config_phase_path, config_role_path = get_config(args.config)
-args2type = {'GPT_3_5_TURBO': ModelType.GPT_3_5_TURBO,
-             'GPT_4': ModelType.GPT_4,
-            #  'GPT_4_32K': ModelType.GPT_4_32k,
-             'GPT_4_TURBO': ModelType.GPT_4_TURBO,
-            #  'GPT_4_TURBO_V': ModelType.GPT_4_TURBO_V
-            'GPT_4O': ModelType.GPT_4O,
-            'GPT_4O_MINI': ModelType.GPT_4O_MINI,
-             }
+args2type = {
+    # OpenAI Models
+    'GPT_3_5_TURBO': ModelType.GPT_3_5_TURBO,
+    'GPT_4': ModelType.GPT_4,
+    'GPT_4_TURBO': ModelType.GPT_4_TURBO,
+    'GPT_4O': ModelType.GPT_4O,
+    'GPT_4O_MINI': ModelType.GPT_4O_MINI,
+    # Google Gemini Models
+    'GEMINI_PRO': ModelType.GEMINI_PRO,
+    'GEMINI_PRO_VISION': ModelType.GEMINI_PRO_VISION,
+    'GEMINI_1_5_PRO': ModelType.GEMINI_1_5_PRO,
+    'GEMINI_1_5_FLASH': ModelType.GEMINI_1_5_FLASH,
+    # DeepSeek Models
+    'DEEPSEEK_CHAT': ModelType.DEEPSEEK_CHAT,
+    'DEEPSEEK_CODER': ModelType.DEEPSEEK_CODER,
+    'DEEPSEEK_CHAT_V2': ModelType.DEEPSEEK_CHAT_V2,
+    # Anthropic Claude (via OpenAI-compatible API)
+    'CLAUDE_3_OPUS': ModelType.CLAUDE_3_OPUS,
+    'CLAUDE_3_SONNET': ModelType.CLAUDE_3_SONNET,
+    'CLAUDE_3_HAIKU': ModelType.CLAUDE_3_HAIKU,
+    'CLAUDE_3_5_SONNET': ModelType.CLAUDE_3_5_SONNET,
+}
 if openai_new_api:
     args2type['GPT_3_5_TURBO'] = ModelType.GPT_3_5_TURBO_NEW
+
+if args.model not in args2type:
+    print(f"Warning: Model '{args.model}' not found in supported models. Using GPT_3_5_TURBO as default.")
+    print(f"Supported models: {', '.join(args2type.keys())}")
+    args.model = 'GPT_3_5_TURBO'
 
 chat_chain = ChatChain(config_path=config_path,
                        config_phase_path=config_phase_path,
