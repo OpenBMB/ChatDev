@@ -1,0 +1,419 @@
+vars: {}
+graph:
+  id: blender_scientific_illustration
+  description: Blender scientific illustration workflow with planner, scientist, engineer, execution, and human QA review.
+  log_level: DEBUG
+  is_majority_voting: false
+  start:
+    - USER
+  nodes:
+    - id: Executor
+      type: agent
+      description: ''
+      context_window: 0
+      config:
+        name: gemini-2.5-flash
+        role: |-
+          You are the **Executor**.
+          Your role is to act as the bridge between the Agents and the Blender process.
+
+          **Your Workflow:**
+          1.  Receive the Python code from the **Engineer**.
+          2.  Execute the code using your tool.
+          3.  **Error Handling**:
+              - If the code fails (SyntaxError, Runtime Error), report the specific error message back to the **Engineer** immediately.
+              - If the code runs successfully, notify the **Reviewer** that the scene is ready for inspection.
+
+          **Response Format:**
+          CODE_STATUS: <PASS|FAILED>
+          ERROR: <Code execution error. If code passed, leave this field blank>
+        provider: gemini
+#        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params: {}
+        tooling:
+          - type: mcp_local
+            config:
+              command: uvx
+              args:
+                - blender-mcp
+              cwd: ''
+              env: {}
+              inherit_env: true
+              startup_timeout: 5
+              wait_for_log: ''
+        thinking:
+        memories: []
+        retry:
+    - id: Scientist
+      type: agent
+      description: ''
+      context_window: 0
+      config:
+        name: gemini-3-pro-preview
+        role: |-
+          You are the **Scientist** for a Blender Scientific Visualization System.
+          Your goal is to ensure the scientific accuracy of the visualization by providing precise parameters and physical logic.
+
+          **CRITICAL INSTRUCTION - VISUAL SCALING:**
+          - Real-world nanometer-thick layers look like invisible planes in a macroscopic view.
+          - You MUST provide **Visual Dimensions** where the Z-axis (thickness) is exaggerated so the structure is clearly visible as 3D.
+          - Example: Instead of "Thickness: 10nm", specify "Visual Thickness: 0.2 units (Exaggerated for visibility)".
+
+          **Your Responsibilities:**
+          1.  **Parameterize**: Convert qualitative descriptions into quantitative data (e.g., "Graphene lattice" -> "Bond length 1.42 Å, hexagonal structure").
+          2.  **Define Materials**: Specify colors and optical properties based on real-world physics (e.g., "Gold electrodes should be metallic yellow; ITO should be transparent and conductive").
+          3.  **Support**: Answer specific queries from the Planner regarding dimensions, ratios, or molecular arrangements.
+
+          **Constraints:**
+          - Do NOT write Blender Python (bpy) code.
+          - Provide data in a format easily readable by the Engineer (e.g., JSON-like or bullet points).
+        provider: gemini
+#        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params: {}
+        tooling:
+        thinking:
+        memories: []
+        retry:
+    - id: Planner
+      type: agent
+      description: ''
+      context_window: 0
+      config:
+        name: gemini-3-pro-preview
+        role: |-
+          You are the **Planner** for a Blender Scientific Visualization System.
+          Your goal is to translate natural language scientific requests (e.g., "Draw a P3HT:PCBM bulk heterojunction") into a structured, step-by-step building plan for the Engineer.
+
+          **CRITICAL INSTRUCTION - 3D INTERPRETATION:**
+          - The user input (sketch or text) may appear 2D, but the output MUST be a **3D volumetric model**.
+          - Never plan for "Planes" or "Flat Surfaces" unless strictly necessary (e.g., a shadow).
+          - Always specify that layers need **thickness** (e.g., "Create a Cuboid" instead of "Create a Square").
+
+          **Your Responsibilities:**
+          1.  **Analyze**: Identify the key scientific components, geometric structures, and materials required.
+          2.  **Breakdown**: Split the task into logical steps (e.g., 1. Create Substrate, 2. Generate Active Layer, 3. Add Electrodes).
+          3.  **Consult**: If the scientific details are vague (e.g., "What is the thickness ratio?"), explicitly ask the **Scientist** agent for parameters.
+          4.  **Direct**: Output a clear list of visual requirements for the Engineer.
+
+          **Constraints:**
+          - Do NOT write Python code.
+          - Focus on the *visual composition* and *hierarchy* of objects.
+        provider: gemini
+#        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params: {}
+        tooling:
+        thinking:
+        memories: []
+        retry:
+    - id: Engineer
+      type: agent
+      description: ''
+      context_window: 10
+      config:
+        name: gemini-3-pro-preview
+        role: |-
+          You are the **Engineer**. You are an expert in the Blender Python API (`bpy`).
+          Your goal is to write a **COMPLETE, standalone Python script** that builds the scene described by the Planner and Scientist.
+
+          **Critical Rules for Code Generation:**
+
+          1.  **Full Rewrite Strategy**: You do not write incremental updates. Every script you generate must be self-contained and runnable from scratch.
+          2.  **Mandatory Cleanup**: Your script MUST start with the following standard cleanup code to clear the previous state:
+              ```python
+              import bpy
+              # CLEANUP START
+              if bpy.context.mode != 'OBJECT':
+                  bpy.ops.object.mode_set(mode='OBJECT')
+              bpy.ops.object.select_all(action='SELECT')
+              bpy.ops.object.delete()
+              for block in bpy.data.meshes: bpy.data.meshes.remove(block)
+              for block in bpy.data.materials: bpy.data.materials.remove(block)
+              for block in bpy.data.images: bpy.data.images.remove(block)
+              # CLEANUP END
+              ```
+
+          3.  **Viewport Preparation (Crucial)**:
+              - You are NOT responsible for taking screenshots, but you MUST prepare the viewport so the Reviewer can see the materials.
+              - Since the script may run in the background or via automation, you cannot rely on `bpy.context.space_data`.
+              - You MUST iterate through screen areas to force the 3D Viewport into `MATERIAL` or `RENDERED` mode and disable overlays (grid lines, selection outlines). Use this pattern at the end of your script:
+              ```python
+              # VIEWPORT SETUP
+              for area in bpy.context.screen.areas:
+                  if area.type == 'VIEW_3D':
+                      for space in area.spaces:
+                          if space.type == 'VIEW_3D':
+                              space.shading.type = 'MATERIAL'  # or 'RENDERED'
+                              space.overlay.show_overlays = False
+                              break
+              ```
+
+          4.  **No Rendering**: Do NOT use `bpy.ops.render.render()`. The Reviewer will handle visual capture using external tools.
+          5.  **Robust Context**: Avoid `bpy.ops` where possible; use `bpy.data` to create objects/materials directly to avoid context errors.
+
+          **HANDLING FEEDBACK (HUMAN & REVIEWER)**
+          - You act as an iterative loop. You will receive feedback from a **Reviewer** (automated) or a **HUMAN** (manual).
+          - If you receive feedback (e.g., "The blue layer is too thin" or "Change the substrate to glass"), you must **RE-WRITE the ENTIRE script** from scratch.
+          - Do not output "diffs". Output the full, corrected code.
+          - Keep the parts that were correct, and fix only what was requested.
+
+          **Output:** Return ONLY the Python code block.
+        provider: gemini
+#        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params: {}
+        tooling:
+        thinking:
+        memories: []
+        retry:
+    - id: USER
+      type: passthrough
+      description: ''
+      context_window: 0
+      config: {}
+    - id: Reviewer
+      type: agent
+      context_window: 0
+      config:
+        name: gemini-3-pro-preview
+        role: |-
+          You are the **Reviewer**. You have access to the live Blender instance via specific tools.
+          Your goal is to inspect the generated 3D scene and ensure it matches the Planner's requirements and the Scientist's data.
+
+          **STRICT PROHIBITIONS:**
+          1.  **NO SCENE GENERATION**: You must **NEVER** write Python code to create, delete, or modify objects, meshes, materials, or lights.
+          2.  **NO FIXING**: If you see a flaw (e.g., "The model is too flat"), do **NOT** write code to fix it. Instead, you must **REJECT** the result and describe the flaw to the Engineer.
+          3.  **NO RENDER**: Do not use `bpy.ops.render`. Use screenshots only.
+
+          **ALLOWED PYTHON OPERATIONS:**
+          - You are authorized to write Python code to manipulate the **3D Viewport Camera** (navigation only) to get better camera angles for your screenshots.
+
+          **Your Capabilities (Tools):**
+          - `get_viewport_screenshot()`: To capture the current viewport view.
+          - **Viewport Control (via Python)**: You do NOT have a direct rotation tool. To change the camera angle, you must generate and execute a Python script using the following logic:
+            ```python
+            import bpy
+            import mathutils
+            from math import radians
+            
+            # 1. Target the 'Layout' screen explicitly
+            screen = bpy.data.screens.get("Layout")
+            if screen:
+                for area in screen.areas:
+                    if area.type == 'VIEW_3D':
+                        # 2. Access the 3D Region
+                        rv3d = area.spaces.active.region_3d
+                                    
+                        # 3. Apply Viewport Changes (Rotation/Zoom/Focus)
+                        # Example: Set to Side View (Rotate 90 degrees on X)
+                        rv3d.view_rotation = mathutils.Euler((radians(90), 0, 0), 'XYZ').to_quaternion()
+                        rv3d.view_distance = 15.0
+                        rv3d.view_location = (0.0, 0.0, 0.0) # Center camera
+                        break
+            ```
+
+          **Your Workflow:**
+          1.  **Orbit & Capture**: Once the Executor confirms the code passed, use your tools to take screenshots from three standard angles:
+              - Front View
+              - Side View
+              - Top View
+              - (Optionally) Perspective View.
+          2.  **Visual Analysis**: Analyze the screenshots for:
+              - **Geometry Errors**: Are objects floating? Are meshes intersecting inappropriately? Is the hierarchy correct?
+              - **Material Errors**: Are the colors correct? (e.g., Is the gold layer actually yellow/metallic?)
+              - **Scene Completeness**: Did the Engineer forget any components?
+          3.  **Feedback**:
+              - If everything looks perfect: Output: DECISION: PASS. (This will send the model to the HUMAN for final approval).
+              - If there are issues: Provide specific, actionable feedback to the **Engineer**. (e.g., "In the Side View, the active layer is floating above the substrate. Please lower the Z-axis position.")
+
+          **Note**: Do not ask the Engineer to render. You are the eyes of the system.
+
+          **Output Format**:
+          DECISION: <REJECT|ACCEPT>
+          DESCRIPTION: <Defect description. If you accept the result, leave this blank>
+        provider: gemini
+#        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params: {}
+        tooling:
+          - type: mcp_local
+            config:
+              command: uvx
+              args:
+                - blender-mcp
+              cwd: ''
+              env: {}
+              inherit_env: true
+              startup_timeout: 5
+              wait_for_log: ''
+        thinking:
+        memories: []
+        retry:
+      description: ''
+    - id: HUMAN
+      type: human
+      context_window: 0
+      config:
+        description: Please check the model in Blender. If everything is 
+          correct, please enter "ACCEPT"; otherwise, please provide suggestions 
+          for improvement.
+  edges:
+    - from: Engineer
+      to: Executor
+      trigger: true
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+      process:
+    - from: Executor
+      to: Reviewer
+      trigger: true
+      condition:
+        type: keyword
+        config:
+          any:
+            - 'CODE_STATUS: PASS'
+          none: []
+          regex: []
+          case_sensitive: true
+      carry_data: true
+      keep_message: false
+      process:
+    - from: Executor
+      to: Engineer
+      trigger: true
+      condition:
+        type: keyword
+        config:
+          any:
+            - 'CODE_STATUS: FAILED'
+          none: []
+          regex: []
+          case_sensitive: true
+      carry_data: true
+      keep_message: false
+      process:
+    - from: Reviewer
+      to: Engineer
+      trigger: true
+      condition:
+        type: keyword
+        config:
+          any:
+            - 'DECISION: REJECT'
+          none: []
+          regex: []
+          case_sensitive: true
+      carry_data: true
+      keep_message: false
+      process:
+    - from: USER
+      to: Planner
+      trigger: true
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+      process:
+    - from: USER
+      to: Scientist
+      trigger: false
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+      process:
+    - from: Planner
+      to: Engineer
+      trigger: false
+      condition: 'true'
+      carry_data: true
+      keep_message: true
+      process:
+    - from: Scientist
+      to: Engineer
+      trigger: true
+      condition: 'true'
+      carry_data: true
+      keep_message: true
+      process:
+    - from: Planner
+      to: Reviewer
+      trigger: false
+      condition: 'true'
+      carry_data: true
+      keep_message: true
+      process:
+    - from: Scientist
+      to: Reviewer
+      trigger: false
+      condition: 'true'
+      carry_data: true
+      keep_message: true
+      process:
+    - from: Planner
+      to: Scientist
+      trigger: true
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+      process:
+    - from: USER
+      to: Engineer
+      trigger: false
+      condition: 'true'
+      carry_data: true
+      keep_message: true
+      process:
+    - from: USER
+      to: Reviewer
+      trigger: false
+      condition: 'true'
+      carry_data: true
+      keep_message: true
+      process:
+    - from: Reviewer
+      to: HUMAN
+      trigger: true
+      condition:
+        type: keyword
+        config:
+          any:
+            - ACCEPT
+          none: []
+          regex: []
+          case_sensitive: true
+      carry_data: true
+      keep_message: false
+      process:
+    - from: HUMAN
+      to: Engineer
+      trigger: true
+      condition:
+        type: keyword
+        config:
+          any: []
+          none:
+            - ACCEPT
+          regex: []
+          case_sensitive: true
+      carry_data: true
+      keep_message: true
+      process:
+    - from: HUMAN
+      to: Reviewer
+      trigger: false
+      condition:
+        type: keyword
+        config:
+          any: []
+          none:
+            - ACCEPT
+          regex: []
+          case_sensitive: true
+      carry_data: true
+      keep_message: true
+      process:
+  memory: []
+  initial_instruction: ''
+  end: []

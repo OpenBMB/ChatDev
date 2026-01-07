@@ -1,0 +1,255 @@
+version: <string> | "0.0.0"
+vars:
+  <key>: <value> | required
+graph:
+  id: <string> | required
+  description: <text> | None
+  log_level: <enum:LogLevel> | [DEBUG, INFO, WARNING, ERROR, CRITICAL]
+  is_majority_voting: <bool> | false
+  nodes:
+  - id: <string> | required
+    type: <string> | [model, agent, human, subgraph, python, passthrough, literal]
+    description: <string> | None
+    context_window: <int> | 0
+    config:
+      <variant[config]=model>:
+        name: <string> | required
+        role: <text> | None
+        provider: <string> | [openai, gemini]
+        base_url: <string> | "${BASE_URL}"
+        api_key: <string> | "${API_KEY}"
+        params:
+          <key>: <value> | required
+        tooling:
+          type: <string> | [function, mcp_remote, mcp_local]
+          config:
+            <variant[config]=function>:
+              tools:
+              - name: <string> | [call_user, describe_available_files, execute_code,
+                  get_city_num, get_weather, get_webpage_content, install_python_packages,
+                  iter_workspace_entries, load_file, load_image, read_text_file_snippet,
+                  save_file, web_search]
+                description: <string> | None
+                parameters: <object> | None
+                auto_fill: <bool> | true
+              timeout: <float> | None
+            <variant[config]=mcp_remote>:
+              server: <string> | required
+              headers:
+                <key>: <value> | required
+              timeout: <float> | None
+            <variant[config]=mcp_local>:
+              command: <string> | required
+              args:
+              - <string> | None
+              cwd: <string> | None
+              env:
+                <key>: <value> | required
+              inherit_env: <bool> | true
+              startup_timeout: <float> | 10.0
+              wait_for_log: <string> | None
+        thinking:
+          type: <string> | [reflection]
+          config:
+            <variant[config]=reflection>:
+              reflection_prompt: <string> | required
+        memories:
+        - name: <string> | required
+          retrieve_stage:
+          - <AgentExecFlowStage> | [pre_gen_thinking, gen, post_gen_thinking, finished]
+          top_k: <int> | 3
+          similarity_threshold: <float> | -1.0
+          read: <bool> | true
+          write: <bool> | true
+        retry:
+          enabled: <bool> | true
+          max_attempts: <int> | 5
+          min_wait_seconds: <float> | 1.0
+          max_wait_seconds: <float> | 6.0
+          retry_on_status_codes:
+          - <int> | None
+          retry_on_exception_types:
+          - <string> | None
+          non_retry_exception_types:
+          - <string> | None
+          retry_on_error_substrings:
+          - <string> | None
+      <variant[config]=agent>:
+        url: <string> | required
+      <variant[config]=human>:
+        description: <text> | None
+      <variant[config]=subgraph>:
+        type: <string> | [config, file]
+        config:
+          <variant[config]=config>:
+            id: <string> | required
+            description: <string> | None
+            log_level: <enum:LogLevel> | [DEBUG, INFO, WARNING, ERROR, CRITICAL]
+            is_majority_voting: <bool> | false
+            nodes:
+            - '<recursive[Node] path: DesignConfig → GraphDefinition → Node → SubgraphConfig → SubgraphInlineConfig → Node>': See
+                earlier definition to avoid infinite recursion
+            edges:
+            - from: <string> | required
+              to: <string> | required
+              trigger: <bool> | true
+              condition:
+                type: <string> | [function, keyword]
+                config:
+                  <variant[config]=function>:
+                    name: <string> | [true, always_false, code_fail, code_pass, contains_keyword,
+                      length_greater_than_5, need_reflection_loop, not_contains_keyword,
+                      should_stop_loop]
+                  <variant[config]=keyword>:
+                    any:
+                    - <string> | None
+                    none:
+                    - <string> | None
+                    regex:
+                    - <string> | None
+                    case_sensitive: <bool> | true
+              carry_data: <bool> | true
+              keep_message: <bool> | false
+              process:
+                type: <string> | [regex_extract, function]
+                config:
+                  <variant[config]=regex_extract>:
+                    pattern: <string> | required
+                    group: <string> | None
+                    case_sensitive: <bool> | true
+                    multiline: <bool> | false
+                    dotall: <bool> | false
+                    multiple: <bool> | false
+                    mode: <enum> | [replace_content, metadata, data_block]
+                    metadata_key: <string> | None
+                    data_key: <string> | None
+                    template: <string> | None
+                    on_no_match: <enum> | [pass, default, drop]
+                    default_value: <string> | None
+                  <variant[config]=function>:
+                    name: <string> | [uppercase_payload]
+            memory:
+            - name: <string> | required
+              type: <string> | [simple, file, blackboard]
+              config:
+                <variant[config]=simple>:
+                  memory_path: <string> | None
+                  embedding:
+                    provider: <string> | "openai"
+                    model: <string> | "text-embedding-3-small"
+                    api_key: <string> | "${API_KEY}"
+                    base_url: <string> | "${BASE_URL}"
+                    params:
+                      <key>: <value> | required
+                <variant[config]=file>:
+                  index_path: <string> | None
+                  file_sources:
+                  - path: <string> | required
+                    file_types:
+                    - <string> | None
+                    recursive: <bool> | true
+                    encoding: <string> | "utf-8"
+                  embedding:
+                    provider: <string> | "openai"
+                    model: <string> | "text-embedding-3-small"
+                    api_key: <string> | "${API_KEY}"
+                    base_url: <string> | "${BASE_URL}"
+                    params:
+                      <key>: <value> | required
+                <variant[config]=blackboard>:
+                  memory_path: <string> | "auto"
+                  max_items: <int> | 1000
+            vars:
+              <key>: <value> | required
+            organization: <string> | None
+            initial_instruction: <string> | None
+            start: <string | list[str]> | None
+            end: <string | list[str]> | None
+          <variant[config]=file>:
+            path: <string> | required
+      <variant[config]=python>:
+        interpreter: <string>
+        args:
+        - <string> | None
+        env:
+          <key>: <value> | required
+        timeout_seconds: <int> | 60
+        encoding: <string> | "utf-8"
+      <variant[config]=passthrough>: {}
+      <variant[config]=literal>:
+        content: <string> | required
+        role: <string> | [user, assistant]
+  edges:
+  - from: <string> | required
+    to: <string> | required
+    trigger: <bool> | true
+    condition:
+      type: <string> | [function, keyword]
+      config:
+        <variant[config]=function>:
+          name: <string> | [true, always_false, code_fail, code_pass, contains_keyword,
+            length_greater_than_5, need_reflection_loop, not_contains_keyword, should_stop_loop]
+        <variant[config]=keyword>:
+          any:
+          - <string> | None
+          none:
+          - <string> | None
+          regex:
+          - <string> | None
+          case_sensitive: <bool> | true
+    carry_data: <bool> | true
+    keep_message: <bool> | false
+    process:
+      type: <string> | [regex_extract, function]
+      config:
+        <variant[config]=regex_extract>:
+          pattern: <string> | required
+          group: <string> | None
+          case_sensitive: <bool> | true
+          multiline: <bool> | false
+          dotall: <bool> | false
+          multiple: <bool> | false
+          mode: <enum> | [replace_content, metadata, data_block]
+          metadata_key: <string> | None
+          data_key: <string> | None
+          template: <string> | None
+          on_no_match: <enum> | [pass, default, drop]
+          default_value: <string> | None
+        <variant[config]=function>:
+          name: <string> | [uppercase_payload]
+  memory:
+  - name: <string> | required
+    type: <string> | [simple, file, blackboard]
+    config:
+      <variant[config]=simple>:
+        memory_path: <string> | None
+        embedding:
+          provider: <string> | "openai"
+          model: <string> | "text-embedding-3-small"
+          api_key: <string> | "${API_KEY}"
+          base_url: <string> | "${BASE_URL}"
+          params:
+            <key>: <value> | required
+      <variant[config]=file>:
+        index_path: <string> | None
+        file_sources:
+        - path: <string> | required
+          file_types:
+          - <string> | None
+          recursive: <bool> | true
+          encoding: <string> | "utf-8"
+        embedding:
+          provider: <string> | "openai"
+          model: <string> | "text-embedding-3-small"
+          api_key: <string> | "${API_KEY}"
+          base_url: <string> | "${BASE_URL}"
+          params:
+            <key>: <value> | required
+      <variant[config]=blackboard>:
+        memory_path: <string> | "auto"
+        max_items: <int> | 1000
+  initial_instruction: <text> | None
+  start:
+  - <string> | None
+  end:
+  - <string> | None

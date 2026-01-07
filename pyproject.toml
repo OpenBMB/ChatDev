@@ -1,0 +1,48 @@
+[project]
+name = "DevAll"
+version = "0.1.0"
+description = "Workflow orchestration runtime for DevAll"
+readme = "README.md"
+license = { text = "Apache-2.0" }
+classifiers = [
+    "License :: OSI Approved :: Apache Software License",
+]
+requires-python = ">=3.12,<3.13"
+authors = [{ name = "DevAll Team" }]
+dependencies = [
+    "pyyaml",
+    "openai",
+    "tenacity",
+    "mcp",
+    "fastmcp",
+    "faiss-cpu",
+    "fastapi==0.124.0",
+    "click>=8.1.8,<8.3", # pin until click restores postponed annotations
+    "uvicorn",
+    "websockets",
+    "wsproto",
+    "pydantic==2.12.5",
+    "requests",
+    "pytest",
+    "ddgs",
+    "beautifulsoup4",
+    "matplotlib",
+    "networkx",
+    "cartopy",
+    "pandas>=2.3.3",
+    "numpy>=2.3.5",
+    "seaborn>=0.13.2",
+    "google-genai>=1.52.0",
+    "chardet>=5.2.0",
+    "pygame>=2.6.1",
+    "filelock>=3.20.1",
+    "markdown>=3.10",
+    "xhtml2pdf>=0.2.17",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.uv]
+package = false

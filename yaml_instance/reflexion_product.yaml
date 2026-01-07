@@ -1,0 +1,79 @@
+version: 0.4.0
+graph:
+  id: reflexion_product_brainstorm
+  description: Marketing campaign brainstorming using a Reflexion subgraph for iteration.
+  log_level: INFO
+  is_majority_voting: false
+  initial_instruction: Please enter a new product, target users, channels, or competitor pain points. The system will output a promotion plan after round-by-round reflection.
+  start:
+    - Intake Planner
+  end:
+  - Client QA Editor
+  nodes:
+  - id: Intake Planner
+    type: agent
+    description: Normalize user tasks, extract goals and constraints.
+    config:
+      provider: openai
+      base_url: ${BASE_URL}
+      api_key: ${API_KEY}
+      name: gpt-4o-mini
+      input_mode: messages
+      role: |
+        You are a marketing strategy manager. Normalize the user input into:
+        {"product": "...", "audience": [..], "channels": [..], "constraints": [..], "success_metric": "..."}
+        Output only JSON, with no additional text.
+      params:
+        temperature: 0.2
+        max_tokens: 1000
+  - id: Research Summarizer
+    type: agent
+    description: Collect background info, organize key points.
+    context_window: -1
+    config:
+      provider: openai
+      base_url: ${BASE_URL}
+      api_key: ${API_KEY}
+      name: gpt-4o-mini
+      input_mode: messages
+      role: |
+        You are a strategy researcher. Based on the JSON from Intake Planner, generate 3-5 background bullets:
+        - Market insights
+        - Core selling points
+        - Risks and dependencies
+      params:
+        temperature: 0.3
+        max_tokens: 1000
+  - id: Reflexion Loop
+    type: subgraph
+    description: Call the reflexion_loop subgraph to iterate and polish the plan.
+    config:
+      type: file
+      config:
+        path: "subgraphs/reflexion_loop.yaml"
+  - id: Client QA Editor
+    type: agent
+    description: Wrap the final output of the Reflexion Loop into a client delivery draft.
+    context_window: -1
+    config:
+      provider: openai
+      base_url: ${BASE_URL}
+      api_key: ${API_KEY}
+      name: gpt-4o
+      input_mode: messages
+      role: |
+        You are a Customer Success Manager.
+        - Organize the output from the Reflexion Loop into the format of "Event Summary + Three-Phase Actions + KPI".
+        - If you find TODOs or risks, append an "Open Risks" list.
+      params:
+        temperature: 0.2
+        max_tokens: 2000
+  edges:
+  - from: Intake Planner
+    to: Research Summarizer
+  - from: Research Summarizer
+    to: Reflexion Loop
+  - from: Reflexion Loop
+    to: Client QA Editor
+  - from: Research Summarizer
+    to: Client QA Editor

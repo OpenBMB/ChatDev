@@ -1,0 +1,67 @@
+version: 0.4.0
+vars: {}
+graph:
+  id: ''
+  description: Simple memory-backed article generation and expansion workflow.
+  is_majority_voting: false
+  nodes:
+    - id: B
+      type: agent
+      config:
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        provider: openai
+        name: gpt-4o
+        role: |
+          You are an editor, skilled at expanding and polishing content provided by the user.
+          The user will provide a piece of text, and you need to expand it into an article of no less than 2000 words, requiring multiple paragraphs, fluent language, and rich content.
+        params:
+          temperature: 0.1
+          max_tokens: 4000
+    - id: A
+      type: agent
+      config:
+        name: gpt-4o
+        provider: openai
+        role: |
+          You are a writer, skilled at generating a full article based on a word or phrase input by the user.
+          The user will input a word or a short sentence, and you need to generate an article of no less than 2000 words based on it, requiring multiple paragraphs.
+          At the same time, there may be past memory input (memory sections are wrapped by ===== Begin of memory results ===== and ===== End of memory results =====). If so, you **must** verbatim include some paragraphs from these memories in certain paragraphs of your article.
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params:
+          temperature: 0.1
+          max_tokens: 4000
+        tooling: []
+        thinking:
+          type: reflection
+          config:
+            reflection_prompt: |
+              Extract the first sentence of each paragraph, do not output anything else.
+        memories:
+          - name: Paper Gen Memory
+            top_k: 2
+            retrieve_stage:
+              - gen
+        retry: null
+      description: ''
+      context_window: 0
+  edges:
+    - from: A
+      to: B
+  log_level: DEBUG
+  memory:
+    - name: Paper Gen Memory
+      type: simple
+      config:
+        memory_path: memory_test/test.json
+        embedding:
+          provider: openai
+          model: text-embedding-ada-002
+          api_key: ${API_KEY}
+          base_url: ${BASE_URL}
+          params: {}
+  initial_instruction: ''
+  start:
+    - A
+  end: []

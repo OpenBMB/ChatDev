@@ -1,0 +1,128 @@
+version: 0.4.0
+graph:
+  id: reflexion_loop
+  description: Reflexion loop subgraph with actor/evaluator and memory storage.
+  log_level: INFO
+  is_majority_voting: false
+  start:
+    - Task
+  end:
+  - Final Synthesizer
+  memory:
+    - name: reflexion_blackboard
+      type: blackboard
+      config:
+      max_items: 500
+  nodes:
+  - id: Task
+    type: passthrough
+    config: {}
+  - id: Reflexion Actor
+    type: agent
+    description: Actor (πθ) generates a strategy draft based on blackboard experience and short-term context.
+    config:
+      provider: openai
+      base_url: ${BASE_URL}
+      api_key: ${API_KEY}
+      name: gpt-4o-mini
+      input_mode: messages
+      role: |
+        You are the Actor. If there are relevant memories, refer to that experience and output the latest action draft; if there are no relevant memories, provide an action draft to the best of your ability.
+        - Structure:
+          Thought: ...
+          Draft: ...
+      memories:
+      - name: reflexion_blackboard
+        retrieve_stage:
+        - gen
+        top_k: 5
+        read: true
+        write: false
+      params:
+        temperature: 0.2
+        max_tokens: 1200
+  - id: Reflexion Evaluator
+    type: agent
+    description: Evaluator (Me) provides scores and improvement directions for the Actor's draft.
+    config:
+      provider: openai
+      base_url: ${BASE_URL}
+      api_key: ${API_KEY}
+      name: gpt-4o-mini
+      input_mode: messages
+      role: |
+        You are the Evaluator. Receive and read the Actor's latest output and task objectives, and evaluate whether they meet the goals.
+        Append `Verdict: CONTINUE` or `Verdict: STOP` at the end of the output.
+        When you think the current plan is good enough, you should give `Verdict: STOP`. Other fields can be skipped.
+        Output:
+        - Score: <0-1>
+        - Reason: <Failure reasons or highlights>
+        - Next Focus: <Key points to focus on in the next round>
+        - Verdict: CONTINUE|STOP
+      params:
+        temperature: 0.1
+        max_tokens: 800
+  - id: Self Reflection Writer
+    type: agent
+    description: Self-Reflection (Msr) converts Evaluator results into reusable experience.
+    config:
+      provider: openai
+      base_url: ${BASE_URL}
+      api_key: ${API_KEY}
+      name: gpt-4o-mini
+      input_mode: messages
+      role: |
+        You are responsible for refining the Evaluator output and Actor Draft into JSON experience:
+        {
+          "issues": [..],
+          "fix_plan": [..],
+          "memory_cue": "A short reminder"
+        }
+        - JSON must not contain extra text.
+      memories:
+      - name: reflexion_blackboard
+        read: false
+        write: true
+      params:
+        temperature: 0.1
+        max_tokens: 500
+  - id: Final Synthesizer
+    type: agent
+    description: Converge the final answer, absorbing the latest Draft and Evaluator tips.
+    config:
+      provider: openai
+      base_url: ${BASE_URL}
+      api_key: ${API_KEY}
+      name: gpt-4o
+      input_mode: messages
+      role: |
+        Please synthesize all inputs and provide a final answer. Be comprehensive. Do not include any extra text other than the final answer.
+      params:
+        temperature: 0.1
+        max_tokens: 1000
+  edges:
+  - from: Task
+    to: Reflexion Actor
+    keep_message: True
+  - from: Task
+    to: Reflexion Evaluator
+    keep_message: True
+    trigger: false
+  - from: Reflexion Actor
+    to: Reflexion Actor
+    trigger: false
+  - from: Reflexion Actor
+    to: Reflexion Evaluator
+  - from: Reflexion Evaluator
+    to: Self Reflection Writer
+    condition: need_reflection_loop
+  - from: Self Reflection Writer
+    to: Reflexion Actor
+    carry_data: true
+  - from: Reflexion Actor
+    to: Final Synthesizer
+    trigger: false
+  - from: Reflexion Evaluator
+    to: Final Synthesizer
+    condition: should_stop_loop
+    carry_data: false

@@ -1,0 +1,20 @@
+version: 0.0.0
+vars: {}
+graph:
+  id: code_run
+  description: Human provides code, then a Python node executes it.
+  is_majority_voting: false
+  start:
+    - A
+  nodes:
+  - id: A
+    type: human
+    config:
+      description: 'Please write a piece of code.'
+  - id: B
+    type: python
+    config:
+      timeout_seconds: 60
+  edges:
+  - from: A
+    to: B

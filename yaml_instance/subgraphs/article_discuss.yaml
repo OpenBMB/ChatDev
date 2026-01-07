@@ -1,0 +1,78 @@
+version: 0.4.0
+graph:
+  id: paper_gen
+  description: Subgraph that gathers multi-style revision suggestions for an article.
+  is_majority_voting: false
+  log_level: INFO
+  start:
+    - Romanticism Writer
+    - Realism Writer
+    - Magical Realism Writer
+  nodes:
+  - id: Romanticism Writer
+    type: agent
+    config:
+      provider: openai
+      base_url: ${BASE_URL}
+      api_key: ${API_KEY}
+      name: gpt-4o
+      role: 'You are a Romanticism writer, advocating intense emotions, loving and deifying nature, pursuing the extraordinary and the ideal, while emphasizing individualism and a spirit of rebellion.
+
+        Please provide revision suggestions for the work according to your style.
+
+        '
+      params:
+        temperature: 0.1
+        max_tokens: 4000
+  - id: Realism Writer
+    type: agent
+    config:
+      provider: openai
+      base_url: ${BASE_URL}
+      api_key: ${API_KEY}
+      name: gpt-4o
+      role: 'You are a Realism writer, seeking to objectively and truly reflect life, focusing on social issues and ordinary people, shaping typical characters in typical environments, with a cool and precise narrative style.
+
+        Please provide revision suggestions for the work according to your style.
+
+        '
+      params:
+        temperature: 0.1
+        max_tokens: 4000
+  - id: Magical Realism Writer
+    type: agent
+    config:
+      provider: openai
+      base_url: ${BASE_URL}
+      api_key: ${API_KEY}
+      name: gpt-4o
+      role: 'You are a Magical Realism writer, seamlessly blending magic and reality, using exaggeration and absurdity as expressive techniques, blurring the boundaries between reality and fantasy.
+
+        Please provide revision suggestions for the work according to your style.
+
+        '
+      params:
+        temperature: 0.1
+        max_tokens: 4000
+  - id: Editor
+    type: agent
+    config:
+      provider: openai
+      base_url: ${BASE_URL}
+      api_key: ${API_KEY}
+      name: gpt-4o
+      role: 'You are an excellent editor, skilled at providing basic article revision suggestions.
+
+        You will synthesize suggestions from writers of different styles, balance various plans, and propose practical revision plans to improve the quality of the article.
+
+        '
+      params:
+        temperature: 0.1
+        max_tokens: 4000
+  edges:
+  - from: Romanticism Writer
+    to: Editor
+  - from: Realism Writer
+    to: Editor
+  - from: Magical Realism Writer
+    to: Editor

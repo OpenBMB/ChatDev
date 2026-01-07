@@ -1,0 +1,115 @@
+version: 0.4.0
+vars: {}
+graph:
+  id: react_agent_subgraph
+  description: ReAct control loop subgraph for tool calls and answer synthesis.
+  is_majority_voting: false
+  log_level: INFO
+  start:
+    - ReAct Brain
+  end:
+  - ReAct Answer Synthesizer
+  nodes:
+  - id: ReAct Brain
+    type: agent
+    description: ReAct controller, responsible for thinking, deciding whether to call tools, and providing final answers.
+    context_window: -1
+    config:
+      provider: openai
+      base_url: ${BASE_URL}
+      api_key: ${API_KEY}
+      name: gpt-4o
+      input_mode: messages
+      role: |
+        You are a ReAct controller, needing to make decisions between the toolbox (web_search, get_webpage_content, execute_code, get_city_num, get_weather) and the final answer.
+        - Organize the entire context into a rolling Thought/Observation process, ensuring references to the latest Observation.
+        - Only when you need to call a tool, output Control: continue, and attach Action and ActionInput (JSON).
+        - If you are ready to answer the user directly, output Final Answer and set Action=FINAL.
+        - Always follow this format:
+          Thought: <your thinking>
+          Action: <tool_name or FINAL>
+          ActionInput: <JSON or NONE>
+          Control: <DONE or CONTINUE>
+        - When Action=FINAL, write the final response in Final Answer: ....
+        - Never fabricate an Observation, you must wait for the Tool Executor's Observation.
+      params:
+        temperature: 0.2
+        max_tokens: 1200
+  - id: Tool Executor
+    type: agent
+    description: Receives control instructions and actually calls function tools, returning Observations.
+    config:
+      provider: openai
+      base_url: ${BASE_URL}
+      api_key: ${API_KEY}
+      name: gpt-4o
+      input_mode: messages
+      role: |
+        You are the tool executor.
+        - Parse the Action and ActionInput fields from the previous node.
+        - Only when Action belongs to {web_search, get_webpage_content, execute_code, get_city_num, get_weather}, call the corresponding function tool; otherwise, reply directly with "Observation: No tool needed".
+        - After a successful call, return using the following template:
+          Tool: <called tool>
+          Observation: <concise summary>
+          Raw Output:
+          ```
+          <raw function return>
+          ```
+        - Do not include trigger in the output to avoid affecting upstream condition judgment.
+        - Do not provide a final answer.
+      tooling:
+        type: function
+        config:
+          auto_load: true
+          tools:
+          - name: web_search
+          - name: get_webpage_content
+          - name: execute_code
+          - name: get_city_num
+          - name: get_weather
+      params:
+        temperature: 0.1
+        max_tokens: 1200
+  - id: ReAct Answer Synthesizer
+    type: agent
+    description: Cleans up ReAct formatting and outputs a user-readable final response.
+    config:
+      provider: openai
+      base_url: ${BASE_URL}
+      api_key: ${API_KEY}
+      name: gpt-4o
+      input_mode: messages
+      role: |
+        You are responsible for receiving the Final Answer from ReAct Brain and combining it with the most recent Observation (if any) to generate a natural language response.
+        - Focus on answering the user's question, including sources/action summaries where necessary.
+        - Remove all template fields (Thought/Action/Control, etc.).
+      params:
+        temperature: 0.2
+        max_tokens: 800
+  edges:
+  - from: ReAct Brain
+    to: Tool Executor
+    trigger: true
+    condition:
+      type: keyword
+      config:
+        any: [ ]
+        none:
+          - FINAL
+        regex: [ ]
+        case_sensitive: true
+  - from: Tool Executor
+    to: ReAct Brain
+    trigger: true
+    condition: 'true'
+  - from: ReAct Brain
+    to: ReAct Answer Synthesizer
+    trigger: true
+    condition:
+      type: keyword
+      config:
+        any:
+          - FINAL
+        none: [ ]
+        regex: [ ]
+        case_sensitive: true

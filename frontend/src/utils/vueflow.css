@@ -1,0 +1,125 @@
+/* VueFlow Custom Node Styles */
+
+.workflow-node {
+  /* Default Variables */
+  --node-bg: #2a2a2a;
+  --node-gradient: linear-gradient(135deg, #666, #999);
+  --node-shadow-color: rgba(100, 100, 100, 0.3);
+  
+  /* Gradient Border Implementation */
+  background-image: linear-gradient(var(--node-bg), var(--node-bg)), var(--node-gradient);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+  border: 2px solid transparent;
+  
+  border-radius: 12px;
+  padding: 12px;
+  min-width: 150px;
+  
+  /* Shadows & Transition */
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* Font settings */
+  color: #e0e0e0;
+  position: relative;
+}
+
+.workflow-node:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.4), 0 0 15px -3px var(--node-shadow-color);
+}
+
+.workflow-node-header {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+
+.workflow-node-type {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  
+  /* Gradient Text */
+  background: var(--node-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: brightness(1.2); 
+}
+
+.workflow-node-id {
+  font-size: 15px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.workflow-node-description {
+  font-size: 12px;
+  color: #aaa;
+  margin-top: 4px;
+  line-height: 1.5;
+}
+
+.workflow-node-handle {
+  width: 10px;
+  height: 10px;
+  background-image: var(--node-gradient);
+  border: 2px solid #2a2a2a;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+
+.workflow-node-handle:hover {
+  filter: brightness(1.2);
+}
+
+/* Active State */
+.workflow-node.workflow-node-active {
+  animation: node-glowing 4s linear infinite, node-pulse 2s ease-out infinite;
+}
+
+@keyframes node-glowing {
+  0% {
+    filter: hue-rotate(0deg) saturate(1) brightness(1);
+    transform: translateZ(0) scale(1);
+    box-shadow: 0 0 0 0 transparent;
+  }
+  50% {
+    filter: hue-rotate(180deg) saturate(1.6) brightness(1.25) drop-shadow(0 0 16px var(--node-shadow-color));
+    transform: translateZ(0) scale(1.02);
+    box-shadow: 0 0 20px 8px rgba(100,100,100,0.12);
+  }
+  100% {
+    filter: hue-rotate(360deg) saturate(1) brightness(1);
+    transform: translateZ(0) scale(1);
+    box-shadow: 0 0 0 0 transparent;
+  }
+}
+
+@keyframes node-pulse {
+  0% {
+    box-shadow: 
+      0 0 0 1px #1a1a1a, 
+      0 0 0 5px var(--node-shadow-color), 
+      0 10px 25px -5px rgba(0,0,0,0.5),
+      0 0 0 0 var(--node-shadow-color);
+  }
+  50% {
+     box-shadow: 
+      0 0 0 1px #1a1a1a, 
+      0 0 0 6px rgba(100,100,100,0.08), 
+      0 12px 30px -6px rgba(0,0,0,0.55),
+      0 0 28px 12px rgba(100,100,100,0.08);
+  }
+  100% {
+    box-shadow: 
+      0 0 0 1px #1a1a1a, 
+      0 0 0 5px var(--node-shadow-color), 
+      0 10px 25px -5px rgba(0,0,0,0.5),
+      0 0 0 0 transparent;
+  }
+}

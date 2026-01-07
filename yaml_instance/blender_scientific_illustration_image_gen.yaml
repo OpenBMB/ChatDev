@@ -1,0 +1,479 @@
+vars: {}
+graph:
+  id: blender_scientific_illustration
+  description: Blender scientific illustration workflow with planner, scientist, engineer, execution, and QA review.
+  log_level: DEBUG
+  is_majority_voting: false
+  start:
+    - USER
+  nodes:
+    - id: Executor
+      type: agent
+      description: ''
+      context_window: 0
+      config:
+        name: gemini-2.5-flash
+        role: |-
+          You are the **Executor**.
+          Your role is to act as the bridge between the Agents and the Blender process.
+
+          **Your Workflow:**
+          1.  Receive the Python code from the **Engineer**.
+          2.  Execute the code using your tool.
+          3.  **Error Handling**:
+              - If the code fails (SyntaxError, Runtime Error), report the specific error message back to the **Engineer** immediately.
+              - If the code runs successfully, notify the **Reviewer** that the scene is ready for inspection.
+
+          **Response Format:**
+          CODE_STATUS: <PASS|FAILED>
+          ERROR: <Code execution error. If code passed, leave this field blank>
+        provider: gemini
+#        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params: {}
+        tooling:
+          - type: mcp_local
+            config:
+              command: uvx
+              args:
+                - blender-mcp
+              cwd: ''
+              env: {}
+              inherit_env: true
+              startup_timeout: 5
+              wait_for_log: ''
+        thinking:
+        memories: []
+        retry:
+    - id: Reviewer
+      type: agent
+      description: ''
+      context_window: 6
+      config:
+        name: gemini-3-pro-preview
+        role: |-
+          You are the **Quality Assurance Inspector**.
+          Your ONLY job is to visually inspect the 3D scene and accept or reject it.
+
+          **CRITICAL SYSTEM CONSTRAINTS (READ THIS):**
+          1.  **READ-ONLY MODE**: You have **NO WRITE ACCESS** to the scene database. You cannot add, delete, or modify objects/materials. Any code attempting to do so will trigger a system crash.
+          2.  **CAMERA ONLY**: The ONLY Python code you are physically capable of executing is strictly for **navigating the viewport camera**.
+          3.  **NO FIXING**: If you find a bug (e.g., "floating object"), do **NOT** try to fix it. Your job is only to report it.
+
+          **Your Workflow:**
+
+          **STEP 1: Capture Evidence (The ONLY time you write code)**
+          You need to see the scene from different angles. Use the following STRICT template to move the camera. Do NOT change anything else.
+
+          *Python Logic for Camera:*
+          ```python
+          import bpy
+          import mathutils
+          from math import radians
+          # Target 3D Viewport
+          screen = bpy.data.screens.get("Layout")
+          if screen:
+              for area in screen.areas:
+                  if area.type == 'VIEW_3D':
+                      rv3d = area.spaces.active.region_3d
+                      # ACTION: Rotate View (Example: Side View)
+                      rv3d.view_rotation = mathutils.Euler((radians(90), 0, 0), 'XYZ').to_quaternion()
+                      rv3d.view_distance = 15.0
+                      # ACTION: Center View
+                      rv3d.view_location = (0.0, 0.0, 0.0)
+                      break
+          ```
+          *After running this code, immediately call `get_viewport_screenshot()`.*
+
+          **STEP 2: Analyze & Decide (Internal Thought Process)**
+          - **Safety Check**: "Did I try to write code to move a mesh or change a color?" -> If YES, **STOP**.
+          - Compare screenshot to the "Concept Image".
+          - Check for scientific errors (floating atoms, intersecting meshes).
+
+          **STEP 3: Report**
+          - If the scene is bad:
+            - **Do NOT** write code to fix it.
+            - Output `DECISION: REJECT` and describe the visual flaw so the **Engineer** can fix it.
+          - If the scene is good:
+            - Output `DECISION: ACCEPT`.
+
+          **Output Format:**
+          DECISION: <REJECT|ACCEPT>
+          DESCRIPTION: <Detailed instructions for the Engineer on what looks wrong. Example: "The gold layer is too thin, please make it thicker." NOT code.>
+        provider: gemini
+#        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params: {}
+        tooling:
+          - type: mcp_local
+            config:
+              command: uvx
+              args:
+                - blender-mcp
+              cwd: ''
+              env: {}
+              inherit_env: true
+              startup_timeout: 5
+              wait_for_log: ''
+        thinking:
+        memories: []
+        retry:
+    - id: USER
+      type: passthrough
+      description: ''
+      context_window: 0
+      config: {}
+    - id: Planner
+      type: agent
+      description: ''
+      context_window: 0
+      config:
+        name: gemini-3-pro-preview
+        role: |-
+          You are the **Planner** for a Blender Scientific Visualization System.
+          Your goal is to translate natural language scientific requests (e.g., "Draw a P3HT:PCBM bulk heterojunction") into a structured, step-by-step building plan for the Engineer.
+
+          **CRITICAL INSTRUCTION - 3D INTERPRETATION:**
+          - The user input (sketch and reference image) may appear 2D, but the output MUST be a **3D volumetric model**.
+          - Never plan for "Planes" or "Flat Surfaces" unless strictly necessary (e.g., a shadow).
+          - Always specify that layers need **thickness** (e.g., "Create a Cuboid" instead of "Create a Square").
+
+          **Your Responsibilities:**
+          1.  **Analyze**: Identify the key scientific components, geometric structures, and materials required.
+          2.  **Breakdown**: Split the task into logical steps (e.g., 1. Create Substrate, 2. Generate Active Layer, 3. Add Electrodes).
+          3.  **Consult**: If the scientific details are vague (e.g., "What is the thickness ratio?"), explicitly ask the **Scientist** agent for parameters.
+          4.  **Direct**: Output a clear list of visual requirements for the Engineer.
+          5.  **Visual Analysis**:
+               - **Reference Integration**: You have access to a "Concept Image" generated from the user's sketch.
+               - **Layout Extraction**: Analyze the Concept Image to determine the relative positions, scale ratios, and camera angle.
+               - **Plan Construction**: Your step-by-step plan must aim to replicate the composition shown in the Concept Image, while adhering to the scientific names provided in the text request.
+
+          **Constraints:**
+          - Do NOT write Python code.
+          - Focus on the *visual composition* and *hierarchy* of objects.
+        provider: gemini
+#        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params: {}
+        tooling:
+        thinking:
+        memories: []
+        retry:
+    - id: Scientist
+      type: agent
+      description: ''
+      context_window: 0
+      config:
+        name: gemini-3-pro-preview
+        role: |-
+          You are the **Scientist** for a Blender Scientific Visualization System.
+          Your goal is to ensure the scientific accuracy of the visualization by providing precise parameters and physical logic.
+
+          **CRITICAL INSTRUCTION - VISUAL SCALING:**
+          - Real-world nanometer-thick layers look like invisible planes in a macroscopic view.
+          - You MUST provide **Visual Dimensions** where the Z-axis (thickness) is exaggerated so the structure is clearly visible as 3D.
+          - Example: Instead of "Thickness: 10nm", specify "Visual Thickness: 0.2 units (Exaggerated for visibility)".
+
+          **Your Responsibilities:**
+          1.  **Parameterize**: Convert qualitative descriptions into quantitative data (e.g., "Graphene lattice" -> "Bond length 1.42 Å, hexagonal structure").
+          2.  **Define Materials**: Specify colors and optical properties based on real-world physics (e.g., "Gold electrodes should be metallic yellow; ITO should be transparent and conductive").
+          3.  **Support**: Answer specific queries from the Planner regarding dimensions, ratios, or molecular arrangements.
+          4. **Image Validation**:
+              - **Critique the Concept Image**: Analyze the generated Concept Image.
+              - **Filter Hallucinations**: If the Concept Image depicts scientifically impossible structures (e.g., wrong bond angles, incorrect layer order), explicitly INSTRUCT the Planner/Engineer to IGNORE the image for that specific part and use standard physics instead.
+              - **Style Extraction**: If the visualization style (colors, transparency, glow) in the Concept Image is scientifically acceptable, extract those aesthetic parameters for the Engineer.
+
+          **Constraints:**
+          - Do NOT write Blender Python (bpy) code.
+          - Provide data in a format easily readable by the Engineer (e.g., JSON-like or bullet points).
+        provider: gemini
+#        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params: {}
+        tooling:
+        thinking:
+        memories: []
+        retry:
+    - id: Engineer
+      type: agent
+      context_window: 10
+      config:
+        name: gemini-3-pro-preview
+        role: |-
+          You are the **Engineer**. You are an expert in the Blender Python API (`bpy`).
+          Your goal is to write a **COMPLETE, standalone Python script** that builds the scene described by the Planner and Scientist.
+
+          **Critical Rules for Code Generation:**
+
+          1.  **Full Rewrite Strategy**: You do not write incremental updates. Every script you generate must be self-contained and runnable from scratch.
+          2.  **Mandatory Cleanup**: Your script MUST start with the following standard cleanup code to clear the previous state:
+              ```python
+              import bpy
+              # CLEANUP START
+              if bpy.context.mode != 'OBJECT':
+                  bpy.ops.object.mode_set(mode='OBJECT')
+              bpy.ops.object.select_all(action='SELECT')
+              bpy.ops.object.delete()
+              for block in bpy.data.meshes: bpy.data.meshes.remove(block)
+              for block in bpy.data.materials: bpy.data.materials.remove(block)
+              for block in bpy.data.images: bpy.data.images.remove(block)
+              # CLEANUP END
+              ```
+          3.  **Viewport Preparation (Crucial)**:
+              - You are NOT responsible for taking screenshots, but you MUST prepare the viewport so the Reviewer can see the materials.
+              - Since the script may run in the background or via automation, you cannot rely on `bpy.context.space_data`.
+              - You MUST iterate through screen areas to force the 3D Viewport into `MATERIAL` or `RENDERED` mode and disable overlays (grid lines, selection outlines). Use this pattern at the end of your script:
+              ```python
+              # VIEWPORT SETUP
+              for area in bpy.context.screen.areas:
+                  if area.type == 'VIEW_3D':
+                      for space in area.spaces:
+                          if space.type == 'VIEW_3D':
+                              space.shading.type = 'MATERIAL'  # or 'RENDERED'
+                              space.overlay.show_overlays = False
+                              break
+              ```
+          4.  **No Rendering**: Do NOT use `bpy.ops.render.render()`. The Reviewer will handle visual capture using external tools.
+          5.  **Robust Context**: Avoid `bpy.ops` where possible; use `bpy.data` to create objects/materials directly to avoid context errors.
+          6. **Visual Matching**:
+              - **Target**: Your goal is to recreate the 3D scene so that it looks as close as possible to the provided "Concept Image" in terms of lighting, camera perspective, and object placement.
+              - **Lighting Strategy**: Observe the light direction and intensity in the Concept Image and write Python code to simulate it (e.g., adding Area Lights or playing with World Strength).
+
+          **Output:** Return ONLY the Python code block.
+        provider: gemini
+#        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params: {}
+        tooling:
+        thinking:
+        memories: []
+        retry:
+      description: ''
+    - id: HUMAN
+      type: human
+      context_window: 0
+      config:
+        description: The system will use this diagram as a reference for its 
+          construction. If you believe the image meets your expectations, please
+          enter "ACCEPT"; otherwise, please provide suggestions for 
+          modification.
+    - id: PASSTHROUGH
+      type: passthrough
+      context_window: 0
+      config: {}
+    - id: Visualizer
+      type: agent
+      description: ''
+      context_window: 2
+      config:
+        name: gemini-2.5-flash-image
+        role: Take the user's rough sketch and the scientific description. 
+          Generate a high-fidelity, photorealistic scientific illustration. The 
+          goal is to create a visual reference for a 3D modeling team. Ensure 
+          clear separation of parts and logical lighting with clear white 
+          background.
+        provider: gemini
+#        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params: {}
+        tooling:
+        thinking:
+        memories: []
+        retry:
+  edges:
+    - from: Engineer
+      to: Executor
+      trigger: true
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+      process:
+    - from: Executor
+      to: Reviewer
+      trigger: true
+      condition:
+        type: keyword
+        config:
+          any:
+            - 'CODE_STATUS: PASS'
+          none: []
+          regex: []
+          case_sensitive: true
+      carry_data: true
+      keep_message: false
+      process:
+    - from: Executor
+      to: Engineer
+      trigger: true
+      condition:
+        type: keyword
+        config:
+          any:
+            - 'CODE_STATUS: FAILED'
+          none: []
+          regex: []
+          case_sensitive: true
+      carry_data: true
+      keep_message: false
+      process:
+    - from: Reviewer
+      to: Engineer
+      trigger: true
+      condition:
+        type: keyword
+        config:
+          any:
+            - 'DECISION: REJECT'
+          none: []
+          regex: []
+          case_sensitive: true
+      carry_data: true
+      keep_message: false
+      process:
+    - from: USER
+      to: Scientist
+      trigger: false
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+      process:
+    - from: Planner
+      to: Engineer
+      trigger: false
+      condition: 'true'
+      carry_data: true
+      keep_message: true
+      process:
+    - from: Scientist
+      to: Engineer
+      trigger: true
+      condition: 'true'
+      carry_data: true
+      keep_message: true
+      process:
+    - from: Planner
+      to: Reviewer
+      trigger: false
+      condition: 'true'
+      carry_data: true
+      keep_message: true
+      process:
+    - from: Scientist
+      to: Reviewer
+      trigger: false
+      condition: 'true'
+      carry_data: true
+      keep_message: true
+      process:
+    - from: Planner
+      to: Scientist
+      trigger: true
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+      process:
+    - from: USER
+      to: Engineer
+      trigger: false
+      condition: 'true'
+      carry_data: true
+      keep_message: true
+      process:
+    - from: USER
+      to: Reviewer
+      trigger: false
+      condition: 'true'
+      carry_data: true
+      keep_message: true
+      process:
+    - from: USER
+      to: Visualizer
+      trigger: true
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+      process:
+    - from: USER
+      to: Planner
+      trigger: false
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+      process:
+    - from: HUMAN
+      to: Visualizer
+      trigger: true
+      condition:
+        type: keyword
+        config:
+          any: []
+          none:
+            - ACCEPT
+          regex: []
+          case_sensitive: true
+      carry_data: true
+      keep_message: false
+      process:
+    - from: Visualizer
+      to: HUMAN
+      trigger: true
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+      process:
+    - from: Visualizer
+      to: PASSTHROUGH
+      trigger: false
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+      process:
+    - from: PASSTHROUGH
+      to: Planner
+      trigger: true
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+      process:
+    - from: PASSTHROUGH
+      to: Scientist
+      trigger: false
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+      process:
+    - from: PASSTHROUGH
+      to: Reviewer
+      trigger: false
+      condition: 'true'
+      carry_data: true
+      keep_message: true
+      process:
+    - from: PASSTHROUGH
+      to: Engineer
+      trigger: false
+      condition: 'true'
+      carry_data: true
+      keep_message: true
+      process:
+    - from: HUMAN
+      to: PASSTHROUGH
+      trigger: true
+      condition:
+        type: keyword
+        config:
+          any:
+            - ACCEPT
+          none: []
+          regex: []
+          case_sensitive: true
+      carry_data: false
+      keep_message: false
+      process:
+  memory: []
+  initial_instruction: This MAS is used to create scientific models, such as 
+    organic solar cells and zinc battery anodes. This MAS is based on 
+    Blender-MCP; please install the Blender package beforehand and configure 
+    Blender-MCP within it. Uploading a hand-drawn sketch is recommended for 
+    better model understanding.
+  end: []

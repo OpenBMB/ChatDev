@@ -1,0 +1,129 @@
+graph:
+  id: MACNet_Node_sub
+  description: MACNet node that dispatches optimization subgraphs and aggregates results.
+  log_level: DEBUG
+  is_majority_voting: false
+  nodes:
+    - id: Handle ALL
+      type: subgraph
+      config:
+        type: file
+        config:
+          path: MACNet_optimize_sub.yaml
+      description: ''
+      context_window: 0
+    - id: START
+      type: passthrough
+      config:
+        only_last_message: false
+      description: ''
+      context_window: 0
+    - id: Get Task
+      type: passthrough
+      config:
+        only_last_message: false
+      description: ''
+      context_window: 0
+    - id: Aggregate
+      type: agent
+      config:
+        name: gpt-4o
+        provider: openai
+        role: |-
+          You are an experienced and meticulous software analyst and developer, trusted by others to optimize and enhance their code. Now there are several programs that serve the same purpose and are currently competing in the software development field.
+          Now you need to carefully analyze and compare these programs to identify their strengths and weaknesses and explain them. Subsequently, you must generate only one new, improved, and runnable program. This program should include the content of each file, encompassing the complete code.
+          There may be two kinds of situations that you need to handle with:
+          1. a task and a single corresponding solution as input. If so, your should return EXACTLY THE SAME AS input WITHOUT ANY MODIFICATION.
+          2. a task and multiple corresponding solutions as input. If so, aggregate them into A SINGLE solution after by carefully considering and merging their pros and discarding their cons.
+          Think step by step and reason yourself to the right decisions and make sure we get it right.
+          Each file must strictly adhere to a markdown code block format. The following tokens must be replaced: "FILENAME" with the lowercase file name, including the file extension; "LANGUAGE" with the programming language; "DOCSTRING" with a string literal specified in the source code for documenting a specific segment of code, and "CODE" is the original code:
+          FILENAME
+          ```LANGUAGE
+          '''
+          DOCSTRING
+          '''
+          CODE
+          ```
+          You will start with the "main" file, then go to the ones that are imported by that file, and so on.
+          This new program should combine the advantages obtained from the competition between different teams and eliminate all weaknesses.
+          Please bear in mind that even if some parts of the improved code may similar to the previous program, do not omit them. Instead, clearly write out each line of the improved code. Furthermore, ensure that the code is fully functional, implementing all functions without the use of placeholders (such as 'pass' and 'Implementation goes here' in Python).
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params: {}
+        tooling: null
+        thinking: null
+        memories: []
+        retry: null
+      description: ''
+      context_window: 0
+  edges:
+    - from: START
+      to: Get Task
+      trigger: true
+      condition:
+        type: keyword
+        config:
+          any: []
+          none:
+            - '```'
+          regex: []
+          case_sensitive: true
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: START
+      to: Handle ALL
+      trigger: true
+      condition:
+        type: keyword
+        config:
+          any:
+            - '```'
+          none: []
+          regex: []
+          case_sensitive: true
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic:
+        type: map
+        split: null
+        config:
+          max_parallel: 10
+    - from: Get Task
+      to: Handle ALL
+      trigger: true
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: Handle ALL
+      to: Aggregate
+      trigger: true
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic:
+        type: tree
+        split: null
+        config:
+          group_size: 3
+          max_parallel: 10
+  memory: []
+  initial_instruction: ''
+  start:
+    - START
+  end: []
+version: 0.0.0
+vars: {}

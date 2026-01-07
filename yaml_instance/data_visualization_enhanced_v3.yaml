@@ -1,0 +1,369 @@
+vars: {}
+graph:
+  id: data_visualization
+  description: Data visualization process (including preliminary profiling, data cleaning and assessment, multi-graph plan breakdown, and iterative review)
+  log_level: DEBUG
+  is_majority_voting: false
+  nodes:
+    - id: Meta Analysis Agent
+      type: agent
+      context_window: -1
+      config:
+        provider: gemini
+        name: gemini-3-pro-preview
+        api_key: ${API_KEY}
+        role: |
+          You are the "Pre-data Profiling" Agent. You must first use tools to confirm the files, and then output Python code to generate `meta_profile.json` for use by subsequent nodes.
+
+          **[Strictly Sequential]**
+          1) describe_available_files to list files; prioritize selecting `*_cleaned.*`, otherwise select the original table (csv/tsv/xlsx/json/jsonl/parquet).
+          2) Use read_text_file_snippet / load_file to quickly peek at delimiters, encoding, column names, and header existence.
+
+          **[Profiling Content Requirements]** Write to meta_profile.json:
+          - data_file_used: The actual data filename used for profiling
+          - n_rows, n_cols; big_data: marked as true if row count > 200000
+          - columns: [{name, pandas_dtype, semantic_role in [id,time,category,measure,text,unknown], missing_rate, nunique,
+                      stats: {mean,std,min,max,quantiles(top3) or topk category frequencies}}]
+          - suggestions: Possible analysis directions or field combinations
+          - Prohibit generation of sample files; regardless of data size, read the complete dataset directly in the code (chunking/stream processing is allowed as needed, but do not save samples to disk).
+
+          **[Output Requirements]**
+          - It is strictly forbidden to paste/echo original data rows or file content in the reply; only output a single Python code block ```python ... ```
+          - The code must save `meta_profile.json` (UTF-8); the last line must be print("meta_profile.json")
+        tooling:
+          - type: function
+            config:
+              auto_load: true
+              tools:
+                - name: describe_available_files
+                - name: load_file
+                - name: read_text_file_snippet
+                - name: install_python_packages
+    - id: Profiling Executor
+      type: python
+      config:
+        timeout_seconds: 180
+        encoding: utf-8
+    - id: Data Analyst
+      type: agent
+      context_window: -1
+      config:
+        provider: gemini
+        name: gemini-3-pro-preview
+        api_key: ${API_KEY}
+        role: |
+          You are the Process Central Control. You must determine the next step—**CLEAN** or **VISUALIZE**—based on the file list and `meta_profile.json`.
+
+          **[Consistency Check]**
+          - Before authorizing **VISUALIZE**, you must verify that `meta_profile.data_file_used` matches the data file intended for use.
+            If there is a mismatch, or if the profile indicates dirty data (e.g., meta shows severe missing values, mixed types, or encoding anomalies), you must require a **CLEAN** step or a re-profiling before proceeding.
+          - If `big_data=true`, you should advise the downstream process to use sampling or aggregation.
+
+          **[Output Format]**
+          ANALYSIS:
+          <Brief summary of data status, key findings from meta, and file consistency results>
+
+          NEXT_STEP:
+          CLEAN / VISUALIZE
+
+          CONTENT:
+          <If CLEAN: List the fields requiring cleaning and the strategies to apply>
+          <If VISUALIZE: List the questions or relationships intended for exploration to guide the Planner>
+        tooling:
+          - type: function
+            config:
+              auto_load: true
+              tools:
+                - name: describe_available_files
+                - name: load_file
+                - name: read_text_file_snippet
+    - id: Data Cleaner
+      type: agent
+      context_window: -1
+      config:
+        provider: gemini
+        name: gemini-3-pro-preview
+        api_key: ${API_KEY}
+        role: |
+          You are responsible for writing Python data cleaning scripts and outputting `*_cleaned.*` files.
+
+          Default cleaning strategies:
+          1) **Missing values:** Fill numeric columns with the median (fallback to mean) and string columns with 'Unknown'.
+          2) **Duplicates:** Drop exact duplicate rows.
+          3) **Formatting:** Parse dates as datetime objects; clean numeric values by removing currency symbols, thousand separators, and percentage signs.
+          4) **Output:** Save the file as `<orig>_cleaned.<ext>` and print the filename.
+
+          You must only output the code block ```python ...```; handle potential encoding or delimiter reading errors; use `install_python_packages` if libraries are missing.
+        tooling:
+          - type: function
+            config:
+              auto_load: true
+              tools:
+                - name: describe_available_files
+                - name: load_file
+                - name: read_text_file_snippet
+                - name: install_python_packages
+    - id: Cleaning Executor
+      type: python
+      config:
+        timeout_seconds: 180
+        encoding: utf-8
+    - id: Visualization Planner
+      type: agent
+      context_window: -1
+      config:
+        provider: gemini
+        name: gemini-3-pro-preview
+        api_key: ${API_KEY}
+        role: |
+          Output a "Visualization Requirements List" that references the field types/suggestions from `meta_profile.json`.
+
+          The output must include: Target Question, Suggested Chart Type, Key Columns (X/Y/Hue), and Essential Elements (Legend/English Title/Units, etc.).
+
+          Append the following at the end:
+          'Please use your professional expertise to enhance the aesthetics of the chart (including color scheme, font size, canvas size, preventing label overlap, etc.). You may adjust specific implementation details based on the data characteristics, provided the visualization goal is met.'
+        tooling:
+          - type: function
+            config:
+              auto_load: true
+              tools:
+                - name: describe_available_files
+                - name: load_file
+                - name: read_text_file_snippet
+    - id: Planning Agent
+      type: agent
+      context_window: -1
+      config:
+        provider: gemini
+        name: gemini-3-pro-preview
+        api_key: ${API_KEY}
+        role: |
+          Convert "requirements + meta_profile" into an executable multi-chart plan `viz_plan.json` (and write to `viz_plan.json`).
+
+          Requirements:
+          - Number of charts: 4~6. Refine each chart: {chart_id, question, chart_type, x, y, hue/col/row/size?, agg?, filters?, sort?, big_data_strategy?, style{title_en,dpi,figsize,rotate_xticks,legend,tight_layout}}.
+          - data_file: If meta has `sampled_file` and `big_data=true`, prioritize using it; otherwise, use the cleaned or original file.
+          - Suggested top-level structure: {"data_file": "...", "charts": [...], "global_style": {...}}
+
+          The output must strictly be ```python ...```; the code must write `viz_plan.json` (UTF-8) and print the file path at the end.
+        tooling:
+          - type: function
+            config:
+              auto_load: true
+              tools:
+                - name: describe_available_files
+                - name: load_file
+                - name: read_text_file_snippet
+    - id: Plan Executor
+      type: python
+      config:
+        timeout_seconds: 120
+        encoding: utf-8
+    - id: Chart Dispatcher
+      type: agent
+      context_window: -1
+      config:
+        provider: gemini
+        name: gemini-3-pro-preview
+        api_key: ${API_KEY}
+        role: |
+          You are responsible for dispatching charts from `viz_plan.json` sequentially: generating `current_chart.json` and maintaining `chart_progress.json`.
+
+          Logic:
+          - If `chart_progress` does not exist, initialize it as `{done: [], current: null}`.
+          - Read `viz_plan.json`:
+              * If it is a dictionary and contains a "charts" list, then charts = plan["charts"].
+              * If it is a list, then charts = plan.
+              * For other formats, FINISH immediately.
+          - Calculate `next_index = len(progress.done) + (1 if progress.current is completed else 0)`. For simplicity: if `progress.current` is non-empty and needs to proceed, treat it as completed first, so the next index = `len(done) + 1`; otherwise, the index = `len(done)`.
+          - Update `progress` only after successfully writing the new `current_chart.json`: append the original `current` (if non-empty) to `done`, then set `current` = new chart_spec, and save `chart_progress.json`.
+          - If there are remaining charts: print("DRAW") then print the path of `current_chart.json`; if none remain: print("FINISH").
+
+          Strict output requirement: output only one ```python ...``` code block, containing no extra text or multiple code blocks.
+
+          Only output ```python ...```.
+        tooling:
+          - type: function
+            config:
+              auto_load: true
+              tools:
+                - name: describe_available_files
+                - name: load_file
+                - name: read_text_file_snippet
+    - id: Dispatch Executor
+      type: python
+      config:
+        timeout_seconds: 120
+        encoding: utf-8
+    - id: Visualization Programmer
+      type: agent
+      context_window: 8
+      config:
+        provider: gemini
+        name: gemini-3-pro-preview
+        api_key: ${API_KEY}
+        role: |
+          You are responsible for generating only the chart described in `current_chart.json`.
+
+          **Before starting, you must:** call `describe_available_files`; and read `current_chart.json` and `meta_profile.json`.
+
+          **Strict Code Requirements:**
+          - **Must** save the file as `<chart_id>_visualization.png` and `print` the file path. Verify its existence using `os.path.exists` after saving; raise an exception if it does not exist.
+          - Raise exceptions for any failures in reading columns, parsing dates, or performing aggregation; silent failures are **prohibited**. When `big_data_strategy` or `meta.big_data` is active, you **must** perform sampling, aggregation, or binning and indicate this in the comments.
+          - Handle Chinese fonts and encoding properly. Enhance aesthetics (adjust `figsize`, `dpi`, `legend`, `alpha`, `tight_layout`); rotate axis ticks if necessary.
+          - Output only ```python ...``` blocks; use `install_python_packages` if libraries are missing.
+        tooling:
+          - type: function
+            config:
+              auto_load: true
+              tools:
+                - name: describe_available_files
+                - name: load_file
+                - name: read_text_file_snippet
+                - name: install_python_packages
+    - id: Visualization Executor
+      type: python
+      config:
+        timeout_seconds: 180
+        encoding: utf-8
+    - id: Visual Expert
+      type: agent
+      context_window: 8
+      config:
+        provider: gemini
+        name: gemini-3-pro-preview
+        api_key: ${API_KEY}
+        role: |
+          You are Visual Quality Assurance. Behavior Rules:
+          - If the upstream message contains FINISH, STOP immediately.
+          - If `<chart_id>_visualization.png` corresponding to the `chart_id` in `current_chart.json` cannot be found, or fails to load:
+            * ANALYSIS: Explain the reason for the missing image/loading failure;
+            * NEXT_STEP=CONTINUE;
+            * CONTENT: Request to regenerate the current chart (filename must be `<chart_id>_visualization.png`, and print the path).
+          - If the image exists, review it based on clarity, color scheme, labels, axis ticks, sampling rationality, and whether it answers the question, then determine CONTINUE / NEXT_CHART / STOP.
+
+          Output Format (Must output):
+          ANALYSIS:
+          <Issues; if the image is missing, state the missing reason>
+
+          NEXT_STEP:
+          CONTINUE / NEXT_CHART / STOP
+
+          CONTENT:
+          <CONTINUE: Improvement instructions or "Please regenerate the current chart <chart_id>"; NEXT_CHART: Reason for approval + global suggestions; STOP: Leave empty>
+        tooling:
+          - type: function
+            config:
+              auto_load: true
+              tools:
+                - name: describe_available_files
+                - name: load_file
+                - name: read_text_file_snippet
+  edges:
+    - from: Meta Analysis Agent
+      to: Profiling Executor
+    - from: Profiling Executor
+      to: Data Analyst
+      condition: code_pass
+    - from: Profiling Executor
+      to: Meta Analysis Agent
+      condition: code_fail
+    - from: Data Analyst
+      to: Data Cleaner
+      condition:
+        type: keyword
+        config:
+          any:
+            - CLEAN
+          none: []
+          regex: []
+          case_sensitive: true
+    - from: Data Cleaner
+      to: Cleaning Executor
+    - from: Cleaning Executor
+      to: Meta Analysis Agent
+      condition: code_pass
+    - from: Cleaning Executor
+      to: Data Cleaner
+      condition: code_fail
+    - from: Data Analyst
+      to: Visualization Planner
+      condition:
+        type: keyword
+        config:
+          any:
+            - VISUALIZE
+          none: []
+          regex: []
+          case_sensitive: true
+    - from: Visualization Planner
+      to: Planning Agent
+      keep_message: true
+    - from: Planning Agent
+      to: Plan Executor
+    - from: Plan Executor
+      to: Chart Dispatcher
+      condition: code_pass
+    - from: Plan Executor
+      to: Planning Agent
+      condition: code_fail
+    - from: Chart Dispatcher
+      to: Dispatch Executor
+    - from: Dispatch Executor
+      to: Visualization Programmer
+      condition:
+        type: keyword
+        config:
+          any:
+            - DRAW
+          none: []
+          regex: []
+          case_sensitive: true
+    - from: Dispatch Executor
+      to: Visual Expert
+      condition:
+        type: keyword
+        config:
+          any:
+            - FINISH
+          none: []
+          regex: []
+          case_sensitive: true
+    - from: Dispatch Executor
+      to: Chart Dispatcher
+      condition: code_fail
+    - from: Visualization Programmer
+      to: Visualization Executor
+    - from: Visualization Executor
+      to: Visual Expert
+      condition: code_pass
+    - from: Visualization Executor
+      to: Visualization Programmer
+      condition: code_fail
+    - from: Visual Expert
+      to: Visualization Programmer
+      condition:
+        type: keyword
+        config:
+          any:
+            - CONTINUE
+          none: []
+          regex: []
+          case_sensitive: true
+    - from: Visual Expert
+      to: Chart Dispatcher
+      keep_message: true
+      condition:
+        type: keyword
+        config:
+          any:
+            - NEXT_CHART
+          none: []
+          regex: []
+          case_sensitive: true
+  memory: []
+  initial_instruction: Please upload your file.
+  start:
+    - Meta Analysis Agent
+  end:
+    - Visual Expert

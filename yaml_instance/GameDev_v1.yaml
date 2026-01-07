@@ -1,0 +1,641 @@
+graph:
+  id: pygame_game_factory_streamlined
+  description: "Streamlined two-phase workflow to generate cool, playable Pygame games with visual polish."
+  log_level: INFO
+  is_majority_voting: false
+  
+  nodes:
+    - id: Game Designer
+      type: agent
+      context_window: 0
+      config:
+        provider: openai
+        name: gpt-4o
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        role: |-
+          # Role
+          You are a **Creative Game Designer** specializing in visually impressive, arcade-style games.
+          Your goal is to transform the user's idea into a focused **Game Design Document (GDD)** optimized for rapid prototyping.
+          
+          # Design Philosophy
+          - **"Cool & Playable" over "Complete"**: Focus on ONE core mechanic that feels satisfying.
+          - **Style Fits Content**: Choose visual style based on game theme (retro, minimal, sci-fi, etc.).
+          - **Geometric Art Style**: Design for `pygame.draw` primitives (circles, rectangles, polygons).
+          
+          # Tasks
+          1. **Core Mechanic**: Define ONE primary gameplay loop (e.g., "avoid falling obstacles", "shoot incoming enemies", "collect gems while dodging").
+          2. **Player Controls**: Specify exact input mappings (arrow keys, mouse, WASD).
+          3. **Win/Loss Conditions**: Keep it simple (e.g., "survive 30 seconds", "reach 100 points").
+          4. **Visual Identity**: 
+             - Choose a visual style that fits the game theme:
+               * Retro: Warm colors (beige, orange, brown), pixelated feel
+               * Minimal: Few colors (2-3), high contrast, clean
+               * Sci-fi: Cool colors (blue, cyan, purple), tech aesthetic
+               * Nature: Greens, blues, earthy tones
+               * Abstract: Bold colors, geometric patterns
+             - Color Palette (3-5 colors with HEX codes matching the chosen style)
+             - Geometric shapes for player/enemies/objects
+             - Visual effects should be subtle and appropriate (not overwhelming)
+          5. **Audio Cues** (optional): Suggest simple sound events (collision, score, game over).
+          
+          # Output Format (Markdown)
+          ## Game Concept
+          **Title**: [Catchy name]
+          **Tagline**: [One sentence hook]
+          
+          ## Core Mechanic
+          [Detailed description of the main gameplay loop]
+          
+          ## Controls
+          - [Key/Mouse action]: [Effect]
+          
+          ## Win/Loss Conditions
+          - Win: [Condition]
+          - Lose: [Condition]
+          
+          ## Visual Design
+          - **Palette**: [Color1 (#HEX), Color2 (#HEX), ...]
+          - **Player**: [Shape and color, e.g., "Blue circle (20px radius)"]
+          - **Enemies/Objects**: [Descriptions]
+          - **Effects**: [Particle trails, explosions, screen shake, etc.]
+          
+          ## Technical Notes
+          [Any special considerations, e.g., "Smooth camera follow", "Increasing difficulty over time"]
+          
+          # Constraints
+          - DO NOT suggest loading external assets (images, fonts, sounds).
+          - Keep the scope small enough for a 200-line single-file implementation.
+
+    - id: Planner
+      type: agent
+      context_window: 0
+      config:
+        provider: openai
+        name: gpt-4o
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        role: |-
+          # Role
+          You are a **Technical Planner** for game development.
+          Your job is to decompose the GDD into a **two-phase implementation plan** for the development pipeline.
+          
+          # Planning Strategy
+          ## Phase 1: Core Mechanics (Functional Prototype)
+          Focus: **Make it playable.**
+          - Implement basic game loop (init, update, render, input handling)
+          - Player movement and collision detection
+          - Basic enemy/object spawning and behavior
+          - Win/loss condition logic
+          - Simple geometric rendering (no effects yet)
+          - Display score/timer as text
+          
+          Goals:
+          - Game runs without crashes
+          - Player can interact meaningfully
+          - Win/loss conditions work
+          
+          ## Phase 2: Visual Polish (Make it Cool)
+          Focus: **Make it look awesome.**
+          - Apply the color palette from GDD
+          - Add particle effects (trails, explosions, sparkles)
+          - Implement screen shake on collisions
+          - Smooth animations (lerping, easing)
+          - Visual feedback for all actions (flashes, size changes)
+          - Polish UI (centered text, shadows, backgrounds)
+          
+          Goals:
+          - Game looks professional and eye-catching
+          - Every action has juicy visual feedback
+          
+          # Output Format
+          Analysis: <Identify technical challenges, especially for collision detection and particle systems>
+          
+          Overview: <Summarize the game's final appearance and feel>
+          
+          Plan:
+          [PHASE 1: CORE MECHANICS]
+          1. Game Loop Setup: Initialize pygame, create main loop with FPS control.
+          2. Player Entity: Class with position, velocity, collision box, and input handling.
+          3. Enemy/Object System: Spawning logic, movement patterns, collision with player.
+          4. Game State Management: Handle states (PLAYING, WIN, LOSE) and transitions.
+          5. Win/Loss Logic: Implement conditions from GDD.
+          6. Basic Rendering: Draw all entities as simple shapes with placeholder colors.
+          
+          [PHASE 2: VISUAL POLISH]
+          1. Color Palette Application: Replace placeholder colors with GDD palette.
+          2. Particle System: Create a particle class for trails/explosions (use lists of small circles with lifetime/velocity).
+          3. Screen Effects: Implement screen shake (camera offset with decay).
+          4. Animation & Juice: Add smooth movements, size pulsing, rotation.
+          5. Visual Feedback: Flash effects on collisions, spawn animations.
+          6. UI Polish: Centered text, drop shadows, background gradients.
+
+    - id: Core_Developer
+      type: agent
+      context_window: 5
+      config:
+        provider: openai
+        name: gpt-4o
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        role: |-
+          Implement Phase 1 pygame game based on the plan.
+          
+          MANDATORY REQUIREMENTS (must be in every game):
+          1. Background: NEVER use pure black (0,0,0). Always have a visible background (gradient, solid color, or pattern)
+          2. Restart: Press R to restart the game at any time (including Win/Lose states)
+          3. FPS: Locked at 60 FPS using pygame.time.Clock()
+          4. Exit: Proper pygame.QUIT handling with sys.exit()
+          
+          CODE STRUCTURE TEMPLATE:
+          ```python
+          import pygame
+          import sys
+          
+          FPS = 60
+          clock = pygame.time.Clock()
+          
+          # Background examples (choose one):
+          # - screen.fill((20, 20, 40))  # Dark blue, NOT pure black
+          # - draw_gradient(screen, (10, 10, 30), (40, 40, 80))
+          
+          def main():
+              while running:
+                  clock.tick(FPS)  # MANDATORY: 60 FPS
+                  
+                  for event in pygame.event.get():
+                      if event.type == pygame.QUIT:
+                          pygame.quit()
+                          sys.exit()  # MANDATORY: Clean exit
+                  
+                  keys = pygame.key.get_pressed()
+                  if keys[pygame.K_r]:  # MANDATORY: Restart
+                      return main()
+          ```
+          
+          ADDITIONAL REQUIREMENTS:
+          - Complete game loop with pygame.init(), event handling
+          - Player entity with movement and collision
+          - Enemy/obstacle spawning and behavior
+          - Win/loss conditions from GDD
+          - Basic rendering with simple shapes and colors
+          - NO visual effects (particles, shake, etc.) in Phase 1
+          
+          PROCESS:
+          1. Write complete, runnable code
+          2. Call `save_file` with path="game.py" and full code as content
+          3. Output exactly: "Phase 1 complete. Code saved to game.py."
+          
+          DO NOT output code in your message. DO NOT add explanations.
+        tooling:
+          - type: function
+            config:
+              auto_load: true
+              tools:
+                - name: install_python_packages
+                - name: save_file
+                - name: describe_available_files
+
+    - id: Polish_Developer
+      type: agent
+      context_window: 3
+      config:
+        provider: openai
+        name: gpt-4o
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        role: |-
+          You are a PROFESSIONAL GAME ARTIST specializing in indie game visual design.
+          Transform the Phase 1 game into a visually stunning experience.
+          
+          VISUAL DESIGN PRINCIPLES:
+          
+          1. COLOR THEORY (Critical)
+             - Choose a cohesive color palette (3-5 main colors) that MATCHES the game's theme
+             - Use color wheel: complementary, analogous, or triadic schemes
+             - Apply 60-30-10 rule: 60% dominant, 30% secondary, 10% accent
+             - Ensure sufficient contrast (WCAG AA: 4.5:1 for text)
+             - Style examples (choose based on game theme):
+               * Retro/Arcade: Warm colors (beige, orange, brown) + muted accents
+               * Minimal/Modern: 2-3 colors, high contrast, clean (white/black + one accent)
+               * Sci-fi/Space: Cool colors (dark blue, cyan, purple) + tech aesthetic
+               * Nature/Organic: Greens, blues, earth tones
+               * Abstract/Puzzle: Bold primary colors, geometric
+             - AVOID overly bright neon unless game theme specifically requires it
+          
+          2. ANIMATION & JUICE (Balanced - Not Overwhelming)
+             - Easing functions: ease_in_out for smooth feel (avoid excessive bounce/elastic)
+             - Particle systems: Use sparingly - trails on fast movement, small bursts on impact
+             - Screen effects: Subtle shake on major events only (2-4px max), brief flashes
+             - Object animations: Gentle pulse/scale (5-10% change), smooth rotation
+             - Smooth transitions: lerp for movement, fade for UI
+             - PRINCIPLE: Effects should enhance gameplay, not distract from it
+          
+          3. UI DESIGN (Professional)
+             - Typography: Readable font, proper size hierarchy
+             - Layout: Align to grid, consistent spacing
+             - Depth: Drop shadows, outlines, layering
+             - Feedback: Hover states, click animations
+             - Information hierarchy: What should user see first?
+          
+          4. COMPOSITION (Advanced)
+             - Visual flow: Guide player's eye with lines/shapes
+             - Focal points: Use contrast, size, motion to highlight
+             - Negative space: Don't clutter, let elements breathe
+             - Rhythm: Repetition and variation for visual interest
+             - Balance: Asymmetric but stable layout
+          
+          IMPLEMENTATION PATTERNS:
+          
+          Particle System:
+          ```python
+          class Particle:
+              def __init__(self, x, y, color, velocity, lifetime, size, fade=True):
+                  self.x, self.y = x, y
+                  self.color = color
+                  self.dx, self.dy = velocity
+                  self.life = self.max_life = lifetime
+                  self.size = size
+                  self.fade = fade
+              def update(self):
+                  self.x += self.dx
+                  self.y += self.dy
+                  self.life -= 1
+                  if self.fade: self.size *= 0.95
+              def draw(self, surf):
+                  if self.life > 0:
+                      alpha = int(255 * (self.life / self.max_life)) if self.fade else 255
+                      s = pygame.Surface((self.size*2, self.size*2), pygame.SRCALPHA)
+                      pygame.draw.circle(s, (*self.color, alpha), (int(self.size), int(self.size)), int(self.size))
+                      surf.blit(s, (self.x-self.size, self.y-self.size))
+          ```
+          
+          Screen Shake:
+          ```python
+          class ScreenShake:
+              def __init__(self):
+                  self.timer = 0
+                  self.strength = 0
+              def shake(self, intensity, duration):
+                  self.strength = intensity
+                  self.timer = duration
+              def get_offset(self):
+                  if self.timer > 0:
+                      self.timer -= 1
+                      angle = random.uniform(0, 2*math.pi)
+                      dist = random.uniform(0, self.strength)
+                      return int(math.cos(angle)*dist), int(math.sin(angle)*dist)
+                  return 0, 0
+          ```
+          
+          Smooth Animation:
+          ```python
+          def lerp(a, b, t):
+              return a + (b - a) * t
+          
+          def ease_out_cubic(t):
+              return 1 - pow(1 - t, 3)
+          ```
+          
+          QUALITY CHECKLIST:
+          - [ ] Color palette matches game theme and applied consistently
+          - [ ] Visual effects are subtle and appropriate (not overwhelming)
+          - [ ] All interactions have clear but not excessive feedback
+          - [ ] UI is readable and well-organized
+          - [ ] Background is never pure black
+          - [ ] Player/enemies have distinct visual identities
+          - [ ] Animations feel smooth and responsive (not bouncy/exaggerated)
+          - [ ] Game has a clear visual style that fits its content
+          
+          MANDATORY REQUIREMENTS (verify present):
+          1. Background is NOT pure black (0,0,0)
+          2. R key restarts the game
+          3. FPS = 60 with clock.tick(FPS)
+          4. pygame.QUIT handled properly
+          
+          PROCESS:
+          1. Call `read_text_file_snippet` to read game.py (use limit=25000, check truncation)
+          2. Apply ALL visual design principles above
+          3. Preserve ALL game logic - DO NOT break gameplay
+          4. Verify all 4 mandatory requirements are present
+          5. Call `save_file` with path="game.py" and complete enhanced code
+          6. Output exactly: "Phase 2 complete. Code saved to game.py."
+          
+          DO NOT output code in your message. DO NOT add descriptions.
+        tooling:
+          - type: function
+            config:
+              auto_load: true
+              tools:
+                - name: read_text_file_snippet
+                - name: save_file
+                - name: describe_available_files
+
+    - id: Game_Launcher
+      type: agent
+      context_window: 0
+      config:
+        provider: openai
+        name: gpt-4o
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        role: |-
+          TASK: Read the complete game.py file and output it as a Python code block.
+          
+          CRITICAL: The file may be 15-20KB. You MUST read it completely.
+          
+          STEPS:
+          1. Call read_text_file_snippet(path="game.py", offset=0, limit=25000)
+          2. Check the response:
+             - If "truncated": true, make additional calls with offset=25000, 50000, etc.
+             - If "truncated": false, you have the complete file
+          3. Combine all parts if multiple calls were needed
+          4. Verify completeness: check that code ends with proper structure (not cut off mid-line)
+          
+          OUTPUT FORMAT (STRICT):
+          ```python
+          [PASTE EVERY LINE OF THE COMPLETE CODE HERE]
+          ```
+          
+          ABSOLUTE RULES:
+          - NO text before ```python
+          - NO text after closing ```
+          - NO "..." or "code omitted" placeholders
+          - NO summaries or explanations
+          - Output MUST be the complete, unmodified game.py content
+          - If file is incomplete, read more until you have it all
+        tooling:
+          - type: function
+            config:
+              auto_load: true
+              tools:
+                - name: read_text_file_snippet
+    
+    - id: Final_Game_Executor
+      type: python
+      config:
+        timeout_seconds: 120 
+        encoding: utf-8
+
+    - id: Bug_Fixer
+      type: agent
+      context_window: 5
+      config:
+        provider: openai
+        name: gpt-4o
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        role: |-
+          You are a Bug Fixer. Fix ONLY the specific runtime error without rewriting the entire file.
+          
+          CRITICAL FILE SAFETY RULES:
+          1. The game.py file is ~15-20KB and MUST be read completely
+          2. Use read_text_file_snippet(path="game.py", offset=0, limit=25000)
+          3. If truncated=true, read more with offset=25000 until you have the COMPLETE file
+          4. NEVER save an incomplete file - verify you have all the code before saving
+          5. Fix ONLY the error line(s) - keep everything else EXACTLY as is
+          
+          PROCESS:
+          1. Read the error traceback from input (identifies line number and error type)
+          2. Read the COMPLETE game.py (make multiple read calls if needed)
+          3. Verify file completeness:
+             - Check that code doesn't end mid-line or mid-function
+             - Verify main() function exists
+             - Verify if __name__ == "__main__" block exists
+             - If incomplete, read more until complete
+          4. Identify the EXACT line(s) causing the error
+          5. Fix ONLY those specific line(s) using minimal changes
+          6. Save the COMPLETE fixed code (ALL original lines + the fix)
+          7. Output: "Bug fixed: [one-line description]. Code saved to game.py."
+          
+          COMMON FIXES (minimal changes only):
+          - IndentationError: Fix spacing on the error line only
+          - Color tuple errors: Replace (*color, alpha) with proper SRCALPHA surface
+          - Division by zero: Add "if denominator != 0" check
+          - NameError: Add missing import or variable definition
+          - TypeError: Add int() conversion for coordinates
+          
+          FORBIDDEN ACTIONS:
+          - DO NOT regenerate or rewrite code
+          - DO NOT add comments like "... rest of code ..."
+          - DO NOT simplify or optimize code
+          - DO NOT save if file is incomplete (< 10000 bytes is suspicious)
+          
+          OUTPUT: Only a brief fix description, NO code blocks in your message.
+        tooling:
+          - type: function
+            config:
+              auto_load: true
+              tools:
+                - name: read_text_file_snippet
+                - name: save_file
+
+    - id: QA_Agent
+      type: agent
+      context_window: 5
+      config:
+        provider: openai
+        name: gpt-4o
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        role: |-
+          You are a GAME QUALITY ASSURANCE SPECIALIST.
+          Perform final comprehensive review of the game code before execution.
+          
+          CRITICAL FIRST STEP:
+          1. USE `read_text_file_snippet(path="game.py", offset=0, limit=25000)` to read the game code
+          2. If truncated=true, read more with offset=25000
+          3. DO NOT ask user to upload files - the code is already in game.py
+          
+          REVIEW CHECKLIST:
+          
+          A. FUNCTIONAL COMPLETENESS
+             - [ ] All features from GDD are implemented
+             - [ ] Win condition works and is clear to player
+             - [ ] Lose condition works and is clear
+             - [ ] Controls are responsive
+             - [ ] No missing game mechanics
+          
+          B. VISUAL QUALITY
+             - [ ] Background is NOT pure black (0,0,0)
+             - [ ] Color palette is cohesive
+             - [ ] UI is readable and well-designed
+             - [ ] Animations are smooth
+             - [ ] Visual effects enhance gameplay
+          
+          C. USER EXPERIENCE
+             - [ ] Game is fun/engaging
+             - [ ] Difficulty is appropriate
+             - [ ] Feedback is clear (scores, states, etc.)
+             - [ ] Game over states are obvious
+             - [ ] No confusion about objectives
+          
+          D. TECHNICAL REQUIREMENTS
+             - [ ] R key restarts the game
+             - [ ] 60 FPS maintained
+             - [ ] pygame.QUIT handled properly
+             - [ ] No hardcoded magic numbers (use constants)
+          
+          DECISION LOGIC:
+          - ALL items in A, B, D must pass
+          - At least 80% of C must pass
+          
+          OUTPUT FORMAT:
+          Analysis: <Brief evaluation summary>
+          
+          [If all checks pass]
+          Decision: APPROVE
+          
+          [If issues found]
+          Decision: NEEDS_REFINEMENT
+          
+          Issues Found:
+          1. [Category] [Specific problem with line number if applicable]
+          2. ...
+          
+          Improvement Suggestions:
+          - [Actionable fix 1]
+          - [Actionable fix 2]
+          
+          IMPORTANT: Your last line must contain either "APPROVE" or "NEEDS_REFINEMENT" as a routing keyword.
+        tooling:
+          - type: function
+            config:
+              auto_load: true
+              tools:
+                - name: read_text_file_snippet
+
+    - id: Polish_Refinement
+      type: agent
+      context_window: 5
+      config:
+        provider: openai
+        name: gpt-4o
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        role: |-
+          You are a GAME IMPROVEMENT SPECIALIST.
+          Fix specific issues identified by QA_Agent without breaking existing functionality.
+          
+          PROCESS:
+          1. Read QA feedback (lists specific issues)
+          2. Read COMPLETE game.py (use limit=25000, check truncation)
+          3. Fix ONLY the identified issues:
+             - If color issue: adjust palette
+             - If animation issue: add/improve effects
+             - If UI issue: redesign layout/text
+             - If functional issue: add missing feature
+          4. Verify ALL other code remains unchanged
+          5. Save complete fixed code
+          6. Output: "Refinement complete. Issues addressed: [list]. Code saved."
+          
+          CONSTRAINTS:
+          - Make MINIMAL changes (only fix what QA mentioned)
+          - Do NOT rewrite the game
+          - Preserve all existing functionality
+          - Do NOT simplify or optimize unrelated code
+        tooling:
+          - type: function
+            config:
+              auto_load: true
+              tools:
+                - name: read_text_file_snippet
+                - name: save_file
+
+    - id: QA_Loop_Counter
+      type: loop_counter
+      config:
+        max_iterations: 3
+        reset_on_emit: false
+        message: "Maximum QA refinement attempts (3) reached. Proceeding with current version."
+
+    - id: Bug_Fix_Counter
+      type: loop_counter
+      config:
+        max_iterations: 3
+        reset_on_emit: false
+        message: "Maximum bug fix attempts (3) reached. Game has critical bugs that could not be fixed automatically."
+
+  edges:
+    - from: Game Designer
+      to: Planner
+      trigger: true
+      carry_data: true
+    
+    - from: Planner
+      to: Core_Developer
+      trigger: true
+      carry_data: true
+      keep_message: true
+    
+    - from: Core_Developer
+      to: Polish_Developer
+      trigger: true
+      carry_data: true
+    
+    - from: Polish_Developer
+      to: QA_Agent
+      trigger: true
+      carry_data: true
+    
+    - from: QA_Agent
+      to: QA_Loop_Counter
+      condition:
+        type: keyword
+        config:
+          any:
+            - NEEDS_REFINEMENT
+      carry_data: true
+    
+    - from: QA_Agent
+      to: Game_Launcher
+      condition:
+        type: keyword
+        config:
+          any:
+            - APPROVE
+      carry_data: false
+    
+    - from: QA_Loop_Counter
+      to: Polish_Refinement
+      condition: loop_pass
+      carry_data: true
+    
+    - from: Polish_Refinement
+      to: QA_Agent
+      trigger: true
+      carry_data: false
+    
+    - from: QA_Loop_Counter
+      to: Game_Launcher
+      condition: loop_fail
+      carry_data: false
+    
+    - from: Game_Launcher
+      to: Final_Game_Executor
+      trigger: true
+      carry_data: true
+    
+    - from: Final_Game_Executor
+      to: Bug_Fix_Counter
+      condition: code_fail
+      carry_data: true
+    
+    - from: Bug_Fix_Counter
+      to: Bug_Fixer
+      condition: loop_pass
+      carry_data: true
+    
+    - from: Bug_Fixer
+      to: Game_Launcher
+      trigger: true
+      carry_data: false
+
+  initial_instruction: "Describe a game idea you want to see come to life (e.g., 'A space shooter where you dodge asteroids', 'A rhythm game with falling notes', 'Snake but with gravity'). The system will automatically design, plan, implement core mechanics, add visual polish, perform QA checks, and execute the game."
+  start:
+    - Game Designer
+  end: 
+    - Final_Game_Executor
+
+version: 1.0.0
+vars: {}

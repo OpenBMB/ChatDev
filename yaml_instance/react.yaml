@@ -1,0 +1,74 @@
+version: 0.4.0
+vars: {}
+graph:
+  id: react_agent_main
+  description: Subgraph-wrapped ReAct agent supporting multi-turn tool calls.
+  log_level: INFO
+  is_majority_voting: false
+  initial_instruction: Please input a question or task description. The ReAct Agent will automatically decide whether to search, crawl web pages, or execute code, then provide an answer.
+  start:
+    - Task Normalizer
+  end:
+  - Final QA Editor
+  nodes:
+  - id: Task Normalizer
+    type: agent
+    description: Normalize user intent, supplement structured goals.
+    config:
+      provider: openai
+      base_url: ${BASE_URL}
+      api_key: ${API_KEY}
+      name: gpt-4o
+      input_mode: messages
+      role: |
+        You are the preprocessor for the ReAct Agent.
+        - Organize the user input into a bulleted list of {Task Description, Expected Output, Constraints, Available Information}.
+        - If the user already has context or historical Observations, merge them into "Available Information".
+        - Output JSON: {"task": "...", "constraints": [..], "expected_output": "...", "context": "..."}
+        - **Note**: You are **forbidden** from directly answering the question. Output only JSON, without additional explanations.
+      params:
+        temperature: 0.1
+        max_tokens: 600
+  - id: ReAct Agent Subgraph
+    type: subgraph
+    description: Reference react_agent_subgraph to implement the ReAct loop.
+    config:
+      type: file
+      config:
+        path: "subgraphs/react_agent.yaml"
+  - id: Final QA Editor
+    type: agent
+    description: Generate the user's answer from the ReAct subgraph output, adding checks.
+    context_window: -1
+    config:
+      provider: openai
+      base_url: ${BASE_URL}
+      api_key: ${API_KEY}
+      name: gpt-4o
+      input_mode: prompt
+      role: |
+        You are a Quality Control Editor.
+        - Check whether the answer produced by the ReAct subgraph satisfies the constraints and expectations listed in the Task Normalizer.
+        - If gaps exist, briefly explain and append a "TODO List" after the answer.
+        - Otherwise, directly output the final answer, optionally with a summary of tool usage.
+      params:
+        temperature: 0.1
+        max_tokens: 600
+  edges:
+  - from: Task Normalizer
+    to: ReAct Agent Subgraph
+  - from: ReAct Agent Subgraph
+    to: Final QA Editor
+  - from: Task Normalizer
+    to: Final QA Editor
+    trigger: false
+  - from: Final QA Editor
+    to: ReAct Agent Subgraph
+    condition:
+      type: keyword
+      config:
+        any:
+          - TODO
+        none: [ ]
+        regex: [ ]
+        case_sensitive: true
