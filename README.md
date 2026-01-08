@@ -209,7 +209,7 @@ We provide robust, out-of-the-box templates for common scenarios. All runnable w
 | **🛠️ 3D Generation**<br>*(Requires [Blender](https://www.blender.org/) & [blender-mcp](https://github.com/ahujasid/blender-mcp))* | `blender_3d_builder_simple.yaml`<br>`blender_3d_builder_hub.yaml`<br>`blender_scientific_illustration.yaml` | <img src="assets/cases/3d_generation/3d.gif" width="100%"><br>Prompt: *"Please build a Christmas tree."* |
 | **🎮 Game Dev** | `GameDev_v1.yaml`<br>`ChatDev_v1.yaml`                                                                      | <img src="assets/cases/game_development/game.gif" width="100%"><br>Prompt: *"Please help me design and develop a Tank Battle game."* |
 | **📚 Deep Research** | `deep_research_v1.yaml`                                                                                     | <img src="assets/cases/deep_research/deep_research.gif" width="85%"><br>Prompt: *"Research about recent advances in the field of LLM-based agent RL"* |
-| **🎓 Teach Video** | `teach_video.yaml` (Please run command `uv add manim` before run this workflow)                             | <img src="assets/cases/video_generation/video.gif" width="140%"><br>Prompt: *"讲一下什么是凸优化"* |
+| **🎓 Teach Video** | `teach_video.yaml` (Please run command `uv add manim` before running this workflow)                         | <img src="assets/cases/video_generation/video.gif" width="140%"><br>Prompt: *"讲一下什么是凸优化"* |
 
 ---
 
