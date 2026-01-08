@@ -1,6 +1,6 @@
 graph:
   id: Video_Creator
-  description: "Teaching video pipeline using Manim: outline, paginate, render, and concat."
+  description: 'Teaching video pipeline using Manim: outline, paginate, render, and concat.'
   log_level: DEBUG
   is_majority_voting: false
   nodes:
@@ -265,23 +265,6 @@ graph:
       clear_kept_context: false
       process: null
       dynamic: null
-    - from: Code Generator
-      to: Visualization Executor
-      trigger: true
-      condition: 'true'
-      carry_data: true
-      keep_message: false
-      clear_context: false
-      clear_kept_context: false
-      process: null
-      dynamic:
-        type: map
-        split:
-          type: message
-          pattern: ''
-          json_path: ''
-        config:
-          max_parallel: 10
     - from: Concluder
       to: Video Concat
       trigger: true
@@ -302,6 +285,22 @@ graph:
       clear_kept_context: false
       process: null
       dynamic: null
+    - from: Code Generator
+      to: Visualization Executor
+      trigger: true
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic:
+        type: map
+        split:
+          type: message
+          config: {}
+        config:
+          max_parallel: 10
     - from: Paginator
       to: Code Generator
       trigger: true
@@ -315,8 +314,13 @@ graph:
         type: map
         split:
           type: regex
-          pattern: (.*?)<!--\s*PAGEBREAK\s*-->
-          json_path: ''
+          config:
+            pattern: (.*?)<!--\s*PAGEBREAK\s*-->
+            group: ''
+            case_sensitive: true
+            multiline: false
+            dotall: false
+            on_no_match: pass
         config:
           max_parallel: 10
   memory: []
