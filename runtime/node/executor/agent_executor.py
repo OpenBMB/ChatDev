@@ -283,7 +283,6 @@ class AgentNodeExecutor(NodeExecutor):
         self._record_model_call(node, last_input, None, CallStage.BEFORE)
         response = self._execute_with_retry(node, retry_policy, _call_provider)
         self.log_manager.debug(response.str_raw_response())
-        # print(timeline)
         self._record_model_call(node, last_input, response, CallStage.AFTER)
         return response
 
