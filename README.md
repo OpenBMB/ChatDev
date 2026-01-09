@@ -13,7 +13,7 @@
   【<a href="./README.md">English</a> | <a href="./README-zh.md">简体中文</a>】
 </p>
 <p align="center">
-    【📚 <a href="#developers">Developers</a> | 👥 <a href="#primary-contributors">Contributors</a>｜⭐️ <a href="https://github.com/OpenBMB/ChatDev/tree/legacy">ChatDev 1.0 (Legacy)</a>】
+    【📚 <a href="#developers">Developers</a> | 👥 <a href="#primary-contributors">Contributors</a>｜⭐️ <a href="https://github.com/OpenBMB/ChatDev/tree/chatdev1.0">ChatDev 1.0 (Legacy)</a>】
 </p>
 
 ## 📖 Overview
