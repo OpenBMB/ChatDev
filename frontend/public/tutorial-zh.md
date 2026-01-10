@@ -18,6 +18,7 @@
   - [初始节点](#初始节点)
 - [5. 审核与二次编辑流程](#5-build-review-and-revise-loop)
   - [创建二次编辑节点](#创建二次编辑节点)
+  - [设置 Context Window](#设置-context-window)
   - [Human Node：引入人工参与](#human-node引入人工参与)
 - [更多细节](#更多细节)
 
@@ -168,6 +169,28 @@ Graph 本身不承担具体任务的执行，而是负责对各节点的运行�
 ```
 
 ---
+### 设置 Context Window
+
+为了让 Agent 具备上下文记忆，请在 **Editor 2** 节点上设置：
+
+* `Context Window Size = 7`
+
+这表示 Editor 2 执行后会保留最近 7 条消息（包括节点输入和输出消息）。
+
+#### 什么是 Context Window（上下文窗口）？
+
+在 DevAll 中，**Context Window** 是**节点级别的上下文保留策略**。节点每次执行结束后，会尝试对自身输入队列中的 Messages 进行清理，仅保留满足保留规则的消息，以控制上下文规模。这不会影响本次执行，仅影响后续执行可见的输入。
+
+**规则**（对应节点配置里的 `Context Window Size`）：
+* `0`：清空全部上下文，仅保留通过边设置了 `Keep Message Input` 为 `True` 的消息。
+* `-1`：不清理，保留全部消息。
+* `> 0`：保留最新的 N 条消息（保留消息也会占用配额）。
+* 当 `Context Window Size != 0` 时，系统会自动把节点的输出消息写入该节点的上下文，供后续执行使用。
+
+**建议**：
+* 需要长期保留的关键上下文，搭配边上的 `Keep Message Input` 或 Memory 模块管理。
+
+---
 ### Human Node：引入人工参与
 
 **Human Node** 是一种特殊的节点类型，用于在 Graph 的执行过程中引入人类参与。
@@ -227,7 +250,7 @@ Graph 本身不承担具体任务的执行，而是负责对各节点的运行�
 
 # 节点类型详解
 
-MAC 提供多种节点类型，每种都有特定的用途和配置选项。
+DevAll 提供多种节点类型，每种都有特定的用途和配置选项。
 
 ## Agent 节点
 
@@ -242,7 +265,7 @@ Agent 节点是最核心的节点类型，用于调用大语言模型 (LLM) 完�
 Agent 节点可以配置工具，让模型调用外部 API 或执行函数。请点击展开 Advanced Settings，即可看到配置项。Tooling 可配置多项，例如可同时配置 MCP 和 Function 工具；可配置多个 MCP 工具等。
 ![agent_tooling_config.png](media/agent_toolig_config.png)
 
-MAC 支持两类工具：
+DevAll 支持两类工具：
 
 #### 1. Function Tooling（本地函数）
 
@@ -610,7 +633,7 @@ def my_processor(data: str, _context: Dict[str, Any]) -> str:
 
 # Workspace 工作区
 
-MAC 使用分层的工作区结构管理文件：
+DevAll 使用分层的工作区结构管理文件：
 
 ## 目录结构
 
