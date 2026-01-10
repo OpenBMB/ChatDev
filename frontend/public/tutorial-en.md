@@ -19,6 +19,7 @@ This tutorial will walk you through how to use a **Graph** structure to organize
   - [Entry Node](#entry-nodes)
 - [5. Build Review and Revise Loop](#5-build-review-and-revise-loop)
   - [Creating a Second Editor Node](#creating-a-second-editing-node)
+  - [Set the Context Window](#set-the-context-window)
   - [Human Node: Introducing Human Participation](#human-node-introducing-human-in-the-Loop)
 - [More Details](#more-things)
 ---
@@ -172,6 +173,28 @@ Based on the article and the revision suggestions, refine and revise the article
 ```
 
 ---
+### Set the Context Window
+
+To give the Agent contextual memory, set this on **Editor 2**:
+
+* `Context Window Size = 7`
+
+This keeps the newest 7 messages (including node input and output messages).
+
+#### What is a Context Window?
+
+In DevAll, the **context window** is a **node-level retention policy**. After each run, the node tries to clean up its own input queue of Messages, keeping only what satisfies the retention rules to control context size. This does not affect the current run; it only affects inputs visible in later runs.
+
+**Rules** (configured via `Context Window Size` on the node):
+* `0`: clear all context, keeping only messages marked by `Keep Message Input = True` on edges.
+* `-1`: keep all messages.
+* `> 0`: keep the newest N messages (kept messages still count toward the limit).
+* When `Context Window Size != 0`, the system automatically saves the node's output messages into that node's context for later runs.
+
+**Tips**:
+* For long-lived context, use `Keep Message Input` in Edge config or the Memory module.
+
+---
 
 ### Human Node: Introducing Human-in-the-Loop
 
@@ -237,7 +260,7 @@ We provide a set of examples: files named `demo_*.yaml` are feature/module demos
 
 # Node Types Explained
 
-MAC provides various node types, each with specific purposes and configuration options.
+DevAll provides various node types, each with specific purposes and configuration options.
 
 ## Agent Node
 
@@ -252,7 +275,7 @@ Agent Nodes are the core node type, used to call large language models (LLMs) fo
 Agent Nodes can be configured with tools, allowing the model to call external APIs or execute functions. Click Advanced Settings to see the options. Multiple tools can be configured, such as both MCP and Function tools, or multiple MCP tools.
 ![agent_tooling_config.png](media/agent_toolig_config.png)
 
-MAC supports two types of tools:
+DevAll supports two types of tools:
 
 #### 1. Function Tooling (Local Functions)
 
@@ -617,7 +640,7 @@ If none are met, repeat from Step 2.
 
 # Workspace Structure
 
-MAC uses a layered workspace structure to manage files:
+DevAll uses a layered workspace structure to manage files:
 
 ## Directory Structure
 
