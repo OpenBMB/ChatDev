@@ -87,10 +87,19 @@ class OpenAIEmbedding(EmbeddingBase):
         self.use_chunking = embedding_config.params.get('use_chunking', False)
         self.chunk_strategy = embedding_config.params.get('chunk_strategy', 'average')
 
+        # Check if a custom base_url is provided for the OpenAI client
         if self.base_url:
-            self.client = openai.OpenAI(api_key=self.api_key, base_url=self.base_url)
+            # Initialize OpenAI client with custom base_url. 
+            # Note: 'proxies' argument is removed to maintain compatibility with OpenAI SDK v1.0.0+
+            self.client = openai.OpenAI(
+                api_key=self.api_key, 
+                base_url=self.base_url
+            )
         else:
-            self.client = openai.OpenAI(api_key=self.api_key)
+            # Initialize OpenAI client with default settings
+            self.client = openai.OpenAI(
+                api_key=self.api_key
+            )
 
     @retry(wait=wait_random_exponential(min=2, max=5), stop=stop_after_attempt(10))
     def get_embedding(self, text):

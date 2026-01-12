@@ -16,10 +16,12 @@ class TokenUsage:
     node_id: Optional[str] = None
     model_name: Optional[str] = None
     workflow_id: Optional[str] = None
-    provider: Optional[str] = None  # Add provider field
+    provider: Optional[str] = None 
+    # New: Add proxies field to track networking configuration
+    proxies: Optional[Dict[str, str]] = None 
 
     def to_dict(self):
-        """Convert to dictionary format."""
+        """Convert the usage metrics to a dictionary format for export."""
         return {
             "input_tokens": self.input_tokens,
             "output_tokens": self.output_tokens,
@@ -29,7 +31,8 @@ class TokenUsage:
             "node_id": self.node_id,
             "model_name": self.model_name,
             "workflow_id": self.workflow_id,
-            "provider": self.provider  # Include provider in output
+            "provider": self.provider,
+            "proxies": self.proxies # Include proxies in dictionary output
         }
 
 
@@ -44,11 +47,13 @@ class TokenTracker:
         self.call_history = []
         self.node_call_counts = defaultdict(int)  # Track how many times each node is called
 
-    def record_usage(self, node_id: str, model_name: str, usage: TokenUsage, provider: str = None):
-        """Records token usage for a specific call, handling multiple node executions."""
-        # Update the usage with provider if it wasn't set already
+    def record_usage(self, node_id: str, model_name: str, usage: TokenUsage, provider: str = None, proxies: Dict = None):
+        """Records token usage for a specific call and tracks proxy information."""
+        # Update usage object with provider and proxy info if available
         if provider and not usage.provider:
             usage.provider = provider
+        if proxies and not usage.proxies:
+            usage.proxies = proxies
             
         # Add to total usage
         self.total_usage.input_tokens += usage.input_tokens
@@ -83,12 +88,14 @@ class TokenTracker:
             "total_tokens": usage.total_tokens,
             "metadata": dict(usage.metadata),
             "timestamp": usage.timestamp.isoformat(),
-            "execution_number": self.node_call_counts[node_id]  # Track which execution this is
+            "execution_number": self.node_call_counts[node_id]
         }
         
-        # Add provider to history entry if available
+        # Include optional metadata in history
         if provider:
             history_entry["provider"] = provider
+        if proxies:
+            history_entry["proxies"] = proxies # Fix for issue #494 tracking
             
         self.call_history.append(history_entry)
 
