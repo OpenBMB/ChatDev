@@ -544,7 +544,13 @@ class OpenAIProvider(ModelProvider):
 
         mime = (attachment.mime_type or "").lower()
         name = (attachment.name or "").lower()
-        if not mime.startswith("text/"):
+        is_json = mime in {
+            "application/json",
+            "application/jsonl",
+            "application/x-ndjson",
+            "application/ndjson",
+        } or name.endswith((".json", ".jsonl", ".ndjson"))
+        if not (mime.startswith("text/") or is_json):
             return None
         if attachment.remote_file_id:
             return None  # nothing to inline if already remote-only
