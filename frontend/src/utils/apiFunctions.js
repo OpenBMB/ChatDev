@@ -424,6 +424,58 @@ export async function getAttachment(sessionId, attachmentId) {
   }
 }
 
+// Batch workflow execution
+export async function postBatchWorkflow({ file, sessionId, yamlFile, maxParallel, logLevel }) {
+  try {
+    const formData = new FormData()
+
+    // Append required parameters
+    if (file) {
+      formData.append('file', file)
+    }
+    if (sessionId) {
+      formData.append('session_id', sessionId)
+    }
+    if (yamlFile) {
+      formData.append('yaml_file', yamlFile)
+    }
+    if (maxParallel !== undefined) {
+      formData.append('max_parallel', maxParallel.toString())
+    }
+    if (logLevel) {
+      formData.append('log_level', logLevel)
+    }
+
+    const response = await fetch(apiUrl('/api/workflows/batch'), {
+      method: 'POST',
+      body: formData
+    })
+
+    const data = await response.json().catch(() => ({}))
+
+    if (response.ok) {
+      return {
+        success: true,
+        message: data?.message || 'Batch workflow executed successfully',
+        ...data
+      }
+    }
+
+    return {
+      success: false,
+      detail: data?.detail,
+      message: data?.message || 'Failed to execute batch workflow',
+      status: response.status
+    }
+  } catch (error) {
+    console.error('Error executing batch workflow:', error)
+    return {
+      success: false,
+      message: 'API error'
+    }
+  }
+}
+
 // Upload a binary file
 export async function postFile(sessionId, file) {
   try {

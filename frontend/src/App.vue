@@ -5,8 +5,8 @@ import Sidebar from './components/Sidebar.vue'
 
 const route = useRoute()
 
-// Hide the sidebar on LaunchView
-const showSidebar = computed(() => route.path !== '/launch')
+// Hide the sidebar on LaunchView, BatchRunView and WorkflowWorkbench
+const showSidebar = computed(() => route.path !== '/launch' && route.path !== '/batch-run')
 </script>
 
 <template>
