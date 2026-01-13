@@ -76,6 +76,8 @@ class OpenAIModel(ModelBackend):
                 client = openai.OpenAI(
                     api_key=OPENAI_API_KEY,
                     base_url=BASE_URL,
+                    timeout=60.0, # Adding a logical timeout for better reliability
+                    max_retries=3  # Standardizing retries
                 )
             else:
                 client = openai.OpenAI(
