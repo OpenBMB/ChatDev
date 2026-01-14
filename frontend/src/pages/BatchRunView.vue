@@ -14,13 +14,47 @@
       <!-- Left panel -->
       <div class="left-panel">
         <!-- Log area -->
-        <div class="log-box">
+        <div v-if="viewMode === 'terminal'" class="log-box">
           <div class="log-messages" ref="logMessagesRef">
             <div v-for="(logMessage, index) in logMessages" :key="index" class="log-message">
-              {{ logMessage }}
+              <span :class="`log-timestamp log-timestamp-${logMessage.type}`">{{ logMessage.timestamp }}</span> : {{ logMessage.message }}
             </div>
             <div v-if="logMessages.length === 0" class="log-placeholder">
               Batch processing logs will appear here...
+            </div>
+          </div>
+        </div>
+
+        <!-- Dashboard area -->
+        <div v-if="viewMode === 'dashboard'" class="dashboard-box">
+          <div class="dashboard-content">
+            <!-- Metrics Grid -->
+            <div class="metrics-grid">
+              <div class="metric-card" :class="{ 'status-active': status === 'In Progress' }">
+                <div class="metric-title">Rows Completed</div>
+                <div class="metric-value">{{ completedRows }}</div>
+              </div>
+              <div class="metric-card" :class="{ 'status-active': status === 'In Progress' }">
+                <div class="metric-title">Total Time</div>
+                <div class="metric-value">{{ totalTime }}</div>
+              </div>
+              <div class="metric-card" :class="{ 'status-active': status === 'In Progress' }">
+                <div class="metric-title">Success Rate</div>
+                <div class="metric-value">{{ successRate }}</div>
+              </div>
+              <div class="metric-card" :class="{ 'status-active': status === 'In Progress' }">
+                <div class="metric-title">Current Status</div>
+                <div class="metric-value" :class="{ 'status-active': status === 'In Progress' }">{{ computedStatus }}</div>
+              </div>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="progress-section">
+              <div class="progress-label">Overall Progress</div>
+              <div class="progress-bar" :style="{ '--process-width': progressPercentage + '%'}">
+                <div class="progress-fill" :class="{ 'processing': status === 'In Progress' }" :style="{ width: progressPercentage + '%' }"></div>
+              </div>
+              <div class="progress-text">{{ progressPercentage }}%</div>
             </div>
           </div>
         </div>
@@ -108,10 +142,24 @@
             </div>
           </div>
 
-          <label class="section-label">Status</label>
-          <div class="status-display" :class="{ 'status-active': status === 'Running...' }">
-            {{ computedStatus }}
+          <label class="section-label">View</label>
+          <div class="view-toggle">
+            <button
+              class="toggle-button"
+              :class="{ active: viewMode === 'dashboard' }"
+              @click="switchToDashboard"
+            >
+              Dashboard
+            </button>
+            <button
+              class="toggle-button"
+              :class="{ active: viewMode === 'terminal' }"
+              @click="viewMode = 'terminal'"
+            >
+              Terminal
+            </button>
           </div>
+
 
 
           <!-- Button area -->
@@ -126,7 +174,7 @@
 
             <button
               class="cancel-button"
-              :disabled="status !== 'Running...'"
+              :disabled="status !== 'In Progress'"
               @click="cancelBatchWorkflow"
             >
               Cancel
@@ -176,6 +224,9 @@
       <div class="column-guide-modal">
         <div class="modal-content">
           <div class="manual-content">
+            <div class="manual-item">
+              Input file should contain at least <code>task</code> and/or <code>attachments</code> columns
+            </div>
             <div class="manual-item">
               <code>id</code> - Must be unique, auto-generated if column not found
             </div>
@@ -259,6 +310,13 @@ const route = useRoute()
 const logMessages = ref([])
 const logMessagesRef = ref(null)
 
+// Log message types
+const LOG_TYPES = {
+  COMPLETED: 'completed',
+  FAILED: 'failed',
+  DEFAULT: 'default'
+}
+
 // Task input state
 const taskPrompt = ref('')
 
@@ -272,15 +330,15 @@ const fileSelectorWrapperRef = ref(null)
 const fileSelectorInputRef = ref(null)
 
 // Status state
-const status = ref('Waiting for workflow selection...')
+const status = ref('Idle')
 const loading = ref(false)
 
 // Computed status from workflow and input file selection
 const computedStatus = computed(() => {
   if (loading.value) return 'Loading...'
-  if (status.value === 'Waiting for workflow selection...') return status.value
-  if (!selectedYamlFile.value) return 'Waiting for workflow selection...'
-  if (!selectedInputFile.value) return 'Waiting for file selection...'
+  if (status.value === 'Pending workflow selection') return status.value
+  if (!selectedYamlFile.value) return 'Pending workflow selection'
+  if (!selectedInputFile.value) return 'Pending file selection'
   return status.value
 })
 
@@ -315,7 +373,64 @@ const showSettingsModal = ref(false)
 const showColumnGuideModal = ref(false)
 
 // View mode
-const viewMode = ref('chat')
+const viewMode = ref('dashboard')
+
+// Dashboard metrics
+const totalRowsCount = ref(0)
+const completedRowsCount = ref(0)
+const successfulTasks = ref(0)
+const failedTasks = ref(0)
+const batchStartTime = ref(null)
+const batchEndTime = ref(null)
+
+// Timer update interval
+let timerInterval = null
+const currentTime = ref(Date.now())
+
+// Timer functions
+const startTimer = () => {
+  if (timerInterval) return
+  timerInterval = setInterval(() => {
+    currentTime.value = Date.now()
+  }, 10) // Update every 10ms
+}
+
+const stopTimer = () => {
+  if (timerInterval) {
+    clearInterval(timerInterval)
+    timerInterval = null
+  }
+}
+
+const completedRows = computed(() => {
+  if (totalRowsCount.value === 0) return '-'
+  return `${completedRowsCount.value}/${totalRowsCount.value}`
+})
+
+const totalTime = computed(() => {
+  if (!batchStartTime.value) return '00:00:00:00'
+
+  const endTime = batchEndTime.value || currentTime.value
+  const duration = endTime - batchStartTime.value
+  const hours = Math.floor(duration / (1000 * 60 * 60))
+  const minutes = Math.floor((duration % (1000 * 60 * 60)) / (1000 * 60))
+  const seconds = Math.floor((duration % (1000 * 60)) / 1000)
+  const centiseconds = Math.floor((duration % 1000) / 10)
+
+  return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}:${centiseconds.toString().padStart(2, '0')}`
+})
+
+const successRate = computed(() => {
+  const totalProcessed = successfulTasks.value + failedTasks.value
+  if (totalProcessed === 0) return '0%'
+  const rate = (successfulTasks.value / totalProcessed) * 100
+  return `${Math.round(rate)}%`
+})
+
+const progressPercentage = computed(() => {
+  if (totalRowsCount.value === 0) return 0
+  return Math.round((completedRowsCount.value / totalRowsCount.value) * 100)
+})
 
 // WebSocket reference
 let ws = null
@@ -375,7 +490,18 @@ const resetConnectionState = ({ closeSocket = true, clearInputFile = true } = {}
   isConnectionReady.value = false
   shouldGlow.value = false
   isWorkflowRunning.value = false
-  activeNodes.value = []
+
+  // Stop the timer
+  stopTimer()
+
+  // Reset metrics
+  totalRowsCount.value = 0
+  completedRowsCount.value = 0
+  successfulTasks.value = 0
+  failedTasks.value = 0
+  batchStartTime.value = null
+  batchEndTime.value = null
+
   if (attachmentHoverTimeout) {
     clearTimeout(attachmentHoverTimeout)
     attachmentHoverTimeout = null
@@ -388,18 +514,6 @@ const resetConnectionState = ({ closeSocket = true, clearInputFile = true } = {}
 
 // Button state management
 const isWorkflowRunning = ref(false)
-
-// Active node list
-const activeNodes = ref([])
-// Hovered node id for highlighting related edges
-const hoveredNodeId = ref(null)
-
-const onNodeHover = (nodeId) => {
-  hoveredNodeId.value = nodeId || null
-}
-const onNodeLeave = (_nodeId) => {
-  hoveredNodeId.value = null
-}
 
 // Current workflow YAML content
 const workflowYaml = ref({})
@@ -480,6 +594,9 @@ const selectWorkflow = (fileName) => {
   isFileSearchDirty.value = false
   closeFileDropdown()
 
+  // Avoid focusing on element after selection
+  fileSelectorInputRef.value?.blur()
+
   router.push({
     query: {
       ...route.query,
@@ -520,65 +637,13 @@ const handleClickOutside = (event) => {
 }
 
 // Add a log entry
-const addLogMessage = (message) => {
+const addLogMessage = (message, type = LOG_TYPES.DEFAULT) => {
   const timestamp = formatLogTimestamp(Date.now())
-  logMessages.value.push(`${timestamp} : ${message}`)
-}
-
-const isAttachmentUploadAllowed = () => {
-  if (!isConnectionReady.value || !sessionId || isUploadingAttachment.value) {
-    return false
-  }
-  if (isWorkflowRunning.value && status.value !== 'Waiting for input...') {
-    return false
-  }
-  return true
-}
-
-const uploadFiles = async (files) => {
-  if (!files || files.length === 0) {
-    return
-  }
-
-  if (!sessionId) {
-    alert('Session is not ready yet. Please wait for connection.')
-    return
-  }
-
-  isUploadingAttachment.value = true
-  try {
-    for (const file of files) {
-      try {
-        const result = await postFile(sessionId, file)
-
-        if (result?.success && result?.attachmentId) {
-          console.log('File uploaded successfully:', result)
-          uploadedAttachments.value.push(result)
-        } else {
-          console.error('File upload failed:', result)
-          alert(result?.message || 'Failed to upload file')
-        }
-      } catch (error) {
-        console.error('Failed to upload attachment:', error)
-        alert('File upload failed, please try again.')
-      }
-    }
-  } finally {
-    isUploadingAttachment.value = false
-  }
-}
-
-const onAttachmentSelected = async (event) => {
-  const file = event.target?.files?.[0]
-  if (event.target) {
-    event.target.value = ''
-  }
-
-  if (!file) {
-    return
-  }
-
-  await uploadFiles([file])
+  logMessages.value.push({
+    timestamp,
+    message,
+    type
+  })
 }
 
 const removeAttachment = (attachmentId) => {
@@ -736,6 +801,7 @@ const handleMicrophoneMouseLeave = (event) => {
   // This allows recording to continue if user drags outside button
 }
 
+// Cleans up stored recorded audios
 const cleanupRecording = () => {
   removeGlobalListeners()
   if (audioStream) {
@@ -745,29 +811,6 @@ const cleanupRecording = () => {
   mediaRecorder = null
   audioChunks = []
   isRecording.value = false
-}
-
-const handleAttachmentHover = (isHovering) => {
-  if (isHovering) {
-    if (attachmentHoverTimeout) {
-      clearTimeout(attachmentHoverTimeout)
-      attachmentHoverTimeout = null
-    }
-
-    if (uploadedAttachments.value.length > 0) {
-      showAttachmentPopover.value = true
-    }
-    return
-  }
-
-  if (attachmentHoverTimeout) {
-    clearTimeout(attachmentHoverTimeout)
-  }
-
-  attachmentHoverTimeout = setTimeout(() => {
-    showAttachmentPopover.value = false
-    attachmentHoverTimeout = null
-  }, 140)
 }
 
 const lockBodyScroll = () => {
@@ -811,88 +854,6 @@ const handleKeydown = (event) => {
   }
 }
 
-// Handle paste events, including file uploads
-const handlePaste = async (event) => {
-  // Check if upload is allowed
-  if (!isAttachmentUploadAllowed()) {
-    return
-  }
-
-  // Get clipboard data
-  const clipboardData = event.clipboardData
-  if (!clipboardData) {
-    return
-  }
-
-  // Check whether the clipboard contains files
-  const files = clipboardData.files
-  if (!files || files.length === 0) {
-    return
-  }
-
-  // Prevent default paste to avoid inserting text
-  event.preventDefault()
-
-  // Upload all pasted files
-  await uploadFiles(files)
-}
-
-const isFileDragEvent = (event) => {
-  const types = event?.dataTransfer?.types
-  if (!types) {
-    return false
-  }
-  return Array.from(types).includes('Files')
-}
-
-const handleDragEnter = (event) => {
-  if (!isFileDragEvent(event) || !isAttachmentUploadAllowed()) {
-    return
-  }
-  dragDepth += 1
-  isDragActive.value = true
-  event.preventDefault()
-}
-
-const handleDragOver = (event) => {
-  if (!isFileDragEvent(event) || !isAttachmentUploadAllowed()) {
-    return
-  }
-  event.preventDefault()
-  if (event.dataTransfer) {
-    event.dataTransfer.dropEffect = 'copy'
-  }
-}
-
-const handleDragLeave = (event) => {
-  if (!isFileDragEvent(event)) {
-    return
-  }
-  dragDepth = Math.max(0, dragDepth - 1)
-  if (dragDepth === 0) {
-    isDragActive.value = false
-  }
-}
-
-const handleDrop = async (event) => {
-  if (!isFileDragEvent(event)) {
-    return
-  }
-  event.preventDefault()
-  dragDepth = 0
-  isDragActive.value = false
-
-  if (!isAttachmentUploadAllowed()) {
-    return
-  }
-
-  const files = Array.from(event.dataTransfer?.files || [])
-  if (files.length === 0) {
-    return
-  }
-  await uploadFiles(files)
-}
-
 // Handle YAML file selection
 const handleYAMLSelection = async (fileName) => {
   if (!fileName) {
@@ -901,6 +862,15 @@ const handleYAMLSelection = async (fileName) => {
     setNodes([])
     setEdges([])
     nodeSpriteMap.value.clear()
+
+    // Reset metrics
+    totalRowsCount.value = 0
+    completedRowsCount.value = 0
+    successfulTasks.value = 0
+    failedTasks.value = 0
+    batchStartTime.value = null
+    batchEndTime.value = null
+
     return
   }
 
@@ -932,48 +902,6 @@ const handleButtonClick = () => {
   }
 }
 
-// Send human input
-const sendHumanInput = () => {
-  if (!ws) {
-    return
-  }
-
-  const trimmedInput = taskPrompt.value.trim()
-  const attachmentIds = uploadedAttachments.value.map((attachment) => attachment.attachmentId)
-  const attachmentNames = uploadedAttachments.value.map(
-    (attachment) => attachment.name || attachment.attachmentId
-  )
-
-  if (!trimmedInput && attachmentIds.length === 0) {
-    return
-  }
-
-  const message = {
-    type: 'human_input',
-    data: {
-      input: trimmedInput,
-      attachments: attachmentIds
-    }
-  }
-
-  clearUploadedAttachments()
-  ws.send(JSON.stringify(message))
-
-  const fullMessage = []
-  if (trimmedInput) {
-    fullMessage.push(trimmedInput)
-  }
-  if (attachmentNames.length) {
-    fullMessage.push(`[[Attachments]]:\n ${attachmentNames.join(', ')}`)
-  }
-
-  if (fullMessage.length) {
-    addDialogue('User', fullMessage.join('\n\n'))
-  }
-
-  taskPrompt.value = ''
-}
-
 // Establish a WebSocket connection
 const establishWebSocketConnection = () => {
   // Reset any previous state before creating a new socket
@@ -990,8 +918,8 @@ const establishWebSocketConnection = () => {
   const socket = new WebSocket(wsUrl)
   ws = socket
 
+  // Ignore events from stale sockets
   socket.onopen = () => {
-    // Ignore events from stale sockets
     if (ws !== socket) return
     console.log('WebSocket connected')
   }
@@ -1015,7 +943,7 @@ const establishWebSocketConnection = () => {
 
       isConnectionReady.value = true
       shouldGlow.value = true
-      status.value = 'Waiting for launch...'
+      status.value = 'Pending launch'
 
       nextTick(() => {
         taskInputRef.value?.focus()
@@ -1025,8 +953,8 @@ const establishWebSocketConnection = () => {
     }
   }
 
+  // Ignore errors from sockets that are no longer current
   socket.onerror = (error) => {
-    // Ignore errors from sockets that are no longer current
     if (ws !== socket) return
 
     console.error('WebSocket error:', error)
@@ -1040,9 +968,9 @@ const establishWebSocketConnection = () => {
     if (ws !== socket) return
 
     console.log('WebSocket closed')
-    if (status.value === 'Running...') {
+    if (status.value === 'In Progress') {
       status.value = 'Disconnected'
-    } else if (status.value === 'Connecting...' || status.value === 'Waiting for launch...') {
+    } else if (status.value === 'Connecting...' || status.value === 'Pending launch') {
       status.value = 'Disconnected'
     }
     resetConnectionState({ closeSocket: false, clearInputFile: false })
@@ -1057,7 +985,7 @@ watch(selectedYamlFile, (newFile) => {
 
   if (!newFile) {
     resetConnectionState()
-    status.value = 'Waiting for file selection...'
+    status.value = 'Pending file selection'
     handleYAMLSelection(newFile)
     return
   }
@@ -1077,6 +1005,7 @@ watch(
   }
 )
 
+// When called from Launch in WorkflowView, auto pass in corresponding workflow
 watch(
   () => route.query?.workflow,
   () => {
@@ -1096,208 +1025,13 @@ onUnmounted(() => {
   unlockBodyScroll()
   resetConnectionState()
   cleanupRecording()
+  stopTimer()
 })
 
-const { fromObject, fitView, onPaneReady, onNodesInitialized, setNodes, setEdges, edges } = useVueFlow()
-
-// Fit the view after the pane is ready or nodes are initialized
-onPaneReady(() => {
-  requestAnimationFrame(() => fitView?.({ padding: 0.1 }))
-})
-onNodesInitialized(() => {
-  requestAnimationFrame(() => fitView?.({ padding: 0.1 }))
-})
-
-const syncNodeAndEdgeData = () => {
-  try {
-    const yamlNodes = workflowYaml.value?.graph?.nodes || []
-    const yamlEdges = workflowYaml.value?.graph?.edges || []
-
-    const yamlNodeById = new Map(
-      Array.isArray(yamlNodes) ? yamlNodes.map(node => [node.id, node]) : []
-    )
-    const yamlEdgeByKey = new Map(
-      Array.isArray(yamlEdges)
-        ? yamlEdges.map(edge => [`${edge.from}-${edge.to}`, edge])
-        : []
-    )
-
-    setNodes(existingNodes => {
-      if (!Array.isArray(existingNodes)) {
-        return existingNodes
-      }
-      return existingNodes.map(node => {
-        const yamlNode = yamlNodeById.get(node.id)
-        if (yamlNode) {
-          return {
-            ...node,
-            data: yamlNode
-          }
-        }
-        return node
-      })
-    })
-
-    setEdges(existingEdges => {
-      if (!Array.isArray(existingEdges)) {
-        return existingEdges
-      }
-      return existingEdges.map(edge => {
-        const key = `${edge.source}-${edge.target}`
-        const yamlEdge = yamlEdgeByKey.get(key)
-        if (yamlEdge) {
-          return {
-            ...edge,
-            data: yamlEdge,
-            markerEnd: {
-              type: MarkerType.Arrow,
-              width: 18,
-              height: 18,
-              color: '#f2f2f2',
-              strokeWidth: 2,
-            }
-          }
-        }
-        return edge
-      })
-    })
-  } catch (error) {
-    console.error('Failed to sync graph data with YAML:', error)
-  }
-}
-
-const generateNodesAndEdges = async ({ fit = false } = {}) => {
-  try {
-    const yamlNodes = Array.isArray(workflowYaml.value?.graph?.nodes)
-      ? workflowYaml.value.graph.nodes
-      : []
-    const yamlEdges = Array.isArray(workflowYaml.value?.graph?.edges)
-      ? workflowYaml.value.graph.edges
-      : []
-
-    const generatedNodes = yamlNodes.map((node, index) => ({
-      id: node.id,
-      type: 'workflow-node',
-      label: node.id,
-      position: {
-        x: 20 + (index % 5) * 200,
-        y: 10 + Math.floor(index / 5) * 150
-      },
-      data: node
-    }))
-
-    const generatedEdges = yamlEdges.map(edge => ({
-      id: `${edge.from}-${edge.to}`,
-      source: edge.from,
-      target: edge.to,
-      type: 'workflow-edge',
-      markerEnd: {
-        type: MarkerType.Arrow,
-        width: 18,
-        height: 18,
-        color: '#f2f2f2',
-        strokeWidth: 2,
-      },
-      data: edge
-    }))
-
-    setNodes(generatedNodes)
-    setEdges(generatedEdges)
-  } catch (error) {
-    console.error('Error generating nodes and edges from YAML:', error)
-  }
-
-  if (fit && viewMode.value === 'graph') {
-    await nextTick()
-    fitView?.({ padding: 0.1 })
-  }
-}
-
-const loadVueFlowGraph = async ({ fit = false } = {}) => {
-  const selectionSnapshot = selectedYamlFile.value
-  const shouldFit = fit && viewMode.value === 'graph'
-
-  const runFallback = async () => {
-    if (selectedYamlFile.value === selectionSnapshot) {
-      await generateNodesAndEdges({ fit: shouldFit })
-    }
-    return false
-  }
-
-  if (!selectionSnapshot) {
-    return await runFallback()
-  }
-
-  const key = selectionSnapshot.replace(/\.yaml$/i, '')
-  if (!key) {
-    return await runFallback()
-  }
-
-  try {
-    const result = await fetchVueGraph(key)
-
-    if (selectedYamlFile.value !== selectionSnapshot) {
-      return false
-    }
-
-    if (result?.status === 404) {
-      return await runFallback()
-    }
-
-    if (!result?.success) {
-      console.error('Failed to load VueFlow graph:', result?.message || result?.detail)
-      return await runFallback()
-    }
-
-    if (selectedYamlFile.value !== selectionSnapshot) {
-      return false
-    }
-
-    const content = result?.content
-
-    if (!content) {
-      return await runFallback()
-    }
-
-    let flow
-    try {
-      flow = JSON.parse(content)
-    } catch (parseError) {
-      console.error('Failed to parse saved VueFlow graph:', parseError)
-      return await runFallback()
-    }
-
-    fromObject?.(flow)
-    await nextTick()
-
-    if (selectedYamlFile.value !== selectionSnapshot) {
-      return false
-    }
-
-    syncNodeAndEdgeData()
-
-    if (shouldFit) {
-      await nextTick()
-
-      if (selectedYamlFile.value !== selectionSnapshot) {
-        return false
-      }
-
-      fitView?.({ padding: 0.1 })
-    }
-
-    return true
-  } catch (error) {
-    console.error('Failed to load VueFlow graph:', error)
-  }
-
-  return await runFallback()
-}
-
-const switchToGraph = async () => {
-  viewMode.value = 'graph'
+// Toggle to dashboard
+const switchToDashboard = async () => {
+  viewMode.value = 'dashboard'
   await nextTick()
-  await loadVueFlowGraph({ fit: true })
 }
 
 const launchBatchWorkflow = async () => {
@@ -1334,7 +1068,7 @@ const launchBatchWorkflow = async () => {
 
     if (result.success) {
       console.log('Batch workflow launched: ', result)
-      status.value = 'Running...'
+      status.value = 'In Progress'
       isWorkflowRunning.value = true
     } else {
       console.error('Failed to launch batch workflow:', result)
@@ -1342,7 +1076,7 @@ const launchBatchWorkflow = async () => {
       alert(`Failed to launch batch workflow: ${result.detail || result.message || 'Unknown error'}`)
       shouldGlow.value = true
       if (isConnectionReady.value) {
-        status.value = 'Waiting for launch...'
+        status.value = 'Pending launch'
       }
     }
   } catch (error) {
@@ -1351,7 +1085,7 @@ const launchBatchWorkflow = async () => {
     alert(`Failed to call batch workflow API: ${error.message}`)
     shouldGlow.value = true
     if (isConnectionReady.value) {
-      status.value = 'Waiting for launch...'
+      status.value = 'Pending launch'
     }
   }
 }
@@ -1363,13 +1097,23 @@ watch(status, (newStatus) => {
   }
 })
 
+// Processes different types of messages
 const processBatchMessage = async (msg) => {
   console.log('Batch Message: ', msg)
 
   // Batch completed
   if (msg.type === 'batch_completed') {
     const message = `Batch processing finished, ${msg.data.succeeded} tasks succeeded, ${msg.data.failed} tasks failed`
-    addLogMessage(message)
+    addLogMessage(message, LOG_TYPES.DEFAULT)
+
+    // Update metrics
+    successfulTasks.value = msg.data.succeeded
+    failedTasks.value = msg.data.failed
+    completedRowsCount.value = msg.data.succeeded + msg.data.failed
+    batchEndTime.value = Date.now()
+
+    // Stop the timer
+    stopTimer()
 
     status.value = 'Batch completed'
     isWorkflowRunning.value = false
@@ -1379,22 +1123,41 @@ const processBatchMessage = async (msg) => {
   // Handle batch processing messages
   if (msg.type === 'batch_started') {
     const message = `Batch processing started with total of ${msg.data.total} rows...`
-    addLogMessage(message)
+    addLogMessage(message, LOG_TYPES.DEFAULT)
+
+    // Initialize metrics
+    totalRowsCount.value = msg.data.total
+    completedRowsCount.value = 0
+    successfulTasks.value = 0
+    failedTasks.value = 0
+    batchStartTime.value = Date.now()
+    batchEndTime.value = null
+
+    // Start the timer
+    startTimer()
   }
 
   if (msg.type === 'batch_task_started') {
     const message = `[ID ${msg.data.task_id}, Row ${msg.data.row_index}] launched`
-    addLogMessage(message)
+    addLogMessage(message, LOG_TYPES.DEFAULT)
   }
 
   if (msg.type === 'batch_task_completed') {
     const message = `[ID ${msg.data.task_id}, Row ${msg.data.row_index}] completed, ${msg.data.duration_ms}ms spent, total ${msg.data.token_usage.total_usage.total_tokens} tokens used`
-    addLogMessage(message)
+    addLogMessage(message, LOG_TYPES.COMPLETED)
+
+    // Update metrics
+    completedRowsCount.value++
+    successfulTasks.value++
   }
 
   if (msg.type === 'batch_task_failed') {
     const message = `[ID ${msg.data.task_id}, Row ${msg.data.row_index}] failed, Error: ${msg.data.error}`
-    addLogMessage(message)
+    addLogMessage(message, LOG_TYPES.FAILED)
+
+    // Update metrics
+    completedRowsCount.value++
+    failedTasks.value++
   }
 }
 
@@ -1403,7 +1166,14 @@ const cancelBatchWorkflow = () => {
   if (!isWorkflowRunning.value || !ws) {
     return
   }
-  addLogMessage('Batch cancelled')
+  addLogMessage('Batch cancelled', LOG_TYPES.DEFAULT)
+
+  // Finalize metrics
+  batchEndTime.value = Date.now()
+
+  // Stop the timer
+  stopTimer()
+
   status.value = 'Batch cancelled'
   isWorkflowRunning.value = false
   sessionIdToDownload = sessionId
@@ -1429,16 +1199,6 @@ const downloadLogs = async () => {
 }
 
 // Auto-scroll to bottom
-watch(
-  () => logMessages.value.length,
-  async () => {
-    await nextTick()
-    if (logMessagesRef.value) {
-      logMessagesRef.value.scrollTop = logMessagesRef.value.scrollHeight
-    }
-  }
-)
-
 watch(
   () => logMessages.value.length,
   async () => {
@@ -1541,7 +1301,7 @@ watch(
 /* Log Box */
 .log-box {
   flex: 1;
-  background-color: rgba(0, 0, 0, 0.8);
+  background-color: rgba(25, 25, 25, 0.95);
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 12px;
   overflow: hidden;
@@ -1549,6 +1309,131 @@ watch(
   flex-direction: column;
   backdrop-filter: blur(5px);
   font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+}
+
+/* Dashboard Box */
+.dashboard-box {
+  flex: 1;
+  background-color: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  backdrop-filter: blur(5px);
+}
+
+.dashboard-content {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+  color: #e7e7e7;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  font-size: 14px;
+  line-height: 1.4;
+  justify-content: space-between;
+}
+
+/* Metrics Grid */
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-bottom: 8px;
+}
+
+.metric-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  backdrop-filter: blur(2px);
+  transition: all 0.3s ease;
+}
+
+.metric-card.status-active {
+  border-color: #aaffcd;
+  box-shadow: 0 0 15px rgba(153, 234, 249, 0.3);
+  animation: borderPulse 4s ease-in-out infinite alternate;
+}
+
+.metric-title {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.6);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+}
+
+.metric-value {
+  font-size: 16px;
+  font-weight: 700;
+  color: #f2f2f2;
+}
+
+/* Progress Section */
+.progress-section {
+  margin-top: 8px;
+}
+
+.progress-label {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.6);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 8px;
+  position: relative;
+}
+
+.progress-fill.processing::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.3) 50%,
+    rgba(255, 255, 255, 0.8) 60%,
+    rgba(255, 255, 255, 0.3) 70%,
+    transparent 100%
+  );
+  animation: wavePulse 1.8s ease-in-out infinite;
+  border-radius: 4px;
+}
+
+.progress-fill {
+  position: relative;
+  height: 100%;
+  background: linear-gradient(90deg, #aaffcd, #99eaf9, #a0c4ff);
+  background-size: 200% 100%;
+  animation: gradientShift 3s ease-in-out infinite;
+  transition: width 0.3s ease;
+  overflow: hidden;
+}
+
+.progress-text {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.8);
+  text-align: center;
+  font-weight: 500;
 }
 
 .log-messages::-webkit-scrollbar {
@@ -1572,11 +1457,11 @@ watch(
   flex: 1;
   padding: 20px;
   overflow-y: auto;
-  color: #e0e0e0;
+  color: #e7e7e7;
   display: flex;
   flex-direction: column;
   gap: 8px;
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.4;
 }
 
@@ -1584,6 +1469,22 @@ watch(
   font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
   white-space: pre-wrap;
   word-break: break-word;
+}
+
+.log-timestamp {
+  font-weight: 500;
+}
+
+.log-timestamp-completed {
+  color: #6bff75;
+}
+
+.log-timestamp-failed {
+  color: #ff8080;
+}
+
+.log-timestamp-default {
+  color: #88e4f8;
 }
 
 .log-placeholder {
@@ -2040,6 +1941,9 @@ watch(
   padding: 12px;
   font-size: 13px;
   line-height: 1.4;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .manual-item {
@@ -2304,9 +2208,30 @@ watch(
   font-weight: 500;
 }
 
-.status-active {
-  color: #a0c4ff;
-  background: rgba(160, 196, 255, 0.1);
+/* View Toggle */
+.view-toggle {
+  display: flex;
+  background: rgba(0, 0, 0, 0.2);
+  padding: 4px;
+  border-radius: 8px;
+}
+
+.toggle-button {
+  flex: 1;
+  padding: 6px;
+  border: none;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  border-radius: 6px;
+  font-size: 13px;
+  transition: all 0.2s ease;
+}
+
+.toggle-button.active {
+  background: rgba(255, 255, 255, 0.1);
+  color: #f2f2f2;
+  font-weight: 500;
 }
 
 
@@ -2434,6 +2359,26 @@ watch(
   100% { box-shadow: 0 0 0 0 rgba(160, 196, 255, 0); }
 }
 
+@keyframes borderPulse {
+  0% { border-color: #aaffcd; box-shadow: 0 0 0px rgba(170, 255, 205, 0.15); }
+  50% { border-color: #99eaf9; box-shadow: 0 0 8px rgba(153, 234, 249, 0.35); }
+  100% { border-color: #a0c4ff; box-shadow: 0 0 0px rgba(160, 196, 255, 0.2); }
+}
+
+@keyframes wavePulse {
+  0% {
+    left: -100%;
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    left: 100%;
+    opacity: 0;
+  }
+}
+
 .download-button {
   padding: 12px;
   background: rgba(255, 255, 255, 0.03);
@@ -2537,7 +2482,7 @@ watch(
   background: #252525;
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px;
-  max-width: 500px;
+  max-width: 550px;
   width: 90vw;
   max-height: 80vh;
   overflow: hidden;

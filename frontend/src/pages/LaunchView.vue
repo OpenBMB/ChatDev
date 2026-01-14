@@ -800,6 +800,9 @@ const selectWorkflow = (fileName) => {
   isFileSearchDirty.value = false
   closeFileDropdown()
 
+  // Avoid focusing on element after selection
+  fileSelectorInputRef.value?.blur()
+
   router.push({
     query: {
       ...route.query,
