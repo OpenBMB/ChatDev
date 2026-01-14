@@ -125,6 +125,7 @@ ChatDev 已从一个专门的软件开发多智能体系统演变为一个全面
     # 从项目根目录运行
     uv run python server_main.py --port 6400 --reload
     ```
+    > 若输出文件（如 GameDev）触发重启导致任务中断、进度丢失，请去掉 `--reload`。
 
 2.  **启动前端**：
     ```bash
