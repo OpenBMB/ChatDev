@@ -3,7 +3,7 @@
     <div class="launch-bg"></div>
     <div class="header">
       <h1>Labaratory</h1>
-      <button class="settings-button" @click="showSettingsModal = true" title="Settings">
+      <button class="settings-button" @click="showBatchSettingsModal()" title="Batch Settings">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="12" cy="12" r="3"></circle>
           <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
@@ -254,6 +254,51 @@ JSON.stringify(["C:\\a_sheep.png"], null, 2)
       </div>
     </div>
   </Transition>
+
+  <!-- Batch Settings Modal -->
+  <Transition name="modal">
+    <div
+      v-if="isBatchSettingsModalVisible"
+      class="batch-settings-modal-overlay"
+      @click.self="isBatchSettingsModalVisible = false"
+    >
+      <div class="batch-settings-modal">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3>Batch Settings</h3>
+            <button class="close-button" @click="isBatchSettingsModalVisible = false">×</button>
+          </div>
+          <div class="modal-body">
+            <div class="settings-item">
+              <label class="setting-label">Max. Parallel Launches</label>
+              <input
+                type="number"
+                v-model.number="maxParallel"
+                class="setting-input"
+                min="1"
+                max="50"
+                step="1"
+              />
+              <p class="setting-desc">Maximum number of parallel workflow launches</p>
+            </div>
+            <div class="settings-item">
+              <label class="setting-label">Log Level</label>
+              <select v-model="logLevel" class="setting-select">
+                <option v-for="level in logLevelOptions" :key="level" :value="level">
+                  {{ level }}
+                </option>
+              </select>
+              <p class="setting-desc">Logging verbosity level</p>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="cancel-button" @click="isBatchSettingsModalVisible = false">Cancel</button>
+            <button class="confirm-button" @click="isBatchSettingsModalVisible = false">Save</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </Transition>
 </template>
 
 <script setup>
@@ -370,7 +415,13 @@ let audioStream = null
 // WebSocket readiness state
 const isConnectionReady = ref(false)
 const showSettingsModal = ref(false)
+const isBatchSettingsModalVisible = ref(false)
 const showColumnGuideModal = ref(false)
+
+// Batch settings
+const maxParallel = ref(5)
+const logLevel = ref('INFO')
+const logLevelOptions = ['INFO', 'DEBUG', 'WARNING', 'ERROR', 'CRITICAL']
 
 // View mode
 const viewMode = ref('dashboard')
@@ -850,8 +901,15 @@ const handleKeydown = (event) => {
       closeImageModal()
     } else if (showColumnGuideModal.value) {
       showColumnGuideModal.value = false
+    } else if (isBatchSettingsModalVisible.value) {
+      isBatchSettingsModalVisible.value = false
     }
   }
+}
+
+// Show batch settings modal
+const showBatchSettingsModal = () => {
+  isBatchSettingsModalVisible.value = true
 }
 
 // Handle YAML file selection
@@ -1062,8 +1120,8 @@ const launchBatchWorkflow = async () => {
       file: selectedInputFile.value,
       sessionId: sessionId,
       yamlFile: selectedYamlFile.value,
-      maxParallel: '',
-      logLevel: ''
+        maxParallel: maxParallel.value,
+      logLevel: logLevel.value
     })
 
     if (result.success) {
@@ -2505,5 +2563,176 @@ watch(
 .modal-leave-to {
   opacity: 0;
   transform: scale(0.95);
+}
+
+/* Batch Settings Modal */
+.batch-settings-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(2px);
+}
+
+.batch-settings-modal {
+  background: #252525;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  max-width: 500px;
+  width: 90vw;
+  max-height: 80vh;
+  overflow: hidden;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+}
+
+.batch-settings-modal .modal-content {
+  padding: 0;
+  max-height: calc(80vh - 48px);
+  overflow-y: auto;
+}
+
+.batch-settings-modal .modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.batch-settings-modal .modal-header h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #f2f2f2;
+}
+
+.batch-settings-modal .close-button {
+  background: none;
+  border: none;
+  color: #888;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+  transition: color 0.2s ease;
+}
+
+.batch-settings-modal .close-button:hover {
+  color: #fff;
+}
+
+.batch-settings-modal .modal-body {
+  padding: 24px;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.batch-settings-modal .settings-item {
+  margin-bottom: 24px;
+}
+
+.batch-settings-modal .settings-item:last-child {
+  margin-bottom: 0;
+}
+
+.batch-settings-modal .setting-label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: #f2f2f2;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.batch-settings-modal .setting-input {
+  width: 86px;
+  padding: 10px 12px;
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  color: #f2f2f2;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.batch-settings-modal .setting-input:focus {
+  outline: none;
+  background-color: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.batch-settings-modal .setting-select {
+  padding: 10px 12px;
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  color: #f2f2f2;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.batch-settings-modal .setting-select:focus {
+  outline: none;
+  background-color: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.batch-settings-modal .setting-select option {
+  background-color: #1a1a1a;
+  color: #f2f2f2;
+}
+
+.batch-settings-modal .setting-desc {
+  margin-top: 6px;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.batch-settings-modal .modal-footer {
+  padding: 16px 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.batch-settings-modal .confirm-button {
+  background: #4facfe;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.batch-settings-modal .confirm-button:hover {
+  background: #3a9cfa;
+}
+
+.batch-settings-modal .cancel-button {
+  background: transparent;
+  color: #ccc;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.batch-settings-modal .cancel-button:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.3);
 }
 </style>
