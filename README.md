@@ -134,6 +134,14 @@ See our paper in [Multi-Agent Collaboration via Evolving Orchestration](https://
     VITE_API_BASE_URL=http://localhost:6400 npm run dev
     ```
     > Then access the Web Console at **[http://localhost:5173](http://localhost:5173)**. 
+    
+    
+    > **💡 Tip**: If the frontend fails to connect to the backend, the default port `6400` may already be occupied.
+    > Please switch both services to an available port, for example:
+    >
+    > * **Backend**: start with `--port 6401`
+    > * **Frontend**: set `VITE_API_BASE_URL=http://localhost:6401`
+
 
 ### 🔑 Configuration
 
