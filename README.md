@@ -127,6 +127,7 @@ See our paper in [Multi-Agent Collaboration via Evolving Orchestration](https://
     # Run from the project root
     uv run python server_main.py --port 6400 --reload
     ```
+    > Remove `--reload` if output files (e.g., GameDev) trigger restarts, which interrupts tasks and loses progress.
 
 2.  **Start Frontend**:
     ```bash
