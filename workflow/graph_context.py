@@ -61,7 +61,8 @@ class GraphContext:
         
         # Output directory
         timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
-        if "session_" in config.name:
+        fixed_output_dir = bool(config.metadata.get("fixed_output_dir"))
+        if fixed_output_dir or "session_" in config.name:
             self.directory = config.output_root / config.name
         else:
             self.directory = config.output_root / f"{config.name}_{timestamp}"

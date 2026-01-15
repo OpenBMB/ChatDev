@@ -18,16 +18,31 @@ from utils.structured_logger import get_server_logger, LogType
 
 
 def _update_workflow_id(content: str, workflow_id: str) -> str:
-    pattern = re.compile(r"^(id:\\s*).*$", re.MULTILINE)
+    # Pattern to match graph:\n  id: <value>
+    pattern = re.compile(r"(graph:\s*\n\s*id:\s*).*$", re.MULTILINE)
     match = pattern.search(content)
     if match:
-        return pattern.sub(rf"\\1{workflow_id}", content, count=1)
+        # Replace the value after "graph:\n  id: "
+        return pattern.sub(rf"\1{workflow_id}", content, count=1)
 
+    # If no graph.id found, look for standalone id: at root level (legacy support)
+    root_id_pattern = re.compile(r"^(id:\s*).*$", re.MULTILINE)
+    root_match = root_id_pattern.search(content)
+    if root_match:
+        return root_id_pattern.sub(rf"\1{workflow_id}", content, count=1)
+
+    # If neither found, add graph.id after graph: section if it exists
+    graph_pattern = re.compile(r"(graph:\s*\n)")
+    graph_match = graph_pattern.search(content)
+    if graph_match:
+        return graph_pattern.sub(rf"\1  id: {workflow_id}\n", content, count=1)
+
+    # Fallback (is invalid)
     lines = content.splitlines()
     insert_index = 0
     if lines and lines[0].strip() == "---":
         insert_index = 1
-    lines.insert(insert_index, f"id: {workflow_id}")
+    lines.insert(insert_index, f"graph:\n  id: {workflow_id}")
     updated = "\n".join(lines)
     if content.endswith("\n"):
         updated += "\n"

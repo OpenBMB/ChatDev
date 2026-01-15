@@ -14,6 +14,10 @@ const routes = [
         component: () => import('../pages/LaunchView.vue')
     },
     {
+        path: '/batch-run',
+        component: () => import('../pages/BatchRunView.vue')
+    },
+    {
         path: '/workflows/:name?',
         component: () => import('../pages/WorkflowWorkbench.vue')
     }
