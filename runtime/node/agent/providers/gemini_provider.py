@@ -558,8 +558,22 @@ class GeminiProvider(ModelProvider):
             config_kwargs["safety_settings"] = safety_settings
 
         image_config = params.pop("image_config", None)
+        aspect_ratio = params.pop("aspect_ratio", None)
+        if aspect_ratio:
+            if image_config is None:
+                image_config = {"aspect_ratio": aspect_ratio}
+            elif isinstance(image_config, dict):
+                image_config = dict(image_config)
+                image_config.setdefault("aspect_ratio", aspect_ratio)
+            elif isinstance(image_config, genai_types.ImageConfig):
+                try:
+                    image_config.aspect_ratio = aspect_ratio
+                except Exception:
+                    image_config = {"aspect_ratio": aspect_ratio}
+            else:
+                image_config = {"aspect_ratio": aspect_ratio}
         if image_config:
-            config_kwargs["image_config"] = image_config
+            config_kwargs["image_config"] = self._coerce_image_config(image_config)
 
         audio_config = params.pop("audio_config", None)
         if audio_config:
@@ -597,6 +611,16 @@ class GeminiProvider(ModelProvider):
             return genai_types.HttpOptions(base_url=base_url, timeout=4 * 60 * 1000)  # 4 min
         except Exception:
             return None
+
+    def _coerce_image_config(self, image_config: Any) -> Any:
+        if isinstance(image_config, genai_types.ImageConfig):
+            return image_config
+        if isinstance(image_config, dict):
+            try:
+                return genai_types.ImageConfig(**image_config)
+            except Exception:
+                return image_config
+        return image_config
 
     def _build_tools(self, tool_specs: List[ToolSpec]) -> List[genai_types.Tool]:
         if not tool_specs:

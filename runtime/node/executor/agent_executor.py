@@ -133,7 +133,7 @@ class AgentNodeExecutor(NodeExecutor):
             else:
                 response_message = response_obj.message
 
-            self._persist_message_attachments(response_message)
+            self._persist_message_attachments(response_message, node.id)
 
             final_message: Message | str = response_message
 
@@ -402,7 +402,7 @@ class AgentNodeExecutor(NodeExecutor):
 
         if input_mode is AgentInputMode.MESSAGES:
             if isinstance(thinking_result, Message):
-                self._persist_message_attachments(thinking_result)
+                self._persist_message_attachments(thinking_result, node.id)
                 conversation.append(self._clone_with_source(thinking_result, node.id))
             else:
                 self._append_user_message(conversation, thinking_result, node_id=node.id)
@@ -828,7 +828,7 @@ class AgentNodeExecutor(NodeExecutor):
             return custom_limit
         return default_limit
 
-    def _persist_message_attachments(self, message: Message) -> None:
+    def _persist_message_attachments(self, message: Message, node_id: str) -> None:
         """Register attachments produced by model outputs to the attachment store."""
         store = self.context.global_state.get("attachment_store")
         if store is None:
@@ -838,11 +838,11 @@ class AgentNodeExecutor(NodeExecutor):
             if not attachment:
                 continue
             try:
-                self._persist_single_attachment(store, block)
+                self._persist_single_attachment(store, block, node_id)
             except Exception as exc:
                 raise RuntimeError(f"Failed to persist attachment '{attachment.name or attachment.attachment_id}': {exc}") from exc
 
-    def _persist_single_attachment(self, store: Any, block: MessageBlock) -> None:
+    def _persist_single_attachment(self, store: Any, block: MessageBlock, node_id: str) -> None:
         attachment = block.attachment
         if attachment is None:
             return
@@ -859,8 +859,7 @@ class AgentNodeExecutor(NodeExecutor):
             return
 
         workspace_root = self.context.global_state.get("python_workspace_root")
-        node_id = getattr(self, "_current_node_id", None)
-        if workspace_root is None or node_id is None:
+        if workspace_root is None or not node_id:
             raise RuntimeError("Workspace or node context missing for attachment persistence")
 
         target_dir = workspace_root / "generated" / node_id
@@ -971,7 +970,7 @@ class AgentNodeExecutor(NodeExecutor):
 
         if input_mode is AgentInputMode.MESSAGES:
             if isinstance(result, Message):
-                self._persist_message_attachments(result)
+                self._persist_message_attachments(result, node.id)
                 self._reset_conversation_with_user_result(conversation, result, node_id=node.id)
             else:
                 self._reset_conversation_with_user_result(conversation, result, node_id=node.id)
