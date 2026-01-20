@@ -307,7 +307,7 @@ class OpenAIProvider(ModelProvider):
         """Convert internal Message to standard Chat Completions schema."""
         role_value = message.role.value
         blocks = message.blocks()
-        if not blocks:
+        if not blocks or message.role == MessageRole.TOOL:
             content = message.text_content()
         else:
             content = self._transform_blocks_for_chat(self._serialize_blocks(blocks, message.role))
