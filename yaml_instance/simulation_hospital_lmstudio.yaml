@@ -1,0 +1,495 @@
+# Hospital Multi-Agent Simulation - Multi-Model LM Studio Version
+# Uses multiple specialized models for different agent roles
+#
+# MODELS IN USE:
+# - bio-medical-multimodal-llama-3-8b-v1-i1: Medical staff - specialized medical knowledge
+#
+# PROMPT: "A patient arrives with flu-like symptoms for a checkup"
+
+version: 0.1.0
+
+vars:
+  api_key: ${API_KEY}
+  base_url: ${BASE_URL}
+
+graph:
+  id: hospital_simulation_lmstudio_multimodel
+  description: |
+    Multi-model hospital simulation using specialized LLMs:
+    - Medical staff uses biomedical model for accurate medical responses
+    - Patients use general Qwen model for natural conversation
+    - Dynamic Execution: Simulates multiple parallel patients.
+    Optimized for 8B parameter models with reduced context and token limits.
+  
+  log_level: DEBUG
+  
+  # Memory stores - reduced size for local models
+  memory:
+    - name: nurse_memory
+      type: simple
+      config:
+        embedding:
+          provider: openai
+          base_url: ${BASE_URL}
+          api_key: ${API_KEY}
+          model: text-embedding-bge-reranker-v2-m3
+    
+    - name: patient_shared_memory
+      type: simple
+      config:
+        embedding:
+          provider: openai
+          base_url: ${BASE_URL}
+          api_key: ${API_KEY}
+          model: text-embedding-bge-reranker-v2-m3
+  
+  nodes:
+    # Input Processor
+    - id: InputProcessor
+      type: passthrough
+      name: Input Processor
+      config: {}
+
+    # Environment Coordinator (General Conversational Model)
+    - id: environment
+      name: Hospital Environment
+      type: agent
+      config:
+        role: |
+          Describe the hospital atmosphere in 1-2 sentences.
+          Focus on observable details and current mood.
+        
+        provider: openai
+        name: bio-medical-multimodal-llama-3-8b-v1-i1
+        api_key: ${api_key}
+        base_url: ${base_url}
+        params:
+          temperature: 0.5
+          max_tokens: 300
+      
+    # Patient Generator (Creates parallel scenarios)
+    - id: PatientGenerator
+      name: Patient Coordinator
+      type: agent
+      config:
+        role: |
+          You are a simulation coordinator. Based on the hospital atmosphere described, generate 3 distinct patient scenarios/personas.
+          
+          CRITICAL REQUIREMENT: Generate a mix of cases:
+          1. **Simple Case**: Clear, minor symptoms (e.g., Flu, sprain). Can be treated here.
+          2. **Complex Case (Hidden)**: Vague symptoms that seem minor but MIGHT be serious (e.g., "Indigestion" that is actually a heart attack, or "Headache" that is a stroke). THESE MUST REQUIRE BLOOD TESTS to reveal the truth.
+          
+          Format them exactly as follows, separated by double newlines:
+          
+          Name: [Name]
+          Symptoms: [Symptoms]
+          Personality: [Brief Personality]
+           Context: [Include the hospital atmosphere context]
+        
+        provider: openai
+        name: bio-medical-multimodal-llama-3-8b-v1-i1
+        api_key: ${api_key}
+        base_url: ${base_url}
+        params:
+          temperature: 0.7
+          max_tokens: 1000
+
+    # Router Node for Patient Regex Split
+    - id: PatientRouter
+      type: passthrough
+      name: Patient Router
+      config: {}
+
+    # Generic Patient Agent (Runs in Parallel)
+    - id: PatientAgent
+      name: Patient
+      type: agent
+      config:
+        role: |
+          You are a patient arriving at the hospital. 
+          Your persona is defined by the input text provided.
+          Act out this persona. Approach the nurse and state your problem clearly.
+          Keep it brief (1-2 sentences).
+        
+        provider: openai
+        name: bio-medical-multimodal-llama-3-8b-v1-i1
+        api_key: ${api_key}
+        base_url: ${base_url}
+        params:
+          temperature: 0.8
+          max_tokens: 300
+        memories:
+          - name: patient_shared_memory
+            top_k: 5
+            retrieve_stage:
+              - gen
+
+    # End Node (Diagnosis)
+    - id: Discharge
+      type: passthrough
+      name: Diagnosed and Discharged
+      config: {}
+      memories:
+        - name: nurse_memory
+          top_k: 5
+          retrieve_stage:
+            - gen
+
+     # Doctor Agent - Diagnosis
+    - id: DoctorDiagnosis
+      name: Dr. House (Diagnosis)
+      type: agent
+      config:
+        role: |
+          You are Dr. Gregory House. You are a brilliant, miserable, cynical genius.
+          You assume everyone lies. You treat the puzzle, not the patient.
+          Be sarcastic, brief, and cut through the noise.
+          
+          PHASE 2: DIAGNOSIS
+          Review the Test Results.
+          - If critical: "TRANSFER: ER immediately."
+          - If treatable: "DIAGNOSIS: [Full diagnosis and treatment]."
+        
+        provider: openai
+        name: bio-medical-multimodal-llama-3-8b-v1-i1
+        api_key: ${api_key}
+        base_url: ${base_url}
+        params:
+          temperature: 0.7
+          max_tokens: 500
+             
+    # Test Results Handler (Processes test orders sequentially)
+    - id: TestResultsHandler
+      name: Test Results Processor
+      type: agent
+      config:
+        role: |
+          You are a medical test processing system.
+          
+          Analyze the patient's symptoms and the doctor's test order.
+          - If the symptoms suggest a **Simple Case** (Flu, etc.), generate NORMAL or MILDLY ABNORMAL results.
+          - If the symptoms imply a **Complex/Hidden Case** (Chest pain, severe headache), generate CRITICAL/DANGEROUS results (e.g., "Troponin High", "Brain bleed on CT").
+          
+          Format: "Test Results: [Specific Data]"
+        
+        provider: openai
+        name: bio-medical-multimodal-llama-3-8b-v1-i1
+        api_key: ${api_key}
+        base_url: ${base_url}
+        params:
+          temperature: 0.5
+          max_tokens: 500
+
+    # Doctor Agent - Intake & Testing
+    - id: DoctorIntake
+      name: Dr. House (Intake)
+      type: agent
+      config:
+        role: |
+          You are Dr. Gregory House. You are a brilliant, miserable, cynical genius.
+          You assume everyone lies. You treat the puzzle, not the patient.
+          Be sarcastic, brief, and cut through the noise.
+          
+          PHASE 1: INTAKE & TESTING
+          1. Interview the patient (be sarcastic/brief).
+          2. MANDATORY: You MUST order a test for EVERY patient.
+          3. DO NOT DIAGNOSE YET. You can only "TEST:" or "QUESTION".
+          
+          Output Format:
+          - To ask info: "QUESTION: [Question]"
+          - To proceed: "TEST: [Test Name]"
+        
+        provider: openai
+        name: bio-medical-multimodal-llama-3-8b-v1-i1
+        api_key: ${api_key}
+        base_url: ${base_url}
+        params:
+          temperature: 0.7
+          max_tokens: 500
+        memories:
+          - name: nurse_memory
+            top_k: 5
+            retrieve_stage:
+              - gen
+
+    # Nurse Agent - Jackie (Biomedical Model)
+    - id: nurse
+      name: Nurse Jackie
+      type: agent
+      config:
+        role: |
+          You are Nurse Jackie, an empathetic but extremely busy triage nurse.
+          Speak professionally but warmly (e.g., "Honey," "Sweetie" is okay if appropriate).
+          Your goal is to calm patients down and get their basic info before sending them to the doctor.
+        
+        provider: openai
+        name: bio-medical-multimodal-llama-3-8b-v1-i1
+        # Using biomedical-specialized model for accurate medical knowledge
+        api_key: ${api_key}
+        base_url: ${base_url}
+        params:
+          temperature: 0.7
+          max_tokens: 300
+        memories:
+          - name: nurse_memory
+            top_k: 5
+            retrieve_stage:
+              - gen
+
+    # Transfer Node (Failure/Referral)
+    - id: ER Transfer
+      type: passthrough
+      name: Transferred to Specialist
+      config: {}
+
+  # ================== Interaction Flow ==================
+  edges:
+    # Scene initialization
+    - from: InputProcessor
+      to: environment
+      processor:
+        type: template
+        template: |
+          Scenario: {{task_prompt}}
+          
+          Describe the hospital atmosphere right now in 1-2 sentences.
+    
+    # Environment -> Generator
+    - from: environment
+      to: PatientGenerator
+      processor:
+        type: template
+        template: |
+          Hospital Atmosphere: {{input}}
+          
+          Generate 3 distinct, VIVID patient personas fitting this atmosphere.
+          Make them diverse in age, personality, and severity of symptoms.
+    
+    # Generator -> Router (Regex Split)
+    - from: PatientGenerator
+      to: PatientRouter
+      dynamic:
+        type: map
+        split:
+          type: regex
+          config:
+            pattern: "(?s)Name:.*?(?=(?:\\n\\nName:|$))"
+        config:
+          max_parallel: 5
+      processor:
+        type: template
+        template: "{{input}}"
+    
+    # Router -> Patient (Message Split)
+    - from: PatientRouter
+      to: PatientAgent
+      dynamic:
+        type: map
+        split:
+          type: message
+        config:
+          max_parallel: 5 # Parallel Waiting Room
+      trigger: true
+      processor:
+        type: template
+        template: |
+          You are this person:
+          {{input}}
+          
+          You are currently standing at the hospital reception.
+          Approach Nurse Jackie and explain what's wrong. Be dramatic or quiet depending on your persona.
+          Don't use any "Action:" prefixes. Just speak naturally.
+    
+    # Patient -> Nurse
+    - from: PatientAgent
+      to: nurse
+      dynamic:
+        type: map
+        split:
+          type: message
+        config:
+          max_parallel: 5
+      processor:
+        type: template
+        template: |
+          [Hospital Atmosphere: {{environment.output}}]
+          
+          Patient says: "{{input}}"
+          
+          Respond as Nurse Jackie. Adjust your demeanor to the hospital atmosphere.
+          Comfort them, check vitals briefly, then refer them to Dr. House for diagnosis.
+    
+    # Nurse -> DoctorIntake (Referral)
+    - from: nurse
+      to: DoctorIntake
+      dynamic:
+        type: map
+        split:
+          type: message
+        config:
+          max_parallel: 1
+      processor:
+        type: template
+        template: |
+          [Current Hospital Situation: {{environment.output}}]
+          
+          Nurse Referral Note: {{input}}
+          
+          Dr. House, consider the hospital atmosphere in your approach.
+          Take this case, interview the patient. Remember: You MUST order a test eventually.
+
+    # DoctorIntake -> Patient (Loop)
+    - from: DoctorIntake
+      to: PatientAgent
+      condition:
+        type: keyword
+        config:
+          any: []
+          none: 
+            - "TEST:"
+            - "Chest X-Ray"
+            - "Blood Panel"
+            - "MRI"
+            - "CT"
+            - "Scan"
+          regex: []
+          case_sensitive: false
+      dynamic:
+        type: map
+        split:
+          type: message
+        config:
+          max_parallel: 5
+      processor:
+        type: template
+        template: |
+          The Doctor says: "{{input}}"
+          
+          Answer him, but feel free to be intimidated or annoyed by his manner.
+
+    # Patient -> DoctorIntake (Loop Return)
+    - from: PatientAgent
+      to: DoctorIntake
+      condition:
+        type: keyword
+        config:
+          any:
+            - "The Doctor says:"
+          none: []
+          case_sensitive: false
+      dynamic:
+        type: map
+        split:
+          type: message
+        config:
+          max_parallel: 1
+      processor:
+        type: template
+        template: |
+          Patient Answer: "{{input}}"
+          
+          Analyze this answer. 
+          - If you need more info, ASK another question.
+          - If you have a hypothesis, ORDER A TEST (TEST: [Name]).
+          - ONLY DIAGNOSE if you have test results and patient history.
+
+    # DoctorIntake -> TestResultsHandler (Mandatory Path)
+    - from: DoctorIntake
+      to: TestResultsHandler
+      condition:
+        type: keyword
+        config:
+          any:
+            - "TEST:"
+            - "Chest X-Ray"
+            - "Blood Panel"
+            - "MRI"
+            - "CT"
+            - "Scan"
+          none: []
+          case_sensitive: false
+      dynamic:
+        type: map
+        split:
+          type: message
+        config:
+          max_parallel: 1
+      processor:
+        type: template
+        template: |
+          Test Order: {{input}}
+
+    # TestResultsHandler -> DoctorDiagnosis (Results Handoff)
+    - from: TestResultsHandler
+      to: DoctorDiagnosis
+      dynamic:
+        type: map
+        split:
+          type: message
+        config:
+          max_parallel: 1
+      processor:
+        type: template
+        template: |
+          Test Results: {{input}}
+          
+          Make your final decision. DIAGNOSIS or TRANSFER.
+
+    # DoctorDiagnosis -> Discharge
+    - from: DoctorDiagnosis
+      to: Discharge
+      condition:
+        type: keyword
+        config:
+          any:
+            - "DIAGNOSIS:"
+          none:
+            - "TRANSFER"
+            - "Transfer"
+      regex: []
+      case_sensitive: false
+      dynamic:
+        type: map
+        split:
+          type: json_path
+          config:
+            json_path: ""
+        config:
+          max_parallel: 5
+      processor:
+        type: template
+        template: |
+          Final Medical Report: {{input}}
+
+    # DoctorDiagnosis -> ER Transfer
+    - from: DoctorDiagnosis
+      to: ER Transfer
+      condition:
+        type: keyword
+        config:
+          any:
+            - "TRANSFER"
+            - "Transfer"
+          none: []
+      regex: []
+      case_sensitive: false
+      dynamic:
+        type: map
+        split:
+          type: json_path
+          config:
+            json_path: ""
+        config:
+          max_parallel: 5
+      processor:
+        type: template
+        template: |
+          Transfer Order: {{input}}
+  
+  initial_instruction: Describe the scenario for the hospital simulation (e.g., 'A busy COVID-19 morning in 2020'). The system will simulate multiple patients arriving in parallel.
+  start:
+    - InputProcessor
+  
+  end:
+    - Discharge
+    - ER Transfer

@@ -35,7 +35,7 @@ graph:
     - id: Z
       type: agent
       config:
-        name: gpt-4o
+        name: ${MODEL_NAME}
         provider: openai
         role: >-
           You need to plan according to user requests. Use your imagination and
@@ -81,7 +81,7 @@ graph:
     - id: 'Y'
       type: agent
       config:
-        name: gpt-4o
+        name: ${MODEL_NAME}
         provider: openai
         role: >-
           Please aggregate the input content into a final result. Note that you

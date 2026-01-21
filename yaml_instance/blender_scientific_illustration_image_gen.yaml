@@ -12,7 +12,7 @@ graph:
       description: ''
       context_window: 0
       config:
-        name: gemini-2.5-flash
+        name: ${MODEL_NAME}
         role: |-
           You are the **Executor**.
           Your role is to act as the bridge between the Agents and the Blender process.
@@ -50,7 +50,7 @@ graph:
       description: ''
       context_window: 6
       config:
-        name: gemini-3-pro-preview
+        name: ${MODEL_NAME}
         role: |-
           You are the **Quality Assurance Inspector**.
           Your ONLY job is to visually inspect the 3D scene and accept or reject it.
@@ -128,7 +128,7 @@ graph:
       description: ''
       context_window: 0
       config:
-        name: gemini-3-pro-preview
+        name: ${MODEL_NAME}
         role: |-
           You are the **Planner** for a Blender Scientific Visualization System.
           Your goal is to translate natural language scientific requests (e.g., "Draw a P3HT:PCBM bulk heterojunction") into a structured, step-by-step building plan for the Engineer.
@@ -164,7 +164,7 @@ graph:
       description: ''
       context_window: 0
       config:
-        name: gemini-3-pro-preview
+        name: ${MODEL_NAME}
         role: |-
           You are the **Scientist** for a Blender Scientific Visualization System.
           Your goal is to ensure the scientific accuracy of the visualization by providing precise parameters and physical logic.
@@ -198,7 +198,7 @@ graph:
       type: agent
       context_window: 10
       config:
-        name: gemini-3-pro-preview
+        name: ${MODEL_NAME}
         role: |-
           You are the **Engineer**. You are an expert in the Blender Python API (`bpy`).
           Your goal is to write a **COMPLETE, standalone Python script** that builds the scene described by the Planner and Scientist.
@@ -266,7 +266,7 @@ graph:
       description: ''
       context_window: 2
       config:
-        name: gemini-2.5-flash-image
+        name: ${MODEL_NAME}
         role: Take the user's rough sketch and the scientific description. 
           Generate a high-fidelity, photorealistic scientific illustration. The 
           goal is to create a visual reference for a 3D modeling team. Ensure 

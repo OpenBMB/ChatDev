@@ -12,7 +12,7 @@ graph:
     - name: reflexion_blackboard
       type: blackboard
       config:
-      max_items: 500
+        max_items: 500
   nodes:
   - id: Task
     type: passthrough
@@ -24,7 +24,7 @@ graph:
       provider: openai
       base_url: ${BASE_URL}
       api_key: ${API_KEY}
-      name: gpt-4o-mini
+      name: ${MODEL_NAME}
       input_mode: messages
       role: |
         You are the Actor. If there are relevant memories, refer to that experience and output the latest action draft; if there are no relevant memories, provide an action draft to the best of your ability.
@@ -48,7 +48,7 @@ graph:
       provider: openai
       base_url: ${BASE_URL}
       api_key: ${API_KEY}
-      name: gpt-4o-mini
+      name: ${MODEL_NAME}
       input_mode: messages
       role: |
         You are the Evaluator. Receive and read the Actor's latest output and task objectives, and evaluate whether they meet the goals.
@@ -69,7 +69,7 @@ graph:
       provider: openai
       base_url: ${BASE_URL}
       api_key: ${API_KEY}
-      name: gpt-4o-mini
+      name: ${MODEL_NAME}
       input_mode: messages
       role: |
         You are responsible for refining the Evaluator output and Actor Draft into JSON experience:
@@ -93,7 +93,7 @@ graph:
       provider: openai
       base_url: ${BASE_URL}
       api_key: ${API_KEY}
-      name: gpt-4o
+      name: ${MODEL_NAME}
       input_mode: messages
       role: |
         Please synthesize all inputs and provide a final answer. Be comprehensive. Do not include any extra text other than the final answer.

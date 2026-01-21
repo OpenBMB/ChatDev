@@ -10,7 +10,7 @@ graph:
       context_window: -1
       config:
         provider: gemini
-        name: gemini-3-pro-preview
+        name: ${MODEL_NAME}
         api_key: ${API_KEY}
         role: |
           You are the "Pre-data Profiling" Agent. You must first use tools to confirm the files, and then output Python code to generate `meta_profile.json` for use by subsequent nodes.
@@ -49,7 +49,7 @@ graph:
       context_window: -1
       config:
         provider: gemini
-        name: gemini-3-pro-preview
+        name: ${MODEL_NAME}
         api_key: ${API_KEY}
         role: |
           You are the Process Central Control. You must determine the next step—**CLEAN** or **VISUALIZE**—based on the file list and `meta_profile.json`.
@@ -82,7 +82,7 @@ graph:
       context_window: -1
       config:
         provider: gemini
-        name: gemini-3-pro-preview
+        name: ${MODEL_NAME}
         api_key: ${API_KEY}
         role: |
           You are responsible for writing Python data cleaning scripts and outputting `*_cleaned.*` files.
@@ -113,7 +113,7 @@ graph:
       context_window: -1
       config:
         provider: gemini
-        name: gemini-3-pro-preview
+        name: ${MODEL_NAME}
         api_key: ${API_KEY}
         role: |
           Output a "Visualization Requirements List" that references the field types/suggestions from `meta_profile.json`.
@@ -135,7 +135,7 @@ graph:
       context_window: -1
       config:
         provider: gemini
-        name: gemini-3-pro-preview
+        name: ${MODEL_NAME}
         api_key: ${API_KEY}
         role: |
           Convert "requirements + meta_profile" into an executable multi-chart plan `viz_plan.json` (and write to `viz_plan.json`).
@@ -164,7 +164,7 @@ graph:
       context_window: -1
       config:
         provider: gemini
-        name: gemini-3-pro-preview
+        name: ${MODEL_NAME}
         api_key: ${API_KEY}
         role: |
           You are responsible for dispatching charts from `viz_plan.json` sequentially: generating `current_chart.json` and maintaining `chart_progress.json`.
@@ -200,7 +200,7 @@ graph:
       context_window: 8
       config:
         provider: gemini
-        name: gemini-3-pro-preview
+        name: ${MODEL_NAME}
         api_key: ${API_KEY}
         role: |
           You are responsible for generating only the chart described in `current_chart.json`.
@@ -231,7 +231,7 @@ graph:
       context_window: 8
       config:
         provider: gemini
-        name: gemini-3-pro-preview
+        name: ${MODEL_NAME}
         api_key: ${API_KEY}
         role: |
           You are Visual Quality Assurance. Behavior Rules:

@@ -14,7 +14,7 @@ graph:
       description: 'Defines the raw requirements and object manifest.'
       context_window: 0
       config:
-        name: gemini-3-pro-preview
+        name: ${MODEL_NAME}
         role: |
           # Role
           You are a professional **3D Technical Product Manager**.
@@ -74,7 +74,7 @@ graph:
       description: 'Splits the spec into Geometry tasks and Decoration tasks.'
       context_window: 0
       config:
-        name: gemini-3-pro-preview
+        name: ${MODEL_NAME}
         role: |
           # Role
           You are the **Technical Planner**.
@@ -120,7 +120,7 @@ graph:
       description: 'The central brain managing state and routing.'
       context_window: 20
       config:
-        name: gemini-3-pro-preview
+        name: ${MODEL_NAME}
         role: |
           # Role
           You are the **Project Orchestrator**.
@@ -189,7 +189,7 @@ graph:
       description: 'Builds the blockout geometry.'
       context_window: 10
       config:
-        name: gemini-3-pro-preview
+        name: ${MODEL_NAME}
         role: |
           # Role
           You are a **Structure Architect**.
@@ -230,7 +230,7 @@ graph:
       description: 'Checks geometry scale and physics.'
       context_window: 5
       config:
-        name: gemini-3-pro-preview
+        name: ${MODEL_NAME}
         role: |
           # Role
           You are a **Civil Engineer**.
@@ -266,7 +266,7 @@ graph:
       description: 'Applies materials and lighting.'
       context_window: 10
       config:
-        name: gemini-3-pro-preview
+        name: ${MODEL_NAME}
         role: |
           You are a **Decorator Architect**.
           You have taken over a verified white model. You need to use tools to execute Blender Python code.
@@ -303,7 +303,7 @@ graph:
       description: 'Checks final visual quality.'
       context_window: 5
       config:
-        name: gemini-3-pro-preview
+        name: ${MODEL_NAME}
         role: |
           # Role
           You are an **Art Director**.

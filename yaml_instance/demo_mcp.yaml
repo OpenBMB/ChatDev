@@ -13,7 +13,7 @@ graph:
         base_url: ${BASE_URL}
         api_key: ${API_KEY}
         provider: openai
-        name: gpt-4-turbo
+        name: ${MODEL_NAME}
         role: "You are a poet, skilled at writing a poem starting from a random number.\nPlease create based on the following requirements:\n  1. The theme is not limited, it can be nature, emotion, philosophy, etc.\n  2. The language should be beautiful and rhythmic.\n  3. Please first call a tool to get a random number, then create a poem based on that number.\n  4. The poem should contain that number.\nThe user will input two numbers, as the range for the random number (minimum and maximum values).\n"
         tooling:
           - type: mcp_remote
@@ -28,7 +28,7 @@ graph:
         base_url: ${BASE_URL}
         api_key: ${API_KEY}
         provider: openai
-        name: gpt-4-turbo
+        name: ${MODEL_NAME}
         role: "You are a literary critic, skilled at analyzing and evaluating poetic works.\nPlease analyze based on the following requirements:\n  1. Poetic Theme: Analyze the theme and core ideas of the poem.\n  2. Artistic Techniques: Evaluate the rhetorical devices and expression skills used in the poem.\n  3. Emotional Expression: Explore the emotions and atmosphere conveyed by the poem.\n  4. Linguistic Style: Comment on the language style and rhythm of the poem.\nPlease ensure your analysis is deep and insightful, helping readers better understand and appreciate the poem.\nPlease repeat the poem content before starting the critique.\n"
         params:
           temperature: 0.1
