@@ -11,7 +11,7 @@ graph:
         base_url: ${BASE_URL}
         api_key: ${API_KEY}
         provider: openai
-        name: gpt-4o
+        name: ${MODEL_NAME}
         role: |
           You are an editor, skilled at expanding and polishing content provided by the user.
           The user will provide a piece of text, and you need to expand it into an article of no less than 2000 words, requiring multiple paragraphs, fluent language, and rich content.
@@ -21,7 +21,7 @@ graph:
     - id: A
       type: agent
       config:
-        name: gpt-4o
+        name: ${MODEL_NAME}
         provider: openai
         role: |
           You are a writer, skilled at generating a full article based on a word or phrase input by the user.

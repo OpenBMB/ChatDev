@@ -38,7 +38,7 @@ graph:
     - id: Programmer Code Review
       type: agent
       config:
-        name: gpt-4o
+        name: ${MODEL_NAME}
         role: |-
           ${COMMON_PROMPT}
           You are Programmer. we are both working at ChatDev. We share a common interest in collaborating to successfully complete a task assigned by a new customer.
@@ -71,7 +71,7 @@ graph:
     - id: Programmer Test Modification
       type: agent
       config:
-        name: gpt-4o
+        name: ${MODEL_NAME}
         role: |-
           ${COMMON_PROMPT}
           You are Programmer. we are both working at ChatDev. We share a common interest in collaborating to successfully complete a task assigned by a new customer.
@@ -104,7 +104,7 @@ graph:
     - id: Chief Executive Officer
       type: agent
       config:
-        name: gpt-4o
+        name: ${MODEL_NAME}
         provider: openai
         role: |-
           ${COMMON_PROMPT}
@@ -166,7 +166,7 @@ graph:
     - id: Programmer Code Complete
       type: agent
       config:
-        name: gpt-4o
+        name: ${MODEL_NAME}
         provider: openai
         role: |-
           ${COMMON_PROMPT}
@@ -214,7 +214,7 @@ graph:
     - id: Programmer Coding
       type: agent
       config:
-        name: gpt-4o
+        name: ${MODEL_NAME}
         provider: openai
         role: |-
           ${COMMON_PROMPT}
@@ -265,7 +265,7 @@ graph:
     - id: Chief Product Officer
       type: agent
       config:
-        name: gpt-4o
+        name: ${MODEL_NAME}
         provider: openai
         role: |-
           ${COMMON_PROMPT}
@@ -323,7 +323,7 @@ graph:
     - id: Programmer Test Error Summary
       type: agent
       config:
-        name: gpt-4o
+        name: ${MODEL_NAME}
         provider: openai
         role: |-
           ${COMMON_PROMPT}
@@ -360,7 +360,7 @@ graph:
     - id: Code Reviewer
       type: agent
       config:
-        name: gpt-4o
+        name: ${MODEL_NAME}
         provider: openai
         role: |-
           ${COMMON_PROMPT}
@@ -458,7 +458,7 @@ graph:
     - id: Software Test Engineer
       type: agent
       config:
-        name: gpt-4o
+        name: ${MODEL_NAME}
         provider: openai
         role: |-
           ${COMMON_PROMPT}

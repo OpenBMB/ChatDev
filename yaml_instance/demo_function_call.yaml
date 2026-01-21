@@ -13,7 +13,7 @@ graph:
         provider: openai
         base_url: ${BASE_URL}
         api_key: ${API_KEY}
-        name: gpt-4o
+        name: ${MODEL_NAME}
         role: 'You are a weather inquiry assistant, responsible for calling tools to get the real-time temperature of a specified city.
 
           The user will input a city name. You need to:
@@ -37,7 +37,7 @@ graph:
         provider: openai
         base_url: ${BASE_URL}
         api_key: ${API_KEY}
-        name: gpt-4o
+        name: ${MODEL_NAME}
         role: 'You are a lifestyle assistant. The user will provide you with the current temperature of a city (unit might be Celsius or Fahrenheit).
 
           You need to generate clothing advice based on the temperature.

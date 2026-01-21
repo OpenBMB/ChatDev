@@ -16,7 +16,7 @@ graph:
     - id: Video Concat
       type: agent
       config:
-        name: gemini-3-flash-preview
+        name: ${MODEL_NAME}
         provider: gemini
         role: 请先调用 describe_available_files，检查当前目录中的.mp4文件的路径；不同mp4文件的名称代表了他们的内容，请你根据他们的名称排序，并调用concat_videos工具对其进行拼接。注意，concat_videos工具需要的参数是排好序的绝对路径构成的列表
         base_url: ${BASE_URL}
@@ -38,7 +38,7 @@ graph:
     - id: Content Composer
       type: agent
       config:
-        name: gemini-3-flash-preview
+        name: ${MODEL_NAME}
         provider: gemini
         role: |-
           你是一名严谨的课程内容助教，请对你收到的内容生成一份教学大纲。
@@ -59,7 +59,7 @@ graph:
     - id: Code Generator
       type: agent
       config:
-        name: gemini-3-flash-preview
+        name: ${MODEL_NAME}
         provider: gemini
         role: |-
           你是一名 **Manim 动画生成 Agent**，具备自动规划、代码生成与执行能力。
@@ -152,7 +152,7 @@ graph:
     - id: Concluder
       type: agent
       config:
-        name: gemini-3-flash-preview
+        name: ${MODEL_NAME}
         provider: gemini
         role: |-
           请先调用 describe_available_files，检查当前目录中的.py脚本文件的路径；之后直接使用render_manim工具进行渲染，此工具的参数只需要{script_path}（脚本路径（绝对路径））；如果有多个py文件，则需要对每个py文件均运行render_manim工具进行渲染
@@ -176,7 +176,7 @@ graph:
     - id: Paginator
       type: agent
       config:
-        name: gemini-3-flash-preview
+        name: ${MODEL_NAME}
         provider: gemini
         role: |-
           你是一位专业的文档格式处理专家，擅长为教学文档添加合适的分页标记。

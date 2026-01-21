@@ -40,7 +40,7 @@ graph:
     - id: Instructor
       type: agent
       config:
-        name: gpt-4o
+        name: ${MODEL_NAME}
         provider: openai
         role: |-
           According to the new user's task and our software designs: 
@@ -69,7 +69,7 @@ graph:
     - id: Instructor After Run Code
       type: agent
       config:
-        name: gpt-4o
+        name: ${MODEL_NAME}
         provider: openai
         role: |-
           According to the new user's task and our software designs: 
@@ -98,7 +98,7 @@ graph:
     - id: Assistant
       type: agent
       config:
-        name: gpt-4o
+        name: ${MODEL_NAME}
         provider: openai
         role: |-
           According to the new user's task, our designed product modality and languages, our developed first-edition source codes are listed below: 
