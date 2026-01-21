@@ -19,7 +19,6 @@ class DesignError(RuntimeError):
     """Raised when a workflow design cannot be loaded or validated."""
 
 
-
 def _allowed_node_types() -> set[str]:
     names = set(iter_node_schemas().keys())
     if not names:
@@ -73,7 +72,9 @@ def load_config(
 
     data = prepare_design_mapping(raw_data, source=str(config_path))
 
-    schema_errors = validate_design(data, set_defaults=set_defaults, fn_module_ref=fn_module)
+    schema_errors = validate_design(
+        data, set_defaults=set_defaults, fn_module_ref=fn_module
+    )
     if schema_errors:
         formatted = "\n".join(f"- {err}" for err in schema_errors)
         raise DesignError(f"Design validation failed for '{config_path}':\n{formatted}")
@@ -86,7 +87,9 @@ def load_config(
     logic_errors = check_workflow_structure(data)
     if logic_errors:
         formatted = "\n".join(f"- {err}" for err in logic_errors)
-        raise DesignError(f"Workflow logical issues detected for '{config_path}':\n{formatted}")
+        raise DesignError(
+            f"Workflow logical issues detected for '{config_path}':\n{formatted}"
+        )
     else:
         print("Workflow OK.")
 
@@ -119,3 +122,28 @@ def check_config(yaml_content: Any) -> str:
         return str(e)
 
     return ""
+
+
+def main():
+    import argparse
+    import sys
+
+    parser = argparse.ArgumentParser(description="Validate workflow design file.")
+    parser.add_argument(
+        "--path", type=Path, required=True, help="Path to the design file."
+    )
+    args = parser.parse_args()
+
+    try:
+        load_config(args.path)
+        print(f"Design '{args.path}' is valid.")
+    except DesignError as e:
+        print(f"Validation failed: {e}")
+        sys.exit(1)
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
+        sys.exit(1)
+
+
+if __name__ == "__main__":
+    main()
