@@ -120,9 +120,33 @@ See our paper in [Multi-Agent Collaboration via Evolving Orchestration](https://
     cd frontend && npm install
     ```
 
-### ⚡️ Run the Application (Local)
+### 🔑 Configuration
 
-1.  **Start Backend** :
+*   **Environment Variables**:
+    ```bash
+    cp .env.example .env
+    ```
+*   **Model Keys**: Set `API_KEY` and `BASE_URL` in `.env` for your LLM provider.
+*   **YAML placeholders**: Use `${VAR}`（e.g., `${API_KEY}`）in configuration files to reference these variables.
+
+### ⚡️ Run the Application
+
+#### Using Makefile (Recommended)
+
+1.  **Start Backend**:
+    ```bash
+    make server
+    ```
+
+2.  **Start Frontend**:
+    ```bash
+    make client
+    ```
+    > Then access the Web Console at **[http://localhost:5173](http://localhost:5173)**.
+
+#### Manual Commands
+
+1.  **Start Backend**:
     ```bash
     # Run from the project root
     uv run python server_main.py --port 6400 --reload
@@ -162,28 +186,19 @@ Alternatively, you can run the entire application using Docker Compose. This met
 
 > The services will automatically restart if they crash, and local file changes will be reflected inside the containers for live development.
 
-#### Production (Docker + nginx)
+#### Utility Commands
 
-- Build and run:
-  ```bash
-  docker compose -f compose.yml -f compose.prod.yml up -d --build
-  ```
-- Access:
-  - Frontend: http://localhost:8080
-  - Backend: not published (internal); proxied via /api and /ws by nginx
-- Stop:
-  ```bash
-  docker compose -f compose.yml -f compose.prod.yml down
-  ```
-- Notes:
-  - .env holds secrets (API keys), .env.docker holds container-only config.
-  - nginx proxies /api and /ws to backend:6400 (see frontend/nginx.conf).
+*   **Sync YAML workflows to frontend**:
+    ```bash
+    make sync
+    ```
+    Uploads all workflow files from `yaml_instance/` to the frontend database.
 
-### 🔑 Configuration
-
-*   **Environment Variables**: Create a `.env` file in the project root.
-*   **Model Keys**: Set `API_KEY` and `BASE_URL` in `.env` for your LLM provider.
-*   **YAML placeholders**: Use `${VAR}`（e.g., `${API_KEY}`）in configuration files to reference these variables.
+*   **Validate all YAML workflows**:
+    ```bash
+    make validate-yamls
+    ```
+    Checks all YAML files for syntax and schema errors.
 
 ---
 
