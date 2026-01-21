@@ -120,9 +120,34 @@ See our paper in [Multi-Agent Collaboration via Evolving Orchestration](https://
     cd frontend && npm install
     ```
 
+### 🔑 Configuration
+
+*   **Environment Variables**:
+    ```bash
+    cp .env.example .env
+    ```
+*   **Model Keys**: Set `API_KEY` and `BASE_URL` in `.env` for your LLM provider.
+*   **YAML placeholders**: Use `${VAR}`（e.g., `${API_KEY}`）in configuration files to reference these variables.
+
 ### ⚡️ Run the Application
 
-1.  **Start Backend** :
+
+#### Using Makefile (Recommended)
+
+1.  **Start Backend**:
+    ```bash
+    make server
+    ```
+
+2.  **Start Frontend**:
+    ```bash
+    make client
+    ```
+    > Then access the Web Console at **[http://localhost:5173](http://localhost:5173)**.
+
+#### Manual Commands
+
+1.  **Start Backend**:
     ```bash
     # Run from the project root
     uv run python server_main.py --port 6400 --reload
@@ -143,12 +168,19 @@ See our paper in [Multi-Agent Collaboration via Evolving Orchestration](https://
     > * **Backend**: start with `--port 6401`
     > * **Frontend**: set `VITE_API_BASE_URL=http://localhost:6401`
 
+#### Utility Commands
 
-### 🔑 Configuration
+*   **Sync YAML workflows to frontend**:
+    ```bash
+    make sync
+    ```
+    Uploads all workflow files from `yaml_instance/` to the frontend database.
 
-*   **Environment Variables**: Create a `.env` file in the project root.
-*   **Model Keys**: Set `API_KEY` and `BASE_URL` in `.env` for your LLM provider.
-*   **YAML placeholders**: Use `${VAR}`（e.g., `${API_KEY}`）in configuration files to reference these variables.
+*   **Validate all YAML workflows**:
+    ```bash
+    make validate-yamls
+    ```
+    Checks all YAML files for syntax and schema errors.
 
 ---
 
