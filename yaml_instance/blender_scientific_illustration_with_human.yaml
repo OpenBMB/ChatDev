@@ -12,7 +12,7 @@ graph:
       description: ''
       context_window: 0
       config:
-        name: ${MODEL_NAME}
+        name: gemini-2.5-flash
         role: |-
           You are the **Executor**.
           Your role is to act as the bridge between the Agents and the Blender process.
@@ -50,7 +50,7 @@ graph:
       description: ''
       context_window: 0
       config:
-        name: ${MODEL_NAME}
+        name: gemini-3-pro-preview
         role: |-
           You are the **Scientist** for a Blender Scientific Visualization System.
           Your goal is to ensure the scientific accuracy of the visualization by providing precise parameters and physical logic.
@@ -81,7 +81,7 @@ graph:
       description: ''
       context_window: 0
       config:
-        name: ${MODEL_NAME}
+        name: gemini-3-pro-preview
         role: |-
           You are the **Planner** for a Blender Scientific Visualization System.
           Your goal is to translate natural language scientific requests (e.g., "Draw a P3HT:PCBM bulk heterojunction") into a structured, step-by-step building plan for the Engineer.
@@ -113,7 +113,7 @@ graph:
       description: ''
       context_window: 10
       config:
-        name: ${MODEL_NAME}
+        name: gemini-3-pro-preview
         role: |-
           You are the **Engineer**. You are an expert in the Blender Python API (`bpy`).
           Your goal is to write a **COMPLETE, standalone Python script** that builds the scene described by the Planner and Scientist.
@@ -177,7 +177,7 @@ graph:
       type: agent
       context_window: 0
       config:
-        name: ${MODEL_NAME}
+        name: gemini-3-pro-preview
         role: |-
           You are the **Reviewer**. You have access to the live Blender instance via specific tools.
           Your goal is to inspect the generated 3D scene and ensure it matches the Planner's requirements and the Scientist's data.

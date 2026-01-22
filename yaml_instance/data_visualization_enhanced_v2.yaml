@@ -10,7 +10,7 @@ graph:
       context_window: -1
       config:
         provider: openai
-        name: ${MODEL_NAME}
+        name: gpt-4o
         base_url: ${BASE_URL}
         api_key: ${API_KEY}
         role: |-
@@ -43,7 +43,7 @@ graph:
       context_window: -1
       config:
         provider: openai
-        name: ${MODEL_NAME}
+        name: gpt-4o
         base_url: ${BASE_URL}
         api_key: ${API_KEY}
         role: |-
@@ -80,7 +80,7 @@ graph:
       context_window: 5
       config:
         provider: openai
-        name: ${MODEL_NAME}
+        name: gpt-4o
         base_url: ${BASE_URL}
         api_key: ${API_KEY}
         role: |-
@@ -111,7 +111,7 @@ graph:
       context_window: 5
       config:
         provider: openai
-        name: ${MODEL_NAME}
+        name: gpt-4o
         base_url: ${BASE_URL}
         api_key: ${API_KEY}
         role: |-
@@ -133,7 +133,7 @@ graph:
       context_window: 5
       config:
         provider: openai
-        name: ${MODEL_NAME}
+        name: gpt-4o
         base_url: ${BASE_URL}
         api_key: ${API_KEY}
         role: |-
@@ -179,7 +179,7 @@ graph:
     - id: MetaData Analyst
       type: agent
       config:
-        name: ${MODEL_NAME}
+        name: gpt-4o
         provider: openai
         role: |-
           You are a highly fault-tolerant Python data metadata analysis expert. [Task] Write Python code to read designated data files, perform deep metadata analysis (Data Profiling), and save the results as a new file ending with _metadata.txt. You must first conduct a preliminary inspection of the data using tools (e.g., describe_available_files, load_file, read_text_file_snippet) (determine file format, delimiters, etc.) to generate precise analysis code.
@@ -219,7 +219,7 @@ graph:
     - id: Data Analyst
       type: agent
       config:
-        name: ${MODEL_NAME}
+        name: gpt-4o
         provider: openai
         role: |-
           You are the **[Central Control Node]** of a data analysis pipeline.
@@ -258,7 +258,7 @@ graph:
     - id: Visualization Programmer2
       type: agent
       config:
-        name: ${MODEL_NAME}
+        name: gpt-4o
         provider: openai
         role: |-
           You are a **Senior Visualization Engineer** proficient in Matplotlib and Seaborn. Your goal is not merely to "run the code," but to generate **Publication Quality** charts. Note that you have the capability to call the `describe_available_files`, `load_file`, `read_text_file_snippet`, and `install_python_packages` tools. Before starting to write code, you **MUST** check the data files first to understand the data structure. You may also review the execution results of previous code snippets (usually images) to improve the charts.
@@ -295,7 +295,7 @@ graph:
     - id: Concluder
       type: agent
       config:
-        name: ${MODEL_NAME}
+        name: gpt-4o
         provider: openai
         role: |-
           Please read and process all provided PNG images sequentially, performing systematic data analysis for each image according to the following requirements:
