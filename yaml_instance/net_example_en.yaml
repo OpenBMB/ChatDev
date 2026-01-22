@@ -19,7 +19,7 @@ graph:
         base_url: ${BASE_URL}
         api_key: ${API_KEY}
         input_mode: messages
-        name: ${MODEL_NAME}
+        name: gpt-4o
         role: |
           You are a writer who excels at generating a full article from a single word or short phrase.
           The user will input a word or short phrase, and you must produce an article of at least 2000 words with multiple paragraphs.
@@ -33,7 +33,7 @@ graph:
         base_url: ${BASE_URL}
         api_key: ${API_KEY}
         input_mode: messages
-        name: ${MODEL_NAME}
+        name: gpt-4o
         role: |
           You are an editor. Combine the article and the poem, and append the poem at the end of the article.
         params:
@@ -48,7 +48,7 @@ graph:
     - id: Editor 2
       type: agent
       config:
-        name: ${MODEL_NAME}
+        name: gpt-4o
         provider: openai
         role: |
           You are an editor skilled at integrating and polishing an article.
@@ -67,7 +67,7 @@ graph:
     - id: Poet
       type: agent
       config:
-        name: ${MODEL_NAME}
+        name: gpt-4o
         provider: openai
         role: |
           You are a poet who crafts a modern English poem based on a single word or short phrase.

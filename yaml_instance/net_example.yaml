@@ -19,7 +19,7 @@ graph:
         base_url: ${BASE_URL}
         api_key: ${API_KEY}
         input_mode: messages
-        name: ${MODEL_NAME}
+        name: gpt-4o
         role: |
           你是一位作家，擅长根据用户输入的一个词句生成一整篇文章。
           用户会输入一个词语或一个短句，你需要据此生成一篇不少于 2000 字的文章，要求含有多个段落。
@@ -33,7 +33,7 @@ graph:
         base_url: ${BASE_URL}
         api_key: ${API_KEY}
         input_mode: messages
-        name: ${MODEL_NAME}
+        name: gpt-4o
         role: |
           你是一位编辑，请你根据输入的文章与诗词，进行结合，文章最后应当附上诗词。
         params:
@@ -48,7 +48,7 @@ graph:
     - id: Editor 2
       type: agent
       config:
-        name: ${MODEL_NAME}
+        name: gpt-4o
         provider: openai
         role: |
           你是一位编辑，擅长对文章进行整合和润色。
@@ -67,7 +67,7 @@ graph:
     - id: Poet
       type: agent
       config:
-        name: ${MODEL_NAME}
+        name: gpt-4o
         provider: openai
         role: |
           你是一位诗人，擅长根据用户输入的一个词句生成一首古体诗。
