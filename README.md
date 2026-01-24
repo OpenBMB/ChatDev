@@ -134,16 +134,12 @@ See our paper in [Multi-Agent Collaboration via Evolving Orchestration](https://
 
 #### Using Makefile (Recommended)
 
-1.  **Start Backend**:
-    ```bash
-    make server
-    ```
+**Start both Backend and Frontent**:
+```bash
+make dev
+```
 
-2.  **Start Frontend**:
-    ```bash
-    make client
-    ```
-    > Then access the Web Console at **[http://localhost:5173](http://localhost:5173)**.
+> Then access the Web Console at **[http://localhost:5173](http://localhost:5173)**.
 
 #### Manual Commands
 
@@ -170,17 +166,23 @@ See our paper in [Multi-Agent Collaboration via Evolving Orchestration](https://
 
 #### Utility Commands
 
+*   **Help command**:
+    ```bash
+    make help
+    ```
+
 *   **Sync YAML workflows to frontend**:
     ```bash
     make sync
     ```
-    Uploads all workflow files from `yaml_instance/` to the frontend database.
+    Uploads all workflow files from `yaml_instance/` to the database.
 
 *   **Validate all YAML workflows**:
     ```bash
     make validate-yamls
     ```
     Checks all YAML files for syntax and schema errors.
+
 
 ---
 
