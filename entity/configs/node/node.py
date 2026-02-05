@@ -65,6 +65,7 @@ class Node(BaseConfig):
     type: str
     description: str | None = None
     # keep_context: bool = False
+    log_output: bool = True
     context_window: int = 0
     vars: Dict[str, Any] = field(default_factory=dict)
     config: BaseConfig | None = None
@@ -118,6 +119,15 @@ class Node(BaseConfig):
             description="Number of context messages accessible during node execution. 0 means clear all context except messages with keep_message=True, -1 means unlimited, other values represent the number of context messages to keep besides those with keep_message=True.",
             # advance=True,
         ),
+        "log_output": ConfigFieldSpec(
+            name="log_output",
+            display_name="Log Output",
+            type_hint="bool",
+            required=False,
+            default=True,
+            advance=True,
+            description="Whether to log this node's output content. Set to false to avoid logging outputs.",
+        ),
         "config": ConfigFieldSpec(
             name="config",
             display_name="Node Configuration",
@@ -170,6 +180,7 @@ class Node(BaseConfig):
 
         description = optional_str(mapping, "description", path)
         # keep_context = bool(mapping.get("keep_context", False))
+        log_output = bool(mapping.get("log_output", True))
         context_window = int(mapping.get("context_window", 0))
         input_value = ensure_list(mapping.get("input"))
         output_value = ensure_list(mapping.get("output"))
@@ -206,6 +217,7 @@ class Node(BaseConfig):
             id=node_id,
             type=node_type,
             description=description,
+            log_output=log_output,
             input=input_messages,
             output=formatted_output,
             # keep_context=keep_context,
