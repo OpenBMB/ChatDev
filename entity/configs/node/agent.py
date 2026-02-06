@@ -331,6 +331,9 @@ class AgentConfig(BaseConfig):
     tooling: List[ToolingConfig] = field(default_factory=list)
     thinking: ThinkingConfig | None = None
     memories: List[MemoryAttachmentConfig] = field(default_factory=list)
+    # Claude Code persistent session support
+    persistent_session: bool = True  # Keep session alive across calls (claude-code only)
+    skip_memory: bool = False  # Skip ChatDev memory system (claude-code manages its own)
 
     # Runtime attributes (attached dynamically)
     token_tracker: Any | None = field(default=None, init=False, repr=False)
@@ -389,6 +392,14 @@ class AgentConfig(BaseConfig):
         if "retry" in mapping and mapping["retry"] is not None:
             retry_cfg = AgentRetryConfig.from_dict(mapping["retry"], path=extend_path(path, "retry"))
 
+        # Claude Code persistent session options
+        persistent_session = optional_bool(mapping, "persistent_session", path, default=True)
+        if persistent_session is None:
+            persistent_session = True
+        skip_memory = optional_bool(mapping, "skip_memory", path, default=False)
+        if skip_memory is None:
+            skip_memory = False
+
         return cls(
             provider=provider,
             base_url=base_url,
@@ -401,6 +412,8 @@ class AgentConfig(BaseConfig):
             memories=memories_cfg,
             retry=retry_cfg,
             input_mode=input_mode,
+            persistent_session=persistent_session,
+            skip_memory=skip_memory,
             path=path,
         )
 
@@ -499,6 +512,24 @@ class AgentConfig(BaseConfig):
             required=False,
             description="Automatic retry policy for this model",
             child=AgentRetryConfig,
+            advance=True,
+        ),
+        "persistent_session": ConfigFieldSpec(
+            name="persistent_session",
+            display_name="Persistent Session",
+            type_hint="bool",
+            required=False,
+            default=True,
+            description="Keep Claude Code session alive across calls (claude-code provider only)",
+            advance=True,
+        ),
+        "skip_memory": ConfigFieldSpec(
+            name="skip_memory",
+            display_name="Skip Memory",
+            type_hint="bool",
+            required=False,
+            default=False,
+            description="Skip ChatDev memory system when using claude-code provider (Claude manages its own context)",
             advance=True,
         ),
     }

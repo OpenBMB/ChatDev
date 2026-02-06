@@ -100,13 +100,20 @@ class AgentNodeExecutor(NodeExecutor):
                     input_mode,
                 )
 
-            self._apply_memory_retrieval(
-                node,
-                conversation,
-                memory_query_snapshot,
-                AgentExecFlowStage.GEN_STAGE,
-                input_mode,
+            # Skip memory retrieval if configured (e.g., claude-code with persistent sessions)
+            should_skip_memory = (
+                agent_config.provider == "claude-code" and
+                getattr(agent_config, "skip_memory", False)
             )
+
+            if not should_skip_memory:
+                self._apply_memory_retrieval(
+                    node,
+                    conversation,
+                    memory_query_snapshot,
+                    AgentExecFlowStage.GEN_STAGE,
+                    input_mode,
+                )
 
             timeline = self._build_initial_timeline(conversation)
             response_obj = self._invoke_provider(
@@ -150,7 +157,9 @@ class AgentNodeExecutor(NodeExecutor):
                     input_mode,
                 )
 
-            self._update_memory(node, input_data, inputs, final_message)
+            # Skip memory update if configured (e.g., claude-code with persistent sessions)
+            if not should_skip_memory:
+                self._update_memory(node, input_data, inputs, final_message)
 
             if isinstance(final_message, Message):
                 return [self._clone_with_source(final_message, node.id)]

@@ -12,6 +12,21 @@ ProviderRegistry.register(
 )
 
 try:
+    from runtime.node.agent.providers.claude_code_provider import ClaudeCodeProvider
+except (ImportError, FileNotFoundError):
+    ClaudeCodeProvider = None
+
+if ClaudeCodeProvider is not None:
+    ProviderRegistry.register(
+        "claude-code",
+        ClaudeCodeProvider,
+        label="Claude Code",
+        summary="Claude models via Claude Code CLI (uses Max subscription, no API key needed)",
+    )
+else:
+    print("Claude Code provider not registered: claude CLI not found in PATH.")
+
+try:
     from runtime.node.agent.providers.gemini_provider import GeminiProvider
 except ImportError:
     GeminiProvider = None
