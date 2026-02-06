@@ -65,6 +65,7 @@ class AgentNodeExecutor(NodeExecutor):
 
             agent_config.token_tracker = self.context.get_token_tracker()
             agent_config.node_id = node.id
+            agent_config.workspace_root = self.context.global_state.get("python_workspace_root")
 
             input_data = self._inputs_to_text(inputs)
             input_payload = self._build_thinking_payload_from_inputs(inputs, input_data)

@@ -16,7 +16,6 @@ from server.settings import YAML_DIR
 from utils.task_input import TaskInputBuilder
 from workflow.graph import GraphExecutor
 from workflow.graph_context import GraphContext
-from runtime.node.agent.providers.claude_code_provider import ClaudeCodeProvider
 
 
 OUTPUT_ROOT = Path("WareHouse")
@@ -123,6 +122,7 @@ def run_workflow(
     token_usage = executor.token_tracker.get_token_usage() if executor.token_tracker else None
 
     # Clear Claude Code persistent sessions when workflow completes
+    from runtime.node.agent.providers.claude_code_provider import ClaudeCodeProvider
     ClaudeCodeProvider.clear_all_sessions()
 
     meta_info = WorkflowMetaInfo(

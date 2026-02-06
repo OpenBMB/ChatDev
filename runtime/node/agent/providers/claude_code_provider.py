@@ -3,11 +3,11 @@
 Uses the Claude Code CLI (claude -p) as the LLM backend, leveraging the user's
 Max subscription instead of requiring a separate API key.
 
-Tool calling is handled via --json-schema, which forces Claude to output
-structured JSON with a response field and a tool_calls array.
+Claude Code works in its native agentic mode, using its own built-in tools
+(Write, Edit, Read, Bash) to accomplish tasks like writing code, running tests,
+etc. The provider returns the text result from Claude's work.
 """
 
-import hashlib
 import json
 import os
 import subprocess
@@ -19,37 +19,11 @@ from entity.configs import AgentConfig
 from entity.messages import (
     Message,
     MessageRole,
-    ToolCallPayload,
 )
 from entity.tool_spec import ToolSpec
 from runtime.node.agent import ModelProvider, ModelResponse
 from utils.token_tracker import TokenUsage
 
-
-# JSON schema used when tools are available.
-# Forces Claude to output structured JSON with tool_calls.
-_TOOL_RESPONSE_SCHEMA = {
-    "type": "object",
-    "properties": {
-        "response": {
-            "type": "string",
-            "description": "Your text response. Empty string if calling tools.",
-        },
-        "tool_calls": {
-            "type": "array",
-            "description": "Tool calls to make. Empty array if just responding with text.",
-            "items": {
-                "type": "object",
-                "properties": {
-                    "name": {"type": "string"},
-                    "arguments": {"type": "object"},
-                },
-                "required": ["name", "arguments"],
-            },
-        },
-    },
-    "required": ["response", "tool_calls"],
-}
 
 
 class ClaudeCodeProvider(ModelProvider):
@@ -141,42 +115,49 @@ class ClaudeCodeProvider(ModelProvider):
     ) -> ModelResponse:
         """Call Claude Code CLI with the conversation and tool specs.
 
-        When tool_specs are provided, uses --json-schema to get structured
-        output with tool_calls. Otherwise, returns plain text.
+        Claude Code works in native agentic mode — it uses its own built-in
+        tools (Write, Edit, Read, Bash) to accomplish tasks. The working
+        directory is set to the workspace root so files are created in the
+        correct location.
 
         Supports persistent sessions via --resume flag when node_id is available.
         """
-        has_tools = bool(tool_specs)
         node_id = getattr(self.config, "node_id", None)
+        workspace_root = getattr(self.config, "workspace_root", None)
 
         # Check for existing session
         existing_session = self.get_session(node_id) if node_id else None
         is_continuation = existing_session is not None
 
         # Build prompt (simplified for continuations)
-        prompt = self._build_prompt(conversation, tool_specs, is_continuation=is_continuation)
+        prompt = self._build_prompt(
+            conversation, tool_specs,
+            is_continuation=is_continuation,
+            workspace_root=workspace_root,
+        )
 
         cmd = [client, "-p", prompt, "--output-format", "json"]
-
-        # Disable Claude Code's own tools - we only want LLM text output
-        cmd.extend(["--tools", ""])
 
         # Resume existing session or start new one
         if existing_session:
             cmd.extend(["--resume", existing_session])
-            # Allow more turns for ongoing sessions since context grows
-            cmd.extend(["--max-turns", "5"])
+            cmd.extend(["--max-turns", "20"])
         else:
-            # Allow 3 turns so --json-schema can work (needs 2 turns internally)
-            cmd.extend(["--max-turns", "3"])
+            cmd.extend(["--max-turns", "15"])
 
         if self._model_flag:
             cmd.extend(["--model", self._model_flag])
 
-        if has_tools:
-            cmd.extend(["--json-schema", json.dumps(_TOOL_RESPONSE_SCHEMA)])
+        # Set CWD to workspace root so Claude's file operations land in the
+        # correct directory. Ensure the directory exists.
+        cwd = None
+        if workspace_root:
+            from pathlib import Path
+            ws_path = Path(workspace_root)
+            ws_path.mkdir(parents=True, exist_ok=True)
+            cwd = str(ws_path)
 
-        timeout = kwargs.pop("timeout", 300)
+        timeout = kwargs.pop("timeout", 600)
 
         try:
             result = subprocess.run(
@@ -185,8 +166,11 @@ class ClaudeCodeProvider(ModelProvider):
                 text=True,
                 encoding="utf-8",
                 timeout=timeout,
+                cwd=cwd,
             )
         except subprocess.TimeoutExpired:
+            if node_id and not existing_session:
+                self.clear_session(node_id)
             return ModelResponse(
                 message=Message(
                     role=MessageRole.ASSISTANT,
@@ -203,10 +187,7 @@ class ClaudeCodeProvider(ModelProvider):
         if new_session_id and node_id:
             self.set_session(node_id, new_session_id)
 
-        if has_tools:
-            return self._parse_structured_response(raw_response)
-        else:
-            return self._parse_text_response(raw_response, result)
+        return self._parse_text_response(raw_response, result)
 
     def extract_token_usage(self, response: Any) -> TokenUsage:
         """Extract token usage from Claude Code CLI JSON response."""
@@ -265,11 +246,9 @@ class ClaudeCodeProvider(ModelProvider):
         conversation: List[Message],
         tool_specs: Optional[List[ToolSpec]],
         is_continuation: bool = False,
+        workspace_root: Optional[Any] = None,
     ) -> str:
         """Build a single prompt string from conversation messages.
-
-        The system message becomes a preamble, user/assistant/tool messages
-        are serialized with role prefixes.
 
         When is_continuation=True (resuming an existing session), the prompt
         is simplified since system instructions and prior context are already
@@ -278,8 +257,6 @@ class ClaudeCodeProvider(ModelProvider):
         parts: List[str] = []
 
         if is_continuation:
-            # For continuations, only include new messages (skip system prompt)
-            # System instructions are already in the session context
             for msg in conversation:
                 text = msg.text_content()
                 if msg.role == MessageRole.USER:
@@ -290,9 +267,7 @@ class ClaudeCodeProvider(ModelProvider):
                     parts.append(
                         f"[Tool Result for '{tool_name}' (call_id: {call_id})]:\n{text}"
                     )
-                # Skip SYSTEM and ASSISTANT for continuations - they're in context
         else:
-            # Full prompt for new sessions
             for msg in conversation:
                 text = msg.text_content()
                 if msg.role == MessageRole.SYSTEM:
@@ -308,93 +283,66 @@ class ClaudeCodeProvider(ModelProvider):
                         f"[Tool Result for '{tool_name}' (call_id: {call_id})]:\n{text}"
                     )
 
-        # Include tool specs on first call only (they persist in session)
         if tool_specs and not is_continuation:
-            parts.append(self._format_tool_specs(tool_specs))
+            parts.append(self._format_tool_specs(tool_specs, workspace_root))
+
+        if workspace_root and not is_continuation:
+            parts.append(
+                f"[Working Directory]: {workspace_root}\n"
+                "Your current working directory is set to the project workspace above. "
+                "All files you create with your Write tool will be saved there. "
+                "Use relative paths (e.g. 'main.py', 'src/utils.py') for all file operations."
+            )
 
         return "\n\n".join(parts)
 
-    def _format_tool_specs(self, tool_specs: List[ToolSpec]) -> str:
-        """Format tool specs into a prompt section."""
+    def _format_tool_specs(
+        self, tool_specs: List[ToolSpec], workspace_root: Optional[Any] = None,
+    ) -> str:
+        """Format tool specs as guidance for Claude's native tools.
+
+        Maps ChatDev tool capabilities to Claude Code's built-in tools so
+        Claude knows what actions are expected and how to accomplish them.
+        """
+        # Build a mapping from ChatDev tools to Claude Code native actions
+        tool_mappings: List[str] = []
+        for spec in tool_specs:
+            name = spec.name
+            desc = spec.description or ""
+            if "save_file" in name or "write" in name.lower():
+                tool_mappings.append(
+                    f"- {name}: {desc}\n"
+                    "  -> Use your Write tool to create/save files with relative paths."
+                )
+            elif "read_file" in name or "read" in name.lower():
+                tool_mappings.append(
+                    f"- {name}: {desc}\n"
+                    "  -> Use your Read tool to read file contents."
+                )
+            elif "run" in name.lower() or "exec" in name.lower() or "bash" in name.lower():
+                tool_mappings.append(
+                    f"- {name}: {desc}\n"
+                    "  -> Use your Bash tool to execute commands."
+                )
+            else:
+                tool_mappings.append(f"- {name}: {desc}")
+
         lines = [
-            "[Available Tools]:",
-            "You can call tools by including them in the tool_calls array.",
-            "If you don't need to call any tool, set tool_calls to an empty array [].",
-            "If calling tools, set response to empty string.",
+            "[Task Capabilities — Native Tool Mapping]:",
+            "You have built-in tools: Write, Edit, Read, Bash.",
+            "The following tasks are expected. Use your tools directly to accomplish them:",
             "",
         ]
-        for spec in tool_specs:
-            params_str = json.dumps(
-                spec.parameters or {"type": "object", "properties": {}},
-                indent=2,
-            )
-            lines.append(f"- **{spec.name}**: {spec.description}")
-            lines.append(f"  Parameters: {params_str}")
-            lines.append("")
-        return "\n".join(lines)
-
-    def _parse_structured_response(self, raw_response: dict) -> ModelResponse:
-        """Parse structured JSON output (when tools were available)."""
-        structured = raw_response.get("structured_output")
-
-        if not structured:
-            # Fallback: try to parse result text as JSON
-            result_text = raw_response.get("result", "")
-            if result_text:
-                try:
-                    structured = json.loads(result_text)
-                except (json.JSONDecodeError, TypeError):
-                    pass
-
-        if not structured:
-            # No structured output - return plain text
-            fallback_text = raw_response.get("result", "")
-            if not fallback_text:
-                errors = raw_response.get("errors", [])
-                fallback_text = (
-                    f"[Claude Code Error]: {errors}" if errors else ""
-                )
-            return ModelResponse(
-                message=Message(
-                    role=MessageRole.ASSISTANT, content=fallback_text
-                ),
-                raw_response=raw_response,
-            )
-
-        response_text = structured.get("response", "")
-        raw_tool_calls = structured.get("tool_calls", [])
-
-        tool_calls: List[ToolCallPayload] = []
-        for idx, tc in enumerate(raw_tool_calls):
-            name = tc.get("name", "")
-            if not name:
-                continue
-            arguments = tc.get("arguments", {})
-            arguments_str = (
-                json.dumps(arguments, ensure_ascii=False)
-                if isinstance(arguments, dict)
-                else str(arguments)
-            )
-            call_id = self._build_tool_call_id(
-                name, arguments_str, fallback_prefix=f"cc_call_{idx}"
-            )
-            tool_calls.append(
-                ToolCallPayload(
-                    id=call_id,
-                    function_name=name,
-                    arguments=arguments_str,
-                    type="function",
-                )
-            )
-
-        return ModelResponse(
-            message=Message(
-                role=MessageRole.ASSISTANT,
-                content=response_text,
-                tool_calls=tool_calls,
-            ),
-            raw_response=raw_response,
+        lines.extend(tool_mappings)
+        lines.append("")
+        lines.append(
+            "CRITICAL: Create all files using your Write tool with RELATIVE paths "
+            "(e.g. 'main.py', not absolute paths). "
+            "Your working directory is already set to the project workspace."
         )
+        if workspace_root:
+            lines.append(f"Workspace: {workspace_root}")
+        return "\n".join(lines)
 
     def _parse_text_response(
         self, raw_response: dict, result: subprocess.CompletedProcess
@@ -407,18 +355,6 @@ class ClaudeCodeProvider(ModelProvider):
             message=Message(role=MessageRole.ASSISTANT, content=response_text),
             raw_response=raw_response,
         )
-
-    def _build_tool_call_id(
-        self,
-        function_name: str,
-        arguments: str,
-        *,
-        fallback_prefix: str = "tool_call",
-    ) -> str:
-        base = function_name or fallback_prefix
-        payload = f"{base}:{arguments or ''}".encode("utf-8")
-        digest = hashlib.md5(payload).hexdigest()[:8]
-        return f"{base}_{digest}"
 
     def _parse_cli_output(self, result: subprocess.CompletedProcess) -> dict:
         """Parse the JSON output from claude CLI."""

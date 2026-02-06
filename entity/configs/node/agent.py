@@ -338,6 +338,7 @@ class AgentConfig(BaseConfig):
     # Runtime attributes (attached dynamically)
     token_tracker: Any | None = field(default=None, init=False, repr=False)
     node_id: str | None = field(default=None, init=False, repr=False)
+    workspace_root: Any | None = field(default=None, init=False, repr=False)
 
     @classmethod
     def from_dict(cls, data: Mapping[str, Any], *, path: str) -> "AgentConfig":
