@@ -201,6 +201,24 @@ Alternatively, you can run the entire application using Docker Compose. This met
     ```
     Checks all YAML files for syntax and schema errors.
 
+### 🐳 Run with Docker
+Alternatively, you can run the entire application using Docker Compose. This method simplifies dependency management and provides a consistent environment.
+
+1.  **Prerequisites**:
+    *   [Docker](https://docs.docker.com/get-docker/) and [Docker Compose](https://docs.docker.com/compose/install/) installed.
+    *   Ensure you have a `.env` file in the project root for your API keys.
+
+2.  **Build and Run**:
+    ```bash
+    # From the project root
+    docker compose up --build
+    ```
+
+3.  **Access**:
+    *   **Backend**: `http://localhost:6400`
+    *   **Frontend**: `http://localhost:5173`
+
+> The services will automatically restart if they crash, and local file changes will be reflected inside the containers for live development.
 
 ---
 
