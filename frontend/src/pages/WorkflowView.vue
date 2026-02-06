@@ -1294,67 +1294,81 @@ const updateVueFlowNodeId = (oldId, newId) => {
 // FormGenerator integration
 const snapshotYamlContent = () => cloneDeep(yamlContent.value ?? null)
 
-// Build YAML without specific node
+// Build YAML without specific node (shallow clone path to avoid full deep-clone on editor open)
 const buildYamlWithoutNode = (nodeId) => {
-  const snapshot = snapshotYamlContent()
-  if (!snapshot?.graph?.nodes || !Array.isArray(snapshot.graph.nodes)) {
-    return snapshot
+  const source = yamlContent.value
+  if (!source?.graph?.nodes || !Array.isArray(source.graph.nodes)) {
+    return source
   }
-  snapshot.graph.nodes = snapshot.graph.nodes.filter(node => node?.id !== nodeId)
-  return snapshot
+  return {
+    ...source,
+    graph: {
+      ...source.graph,
+      nodes: source.graph.nodes.filter(node => node?.id !== nodeId)
+    }
+  }
 }
 
 const buildYamlWithoutEdge = (fromId, toId) => {
-  const snapshot = snapshotYamlContent()
-  if (!snapshot?.graph?.edges || !Array.isArray(snapshot.graph.edges)) {
-    return snapshot
+  const source = yamlContent.value
+  if (!source?.graph?.edges || !Array.isArray(source.graph.edges)) {
+    return source
   }
   let removed = false
-  snapshot.graph.edges = snapshot.graph.edges.filter(edge => {
+  const filteredEdges = source.graph.edges.filter(edge => {
     if (!removed && edge?.from === fromId && edge?.to === toId) {
       removed = true
       return false
     }
     return true
   })
-  return snapshot
+  return {
+    ...source,
+    graph: {
+      ...source.graph,
+      edges: filteredEdges
+    }
+  }
 }
 
 const buildYamlWithoutVars = () => {
-  const snapshot = snapshotYamlContent()
-  if (!snapshot || typeof snapshot !== 'object') {
-    return snapshot
+  const source = yamlContent.value
+  if (!source || typeof source !== 'object') {
+    return source
   }
-  if (!Object.prototype.hasOwnProperty.call(snapshot, 'vars')) {
-    return snapshot
+  if (!Object.prototype.hasOwnProperty.call(source, 'vars')) {
+    return source
   }
-  const sanitized = { ...snapshot }
+  const sanitized = { ...source }
   delete sanitized.vars
   return sanitized
 }
 
 const buildYamlWithoutMemory = () => {
-  const snapshot = snapshotYamlContent()
-  if (!snapshot?.graph) {
-    return snapshot
+  const source = yamlContent.value
+  if (!source?.graph) {
+    return source
   }
-  if (Object.prototype.hasOwnProperty.call(snapshot.graph, 'memory')) {
-    const newGraph = { ...snapshot.graph }
+  if (Object.prototype.hasOwnProperty.call(source.graph, 'memory')) {
+    const newGraph = { ...source.graph }
     delete newGraph.memory
-    snapshot.graph = newGraph
+    return {
+      ...source,
+      graph: newGraph
+    }
   }
-  return snapshot
+  return source
 }
 
 const buildYamlWithoutGraph = () => {
-  const snapshot = snapshotYamlContent()
-  if (!snapshot || typeof snapshot !== 'object') {
-    return snapshot
+  const source = yamlContent.value
+  if (!source || typeof source !== 'object') {
+    return source
   }
-  if (!Object.prototype.hasOwnProperty.call(snapshot, 'graph')) {
-    return snapshot
+  if (!Object.prototype.hasOwnProperty.call(source, 'graph')) {
+    return source
   }
-  const sanitized = { ...snapshot }
+  const sanitized = { ...source }
   delete sanitized.graph
   return sanitized
 }
@@ -1398,12 +1412,10 @@ const openDynamicFormGenerator = (type, options = {}) => {
 
   const hasCustomYaml = Object.prototype.hasOwnProperty.call(options, 'initialYaml')
   const yamlSource = hasCustomYaml ? options.initialYaml : yamlContent.value
-  formGeneratorInitialYaml.value = yamlSource ? cloneDeep(yamlSource) : null
+  formGeneratorInitialYaml.value = yamlSource || null
 
   if (Object.prototype.hasOwnProperty.call(options, 'initialFormData')) {
-    formGeneratorInitialFormData.value = options.initialFormData
-      ? cloneDeep(options.initialFormData)
-      : null
+    formGeneratorInitialFormData.value = options.initialFormData || null
   } else {
     formGeneratorInitialFormData.value = null
   }
