@@ -118,7 +118,7 @@ ChatDev 已从一个专门的软件开发多智能体系统演变为一个全面
     cd frontend && npm install
     ```
 
-### ⚡️ 运行应用
+### ⚡️ 运行应用（本地）
 
 #### 使用 Makefile（推荐）
 
@@ -170,6 +170,25 @@ make dev
     ```
     检查所有 YAML 文件的语法与 schema 错误。
 
+
+### 🐳 使用 Docker 运行
+你也可以通过 Docker Compose 运行整个应用。该方式可简化依赖管理，并提供一致的运行环境。
+
+1.  **前置条件**：
+    *   已安装 [Docker](https://docs.docker.com/get-docker/) 和 [Docker Compose](https://docs.docker.com/compose/install/)。
+    *   请确保在项目根目录中存在用于配置 API Key 的 `.env` 文件。
+
+2.  **构建并运行**：
+    ```bash
+    # 在项目根目录执行
+    docker compose up --build
+    ```
+
+3.  **访问地址**：
+    *   **后端**：`http://localhost:6400`
+    *   **前端**：`http://localhost:5173`
+
+> 服务在异常退出后会自动重启，本地文件的修改会同步映射到容器中，便于实时开发。
 
 ### 🔑 配置
 

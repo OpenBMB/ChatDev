@@ -1,0 +1,33 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runtime
+    container_name: chatdev_backend
+    volumes:
+      - .:/app
+    ports:
+      - "6400:6400"
+    env_file:
+      - .env
+      - .env.docker
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      target: dev
+    container_name: chatdev_frontend
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    ports:
+      - "${FRONTEND_PORT:-5173}:5173"
+    env_file:
+      - .env
+      - .env.docker
+    depends_on:
+      - backend
+    restart: unless-stopped
