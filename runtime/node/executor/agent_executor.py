@@ -660,7 +660,11 @@ class AgentNodeExecutor(NodeExecutor):
                             data_uri=data_uri,
                         )
 
-                        # Append attachment block to message
+                        # Ensure content is a list before appending
+                        if isinstance(response_message.content, str):
+                            response_message.content = [
+                                MessageBlock.text_block(response_message.content),
+                            ]
                         response_message.content.append(
                             MessageBlock(
                                 type="artifact",
