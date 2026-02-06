@@ -626,7 +626,7 @@ class GraphExecutor:
                 output_role = "none"
                 output_source = None
 
-            self.log_manager.record_node_end(node.id, output_text, {
+            self.log_manager.record_node_end(node.id, output_text if node.log_output else "", {
                 "output_size": len(output_text),
                 "output_count": len(output_messages),
                 "output_role": output_role,
