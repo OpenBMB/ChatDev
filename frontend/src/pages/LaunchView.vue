@@ -385,6 +385,17 @@
             {{ status }}
           </div>
 
+          <div v-if="tokenUsage" class="cost-summary">
+            <div class="cost-row">
+              <span class="cost-label">Tokens</span>
+              <span class="cost-value">{{ tokenUsage.total_usage?.total_tokens?.toLocaleString() || 0 }}</span>
+            </div>
+            <div v-if="totalCostUsd > 0" class="cost-row">
+              <span class="cost-label">Cost</span>
+              <span class="cost-value cost-highlight">${{ totalCostUsd.toFixed(4) }}</span>
+            </div>
+          </div>
+
           <label class="section-label">View</label>
           <div class="view-toggle">
             <button
@@ -509,6 +520,9 @@ const fileSelectorInputRef = ref(null)
 // Status state
 const status = ref('Waiting for workflow selection...')
 const loading = ref(false)
+
+// Token usage & cost tracking
+const tokenUsage = ref(null)
 
 // Session ID for downloads
 let sessionIdToDownload = null
@@ -662,6 +676,18 @@ const filteredWorkflowFiles = computed(() => {
   return workflowFiles.value.filter((workflow) =>
     workflow.name?.toLowerCase().includes(query)
   )
+})
+
+// Total cost extracted from token usage metadata (call_history)
+const totalCostUsd = computed(() => {
+  if (!tokenUsage.value) return 0
+  const history = tokenUsage.value.call_history || []
+  let total = 0
+  for (const entry of history) {
+    const cost = entry.metadata?.total_cost_usd
+    if (typeof cost === 'number') total += cost
+  }
+  return total
 })
 
 // Button label computed property
@@ -1755,6 +1781,7 @@ const launchWorkflow = async () => {
 
       status.value = 'Running...'
       isWorkflowRunning.value = true
+      tokenUsage.value = null
     } else {
       const error = await response.json().catch(() => ({}))
       console.error('Failed to launch workflow:', error)
@@ -2101,6 +2128,11 @@ const processMessage = async (msg) => {
     status.value = 'Completed'
     isWorkflowRunning.value = false
     sessionIdToDownload = sessionId
+
+    // Capture token usage & cost data
+    if (msg.data.token_usage) {
+      tokenUsage.value = msg.data.token_usage
+    }
   }
 
   // Handle direct error messages (e.g., workflow execution errors)
@@ -3083,6 +3115,38 @@ watch(
 .status-active {
   color: #a0c4ff;
   background: rgba(160, 196, 255, 0.1);
+}
+
+/* Cost Summary */
+.cost-summary {
+  margin-top: 6px;
+  padding: 8px 10px;
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.cost-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+}
+
+.cost-label {
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.cost-value {
+  color: rgba(255, 255, 255, 0.7);
+  font-variant-numeric: tabular-nums;
+}
+
+.cost-highlight {
+  color: #80e0a0;
+  font-weight: 500;
 }
 
 /* View Toggle */
