@@ -1,0 +1,30 @@
+graph:
+  id: test_claude_session
+  description: Simple test for Claude Code persistent session
+  log_level: DEBUG
+  nodes:
+    - id: USER
+      type: passthrough
+      config: {}
+
+    - id: Assistant
+      type: agent
+      config:
+        name: sonnet
+        provider: claude-code
+        persistent_session: true
+        skip_memory: true
+        role: |
+          You are a helpful assistant. Keep your responses brief and concise.
+          When asked to remember something, confirm that you will remember it.
+          When asked what you remember, recall what was told to you earlier in this conversation.
+
+    - id: FINAL
+      type: passthrough
+      config: {}
+
+  edges:
+    - from: USER
+      to: Assistant
+    - from: Assistant
+      to: FINAL
