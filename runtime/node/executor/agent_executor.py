@@ -10,6 +10,7 @@ Responsible for running agent nodes, including
 import asyncio
 import base64
 import json
+import os
 import traceback
 from typing import Any, Callable, Dict, List, Optional, Sequence
 
@@ -339,6 +340,8 @@ class AgentNodeExecutor(NodeExecutor):
                     )
 
             extra_kwargs["stream_callback"] = _stream_callback
+            extra_kwargs["session_id"] = self.context.global_state.get("session_id", "")
+            extra_kwargs["server_port"] = int(os.environ.get("CHATDEV_SERVER_PORT", "8000"))
 
         def _call_provider() -> ModelResponse:
             merged = dict(call_options)

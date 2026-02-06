@@ -38,10 +38,11 @@ def main():
     )
     
     args = parser.parse_args()
-    
+
     # Configure structured logging
     import os
     os.environ['LOG_LEVEL'] = args.log_level.upper()
+    os.environ['CHATDEV_SERVER_PORT'] = str(args.port)
     
     # Ensure log directory exists
     log_dir = Path("logs")

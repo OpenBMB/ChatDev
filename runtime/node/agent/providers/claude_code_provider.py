@@ -12,6 +12,7 @@ import json
 import os
 import subprocess
 import shutil
+import tempfile
 import threading
 from pathlib import Path
 from typing import Any, Dict, List, Optional
@@ -127,12 +128,19 @@ class ClaudeCodeProvider(ModelProvider):
         Supports persistent sessions via --resume flag when node_id is available.
         """
         stream_callback = kwargs.pop("stream_callback", None)
+        session_id = kwargs.pop("session_id", "")
+        server_port = kwargs.pop("server_port", 8000)
         node_id = getattr(self.config, "node_id", None)
         workspace_root = getattr(self.config, "workspace_root", None)
 
         # Check for existing session
         existing_session = self.get_session(node_id) if node_id else None
         is_continuation = existing_session is not None
+
+        # Create MCP config for chatdev-reporter
+        mcp_config_path = self._create_mcp_config(
+            node_id or "", session_id, server_port,
+        ) if session_id else None
 
         # Build prompt (simplified for continuations)
         prompt = self._build_prompt(
@@ -159,6 +167,9 @@ class ClaudeCodeProvider(ModelProvider):
         else:
             cmd.extend(["--max-turns", "15"])
 
+        if mcp_config_path:
+            cmd.extend(["--mcp-config", mcp_config_path])
+
         if self._model_flag:
             cmd.extend(["--model", self._model_flag])
 
@@ -175,70 +186,75 @@ class ClaudeCodeProvider(ModelProvider):
 
         timeout = kwargs.pop("timeout", 600)
 
-        raw_response, stderr_text = self._run_streaming(
-            cmd, cwd, timeout, stream_callback,
-        )
-
-        if raw_response.get("error") == "timeout":
-            if node_id and not existing_session:
-                self.clear_session(node_id)
-            return ModelResponse(
-                message=Message(
-                    role=MessageRole.ASSISTANT,
-                    content="[Error: Claude Code CLI timed out]",
-                ),
-                raw_response=raw_response,
-            )
-
-        self._track_token_usage(raw_response)
-
-        # Check for session resume errors and retry without --resume
-        error_msg = raw_response.get("error", "")
-        if existing_session and error_msg and ("session" in error_msg.lower() or "resume" in error_msg.lower()):
-            # Session expired or invalid - clear it and retry without resume
-            if node_id:
-                self.clear_session(node_id)
-
-            # Retry without --resume flag
-            cmd_retry = [client, "-p", prompt, "--output-format", "stream-json"]
-            cmd_retry.append("--verbose")
-            cmd_retry.append("--dangerously-skip-permissions")
-            cmd_retry.extend(["--max-turns", "15"])
-            if self._model_flag:
-                cmd_retry.extend(["--model", self._model_flag])
-
+        try:
             raw_response, stderr_text = self._run_streaming(
-                cmd_retry, cwd, timeout, stream_callback,
+                cmd, cwd, timeout, stream_callback,
             )
 
             if raw_response.get("error") == "timeout":
+                if node_id and not existing_session:
+                    self.clear_session(node_id)
                 return ModelResponse(
                     message=Message(
                         role=MessageRole.ASSISTANT,
-                        content="[Error: Claude Code CLI timed out on retry]",
+                        content="[Error: Claude Code CLI timed out]",
                     ),
                     raw_response=raw_response,
                 )
 
             self._track_token_usage(raw_response)
 
-        # Diff workspace to detect files created/modified by Claude Code
-        if cwd:
-            after_snapshot = self._snapshot_workspace(cwd)
-            raw_response["file_changes"] = self._diff_workspace(
-                before_snapshot, after_snapshot,
-            )
+            # Check for session resume errors and retry without --resume
+            error_msg = raw_response.get("error", "")
+            if existing_session and error_msg and ("session" in error_msg.lower() or "resume" in error_msg.lower()):
+                # Session expired or invalid - clear it and retry without resume
+                if node_id:
+                    self.clear_session(node_id)
 
-        # Mark whether streaming was active so executor can skip duplicate logs
-        if stream_callback is not None:
-            raw_response["_streamed"] = True
+                # Retry without --resume flag
+                cmd_retry = [client, "-p", prompt, "--output-format", "stream-json"]
+                cmd_retry.append("--verbose")
+                cmd_retry.append("--dangerously-skip-permissions")
+                cmd_retry.extend(["--max-turns", "15"])
+                if mcp_config_path:
+                    cmd_retry.extend(["--mcp-config", mcp_config_path])
+                if self._model_flag:
+                    cmd_retry.extend(["--model", self._model_flag])
 
-        # Save session ID for future calls (persistent session support)
-        new_session_id = raw_response.get("session_id")
-        if new_session_id and node_id:
-            self.set_session(node_id, new_session_id)
+                raw_response, stderr_text = self._run_streaming(
+                    cmd_retry, cwd, timeout, stream_callback,
+                )
 
-        return self._build_stream_response(raw_response, stderr_text)
+                if raw_response.get("error") == "timeout":
+                    return ModelResponse(
+                        message=Message(
+                            role=MessageRole.ASSISTANT,
+                            content="[Error: Claude Code CLI timed out on retry]",
+                        ),
+                        raw_response=raw_response,
+                    )
+
+                self._track_token_usage(raw_response)
+
+            # Diff workspace to detect files created/modified by Claude Code
+            if cwd:
+                after_snapshot = self._snapshot_workspace(cwd)
+                raw_response["file_changes"] = self._diff_workspace(
+                    before_snapshot, after_snapshot,
+                )
+
+            # Mark whether streaming was active so executor can skip duplicate logs
+            if stream_callback is not None:
+                raw_response["_streamed"] = True
+
+            # Save session ID for future calls (persistent session support)
+            new_session_id = raw_response.get("session_id")
+            if new_session_id and node_id:
+                self.set_session(node_id, new_session_id)
+
+            return self._build_stream_response(raw_response, stderr_text)
+        finally:
+            self._cleanup_mcp_config(mcp_config_path)
 
     # ------------------------------------------------------------------
     # Streaming helpers
@@ -506,6 +522,16 @@ class ClaudeCodeProvider(ModelProvider):
                 "Use relative paths (e.g. 'main.py', 'src/utils.py') for all file operations."
             )
 
+        if not is_continuation:
+            parts.append(
+                "[Progress Reporting]:\n"
+                "You have a report_progress MCP tool available. Call it at natural "
+                "transition points (e.g. after analyzing requirements, before starting "
+                "implementation, after writing key files, before/after running tests). "
+                "Keep reports concise (1-2 sentences). Do NOT over-report — 2-5 calls "
+                "per session is ideal. If reporting fails, continue your work normally."
+            )
+
         return "\n\n".join(parts)
 
     def _format_tool_specs(
@@ -567,6 +593,59 @@ class ClaudeCodeProvider(ModelProvider):
             message=Message(role=MessageRole.ASSISTANT, content=response_text),
             raw_response=raw_response,
         )
+
+    # ------------------------------------------------------------------
+    # MCP config helpers
+    # ------------------------------------------------------------------
+
+    @staticmethod
+    def _create_mcp_config(
+        node_id: str,
+        session_id: str,
+        server_port: int,
+    ) -> Optional[str]:
+        """Create a temporary MCP config JSON file for the chatdev-reporter server.
+
+        Returns the path to the temp file, or None if creation fails.
+        """
+        try:
+            mcp_server_path = str(
+                Path(__file__).resolve().parents[4]
+                / "mcp_servers"
+                / "chatdev_reporter.py"
+            )
+            if not Path(mcp_server_path).exists():
+                return None
+
+            config = {
+                "mcpServers": {
+                    "chatdev-reporter": {
+                        "command": "python",
+                        "args": [mcp_server_path],
+                        "env": {
+                            "CHATDEV_SERVER_URL": f"http://127.0.0.1:{server_port}",
+                            "CHATDEV_SESSION_ID": session_id,
+                            "CHATDEV_NODE_ID": node_id,
+                        },
+                    }
+                }
+            }
+
+            fd, path = tempfile.mkstemp(suffix=".json", prefix="chatdev_mcp_")
+            with os.fdopen(fd, "w") as f:
+                json.dump(config, f)
+            return path
+        except Exception:
+            return None
+
+    @staticmethod
+    def _cleanup_mcp_config(config_path: Optional[str]) -> None:
+        """Remove a temporary MCP config file."""
+        if config_path:
+            try:
+                os.unlink(config_path)
+            except OSError:
+                pass
 
     # ------------------------------------------------------------------
     # Workspace scanning helpers
