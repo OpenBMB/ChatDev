@@ -120,7 +120,7 @@ See our paper in [Multi-Agent Collaboration via Evolving Orchestration](https://
     cd frontend && npm install
     ```
 
-### ⚡️ Run the Application
+### ⚡️ Run the Application (Local)
 
 1.  **Start Backend** :
     ```bash
@@ -143,6 +143,24 @@ See our paper in [Multi-Agent Collaboration via Evolving Orchestration](https://
     > * **Backend**: start with `--port 6401`
     > * **Frontend**: set `VITE_API_BASE_URL=http://localhost:6401`
 
+### 🐳 Run with Docker
+Alternatively, you can run the entire application using Docker Compose. This method simplifies dependency management and provides a consistent environment.
+
+1.  **Prerequisites**:
+    *   [Docker](https://docs.docker.com/get-docker/) and [Docker Compose](https://docs.docker.com/compose/install/) installed.
+    *   Ensure you have a `.env` file in the project root for your API keys.
+
+2.  **Build and Run**:
+    ```bash
+    # From the project root
+    docker compose up --build
+    ```
+
+3.  **Access**:
+    *   **Backend**: `http://localhost:6400`
+    *   **Frontend**: `http://localhost:5173`
+
+> The services will automatically restart if they crash, and local file changes will be reflected inside the containers for live development.
 
 ### 🔑 Configuration
 
