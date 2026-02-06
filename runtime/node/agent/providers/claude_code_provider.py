@@ -13,6 +13,7 @@ import os
 import subprocess
 import shutil
 import threading
+from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 from entity.configs import AgentConfig
@@ -138,6 +139,11 @@ class ClaudeCodeProvider(ModelProvider):
 
         cmd = [client, "-p", prompt, "--output-format", "json"]
 
+        # Skip all permission checks for non-interactive mode.
+        # Without this, -p mode blocks on permission prompts and produces
+        # empty output.
+        cmd.append("--dangerously-skip-permissions")
+
         # Resume existing session or start new one
         if existing_session:
             cmd.extend(["--resume", existing_session])
@@ -152,10 +158,12 @@ class ClaudeCodeProvider(ModelProvider):
         # correct directory. Ensure the directory exists.
         cwd = None
         if workspace_root:
-            from pathlib import Path
             ws_path = Path(workspace_root)
             ws_path.mkdir(parents=True, exist_ok=True)
             cwd = str(ws_path)
+
+        # Snapshot workspace before Claude Code runs so we can diff afterwards
+        before_snapshot = self._snapshot_workspace(cwd) if cwd else {}
 
         timeout = kwargs.pop("timeout", 600)
 
@@ -181,6 +189,13 @@ class ClaudeCodeProvider(ModelProvider):
 
         raw_response = self._parse_cli_output(result)
         self._track_token_usage(raw_response)
+
+        # Diff workspace to detect files created/modified by Claude Code
+        if cwd:
+            after_snapshot = self._snapshot_workspace(cwd)
+            raw_response["file_changes"] = self._diff_workspace(
+                before_snapshot, after_snapshot,
+            )
 
         # Save session ID for future calls (persistent session support)
         new_session_id = raw_response.get("session_id")
@@ -355,6 +370,59 @@ class ClaudeCodeProvider(ModelProvider):
             message=Message(role=MessageRole.ASSISTANT, content=response_text),
             raw_response=raw_response,
         )
+
+    # ------------------------------------------------------------------
+    # Workspace scanning helpers
+    # ------------------------------------------------------------------
+
+    _SCAN_EXCLUDE_DIRS = frozenset({
+        "__pycache__", ".git", ".venv", "venv", "node_modules",
+        ".mypy_cache", ".pytest_cache", "attachments",
+    })
+
+    def _snapshot_workspace(self, workspace_root: str) -> Dict[str, tuple]:
+        """Take a lightweight snapshot of workspace files.
+
+        Returns a dict of ``{relative_path: (size, mtime_ns)}``.
+        """
+        snapshot: Dict[str, tuple] = {}
+        root = Path(workspace_root)
+        if not root.exists():
+            return snapshot
+
+        for item in root.rglob("*"):
+            if not item.is_file():
+                continue
+            rel = item.relative_to(root)
+            # Skip hidden and excluded directories
+            if any(
+                part.startswith(".") or part in self._SCAN_EXCLUDE_DIRS
+                for part in rel.parts[:-1]  # check parent dirs, not filename
+            ):
+                continue
+            try:
+                st = item.stat()
+                snapshot[str(rel)] = (st.st_size, st.st_mtime_ns)
+            except OSError:
+                continue
+        return snapshot
+
+    @staticmethod
+    def _diff_workspace(
+        before: Dict[str, tuple],
+        after: Dict[str, tuple],
+    ) -> List[Dict[str, Any]]:
+        """Compare two workspace snapshots and return a list of changes."""
+        changes: List[Dict[str, Any]] = []
+        for path, (size, mtime) in after.items():
+            if path not in before:
+                changes.append({"path": path, "change": "created", "size": size})
+            elif before[path] != (size, mtime):
+                changes.append({"path": path, "change": "modified", "size": size})
+        for path in before:
+            if path not in after:
+                changes.append({"path": path, "change": "deleted", "size": 0})
+        return changes
 
     def _parse_cli_output(self, result: subprocess.CompletedProcess) -> dict:
         """Parse the JSON output from claude CLI."""

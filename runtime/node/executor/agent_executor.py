@@ -141,6 +141,11 @@ class AgentNodeExecutor(NodeExecutor):
             else:
                 response_message = response_obj.message
 
+            # Emit synthetic tool-call logs for files created/modified by
+            # Claude Code so the UI shows tool activity and file operations.
+            if agent_config.provider == "claude-code":
+                self._emit_claude_code_file_changes(node, response_obj)
+
             self._persist_message_attachments(response_message, node.id)
 
             final_message: Message | str = response_message
@@ -477,8 +482,53 @@ class AgentNodeExecutor(NodeExecutor):
         )
 
         return retrieved_memory
-    
-    
+
+    def _emit_claude_code_file_changes(
+        self,
+        node: Node,
+        response: ModelResponse,
+    ) -> None:
+        """Emit synthetic TOOL_CALL log entries for Claude Code file operations.
+
+        Claude Code uses its own built-in tools (Write, Edit, Bash) internally.
+        After execution, we inspect ``raw_response["file_changes"]`` (populated
+        by the provider's workspace diff) and emit log entries so the UI shows
+        tool activity and the log system records file operations.
+        """
+        raw = response.raw_response
+        if not isinstance(raw, dict):
+            return
+
+        file_changes = raw.get("file_changes", [])
+        if not file_changes:
+            return
+
+        _CHANGE_TO_TOOL = {
+            "created": "Write",
+            "modified": "Edit",
+            "deleted": "Delete",
+        }
+
+        for change in file_changes:
+            path = change.get("path", "")
+            change_type = change.get("change", "unknown")
+            size = change.get("size", 0)
+            tool_name = _CHANGE_TO_TOOL.get(change_type, "FileOp")
+
+            self.log_manager.record_tool_call(
+                node.id,
+                f"claude:{tool_name}",
+                success=True,
+                tool_result=f"File {change_type}: {path} ({size} bytes)",
+                details={
+                    "arguments": {"path": path},
+                    "change_type": change_type,
+                    "file_size": size,
+                    "synthetic": True,
+                },
+                stage=CallStage.AFTER,
+            )
+
     def _handle_tool_calls(
         self,
         node: Node,
