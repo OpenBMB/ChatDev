@@ -22,8 +22,9 @@ The key advantage: Claude Code runs in its own **agentic mode** with built-in to
 - **Persistent sessions**: First call gets a `session_id` from response, subsequent calls use `--resume <session_id>` to maintain context
 - **Thread-safe session storage**: Class-level `Dict[str, str]` with `threading.Lock` for `node_id → session_id` mapping
 - **CWD-based file creation**: `subprocess.run(cwd=workspace_root)` so Claude's Write tool saves files in the correct workspace directory
-- **Workspace scanning**: Before/after snapshots to detect files created/modified/deleted by Claude Code
+- **Workspace scanning**: Before/after snapshots to detect files created/modified/deleted by Claude Code. Excludes `firebase-debug.log`, `.DS_Store` and similar OS artifacts
 - **Prompt building**: Maps ChatDev tool specs to Claude Code's native tools, includes workspace info
+- **Session timeout recovery**: If `--resume` fails (expired/invalid session), automatically retries with a fresh session
 
 ### 2. Agent Config Extensions (`entity/configs/node/agent.py`)
 
@@ -34,7 +35,8 @@ The key advantage: Claude Code runs in its own **agentic mode** with built-in to
 ### 3. Agent Executor Integration (`runtime/node/executor/agent_executor.py`)
 
 - Passes `workspace_root` from `global_state["python_workspace_root"]` to provider config
-- **Synthetic tool logs**: After Claude Code finishes, emits `claude:Write`, `claude:Edit`, `claude:Delete` log entries based on workspace diff — so the logging system records file operations
+- **Synthetic tool logs**: After Claude Code finishes, emits `claude:Write`, `claude:Edit`, `claude:Delete` log entries with both `BEFORE` and `AFTER` stages — so the UI can show loading indicators and completion states
+- **File attachments**: Generated/modified files are read from disk, base64-encoded, and attached to the response message as `MessageBlock(type="artifact")` with `AttachmentRef` — this makes files browsable in the UI
 
 ### 4. Circular Import Fix (`runtime/sdk.py`)
 
@@ -53,37 +55,28 @@ The key advantage: Claude Code runs in its own **agentic mode** with built-in to
 | Persistent sessions (`--resume`) | ✅ Working |
 | Session isolation per agent node | ✅ Working |
 | Workspace diff (detect file changes) | ✅ Working |
-| Synthetic tool logs in session log | ✅ Working |
+| Synthetic tool logs in session log | ✅ Working (BEFORE + AFTER stages) |
+| Generated files attached to messages | ✅ Working (base64 data URI attachments) |
 | Multi-agent workflow (Programmer → Code Reviewer → Programmer) | ✅ Working |
 | Claude Code running tests autonomously | ✅ Working |
 | Token usage tracking | ✅ Working |
+| Session timeout recovery (auto-retry) | ✅ Working |
+| Workspace scan excludes OS/debug artifacts | ✅ Working |
 
 ## Known Issues / Remaining Work
 
-### 1. Tool Activity & Generated Code Not Visible in UI (HIGH PRIORITY)
+### 1. Real-Time Tool Activity Streaming (ENHANCEMENT)
 
-**Problem**: In the previous API-based flow, when an agent called `save_file` or `read_file_segment`, the UI displayed these tool calls in real-time **and** showed the generated source code files. With Claude Code provider, tools are used internally by Claude and ChatDev's `ToolManager` is completely bypassed.
+**Current state**: Tool activity (file writes, edits, deletes) is logged **after** Claude Code finishes execution. Synthetic tool logs with BEFORE/AFTER stages are emitted, and generated files are attached to messages as artifacts.
 
-**Current state**:
-- Agent chat messages (what each agent said) **do** appear in the UI
-- Tool calls (file write/edit/delete operations) **do NOT** appear in the UI activity feed
-- Generated source code files **are NOT** browsable from the UI — they exist only on disk at `WareHouse/session_<id>/code_workspace/`
-- Synthetic tool logs (`claude:Write`, etc.) are emitted to session log files, but the UI doesn't pick them up
+**What could be improved**: For real-time tool visibility during long-running agent tasks, consider switching to `--output-format stream-json` instead of `--output-format json`. This would allow:
+- Parsing tool use events as they happen (Write, Edit, Read, Bash)
+- Emitting them via WebSocket to the UI in real-time
+- Showing a live activity feed instead of a post-execution summary
 
-**Verified in end-to-end test**: A full workflow ran successfully (Programmer → Code Reviewer → Programmer Code Review → CEO Manual Review). All files were created correctly on disk (`main.py`, `test_calculator.py`, `manual.md`, `README.md`), code review feedback was applied (files merged into single file), tests passed — but the UI only showed agent messages, not the file operations or generated code.
+**Implementation hint**: The `_parse_cli_output()` method already handles stream-mode JSON (line-by-line parsing). The change would be in `call_model()` — use `subprocess.Popen` instead of `subprocess.run` and parse stdout line-by-line.
 
-**What needs to happen**:
-- (a) The UI should display synthetic tool logs (`claude:Write`, `claude:Edit`, `claude:Delete`) in the activity feed — these are already in the session log with `"synthetic": true` flag
-- (b) The UI should allow browsing/viewing files in `code_workspace/` — perhaps by reading the `file_changes` from the log or scanning the workspace directory
-- (c) For real-time tool visibility, consider switching to `--output-format stream-json` instead of `--output-format json` to get tool use events as they happen, parse them, and emit them via WebSocket
-
-### 2. `firebase-debug.log` Pollution
-
-**Problem**: Firebase MCP server creates `firebase-debug.log` in the CWD (workspace). The workspace scanner picks it up as a `claude:Write` artifact.
-
-**Fix**: Either add `firebase-debug.log` to the exclude list in `_snapshot_workspace()`, or disable Firebase MCP for Claude Code subprocess calls.
-
-### 3. ChatDev ToolManager Completely Bypassed
+### 2. ChatDev ToolManager Completely Bypassed
 
 **Problem**: ChatDev has a rich tool system (`ToolManager`, `FunctionCallingProvider`, file tools like `save_file`, `read_file_segment`). With Claude Code, none of these are used — Claude uses its own built-in tools.
 
@@ -94,17 +87,38 @@ The key advantage: Claude Code runs in its own **agentic mode** with built-in to
 
 **This may be acceptable** — Claude Code's native tools are more capable than ChatDev's tool wrappers. But if specific ChatDev tools are needed (e.g., custom API integrations), a hybrid approach would need to be designed.
 
-### 4. Memory System Bypass (OPTIONAL)
+### 3. Memory System Bypass (OPTIONAL)
 
 `skip_memory: true` config is defined but not yet wired up in executor. When `provider: claude-code` and `skip_memory: true`, the executor should skip `_apply_memory_retrieval()`. This is optional since Claude Code maintains its own context via `--resume`.
 
-### 5. Session Timeout Handling
+### 4. Cost Tracking Display
 
-Claude Code sessions may expire after some time. Currently, if `--resume` fails, the error is returned as-is. Should add fallback logic: if resume fails, start a new session automatically.
+Claude Code returns `total_cost_usd` in response. This is tracked in token usage metadata but not prominently displayed. May want to aggregate costs per workflow run and show in UI.
 
-### 6. Cost Tracking
+## Resolved Issues
 
-Claude Code returns `total_cost_usd` in response. This is tracked but not prominently displayed. May want to aggregate costs per workflow run.
+These were previously known issues that have been fixed:
+
+### ✅ Tool Activity & Generated Code Not Visible in UI (RESOLVED)
+
+**Was**: Synthetic tool logs existed in session logs but UI didn't pick them up. Generated files were only on disk.
+
+**Fix**:
+- Synthetic tool logs now emit both `BEFORE` and `AFTER` stages via `record_tool_call()` with proper `CallStage` — enabling UI loading indicators
+- Generated/modified files are now attached to response messages as base64 data URI attachments with `AttachmentRef` and `MessageBlock(type="artifact")` — making them browsable in the UI
+- See `agent_executor.py` → `_emit_claude_code_file_changes()`
+
+### ✅ `firebase-debug.log` Pollution (RESOLVED)
+
+**Was**: Firebase MCP server created `firebase-debug.log` in workspace, picked up as `claude:Write` artifact.
+
+**Fix**: Added `_SCAN_EXCLUDE_FILES` frozenset in `claude_code_provider.py` that filters out `firebase-debug.log`, `.DS_Store`, `Thumbs.db`, `desktop.ini` from workspace scanning.
+
+### ✅ Session Timeout Handling (RESOLVED)
+
+**Was**: If `--resume` failed on an expired session, the error was returned as-is.
+
+**Fix**: Added retry logic in `call_model()` — if `--resume` returns an error containing "session" or "resume", the session is cleared and the command is retried without `--resume` flag (fresh session).
 
 ## Technical Challenges We Encountered (and Solved)
 
@@ -146,12 +160,15 @@ AgentNodeExecutor (runtime/node/executor/agent_executor.py)
     │   ClaudeCodeProvider.call_model()
     │       ├── Build prompt (system + conversation + tool mapping)
     │       ├── Check for existing session (--resume)
+    │       ├── If resume fails → retry with fresh session
     │       ├── subprocess.run(["claude", "-p", prompt, ...], cwd=workspace)
     │       ├── Parse JSON response (session_id, result, usage)
-    │       ├── Workspace diff (before/after snapshot)
+    │       ├── Workspace diff (before/after snapshot, excludes OS artifacts)
     │       └── Return ModelResponse
     │   ↓
-    │   Emit synthetic tool logs (claude:Write, claude:Edit, claude:Delete)
+    │   _emit_claude_code_file_changes():
+    │       ├── Emit BEFORE/AFTER tool logs (claude:Write, claude:Edit, claude:Delete)
+    │       └── Attach generated files to response message as artifacts
     │
     └── provider == "openai" / "anthropic"?
         ↓ YES
@@ -162,14 +179,22 @@ AgentNodeExecutor (runtime/node/executor/agent_executor.py)
 
 ```
 runtime/node/agent/providers/
-├── claude_code_provider.py    ← Main provider (450+ lines)
+├── claude_code_provider.py    ← Main provider (~500 lines)
+│   ├── Session management (get/set/clear with threading.Lock)
+│   ├── call_model() with --resume support + timeout recovery
+│   ├── _build_prompt() with is_continuation optimization
+│   ├── _snapshot_workspace() / _diff_workspace() for file change detection
+│   └── _SCAN_EXCLUDE_FILES for filtering OS/debug artifacts
 ├── base.py                    ← ModelProvider base class
 ├── openai_compatible.py       ← OpenAI/Anthropic API provider
 └── response.py                ← ModelResponse dataclass
 
 runtime/node/executor/
-└── agent_executor.py          ← Lines 141-148: Claude Code synthetic logs
-                               ← Lines 486-530: _emit_claude_code_file_changes()
+└── agent_executor.py
+    ├── Lines ~141-148: Claude Code integration hook
+    └── _emit_claude_code_file_changes():
+        ├── BEFORE/AFTER stage tool logs
+        └── File attachment as base64 data URI artifacts
 
 entity/configs/node/
 └── agent.py                   ← workspace_root, persistent_session, skip_memory

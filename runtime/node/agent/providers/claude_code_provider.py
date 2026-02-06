@@ -190,6 +190,40 @@ class ClaudeCodeProvider(ModelProvider):
         raw_response = self._parse_cli_output(result)
         self._track_token_usage(raw_response)
 
+        # Check for session resume errors and retry without --resume
+        error_msg = raw_response.get("error", "")
+        if existing_session and error_msg and ("session" in error_msg.lower() or "resume" in error_msg.lower()):
+            # Session expired or invalid - clear it and retry without resume
+            if node_id:
+                self.clear_session(node_id)
+
+            # Retry without --resume flag
+            cmd_retry = [client, "-p", prompt, "--output-format", "json"]
+            cmd_retry.append("--dangerously-skip-permissions")
+            cmd_retry.extend(["--max-turns", "15"])
+            if self._model_flag:
+                cmd_retry.extend(["--model", self._model_flag])
+
+            try:
+                result = subprocess.run(
+                    cmd_retry,
+                    capture_output=True,
+                    text=True,
+                    encoding="utf-8",
+                    timeout=timeout,
+                    cwd=cwd,
+                )
+                raw_response = self._parse_cli_output(result)
+                self._track_token_usage(raw_response)
+            except subprocess.TimeoutExpired:
+                return ModelResponse(
+                    message=Message(
+                        role=MessageRole.ASSISTANT,
+                        content="[Error: Claude Code CLI timed out on retry]",
+                    ),
+                    raw_response={"error": "timeout"},
+                )
+
         # Diff workspace to detect files created/modified by Claude Code
         if cwd:
             after_snapshot = self._snapshot_workspace(cwd)
@@ -380,6 +414,13 @@ class ClaudeCodeProvider(ModelProvider):
         ".mypy_cache", ".pytest_cache", "attachments",
     })
 
+    _SCAN_EXCLUDE_FILES = frozenset({
+        "firebase-debug.log",
+        ".DS_Store",
+        "Thumbs.db",
+        "desktop.ini",
+    })
+
     def _snapshot_workspace(self, workspace_root: str) -> Dict[str, tuple]:
         """Take a lightweight snapshot of workspace files.
 
@@ -399,6 +440,9 @@ class ClaudeCodeProvider(ModelProvider):
                 part.startswith(".") or part in self._SCAN_EXCLUDE_DIRS
                 for part in rel.parts[:-1]  # check parent dirs, not filename
             ):
+                continue
+            # Skip excluded files (e.g., firebase-debug.log, .DS_Store)
+            if rel.name in self._SCAN_EXCLUDE_FILES:
                 continue
             try:
                 st = item.stat()

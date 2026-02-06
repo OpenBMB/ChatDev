@@ -144,7 +144,7 @@ class AgentNodeExecutor(NodeExecutor):
             # Emit synthetic tool-call logs for files created/modified by
             # Claude Code so the UI shows tool activity and file operations.
             if agent_config.provider == "claude-code":
-                self._emit_claude_code_file_changes(node, response_obj)
+                self._emit_claude_code_file_changes(node, response_obj, response_message)
 
             self._persist_message_attachments(response_message, node.id)
 
@@ -487,6 +487,7 @@ class AgentNodeExecutor(NodeExecutor):
         self,
         node: Node,
         response: ModelResponse,
+        response_message: Message,
     ) -> None:
         """Emit synthetic TOOL_CALL log entries for Claude Code file operations.
 
@@ -494,13 +495,21 @@ class AgentNodeExecutor(NodeExecutor):
         After execution, we inspect ``raw_response["file_changes"]`` (populated
         by the provider's workspace diff) and emit log entries so the UI shows
         tool activity and the log system records file operations.
+
+        Also attaches generated files to the response message so they appear in the UI.
         """
+        from pathlib import Path
+
         raw = response.raw_response
         if not isinstance(raw, dict):
             return
 
         file_changes = raw.get("file_changes", [])
         if not file_changes:
+            return
+
+        workspace_root = self.context.global_state.get("python_workspace_root")
+        if not workspace_root:
             return
 
         _CHANGE_TO_TOOL = {
@@ -515,6 +524,23 @@ class AgentNodeExecutor(NodeExecutor):
             size = change.get("size", 0)
             tool_name = _CHANGE_TO_TOOL.get(change_type, "FileOp")
 
+            # Emit "before" stage to start the loading indicator in UI
+            self.log_manager.record_tool_call(
+                node.id,
+                f"claude:{tool_name}",
+                success=True,
+                tool_result=f"Starting {change_type} for: {path}",
+                details={
+                    "arguments": {"path": path},
+                    "change_type": change_type,
+                    "file_size": size,
+                    "synthetic": True,
+                    "tool_name": f"claude:{tool_name}",
+                },
+                stage=CallStage.BEFORE,
+            )
+
+            # Emit "after" stage to complete the loading indicator
             self.log_manager.record_tool_call(
                 node.id,
                 f"claude:{tool_name}",
@@ -525,9 +551,58 @@ class AgentNodeExecutor(NodeExecutor):
                     "change_type": change_type,
                     "file_size": size,
                     "synthetic": True,
+                    "tool_name": f"claude:{tool_name}",
                 },
                 stage=CallStage.AFTER,
             )
+
+            # Attach created/modified files to response message for UI viewing
+            if change_type in ("created", "modified"):
+                try:
+                    file_path = Path(workspace_root) / path
+                    if file_path.exists() and file_path.is_file():
+                        # Read file content and add as attachment to the message
+                        with open(file_path, 'rb') as f:
+                            content = f.read()
+
+                        # Create attachment block
+                        import mimetypes
+                        mime_type, _ = mimetypes.guess_type(str(file_path))
+                        if mime_type is None:
+                            # Default to text/plain for common code files
+                            if file_path.suffix in ('.py', '.js', '.ts', '.java', '.cpp', '.c', '.h', '.txt', '.md'):
+                                mime_type = 'text/plain'
+                            else:
+                                mime_type = 'application/octet-stream'
+
+                        # Encode as data URI if it's a text file
+                        if mime_type.startswith('text/') or mime_type in ('application/json', 'application/xml'):
+                            data_uri = f"data:{mime_type};base64,{base64.b64encode(content).decode('utf-8')}"
+                        else:
+                            data_uri = f"data:{mime_type};base64,{base64.b64encode(content).decode('utf-8')}"
+
+                        # Add attachment to message
+                        attachment_ref = AttachmentRef(
+                            name=file_path.name,
+                            attachment_id=f"claude_code_{node.id}_{path.replace('/', '_')}",
+                            mime_type=mime_type,
+                            size=len(content),
+                            data_uri=data_uri,
+                        )
+
+                        # Append attachment block to message
+                        response_message.content.append(
+                            MessageBlock(
+                                type="artifact",
+                                text=f"Generated file: {path}",
+                                attachment=attachment_ref,
+                            )
+                        )
+                except Exception as e:
+                    self.log_manager.warning(
+                        f"Failed to attach file {path} to message: {e}",
+                        node_id=node.id
+                    )
 
     def _handle_tool_calls(
         self,
