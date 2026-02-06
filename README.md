@@ -162,6 +162,23 @@ Alternatively, you can run the entire application using Docker Compose. This met
 
 > The services will automatically restart if they crash, and local file changes will be reflected inside the containers for live development.
 
+#### Production (Docker + nginx)
+
+- Build and run:
+  ```bash
+  docker compose -f compose.yml -f compose.prod.yml up -d --build
+  ```
+- Access:
+  - Frontend: http://localhost:8080
+  - Backend: not published (internal); proxied via /api and /ws by nginx
+- Stop:
+  ```bash
+  docker compose -f compose.yml -f compose.prod.yml down
+  ```
+- Notes:
+  - .env holds secrets (API keys), .env.docker holds container-only config.
+  - nginx proxies /api and /ws to backend:6400 (see frontend/nginx.conf).
+
 ### 🔑 Configuration
 
 *   **Environment Variables**: Create a `.env` file in the project root.

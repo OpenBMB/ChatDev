@@ -160,6 +160,23 @@ ChatDev 已从一个专门的软件开发多智能体系统演变为一个全面
 
 > 服务在异常退出后会自动重启，本地文件的修改会同步映射到容器中，便于实时开发。
 
+#### 生产环境（Docker + nginx）
+
+- 构建并运行：
+  ```bash
+  docker compose -f compose.yml -f compose.prod.yml up -d --build
+  ```
+- 访问：
+  - 前端：http://localhost:8080
+  - 后端：不对外暴露，由 nginx 通过 /api 与 /ws 转发
+- 停止：
+  ```bash
+  docker compose -f compose.yml -f compose.prod.yml down
+  ```
+- 说明：
+  - .env 保存密钥（API Keys），.env.docker 保存容器相关配置。
+  - nginx 将 /api 与 /ws 代理到 backend:6400（见 frontend/nginx.conf）。
+
 ### 🔑 配置
 
 *   **环境变量**：在项目根目录创建一个 `.env` 文件。

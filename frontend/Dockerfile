@@ -27,7 +27,7 @@ RUN npm run build
 # ---- Prod runtime: serve static dist with nginx ----
 FROM nginx:alpine AS prod
 # For SPA deep links you might add a custom nginx.conf with index.html fallback.
-# COPY frontend/nginx.conf /etc/nginx/conf.d/default.conf
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 COPY --from=build /app/dist /usr/share/nginx/html
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
