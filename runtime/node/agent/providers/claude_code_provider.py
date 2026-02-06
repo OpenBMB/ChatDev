@@ -121,8 +121,12 @@ class ClaudeCodeProvider(ModelProvider):
         directory is set to the workspace root so files are created in the
         correct location.
 
+        Uses --output-format stream-json with subprocess.Popen for real-time
+        streaming of tool events to the UI via stream_callback.
+
         Supports persistent sessions via --resume flag when node_id is available.
         """
+        stream_callback = kwargs.pop("stream_callback", None)
         node_id = getattr(self.config, "node_id", None)
         workspace_root = getattr(self.config, "workspace_root", None)
 
@@ -137,7 +141,7 @@ class ClaudeCodeProvider(ModelProvider):
             workspace_root=workspace_root,
         )
 
-        cmd = [client, "-p", prompt, "--output-format", "json"]
+        cmd = [client, "-p", prompt, "--output-format", "stream-json"]
 
         # Skip all permission checks for non-interactive mode.
         # Without this, -p mode blocks on permission prompts and produces
@@ -167,16 +171,11 @@ class ClaudeCodeProvider(ModelProvider):
 
         timeout = kwargs.pop("timeout", 600)
 
-        try:
-            result = subprocess.run(
-                cmd,
-                capture_output=True,
-                text=True,
-                encoding="utf-8",
-                timeout=timeout,
-                cwd=cwd,
-            )
-        except subprocess.TimeoutExpired:
+        raw_response, stderr_text = self._run_streaming(
+            cmd, cwd, timeout, stream_callback,
+        )
+
+        if raw_response.get("error") == "timeout":
             if node_id and not existing_session:
                 self.clear_session(node_id)
             return ModelResponse(
@@ -184,10 +183,9 @@ class ClaudeCodeProvider(ModelProvider):
                     role=MessageRole.ASSISTANT,
                     content="[Error: Claude Code CLI timed out]",
                 ),
-                raw_response={"error": "timeout"},
+                raw_response=raw_response,
             )
 
-        raw_response = self._parse_cli_output(result)
         self._track_token_usage(raw_response)
 
         # Check for session resume errors and retry without --resume
@@ -198,31 +196,26 @@ class ClaudeCodeProvider(ModelProvider):
                 self.clear_session(node_id)
 
             # Retry without --resume flag
-            cmd_retry = [client, "-p", prompt, "--output-format", "json"]
+            cmd_retry = [client, "-p", prompt, "--output-format", "stream-json"]
             cmd_retry.append("--dangerously-skip-permissions")
             cmd_retry.extend(["--max-turns", "15"])
             if self._model_flag:
                 cmd_retry.extend(["--model", self._model_flag])
 
-            try:
-                result = subprocess.run(
-                    cmd_retry,
-                    capture_output=True,
-                    text=True,
-                    encoding="utf-8",
-                    timeout=timeout,
-                    cwd=cwd,
-                )
-                raw_response = self._parse_cli_output(result)
-                self._track_token_usage(raw_response)
-            except subprocess.TimeoutExpired:
+            raw_response, stderr_text = self._run_streaming(
+                cmd_retry, cwd, timeout, stream_callback,
+            )
+
+            if raw_response.get("error") == "timeout":
                 return ModelResponse(
                     message=Message(
                         role=MessageRole.ASSISTANT,
                         content="[Error: Claude Code CLI timed out on retry]",
                     ),
-                    raw_response={"error": "timeout"},
+                    raw_response=raw_response,
                 )
+
+            self._track_token_usage(raw_response)
 
         # Diff workspace to detect files created/modified by Claude Code
         if cwd:
@@ -231,12 +224,159 @@ class ClaudeCodeProvider(ModelProvider):
                 before_snapshot, after_snapshot,
             )
 
+        # Mark whether streaming was active so executor can skip duplicate logs
+        if stream_callback is not None:
+            raw_response["_streamed"] = True
+
         # Save session ID for future calls (persistent session support)
         new_session_id = raw_response.get("session_id")
         if new_session_id and node_id:
             self.set_session(node_id, new_session_id)
 
-        return self._parse_text_response(raw_response, result)
+        return self._build_stream_response(raw_response, stderr_text)
+
+    # ------------------------------------------------------------------
+    # Streaming helpers
+    # ------------------------------------------------------------------
+
+    def _run_streaming(
+        self,
+        cmd: List[str],
+        cwd: Optional[str],
+        timeout: int,
+        stream_callback: Optional[Any],
+    ) -> tuple:
+        """Run Claude Code CLI with Popen, parse NDJSON stream in real time.
+
+        Returns (raw_response_dict, stderr_text).
+        """
+        process = subprocess.Popen(
+            cmd,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            encoding="utf-8",
+            cwd=cwd,
+        )
+
+        timed_out = False
+
+        def _kill():
+            nonlocal timed_out
+            timed_out = True
+            process.kill()
+
+        timer = threading.Timer(timeout, _kill)
+        timer.start()
+
+        accumulated_text: List[str] = []
+        session_id: Optional[str] = None
+        result_data: dict = {}
+        pending_tool: Optional[dict] = None
+
+        try:
+            for line in process.stdout:
+                line = line.strip()
+                if not line:
+                    continue
+                try:
+                    event = json.loads(line)
+                except json.JSONDecodeError:
+                    continue
+
+                event_type = event.get("type")
+
+                if event_type == "system":
+                    session_id = event.get("session_id") or session_id
+
+                elif event_type == "assistant":
+                    msg = event.get("message", {})
+                    content_blocks = msg.get("content", [])
+                    for block in content_blocks:
+                        if block.get("type") == "tool_use":
+                            # Close previous tool if any
+                            if pending_tool and stream_callback:
+                                stream_callback("tool_end", pending_tool)
+                            # Emit new tool start
+                            pending_tool = {
+                                "name": block.get("name", "unknown"),
+                                "input": block.get("input", {}),
+                            }
+                            if stream_callback:
+                                stream_callback("tool_start", pending_tool)
+                        elif block.get("type") == "text":
+                            text = block.get("text", "")
+                            if text:
+                                accumulated_text.append(text)
+                            # Text after a tool means tool finished
+                            if pending_tool and stream_callback:
+                                stream_callback("tool_end", pending_tool)
+                                pending_tool = None
+
+                elif event_type == "result":
+                    # Close last pending tool
+                    if pending_tool and stream_callback:
+                        stream_callback("tool_end", pending_tool)
+                        pending_tool = None
+                    result_data = event
+                    session_id = event.get("session_id") or session_id
+
+        finally:
+            timer.cancel()
+            process.wait()
+
+        stderr_text = ""
+        try:
+            stderr_text = process.stderr.read() if process.stderr else ""
+        except Exception:
+            pass
+
+        if timed_out:
+            return {"error": "timeout"}, stderr_text
+
+        # Build raw_response from stream data
+        raw_response = self._parse_stream_result(
+            result_data, accumulated_text, session_id,
+        )
+        raw_response["_returncode"] = process.returncode
+        return raw_response, stderr_text
+
+    def _parse_stream_result(
+        self,
+        result_data: dict,
+        accumulated_text: List[str],
+        session_id: Optional[str],
+    ) -> dict:
+        """Build a raw_response dict from streamed data, compatible with
+        the format returned by _parse_cli_output for non-stream mode."""
+        if result_data:
+            # result event already has the shape we need
+            raw = dict(result_data)
+            # Ensure result text is populated
+            if not raw.get("result") and accumulated_text:
+                raw["result"] = "\n".join(accumulated_text)
+            if session_id:
+                raw.setdefault("session_id", session_id)
+            return raw
+
+        # No result event received — fallback
+        return {
+            "result": "\n".join(accumulated_text) if accumulated_text else "",
+            "session_id": session_id,
+            "type": "result",
+        }
+
+    def _build_stream_response(
+        self, raw_response: dict, stderr_text: str,
+    ) -> ModelResponse:
+        """Build ModelResponse from streaming raw_response."""
+        response_text = raw_response.get("result", "")
+        if not response_text and stderr_text:
+            response_text = f"[Claude Code Error]: {stderr_text[:500]}"
+        return ModelResponse(
+            message=Message(role=MessageRole.ASSISTANT, content=response_text),
+            raw_response=raw_response,
+        )
 
     def extract_token_usage(self, response: Any) -> TokenUsage:
         """Extract token usage from Claude Code CLI JSON response."""

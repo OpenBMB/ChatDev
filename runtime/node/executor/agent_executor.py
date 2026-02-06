@@ -285,13 +285,56 @@ class AgentNodeExecutor(NodeExecutor):
         agent_config = node.as_config(AgentConfig)
         retry_policy = self._resolve_retry_policy(node, agent_config)
 
+        extra_kwargs: Dict[str, Any] = {}
+
+        # Build a real-time stream callback for Claude Code provider so tool
+        # events (Write, Edit, Bash, etc.) appear in the UI as they happen.
+        if agent_config and agent_config.provider == "claude-code":
+            def _stream_callback(event_type: str, data: dict) -> None:
+                tool_name = data.get("name", "unknown")
+                tool_input = data.get("input", {})
+                display_name = f"claude:{tool_name}"
+
+                if event_type == "tool_start":
+                    self.log_manager.record_tool_call(
+                        node.id,
+                        display_name,
+                        success=True,
+                        tool_result=f"Executing {tool_name}...",
+                        details={
+                            "arguments": tool_input,
+                            "tool_name": display_name,
+                            "synthetic": True,
+                            "streaming": True,
+                        },
+                        stage=CallStage.BEFORE,
+                    )
+                elif event_type == "tool_end":
+                    self.log_manager.record_tool_call(
+                        node.id,
+                        display_name,
+                        success=True,
+                        tool_result=f"{tool_name} completed",
+                        details={
+                            "arguments": tool_input,
+                            "tool_name": display_name,
+                            "synthetic": True,
+                            "streaming": True,
+                        },
+                        stage=CallStage.AFTER,
+                    )
+
+            extra_kwargs["stream_callback"] = _stream_callback
+
         def _call_provider() -> ModelResponse:
+            merged = dict(call_options)
+            merged.update(extra_kwargs)
             return provider.call_model(
                 client,
                 conversation=conversation,
                 timeline=timeline,
                 tool_specs=tool_specs or None,
-                **call_options,
+                **merged,
             )
 
         last_input = ''.join(msg.text_content() for msg in conversation) if conversation else ""
@@ -496,6 +539,11 @@ class AgentNodeExecutor(NodeExecutor):
         by the provider's workspace diff) and emit log entries so the UI shows
         tool activity and the log system records file operations.
 
+        When streaming was active (``raw_response["_streamed"]`` is truthy),
+        BEFORE/AFTER tool logs were already emitted in real time via the
+        stream callback, so we skip duplicate log emission and only handle
+        file attachment logic.
+
         Also attaches generated files to the response message so they appear in the UI.
         """
         from pathlib import Path
@@ -512,6 +560,9 @@ class AgentNodeExecutor(NodeExecutor):
         if not workspace_root:
             return
 
+        # If streaming was active, tool logs were already emitted in real time.
+        was_streamed = raw.get("_streamed", False)
+
         _CHANGE_TO_TOOL = {
             "created": "Write",
             "modified": "Edit",
@@ -524,37 +575,39 @@ class AgentNodeExecutor(NodeExecutor):
             size = change.get("size", 0)
             tool_name = _CHANGE_TO_TOOL.get(change_type, "FileOp")
 
-            # Emit "before" stage to start the loading indicator in UI
-            self.log_manager.record_tool_call(
-                node.id,
-                f"claude:{tool_name}",
-                success=True,
-                tool_result=f"Starting {change_type} for: {path}",
-                details={
-                    "arguments": {"path": path},
-                    "change_type": change_type,
-                    "file_size": size,
-                    "synthetic": True,
-                    "tool_name": f"claude:{tool_name}",
-                },
-                stage=CallStage.BEFORE,
-            )
+            # Only emit post-execution tool logs when streaming was NOT active
+            if not was_streamed:
+                # Emit "before" stage to start the loading indicator in UI
+                self.log_manager.record_tool_call(
+                    node.id,
+                    f"claude:{tool_name}",
+                    success=True,
+                    tool_result=f"Starting {change_type} for: {path}",
+                    details={
+                        "arguments": {"path": path},
+                        "change_type": change_type,
+                        "file_size": size,
+                        "synthetic": True,
+                        "tool_name": f"claude:{tool_name}",
+                    },
+                    stage=CallStage.BEFORE,
+                )
 
-            # Emit "after" stage to complete the loading indicator
-            self.log_manager.record_tool_call(
-                node.id,
-                f"claude:{tool_name}",
-                success=True,
-                tool_result=f"File {change_type}: {path} ({size} bytes)",
-                details={
-                    "arguments": {"path": path},
-                    "change_type": change_type,
-                    "file_size": size,
-                    "synthetic": True,
-                    "tool_name": f"claude:{tool_name}",
-                },
-                stage=CallStage.AFTER,
-            )
+                # Emit "after" stage to complete the loading indicator
+                self.log_manager.record_tool_call(
+                    node.id,
+                    f"claude:{tool_name}",
+                    success=True,
+                    tool_result=f"File {change_type}: {path} ({size} bytes)",
+                    details={
+                        "arguments": {"path": path},
+                        "change_type": change_type,
+                        "file_size": size,
+                        "synthetic": True,
+                        "tool_name": f"claude:{tool_name}",
+                    },
+                    stage=CallStage.AFTER,
+                )
 
             # Attach created/modified files to response message for UI viewing
             if change_type in ("created", "modified"):
