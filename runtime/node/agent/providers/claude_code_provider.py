@@ -143,6 +143,10 @@ class ClaudeCodeProvider(ModelProvider):
 
         cmd = [client, "-p", prompt, "--output-format", "stream-json"]
 
+        # --verbose is required when using --output-format stream-json with -p
+        # (print) mode.  Without it Claude CLI exits with an error.
+        cmd.append("--verbose")
+
         # Skip all permission checks for non-interactive mode.
         # Without this, -p mode blocks on permission prompts and produces
         # empty output.
@@ -197,6 +201,7 @@ class ClaudeCodeProvider(ModelProvider):
 
             # Retry without --resume flag
             cmd_retry = [client, "-p", prompt, "--output-format", "stream-json"]
+            cmd_retry.append("--verbose")
             cmd_retry.append("--dangerously-skip-permissions")
             cmd_retry.extend(["--max-turns", "15"])
             if self._model_flag:
@@ -301,6 +306,7 @@ class ClaudeCodeProvider(ModelProvider):
                             pending_tool = {
                                 "name": block.get("name", "unknown"),
                                 "input": block.get("input", {}),
+                                "id": block.get("id"),
                             }
                             if stream_callback:
                                 stream_callback("tool_start", pending_tool)
@@ -310,6 +316,23 @@ class ClaudeCodeProvider(ModelProvider):
                                 accumulated_text.append(text)
                             # Text after a tool means tool finished
                             if pending_tool and stream_callback:
+                                stream_callback("tool_end", pending_tool)
+                                pending_tool = None
+
+                elif event_type == "user":
+                    # User events with tool_result indicate tool completion.
+                    # This is a more reliable tool_end signal than text blocks.
+                    msg = event.get("message", {})
+                    content_blocks = msg.get("content", [])
+                    for block in content_blocks:
+                        if block.get("type") == "tool_result":
+                            result_content = block.get("content", "")
+                            if pending_tool and stream_callback:
+                                pending_tool["result"] = (
+                                    result_content
+                                    if isinstance(result_content, str)
+                                    else str(result_content)[:200]
+                                )
                                 stream_callback("tool_end", pending_tool)
                                 pending_tool = None
 

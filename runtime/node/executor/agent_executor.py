@@ -295,30 +295,44 @@ class AgentNodeExecutor(NodeExecutor):
                 tool_input = data.get("input", {})
                 display_name = f"claude:{tool_name}"
 
+                # Extract file path for display (Write/Edit/Read use file_path)
+                file_path = tool_input.get("file_path", tool_input.get("path", ""))
+                if file_path:
+                    # Show relative path only for readability
+                    parts = file_path.rsplit("/", 1)
+                    short_path = parts[-1] if parts else file_path
+                else:
+                    short_path = ""
+
                 if event_type == "tool_start":
+                    desc = f"Executing {tool_name}"
+                    if short_path:
+                        desc += f": {short_path}"
                     self.log_manager.record_tool_call(
                         node.id,
                         display_name,
                         success=True,
-                        tool_result=f"Executing {tool_name}...",
+                        tool_result=f"{desc}...",
                         details={
                             "arguments": tool_input,
                             "tool_name": display_name,
-                            "synthetic": True,
                             "streaming": True,
                         },
                         stage=CallStage.BEFORE,
                     )
                 elif event_type == "tool_end":
+                    # Use tool result from user event if available
+                    result_text = data.get("result", f"{tool_name} completed")
+                    if short_path and result_text == f"{tool_name} completed":
+                        result_text = f"{tool_name} completed: {short_path}"
                     self.log_manager.record_tool_call(
                         node.id,
                         display_name,
                         success=True,
-                        tool_result=f"{tool_name} completed",
+                        tool_result=result_text if len(result_text) <= 200 else result_text[:200],
                         details={
                             "arguments": tool_input,
                             "tool_name": display_name,
-                            "synthetic": True,
                             "streaming": True,
                         },
                         stage=CallStage.AFTER,
