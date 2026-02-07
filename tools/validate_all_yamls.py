@@ -1,3 +1,22 @@
+"""
+Validate All YAML Workflow Configurations
+
+This tool performs strict validation on all YAML workflow configuration files
+in the yaml_instance/ directory. It ensures configuration integrity and prevents
+runtime errors by catching issues early in the development process.
+
+Purpose:
+- Validates YAML syntax and schema compliance for all workflow configurations
+- Prevents invalid configurations from causing runtime failures
+- Essential for CI/CD pipelines to ensure code quality
+- Provides detailed error reporting for debugging
+
+Usage:
+    python tools/validate_all_yamls.py
+    # or via Makefile:
+    make validate-yamls
+"""
+
 import sys
 import subprocess
 from pathlib import Path
@@ -57,7 +76,7 @@ def validate_all():
             failed_files.append(str(rel_path))
 
     print("\n" + "=" * 40)
-    print(f"Validation Summary")
+    print(f"YAML Validation Summary")
     print("=" * 40)
     print(f"Total Files: {len(files)}")
     print(f"Passed:      {passed}")
@@ -67,9 +86,17 @@ def validate_all():
         print("\nFailed Files:")
         for f in failed_files:
             print(f"- {f}")
+
+    # Overall validation status
+    print("\n" + "=" * 40)
+    print("Overall Validation Status")
+    print("=" * 40)
+
+    if failed > 0:
+        print("YAML validation: FAILED")
         sys.exit(1)
     else:
-        print("\nAll files passed validation.")
+        print("All validations passed successfully.")
         sys.exit(0)
 
 
