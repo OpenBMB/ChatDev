@@ -3,26 +3,20 @@ graph:
   description: |
     Comprehensive LoopTimer demonstration with both standard and passthrough modes.
     
-    STANDARD MODE BRANCH:
-    StandardWriter → StandardCritic → Standard Timer Gate (2 min) → StandardFinalizer
+    STANDARD MODE (left branch):
+    Writer loops with Critic through Standard Timer Gate for 2 minutes,
+    then releases to StandardFinalizer.
     
-    The Standard Timer Gate suppresses messages for 2 minutes, then emits a time limit 
-    message to StandardFinalizer. The feedback loop (StandardCritic → StandardWriter) 
-    continues running but outputs are blocked by the gate until time expires.
-    
-    PASSTHROUGH MODE BRANCH:
-    PassthroughWriter → PassthroughCritic → Passthrough Timer Gate (2 min) → PassthroughFinalizer
-    
-    The Passthrough Timer Gate allows messages through immediately, maintains a parallel 
-    feedback loop (PassthroughCritic → PassthroughWriter), and after 2 minutes emits a 
-    time limit message before becoming transparent.
+    PASSTHROUGH MODE (right branch):
+    Writer loops with Critic through Passthrough Timer Gate, messages pass through
+    immediately to PassthroughFinalizer, timer emits at 2 minutes then transparent.
   log_level: INFO
   is_majority_voting: false
   nodes:
     # ===== STANDARD MODE BRANCH =====
     - id: StandardWriter
       type: literal
-      description: Standard mode - outputs draft messages that get blocked by timer gate.
+      description: Standard mode - outputs draft messages.
       config:
         content: "[STANDARD] Draft iteration from Writer"
         role: assistant
@@ -38,8 +32,7 @@ graph:
       type: loop_timer
       description: |
         Standard mode (passthrough=false) - Suppresses messages for 2 minutes.
-        After 2 minutes elapsed, emits time limit message and allows passage to StandardFinalizer.
-        Timer resets after emission (reset_on_emit=true).
+        After 2 minutes, emits message to StandardFinalizer.
       config:
         max_duration: 2
         duration_unit: minutes
@@ -57,7 +50,7 @@ graph:
     # ===== PASSTHROUGH MODE BRANCH =====
     - id: PassthroughWriter
       type: literal
-      description: Passthrough mode - outputs draft messages that pass through immediately.
+      description: Passthrough mode - outputs draft messages.
       config:
         content: "[PASSTHROUGH] Draft iteration from Writer"
         role: assistant
@@ -73,8 +66,7 @@ graph:
       type: loop_timer
       description: |
         Passthrough mode (passthrough=true) - Allows messages through immediately.
-        After 2 minutes elapsed, emits time limit message.
-        Then becomes transparent gate (no reset, continues passing through).
+        After 2 minutes, emits message then becomes transparent.
       config:
         max_duration: 2
         duration_unit: minutes
@@ -84,54 +76,63 @@ graph:
 
     - id: PassthroughFinalizer
       type: literal
-      description: Passthrough mode - receives output immediately and continues receiving after timer.
+      description: Passthrough mode - receives outputs immediately and after timer.
       config:
         content: "[PASSTHROUGH] Final summary released"
         role: assistant
 
   edges:
     # ===== STANDARD MODE EDGES =====
-    # Main forward path
+    # Initial flow: Writer -> Critic -> Timer Gate
     - from: StandardWriter
       to: StandardCritic
 
     - from: StandardCritic
       to: Standard Timer Gate
+      trigger: true
+      condition: 'true'
+      carry_data: false
+      keep_message: false
 
-    # Feedback loop (blocked until timer expires)
-    - from: StandardCritic
+    # Feedback loop: Timer Gate -> Writer (while time < 2 min)
+    - from: Standard Timer Gate
       to: StandardWriter
       trigger: true
       condition: 'true'
-      carry_data: true
+      carry_data: false
       keep_message: false
 
-    # Timer gate output (only after 2 minutes)
+    # Exit: Timer Gate -> Finalizer (when time >= 2 min)
     - from: Standard Timer Gate
       to: StandardFinalizer
 
     # ===== PASSTHROUGH MODE EDGES =====
-    # Main forward path
+    # Initial flow: Writer -> Critic -> Timer Gate
     - from: PassthroughWriter
       to: PassthroughCritic
 
     - from: PassthroughCritic
       to: Passthrough Timer Gate
+      trigger: true
+      condition: 'true'
+      carry_data: false
+      keep_message: false
 
-    # Feedback loop (always active)
-    - from: PassthroughCritic
+    # Feedback loop: Timer Gate -> Writer (always active)
+    - from: Passthrough Timer Gate
       to: PassthroughWriter
       trigger: true
       condition: 'true'
-      carry_data: true
+      carry_data: false
       keep_message: false
 
-    # Timer gate output (immediate passthrough + timer message at 2 min)
+    # Passthrough: Timer Gate -> Finalizer (immediate + at 2 min)
     - from: Passthrough Timer Gate
       to: PassthroughFinalizer
 
   start:
     - StandardWriter
+    - PassthroughWriter
   end:
     - StandardFinalizer
     - PassthroughFinalizer
