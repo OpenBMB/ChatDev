@@ -37,6 +37,11 @@ jobs:
         uses: astral-sh/setup-uv@v4
         with:
           enable-cache: true
+
+      - name: Install system dependencies for pycairo
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libcairo2-dev pkg-config
       
       - name: Cache uv dependencies
         uses: actions/cache@v4
