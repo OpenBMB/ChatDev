@@ -1,52 +1,137 @@
 version: 0.4.0
 graph:
   start:
-    - Writer
+    - StandardWriter
   end:
-    - Finalizer
-  id: loop_timer_demo
-  description: LoopTimer demo that releases output after 5 seconds of elapsed time.
+    - StandardFinalizer
+    - PassthroughFinalizer
+  id: loop_timer_comprehensive_demo
+  description: |
+    Comprehensive LoopTimer demonstration with both standard and passthrough modes.
+    
+    STANDARD MODE BRANCH:
+    StandardWriter → StandardCritic → Standard Timer Gate (2 min) → StandardFinalizer
+    
+    The Standard Timer Gate suppresses messages for 2 minutes, then emits a time limit 
+    message to StandardFinalizer. The feedback loop (StandardCritic → StandardWriter) 
+    continues running but outputs are blocked by the gate until time expires.
+    
+    PASSTHROUGH MODE BRANCH:
+    PassthroughWriter → PassthroughCritic → Passthrough Timer Gate (2 min) → PassthroughFinalizer
+    
+    The Passthrough Timer Gate allows messages through immediately, maintains a parallel 
+    feedback loop (PassthroughCritic → PassthroughWriter), and after 2 minutes emits a 
+    time limit message before becoming transparent.
   is_majority_voting: false
   log_level: INFO
   nodes:
-    - id: Writer
+    # ===== STANDARD MODE BRANCH =====
+    - id: StandardWriter
       type: literal
-      description: Responsible for outputting a fixed draft.
+      description: Standard mode - outputs draft messages that get blocked by timer gate.
       config:
-        content: Draft iteration from Writer
+        content: "[STANDARD] Draft iteration from Writer"
         role: assistant
-    - id: Critic
+
+    - id: StandardCritic
       type: literal
-      description: Simulates feedback, always requesting further revisions.
+      description: Standard mode - provides feedback to keep the loop running.
       config:
-        content: Please revise again
+        content: "[STANDARD] Please revise again"
         role: user
-    - id: Timer Gate
+
+    - id: Standard Timer Gate
       type: loop_timer
-      description: Counts elapsed time, only granting passage after 5 seconds.
+      description: |
+        Standard mode (passthrough=false) - Suppresses messages for 2 minutes.
+        After 2 minutes elapsed, emits time limit message and allows passage to StandardFinalizer.
+        Timer resets after emission (reset_on_emit=true).
       config:
-        max_duration: 5
-        duration_unit: seconds
+        max_duration: 2
+        duration_unit: minutes
         reset_on_emit: true
-        message: Loop finished after 5 seconds
-    - id: Finalizer
+        message: "[STANDARD] Time limit reached after 2 minutes - releasing output"
+        passthrough: false
+
+    - id: StandardFinalizer
       type: literal
-      description: Receives the release signal from Timer Gate and outputs the final statement.
+      description: Standard mode - receives output only after timer expires.
       config:
-        content: Final summary released
+        content: "[STANDARD] Final summary released"
         role: assistant
+
+    # ===== PASSTHROUGH MODE BRANCH =====
+    - id: PassthroughWriter
+      type: literal
+      description: Passthrough mode - outputs draft messages that pass through immediately.
+      config:
+        content: "[PASSTHROUGH] Draft iteration from Writer"
+        role: assistant
+
+    - id: PassthroughCritic
+      type: literal
+      description: Passthrough mode - provides feedback to keep the loop running.
+      config:
+        content: "[PASSTHROUGH] Please revise again"
+        role: user
+
+    - id: Passthrough Timer Gate
+      type: loop_timer
+      description: |
+        Passthrough mode (passthrough=true) - Allows messages through immediately.
+        After 2 minutes elapsed, emits time limit message.
+        Then becomes transparent gate (no reset, continues passing through).
+      config:
+        max_duration: 2
+        duration_unit: minutes
+        reset_on_emit: false
+        message: "[PASSTHROUGH] Time limit reached after 2 minutes - now transparent"
+        passthrough: true
+
+    - id: PassthroughFinalizer
+      type: literal
+      description: Passthrough mode - receives output immediately and continues receiving after timer.
+      config:
+        content: "[PASSTHROUGH] Final summary released"
+        role: assistant
+
   edges:
-    - from: Writer
-      to: Critic
-    - from: Critic
-      to: Writer
-    - from: Critic
-      to: Timer Gate
-    - from: Timer Gate
-      to: Writer
+    # ===== STANDARD MODE EDGES =====
+    # Main forward path
+    - from: StandardWriter
+      to: StandardCritic
+
+    - from: StandardCritic
+      to: Standard Timer Gate
+
+    # Feedback loop (blocked until timer expires)
+    - from: StandardCritic
+      to: StandardWriter
       trigger: true
       condition: 'true'
       carry_data: true
       keep_message: false
-    - from: Timer Gate
-      to: Finalizer
+
+    # Timer gate output (only after 2 minutes)
+    - from: Standard Timer Gate
+      to: StandardFinalizer
+
+    # ===== PASSTHROUGH MODE EDGES =====
+    # Main forward path
+    - from: PassthroughWriter
+      to: PassthroughCritic
+
+    - from: PassthroughCritic
+      to: Passthrough Timer Gate
+
+    # Feedback loop (always active)
+    - from: PassthroughCritic
+      to: PassthroughWriter
+      trigger: true
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+
+    # Timer gate output (immediate passthrough + timer message at 2 min)
+    - from: Passthrough Timer Gate
+      to: PassthroughFinalizer
