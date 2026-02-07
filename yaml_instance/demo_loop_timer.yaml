@@ -1,0 +1,52 @@
+version: 0.4.0
+graph:
+  start:
+    - Writer
+  end:
+    - Finalizer
+  id: loop_timer_demo
+  description: LoopTimer demo that releases output after 5 seconds of elapsed time.
+  is_majority_voting: false
+  log_level: INFO
+  nodes:
+    - id: Writer
+      type: literal
+      description: Responsible for outputting a fixed draft.
+      config:
+        content: Draft iteration from Writer
+        role: assistant
+    - id: Critic
+      type: literal
+      description: Simulates feedback, always requesting further revisions.
+      config:
+        content: Please revise again
+        role: user
+    - id: Timer Gate
+      type: loop_timer
+      description: Counts elapsed time, only granting passage after 5 seconds.
+      config:
+        max_duration: 5
+        duration_unit: seconds
+        reset_on_emit: true
+        message: Loop finished after 5 seconds
+    - id: Finalizer
+      type: literal
+      description: Receives the release signal from Timer Gate and outputs the final statement.
+      config:
+        content: Final summary released
+        role: assistant
+  edges:
+    - from: Writer
+      to: Critic
+    - from: Critic
+      to: Writer
+    - from: Critic
+      to: Timer Gate
+    - from: Timer Gate
+      to: Writer
+      trigger: true
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+    - from: Timer Gate
+      to: Finalizer

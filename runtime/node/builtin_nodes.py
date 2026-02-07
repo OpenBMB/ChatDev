@@ -12,6 +12,7 @@ from entity.configs.node.passthrough import PassthroughConfig
 from entity.configs.node.literal import LiteralNodeConfig
 from entity.configs.node.python_runner import PythonRunnerConfig
 from entity.configs.node.loop_counter import LoopCounterConfig
+from entity.configs.node.loop_timer import LoopTimerConfig
 from runtime.node.executor.agent_executor import AgentNodeExecutor
 from runtime.node.executor.human_executor import HumanNodeExecutor
 from runtime.node.executor.passthrough_executor import PassthroughNodeExecutor
@@ -19,6 +20,7 @@ from runtime.node.executor.literal_executor import LiteralNodeExecutor
 from runtime.node.executor.python_executor import PythonNodeExecutor
 from runtime.node.executor.subgraph_executor import SubgraphNodeExecutor
 from runtime.node.executor.loop_counter_executor import LoopCounterNodeExecutor
+from runtime.node.executor.loop_timer_executor import LoopTimerNodeExecutor
 from runtime.node.registry import NodeCapabilities, register_node_type
 
 
@@ -48,9 +50,10 @@ register_node_type(
     "subgraph",
     config_cls=SubgraphConfig,
     executor_cls=SubgraphNodeExecutor,
-    capabilities=NodeCapabilities(
+    capabilities=NodeCapabilities(),
+    executor_factory=lambda context, subgraphs=None: SubgraphNodeExecutor(
+        context, subgraphs or {}
     ),
-    executor_factory=lambda context, subgraphs=None: SubgraphNodeExecutor(context, subgraphs or {}),
     summary="Embeds (through file path or inline config) and runs another named subgraph within the current workflow",
 )
 
@@ -69,8 +72,7 @@ register_node_type(
     "passthrough",
     config_cls=PassthroughConfig,
     executor_cls=PassthroughNodeExecutor,
-    capabilities=NodeCapabilities(
-    ),
+    capabilities=NodeCapabilities(),
     summary="Forwards prior node output downstream without modification",
 )
 
@@ -78,8 +80,7 @@ register_node_type(
     "literal",
     config_cls=LiteralNodeConfig,
     executor_cls=LiteralNodeExecutor,
-    capabilities=NodeCapabilities(
-    ),
+    capabilities=NodeCapabilities(),
     summary="Emits the configured text message every time it is triggered",
 )
 
@@ -89,6 +90,14 @@ register_node_type(
     executor_cls=LoopCounterNodeExecutor,
     capabilities=NodeCapabilities(),
     summary="Blocks downstream edges until the configured iteration limit is reached, then emits a message to release the loop.",
+)
+
+register_node_type(
+    "loop_timer",
+    config_cls=LoopTimerConfig,
+    executor_cls=LoopTimerNodeExecutor,
+    capabilities=NodeCapabilities(),
+    summary="Blocks downstream edges until the configured time limit is reached, then emits a message to release the loop.",
 )
 
 # Register subgraph source types (file-based and inline config)

@@ -114,6 +114,7 @@ Execute according to the topological order:
 After completing each round of in-cycle execution, the system checks these exit conditions:
 - **Exit edge triggered**: If any in-cycle node triggers an edge to an out-of-cycle node, exit the loop
 - **Maximum iterations reached**: If the configured maximum (default 100) is reached, force termination
+- **Time limit reached**: If a `loop_timer` node within the cycle reaches its configured time limit, exit the loop
 - **Initial node not re-triggered**: If the initial node isn't re-triggered by in-cycle predecessors, the loop naturally terminates
 
 If none of the conditions are met, return to Step 2 for the next iteration.

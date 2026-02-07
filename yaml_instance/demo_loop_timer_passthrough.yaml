@@ -1,0 +1,51 @@
+version: 0.4.0
+graph:
+  start:
+    - Writer
+  end:
+    - Finalizer
+  id: loop_timer_passthrough_demo
+  description: LoopTimer passthrough mode demo - passes through messages before the limit, emits at the limit, then becomes transparent.
+  is_majority_voting: false
+  log_level: INFO
+  nodes:
+    - id: Writer
+      type: literal
+      description: Outputs a draft message.
+      config:
+        content: Draft iteration from Writer
+        role: assistant
+    - id: Critic
+      type: literal
+      description: Provides feedback.
+      config:
+        content: Please revise again
+        role: user
+    - id: Timer Gate
+      type: loop_timer
+      description: Passthrough mode - passes messages through before 5 seconds, emits limit message at 5 seconds, then transparent.
+      config:
+        max_duration: 5
+        duration_unit: seconds
+        reset_on_emit: false
+        message: Time limit reached - switching to passthrough
+        passthrough: true
+    - id: Finalizer
+      type: literal
+      description: Receives messages.
+      config:
+        content: Final summary released
+        role: assistant
+  edges:
+    - from: Writer
+      to: Critic
+    - from: Critic
+      to: Timer Gate
+    - from: Timer Gate
+      to: Writer
+      trigger: true
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+    - from: Timer Gate
+      to: Finalizer
