@@ -120,6 +120,17 @@ ChatDev 已从一个专门的软件开发多智能体系统演变为一个全面
 
 ### ⚡️ 运行应用
 
+#### 使用 Makefile（推荐）
+
+**同时启动后端与前端**：
+```bash
+make dev
+```
+
+> 然后访问 Web 控制台：**[http://localhost:5173](http://localhost:5173)**。
+
+#### 手动命令
+
 1.  **启动后端**：
     ```bash
     # 从项目根目录运行
@@ -139,6 +150,25 @@ ChatDev 已从一个专门的软件开发多智能体系统演变为一个全面
     >
     > * **后端**：启动时指定 `--port 6401`
     > * **前端**：设置 `VITE_API_BASE_URL=http://localhost:6401`
+
+#### 常用命令
+
+*   **帮助命令**：
+    ```bash
+    make help
+    ```
+
+*   **同步 YAML 工作流到前端**：
+    ```bash
+    make sync
+    ```
+    将 `yaml_instance/` 中的所有工作流文件上传到数据库。
+
+*   **校验所有 YAML 工作流**：
+    ```bash
+    make validate-yamls
+    ```
+    检查所有 YAML 文件的语法与 schema 错误。
 
 
 ### 🔑 配置
@@ -252,6 +282,7 @@ if result.final_message:
     <td align="center"><a href="https://github.com/shiowen"><img src="https://github.com/shiowen.png?size=100" width="64px;" alt=""/><br /><sub><b>shiowen</b></sub></a></td>
     <td align="center"><a href="https://github.com/kilo2127"><img src="https://github.com/kilo2127.png?size=100" width="64px;" alt=""/><br /><sub><b>kilo2127</b></sub></a></td>
     <td align="center"><a href="https://github.com/AckerlyLau"><img src="https://github.com/AckerlyLau.png?size=100" width="64px;" alt=""/><br /><sub><b>AckerlyLau</b></sub></a></td>
+    <td align="center"><a href="https://github.com/LaansDole"><img src="https://github.com/LaansDole.png?size=100" width="64px;" alt=""/><br /><sub><b>LaansDole</b></sub></a></td>
 </table>
 
 ## 🤝 致谢
