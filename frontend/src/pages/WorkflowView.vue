@@ -87,38 +87,46 @@
           >
             <!-- Pane context menu -->
             <template v-if="contextMenuType === 'pane'">
-              <div
-                class="context-menu-item"
-                @click.stop="() => { hideContextMenu(); openCreateNodeModal(); }"
-              >
-                Create Node
-              </div>
+              <RichTooltip :content="helpContent.contextMenu.createNode" placement="right">
+                <div
+                  class="context-menu-item"
+                  @click.stop="() => { hideContextMenu(); openCreateNodeModal(); }"
+                >
+                  Create Node
+                </div>
+              </RichTooltip>
             </template>
 
             <!-- Node context menu -->
             <template v-else-if="contextMenuType === 'node'">
-              <div
-                class="context-menu-item"
-                @click.stop="() => { hideContextMenu(); onCopyNodeFromContext(); }"
-              >
-                Copy Node
-              </div>
-              <div
-                class="context-menu-item"
-                @click.stop="() => { hideContextMenu(); onDeleteNodeFromContext(); }"
-              >
-                Delete Node
-              </div>
+              <RichTooltip :content="helpContent.contextMenu.copyNode" placement="right">
+                <div
+                  class="context-menu-item"
+                  @click.stop="() => { hideContextMenu(); onCopyNodeFromContext(); }"
+                >
+                  Copy Node
+                </div>
+              </RichTooltip>
+              <RichTooltip :content="helpContent.contextMenu.deleteNode" placement="right">
+                <div
+                  class="context-menu-item"
+                  @click.stop="() => { hideContextMenu(); onDeleteNodeFromContext(); }"
+                >
+                  Delete Node
+                </div>
+              </RichTooltip>
             </template>
 
             <!-- Edge context menu -->
             <template v-else-if="contextMenuType === 'edge'">
-              <div
-                class="context-menu-item"
-                @click.stop="() => { hideContextMenu(); onDeleteEdgeFromContext(); }"
-              >
-                Delete Edge
-              </div>
+              <RichTooltip :content="helpContent.contextMenu.deleteEdge" placement="right">
+                <div
+                  class="context-menu-item"
+                  @click.stop="() => { hideContextMenu(); onDeleteEdgeFromContext(); }"
+                >
+                  Delete Edge
+                </div>
+              </RichTooltip>
             </template>
           </div>
         </transition>
@@ -141,15 +149,21 @@
         </button>
       </div>
       <div v-if="activeTab === 'graph'" class="editor-actions">
-        <button @click="openCreateNodeModal" class="glass-button">
-          <span>Create Node</span>
-        </button>
-        <button @click="openConfigureGraphModal" class="glass-button">
-          <span>Configure Graph</span>
-        </button>
-        <button @click="goToLaunch" class="launch-button-primary">
-          <span>Launch</span>
-        </button>
+        <RichTooltip :content="helpContent.contextMenu.createNodeButton" placement="bottom">
+          <button @click="openCreateNodeModal" class="glass-button">
+            <span>Create Node</span>
+          </button>
+        </RichTooltip>
+        <RichTooltip :content="helpContent.contextMenu.configureGraph" placement="bottom">
+          <button @click="openConfigureGraphModal" class="glass-button">
+            <span>Configure Graph</span>
+          </button>
+        </RichTooltip>
+        <RichTooltip :content="helpContent.contextMenu.launch" placement="bottom">
+          <button @click="goToLaunch" class="launch-button-primary">
+            <span>Launch</span>
+          </button>
+        </RichTooltip>
         
         <div
           class="menu-container"
@@ -166,11 +180,21 @@
           </div>
           <transition name="fade">
             <div v-if="showMenu" class="menu-dropdown">
-              <div @click="openRenameWorkflowModal" class="menu-item">Rename Workflow</div>
-              <div @click="openCopyWorkflowModal" class="menu-item">Copy Workflow</div>
-              <div @click="openManageVarsModal" class="menu-item">Manage Variables</div>
-              <div @click="openManageMemoriesModal" class="menu-item">Manage Memories</div>
-              <div @click="openCreateEdgeModal" class="menu-item">Create Edge</div>
+              <RichTooltip :content="helpContent.contextMenu.renameWorkflow" placement="left">
+                <div @click="openRenameWorkflowModal" class="menu-item">Rename Workflow</div>
+              </RichTooltip>
+              <RichTooltip :content="helpContent.contextMenu.copyWorkflow" placement="left">
+                <div @click="openCopyWorkflowModal" class="menu-item">Copy Workflow</div>
+              </RichTooltip>
+              <RichTooltip :content="helpContent.contextMenu.manageVariables" placement="left">
+                <div @click="openManageVarsModal" class="menu-item">Manage Variables</div>
+              </RichTooltip>
+              <RichTooltip :content="helpContent.contextMenu.manageMemories" placement="left">
+                <div @click="openManageMemoriesModal" class="menu-item">Manage Memories</div>
+              </RichTooltip>
+              <RichTooltip :content="helpContent.contextMenu.createEdge" placement="left">
+                <div @click="openCreateEdgeModal" class="menu-item">Create Edge</div>
+              </RichTooltip>
             </div>
           </transition>
         </div>
@@ -270,8 +294,10 @@ import WorkflowNode from '../components/WorkflowNode.vue'
 import WorkflowEdge from '../components/WorkflowEdge.vue'
 import StartNode from '../components/StartNode.vue'
 import FormGenerator from '../components/FormGenerator.vue'
+import RichTooltip from '../components/RichTooltip.vue'
 import yaml from 'js-yaml'
 import { fetchYaml, fetchVueGraph, postVuegraphs, updateYaml, postYamlNameChange, postYamlCopy } from '../utils/apiFunctions'
+import { helpContent } from '../utils/helpContent.js'
 
 const props = defineProps({
   workflowName: {

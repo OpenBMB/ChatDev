@@ -3,6 +3,8 @@ import { computed, ref, onMounted, onUnmounted, watch } from 'vue'
 import { Handle, Position } from '@vue-flow/core'
 import { getNodeStyles } from '../utils/colorUtils.js'
 import { spriteFetcher } from '../utils/spriteFetcher.js'
+import RichTooltip from './RichTooltip.vue'
+import { getNodeHelp } from '../utils/helpContent.js'
 
 const props = defineProps({
   id: {
@@ -36,6 +38,8 @@ const nodeId = computed(() => props.data?.id || props.id)
 const nodeDescription = computed(() => props.data?.description || '')
 const isActive = computed(() => props.isActive)
 const dynamicStyles = computed(() => getNodeStyles(nodeType.value))
+
+const nodeHelpContent = computed(() => getNodeHelp(nodeType.value))
 
 // Compute the current sprite path based on active state and walking frame
 const currentSprite = computed(() => {
@@ -83,40 +87,42 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="workflow-node-container">
-    <div v-if="props.sprite" class="workflow-node-sprite">
-      <img :src="currentSprite" :alt="`${nodeId} sprite`" class="node-sprite-image" />
-    </div>
-    <div
-      class="workflow-node"
-      :class="{ 'workflow-node-active': isActive }"
-      :data-type="nodeType"
-      :style="dynamicStyles"
-      @mouseenter="$emit('hover', nodeId)"
-      @mouseleave="$emit('leave', nodeId)"
-    >
-      <div class="workflow-node-header">
-        <span class="workflow-node-type">{{ nodeType }}</span>
-        <span class="workflow-node-id">{{ nodeId }}</span>
+  <RichTooltip :content="nodeHelpContent" placement="top">
+    <div class="workflow-node-container">
+      <div v-if="props.sprite" class="workflow-node-sprite">
+        <img :src="currentSprite" :alt="`${nodeId} sprite`" class="node-sprite-image" />
       </div>
-      <div v-if="nodeDescription" class="workflow-node-description">
-        {{ nodeDescription }}
-      </div>
+      <div
+        class="workflow-node"
+        :class="{ 'workflow-node-active': isActive }"
+        :data-type="nodeType"
+        :style="dynamicStyles"
+        @mouseenter="$emit('hover', nodeId)"
+        @mouseleave="$emit('leave', nodeId)"
+      >
+        <div class="workflow-node-header">
+          <span class="workflow-node-type">{{ nodeType }}</span>
+          <span class="workflow-node-id">{{ nodeId }}</span>
+        </div>
+        <div v-if="nodeDescription" class="workflow-node-description">
+          {{ nodeDescription }}
+        </div>
 
-      <Handle
-        id="source"
-        type="source"
-        :position="Position.Right"
-        class="workflow-node-handle"
-      />
-      <Handle
-        id="target"
-        type="target"
-        :position="Position.Left"
-        class="workflow-node-handle"
-      />
+        <Handle
+          id="source"
+          type="source"
+          :position="Position.Right"
+          class="workflow-node-handle"
+        />
+        <Handle
+          id="target"
+          type="target"
+          :position="Position.Left"
+          class="workflow-node-handle"
+        />
+      </div>
     </div>
-  </div>
+  </RichTooltip>
 </template>
 
 <style scoped>

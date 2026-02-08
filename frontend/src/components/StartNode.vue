@@ -1,6 +1,8 @@
 <script setup>
 import { computed } from 'vue'
 import { Handle, Position } from '@vue-flow/core'
+import RichTooltip from './RichTooltip.vue'
+import { helpContent } from '../utils/helpContent.js'
 
 const props = defineProps({
   id: {
@@ -15,11 +17,13 @@ const props = defineProps({
 </script>
 
 <template>
-  <div class="start-node" :style="{ opacity: data.opacity ?? 1 }">
-    <div class="start-node-bubble" title="Start Node"></div>
-    <!-- Provide source handle at right -->
-    <Handle id="source" type="source" :position="Position.Right" class="start-node-handle" />
-  </div>
+  <RichTooltip :content="helpContent.startNode" placement="right">
+    <div class="start-node" :style="{ opacity: data.opacity ?? 1 }">
+      <div class="start-node-bubble" title="Start Node"></div>
+      <!-- Provide source handle at right -->
+      <Handle id="source" type="source" :position="Position.Right" class="start-node-handle" />
+    </div>
+  </RichTooltip>
 </template>
 
 <style scoped>

@@ -2,6 +2,8 @@
 import { computed, ref, nextTick, watch } from 'vue'
 import { BaseEdge, EdgeLabelRenderer, getBezierPath, getSmoothStepPath, MarkerType } from '@vue-flow/core'
 import { useVueFlow } from '@vue-flow/core'
+import RichTooltip from './RichTooltip.vue'
+import { getEdgeHelp } from '../utils/helpContent.js'
 
 const { findNode } = useVueFlow()
 
@@ -562,6 +564,8 @@ const labelStyle = computed(() => {
 
   return s
 })
+
+const edgeHelpContent = computed(() => getEdgeHelp(props.data))
 </script>
 
 <template>
@@ -614,6 +618,23 @@ const labelStyle = computed(() => {
     :animated="false"
     class="nodrag nopan"
   />
+  <!-- Tooltip-enabled hover area at edge midpoint -->
+  <EdgeLabelRenderer>
+    <RichTooltip :content="edgeHelpContent" placement="top">
+      <div
+        :style="{
+          position: 'absolute',
+          transform: `translate(-50%, -50%) translate(${labelX}px, ${labelY}px)`,
+          pointerEvents: 'all',
+          width: '20px',
+          height: '20px',
+          borderRadius: '50%',
+          cursor: 'pointer'
+        }"
+        class="edge-tooltip-trigger"
+      />
+    </RichTooltip>
+  </EdgeLabelRenderer>
   <EdgeLabelRenderer v-if="edgeLabel">
     <div
       :key="edgeLabelKey"
@@ -648,5 +669,14 @@ const labelStyle = computed(() => {
 
 .animated-label {
   animation: label-pulse var(--label-anim-duration) infinite linear;
+}
+
+.edge-tooltip-trigger {
+  background: transparent;
+  transition: background-color 0.2s;
+}
+
+.edge-tooltip-trigger:hover {
+  background-color: rgba(255, 255, 255, 0.1);
 }
 </style>
