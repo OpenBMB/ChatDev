@@ -87,9 +87,9 @@ async def rate_limit_middleware(request: Request, call_next: Callable):
     return response
 
 
-def add_middleware(app: FastAPI):
-    """Add all middleware to the FastAPI application."""
-    # CORS (dev defaults; override via CORS_ALLOW_ORIGINS comma-separated list)
+def add_cors_middleware(app: FastAPI) -> None:
+    """Configure and attach CORS middleware."""
+    # Dev defaults; override via CORS_ALLOW_ORIGINS (comma-separated)
     default_origins = [
         "http://localhost:5173",
         "http://127.0.0.1:5173",
@@ -103,7 +103,6 @@ def add_middleware(app: FastAPI):
         # Helpful in dev: allow localhost/127.0.0.1 on any port
         origin_regex = r"^https?://(localhost|127\.0\.0\.1)(:\d+)?$"
 
-    # Add CORS middleware first to handle preflight requests and allow origins.
     app.add_middleware(
         CORSMiddleware,
         allow_origins=origins,
@@ -114,6 +113,12 @@ def add_middleware(app: FastAPI):
         expose_headers=["X-Correlation-ID"],
         max_age=600,
     )
+
+
+def add_middleware(app: FastAPI):
+    """Add all middleware to the FastAPI application."""
+    # Attach CORS first to handle preflight requests and allow origins.
+    add_cors_middleware(app)
 
     # Add other middleware
     app.middleware("http")(correlation_id_middleware)
