@@ -969,10 +969,24 @@ const establishWebSocketConnection = () => {
     return
   }
 
-  const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'
-  const wsProtocol = baseUrl.startsWith('https') ? 'wss:' : 'ws:'
-  const urlObj = new URL(baseUrl)
-  const wsUrl = `${wsProtocol}//${urlObj.host}/ws`
+  const apiBase = import.meta.env.VITE_API_BASE_URL || ''
+  // Defaults: same-origin (works with Vite dev proxy)
+  const defaultScheme = window.location.protocol === 'https:' ? 'wss:' : 'ws:'
+  let scheme = defaultScheme
+  let host = window.location.host
+
+  // In production, prefer explicit API base if provided
+  if (!import.meta.env.DEV && apiBase) {
+    try {
+      const api = new URL(apiBase, window.location.origin)
+      scheme = api.protocol === 'https:' ? 'wss:' : 'ws:'
+      host = api.host
+    } catch {
+      // keep defaults
+    }
+  }
+
+  const wsUrl = `${scheme}//${host}/ws`
   const socket = new WebSocket(wsUrl)
   ws = socket
 
