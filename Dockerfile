@@ -20,11 +20,11 @@ ENV UV_PROJECT_ENVIRONMENT=/opt/venv
 
 # Copy dependency files first to maximize cache
 COPY pyproject.toml ./
-# If you have a lock file, uncomment the next line for reproducible builds:
-# COPY uv.lock ./
+# reproducible builds:
+COPY uv.lock ./
 
 # Create the project virtualenv and install deps
-RUN uv sync --no-cache
+RUN uv sync --no-cache --frozen
 
 # ---- Runtime: minimal image with only runtime libs + app ----
 FROM python:3.12-slim AS runtime
