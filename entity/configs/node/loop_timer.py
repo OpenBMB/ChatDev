@@ -7,6 +7,7 @@ from entity.configs.base import (
     BaseConfig,
     ConfigError,
     ConfigFieldSpec,
+    EnumOption,
     require_mapping,
     extend_path,
     optional_str,
@@ -92,6 +93,16 @@ class LoopTimerConfig(BaseConfig):
             required=True,
             default="seconds",
             description="Unit of time for max_duration: 'seconds', 'minutes', or 'hours'.",
+            enum=["seconds", "minutes", "hours"],
+            enum_options=[
+                EnumOption(
+                    value="seconds", label="Seconds", description="Time in seconds"
+                ),
+                EnumOption(
+                    value="minutes", label="Minutes", description="Time in minutes"
+                ),
+                EnumOption(value="hours", label="Hours", description="Time in hours"),
+            ],
         ),
         "reset_on_emit": ConfigFieldSpec(
             name="reset_on_emit",

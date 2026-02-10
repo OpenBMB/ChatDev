@@ -5,7 +5,7 @@ graph:
   end:
     - Finalizer
   id: loop_timer_demo
-  description: LoopTimer demo that releases output after 10 seconds of agent iterations.
+  description: LoopTimer demo that releases output after 20 seconds of agent iterations.
   is_majority_voting: false
   log_level: INFO
   nodes:
@@ -57,7 +57,7 @@ graph:
         reset_on_emit: true
         message: Time limit reached - loop automatically terminated
         passthrough: false
-      description: Tracks elapsed time, only granting passage after 10 seconds.
+      description: Tracks elapsed time, only granting passage after 20 seconds.
       context_window: 0
       log_output: true
   edges:
