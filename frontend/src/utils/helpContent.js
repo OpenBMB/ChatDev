@@ -34,7 +34,7 @@ export const helpContent = {
     },
     python: {
       title: "Python Node",
-      description: "Executes Python code in a sandboxed environment. The code runs in the workspace directory and can access uploaded files.",
+      description: "Executes Python code on your local environment. The code runs in the workspace directory and can access uploaded files.",
       examples: [
         "Data processing and analysis",
         "Running generated code",
@@ -160,7 +160,7 @@ export const helpContent = {
 /**
  * Get help content by key path
  * @param {string} key - Dot-separated path to content (e.g., 'workflowNode.agent')
- * @returns {Object} Help content object or fallback
+ * @returns {Object|null} Help content object or null if not found
  */
 export function getHelpContent(key) {
   const keys = key.split('.')
@@ -170,11 +170,8 @@ export function getHelpContent(key) {
     if (content && typeof content === 'object' && k in content) {
       content = content[k]
     } else {
-      console.warn(`[HelpContent] Missing content for key: ${key}`)
-      return {
-        description: "Help content coming soon. Check the tutorial for more information.",
-        learnMoreUrl: "/tutorial"
-      }
+      // Return null for missing content instead of fallback
+      return null
     }
   }
 
@@ -183,17 +180,25 @@ export function getHelpContent(key) {
     return { description: content }
   }
 
-  return content || { description: "Help content coming soon." }
+  return content || null
 }
 
 /**
  * Get node-specific help content based on node type
  * @param {string} nodeType - The type of node (agent, human, python, etc.)
- * @returns {Object} Help content for that node type
+ * @returns {Object|null} Help content for that node type, or null for unknown types
  */
 export function getNodeHelp(nodeType) {
-  const type = (nodeType || 'unknown').toLowerCase()
-  return getHelpContent(`workflowNode.${type}`)
+  if (!nodeType) {
+    return null
+  }
+  
+  const type = nodeType.toLowerCase()
+  const content = getHelpContent(`workflowNode.${type}`)
+  
+  // Return null for unknown types (when content lookup fails)
+  // This prevents showing tooltips for custom/user-defined node types
+  return content
 }
 
 /**

@@ -87,7 +87,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <RichTooltip :content="nodeHelpContent" placement="top">
+  <RichTooltip v-if="nodeHelpContent" :content="nodeHelpContent" placement="top">
     <div class="workflow-node-container">
       <div v-if="props.sprite" class="workflow-node-sprite">
         <img :src="currentSprite" :alt="`${nodeId} sprite`" class="node-sprite-image" />
@@ -123,6 +123,40 @@ onUnmounted(() => {
       </div>
     </div>
   </RichTooltip>
+  <div v-else class="workflow-node-container">
+    <div v-if="props.sprite" class="workflow-node-sprite">
+      <img :src="currentSprite" :alt="`${nodeId} sprite`" class="node-sprite-image" />
+    </div>
+    <div
+      class="workflow-node"
+      :class="{ 'workflow-node-active': isActive }"
+      :data-type="nodeType"
+      :style="dynamicStyles"
+      @mouseenter="$emit('hover', nodeId)"
+      @mouseleave="$emit('leave', nodeId)"
+    >
+      <div class="workflow-node-header">
+        <span class="workflow-node-type">{{ nodeType }}</span>
+        <span class="workflow-node-id">{{ nodeId }}</span>
+      </div>
+      <div v-if="nodeDescription" class="workflow-node-description">
+        {{ nodeDescription }}
+      </div>
+
+      <Handle
+        id="source"
+        type="source"
+        :position="Position.Right"
+        class="workflow-node-handle"
+      />
+      <Handle
+        id="target"
+        type="target"
+        :position="Position.Left"
+        class="workflow-node-handle"
+      />
+    </div>
+  </div>
 </template>
 
 <style scoped>
