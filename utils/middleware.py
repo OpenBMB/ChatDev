@@ -2,10 +2,12 @@
 
 import uuid
 from typing import Callable, Awaitable
-from fastapi import Request, HTTPException
+from fastapi import Request, HTTPException, FastAPI
 from fastapi.responses import JSONResponse
+from fastapi.middleware.cors import CORSMiddleware
 import time
 import re
+import os
 
 from utils.structured_logger import get_server_logger, LogType
 from utils.exceptions import SecurityError
@@ -85,9 +87,40 @@ async def rate_limit_middleware(request: Request, call_next: Callable):
     return response
 
 
-def add_middleware(app):
+def add_cors_middleware(app: FastAPI) -> None:
+    """Configure and attach CORS middleware."""
+    # Dev defaults; override via CORS_ALLOW_ORIGINS (comma-separated)
+    default_origins = [
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+    ]
+    env_origins = os.getenv("CORS_ALLOW_ORIGINS")
+    if env_origins:
+        origins = [o.strip() for o in env_origins.split(",") if o.strip()]
+        origin_regex = None
+    else:
+        origins = default_origins
+        # Helpful in dev: allow localhost/127.0.0.1 on any port
+        origin_regex = r"^https?://(localhost|127\.0\.0\.1)(:\d+)?$"
+
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=origins,
+        allow_origin_regex=origin_regex,
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+        expose_headers=["X-Correlation-ID"],
+        max_age=600,
+    )
+
+
+def add_middleware(app: FastAPI):
     """Add all middleware to the FastAPI application."""
-    # Add middleware in the appropriate order
+    # Attach CORS first to handle preflight requests and allow origins.
+    add_cors_middleware(app)
+
+    # Add other middleware
     app.middleware("http")(correlation_id_middleware)
     app.middleware("http")(security_middleware)
     # app.middleware("http")(rate_limit_middleware)  # Enable if needed
