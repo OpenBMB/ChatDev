@@ -42,4 +42,5 @@ validate-yamls: ## Validate all YAML configuration files
 .PHONY: help
 help: ## Display this help message
 	@python -c "import re; \
-	[print(f'{m[0]:<20} {m[1]}') for m in re.findall(r'^([a-zA-Z_-]+):.*?## (.*)$$', open('$(MAKEFILE_LIST)').read(), re.M)]" | sort
+	p=r'$(firstword $(MAKEFILE_LIST))'.strip(); \
+	[print(f'{m[0]:<20} {m[1]}') for m in re.findall(r'^([a-zA-Z_-]+):.*?## (.*)$$', open(p, encoding='utf-8').read(), re.M)]" | sort
