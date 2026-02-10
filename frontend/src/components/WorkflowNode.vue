@@ -5,6 +5,7 @@ import { getNodeStyles } from '../utils/colorUtils.js'
 import { spriteFetcher } from '../utils/spriteFetcher.js'
 import RichTooltip from './RichTooltip.vue'
 import { getNodeHelp } from '../utils/helpContent.js'
+import { configStore } from '../utils/configStore.js'
 
 const props = defineProps({
   id: {
@@ -40,6 +41,8 @@ const isActive = computed(() => props.isActive)
 const dynamicStyles = computed(() => getNodeStyles(nodeType.value))
 
 const nodeHelpContent = computed(() => getNodeHelp(nodeType.value))
+
+const shouldShowTooltip = computed(() => configStore.ENABLE_HELP_TOOLTIPS && nodeHelpContent.value)
 
 // Compute the current sprite path based on active state and walking frame
 const currentSprite = computed(() => {
@@ -87,7 +90,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <RichTooltip v-if="nodeHelpContent" :content="nodeHelpContent" placement="top">
+  <RichTooltip v-if="shouldShowTooltip" :content="nodeHelpContent" placement="top">
     <div class="workflow-node-container">
       <div v-if="props.sprite" class="workflow-node-sprite">
         <img :src="currentSprite" :alt="`${nodeId} sprite`" class="node-sprite-image" />
