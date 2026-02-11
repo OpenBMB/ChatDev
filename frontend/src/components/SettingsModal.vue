@@ -21,6 +21,13 @@
             </label>
             <p class="setting-desc">Automatically expand message content in the chat view.</p>
           </div>
+          <div class="settings-item">
+            <label class="checkbox-label">
+              <input type="checkbox" v-model="localConfig.ENABLE_HELP_TOOLTIPS">
+              Enable help tooltips
+            </label>
+            <p class="setting-desc">Show contextual help tooltips throughout the workflow interface.</p>
+          </div>
         </div>
         <div class="modal-footer">
           <button class="cancel-button" @click="close">Cancel</button>
@@ -44,7 +51,8 @@ const props = defineProps({
 
 const localConfig = reactive({
   AUTO_SHOW_ADVANCED: false,
-  AUTO_EXPAND_MESSAGES: false
+  AUTO_EXPAND_MESSAGES: false,
+  ENABLE_HELP_TOOLTIPS: true
 })
 
 watch(() => props.isVisible, (newVal) => {

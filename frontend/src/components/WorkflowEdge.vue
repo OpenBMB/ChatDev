@@ -2,6 +2,9 @@
 import { computed, ref, nextTick, watch } from 'vue'
 import { BaseEdge, EdgeLabelRenderer, getBezierPath, getSmoothStepPath, MarkerType } from '@vue-flow/core'
 import { useVueFlow } from '@vue-flow/core'
+import RichTooltip from './RichTooltip.vue'
+import { getEdgeHelp } from '../utils/helpContent.js'
+import { configStore } from '../utils/configStore.js'
 
 const { findNode } = useVueFlow()
 
@@ -562,6 +565,44 @@ const labelStyle = computed(() => {
 
   return s
 })
+
+const edgeHelpContent = computed(() => getEdgeHelp(props.data))
+
+// Compute tooltip position (geometric midpoint of edge path)
+const tooltipX = computed(() => {
+  const sourceNode = findNode(props.source)
+  const targetNode = findNode(props.target)
+  const isSelfLoop = props.source === props.target
+  const isLeftwardEdge = props.targetX < props.sourceX
+  
+  // For self-loops and leftward edges with arc paths, use arc midpoint calculation
+  if (isSelfLoop || isLeftwardEdge) {
+    // Return labelX for arcs (already computed as arc midpoint)
+    return labelX.value
+  }
+  
+  // For bezier paths, compute midpoint at t=0.5
+  return (props.sourceX + props.targetX) / 2
+})
+
+const tooltipY = computed(() => {
+  const sourceNode = findNode(props.source)
+  const targetNode = findNode(props.target)
+  const isSelfLoop = props.source === props.target
+  const isLeftwardEdge = props.targetX < props.sourceX
+  
+  // For self-loops and leftward edges with arc paths, use arc midpoint calculation
+  if (isSelfLoop || isLeftwardEdge) {
+    // Return labelY for arcs (already computed as arc midpoint)
+    return labelY.value
+  }
+  
+  // For bezier paths, compute midpoint at t=0.5
+  return (props.sourceY + props.targetY) / 2
+})
+
+const shouldShowTooltip = computed(() => configStore.ENABLE_HELP_TOOLTIPS)
+
 </script>
 
 <template>
@@ -614,6 +655,23 @@ const labelStyle = computed(() => {
     :animated="false"
     class="nodrag nopan"
   />
+  <!-- Tooltip-enabled hover area at edge midpoint -->
+  <EdgeLabelRenderer v-if="shouldShowTooltip">
+    <RichTooltip :content="edgeHelpContent" placement="top">
+      <div
+        :style="{
+          position: 'absolute',
+          transform: `translate(-50%, -50%) translate(${tooltipX}px, ${tooltipY}px)`,
+          pointerEvents: 'all',
+          width: '20px',
+          height: '20px',
+          borderRadius: '50%',
+          cursor: 'pointer'
+        }"
+        class="edge-tooltip-trigger"
+      />
+    </RichTooltip>
+  </EdgeLabelRenderer>
   <EdgeLabelRenderer v-if="edgeLabel">
     <div
       :key="edgeLabelKey"
@@ -648,5 +706,14 @@ const labelStyle = computed(() => {
 
 .animated-label {
   animation: label-pulse var(--label-anim-duration) infinite linear;
+}
+
+.edge-tooltip-trigger {
+  background: transparent;
+  transition: background-color 0.2s;
+}
+
+.edge-tooltip-trigger:hover {
+  background-color: rgba(255, 255, 255, 0.1);
 }
 </style>
