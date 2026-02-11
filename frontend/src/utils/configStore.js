@@ -4,7 +4,8 @@ const CONFIG_KEY = 'agent_config_settings'
 
 const defaultSettings = {
     AUTO_SHOW_ADVANCED: false,
-    AUTO_EXPAND_MESSAGES: false
+    AUTO_EXPAND_MESSAGES: false,
+    ENABLE_HELP_TOOLTIPS: true
 }
 
 // Initialize state from localStorage

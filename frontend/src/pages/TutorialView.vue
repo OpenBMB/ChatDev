@@ -1,7 +1,10 @@
 <script setup>
 import { ref, onMounted, nextTick } from 'vue'
+import { useRoute } from 'vue-router'
 import MarkdownIt from 'markdown-it'
 import markdownItAnchor from 'markdown-it-anchor'
+
+const route = useRoute()
 
 const renderedContent = ref('')
 const currentLang = ref('en') // 'zh' for Chinese, 'en' for English
@@ -27,6 +30,23 @@ md.use(markdownItAnchor, {
 })
 
 const getTutorialFile = () => (currentLang.value === 'en' ? '/tutorial-en.md' : '/tutorial-zh.md')
+
+const scrollToHash = () => {
+  // Wait for DOM to update, then scroll to hash if present
+  nextTick(() => {
+    if (route.hash) {
+      // Remove the '#' from the hash
+      const targetId = route.hash.slice(1)
+      const targetElement = document.getElementById(targetId)
+      
+      if (targetElement) {
+        setTimeout(() => {
+          targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' })
+        }, 100)
+      }
+    }
+  })
+}
 
 const addCopyButtons = () => {
   nextTick(() => {
@@ -71,6 +91,7 @@ const loadTutorial = async () => {
       
       renderedContent.value = md.render(text)
       addCopyButtons()
+      scrollToHash()
     } else {
       console.error('Failed to fetch tutorial markdown')
     }
@@ -117,6 +138,7 @@ onMounted(() => {
   box-shadow: 0 4px 32px 0 rgba(0, 255, 255, 0.08), 0 0 0 2px #00eaff33;
   border: 1.5px solid #00eaff33;
   transition: box-shadow 0.3s;
+  scroll-behavior: smooth;
 }
 
 .lang-switch {
@@ -175,6 +197,23 @@ onMounted(() => {
   color: #00eaff;
   text-shadow: 0 0 8px #00eaff44;
   letter-spacing: 0.02em;
+  scroll-margin-top: 20px; /* Offset for hash scroll target */
+  transition: background 0.3s ease;
+}
+
+/* Highlight targeted heading */
+:deep(.markdown-body h1:target),
+:deep(.markdown-body h2:target),
+:deep(.markdown-body h3:target),
+:deep(.markdown-body h4:target),
+:deep(.markdown-body h5:target),
+:deep(.markdown-body h6:target) {
+  background: rgba(0, 234, 255, 0.15);
+  padding: 8px 12px;
+  margin-left: -12px;
+  margin-right: -12px;
+  border-radius: 6px;
+  box-shadow: 0 0 16px rgba(0, 234, 255, 0.3);
 }
 
 :deep(.markdown-body h1) { font-size: 2.2em; border-bottom: 1px solid #00eaff33; padding-bottom: 0.3em; }
