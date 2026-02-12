@@ -92,6 +92,7 @@ Further reading: `docs/user_guide/en/field_specs.md` (field catalog), `docs/user
 | `passthrough` | Pass-through node that forwards only the last message by default and can be configured to forward all messages; used for context filtering and graph structure optimization. | `only_last_message` | [passthrough.md](nodes/passthrough.md) |
 | `literal` | Emits a fixed text payload whenever triggered and discards inputs.                                                                                                           | `content`, `role` (`user`/`assistant`) | [literal.md](nodes/literal.md) |
 | `loop_counter` | Guard node that limits loop iterations before releasing downstream edges.                                                                                                    | `max_iterations`, `reset_on_emit`, `message` | [loop_counter.md](nodes/loop_counter.md) |
+| `loop_timer` | Guard node that limits loop duration before releasing downstream edges.                                                                                                      | `max_duration`, `duration_unit`, `reset_on_emit`, `message`, `passthrough` | [loop_timer.md](nodes/loop_timer.md) |
 
 Fetch the full schema via `POST /api/config/schema` or inspect the dataclasses inside `entity/configs/`.
 

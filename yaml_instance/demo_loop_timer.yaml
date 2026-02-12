@@ -1,0 +1,82 @@
+version: 0.0.0
+graph:
+  start:
+    - Writer
+  end:
+    - Finalizer
+  id: loop_timer_demo
+  description: LoopTimer demo that releases output after 20 seconds of agent iterations.
+  is_majority_voting: false
+  log_level: INFO
+  nodes:
+    - id: Critic
+      type: agent
+      config:
+        name: ${MODEL_NAME}
+        provider: openai
+        role: You are a critic. Provide brief feedback (1 sentence) to improve the draft.
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params: {}
+        tooling: []
+        thinking: null
+        memories: []
+        retry: null
+      description: Reviews the draft and provides feedback for improvement.
+      context_window: 0
+      log_output: true
+    - id: Writer
+      type: agent
+      config:
+        name: ${MODEL_NAME}
+        provider: openai
+        role: You are a technical writer. Generate a brief draft (1 sentence).
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params: {}
+        tooling: []
+        thinking: null
+        memories: []
+        retry: null
+      description: Drafts content based on feedback.
+      context_window: 0
+      log_output: true
+    - id: Finalizer
+      type: literal
+      config:
+        content: Final summary released
+        role: assistant
+      description: Receives the release signal from Loop Gate and outputs the final statement.
+      context_window: 0
+      log_output: true
+    - id: Loop Gate
+      type: loop_timer
+      config:
+        max_duration: 20
+        duration_unit: seconds
+        reset_on_emit: true
+        message: Time limit reached - loop automatically terminated
+        passthrough: false
+      description: Tracks elapsed time, only granting passage after 20 seconds.
+      context_window: 0
+      log_output: true
+  edges:
+    - from: Writer
+      to: Critic
+    - from: Critic
+      to: Writer
+    - from: Critic
+      to: Loop Gate
+    - from: Loop Gate
+      to: Writer
+    - from: Loop Gate
+      to: Finalizer
+    - from: Loop Gate
+      to: Writer
+      trigger: true
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+      process: null
+vars:
+  MODEL_NAME: qwen/qwen3-8b
