@@ -37,7 +37,7 @@ def sync_yaml_to_vuegraphs():
         try:
             filename = Path(file_path).stem  # simulation_hospital_lmstudio
 
-            with open(file_path, "r") as f:
+            with open(file_path, 'r', encoding='utf-8') as f:
                 content = f.read()
 
             # Basic validation to ensure it's a valid YAML

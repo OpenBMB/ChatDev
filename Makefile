@@ -3,7 +3,9 @@
 # ==============================================================================
 
 .PHONY: dev
-dev: server client ## Run both backend and frontend development servers
+dev: ## Run both backend and frontend development servers
+	@$(MAKE) -j2 server client
+
 
 .PHONY: server
 server: ## Start the backend server in the background
@@ -12,14 +14,14 @@ server: ## Start the backend server in the background
 
 .PHONY: client
 client: ## Start the frontend development server
-	@cd frontend && VITE_API_BASE_URL=http://localhost:6400 npm run dev
+	@cd frontend && npx cross-env VITE_API_BASE_URL=http://localhost:6400 npm run dev
 
 .PHONY: stop
-stop: ## Stop backend and frontend servers
+stop: ## Stop backend and frontend servers cross-platform
 	@echo "Stopping backend server (port 6400)..."
-	@lsof -t -i:6400 | xargs kill -9 2>/dev/null || echo "Backend server not found on port 6400."
+	@npx kill-port 6400
 	@echo "Stopping frontend server (port 5173)..."
-	@lsof -t -i:5173 | xargs kill -9 2>/dev/null || echo "Frontend server not found on port 5173."
+	@npx kill-port 5173
 
 # ==============================================================================
 # Tools & Maintenance
@@ -39,4 +41,6 @@ validate-yamls: ## Validate all YAML configuration files
 
 .PHONY: help
 help: ## Display this help message
-	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
+	@python -c "import re; \
+	p=r'$(firstword $(MAKEFILE_LIST))'.strip(); \
+	[print(f'{m[0]:<20} {m[1]}') for m in re.findall(r'^([a-zA-Z_-]+):.*?## (.*)$$', open(p, encoding='utf-8').read(), re.M)]" | sort
