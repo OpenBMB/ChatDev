@@ -1,0 +1,269 @@
+version: 0.4.0
+vars: {}
+graph:
+  id: spring_text_image_EN
+  description: 'Launch-driven Spring Festival content factory: plan -> parallel gen -> edit -> human review -> revise (gpt-4o).'
+  is_majority_voting: false
+  start:
+    - Planner
+  nodes:
+    - id: Planner
+      type: agent
+      config:
+        name: gpt-4o
+        provider: openai
+        role: |
+          You are a Spring Festival social media strategist.
+          The content entered at Launch is the only requirement for this task.
+          Please output a creation Brief (Markdown) that MUST include:
+          ## Target Audience
+          ## Core Communication Points (3)
+          ## Style & Taboos
+          ## Required Elements
+          ## Optional Creative Hooks (2)
+          ## One-Sentence Writing Task Summary
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params:
+          temperature: 0.6
+        tooling: []
+        thinking: null
+        memories: []
+        retry: null
+      description: ''
+      context_window: 0
+      log_output: true
+
+    - id: Copywriter
+      type: agent
+      config:
+        name: gpt-4o
+        provider: openai
+        role: |
+          You are the official account copywriter.
+          Based on the Brief, produce a Spring Festival post ready for publication (Markdown).
+          Requirements:
+          - 1 headline (eye-catching but not clickbait)
+          - 4–6 short paragraphs (fast rhythm, concise)
+          - At least 3 highly shareable punchlines (in **bold**)
+          - 2 interaction prompts at the end (e.g., comment topic / poll / share CTA)
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params:
+          temperature: 0.7
+        tooling: []
+        thinking: null
+        memories: []
+        retry: null
+      description: ''
+      context_window: 0
+      log_output: true
+
+    - id: Blessing
+      type: agent
+      config:
+        name: gpt-4o
+        provider: openai
+        role: |
+          You are a Spring Festival greeting writer.
+          Based on the Brief, generate 12 short greetings (Markdown list):
+          - 4 warm
+          - 4 humorous
+          - 4 traditional/Chinese-style
+          - Each greeting must be no more than 18 words
+          - Avoid repetitive expressions
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params:
+          temperature: 0.85
+        tooling: []
+        thinking: null
+        memories: []
+        retry: null
+      description: ''
+      context_window: 0
+      log_output: true
+
+    - id: Storyteller
+      type: agent
+      config:
+        name: gpt-4o
+        provider: openai
+        role: |
+          You are a short story writer.
+          Based on the Brief, write a 300–500 word Spring Festival short story (Markdown).
+          Requirements:
+          - Include one memorable element (twist / detail / punchline)
+          - End with reunion, blessing, or a sense of new beginning
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params:
+          temperature: 0.85
+        tooling: []
+        thinking: null
+        memories: []
+        retry: null
+      description: ''
+      context_window: 0
+      log_output: true
+
+    - id: PosterPrompt
+      type: agent
+      config:
+        name: gpt-4o
+        provider: openai
+        role: |
+          Based on the "Final Publication Package", generate a prompt pack for image generation.
+          Requirements:
+          - 3 style directions (Traditional Chinese / Modern Minimalist / Hand-drawn Illustration)
+          - For each direction provide:
+            - Positive prompt
+            - Negative prompt
+            - Suggested aspect ratio
+            - Main title / subtitle layout suggestions
+          Output in Markdown.
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params:
+          temperature: 0.6
+        tooling: []
+        thinking: null
+        memories: []
+        retry: null
+      description: ''
+      context_window: 0
+      log_output: true
+
+    - id: Editor1
+      type: agent
+      config:
+        name: gpt-4o
+        provider: openai
+        role: |
+          You are the chief editor.
+          You will receive: Brief + Post + Greetings + Short Story.
+          Please integrate them into an "Official Publication Package (Draft)" (Markdown),
+          with the following fixed structure:
+          # Headline Options (3)
+          # Final Main Post (1)
+          # Poster Short Lines (Select 6 from the greetings)
+          # Visual/Layout Suggestions (5)
+          # Comment Section Topics (3)
+          Ensure unified tone and make it directly publishable.
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params:
+          temperature: 0.5
+        tooling: []
+        thinking: null
+        memories: []
+        retry: null
+      description: ''
+      context_window: 10
+      log_output: true
+
+    - id: HumanReview
+      type: human
+      config:
+        description: |
+          Please review the "Official Publication Package (Draft)":
+          - If satisfied, enter: ACCEPT (the workflow will end)
+          - Otherwise, provide revision feedback (be as specific as possible)
+      description: ''
+      context_window: 10
+      log_output: true
+
+    - id: Editor2
+      type: agent
+      config:
+        name: gpt-4o
+        provider: openai
+        role: |
+          You are the second-round polishing editor.
+          You will receive the draft package + human revision feedback.
+          Please output the revised final publication package (Markdown).
+          Requirements:
+          - Fully preserve the structure (Headline Options / Final Post / Poster Lines / Visual Suggestions / Comment Topics)
+          - Address each revision point explicitly
+          - Ensure consistent tone and publish-ready quality
+          - If structure is missing or inconsistent, fix and complete it
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params:
+          temperature: 0.45
+        tooling: []
+        thinking: null
+        memories: []
+        retry: null
+      description: ''
+      context_window: 10
+      log_output: true
+
+    - id: ImageGen
+      type: agent
+      config:
+        name: gemini-2.5-flash-image-preview
+        provider: openai
+        role: |
+          Based on the provided poster prompt schemes, generate 1 Spring Festival themed poster image for each scheme.
+          If the poster involves text, ensure text accuracy. If text accuracy cannot be guaranteed, avoid including text.
+          If aspect ratio parameters are supported, prioritize the suggested ratio; otherwise use 1:1.
+          Output the result directly in the system-returned format.
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params: {}
+        tooling: []
+        thinking: null
+        memories: []
+        retry: null
+        input_mode: messages
+      description: ''
+      context_window: 0
+      log_output: true
+
+  edges:
+    - from: Planner
+      to: Copywriter
+    - from: Planner
+      to: Blessing
+    - from: Planner
+      to: Storyteller
+    - from: Planner
+      to: Editor1
+    - from: Copywriter
+      to: Editor1
+    - from: Blessing
+      to: Editor1
+    - from: Storyteller
+      to: Editor1
+    - from: Editor2
+      to: PosterPrompt
+    - from: PosterPrompt
+      to: ImageGen
+    - from: HumanReview
+      to: Editor2
+      trigger: true
+      condition:
+        type: keyword
+        config:
+          any: []
+          none:
+            - ACCEPT
+          regex: []
+          case_sensitive: true
+      carry_data: true
+      keep_message: true
+      clear_context: true
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: Editor1
+      to: HumanReview
+      trigger: true
+      condition: null
+      carry_data: true
+      keep_message: true
+      clear_context: true
+      clear_kept_context: false
+      process: null
+      dynamic: null
