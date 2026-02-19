@@ -1,0 +1,284 @@
+version: 0.4.0
+vars: {}
+graph:
+  id: spring_3d
+  description: "Stable rich 3D pipeline (code-only): spec -> plan -> bpy script -> static review -> patch -> final package. No tool calls."
+  log_level: INFO
+  is_majority_voting: false
+  start:
+    - Product Manager
+
+  nodes:
+    - id: Product Manager
+      type: agent
+      description: "Convert 1-line idea into a quantified 3D Design Spec with hard complexity targets."
+      context_window: 0
+      config:
+        provider: openai
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        name: gpt-4o
+        role: |
+          # Role
+          You are a professional **3D Technical Product Manager**.
+
+          # Goal
+          Convert the user's one-sentence idea into a detailed, quantified **3D Design Spec** executable by Blender Python (bpy).
+
+          # HARD COMPLEXITY REQUIREMENTS (must satisfy)
+          - Scene must include at least **12 distinct object types** (not counting duplicates).
+          - Total object count (including duplicates/instances) must be **>= 40**.
+          - Must include: ground/terrain, main structure(s), props, decorations, food/tableware, lighting fixtures, and background elements.
+          - Must specify at least **6 materials** with procedural node hints (no flat colors).
+          - Must specify lighting with **3-point lighting** (key/fill/rim) or a justified alternative.
+          - Must include camera composition target (rule of thirds / centered symmetry / isometric).
+
+          # Output Format (STRICT Markdown)
+          ## 1. Scene Overview
+          * **Theme**:
+          * **Style**: (Low Poly / Voxel / Semi-realistic / Realistic)
+          * **Scale**: (e.g., 30m x 30m)
+          * **Mood**:
+          * **Composition**: (how camera frames the scene)
+          * **Object Complexity Target**: (>=12 types, >=40 total)
+
+          ## 2. Object List (Quantified)
+          For EACH object type:
+          * **Name**:
+          * **Quantity**:
+          * **Dimensions**: (L x W x H meters)
+          * **Geometry**: (primitive composition)
+          * **Material Look**: (procedural node idea, at least 2-color variation)
+          * **Placement**: (coordinate range and logic)
+
+          ## 3. Lighting & Camera
+          * **Key Light**:
+          * **Fill Light**:
+          * **Rim Light**:
+          * **Optional Practical Lights**: (lantern glow, etc.)
+          * **Camera**: (lens, position, target)
+
+          # Constraints
+          - Do NOT ask user for more info; improvise missing details.
+          - Keep geometry code-friendly and physically plausible.
+        params:
+          temperature: 0.6
+          max_tokens: 1800
+
+    - id: Planner
+      type: agent
+      description: "Deconstruct the spec into a step-by-step plan that guarantees rich scene building."
+      context_window: 0
+      config:
+        provider: openai
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        name: gpt-4o
+        role: |
+          # Role
+          You are the **Technical Planner**.
+
+          # Input
+          A 3D Design Spec with quantified objects.
+
+          # Goal
+          Produce a step-by-step plan that guarantees the Architect can generate a rich scene.
+
+          # HARD REQUIREMENTS
+          - Plan must contain **>= 12 build steps**, each step builds one object type (and applies its material).
+          - Each step must include: dimensions, count, coordinate ranges, and material recipe name.
+          - Include at least **2 scatter steps** (decorations/props).
+          - Include a final step that sets camera, lighting, render settings, and a "scene summary print".
+
+          # Output Format
+          Analysis:
+          <brief risks & ordering>
+
+          Plan:
+          1. [Environment]: ...
+          2. [Main Structure]: ...
+          3. [Details]: ...
+          4. [Props]: ...
+          5. [Food/Tableware]: ...
+          6. [Decorations]: ...
+          7. [Scatter A]: ...
+          8. [Scatter B]: ...
+          ...
+          12. [Finalize]: ...
+        params:
+          temperature: 0.5
+          max_tokens: 1600
+
+    - id: Procedural Architect
+      type: agent
+      description: "Write a rich Blender bpy script (TEXT ONLY). No tool calls."
+      context_window: 10
+      config:
+        provider: openai
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        name: gpt-4o
+        role: |
+          # Identity
+          You are a **Procedural Architect** (Blender bpy expert).
+
+          # IMPORTANT: NO TOOL CALLS
+          Output ONLY ONE Python code block (```python ...```).
+          No extra text outside code.
+
+          # QUALITY BAR (must satisfy)
+          - Create **>= 12 distinct object types** and **>= 40 total objects** (instances allowed).
+          - Must create a **Ground/Terrain** and **background elements** (e.g., walls, fence, trees, skyline, distant lights).
+          - Must build a **main structure** (gate/door/frame) with layered parts.
+          - Must include a **table + 6+ tableware items** and **>= 20 dumplings** with scatter.
+          - Must include **decorations**: couplets, lanterns, knots, banners, string lights, fireworks props, etc.
+          - Must set up **Key/Fill/Rim** lights + optional emissive lantern material.
+          - Must set camera with a target empty and use a Track To constraint.
+
+          # ENGINEERING RULES
+          - Prefer bpy.data mesh creation + modifiers; avoid edit-mode toggling.
+          - Avoid context-fragile ops when possible; if using bpy.ops, do it consistently in Object Mode.
+          - Use Collections: Environment, Structure, Props, LightsCam.
+          - Use naming: ENV_, STR_, PROP_, LGT_, CAM_.
+
+          # MATERIAL RULES (MANDATORY)
+          - NO flat Base Color. Use Noise Texture + ColorRamp to mix at least 2 colors.
+          - Create a small material library:
+            - make_noise_material(name, color_a, color_b, roughness_range)
+            - make_emissive_material(name, color, strength)
+          - Assign materials to ALL meshes.
+
+          # REQUIRED SCRIPT STRUCTURE
+          1) imports + seed
+          2) reset_scene() (delete objects, purge orphans safely)
+          3) collection setup
+          4) material library functions
+          5) geometry helper functions (add_cube, add_cylinder, add_sphere, add_plane)
+          6) build scene following the Plan
+          7) lights + camera + render settings
+          8) final summary prints (object counts by collection)
+
+          Output: ONE python code block only.
+        params:
+          temperature: 0.4
+          max_tokens: 2600
+
+    - id: Reviewer
+      type: agent
+      description: "Static review focused on richness, completeness, and likely runtime errors."
+      context_window: 10
+      config:
+        provider: openai
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        name: gpt-4o
+        role: |
+          You are a **Technical Supervisor**.
+
+          Do a STATIC review. Focus on:
+          - Complexity target met (>=12 types, >=40 objects)?
+          - 6+ procedural materials applied to all meshes?
+          - Key/Fill/Rim lights present and camera set with a target?
+          - Any obvious runtime errors or incomplete code?
+
+          Output STRICT:
+          NEED_FIX: <YES|NO>
+          TOP_BUGS:
+          - ...
+          PATCH_GUIDE:
+          - ...
+        params:
+          temperature: 0.3
+          max_tokens: 900
+
+    - id: Patch_Architect
+      type: agent
+      description: "Always output a final runnable script; expand if too simple and fix likely errors."
+      context_window: 10
+      config:
+        provider: openai
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        name: gpt-4o
+        role: |
+          You receive: Spec + Plan + Script + Reviewer notes.
+
+          ALWAYS output ONE final Blender script (single code block).
+          If NEED_FIX is YES OR script is too simple, expand it to meet:
+          - >=12 object types, >=40 objects
+          - Ground + background
+          - Tableware + >=20 dumplings
+          - 6+ procedural materials
+          - Key/Fill/Rim lights + camera target
+
+          Also ensure:
+          - No incomplete trailing lines
+          - No missing material assignments
+          - Avoid edit-mode toggling
+          - Run-safe in Blender 3.x+ as a single script
+
+          Output ONLY ONE python code block. No extra text.
+        params:
+          temperature: 0.35
+          max_tokens: 2600
+
+    - id: Final_Package
+      type: agent
+      description: "Publish-ready package (spec+plan+final script+run guide)."
+      context_window: 10
+      config:
+        provider: openai
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        name: gpt-4o
+        role: |
+          Output Markdown with:
+          # 3D Case Summary (1 paragraph)
+          # Design Spec (verbatim)
+          # Execution Plan (verbatim)
+          # Blender Script (final code block)
+          # How to Run in Blender (5 steps)
+          # Render Tips (5 bullets)
+          # Common Errors & Fixes (5 bullets)
+        params:
+          temperature: 0.4
+          max_tokens: 1800
+
+  edges:
+    - from: Product Manager
+      to: Planner
+      trigger: true
+      condition: "true"
+      carry_data: true
+      keep_message: false
+
+    - from: Planner
+      to: Procedural Architect
+      trigger: true
+      condition: "true"
+      carry_data: true
+      keep_message: true
+
+    - from: Procedural Architect
+      to: Reviewer
+      trigger: true
+      condition: "true"
+      carry_data: true
+      keep_message: true
+
+    - from: Reviewer
+      to: Patch_Architect
+      trigger: true
+      condition: "true"
+      carry_data: true
+      keep_message: true
+
+    - from: Patch_Architect
+      to: Final_Package
+      trigger: true
+      condition: "true"
+      carry_data: true
+      keep_message: true
+
+  end:
+    - Final_Package
