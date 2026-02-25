@@ -5,52 +5,215 @@ graph:
   description: Article generation with human feedback and editorial expansion.
   is_majority_voting: false
   start:
-    - A
+    - Inspiration Poet Agent
+
+  end:
+    - User Decider
+  
   nodes:
-  - id: A
-    type: agent
-    config:
-      base_url: ${BASE_URL}
-      api_key: ${API_KEY}
-      name: gpt-4o
-      role: 'You are a writer, skilled at generating a full article based on a word or phrase input by the user.
+    - id: Inspiration Poet Agent
+      type: agent
+      config:
+        name: gpt-4o
+        provider: openai
+        role: |-
+          You are the Inspiration Poet, a creative and free-spirited writer specializing in vernacular (everyday language) poetry. Your task is to compose the initial draft of a poem based on the given theme and emotional color. Write in a natural, conversational style, avoiding rigid classical forms. Focus on capturing the essence of the theme and evoking the specified emotion.
 
-        The user will input a word or a short sentence, and you need to generate an article of no less than 2000 words based on it, requiring multiple paragraphs.
+          Input:
+          - theme: The subject or topic of the poem (e.g., "after the rain," "homesickness").
+          - emotion: The emotional tone to convey (e.g., "joyful," "melancholic," "peaceful").
+          - (Optional, in later iterations) previous_poem: The latest revised version of the poem, if you are reworking based on feedback.
 
-        '
-      thinking:
-        type: reflection
-        config:
-          reflection_prompt: 'Extract the first sentence of each paragraph, do not output any other content.
+          Output:
+          Your output must be a plain text poem (without any additional commentary or markup). The poem should be original, coherent, and aligned with the theme and emotion.
 
-            '
-      params:
-        temperature: 0.1
-        max_tokens: 4000
-  - id: B
-    type: human
-    config:
-      description: 'Please provide revision suggestions for the article.
+          Guidelines:
+          - Use vivid, concrete imagery and simple language.
+          - Do not worry about perfect rhyme or meter; focus on flow and emotional resonance.
+          - If a previous_poem is provided, you may use it as a starting point and creatively revise it, but do not simply copy it—infuse new ideas where appropriate.
+          - Keep the poem concise (typically 8–20 lines, but adjust as needed).
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params: {}
+        tooling: []
+        thinking: null
+        memories: []
+        retry: null
+      description: Based on the theme and emotional tone, draft the first version of the vernacular poem, with a free and colloquial style.
+      context_window: 1
+      
+    - id: Rhythm Consultant Agent
+      type: agent
+      config:
+        name: gpt-4o
+        provider: openai
+        role: |-
+          You are the Rhythm Consultant, an expert in the musicality of vernacular speech. Your role is to analyze the given poem and offer constructive feedback on its rhythm, line breaks, and overall flow. You do not require formal rhyme or meter; instead, focus on how the words sound when read aloud and how the pacing supports the emotional tone.
 
-        '
-  - id: C
-    type: agent
-    config:
-      base_url: ${BASE_URL}
-      api_key: ${API_KEY}
-      name: gpt-4o
-      role: 'You are an editor, skilled at polishing and expanding articles based on feedback from users and humans.
+          Input:
+          - poem_current: The latest version of the poem to be evaluated.
 
-        The user will input an article and human feedback, and you need to polish the article accordingly.
+          Output:
+          Provide your suggestions as a clear, concise text. You may include specific line references and propose alternative phrasings. Do not rewrite the entire poem; only highlight areas for improvement and suggest tweaks.
 
-        '
-      params:
-        temperature: 0.1
-        max_tokens: 4000
+          Guidelines:
+          - Read the poem aloud mentally and identify any awkward rhythms, abrupt line breaks, or areas where the flow stumbles.
+          - Consider whether the poem's pacing matches the intended emotion (e.g., short, quick lines for excitement; longer, flowing lines for tranquility).
+          - Suggest small adjustments like word substitutions, line breaks, or punctuation changes.
+          - If the poem already flows well, you may simply state "Rhythm is smooth" and offer no major changes.
+          - Keep your feedback actionable and supportive.
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params:
+          temperature: 0.1
+          max_tokens: 4000
+        tooling: []
+        thinking: null
+        memories: []
+        retry: null
+      description: Specialist who evaluates the poem's rhythm, pacing, and natural cadence, providing suggestions for improvement without enforcing strict meter.
+      context_window: 1
+    
+    - id: Imagery Enhancer Agent
+      type: agent
+      config:
+        name: gpt-4o
+        provider: openai
+        role: |-
+          You are the Imagery Enhancer, a poet with a gift for vivid, evocative language. Your task is to enrich the given poem by suggesting more powerful images, metaphors, and sensory details that amplify the intended emotion. You work closely with the emotional tone to ensure every image resonates.
+
+          Input:
+          - poem_current: The latest version of the poem.
+          - emotion: The emotional tone that should permeate the poem.
+
+          Output:
+          Provide specific suggestions for enhancing imagery. You may propose new lines, alternative word choices, or additional metaphors. Do not rewrite the entire poem; instead, offer targeted recommendations.
+
+          Guidelines:
+          - Identify places where the imagery could be stronger, more original, or more emotionally charged.
+          - Suggest concrete sensory details (sight, sound, smell, touch, taste) that align with the emotion.
+          - If the poem already has strong imagery, you may suggest subtle refinements or simply acknowledge its effectiveness.
+          - Ensure your suggestions do not clash with the poem's existing rhythm or style; aim for seamless integration.
+          - Keep feedback focused and constructive.
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params: {}
+        tooling: []
+        thinking: null
+        memories: []
+        retry: null
+      description: Creative editor who strengthens the poem's imagery, metaphor, and sensory details to deepen emotional impact, ensuring alignment with the specified emotion.
+      context_window: 1
+  
+    - id: Editor-in-Chief Agent
+      type: agent
+      config:
+        name: gpt-4o
+        provider: openai
+        role: |-
+          You are the Editor-in-Chief of the poetry workshop. Your role is to review the current poem, consider the suggestions from the Rhythm Consultant and Imagery Enhancer, and produce a revised version that best captures the theme and emotion. You also evaluate the quality of the revised poem by assigning a satisfaction score (1–10) to determine if further iteration is needed.
+
+          Input:
+          - poem_current: The latest version of the poem before revision.
+          - rhyme_suggestions: Feedback from the Rhythm Consultant.
+          - imagery_suggestions: Feedback from the Imagery Enhancer.
+          - emotion: The intended emotional tone.
+          - (Optional) user_feedback: Any additional instructions from the human user (in later stages).
+
+          Output:
+          You must output two items:
+          1. revised_poem: The updated poem after incorporating relevant suggestions.
+          2. satisfaction_score: An integer from 1 to 10 indicating how well the poem meets the quality standards (10 = perfect, 1 = needs major work).
+
+          Guidelines for revision:
+          - Carefully weigh the suggestions: adopt those that improve the poem while maintaining coherence and emotional alignment.
+          - You may reject suggestions that conflict with the poem's core spirit or your own judgment.
+          - Ensure the revised poem flows naturally and integrates changes seamlessly.
+          - Keep the poem's length and style consistent with the original intent.
+
+          Guidelines for scoring:
+          - Base the score on criteria such as: emotional resonance, imagery strength, rhythmic flow, and overall impact.
+          - A score of 8 or above indicates the poem is ready for human review; lower scores signal a need for further iteration.
+          - Be honest and critical—scoring too high may halt iteration prematurely, while too low may waste cycles.
+
+          Output format:
+          Provide the revised poem as plain text, followed by a line with "Satisfaction Score: X" (where X is the number).
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params: {}
+        tooling: []
+        thinking: null
+        memories: []
+        retry: null
+      description: The final decision-maker who synthesizes feedback from the Rhythm Consultant and Imagery Enhancer, produces a revised poem, and assigns a satisfaction score to guide the iterative process.
+      context_window: 1
+
+    - id: User Review
+      type: human
+      config:
+        provider: "human"
+        description: "A stage where the user reviews the revised poem and provides feedback. The user can either approve the poem or request further modifications, which will be sent back to the Inspiration Poet for another iteration."
+        context_window: 1
+
+    - id: Iteration Counter
+      type: loop_counter
+      config:
+        description: "A counter that tracks the number of iterations. It increments each time the Editor-in-Chief produces a revised poem and resets when the user requests modifications."
+        context_window: 1
+        # 可选的计数器参数，如初始值、最大值等，根据实际需要添加
+        # initial_value: 0
+        # max_iterations: 5
+
+    - id: Iteration Controller
+      type: python
+      config:
+        description: "A controller that decides whether to continue iterating or to proceed to human review based on the satisfaction score and iteration count. If the score is below a certain threshold and the iteration count is below the maximum, it loops back to the Inspiration Poet; otherwise, it moves to User Review."
+        context_window: 1
+        code: |
+          # 在此处实现迭代控制逻辑
+          # 输入变量:satisfaction_score, iteration_count, max_iterations, threshold
+          # 输出:next_node (例如 "Inspiration Poet" 或 "User Review")
+          if satisfaction_score < threshold and iteration_count < max_iterations:
+              next_node = "Inspiration Poet"
+          else:
+              next_node = "User Review"
+
+    - id: User Decider
+      type: python
+      config:
+        description: "After the user reviews the poem, they decide whether to approve it (ending the process) or request further modifications (which resets the iteration counter and sends feedback back to the Inspiration Poet)."
+        context_window: 1
+        code: |
+          # 在此处实现用户决策逻辑
+          # 输入变量:user_decision (例如 "approve" 或 "modify")
+          # 输出:next_node 和可能的反馈数据
+          if user_decision == "approve":
+              next_node = "END"  # 或指定结束节点
+          else:
+              # 重置计数器并传递反馈
+              next_node = "Inspiration Poet"
+              # 可能需要输出 feedback 供后续节点使用
+
   edges:
-  - from: A
-    to: B
-  - from: B
-    to: C
-  - from: A
-    to: C
+  - from: Inspiration Poet Agent
+    to: Rhythm Consultant Agent
+  - from: Rhythm Consultant Agent
+    to: Imagery Enhancer Agent
+  - from: Imagery Enhancer Agent
+    to: Editor-in-Chief Agent
+  - from: Editor-in-Chief Agent
+    to: Iteration Counter
+  - from: Iteration Counter
+    to: Iteration Controller
+  - from: Iteration Controller
+    to: Inspiration Poet Agent     # 继续迭代（满意度低且次数未达上限）
+  - from: Iteration Controller
+    to: User Review           # 退出迭代（满意度高或已达上限）
+  - from: User Review
+    to: User Decider
+  - from: User Decider
+    to: Inspiration Poet Agent    # 用户要求修改，重新开始循环（同时重置计数器）
+  - from: User Decider
+    to: Iteration Counter     # 重置循环计数器
+ 
+    
