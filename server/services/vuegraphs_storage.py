@@ -37,6 +37,12 @@ def _ensure_db_initialized() -> Path:
 
 def save_vuegraph_content(filename: str, content: str) -> None:
     """Insert or update the stored content for the provided filename."""
+    # Input validation to prevent SQL injection and ensure data integrity
+    if not filename or not isinstance(filename, str):
+        raise ValueError("filename must be a non-empty string")
+    if not isinstance(content, str):
+        raise ValueError("content must be a string")
+    
     db_path = _ensure_db_initialized()
     with sqlite3.connect(db_path) as connection:
         connection.execute(
