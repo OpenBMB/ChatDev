@@ -12,6 +12,21 @@ ProviderRegistry.register(
 )
 
 try:
+    from runtime.node.agent.providers.doubao_provider import DoubaoProvider
+except ImportError:
+    DoubaoProvider = None
+
+if DoubaoProvider is not None:
+    ProviderRegistry.register(
+        "doubao",
+        DoubaoProvider,
+        label="Doubao",
+        summary="ByteDance Doubao models via OpenAI-compatible API",
+    )
+else:
+    print("Doubao provider not registered.")
+
+try:
     from runtime.node.agent.providers.gemini_provider import GeminiProvider
 except ImportError:
     GeminiProvider = None
