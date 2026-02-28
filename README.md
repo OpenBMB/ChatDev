@@ -270,6 +270,7 @@ We provide robust, out-of-the-box templates for common scenarios. All runnable w
 | **🎮 Game Dev** | `GameDev_v1.yaml`<br>`ChatDev_v1.yaml`                                                                      | <img src="assets/cases/game_development/game.gif" width="100%"><br>Prompt: *"Please help me design and develop a Tank Battle game."* |
 | **📚 Deep Research** | `deep_research_v1.yaml`                                                                                     | <img src="assets/cases/deep_research/deep_research.gif" width="85%"><br>Prompt: *"Research about recent advances in the field of LLM-based agent RL"* |
 | **📘 Study Productivity** | `demo_study_report_innovation.yaml`                                                                         | Prompt: *"Here are my study notes for today. Build a review report and propose innovative improvements for the next 48 hours."* |
+| **📝 Exam Revision** | `demo_physics_revision_ppt_only.yaml`<br>`demo_math_analysis2_revision_ppt_only.yaml`<br>`demo_discrete_math_revision_lecture_only.yaml`<br>`demo_data_structure_revision_ppt_only.yaml` | Prompt: *"Generate chapter-level exam revision notes strictly from uploaded PPT/PDF materials with source tagging."* |
 | **🎓 Teach Video** | `teach_video.yaml` (Please run command `uv add manim` before running this workflow)                         | <img src="assets/cases/video_generation/video.gif" width="140%"><br>Prompt: *"讲一下什么是凸优化"* |
 
 ---
