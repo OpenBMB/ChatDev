@@ -5,13 +5,13 @@
         <label>
           {{ field.displayName || field.name }}
           <span v-if="field.required" class="required-asterisk">*</span>
-          <span
+          <RichTooltip
             v-if="field.description"
-            class="help-icon"
-            :title="field.description"
+            :content="{ description: field.description }"
+            placement="top"
           >
-            ?
-          </span>
+            <span class="help-icon" tabindex="0">?</span>
+          </RichTooltip>
         </label>
         <div class="child-node-container">
           <div class="child-node-controls">
@@ -120,13 +120,13 @@
         <label>
           {{ field.displayName || field.name }}
           <span v-if="field.required" class="required-asterisk">*</span>
-          <span
+          <RichTooltip
             v-if="field.description"
-            class="help-icon"
-            :title="field.description"
+            :content="{ description: field.description }"
+            placement="top"
           >
-            ?
-          </span>
+            <span class="help-icon" tabindex="0">?</span>
+          </RichTooltip>
         </label>
         <div class="child-node-container">
           <div class="child-node-controls">
@@ -232,13 +232,13 @@
         <label :for="`${modalId}-${field.name}`">
           {{ field.displayName || field.name }}
           <span v-if="field.required" class="required-asterisk">*</span>
-          <span
+          <RichTooltip
             v-if="field.description"
-            class="help-icon"
-            :title="field.description"
+            :content="{ description: field.description }"
+            placement="top"
           >
-            ?
-          </span>
+            <span class="help-icon" tabindex="0">?</span>
+          </RichTooltip>
         </label>
         <div class="custom-select-wrapper" :class="{ 'select-disabled': isReadOnly }">
           <input
@@ -291,13 +291,13 @@
         <label>
           {{ field.displayName || field.name }}
           <span v-if="field.required" class="required-asterisk">*</span>
-          <span
+          <RichTooltip
             v-if="field.description"
-            class="help-icon"
-            :title="field.description"
+            :content="{ description: field.description }"
+            placement="top"
           >
-            ?
-          </span>
+            <span class="help-icon" tabindex="0">?</span>
+          </RichTooltip>
         </label>
         <div class="multi-select-options">
           <label
@@ -328,13 +328,13 @@
           <label :for="`${modalId}-${field.name}`" class="switch-label-text">
             {{ field.displayName || field.name }}
             <span v-if="field.required" class="required-asterisk">*</span>
-            <span
+            <RichTooltip
               v-if="field.description"
-              class="help-icon"
-              :title="field.description"
+              :content="{ description: field.description }"
+              placement="top"
             >
-              ?
-            </span>
+              <span class="help-icon" tabindex="0">?</span>
+            </RichTooltip>
           </label>
           <label class="switch-container">
             <input
@@ -354,13 +354,13 @@
         <label :for="`${modalId}-${field.name}`">
           {{ field.displayName || field.name }}
           <span v-if="field.required" class="required-asterisk">*</span>
-          <span
+          <RichTooltip
             v-if="field.description"
-            class="help-icon"
-            :title="field.description"
+            :content="{ description: field.description }"
+            placement="top"
           >
-            ?
-          </span>
+            <span class="help-icon" tabindex="0">?</span>
+          </RichTooltip>
         </label>
         <input
           :id="`${modalId}-${field.name}`"
@@ -378,13 +378,13 @@
         <label :for="`${modalId}-${field.name}`">
           {{ field.displayName || field.name }}
           <span v-if="field.required" class="required-asterisk">*</span>
-          <span
+          <RichTooltip
             v-if="field.description"
-            class="help-icon"
-            :title="field.description"
+            :content="{ description: field.description }"
+            placement="top"
           >
-            ?
-          </span>
+            <span class="help-icon" tabindex="0">?</span>
+          </RichTooltip>
         </label>
         <textarea
           :id="`${modalId}-${field.name}`"
@@ -402,13 +402,13 @@
         <label :for="`${modalId}-${field.name}`">
           {{ field.displayName || field.name }}
           <span v-if="field.required" class="required-asterisk">*</span>
-          <span
+          <RichTooltip
             v-if="field.description"
-            class="help-icon"
-            :title="field.description"
+            :content="{ description: field.description }"
+            placement="top"
           >
-            ?
-          </span>
+            <span class="help-icon" tabindex="0">?</span>
+          </RichTooltip>
         </label>
         <input
           :id="`${modalId}-${field.name}`"
@@ -427,13 +427,13 @@
         <label :for="`${modalId}-${field.name}`">
           {{ field.displayName || field.name }}
           <span v-if="field.required" class="required-asterisk">*</span>
-          <span
+          <RichTooltip
             v-if="field.description"
-            class="help-icon"
-            :title="field.description"
+            :content="{ description: field.description }"
+            placement="top"
           >
-            ?
-          </span>
+            <span class="help-icon" tabindex="0">?</span>
+          </RichTooltip>
         </label>
         <input
           :id="`${modalId}-${field.name}`"
@@ -452,13 +452,13 @@
         <label>
           {{ field.displayName || field.name }}
           <span v-if="field.required" class="required-asterisk">*</span>
-          <span
+          <RichTooltip
             v-if="field.description"
-            class="help-icon"
-            :title="field.description"
+            :content="{ description: field.description }"
+            placement="top"
           >
-            ?
-          </span>
+            <span class="help-icon" tabindex="0">?</span>
+          </RichTooltip>
         </label>
         <div class="vars-container">
           <button @click="$emit('open-var-modal', field.name)" class="add-var-button">
@@ -507,13 +507,13 @@
         <label>
           {{ field.displayName || field.name }}
           <span v-if="field.required" class="required-asterisk">*</span>
-          <span
+          <RichTooltip
             v-if="field.description"
-            class="help-icon"
-            :title="field.description"
+            :content="{ description: field.description }"
+            placement="top"
           >
-            ?
-          </span>
+            <span class="help-icon" tabindex="0">?</span>
+          </RichTooltip>
         </label>
         <div class="list-container">
           <button @click="$emit('open-list-item-modal', field.name)" class="add-list-button">
@@ -556,6 +556,7 @@
 
 <script setup>
 import { computed, ref } from 'vue'
+import RichTooltip from './RichTooltip.vue'
 
 const props = defineProps({
   field: {
