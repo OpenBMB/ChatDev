@@ -602,29 +602,30 @@ const deleteNodeById = async (nodeId) => {
   if (!nodeId) {
     return
   }
-  const snapshot = snapshotYamlContent()
-  if (!snapshot?.graph) {
+  const source = yamlContent.value
+  if (!source?.graph) {
     return
   }
-  const nodesArr = Array.isArray(snapshot.graph.nodes) ? snapshot.graph.nodes : []
-  const edgesArr = Array.isArray(snapshot.graph.edges) ? snapshot.graph.edges : []
+  const sourceGraph = source.graph
+  const nodesArr = Array.isArray(sourceGraph.nodes) ? sourceGraph.nodes : []
+  const edgesArr = Array.isArray(sourceGraph.edges) ? sourceGraph.edges : []
 
   // Remove the node and its related edges
   const nextNodes = nodesArr.filter(node => node?.id !== nodeId)
   const nextEdges = edgesArr.filter(edge => edge?.from !== nodeId && edge?.to !== nodeId)
   
   // Remove node ID from graph.start/end
-  const nextStart = Array.isArray(snapshot.graph.start)
-    ? snapshot.graph.start.filter(id => id !== nodeId)
-    : snapshot.graph.start
-  const nextEnd = Array.isArray(snapshot.graph.end)
-    ? snapshot.graph.end.filter(id => id !== nodeId)
-    : snapshot.graph.end
+  const nextStart = Array.isArray(sourceGraph.start)
+    ? sourceGraph.start.filter(id => id !== nodeId)
+    : sourceGraph.start
+  const nextEnd = Array.isArray(sourceGraph.end)
+    ? sourceGraph.end.filter(id => id !== nodeId)
+    : sourceGraph.end
 
   const nextSnapshot = {
-    ...snapshot,
+    ...source,
     graph: {
-      ...snapshot.graph,
+      ...sourceGraph,
       nodes: nextNodes,
       edges: nextEdges,
       start: nextStart,
@@ -647,13 +648,14 @@ const deleteEdgeByEndpoints = async (fromId, toId) => {
   if (!fromId || !toId) {
     return
   }
-  const snapshot = snapshotYamlContent()
-  if (!snapshot?.graph || !Array.isArray(snapshot.graph.edges)) {
+  const source = yamlContent.value
+  if (!source?.graph || !Array.isArray(source.graph.edges)) {
     return
   }
+  const sourceGraph = source.graph
 
   let removed = false
-  const nextEdges = snapshot.graph.edges.filter(edge => {
+  const nextEdges = sourceGraph.edges.filter(edge => {
     if (!removed && edge?.from === fromId && edge?.to === toId) {
       removed = true
       return false
@@ -662,11 +664,11 @@ const deleteEdgeByEndpoints = async (fromId, toId) => {
   })
 
   // Delete from .start if edge is from Start Node
-  let nextStart = snapshot.graph.start
+  let nextStart = sourceGraph.start
   if (fromId === START_NODE_ID) {
-    nextStart = Array.isArray(snapshot.graph.start)
-      ? snapshot.graph.start.filter(id => id !== toId)
-      : snapshot.graph.start
+    nextStart = Array.isArray(sourceGraph.start)
+      ? sourceGraph.start.filter(id => id !== toId)
+      : sourceGraph.start
 
     // Empty start node array is not allowed
     const startArray = Array.isArray(nextStart) ? nextStart : []
@@ -677,9 +679,9 @@ const deleteEdgeByEndpoints = async (fromId, toId) => {
   }
 
   const nextSnapshot = {
-    ...snapshot,
+    ...source,
     graph: {
-      ...snapshot.graph,
+      ...sourceGraph,
       edges: nextEdges,
       start: nextStart
     }
@@ -888,6 +890,11 @@ const updateNodesAndEdgesFromYaml = (preserveExistingLayout = false) => {
 
     const currentNodes = nodes.value || []
     const currentEdges = edges.value || []
+    const defaultCenterPosition = getCentralPosition()
+    const getDefaultCenterPosition = () => ({
+      x: defaultCenterPosition.x,
+      y: defaultCenterPosition.y
+    })
 
     const existingNodeById = preserveExistingLayout
       ? new Map(currentNodes.map(node => [node.id, node]))
@@ -947,8 +954,9 @@ const updateNodesAndEdgesFromYaml = (preserveExistingLayout = false) => {
           }
         }
 
-        while (q.length) {
-          const id = q.shift()
+        let queueIndex = 0
+        while (queueIndex < q.length) {
+          const id = q[queueIndex++]
           const baseLevel = levelById.get(id) || 0
           const neighbors = adj.get(id) || new Set()
           for (const nb of neighbors) {
@@ -1033,7 +1041,7 @@ const updateNodesAndEdgesFromYaml = (preserveExistingLayout = false) => {
             }
           }
 
-          const pos = positions.get(id) || getCentralPosition()
+          const pos = positions.get(id) || getDefaultCenterPosition()
           return {
             id,
             type: 'workflow-node',
@@ -1051,7 +1059,7 @@ const updateNodesAndEdgesFromYaml = (preserveExistingLayout = false) => {
           id: yamlNode.id,
           type: 'workflow-node',
           label: yamlNode.id,
-          position: getCentralPosition(),
+          position: getDefaultCenterPosition(),
           data: yamlNode
         }))
         nodes.value = nextNodes
@@ -1097,13 +1105,13 @@ const updateNodesAndEdgesFromYaml = (preserveExistingLayout = false) => {
         // Place start node to the left of the leftmost column
         const yamlNodesInGraph = (nodes.value || []).filter(n => n && n.id !== START_NODE_ID)
         if (yamlNodesInGraph.length) {
-          const xs = yamlNodesInGraph.map(n => (n?.position && typeof n.position.x === 'number') ? n.position.x : getCentralPosition().x)
+          const xs = yamlNodesInGraph.map(n => (n?.position && typeof n.position.x === 'number') ? n.position.x : defaultCenterPosition.x)
           const minX = Math.min(...xs)
           // Find nodes in that left column
           const tol = 1
           const leftColumn = yamlNodesInGraph.filter(n => Math.abs((n?.position?.x || 0) - minX) <= tol)
-          const ys = leftColumn.map(n => (n?.position && typeof n.position.y === 'number') ? n.position.y : getCentralPosition().y)
-          const avgY = ys.length ? ys.reduce((a, b) => a + b, 0) / ys.length : getCentralPosition().y
+          const ys = leftColumn.map(n => (n?.position && typeof n.position.y === 'number') ? n.position.y : defaultCenterPosition.y)
+          const avgY = ys.length ? ys.reduce((a, b) => a + b, 0) / ys.length : defaultCenterPosition.y
           const startXOffset = -100
           const startYOffset = 80
           startNode = {
@@ -1118,7 +1126,7 @@ const updateNodesAndEdgesFromYaml = (preserveExistingLayout = false) => {
             id: START_NODE_ID,
             type: 'start-node',
             label: 'Start',
-            position: getCentralPosition(),
+            position: getDefaultCenterPosition(),
             data: { id: START_NODE_ID, label: 'Start' }
           }
         }
@@ -1128,7 +1136,7 @@ const updateNodesAndEdgesFromYaml = (preserveExistingLayout = false) => {
           id: START_NODE_ID,
           type: 'start-node',
           label: 'Start',
-          position: getCentralPosition(),
+          position: getDefaultCenterPosition(),
           data: { id: START_NODE_ID, label: 'Start' }
         }
       }
@@ -1167,13 +1175,14 @@ const updateNodesAndEdgesFromYaml = (preserveExistingLayout = false) => {
     }).filter(Boolean)
 
     // Combine YAML edges with visual start edges (preserve any existing non-yaml edges)
+    const nextYamlEdgeIdSet = new Set(nextYamlEdges.map(edge => edge.id))
     edges.value = [
       // keep any existing edges that are not YAML edges (e.g., visual-only) when preserving layout
       // but always exclude previous Start edges so they are replaced by the newly computed ones
       ...(preserveExistingLayout ? currentEdges.filter(e => {
         const k = `${e.source}-${e.target}`
         // drop if it's a YAML-defined edge or a previous Start edge
-        const isYamlEdge = nextYamlEdges.some(ne => ne.id === k)
+        const isYamlEdge = nextYamlEdgeIdSet.has(k)
         const isStartEdge = e.source === START_NODE_ID
         // Also drop if it looks like a YAML edge (has data.from/to) but isn't in nextYamlEdges (stale)
         const isStaleYamlEdge = e.data?.from && e.data?.to
@@ -1292,69 +1301,81 @@ const updateVueFlowNodeId = (oldId, newId) => {
 }
 
 // FormGenerator integration
-const snapshotYamlContent = () => cloneDeep(yamlContent.value ?? null)
-
-// Build YAML without specific node
+// Build YAML without specific node (shallow clone path to avoid full deep-clone on editor open)
 const buildYamlWithoutNode = (nodeId) => {
-  const snapshot = snapshotYamlContent()
-  if (!snapshot?.graph?.nodes || !Array.isArray(snapshot.graph.nodes)) {
-    return snapshot
+  const source = yamlContent.value
+  if (!source?.graph?.nodes || !Array.isArray(source.graph.nodes)) {
+    return source
   }
-  snapshot.graph.nodes = snapshot.graph.nodes.filter(node => node?.id !== nodeId)
-  return snapshot
+  return {
+    ...source,
+    graph: {
+      ...source.graph,
+      nodes: source.graph.nodes.filter(node => node?.id !== nodeId)
+    }
+  }
 }
 
 const buildYamlWithoutEdge = (fromId, toId) => {
-  const snapshot = snapshotYamlContent()
-  if (!snapshot?.graph?.edges || !Array.isArray(snapshot.graph.edges)) {
-    return snapshot
+  const source = yamlContent.value
+  if (!source?.graph?.edges || !Array.isArray(source.graph.edges)) {
+    return source
   }
   let removed = false
-  snapshot.graph.edges = snapshot.graph.edges.filter(edge => {
+  const filteredEdges = source.graph.edges.filter(edge => {
     if (!removed && edge?.from === fromId && edge?.to === toId) {
       removed = true
       return false
     }
     return true
   })
-  return snapshot
+  return {
+    ...source,
+    graph: {
+      ...source.graph,
+      edges: filteredEdges
+    }
+  }
 }
 
 const buildYamlWithoutVars = () => {
-  const snapshot = snapshotYamlContent()
-  if (!snapshot || typeof snapshot !== 'object') {
-    return snapshot
+  const source = yamlContent.value
+  if (!source || typeof source !== 'object') {
+    return source
   }
-  if (!Object.prototype.hasOwnProperty.call(snapshot, 'vars')) {
-    return snapshot
+  if (!Object.prototype.hasOwnProperty.call(source, 'vars')) {
+    return source
   }
-  const sanitized = { ...snapshot }
+  const sanitized = { ...source }
   delete sanitized.vars
   return sanitized
 }
 
 const buildYamlWithoutMemory = () => {
-  const snapshot = snapshotYamlContent()
-  if (!snapshot?.graph) {
-    return snapshot
+  const source = yamlContent.value
+  if (!source?.graph) {
+    return source
   }
-  if (Object.prototype.hasOwnProperty.call(snapshot.graph, 'memory')) {
-    const newGraph = { ...snapshot.graph }
+  if (Object.prototype.hasOwnProperty.call(source.graph, 'memory')) {
+    const newGraph = { ...source.graph }
     delete newGraph.memory
-    snapshot.graph = newGraph
+    return {
+      ...source,
+      graph: newGraph
+    }
   }
-  return snapshot
+  return source
 }
 
 const buildYamlWithoutGraph = () => {
-  const snapshot = snapshotYamlContent()
-  if (!snapshot || typeof snapshot !== 'object') {
-    return snapshot
+  const source = yamlContent.value
+  if (!source || typeof source !== 'object') {
+    return source
   }
-  if (!Object.prototype.hasOwnProperty.call(snapshot, 'graph')) {
-    return snapshot
+  if (!Object.prototype.hasOwnProperty.call(source, 'graph')) {
+    return source
   }
-  const sanitized = { ...snapshot }
+  const sanitized = { ...source }
   delete sanitized.graph
   return sanitized
 }
@@ -1362,17 +1383,18 @@ const buildYamlWithoutGraph = () => {
 const autoAddStartEdge = async (nextNodeId) => {
   const workflowNodes = (yamlContent.value?.graph?.nodes || []).filter(node => node?.id !== START_NODE_ID)
   if (workflowNodes.length === 1 && workflowNodes[0]?.id === nextNodeId) {
-    const snapshot = snapshotYamlContent()
-    if (!snapshot?.graph) {
-      snapshot.graph = {}
-    }
-    if (!Array.isArray(snapshot.graph.start)) {
-      snapshot.graph.start = []
-    }
-    if (!snapshot.graph.start.includes(nextNodeId)) {
-      // Add node
-      snapshot.graph.start.push(nextNodeId)
-      const ok = await persistYamlSnapshot(snapshot)
+    const source = yamlContent.value
+    const sourceGraph = source?.graph && typeof source.graph === 'object' ? source.graph : {}
+    const currentStart = Array.isArray(sourceGraph.start) ? sourceGraph.start : []
+    if (!currentStart.includes(nextNodeId)) {
+      const nextSnapshot = {
+        ...source,
+        graph: {
+          ...sourceGraph,
+          start: [...currentStart, nextNodeId]
+        }
+      }
+      const ok = await persistYamlSnapshot(nextSnapshot)
       if (ok) {
         await loadYamlFile()
         syncVueNodesAndEdgesData()
@@ -1398,12 +1420,10 @@ const openDynamicFormGenerator = (type, options = {}) => {
 
   const hasCustomYaml = Object.prototype.hasOwnProperty.call(options, 'initialYaml')
   const yamlSource = hasCustomYaml ? options.initialYaml : yamlContent.value
-  formGeneratorInitialYaml.value = yamlSource ? cloneDeep(yamlSource) : null
+  formGeneratorInitialYaml.value = yamlSource || null
 
   if (Object.prototype.hasOwnProperty.call(options, 'initialFormData')) {
-    formGeneratorInitialFormData.value = options.initialFormData
-      ? cloneDeep(options.initialFormData)
-      : null
+    formGeneratorInitialFormData.value = options.initialFormData || null
   } else {
     formGeneratorInitialFormData.value = null
   }
@@ -1632,25 +1652,30 @@ const onConnect = async (connection) => {
   // Special handling for StartNode connections
   if (connection.source === START_NODE_ID) {
     // Add target node to graph.start array instead of opening FormGenerator
-    const snapshot = snapshotYamlContent()
-    if (!snapshot?.graph) {
+    const source = yamlContent.value
+    if (!source?.graph) {
       setTimeout(() => {
         isCreatingConnection.value = false
       }, 10)
       return
     }
+    const sourceGraph = source.graph
 
     // Ensure graph.start exists as an array
-    if (!Array.isArray(snapshot.graph.start)) {
-      snapshot.graph.start = []
-    }
+    const currentStart = Array.isArray(sourceGraph.start) ? sourceGraph.start : []
 
     // Add target node to start array if not already present
-    if (!snapshot.graph.start.includes(connection.target)) {
-      snapshot.graph.start.push(connection.target)
+    if (!currentStart.includes(connection.target)) {
+      const nextSnapshot = {
+        ...source,
+        graph: {
+          ...sourceGraph,
+          start: [...currentStart, connection.target]
+        }
+      }
 
       // Persist the updated YAML
-      const ok = await persistYamlSnapshot(snapshot)
+      const ok = await persistYamlSnapshot(nextSnapshot)
       if (ok) {
         await loadYamlFile()
         syncVueNodesAndEdgesData()
