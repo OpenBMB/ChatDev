@@ -1,0 +1,39 @@
+graph:
+  id: skills
+  description: ''
+  log_level: DEBUG
+  is_majority_voting: false
+  nodes:
+    - id: Qwerty
+      type: agent
+      config:
+        name: gpt-4o
+        provider: openai
+        role: Use any available tools or skills - notify if none are available
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params: {}
+        tooling:
+          - type: function
+            config:
+              tools:
+                - name: python_execution:All
+              timeout: null
+            prefix: ''
+        thinking: null
+        memories: []
+        skills:
+          enabled: true
+          allow:
+            - name: python-scratchpad
+            - name: rest-api-caller
+        retry: null
+      description: ''
+      context_window: 0
+      log_output: true
+  edges: []
+  memory: []
+  initial_instruction: ''
+  start:
+    - Qwerty
+  end: []

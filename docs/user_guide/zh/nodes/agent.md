@@ -15,6 +15,7 @@ Agent 节点是 DevAll 平台中最核心的节点类型，用于调用大语言
 | `tooling` | object | 否 | - | 工具调用配置，详见 [Tooling 模块](../modules/tooling/README.md) |
 | `thinking` | object | 否 | - | 思维链配置，如 chain-of-thought、reflection |
 | `memories` | list | 否 | `[]` | 记忆绑定配置，详见 [Memory 模块](../modules/memory.md) |
+| `skills` | object | 否 | - | Agent Skills 发现配置，以及内置的技能激活/文件读取工具 |
 | `retry` | object | 否 | - | 自动重试策略配置 |
 
 ### 重试策略配置 (retry)
@@ -26,6 +27,22 @@ Agent 节点是 DevAll 平台中最核心的节点类型，用于调用大语言
 | `min_wait_seconds` | float | `1.0` | 最小退避等待时间 |
 | `max_wait_seconds` | float | `6.0` | 最大退避等待时间 |
 | `retry_on_status_codes` | list[int] | `[408,409,425,429,500,502,503,504]` | 触发重试的 HTTP 状态码 |
+
+### Agent Skills 配置 (skills)
+
+| 字段 | 类型 | 默认值 | 说明 |
+|------|------|--------|------|
+| `enabled` | bool | `false` | 是否为该节点启用 Agent Skills |
+| `allow` | list[object] | `[]` | 可选的技能白名单，来源于项目级 `skills/` 目录；每个条目使用 `name` |
+
+### Agent Skills 说明
+
+- 技能统一从固定的项目级 `skills/` 目录中发现。
+- 运行时会暴露两个内置技能工具：`activate_skill` 和 `read_skill_file`。
+- `read_skill_file` 只有在对应技能已经激活后才可用。
+- 技能 `SKILL.md` 的 frontmatter 可以包含可选的 `allowed-tools`，格式遵循 Agent Skills 规范，例如 `allowed-tools: run_python_script execute_code`。
+- 如果某个已选择技能依赖的工具没有绑定到当前节点，该技能会在运行时被跳过。
+- 如果最终没有任何兼容技能可用，Agent 会被明确告知不要声称自己使用了技能。
 
 ## 何时使用
 
@@ -143,6 +160,23 @@ nodes:
         max_attempts: 3
         min_wait_seconds: 2.0
         max_wait_seconds: 10.0
+```
+
+### 配置 Agent Skills
+
+```yaml
+nodes:
+  - id: Skilled Agent
+    type: agent
+    config:
+      provider: openai
+      name: gpt-4o
+      api_key: ${API_KEY}
+      skills:
+        enabled: true
+        allow:
+          - name: python-scratchpad
+          - name: rest-api-caller
 ```
 
 ## 相关文档

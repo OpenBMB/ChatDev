@@ -33,6 +33,7 @@ from runtime.node.agent.memory.memory_base import (
 )
 from runtime.node.agent import ThinkingPayload
 from runtime.node.agent import ModelProvider, ProviderRegistry, ModelResponse
+from runtime.node.agent.skills import AgentSkillManager
 from tenacity import Retrying, retry_if_exception, stop_after_attempt, wait_random_exponential
 
 
@@ -70,16 +71,18 @@ class AgentNodeExecutor(NodeExecutor):
             input_payload = self._build_thinking_payload_from_inputs(inputs, input_data)
             memory_query_snapshot = self._build_memory_query_snapshot(inputs, input_data)
             input_mode = agent_config.input_mode or AgentInputMode.PROMPT
+            external_tool_specs = self.tool_manager.get_tool_specs(agent_config.tooling)
+            skill_manager = self._build_skill_manager(node, agent_config, external_tool_specs)
 
             provider = provider_class(agent_config)
             client = provider.create_client()
 
             if input_mode is AgentInputMode.PROMPT:
-                conversation = self._prepare_prompt_messages(node, input_data)
+                conversation = self._prepare_prompt_messages(node, input_data, skill_manager)
             else:
-                conversation = self._prepare_message_conversation(node, inputs)
+                conversation = self._prepare_message_conversation(node, inputs, skill_manager)
             call_options = self._prepare_call_options(node)
-            tool_specs = self.tool_manager.get_tool_specs(agent_config.tooling)
+            tool_specs = self._merge_skill_tool_specs(external_tool_specs, skill_manager)
 
             agent_invoker = self._build_agent_invoker(
                 provider,
@@ -129,6 +132,7 @@ class AgentNodeExecutor(NodeExecutor):
                     call_options,
                     response_obj,
                     tool_specs,
+                    skill_manager,
                 )
             else:
                 response_message = response_obj.message
@@ -172,12 +176,18 @@ class AgentNodeExecutor(NodeExecutor):
         finally:
             self._current_node_id = None
     
-    def _prepare_prompt_messages(self, node: Node, input_data: str) -> List[Message]:
+    def _prepare_prompt_messages(
+        self,
+        node: Node,
+        input_data: str,
+        skill_manager: AgentSkillManager | None,
+    ) -> List[Message]:
         """Prepare the prompt-style message sequence."""
         messages: List[Message] = []
 
-        if node.role:
-            messages.append(Message(role=MessageRole.SYSTEM, content=node.role))
+        system_prompt = self._build_system_prompt(node, skill_manager)
+        if system_prompt:
+            messages.append(Message(role=MessageRole.SYSTEM, content=system_prompt))
 
         try:
             if isinstance(input_data, str):
@@ -191,11 +201,17 @@ class AgentNodeExecutor(NodeExecutor):
         messages.append(Message(role=MessageRole.USER, content=clean_input))
         return messages
 
-    def _prepare_message_conversation(self, node: Node, inputs: List[Message]) -> List[Message]:
+    def _prepare_message_conversation(
+        self,
+        node: Node,
+        inputs: List[Message],
+        skill_manager: AgentSkillManager | None,
+    ) -> List[Message]:
         messages: List[Message] = []
 
-        if node.role:
-            messages.append(Message(role=MessageRole.SYSTEM, content=node.role))
+        system_prompt = self._build_system_prompt(node, skill_manager)
+        if system_prompt:
+            messages.append(Message(role=MessageRole.SYSTEM, content=system_prompt))
 
         normalized_inputs = self._coerce_inputs_to_messages(inputs)
         if normalized_inputs:
@@ -219,6 +235,76 @@ class AgentNodeExecutor(NodeExecutor):
         # call_options.setdefault("temperature", 0.7)
         # call_options.setdefault("max_tokens", 4096)
         return call_options
+
+    def _build_skill_manager(
+        self,
+        node: Node,
+        agent_config: AgentConfig,
+        external_tool_specs: List[ToolSpec],
+    ) -> AgentSkillManager | None:
+        skills_config = agent_config.skills
+        if not skills_config or not skills_config.enabled:
+            return None
+
+        manager = AgentSkillManager(
+            allow=skills_config.allow,
+            available_tool_names=[spec.name for spec in external_tool_specs],
+            warning_reporter=lambda message: self.log_manager.warning(message, node_id=node.id),
+        )
+        return manager
+
+    def _build_system_prompt(self, node: Node, skill_manager: AgentSkillManager | None) -> str | None:
+        parts: List[str] = []
+        if node.role:
+            parts.append(node.role)
+
+        if skill_manager is not None:
+            skills_xml = skill_manager.build_available_skills_xml()
+            if skills_xml:
+                parts.append(
+                    "\n".join(
+                        [
+                            "You have access to Agent Skills.",
+                            "Use `activate_skill` to load the full SKILL.md instructions for a relevant skill before following it.",
+                            "Use `read_skill_file` to read supporting files from that skill directory when the instructions reference them.",
+                            "Do not assume a skill's contents until you load it.",
+                            skills_xml,
+                        ]
+                    )
+                )
+            else:
+                warning_lines = skill_manager.discovery_warnings()
+                warning_text = "\n".join(f"- {warning}" for warning in warning_lines[:5])
+                parts.append(
+                    "\n".join(
+                        [
+                            "Agent Skills are enabled for this node, but no compatible skills are currently available.",
+                            "Do not claim to use or load any skill unless it appears in <available_skills>.",
+                            warning_text,
+                        ]
+                    ).strip()
+                )
+
+        if not parts:
+            return None
+        return "\n\n".join(part for part in parts if part)
+
+    def _merge_skill_tool_specs(
+        self,
+        tool_specs: List[ToolSpec],
+        skill_manager: AgentSkillManager | None,
+    ) -> List[ToolSpec]:
+        if skill_manager is None:
+            return tool_specs
+
+        merged = list(tool_specs)
+        existing_names = {spec.name for spec in merged}
+        for spec in skill_manager.build_tool_specs():
+            if spec.name in existing_names:
+                raise ValueError(f"Tool name '{spec.name}' conflicts with a built-in skill tool")
+            existing_names.add(spec.name)
+            merged.append(spec)
+        return merged
 
     def _build_agent_invoker(
         self,
@@ -479,6 +565,7 @@ class AgentNodeExecutor(NodeExecutor):
         call_options: Dict[str, Any],
         initial_response: ModelResponse,
         tool_specs: List[ToolSpec],
+        skill_manager: AgentSkillManager | None,
     ) -> Message:
         """Handle tool calls until completion or until the loop limit is reached."""
         assistant_message = initial_response.message
@@ -503,7 +590,12 @@ class AgentNodeExecutor(NodeExecutor):
 
             iteration += 1
 
-            tool_call_messages, tool_events = self._execute_tool_batch(node, assistant_message.tool_calls, tool_specs)
+            tool_call_messages, tool_events = self._execute_tool_batch(
+                node,
+                assistant_message.tool_calls,
+                tool_specs,
+                skill_manager,
+            )
             conversation.extend(tool_call_messages)
             timeline.extend(tool_events)
             trace_messages.extend(self._clone_with_source(msg, node.id) for msg in tool_call_messages)
@@ -524,10 +616,11 @@ class AgentNodeExecutor(NodeExecutor):
         node: Node,
         tool_calls: List[ToolCallPayload],
         tool_specs: List[ToolSpec],
-    ) -> tuple[List[Message], List[FunctionCallOutputEvent]]:
+        skill_manager: AgentSkillManager | None,
+    ) -> tuple[List[Message], List[Any]]:
         """Execute a batch of tool calls and return conversation + timeline events."""
         messages: List[Message] = []
-        events: List[FunctionCallOutputEvent] = []
+        events: List[Any] = []
         model = node.as_config(AgentConfig)
         
         # Build map for fast lookup
@@ -556,6 +649,98 @@ class AgentNodeExecutor(NodeExecutor):
                         tool_config = configs[idx]
                     # Use original name if prefixed
                     execution_name = spec.metadata.get("original_name", tool_name)
+
+                if spec and spec.metadata.get("source") == "agent_skill_internal":
+                    try:
+                        self.log_manager.record_tool_call(
+                            node.id,
+                            tool_name,
+                            None,
+                            None,
+                            {"arguments": arguments},
+                            CallStage.BEFORE,
+                        )
+                        with self.log_manager.tool_timer(node.id, tool_name):
+                            result = self._execute_skill_tool(tool_name, arguments, skill_manager)
+
+                        tool_message = self._build_tool_message(
+                            result,
+                            tool_call,
+                            node_id=node.id,
+                            tool_name=tool_name,
+                        )
+                        events.append(self._build_function_call_output_event(tool_call, result))
+                        system_message = self._build_skill_followup_message(tool_name, result, node.id)
+                        if system_message is not None:
+                            messages.append(system_message)
+                            events.append(system_message)
+                        self.log_manager.record_tool_call(
+                            node.id,
+                            tool_name,
+                            True,
+                            self._serialize_tool_result(result),
+                            {"arguments": arguments},
+                            CallStage.AFTER,
+                        )
+                    except Exception as exc:
+                        self.log_manager.record_tool_call(
+                            node.id,
+                            tool_name,
+                            False,
+                            None,
+                            {"error": str(exc), "arguments": arguments},
+                            CallStage.AFTER,
+                        )
+                        tool_message = Message(
+                            role=MessageRole.TOOL,
+                            content=f"Tool {tool_name} error: {exc}",
+                            tool_call_id=tool_call.id,
+                            metadata={"tool_name": tool_name, "source": node.id},
+                        )
+                        events.append(
+                            FunctionCallOutputEvent(
+                                call_id=tool_call.id or tool_call.function_name or "tool_call",
+                                function_name=tool_call.function_name,
+                                output_text=f"error: {exc}",
+                            )
+                        )
+
+                    messages.append(tool_message)
+                    continue
+
+                active_skill = skill_manager.active_skill() if skill_manager is not None else None
+                if (
+                    active_skill is not None
+                    and active_skill.allowed_tools
+                    and execution_name not in active_skill.allowed_tools
+                ):
+                    error_msg = (
+                        f"Tool '{tool_name}' is not allowed by active skill "
+                        f"'{active_skill.name}'. Allowed tools: {list(active_skill.allowed_tools)}"
+                    )
+                    self.log_manager.record_tool_call(
+                        node.id,
+                        tool_name,
+                        False,
+                        None,
+                        {"error": error_msg, "arguments": arguments},
+                        CallStage.AFTER,
+                    )
+                    tool_message = Message(
+                        role=MessageRole.TOOL,
+                        content=f"Error: {error_msg}",
+                        tool_call_id=tool_call.id,
+                        metadata={"tool_name": tool_name, "source": node.id},
+                    )
+                    events.append(
+                        FunctionCallOutputEvent(
+                            call_id=tool_call.id or tool_call.function_name or "tool_call",
+                            function_name=tool_call.function_name,
+                            output_text=f"error: {error_msg}",
+                        )
+                    )
+                    messages.append(tool_message)
+                    continue
                 
                 if not tool_config:
                      # Fallback check: if we have 1 config, maybe it's that one? 
@@ -661,6 +846,61 @@ class AgentNodeExecutor(NodeExecutor):
                     context_state["node_id"] = previous_node_id
 
         return messages, events
+
+    def _build_skill_followup_message(
+        self,
+        tool_name: str,
+        result: Any,
+        node_id: str,
+    ) -> Message | None:
+        if tool_name != "activate_skill" or not isinstance(result, dict):
+            return None
+
+        instructions = result.get("instructions")
+        skill_name = result.get("skill_name", "unknown-skill")
+        allowed_tools = result.get("allowed_tools")
+        if not isinstance(instructions, str) or not instructions.strip():
+            return None
+
+        tool_constraint = ""
+        if isinstance(allowed_tools, list) and allowed_tools:
+            tool_constraint = f"\n\nOnly use these external tools while this skill is active: {allowed_tools}"
+
+        return Message(
+            role=MessageRole.SYSTEM,
+            content=(
+                f"Activated Agent Skill `{skill_name}`. "
+                "Follow its instructions for the current task until they are completed or no longer relevant.\n\n"
+                f"{instructions}{tool_constraint}"
+            ),
+            metadata={"source": node_id, "skill_name": skill_name, "skill_activation": True},
+        )
+
+    def _execute_skill_tool(
+        self,
+        tool_name: str,
+        arguments: Dict[str, Any],
+        skill_manager: AgentSkillManager | None,
+    ) -> Dict[str, Any]:
+        if skill_manager is None:
+            raise ValueError("Agent Skills are not enabled for this node")
+
+        if tool_name == "activate_skill":
+            skill_name = str(arguments.get("skill_name", "")).strip()
+            if not skill_name:
+                raise ValueError("skill_name is required")
+            return skill_manager.activate_skill(skill_name)
+
+        if tool_name == "read_skill_file":
+            skill_name = str(arguments.get("skill_name", "")).strip()
+            relative_path = str(arguments.get("relative_path", "")).strip()
+            if not skill_name:
+                raise ValueError("skill_name is required")
+            if not relative_path:
+                raise ValueError("relative_path is required")
+            return skill_manager.read_skill_file(skill_name, relative_path)
+
+        raise ValueError(f"Unsupported skill tool '{tool_name}'")
 
     def _build_function_call_output_event(
         self,
