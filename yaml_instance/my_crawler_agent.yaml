@@ -1,0 +1,43 @@
+graph:
+  start: "node_ceo"
+  nodes:
+    - id: "node_ceo"
+      type: "agent"
+      name: "CEO"
+      role: "Chief Executive Officer"
+      prompt: "你是一家专业数据抓取公司的CEO。你的任务是仔细分析用户的需求，将其拆解为明确、分步的Python网络爬虫开发计划，重点指出需要抓取的目标字段和可能遇到的难点。"
+      config:
+        provider: "openai"
+        name: "gpt-3.5-turbo"
+        base_url: "${BASE_URL}"
+        api_key: "${API_KEY}"
+        
+    - id: "node_engineer"
+      type: "agent"
+      name: "Crawler_Engineer"
+      role: "Senior Python Programmer"
+      prompt: "你是一名资深Python爬虫开发工程师。请严格根据CEO的规划编写代码。要求：1. 必须使用requests和BeautifulSoup库；2. 必须添加完整的User-Agent请求头以应对基本反爬；3. 核心抓取逻辑必须包含try-except异常处理；4. 代码需结构清晰并带有详尽的中文注释。"
+      config:
+        provider: "openai"
+        name: "gpt-3.5-turbo"
+        base_url: "${BASE_URL}"
+        api_key: "${API_KEY}"
+        
+    - id: "node_reviewer"
+      type: "agent"
+      name: "Code_Reviewer"
+      role: "Quality Assurance Engineer"
+      prompt: "你是一名严苛的代码审查专家。你的任务是检查Crawler_Engineer提交的Python爬虫代码。请检查：1. 语法是否正确；2. 是否包含了请求头伪装；3. 是否有异常处理。请在指出优缺点的同时，输出最终修正后的完整、可运行的Python代码。"
+      config:
+        provider: "openai"
+        name: "gpt-3.5-turbo"
+        base_url: "${BASE_URL}"
+        api_key: "${API_KEY}"
+
+  edges:
+    - from: "node_ceo"
+      to: "node_engineer"
+      condition: "CEO完成需求规划后，交由工程师进行编码"
+    - from: "node_engineer"
+      to: "node_reviewer"
+      condition: "工程师完成初版代码后，提交给审查员进行代码质量检测和最终确认"
