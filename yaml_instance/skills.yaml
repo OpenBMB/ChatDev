@@ -1,6 +1,7 @@
 graph:
   id: skills
-  description: ''
+  description: Workflow to demonstrate skills usage
+  initial_instruction: Give the agent an instruction to explicitly use code to generate a Fibonacci sequence, sum numbers, or something else that is better done with code than LLM generation.
   log_level: DEBUG
   is_majority_voting: false
   nodes:
@@ -17,7 +18,7 @@ graph:
           - type: function
             config:
               tools:
-                - name: python_execution:All
+                - name: code_executor:All
               timeout: null
             prefix: ''
         thinking: null
@@ -33,7 +34,6 @@ graph:
       log_output: true
   edges: []
   memory: []
-  initial_instruction: ''
   start:
     - Qwerty
   end: []

@@ -7,7 +7,7 @@ numbers = [14, 27, 31, 8]
 print(sum(numbers))
 ```
 
-Expected structured result with `run_python_script`:
+Expected structured result with `execute_code`:
 
 ```json
 {
