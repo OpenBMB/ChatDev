@@ -7,8 +7,8 @@ graph:
     - id: Read
       type: agent
       config:
-        name: 
-        provider: 
+        name: gpt-4o
+        provider: openai
         role: |-
           你是一名数学高手，擅长解决大学数学问题。
           你的任务是：接受用户给出的数学问题，分析题意，拆解已知条件和所求，分条陈述给下一个节点。
@@ -26,8 +26,8 @@ graph:
     - id: Solve
       type: agent
       config:
-        name: 
-        provider: 
+        name: gpt-4o
+        provider: openai 
         role: |-
           你是一个数学高手，擅长解决大学数学问题。
           你的任务是：根据提供的拆解后的已知条件和所求，深入分析，得出一个相对快捷的解法，并将解题步骤陈述给下一个节点。
@@ -45,8 +45,8 @@ graph:
     - id: Check
       type: agent
       config:
-        name: 
-        provider: 
+        name: gpt-4o
+        provider: openai 
         role: |
           你是一个数学高手，擅长解决大学数学问题。
           你的任务是：检查给出的解法是否能真正解决该问题，如果解法正确，不用做任何操作，如果解法有错误，直接给出修改后的解法。
@@ -63,8 +63,8 @@ graph:
     - id: Print
       type: agent
       config:
-        name: 
-        provider: 
+        name: gpt-4o
+        provider: openai 
         role: |
           你是一个数学高手，擅长解决大学数学问题。
           你的任务是：根据陈述的数学题解法，用严谨的格式给出一个简洁的完整的回答，并打印到对话框中，作为对该数学题的最终答案。
@@ -81,8 +81,8 @@ graph:
     - id: Rethink
       type: agent
       config:
-        name: 
-        provider: 
+        name: gpt-4o
+        provider: openai
         role: |
           你是一个数学高手，擅长解决大学数学问题。
           你的任务是：根据题目分析和解法步骤，给出一道运用了相同或相似知识点解决的数学题，并直接给出解题步骤，并阐述相似点在何处
