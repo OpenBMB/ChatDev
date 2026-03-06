@@ -12,24 +12,50 @@ graph:
     - Editor 2
     - Editor 1
   nodes:
+    - id: Article Writer
+      type: agent
+      config:
+        provider: openai
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        input_mode: messages
+        name: gpt-4o
+        role: |
+          You are a writer who excels at generating a full article from a single word or short phrase.
+          The user will input a word or short phrase, and you must produce an article of at least 2000 words with multiple paragraphs.
+        params:
+          temperature: 0.1
+          max_tokens: 4000
+    - id: Editor 1
+      type: agent
+      config:
+        provider: openai
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        input_mode: messages
+        name: gpt-4o
+        role: |
+          You are an editor. Combine the article and the poem, and append the poem at the end of the article.
+        params:
+          temperature: 0.1
+          max_tokens: 4000
     - id: Human Viewer
       type: human
       config:
         description: Please provide revision suggestions for the article, or enter ACCEPT to exit the loop.
       description: ''
       context_window: 0
-    - id: Article Writer
+    - id: Editor 2
       type: agent
       config:
-        name: ${MODEL_NAME}
+        name: gpt-4o
         provider: openai
         role: |
-          You are a writer who excels at generating a full article from a single word or short phrase.
-          The user will input a word or short phrase, and you must produce an article of at least 2000 words with multiple paragraphs.
+          You are an editor skilled at integrating and polishing an article.
+          Based on the article and the revision suggestions, refine and revise the article. Output only the revised article.
         base_url: ${BASE_URL}
         api_key: ${API_KEY}
         params:
-          temperature: 0.1
           max_tokens: 4000
         tooling: []
         thinking: null
@@ -37,12 +63,11 @@ graph:
         retry: null
         input_mode: messages
       description: ''
-      context_window: 0
-      log_output: true
+      context_window: 7
     - id: Poet
       type: agent
       config:
-        name: ${MODEL_NAME}
+        name: gpt-4o
         provider: openai
         role: |
           You are a poet who crafts a modern English poem based on a single word or short phrase.
@@ -59,47 +84,6 @@ graph:
         input_mode: messages
       description: ''
       context_window: 0
-      log_output: true
-    - id: Editor 1
-      type: agent
-      config:
-        name: ${MODEL_NAME}
-        provider: openai
-        role: |
-          You are an editor. Combine the article and the poem, and append the poem at the end of the article.
-        base_url: ${BASE_URL}
-        api_key: ${API_KEY}
-        params:
-          temperature: 0.1
-          max_tokens: 4000
-        tooling: []
-        thinking: null
-        memories: []
-        retry: null
-        input_mode: messages
-      description: ''
-      context_window: 0
-      log_output: true
-    - id: Editor 2
-      type: agent
-      config:
-        name: ${MODEL_NAME}
-        provider: openai
-        role: |
-          You are an editor skilled at integrating and polishing an article.
-          Based on the article and the revision suggestions, refine and revise the article. Output only the revised article.
-        base_url: ${BASE_URL}
-        api_key: ${API_KEY}
-        params:
-          max_tokens: 4000
-        tooling: []
-        thinking: null
-        memories: []
-        retry: null
-        input_mode: messages
-      description: ''
-      context_window: 7
-      log_output: true
   edges:
     - from: Article Writer
       to: Editor 1
