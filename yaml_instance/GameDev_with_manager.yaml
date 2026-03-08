@@ -18,8 +18,8 @@ graph:
     - id: manager
       type: agent
       config:
-        name: GLM-4.7
-        provider: openai
+        name:
+        provider:
         role: |-
           You are a manager in the AI driven game development process, responsible for supervising the operations of other AI driven departments and providing targeted suggestions and optimization directions for their work based on the characteristics of this game, preventing them from deviating from the initial concept during the development process and making the game more playable. You can also add your additional ideas to the suggestion, but you need to pay attention to compatibility with the original design. In the workflow, there are also game designers, planners core developer、polish developer、QA agent。
           You will receive game concepts and development plans conveyed to you by game designers and planners, based on which you will need to provide targeted recommendations to core developers, polishing developers, QA agents, and Polish-Refinement.
@@ -73,8 +73,8 @@ graph:
     - id: Planner
       type: agent
       config:
-        name: GLM-4.7
-        provider: openai
+        name:
+        provider:
         role: |-
           # Role
           You are a **Technical Planner** for game development.
@@ -142,8 +142,8 @@ graph:
     - id: Game Designer
       type: agent
       config:
-        name: GLM-4.7
-        provider: openai
+        name:
+        provider:
         role: |-
           # Role
           You are a **Creative Game Designer** specializing in visually impressive, arcade-style games.
@@ -226,8 +226,8 @@ graph:
     - id: Core_Developer
       type: agent
       config:
-        name: GLM-4.7
-        provider: openai
+        name:
+        provider:
         role: |-
           Implement Phase 1 pygame game based on the plan.
 
@@ -311,8 +311,8 @@ graph:
     - id: Polish_Developer
       type: agent
       config:
-        name: GLM-4.7
-        provider: openai
+        name:
+        provider:
         role: |-
           You are a PROFESSIONAL GAME ARTIST specializing in indie game visual design.
           Transform the Phase 1 game into a visually stunning experience.
@@ -476,8 +476,8 @@ graph:
     - id: QA_Agent
       type: agent
       config:
-        name: GLM-4.7
-        provider: openai
+        name:
+        provider:
         role: |-
           You are a GAME QUALITY ASSURANCE SPECIALIST.
           Perform final comprehensive review of the game code before execution.
@@ -556,8 +556,8 @@ graph:
     - id: Polish_Refinement
       type: agent
       config:
-        name: GLM-4.7
-        provider: openai
+        name:
+        provider:
         role: |-
           You are a GAME IMPROVEMENT SPECIALIST.
           Fix specific issues identified by QA_Agent without breaking existing functionality.
@@ -618,8 +618,8 @@ graph:
     - id: Game_Launcher
       type: agent
       config:
-        name: GLM-4.7
-        provider: openai
+        name:
+        provider:
         role: |-
           TASK: Read the complete game.py file and output it as a Python code block.
 
@@ -663,8 +663,8 @@ graph:
     - id: Bug_Fixer
       type: agent
       config:
-        name: GLM-4.7
-        provider: openai
+        name:
+        provider:
         role: |-
           You are a Bug Fixer. Fix ONLY the specific runtime error without rewriting the entire file.
 
@@ -902,3 +902,4 @@ graph:
     - Final_Game_Executor
 version: 1.0.0
 vars: {}
+
