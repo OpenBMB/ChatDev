@@ -1,0 +1,330 @@
+graph:
+  id: general_problem_solving_team
+  description: 通用问题解决专家小组，包括需求理解与拆解部门、逻辑推理与分析部门、创意与方案生成部门、语言表达部门、技术实现部门、信息搜集部门、审核部门。
+  log_level: DEBUG
+  is_majority_voting: false
+  nodes:
+    - id: Summary Department
+      type: agent
+      config:
+        name: ${MODEL_NAME}
+        provider: openai
+        role: |-
+          你是一个通用问题解决小组的一员。你的职务是“总结输出负责人”。
+          你将接收到来自所有上级专家智能体的指令。你将负责整合他们的信息并综合输出。
+          你是【最终总结专家】，是用户看到的唯一出口：
+          整合所有部门结果，整理成通顺、完整、友好的回答
+          结构清晰：重点前置、分点、易懂
+          不添加新信息，不篡改内容
+          输出：给用户的最终回答。
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params: {}
+        tooling:
+          - type: function
+            config:
+              tools:
+                - name: file:All
+                - name: user:All
+                - name: video:All
+                - name: weather:All
+                - name: web:All
+                - name: code_executor:All
+              timeout: null
+            prefix: ''
+        thinking: null
+        memories: []
+        retry: null
+      description: ''
+      context_window: -1
+      log_output: true
+    - id: Technician
+      type: agent
+      config:
+        name: ${MODEL_NAME}
+        provider: openai
+        role: |-
+          你是一个通用问题解决小组的一员。你的职务是“技术实现专家。
+          你将接收到来自上级智能体的指令。寻找指令中关于“技术实现”的部分，只执行这部分指令，并完全忽略其它不属于你的指令。
+          你是【技术实现专家】，负责所有可落地的技术任务：
+          写代码、写脚本、写命令
+          设计步骤、流程、工具调用
+          保证代码可运行、思路清晰
+          只输出技术方案 + 可执行内容，不闲聊。
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params: {}
+        tooling:
+          - type: function
+            config:
+              tools:
+                - name: code_executor:All
+                - name: file:All
+                - name: utils:All
+                - name: uv_related:All
+              timeout: null
+            prefix: ''
+        thinking: null
+        memories: []
+        retry: null
+      description: ''
+      context_window: -1
+      log_output: true
+    - id: Scheme Generater
+      type: agent
+      config:
+        name: ${MODEL_NAME}
+        provider: openai
+        role: |
+          你是一个通用问题解决小组的一员。你的职务是“方案生成专家”。
+          你将接收到来自上级智能体的指令。寻找指令中关于“方案生成”的部分，只执行这部分指令，并完全忽略其它不属于你的指令。
+          你是【方案生成专家】：
+          当问题没有唯一答案时，生成多套可行方案
+          给出建议、策划、思路、表达优化
+          兼顾实用性与可读性
+          输出：清晰、可选择、可直接使用的方案。
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params: {}
+        tooling: []
+        thinking: null
+        memories: []
+        retry: null
+      description: ''
+      context_window: -1
+      log_output: true
+    - id: Reasoner
+      type: agent
+      config:
+        name: ${MODEL_NAME}
+        provider: openai
+        role: |-
+          你是一个通用问题解决小组的一员。你的职务是“逻辑推理专家”。
+          你将收到3条指令：
+          你将接收到来自“Demand Analyzer”指令。寻找指令中关于“逻辑推理”的部分，只执行这部分指令，并完全忽略其它不属于你的指令。
+          你将收到来自“Information Searcher”的分析。这是一位信息搜取专家。
+          你将收到来自“Technician”的结果。这是你们团队的技术人员。
+          你是【逻辑推理与分析专家】：
+          基于已有信息做推导、对比、判断、计算
+          找出漏洞、矛盾、不合理之处
+          给出结论、原因、优先级
+          不做创意，不写代码，不搜新信息，只做理性分析。
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params: {}
+        tooling: []
+        thinking:
+          type: reflection
+          config:
+            reflection_prompt: Thinking {type = true}
+        memories: []
+        retry: null
+      description: ''
+      context_window: -1
+      log_output: true
+    - id: Information Searcher
+      type: agent
+      config:
+        name: ${MODEL_NAME}
+        provider: openai
+        role: |-
+          你是一个通用问题解决小组的一员。你的职务是“信息搜集专家”。
+          你将接收到来自上级智能体的指令。寻找指令中关于“信息搜集”的部分，只执行这部分指令，并完全忽略其它不属于你的指令。
+          你是【信息搜集专家】，只做事实类信息获取：
+          搜索最新、权威、准确的资料
+          只保留与任务相关的关键信息
+          不编造、不扩展、不推理
+          输出：结构化要点，来源可靠，简洁客观。
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params: {}
+        tooling:
+          - type: function
+            config:
+              tools:
+                - name: web:All
+                - name: weather:All
+              timeout: null
+            prefix: ''
+        thinking: null
+        memories: []
+        retry: null
+      description: ''
+      context_window: -1
+      log_output: true
+    - id: Demand Analyze
+      type: agent
+      config:
+        name: ${MODEL_NAME}
+        provider: openai
+        role: |-
+          你是一个通用问题解决小组的一员。其中：
+          你是【需求拆解专家】，只做一件事：
+          把用户模糊、简短的一句话，精准理解真实意图，并拆成可执行的小任务。
+          输出要求：
+          用户真正想解决什么问题
+          必须拆成 ≤5 个明确子任务
+          标注每个任务交给哪个部门：信息搜集 / 逻辑推理 / 技术实现 / 方案生成 / 总结输出
+          给每个部门的任务必须符合他们的职能，不同部门之间的任务不可以重叠
+          如果你认为该问题用不到5个部门，则可以明确指出不需要它们工作
+          禁止回答问题，只输出拆解结果。
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params: {}
+        tooling:
+          - type: function
+            config:
+              tools:
+                - name: user:All
+              timeout: null
+            prefix: ''
+        thinking: null
+        memories: []
+        retry:
+          enabled: true
+          max_attempts: 2
+          min_wait_seconds: 1
+          max_wait_seconds: 6
+          retry_on_status_codes: []
+          retry_on_exception_types: []
+          non_retry_exception_types: []
+          retry_on_error_substrings: []
+      description: ''
+      context_window: 0
+      log_output: true
+  edges:
+    - from: Information Searcher
+      to: Summary Department
+      trigger: true
+      condition:
+        type: function
+        config:
+          name: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: Reasoner
+      to: Summary Department
+      trigger: true
+      condition:
+        type: function
+        config:
+          name: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: Technician
+      to: Summary Department
+      trigger: true
+      condition:
+        type: function
+        config:
+          name: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: Scheme Generater
+      to: Summary Department
+      trigger: true
+      condition:
+        type: function
+        config:
+          name: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: Demand Analyze
+      to: Information Searcher
+      trigger: true
+      condition:
+        type: function
+        config:
+          name: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: Demand Analyze
+      to: Reasoner
+      trigger: true
+      condition:
+        type: function
+        config:
+          name: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: Demand Analyze
+      to: Technician
+      trigger: true
+      condition:
+        type: function
+        config:
+          name: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: Demand Analyze
+      to: Scheme Generater
+      trigger: true
+      condition:
+        type: function
+        config:
+          name: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: Information Searcher
+      to: Reasoner
+      trigger: true
+      condition:
+        type: function
+        config:
+          name: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: Technician
+      to: Reasoner
+      trigger: true
+      condition:
+        type: function
+        config:
+          name: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+  memory: []
+  initial_instruction: 请输入您想解决的问题。
+  start:
+    - Demand Analyze
+  end: []
