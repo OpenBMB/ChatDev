@@ -33,14 +33,14 @@ Agent 节点是 DevAll 平台中最核心的节点类型，用于调用大语言
 | 字段 | 类型 | 默认值 | 说明 |
 |------|------|--------|------|
 | `enabled` | bool | `false` | 是否为该节点启用 Agent Skills |
-| `allow` | list[object] | `[]` | 可选的技能白名单，来源于项目级 `skills/` 目录；每个条目使用 `name` |
+| `allow` | list[object] | `[]` | 可选的技能白名单，来源于项目级 `.agents/skills/` 目录；每个条目使用 `name` |
 
 ### Agent Skills 说明
 
-- 技能统一从固定的项目级 `skills/` 目录中发现。
+- 技能统一从固定的项目级 `.agents/skills/` 目录中发现。
 - 运行时会暴露两个内置技能工具：`activate_skill` 和 `read_skill_file`。
 - `read_skill_file` 只有在对应技能已经激活后才可用。
-- 技能 `SKILL.md` 的 frontmatter 可以包含可选的 `allowed-tools`，格式遵循 Agent Skills 规范，例如 `allowed-tools: run_python_script execute_code`。
+- 技能 `SKILL.md` 的 frontmatter 可以包含可选的 `allowed-tools`，格式遵循 Agent Skills 规范，例如 `allowed-tools: execute_code`。
 - 如果某个已选择技能依赖的工具没有绑定到当前节点，该技能会在运行时被跳过。
 - 如果最终没有任何兼容技能可用，Agent 会被明确告知不要声称自己使用了技能。
 

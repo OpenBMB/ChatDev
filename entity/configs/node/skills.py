@@ -18,7 +18,7 @@ from entity.configs.base import (
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
-DEFAULT_SKILLS_ROOT = (REPO_ROOT / "skills").resolve()
+DEFAULT_SKILLS_ROOT = (REPO_ROOT / ".agents" / "skills").resolve()
 def _discover_default_skills() -> List[tuple[str, str]]:
     if not DEFAULT_SKILLS_ROOT.exists() or not DEFAULT_SKILLS_ROOT.is_dir():
         return []

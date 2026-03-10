@@ -11,7 +11,7 @@ from entity.tool_spec import ToolSpec
 
 
 REPO_ROOT = Path(__file__).resolve().parents[4]
-DEFAULT_SKILLS_ROOT = (REPO_ROOT / "skills").resolve()
+DEFAULT_SKILLS_ROOT = (REPO_ROOT / ".agents" / "skills").resolve()
 MAX_SKILL_FILE_BYTES = 128 * 1024
 
 
@@ -126,6 +126,7 @@ class AgentSkillManager:
         self._skills_by_name: Dict[str, SkillMetadata] | None = None
         self._skill_content_cache: Dict[str, str] = {}
         self._activation_state: Dict[str, bool] = {}
+        self._current_skill_name: str | None = None
         self._discovery_warnings: List[str] = []
 
     def discover(self) -> List[SkillMetadata]:
@@ -176,6 +177,7 @@ class AgentSkillManager:
             cached = skill.skill_file.read_text(encoding="utf-8")
             self._skill_content_cache[skill.name] = cached
         self._activation_state[skill.name] = True
+        self._current_skill_name = skill.name
         return {
             "skill_name": skill.name,
             "path": str(skill.skill_file),
@@ -214,10 +216,12 @@ class AgentSkillManager:
         return bool(self._activation_state.get(skill_name))
 
     def active_skill(self) -> SkillMetadata | None:
-        for skill in self.discover():
-            if self.is_activated(skill.name):
-                return skill
-        return None
+        if self._current_skill_name is None:
+            return None
+        skills = self._skills_by_name
+        if skills is None:
+            return None
+        return skills.get(self._current_skill_name)
 
     def discovery_warnings(self) -> List[str]:
         self.discover()

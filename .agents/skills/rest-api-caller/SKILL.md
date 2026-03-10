@@ -1,7 +1,7 @@
 ---
 name: rest-api-caller
 description: Call REST APIs from Python, parse JSON responses, and report the useful fields back to the user.
-allowed-tools: run_python_script execute_code
+allowed-tools: execute_code
 ---
 
 # REST API Caller
@@ -14,14 +14,14 @@ This skill is intended for:
 - endpoints where the user specifies headers, query params, or environment variable names
 
 Requirements:
-- The agent should have access to `run_python_script` or `execute_code`.
+- The agent should have access to `execute_code`.
 
 Workflow:
 1. Activate this skill when the task requires calling an API.
 2. If you need examples, call `read_skill_file` for `references/examples.md`.
 3. Write a short Python script that performs the request.
 4. Prefer the `requests` library if available in the environment.
-5. Prefer `run_python_script`; if it is unavailable, fall back to `execute_code`.
+5. Prefer `execute_code`.
 6. Parse the response and print only the fields needed for the final answer.
 7. Summarize the API result clearly for the user.
 

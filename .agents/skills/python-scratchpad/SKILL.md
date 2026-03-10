@@ -21,7 +21,7 @@ Workflow:
 1. If the task needs computation or a repeatable transformation, activate this skill.
 2. If you need examples, call `read_skill_file` for `references/examples.md`.
 3. Write a short Python script for the exact task.
-4. Prefer `run_python_script` with the script in its `script` argument.
+4. Prefer `execute_code`.
 5. Use the script output in the final answer.
 6. Keep scripts small and task-specific.
 
