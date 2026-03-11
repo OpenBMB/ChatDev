@@ -16,7 +16,7 @@ def execute_code(code: str, time_out: int = 60) -> str:
     from pathlib import Path
 
     def __write_script_file(_code: str):
-        _workspace = Path(os.getenv('TEMP_CODE_DIR', 'temp'))
+        _workspace = Path(os.getenv('TEMP_CODE_DIR', 'temp')).resolve()
         _workspace.mkdir(exist_ok=True)
         filename = f"{uuid.uuid4()}.py"
         code_path = _workspace / filename
@@ -35,7 +35,7 @@ def execute_code(code: str, time_out: int = 60) -> str:
         script_path = __write_script_file(code)
         workspace = script_path.parent
 
-        cmd = [__default_interpreter(), str(script_path)]
+        cmd = [__default_interpreter(), str(script_path.resolve())]
 
         try:
             completed = subprocess.run(
