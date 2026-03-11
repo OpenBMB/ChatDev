@@ -1,0 +1,847 @@
+graph:
+  id: Knowledge_Point_Explainer
+  description: 'Structured agent workflow designed to explain specific knowledge point. '
+  log_level: DEBUG
+  is_majority_voting: false
+  nodes:
+    - id: passthrough
+      type: passthrough
+      config:
+        only_last_message: true
+      description: ''
+      context_window: 0
+      log_output: true
+    - id: refining
+      type: literal
+      config:
+        content: 'if you have any questions unsolved, please type it down in the chat '
+        role: assistant
+      description: ''
+      context_window: 10
+      log_output: true
+    - id: start
+      type: human
+      config:
+        description: Hello, this is an agentic workflow designed to help you learn specific knowledge points. You may type down the knowledge point that you want to know about in the chat. Type "DEEP" for deep and well organized explanation and "STRAIGHT" for a glance of the knowledge point.
+      description: ''
+      context_window: 0
+      log_output: true
+    - id: HELLO
+      type: literal
+      config:
+        content: Hello, this is an agentic workflow designed to help you learn specific knowledge points. You may type down the knowledge point that you want to know about in the chat. Type "DEEP" for deep and well organized explanation and "STRAIGHT" for a glance of the knowledge point.
+        role: assistant
+      description: ''
+      context_window: 0
+      log_output: true
+    - id: simple explainer
+      type: agent
+      config:
+        name: gpt-4o
+        provider: openai
+        role: |-
+          ## your role
+          You are a skilled teacher who is good at teaching student things they are unfamiliar with.
+
+          ## your task
+          The student is unfamiliar with a specific knowledge point, he wants to get a glance on it, you should:
+          - generate an simplified introduction of the knowledge point to the student
+          - keep the explanation simple and straight-forward
+          - the explanation should not longer than 150 words
+          - if the knowledge point is a concept (e.g. graph, path), do not simply put out the formal definition, instead, give a simplified explanation that can illustrate the concept with vivid cases
+          - if the knowledge point is some kind of theorem, give out the whole formula, explain the basic logic of the theorem
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params: {}
+        tooling: []
+        thinking: null
+        memories: []
+        retry: null
+      description: ''
+      context_window: 0
+      log_output: true
+    - id: DEEP
+      type: agent
+      config:
+        name: gpt-4o
+        provider: openai
+        role: |-
+          ## your role
+          You're a skilled teacher who is good at teaching students concepts they were totally unfamiliar with.
+
+          ## your task
+          You should analyze what kind of knowledge the knowledge point user given belongs to.
+          There are three types of knowledge point.
+          - simple concept
+          - theorem
+          - abstract concept
+          you should read the definitions below to decide which kind of knowledge it is
+
+          ### simple concept
+          concepts that are textual and do not related to abstract images and could be understand through fully textual. for example, concepts like "Chinese", "English", and "variables" are simple concepts, also some chemical formulas should be included, because they are concepts that are not bind to complex process. you can compare to these examples if you're not sure about whether one is a simple concept or not.
+
+          ### abstract concept
+          concepts that are related to complex process or specific images are abstract concepts. for example, concepts like "linear transformation", "queue", "link list" are abstract concepts, because they are related to certain abstract images or complex process. you can compare to these examples if you're not sure about whether one is a simple concept or not.
+
+          ### theorem
+          theorem mainly refer to math theorem or physics theorem(formulas).
+
+          after you determined what kind of knowledge the knowledge point is, you should output the keyword in your respond message:
+          - simple concept: output "SIMPLE"
+          - abstract concept: output "ABSTRACT"
+          - theorem: "THEOREM"
+
+          then add the knowledge point's name to the message too.
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params: {}
+        tooling: []
+        thinking: null
+        memories: []
+        retry: null
+      description: ''
+      context_window: 0
+      log_output: true
+    - id: searcher
+      type: agent
+      config:
+        name: gpt-4o
+        provider: openai
+        role: |-
+          ## your role
+          you are a professional teacher who is good at searching the web to look for helpful materials for the preparation of the following explanation process.
+
+          ## your task
+          you should use the tools web_search and read_webpage_content to search for the tutorials and other explanation that are related and helpful to explain the user-asked knowledge. then you should summarize the information you got and pass it to the next agent in the message
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params: {}
+        tooling:
+          - type: function
+            config:
+              tools:
+                - name: read_webpage_content
+                - name: web_search
+              timeout: null
+            prefix: ''
+        thinking: null
+        memories: []
+        retry: null
+      description: ''
+      context_window: 0
+      log_output: true
+    - id: user
+      type: human
+      config:
+        description: type down your questions, type "DOWN" if there are no more
+      description: ''
+      context_window: 7
+      log_output: true
+    - id: ABSTRACT
+      type: agent
+      config:
+        name: gpt-4o
+        provider: openai
+        role: |-
+          You are a rigorous course content assistant. You will receive the following materials:
+          1. The knowledge point that the student wants to learn
+          2. A summary of content related to this knowledge point searched from web pages
+          Please create a teaching outline based on these materials, following these requirements:
+          1. Keep the language concise and objective, avoid exaggeration; do not write marketing copy.
+          2. Do not insert code blocks, tables, or multi-level lists; use unordered lists for at most 1–3 supplementary points.
+          3. Output only the Markdown main text, with no additional explanations.
+
+          ATTENTION: you must strictly follow and use the language the user used
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params: {}
+        tooling: []
+        thinking: null
+        memories: []
+        retry: null
+      description: ''
+      context_window: 0
+      log_output: true
+    - id: SIMPLE
+      type: agent
+      config:
+        name: gpt-4o
+        provider: openai
+        role: |-
+          You are a rigorous course content assistant. You will receive the following materials:
+          1. The knowledge point that the student wants to learn
+          2. A summary of content related to this knowledge point searched from web pages
+          Please create a teaching outline based on these materials, following these requirements:
+          1. Keep the language concise and objective, avoid exaggeration; do not write marketing copy.
+          2. Do not insert code blocks, tables, or multi-level lists; you may use bullet points for at most 1–3 supplementary points.
+          3. Output only the Markdown main text, with no additional explanations.
+          ATTENTION: you must strictly follow and use the language the user used
+
+          ATTENTION: you must strictly follow and use the language the user used
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params: {}
+        tooling: []
+        thinking: null
+        memories: []
+        retry: null
+      description: ''
+      context_window: 0
+      log_output: true
+    - id: THEOREM
+      type: agent
+      config:
+        name: gpt-4o
+        provider: openai
+        role: |-
+          You are a rigorous course content assistant. You will receive the following materials:
+          1. The knowledge point that the student wants to learn
+          2. A summary of content related to this knowledge point searched from web pages
+          Please create a teaching outline based on these materials, following these requirements:
+          1. Keep the language concise and objective, avoid exaggeration; do not write marketing copy.
+          2. Do not insert code blocks, tables, or multi-level lists; you may use bullet points for at most 1–3 supplementary points.
+          3. Output only the Markdown main text, with no additional explanations.
+          4. Provide complete theorems and formulas, as well as all detailed derivation processes and lemmas.
+
+          ATTENTION: you must strictly follow and use the language the user used
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params: {}
+        tooling: []
+        thinking: null
+        memories: []
+        retry: null
+      description: ''
+      context_window: 0
+      log_output: true
+    - id: Paginator
+      type: agent
+      config:
+        name: gpt-4o
+        provider: openai
+        role: |-
+          You are a professional document formatting expert, specializing in adding appropriate page breaks to teaching materials.
+
+          Task: Process the provided chapter content in Markdown by adding page breaks while fully preserving all original content.
+
+          Chapter content:
+          {section_content}
+
+          ## Processing Principles
+          1. **Full content retention** – Keep every word, punctuation, blank line, format and structure intact.
+          2. **Only add page breaks** – Insert page breaks only at appropriate positions.
+          3. **Maintain logical structure** – Ensure pagination does not break the logical coherence of the content.
+          4. **Content integrity first** – Guarantee the completeness of the content.
+
+          ## Page Break Rules
+          - Use `<!-- PAGEBREAK -->` as the page break marker.
+          - The page break marker must be placed on a separate line.
+
+          ## Pagination Strategy
+          - Each page you split will be displayed on one page in Manim later, so be as detailed as appropriate without excessive fragmentation.
+          - Ensure the integrity of code examples.
+          - Do not split important concepts across pages.
+          - If a chapter does not require pagination, leave it unchanged.
+          - **Important**: Do not place any level of heading on a separate page alone.
+
+          ## Output Requirements
+          - Preserve the original Markdown format.
+          - Place page break markers on separate lines.
+          - **Never truncate or omit any content**.
+
+          ## Output Format
+          Directly output the complete processed Markdown content without any additional explanatory text.
+
+          Please process the chapter content in strict accordance with the above requirements to ensure its integrity.
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params: {}
+        tooling: []
+        thinking: null
+        memories: []
+        retry: null
+      description: ''
+      context_window: 0
+      log_output: true
+    - id: concluder
+      type: agent
+      config:
+        name: gpt-4o
+        provider: openai
+        role: |-
+          First, call describe_available_files to check the paths of .py script files in the current directory; then directly use the render_manim tool for rendering, and this tool only requires {script_path} (the absolute path of the script) as a parameter; if there are multiple py files, you need to run the render_manim tool for rendering on each py file separately.
+          If you encounter any issues in render_manim, please output the specific error message and also output "ERROR".
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params: {}
+        tooling:
+          - type: function
+            config:
+              tools:
+                - name: render_manim
+                - name: describe_available_files
+              timeout: null
+            prefix: ''
+        thinking: null
+        memories: []
+        retry: null
+      description: ''
+      context_window: 0
+      log_output: true
+    - id: Video Concat
+      type: agent
+      config:
+        name: gpt-4o
+        provider: openai
+        role: First, call describe_available_files to check the paths of .mp4 files in the current directory; the names of different mp4 files represent their content, so please sort them according to their names and call the concat_videos tool to concatenate them. Note that the parameter required by the concat_videos tool is a list composed of sorted absolute paths.
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params: {}
+        tooling:
+          - type: function
+            config:
+              tools:
+                - name: concat_videos
+              timeout: null
+            prefix: ''
+          - type: function
+            config:
+              tools:
+                - name: describe_available_files
+              timeout: null
+            prefix: ''
+        thinking: null
+        memories: []
+        retry: null
+      description: ''
+      context_window: 0
+      log_output: true
+    - id: re-explainer
+      type: agent
+      config:
+        name: gpt-4o
+        provider: openai
+        role: You are a conscientious and responsible teaching assistant. Now that students have completed the relevant content, they still have doubts about certain parts. Please answer their questions.
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params: {}
+        tooling: []
+        thinking: null
+        memories: []
+        retry: null
+      description: ''
+      context_window: 20
+      log_output: true
+    - id: SIMPLE content composer
+      type: agent
+      config:
+        name: gpt-4o
+        provider: openai
+        role: You are an excellent writer. Please supplement the provided teaching outline with complete and detailed textual explanations, so that the text can be directly read to understand a specific concept.
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params: {}
+        tooling: []
+        thinking: null
+        memories: []
+        retry: null
+      description: ''
+      context_window: 0
+      log_output: true
+    - id: THEOREM content composer
+      type: agent
+      config:
+        name: gpt-4o
+        provider: openai
+        role: You are an excellent teaching assistant. Based on the provided teaching outline, please fill in complete textual content to explain the corresponding theorems and formulas. If mathematical formulas, physical formulas, etc. are involved, please provide complete and correct LaTeX code. Note that there should be no skipped steps in the explanation process, the logic must be complete, the explanation rigorous, and all derivation processes and lemmas must be given.
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params: {}
+        tooling: []
+        thinking: null
+        memories: []
+        retry: null
+      description: ''
+      context_window: 0
+      log_output: true
+    - id: visualization_executor
+      type: python
+      config:
+        interpreter: .venv\Scripts\python.exe
+        args: []
+        env: {}
+        timeout_seconds: 60
+        encoding: utf-8
+      description: ''
+      context_window: 0
+      log_output: true
+    - id: Content Composer
+      type: agent
+      config:
+        name: gpt-4o
+        provider: openai
+        role: |-
+          ## your role
+          you are a skilled teacher who is good at teaching students abstract concepts
+
+          ## your task
+          you will receive a outline about how to explain a concept to the student, your task is to add vivid and detailed textual explanations to the outline to make it more detailed, and add the textual description of the images you are going to use in the later video generation. make sure the images' description is clear and detailed to be understood.
+
+          **ATTENTION**, YOU MUST IGNORE THE PREFIXED "ABSTRACT" SEND TO YOU, ONLY PAY ATTENTION TO THE KNOWLEDGE POINT.
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params: {}
+        tooling: []
+        thinking: null
+        memories: []
+        retry: null
+      description: ''
+      context_window: 0
+      log_output: true
+    - id: code_generator
+      type: agent
+      config:
+        name: gpt-5.1
+        provider: openai
+        role: |-
+          You are a **Manim Animation Generation Agent** with automatic planning, code generation, and execution capabilities.
+          You will receive a piece of question information (in Markdown format) and contextual position information of this content within the entire course.
+          **The context is only for understanding and must not be reflected in the animation**; you are only responsible for generating a single-page animation for this part of the content.
+
+          Your task process is as follows (to be completed automatically, no questions to the user are allowed):
+
+          1. Parse the current content and automatically plan the content structure of a single-page Manim animation to ensure clear logic and inclusion of all information;
+          2. Generate **complete, directly runnable Manim Python source code**;
+          3. Do not output any non-code content.
+
+          ---
+
+          ### Mandatory Constraints (Must be strictly followed; violation of any one is considered an error):
+
+          1. **Only complete Python source code is allowed in the final output**; no explanatory text, commentaries, or natural language content may be included;
+          2. The page does not need a title page, but **the title must be displayed at the top of the page**;
+          3. The title content should be a **highly concise summary** of the teaching content on this page, and **the use of numbering formats such as Page x is prohibited**;
+          4. The font, font size, position, and animation method of the title **must strictly follow the following template** (only the title text may be replaced):
+
+          **ATTENTION!!!**, you must include all the teaching materials given to you in the video you designed, do not ignore any of them.
+          **ATTENTION!!!**, you don't have to strictly follow the page separation the outline told you, since if you strictly follow that then the layout on the video page may overlap, so make sure you keep all the content at the same time make well arrangement to the content so they don't cover each other. But this doesn't mean that you don't clear anything! Remember to clear  the existing content when you switch to another page so they don't overlap together.
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params: {}
+        tooling: []
+        thinking: null
+        memories: []
+        retry: null
+      description: ''
+      context_window: 0
+      log_output: true
+  edges:
+    - from: code_generator
+      to: visualization_executor
+      trigger: true
+      condition:
+        type: function
+        config:
+          name: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: concluder
+      to: Video Concat
+      trigger: true
+      condition:
+        type: function
+        config:
+          name: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: concluder
+      to: code_generator
+      trigger: true
+      condition:
+        type: keyword
+        config:
+          any:
+            - ERROR
+          none: []
+          regex: []
+          case_sensitive: true
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: visualization_executor
+      to: concluder
+      trigger: true
+      condition:
+        type: function
+        config:
+          name: code_pass
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: visualization_executor
+      to: code_generator
+      trigger: true
+      condition:
+        type: function
+        config:
+          name: code_fail
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: start
+      to: simple explainer
+      trigger: true
+      condition:
+        type: keyword
+        config:
+          any:
+            - STRAIGHT
+          none: []
+          regex: []
+          case_sensitive: true
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: DEEP
+      to: SIMPLE
+      trigger: true
+      condition:
+        type: keyword
+        config:
+          any:
+            - SIMPLE
+          none: []
+          regex: []
+          case_sensitive: true
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: DEEP
+      to: ABSTRACT
+      trigger: true
+      condition:
+        type: keyword
+        config:
+          any:
+            - ABSTRACT
+          none: []
+          regex: []
+          case_sensitive: true
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: DEEP
+      to: THEOREM
+      trigger: true
+      condition:
+        type: keyword
+        config:
+          any:
+            - THEOREM
+          none: []
+          regex: []
+          case_sensitive: true
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: start
+      to: passthrough
+      trigger: true
+      condition:
+        type: keyword
+        config:
+          any:
+            - DEEP
+          none: []
+          regex: []
+          case_sensitive: true
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: passthrough
+      to: DEEP
+      trigger: true
+      condition:
+        type: function
+        config:
+          name: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: passthrough
+      to: searcher
+      trigger: true
+      condition:
+        type: function
+        config:
+          name: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: Paginator
+      to: code_generator
+      trigger: true
+      condition:
+        type: function
+        config:
+          name: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: ABSTRACT
+      to: Content Composer
+      trigger: true
+      condition:
+        type: function
+        config:
+          name: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: Content Composer
+      to: Paginator
+      trigger: true
+      condition:
+        type: function
+        config:
+          name: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: simple explainer
+      to: refining
+      trigger: true
+      condition:
+        type: function
+        config:
+          name: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: refining
+      to: user
+      trigger: true
+      condition:
+        type: function
+        config:
+          name: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: user
+      to: re-explainer
+      trigger: true
+      condition:
+        type: keyword
+        config:
+          any: []
+          none:
+            - DONE
+          regex: []
+          case_sensitive: true
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: re-explainer
+      to: refining
+      trigger: true
+      condition:
+        type: function
+        config:
+          name: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: THEOREM
+      to: THEOREM content composer
+      trigger: true
+      condition:
+        type: function
+        config:
+          name: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: SIMPLE
+      to: SIMPLE content composer
+      trigger: true
+      condition:
+        type: function
+        config:
+          name: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: SIMPLE content composer
+      to: refining
+      trigger: true
+      condition:
+        type: function
+        config:
+          name: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: THEOREM content composer
+      to: refining
+      trigger: true
+      condition:
+        type: function
+        config:
+          name: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: HELLO
+      to: start
+      trigger: true
+      condition:
+        type: function
+        config:
+          name: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: searcher
+      to: ABSTRACT
+      trigger: true
+      condition:
+        type: keyword
+        config:
+          any:
+            - ABSTRACT
+          none: []
+          regex: []
+          case_sensitive: true
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: searcher
+      to: THEOREM
+      trigger: true
+      condition:
+        type: keyword
+        config:
+          any:
+            - THEOREM
+          none: []
+          regex: []
+          case_sensitive: true
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: searcher
+      to: SIMPLE
+      trigger: true
+      condition:
+        type: keyword
+        config:
+          any:
+            - SIMPLE
+          none: []
+          regex: []
+          case_sensitive: true
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: Video Concat
+      to: refining
+      trigger: true
+      condition:
+        type: function
+        config:
+          name: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+  memory: []
+  initial_instruction: ''
+  start:
+    - HELLO
+  end: []
