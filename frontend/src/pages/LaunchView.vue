@@ -582,6 +582,10 @@ const addLoadingEntry = (nodeId, baseKey, label) => {
   nodeState.entryMap.set(key, entry)
   nodeState.baseKeyToKey.set(baseKey, key)
   nodeState.message.loadingEntries.push(entry)
+  runningLoadingEntries.value += 1
+  if (runningLoadingEntries.value === 1) {
+    startLoadingTimer()
+  }
   return entry
 }
 
@@ -594,22 +598,37 @@ const finishLoadingEntry = (nodeId, baseKey) => {
   const entry = key ? nodeState.entryMap.get(key) : null
   if (!entry) return null
 
+  const wasRunning = entry.status === 'running'
   entry.status = 'done'
   entry.endedAt = Date.now()
   nodeState.baseKeyToKey.delete(baseKey)
+  if (wasRunning) {
+    runningLoadingEntries.value = Math.max(0, runningLoadingEntries.value - 1)
+    if (runningLoadingEntries.value === 0) {
+      stopLoadingTimer()
+    }
+  }
   return entry
 }
 
 // Finish all running entries when a node ends or cancels
 const finalizeAllLoadingEntries = (nodeState, endedAt = Date.now()) => {
   if (!nodeState) return
+  let finishedCount = 0
   for (const entry of nodeState.entryMap.values()) {
     if (entry.status === 'running') {
       entry.status = 'done'
       entry.endedAt = endedAt
+      finishedCount += 1
     }
   }
   nodeState.baseKeyToKey.clear()
+  if (finishedCount) {
+    runningLoadingEntries.value = Math.max(0, runningLoadingEntries.value - finishedCount)
+    if (runningLoadingEntries.value === 0) {
+      stopLoadingTimer()
+    }
+  }
 }
 
 // Global timer for updating loading bubble durations
@@ -876,10 +895,12 @@ const addDialogue = (name, message) => {
 
   const isRight = name === "User"
 
+  const htmlContent = renderMarkdown(text)
   chatMessages.value.push({
     type: 'dialogue',
     name: name,
     text: text,
+    htmlContent,
     avatar: avatar,
     isRight: isRight,
     timestamp: Date.now()
@@ -1497,13 +1518,6 @@ onMounted(() => {
   document.addEventListener('click', handleClickOutside)
   document.addEventListener('keydown', handleKeydown)
   loadWorkflows()
-
-  // Start the global timer
-  if (!loadingTimerInterval) {
-    loadingTimerInterval = setInterval(() => {
-      now.value = Date.now()
-    }, 1000)
-  }
 })
 
 onUnmounted(() => {
@@ -1513,10 +1527,8 @@ onUnmounted(() => {
   resetConnectionState()
   cleanupRecording()
 
-  if (loadingTimerInterval) {
-    clearInterval(loadingTimerInterval)
-    loadingTimerInterval = null
-  }
+  stopLoadingTimer()
+  runningLoadingEntries.value = 0
 })
 
 const { fromObject, fitView, onPaneReady, onNodesInitialized, setNodes, setEdges, edges } = useVueFlow()

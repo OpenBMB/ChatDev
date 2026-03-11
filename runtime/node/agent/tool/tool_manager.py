@@ -9,7 +9,6 @@ import logging
 import mimetypes
 import os
 import threading
-import time
 from pathlib import Path
 from typing import Any, Dict, List, Mapping, Sequence
 
@@ -36,19 +35,13 @@ class _FunctionManagerCacheEntry:
     auto_loaded: bool = False
 
 
-@dataclass
-class _McpToolCacheEntry:
-    tools: List[Any]
-    fetched_at: float
-
-
 class ToolManager:
     """Manage function tools for agent nodes."""
 
     def __init__(self) -> None:
         self._functions_dir: Path = FUNCTION_CALLING_DIR
         self._function_managers: Dict[Path, _FunctionManagerCacheEntry] = {}
-        self._mcp_tool_cache: Dict[str, _McpToolCacheEntry] = {}
+        self._mcp_tool_cache: Dict[str, List[Any]] = {}
         self._mcp_stdio_clients: Dict[str, "_StdioClientWrapper"] = {}
 
     def _get_function_manager(self) -> FunctionManager:
@@ -199,25 +192,19 @@ class ToolManager:
 
     def _build_mcp_remote_specs(self, config: McpRemoteConfig) -> List[ToolSpec]:
         cache_key = f"remote:{config.cache_key()}"
-        tools = self._get_mcp_tools(
-            cache_key,
-            config.cache_ttl,
-            lambda: asyncio.run(
+        tools = self._mcp_tool_cache.get(cache_key)
+        if tools is None:
+            tools = asyncio.run(
                 self._fetch_mcp_tools_http(
                     config.server,
                     headers=config.headers,
                     timeout=config.timeout,
                 )
-            ),
-        )
+            )
+            self._mcp_tool_cache[cache_key] = tools
 
         specs: List[ToolSpec] = []
-        allowed_sources = {source for source in (config.tool_sources or []) if source}
         for tool in tools:
-            meta = getattr(tool, "meta", None)
-            source = meta.get("source") if isinstance(meta, Mapping) else None
-            if allowed_sources and source not in allowed_sources:
-                continue
             specs.append(
                 ToolSpec(
                     name=tool.name,
@@ -234,11 +221,10 @@ class ToolManager:
             raise ValueError("MCP local configuration missing launch key")
 
         cache_key = f"stdio:{launch_key}"
-        tools = self._get_mcp_tools(
-            cache_key,
-            config.cache_ttl,
-            lambda: asyncio.run(self._fetch_mcp_tools_stdio(config, launch_key)),
-        )
+        tools = self._mcp_tool_cache.get(cache_key)
+        if tools is None:
+            tools = asyncio.run(self._fetch_mcp_tools_stdio(config, launch_key))
+            self._mcp_tool_cache[cache_key] = tools
 
         specs: List[ToolSpec] = []
         for tool in tools:
@@ -252,25 +238,28 @@ class ToolManager:
             )
         return specs
 
-    def _get_mcp_tools(
+    def _execute_function_tool(
         self,
-        cache_key: str,
-        cache_ttl: float,
-        fetcher,
-    ) -> List[Any]:
-        entry = self._mcp_tool_cache.get(cache_key)
-        if entry and self._is_cache_fresh(entry.fetched_at, cache_ttl):
-            return entry.tools
-        tools = fetcher()
-        self._mcp_tool_cache[cache_key] = _McpToolCacheEntry(tools=tools, fetched_at=time.time())
-        return tools
+        tool_name: str,
+        arguments: Dict[str, Any],
+        config: FunctionToolConfig,
+        tool_context: Dict[str, Any] | None = None,
+    ) -> Any:
+        mgr = self._get_function_manager()
+        if config.auto_load:
+            mgr.load_functions()
+        func = mgr.get_function(tool_name)
+        if func is None:
+            raise ValueError(f"Tool {tool_name} not found in {self._functions_dir}")
 
-    @staticmethod
-    def _is_cache_fresh(fetched_at: float, cache_ttl: float) -> bool:
-        if cache_ttl <= 0:
-            return False
-        return (time.time() - fetched_at) < cache_ttl
-
+        call_args = dict(arguments or {})
+        if (
+            tool_context is not None
+            # and "_context" not in call_args
+            and self._function_accepts_context(func)
+        ):
+            call_args["_context"] = tool_context
+        return func(**call_args)
 
     def _function_accepts_context(self, func: Any) -> bool:
         try:
