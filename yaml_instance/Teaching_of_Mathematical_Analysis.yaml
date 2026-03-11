@@ -1,0 +1,383 @@
+graph:
+  id: Teaching_of_Mathematical_Analysis_NoHuman
+  description: Generate Manim code explaining Cauchy Convergence Criterion (without human review).
+  log_level: DEBUG
+  is_majority_voting: false
+  nodes:
+    - id: code_improver
+      type: agent
+      config:
+        name: gpt-4o
+        provider: openai
+        role: Based on the review comments, modify the original code and output the corrected, complete Manim code. Address each comment one by one. Ensure the final code is runnable directly.
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params: {}
+        tooling: []
+        thinking: null
+        memories: []
+        retry: null
+      description: ''
+      context_window: 0
+    - id: content_request
+      type: literal
+      config:
+        content: |-
+          Please explain the Cauchy Convergence Criterion in one-variable calculus for first-year students. The content should include:
+          1. The rigorous mathematical definition of the Cauchy Convergence Criterion (using LaTeX).
+          2. Intuitive explanation: Why does convergence of a sequence imply that its terms become arbitrarily close?
+          3. Geometric meaning: On the number line, the points of the sequence eventually cluster within a small neighborhood.
+          4. Positive example: The sequence {1/n} satisfies the Cauchy condition.
+          5. Counterexample: The sequence {(-1)^n} does not satisfy the Cauchy condition.
+          6. Summary of the relationship with sequence convergence.
+        role: user
+      description: ''
+      context_window: 0
+    - id: code_writer
+      type: agent
+      config:
+        name: gpt-4o
+        provider: openai
+        role: |-
+          You are a Manim animation expert. Based on the storyboard, generate complete Manim Python code. Requirements:
+          - Use Manim Community Edition syntax.
+          - Create a Scene class with a self-defined name.
+          - Separate each scene with self.next_section or comments.
+          - Appropriately use MathTex, Tex, Dot, NumberLine, AnimationGroup, etc.
+          - Keep the animation pace moderate, with key points pausing long enough.
+          - Include necessary imports and configurations.
+          Output the complete Python code.
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params: {}
+        tooling: []
+        thinking: null
+        memories: []
+        retry: null
+      description: ''
+      context_window: 0
+    - id: instructional_design
+      type: agent
+      config:
+        name: gpt-4o
+        provider: openai
+        role: |-
+          You are an instructional designer responsible for integrating the above three parts into a storyboard suitable for animation. Divide the content into 5–7 scenes, each describing:
+          - Animation objective
+          - Elements on screen (text, formulas, graphics)
+          - Animation actions (appear, move, highlight, etc.)
+          - Narration text
+          Output format: Use a Markdown list, each scene starting with "Scene X:".
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params: {}
+        tooling: []
+        thinking: null
+        memories: []
+        retry: null
+      description: ''
+      context_window: 0
+    - id: code_reviewer
+      type: agent
+      config:
+        name: gpt-4o
+        provider: openai
+        role: |-
+          Review the following Manim code for:
+          - Syntax errors (missing imports, mismatched parentheses, etc.)
+          - Logical errors (incorrect animation order, mathematical inaccuracies)
+          - Teaching clarity (consistency with the storyboard, emphasis on core concepts)
+          - Visual effects (color, layout, reasonableness)
+          List any issues found and provide suggestions for improvement. Output text.
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params: {}
+        tooling: []
+        thinking: null
+        memories: []
+        retry: null
+      description: ''
+      context_window: 0
+    - id: system_prompt
+      type: literal
+      config:
+        content: You are a mathematics professor at Shanghai Jiao Tong University, skilled at explaining abstract concepts in an intuitive and vivid manner, and familiar with Manim animation production.
+        role: null
+      description: ''
+      context_window: 0
+    - id: Final_Output
+      type: agent
+      config:
+        name: gpt-4o
+        provider: openai
+        role: You are a final output formatter. Output the exact content of the input message without any modifications, explanations, or additional text. Just return the code as is.
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params: {}
+        tooling: []
+        thinking: null
+        memories: []
+        retry: null
+      description: ''
+      context_window: 0
+    - id: math_expert_def
+      type: agent
+      config:
+        name: gpt-4o
+        provider: openai
+        role: 'Based on the system prompt and user request, generate the detailed text for the "Definition and Intuitive Explanation" part. Requirements: Explain the definition of the Cauchy Convergence Criterion and its intuitive meaning in plain language, using mathematical symbols. Use analogies, e.g., "the terms of the sequence eventually huddle together." Output plain text.'
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params: {}
+        tooling: []
+        thinking: null
+        memories: []
+        retry: null
+      description: ''
+      context_window: 1
+    - id: math_expert_geo
+      type: agent
+      config:
+        name: gpt-4o
+        provider: openai
+        role: 'Generate the detailed text for the "Geometric Meaning and Positive Example (1/n)" part. Requirements: Show how the sequence points on the number line approach 0, and explain why 1/n satisfies the Cauchy condition (for any ε, there exists N such that for all m,n > N, |1/m - 1/n|< ε). Can be described with images. Output plain text.'
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params: {}
+        tooling: []
+        thinking: null
+        memories: []
+        retry: null
+      description: ''
+      context_window: 1
+    - id: "math_expert_counter\t"
+      type: agent
+      config:
+        name: gpt-4o
+        provider: openai
+        role: "Generate the detailed text for the \"Counterexample ((-1)^n) and Summary\" part. Requirements: Show the sequence oscillating between -1 and 1, and explain why it does not satisfy the Cauchy condition (there exists ε=1 such that no matter how large N, we can find m,n > N with\t|(-1)^m - (-1)^n|= 2 > 1). Finally, summarize the equivalence of the Cauchy criterion and sequence convergence. Output plain text."
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params: {}
+        tooling: []
+        thinking: null
+        memories: []
+        retry: null
+      description: ''
+      context_window: 1
+  edges:
+    - from: system_prompt
+      to: math_expert_def
+      trigger: true
+      condition:
+        type: function
+        config:
+          name: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: content_request
+      to: math_expert_def
+      trigger: true
+      condition:
+        type: function
+        config:
+          name: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: system_prompt
+      to: math_expert_geo
+      trigger: true
+      condition:
+        type: function
+        config:
+          name: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: content_request
+      to: math_expert_geo
+      trigger: true
+      condition:
+        type: function
+        config:
+          name: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: content_request
+      to: "math_expert_counter\t"
+      trigger: true
+      condition:
+        type: function
+        config:
+          name: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: system_prompt
+      to: "math_expert_counter\t"
+      trigger: true
+      condition:
+        type: function
+        config:
+          name: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: math_expert_def
+      to: instructional_design
+      trigger: true
+      condition:
+        type: function
+        config:
+          name: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: math_expert_geo
+      to: instructional_design
+      trigger: true
+      condition:
+        type: function
+        config:
+          name: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: "math_expert_counter\t"
+      to: instructional_design
+      trigger: true
+      condition:
+        type: function
+        config:
+          name: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: system_prompt
+      to: code_writer
+      trigger: true
+      condition:
+        type: function
+        config:
+          name: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: code_writer
+      to: code_reviewer
+      trigger: true
+      condition:
+        type: function
+        config:
+          name: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: code_writer
+      to: code_improver
+      trigger: true
+      condition:
+        type: function
+        config:
+          name: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: code_reviewer
+      to: code_improver
+      trigger: true
+      condition:
+        type: function
+        config:
+          name: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: instructional_design
+      to: code_reviewer
+      trigger: true
+      condition:
+        type: function
+        config:
+          name: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: instructional_design
+      to: code_writer
+      trigger: true
+      condition:
+        type: function
+        config:
+          name: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: code_improver
+      to: Final_Output
+      trigger: true
+      condition:
+        type: function
+        config:
+          name: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+  memory: []
+  initial_instruction: ''
+  start:
+    - system_prompt
+    - content_request
+  end:
+    - Final_Output

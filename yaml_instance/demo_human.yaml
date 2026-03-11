@@ -158,18 +158,16 @@ graph:
     - id: Iteration Counter
       type: loop_counter
       config:
+        provider: "none"
         description: "A counter that tracks the number of iterations. It increments each time the Editor-in-Chief produces a revised poem and resets when the user requests modifications."
         context_window: 1
         # 可选的计数器参数，如初始值、最大值等，根据实际需要添加
         # initial_value: 0
         # max_iterations: 5
-
-    - id: Iteration Controller
-      type: python
-      config:
-        description: "A controller that decides whether to continue iterating or to proceed to human review based on the satisfaction score and iteration count. If the score is below a certain threshold and the iteration count is below the maximum, it loops back to the Inspiration Poet; otherwise, it moves to User Review."
-        context_window: 1
-        code: |
+    
+    - name: code_provider for Iteration Controller
+      type: literal
+      content: |
           # 在此处实现迭代控制逻辑
           # 输入变量:satisfaction_score, iteration_count, max_iterations, threshold
           # 输出:next_node (例如 "Inspiration Poet" 或 "User Review")
@@ -177,6 +175,15 @@ graph:
               next_node = "Inspiration Poet"
           else:
               next_node = "User Review"
+
+    - id: Iteration Controller
+      type: python
+      config:
+        description: "A controller that decides whether to continue iterating or to proceed to human review based on the satisfaction score and iteration count. If the score is below a certain threshold and the iteration count is below the maximum, it loops back to the Inspiration Poet; otherwise, it moves to User Review."
+        context_window: 1
+        inputs:
+        - code_provider for Iteration Controller
+
 
     - id: User Decider
       type: python
