@@ -264,6 +264,8 @@ if result.final_message:
 | **🛠️ 3D 场景生成**<br>*(需要 [Blender](https://www.blender.org/) 和 [blender-mcp](https://github.com/ahujasid/blender-mcp))* | `blender_3d_builder_simple.yaml`<br>`blender_3d_builder_hub.yaml`<br>`blender_scientific_illustration.yaml` | <img src="assets/cases/3d_generation/3d.gif" width="100%"><br>提示词：*"Please build a Christmas tree."* |
 | **🎮 游戏开发** | `GameDev_v1.yaml`<br>`ChatDev_v1.yaml`                                                                      | <img src="assets/cases/game_development/game.gif" width="100%"><br>提示词：*"Please help me design and develop a Tank Battle game."* |
 | **📚 深度研究** | `deep_research_v1.yaml`                                                                                     | <img src="assets/cases/deep_research/deep_research.gif" width="85%"><br>提示词：*"Research about recent advances in the field of LLM-based agent RL"* |
+| **📘 学习复盘与创新** | `study_report_innovation.yaml`                                                                         | 提示词：*"这是我今天的学习记录，请生成复盘报告，并给出未来 48 小时可执行的创新改进方案。"* |
+| **📝 考前复习资料生成** | `physics_revision_ppt_only.yaml`<br>`math_analysis2_revision_ppt_only.yaml`<br>`discrete_math_revision_lecture_only.yaml`<br>`data_structure_revision_ppt_only.yaml` | 提示词：*"请严格基于我上传的 PPT/PDF 生成章节复习资料，并为每条结论附来源标注。"* |
 | **🎓 教学视频** | `teach_video.yaml` (请在运行此工作流之前运行 `uv add manim` 命令)                                                         | <img src="assets/cases/video_generation/video.gif" width="140%"><br>提示词：*"讲一下什么是凸优化"* |
 
 ------
