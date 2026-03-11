@@ -24,8 +24,6 @@ _DYNAMIC_TOOLS_DIR = Path(__file__).parent / "dynamic_tools"
 _DYNAMIC_TOOLS_DIR.mkdir(parents=True, exist_ok=True)
 
 
-
-
 def _safe_tool_filename(filename: str) -> str:
     name = Path(filename).name
     if not name.endswith(".py"):
@@ -184,6 +182,6 @@ if _bootstrap["errors"]:
 
 
 if __name__ == "__main__":
-    print("Starting DevAll MCP server...")
+    print("Starting MCP server...")
     print("Run standalone with: fastmcp run server/mcp_server.py --transport streamable-http --port 8010")
     mcp.run()

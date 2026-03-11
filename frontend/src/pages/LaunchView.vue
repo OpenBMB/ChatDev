@@ -56,7 +56,7 @@
                   >
                   <CollapsibleMessage
                     v-if="message.text"
-                    :html-content="renderMarkdown(message.text)"
+                    :html-content="message.htmlContent || renderMarkdown(message.text)"
                     :raw-content="message.text"
                     :default-expanded="configStore.AUTO_EXPAND_MESSAGES"
                   />
@@ -540,6 +540,7 @@ const addTotalLoadingMessage = (nodeId) => {
     type: 'dialogue',
     name: nodeId,
     text: '',
+    htmlContent: '',
     avatar,
     isRight: false,
     isLoading: true,
@@ -614,6 +615,20 @@ const finalizeAllLoadingEntries = (nodeState, endedAt = Date.now()) => {
 // Global timer for updating loading bubble durations
 const now = ref(Date.now())
 let loadingTimerInterval = null
+const runningLoadingEntries = ref(0)
+
+const startLoadingTimer = () => {
+  if (loadingTimerInterval) return
+  loadingTimerInterval = setInterval(() => {
+    now.value = Date.now()
+  }, 1000)
+}
+
+const stopLoadingTimer = () => {
+  if (!loadingTimerInterval) return
+  clearInterval(loadingTimerInterval)
+  loadingTimerInterval = null
+}
 
 // Map sprites for different roles
 const nameToSpriteMap = ref(new Map())

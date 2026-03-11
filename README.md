@@ -182,6 +182,29 @@ make dev
     ```
     Checks all YAML files for syntax and schema errors.
 
+### 🦞 Run with OpenClaw
+OpenClaw can integrate with ChatDev by invoking existing agent teams or dynamically creating new agent teams within ChatDev.
+To get started:
+1. Start the ChatDev 2.0 backend.
+2. Install the required skills for your OpenClaw instance:
+    ```bash
+    clawdbot install chatdev
+    ```
+
+3. Ask your OpenClaw to create a ChatDev workflow. For example:
+
+* **Automated information collection and content publishing**
+
+  ```
+  Create a ChatDev workflow to automatically collect trending information, generate a Xiaohongshu post, and publish it.
+  ```
+
+* **Multi-agent geopolitical simulation**
+  ```
+  Create a ChatDev workflow with multiple agents to simulate possible future developments of the Middle East situation.
+  ```
+
+
 ### 🐳 Run with Docker
 Alternatively, you can run the entire application using Docker Compose. This method simplifies dependency management and provides a consistent environment.
 
