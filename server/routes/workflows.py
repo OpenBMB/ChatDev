@@ -1,4 +1,5 @@
 from fastapi import APIRouter, HTTPException
+from typing import Any
 
 from server.models import (
     WorkflowCopyRequest,
@@ -67,6 +68,91 @@ async def list_workflows():
     return {"workflows": [file.name for file in YAML_DIR.glob("*.yaml")]}
 
 
+@router.get("/api/workflows/{filename}/args")
+async def get_workflow_args(filename: str):
+    print(str)
+    try:
+        safe_filename = validate_workflow_filename(filename, require_yaml_extension=True)
+        print(safe_filename)
+        file_path = YAML_DIR / safe_filename
+
+        if not file_path.exists() or not file_path.is_file():
+            raise ResourceNotFoundError(
+                "Workflow file not found",
+                resource_type="workflow",
+                resource_id=safe_filename,
+            )
+
+        # Load and validate YAML content
+        raw_content = file_path.read_text(encoding="utf-8")
+        _, yaml_content = validate_workflow_content(safe_filename, raw_content)
+
+        args: list[dict[str, Any]] = []
+        if isinstance(yaml_content, dict):
+            graph = yaml_content.get("graph") or {}
+            if isinstance(graph, dict):
+                raw_args = graph.get("args") or []
+                if isinstance(raw_args, list):
+                    if len(raw_args) == 0:
+                        raise ResourceNotFoundError(
+                            "Workflow file does not have args",
+                            resource_type="workflow",
+                            resource_id=safe_filename,
+                        )
+                    for item in raw_args:
+                        # Each item is expected to be like: { arg_name: [ {key: value}, ... ] }
+                        if not isinstance(item, dict) or len(item) != 1:
+                            continue
+                        (arg_name, spec_list), = item.items()
+                        if not isinstance(arg_name, str):
+                            continue
+
+                        arg_info: dict[str, Any] = {"name": arg_name}
+                        if isinstance(spec_list, list):
+                            for spec in spec_list:
+                                if isinstance(spec, dict):
+                                    for key, value in spec.items():
+                                        # Later entries override earlier ones if duplicated
+                                        arg_info[str(key)] = value
+                        args.append(arg_info)
+
+        logger = get_server_logger()
+        logger.info(
+            "Workflow args retrieved",
+            log_type=LogType.WORKFLOW,
+            filename=safe_filename,
+            args_count=len(args),
+        )
+
+        return {"args": args}
+    except ValidationError as exc:
+        # 参数或文件名等校验错误
+        raise HTTPException(
+            status_code=400,
+            detail={"message": str(exc)},
+        )
+    except SecurityError as exc:
+        # 安全相关错误（例如路径遍历）
+        raise HTTPException(
+            status_code=400,
+            detail={"message": str(exc)},
+        )
+    except ResourceNotFoundError as exc:
+        # 文件不存在
+        raise HTTPException(
+            status_code=404,
+            detail={"message": str(exc)},
+        )
+    except Exception as exc:
+        logger = get_server_logger()
+        logger.log_exception(exc, f"Unexpected error retrieving workflow args: {filename}")
+        # 兜底错误
+        raise HTTPException(
+            status_code=500,
+            detail={"message": f"Failed to retrieve workflow args: {exc}"},
+        )
+
+
 @router.post("/api/workflows/upload/content")
 async def upload_workflow_content(request: WorkflowUploadContentRequest):
     return _persist_workflow_from_content(
@@ -78,7 +164,7 @@ async def upload_workflow_content(request: WorkflowUploadContentRequest):
     )
 
 
-@router.put("/api/workflows/{filename}")
+@router.put("/api/workflows/{filename}/update")
 async def update_workflow_content(filename: str, request: WorkflowUpdateContentRequest):
     return _persist_workflow_from_content(
         filename,
@@ -89,7 +175,7 @@ async def update_workflow_content(filename: str, request: WorkflowUpdateContentR
     )
 
 
-@router.delete("/api/workflows/{filename}")
+@router.delete("/api/workflows/{filename}/delete")
 async def delete_workflow(filename: str):
     try:
         safe_filename = validate_workflow_filename(filename, require_yaml_extension=True)
@@ -180,7 +266,7 @@ async def copy_workflow_file(filename: str, request: WorkflowCopyRequest):
         raise WorkflowExecutionError(f"Failed to copy workflow: {exc}")
 
 
-@router.get("/api/workflows/{filename}")
+@router.get("/api/workflows/{filename}/get")
 async def get_workflow_raw_content(filename: str):
     try:
         safe_filename = validate_workflow_filename(filename, require_yaml_extension=True)

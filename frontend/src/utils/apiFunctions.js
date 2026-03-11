@@ -69,7 +69,7 @@ export async function postYaml(filename, content) {
 export async function updateYaml(filename, content) {
   try {
     const yamlFilename = addYamlSuffix(filename)
-    const response = await fetch(apiUrl(`/api/workflows/${encodeURIComponent(yamlFilename)}`), {
+    const response = await fetch(apiUrl(`/api/workflows/${encodeURIComponent(yamlFilename)}/update`), {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -197,7 +197,7 @@ export async function fetchWorkflowsWithDesc() {
     const filesWithDesc = await Promise.all(
       data.workflows.map(async (filename) => {
         try {
-          const response = await fetch(apiUrl(`/api/workflows/${encodeURIComponent(filename)}`))
+          const response = await fetch(apiUrl(`/api/workflows/${encodeURIComponent(filename)}/get`))
           const fileData = await response.json()
           return {
             name: filename,
@@ -234,7 +234,7 @@ export async function fetchWorkflowsWithDesc() {
 // Fetch YAML file content
 export async function fetchWorkflowYAML(filename) {
   try {
-    const response = await fetch(apiUrl(`/api/workflows/${encodeURIComponent(filename)}`))
+    const response = await fetch(apiUrl(`/api/workflows/${encodeURIComponent(filename)}/get`))
     if (!response.ok) {
       throw new Error(`Failed to load YAML file: ${filename}, status: ${response.status}`)
     }
@@ -250,7 +250,7 @@ export async function fetchWorkflowYAML(filename) {
 export async function fetchYaml(filename) {
   try {
     const yamlFilename = addYamlSuffix(filename)
-    const response = await fetch(apiUrl(`/api/workflows/${encodeURIComponent(yamlFilename)}`))
+    const response = await fetch(apiUrl(`/api/workflows/${encodeURIComponent(yamlFilename)}/get`))
 
     const data = await response.json().catch(() => ({}))
 
