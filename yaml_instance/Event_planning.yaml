@@ -1,0 +1,457 @@
+graph:
+  id: event_planning
+  description: >-
+    A collaborative workflow that automates professional event planning. It
+    integrates parallel brainstorming and detailed execution steps to deliver
+    ready-to-use proposals.
+  log_level: DEBUG
+  is_majority_voting: false
+  nodes:
+    - id: Account_Manager
+      type: agent
+      config:
+        name: gpt-4o
+        provider: openai
+        role: >-
+          你是一名资深客户经理。请接收用户的原始活动需求：{User_Input}。你的任务是提取核心信息，不加任何自我发挥，将其整理为标准的《活动需求简报
+          (Event Brief)》。必须包含：1. 活动背景与目的；2. 目标受众；3. 预估规模；4. 特殊限制条件（如提及）。输出标准的
+          Markdown 格式简报。
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params: {}
+        tooling: []
+        thinking: null
+        memories: []
+        retry: null
+      description: ''
+      context_window: 0
+      log_output: true
+    - id: Creative_Director
+      type: agent
+      config:
+        name: gpt-4o
+        provider: openai
+        role: 阅读《活动需求简报》。请提出 1 个极具传播力、情感共鸣的活动主题名称，并用一段话描述其核心创意概念。
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params: {}
+        tooling: []
+        thinking: null
+        memories: []
+        retry: null
+      description: ''
+      context_window: 10
+      log_output: true
+    - id: Tech_Curator
+      type: agent
+      config:
+        name: gpt-4o
+        provider: openai
+        role: 阅读《活动需求简报》。请提出 1 个在活动现场可以使用的新奇互动玩法或技术手段（如AR签到、特定装置），只需描述玩法和效果。
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params: {}
+        tooling: []
+        thinking: null
+        memories: []
+        retry: null
+      description: ''
+      context_window: 10
+      log_output: true
+    - id: PR_Specialist
+      type: agent
+      config:
+        name: gpt-4o
+        provider: openai
+        role: 阅读《活动需求简报》。请构思 1 个能在社交媒体上引发讨论的造势话题（Hashtag）或营销噱头。
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params: {}
+        tooling: []
+        thinking: null
+        memories: []
+        retry: null
+      description: ''
+      context_window: 10
+      log_output: true
+    - id: Logistics_Manager
+      type: agent
+      config:
+        name: gpt-4o
+        provider: openai
+        role: 基于已通过的《活动核心概念方案》，请输出一份《现场执行流程表 (Run-down)》，需包含：时间节点、环节名称、核心动作、场地划分要求。
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params: {}
+        tooling: []
+        thinking: null
+        memories: []
+        retry: null
+      description: ''
+      context_window: 10
+      log_output: true
+    - id: Finance_Controller
+      type: agent
+      config:
+        name: gpt-4o
+        provider: openai
+        role: >-
+          基于《活动核心概念方案》的预估预算池，请将资金拆解为具体的《预算分配明细表
+          (Markdown表格)》，标明场地、物料、人员、宣发的花销比例。
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params: {}
+        tooling: []
+        thinking: null
+        memories: []
+        retry: null
+      description: ''
+      context_window: 0
+      log_output: true
+    - id: human_review
+      type: human
+      config:
+        description: 这是最终的《活动策划全案》。请验收。（输入 'ACCEPT' 结束流程；或输入局部修改意见，例如：'把预算表里的餐饮费下调 20%'）
+      description: ''
+      context_window: 10
+      log_output: true
+    - id: Event_Producer
+      type: agent
+      config:
+        name: gpt-5
+        provider: openai
+        role: >-
+          你是活动制作人。请阅读《活动需求简报》以及三位专家提供的【创意主题】、【互动玩法】和【公关噱头】。请你将它们揉合成一个逻辑自洽的《活动核心概念方案》。同时，基于经验，请粗略列出该方案的【预估总预算范围】。等待用户审核。
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params: {}
+        tooling: []
+        thinking: null
+        memories: []
+        retry: null
+      description: ''
+      context_window: 20
+      log_output: true
+    - id: Risk_Auditor
+      type: agent
+      config:
+        name: gpt-4o
+        provider: openai
+        role: >-
+          你是冷酷无情的风控审计员。请审视《活动全案初稿》。不要修改原方案，只在方案末尾追加一个全新的章节：【风险评估与应急预案 (Plan
+          B)】。必须列出现场最可能发生的 3 个灾难性突发状况，并给出直接的解决方案。
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params: {}
+        tooling: []
+        thinking: null
+        memories: []
+        retry: null
+      description: ''
+      context_window: 30
+      log_output: true
+    - id: Marketing_Manager
+      type: agent
+      config:
+        name: gpt-4o
+        provider: openai
+        role: 基于《活动核心概念方案》，请列出活动前、中、后三个阶段的《传播节奏表》及所需的媒介渠道。
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params: {}
+        tooling: []
+        thinking: null
+        memories: []
+        retry: null
+      description: ''
+      context_window: 10
+      log_output: true
+    - id: Presentation_Designer
+      type: agent
+      config:
+        name: gpt-5
+        provider: openai
+        role: >-
+          你是顶级咨询公司的排版专员。请拿到包含风控预案的《活动全案初稿》，将其润色、排版为一份可以直接发给客户的《Event Master Plan
+          (最终全案)》。要求：使用极具商业质感的语言，充分利用 Markdown 的各级标题、表格、引用块和分割线。去掉所有 AI
+          生成过程中的废话，只保留专业交付物。
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params: {}
+        tooling: []
+        thinking: null
+        memories: []
+        retry: null
+      description: ''
+      context_window: 50
+      log_output: true
+    - id: Lead_Planner
+      type: agent
+      config:
+        name: gpt-5
+        provider: openai
+        role: >-
+          你是一名逻辑极其严密的主策划师。请将统筹经理的流程表、营销经理的传播表、财务主管的预算表进行整合。消除其中可能存在的时间和预算冲突（例如：财务没给宣发留钱，但营销经理排了大量宣发）。输出一份结构完整的《活动全案初稿》。
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params: {}
+        tooling: []
+        thinking: null
+        memories: []
+        retry: null
+      description: ''
+      context_window: 40
+      log_output: true
+  edges:
+    - from: Account_Manager
+      to: Creative_Director
+      trigger: true
+      condition:
+        type: function
+        config:
+          name: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: Account_Manager
+      to: Tech_Curator
+      trigger: true
+      condition:
+        type: function
+        config:
+          name: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: Account_Manager
+      to: PR_Specialist
+      trigger: true
+      condition:
+        type: function
+        config:
+          name: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: Creative_Director
+      to: Event_Producer
+      trigger: true
+      condition:
+        type: function
+        config:
+          name: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: Tech_Curator
+      to: Event_Producer
+      trigger: true
+      condition:
+        type: function
+        config:
+          name: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: PR_Specialist
+      to: Event_Producer
+      trigger: true
+      condition:
+        type: function
+        config:
+          name: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: Logistics_Manager
+      to: Lead_Planner
+      trigger: true
+      condition:
+        type: function
+        config:
+          name: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: Marketing_Manager
+      to: Lead_Planner
+      trigger: true
+      condition:
+        type: function
+        config:
+          name: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: Finance_Controller
+      to: Lead_Planner
+      trigger: true
+      condition:
+        type: function
+        config:
+          name: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: Lead_Planner
+      to: Risk_Auditor
+      trigger: true
+      condition:
+        type: function
+        config:
+          name: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: Risk_Auditor
+      to: Presentation_Designer
+      trigger: true
+      condition:
+        type: function
+        config:
+          name: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: Account_Manager
+      to: Event_Producer
+      trigger: true
+      condition:
+        type: function
+        config:
+          name: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: Lead_Planner
+      to: Presentation_Designer
+      trigger: true
+      condition:
+        type: function
+        config:
+          name: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: Event_Producer
+      to: Logistics_Manager
+      trigger: true
+      condition:
+        type: function
+        config:
+          name: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: Event_Producer
+      to: Marketing_Manager
+      trigger: true
+      condition:
+        type: function
+        config:
+          name: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: Event_Producer
+      to: Finance_Controller
+      trigger: true
+      condition:
+        type: function
+        config:
+          name: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: Lead_Planner
+      to: human_review
+      trigger: true
+      condition:
+        type: function
+        config:
+          name: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: human_review
+      to: Presentation_Designer
+      trigger: true
+      condition:
+        type: function
+        config:
+          name: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: Event_Producer
+      to: Lead_Planner
+      trigger: true
+      condition:
+        type: function
+        config:
+          name: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+  memory: []
+  initial_instruction: ''
+  start:
+    - Account_Manager
+  end: []
