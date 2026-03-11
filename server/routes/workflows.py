@@ -153,6 +153,69 @@ async def get_workflow_args(filename: str):
         )
 
 
+@router.get("/api/workflows/{filename}/desc")
+async def get_workflow_desc(filename: str):
+    try:
+        safe_filename = validate_workflow_filename(filename, require_yaml_extension=True)
+        file_path = YAML_DIR / safe_filename
+
+        if not file_path.exists() or not file_path.is_file():
+            raise ResourceNotFoundError(
+                "Workflow file not found",
+                resource_type="workflow",
+                resource_id=safe_filename,
+            )
+
+        # Load and validate YAML content
+        raw_content = file_path.read_text(encoding="utf-8")
+        _, yaml_content = validate_workflow_content(safe_filename, raw_content)
+
+        desc = ""
+        if isinstance(yaml_content, dict):
+            graph = yaml_content.get("graph") or {}
+            if isinstance(graph, dict):
+                desc = graph.get("description") or ""
+                if len(desc) == 0:
+                        raise ResourceNotFoundError(
+                            "Workflow file does not have args",
+                            resource_type="workflow",
+                            resource_id=safe_filename,
+                        )
+        logger = get_server_logger()
+        logger.info(
+            "Workflow description retrieved",
+            log_type=LogType.WORKFLOW,
+            filename=safe_filename,
+        )
+        return {"description": desc}
+    except ValidationError as exc:
+        # 参数或文件名等校验错误
+        raise HTTPException(
+            status_code=400,
+            detail={"message": str(exc)},
+        )
+    except SecurityError as exc:
+        # 安全相关错误（例如路径遍历）
+        raise HTTPException(
+            status_code=400,
+            detail={"message": str(exc)},
+        )
+    except ResourceNotFoundError as exc:
+        # 文件不存在
+        raise HTTPException(
+            status_code=404,
+            detail={"message": str(exc)},
+        )
+    except Exception as exc:
+        logger = get_server_logger()
+        logger.log_exception(exc, f"Unexpected error retrieving workflow args: {filename}")
+        # 兜底错误
+        raise HTTPException(
+            status_code=500,
+            detail={"message": f"Failed to retrieve workflow args: {exc}"},
+        )
+
+
 @router.post("/api/workflows/upload/content")
 async def upload_workflow_content(request: WorkflowUploadContentRequest):
     return _persist_workflow_from_content(
@@ -295,3 +358,4 @@ async def get_workflow_raw_content(filename: str):
         logger = get_server_logger()
         logger.log_exception(exc, f"Unexpected error retrieving workflow: {filename}")
         raise WorkflowExecutionError(f"Failed to retrieve workflow: {exc}")
+

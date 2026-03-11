@@ -197,7 +197,7 @@ export async function fetchWorkflowsWithDesc() {
     const filesWithDesc = await Promise.all(
       data.workflows.map(async (filename) => {
         try {
-          const response = await fetch(apiUrl(`/api/workflows/${encodeURIComponent(filename)}/get`))
+          const response = await fetch(apiUrl(`/api/workflows/${encodeURIComponent(filename)}/desc`))
           const fileData = await response.json()
           return {
             name: filename,
