@@ -1,0 +1,39 @@
+graph:
+  id: skills
+  description: Workflow to demonstrate skills usage
+  initial_instruction: Give the agent an instruction to explicitly use code to generate a Fibonacci sequence, sum numbers, or something else that is better done with code than LLM generation.
+  log_level: DEBUG
+  is_majority_voting: false
+  nodes:
+    - id: Qwerty
+      type: agent
+      config:
+        name: gpt-4o
+        provider: openai
+        role: Use any available tools or skills - notify if none are available
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params: {}
+        tooling:
+          - type: function
+            config:
+              tools:
+                - name: code_executor:All
+              timeout: null
+            prefix: ''
+        thinking: null
+        memories: []
+        skills:
+          enabled: true
+          allow:
+            - name: python-scratchpad
+            - name: rest-api-caller
+        retry: null
+      description: ''
+      context_window: 0
+      log_output: true
+  edges: []
+  memory: []
+  start:
+    - Qwerty
+  end: []

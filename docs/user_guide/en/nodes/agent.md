@@ -15,6 +15,7 @@ The Agent node is the most fundamental node type in the DevAll platform, used to
 | `tooling` | object | No | - | Tool calling configuration, see [Tooling Module](../modules/tooling/README.md) |
 | `thinking` | object | No | - | Chain-of-thought configuration, e.g., chain-of-thought, reflection |
 | `memories` | list | No | `[]` | Memory binding configuration, see [Memory Module](../modules/memory.md) |
+| `skills` | object | No | - | Agent Skills discovery and built-in skill activation/file-read tools |
 | `retry` | object | No | - | Automatic retry strategy configuration |
 
 ### Retry Strategy Configuration (retry)
@@ -26,6 +27,22 @@ The Agent node is the most fundamental node type in the DevAll platform, used to
 | `min_wait_seconds` | float | `1.0` | Minimum backoff wait time |
 | `max_wait_seconds` | float | `6.0` | Maximum backoff wait time |
 | `retry_on_status_codes` | list[int] | `[408,409,425,429,500,502,503,504]` | HTTP status codes that trigger retry |
+
+### Agent Skills Configuration (skills)
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `enabled` | bool | `false` | Enable Agent Skills discovery for this node |
+| `allow` | list[object] | `[]` | Optional allowlist of skills from the project-level `.agents/skills/` directory; each entry uses `name` |
+
+### Agent Skills Notes
+
+- Skills are discovered from the fixed project-level `.agents/skills/` directory.
+- The runtime exposes two built-in skill tools: `activate_skill` and `read_skill_file`.
+- `read_skill_file` only works after the relevant skill has been activated.
+- Skill `SKILL.md` frontmatter may include optional `allowed-tools` using the Agent Skills spec format, for example `allowed-tools: execute_code`.
+- If a selected skill requires tools that are not bound on the node, that skill is skipped at runtime.
+- If no compatible skills remain, the agent is explicitly instructed not to claim skill usage.
 
 ## When to Use
 
@@ -143,6 +160,23 @@ nodes:
         max_attempts: 3
         min_wait_seconds: 2.0
         max_wait_seconds: 10.0
+```
+
+### Configuring Agent Skills
+
+```yaml
+nodes:
+  - id: Skilled Agent
+    type: agent
+    config:
+      provider: openai
+      name: gpt-4o
+      api_key: ${API_KEY}
+      skills:
+        enabled: true
+        allow:
+          - name: python-scratchpad
+          - name: rest-api-caller
 ```
 
 ## Related Documentation
