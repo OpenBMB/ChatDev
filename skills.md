@@ -192,6 +192,13 @@ tooling:
         - name: add
 ```
 
+## Common scenarios and tool suggestions
+- If the agent needs to search the web, use `web_search`.
+- If the agent needs to fetch a URL's content, use `read_webpage_content`.
+- If the agent needs to inspect local files, use `describe_available_files` and `list_directory`.
+- If the agent needs to read a file snippet, use `read_text_file_snippet` or `read_file_segment`.
+- If the agent needs to write output files, use `save_file`.
+
 ## Advanced Workflow Templates
 
 Below are advanced YAML templates you can copy and adapt. They cover debate loops,

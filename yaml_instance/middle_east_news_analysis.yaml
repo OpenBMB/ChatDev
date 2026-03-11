@@ -1,0 +1,74 @@
+version: 0.0.1
+vars: {}
+graph:
+  id: middle_east_news_analysis
+  description: Fetch and analyze latest Middle East news using web search
+  log_level: INFO
+  is_majority_voting: false
+  start:
+    - News Researcher
+  end:
+    - News Analyst
+  nodes:
+    - id: News Researcher
+      type: agent
+      context_window: -1
+      config:
+        provider: openai
+        name: gpt-4o
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        role: |-
+          You are a News Researcher. Your task is to search for the latest Middle East news using web search.
+
+          [Instructions]
+          1. Use the web_search tool to search for latest Middle East news
+          2. Search for multiple relevant queries to get comprehensive coverage
+          3. Save the news results to a file named middle_east_news.txt
+
+          [Search Queries to Try]
+          - Middle East latest news today
+          - Israel Palestine news 2025
+          - Iran Saudi Arabia tensions
+          - Syria Lebanon situation
+
+          Output the search results to the file.
+        tooling:
+          - type: function
+            config:
+              auto_load: true
+              tools:
+                - name: web_search
+                - name: describe_available_files
+                - name: load_file
+                - name: read_text_file_snippet
+    - id: News Analyst
+      type: agent
+      context_window: -1
+      config:
+        provider: openai
+        name: gpt-4o
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        role: |-
+          You are a Middle East Political Analyst. Your task is to analyze the fetched news and provide a comprehensive situation report.
+
+          [Your Output Should Include]
+          1. Key Events: List the most important recent developments
+          2. Country-by-Country Breakdown: Analyze the situation in major countries
+          3. Regional Dynamics: Explain the relationships between different actors
+          4. Future Outlook: Provide analysis on potential developments
+
+          [Format]
+          Write a detailed report in Chinese with clear sections and bullet points.
+
+          First, read the news file to understand the content.
+        tooling:
+          - type: function
+            config:
+              auto_load: true
+              tools:
+                - name: describe_available_files
+                - name: load_file
+                - name: read_text_file_snippet
+  edges: []
