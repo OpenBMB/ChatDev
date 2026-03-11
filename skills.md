@@ -157,38 +157,30 @@ Run ability units via the local API and return `final_message` from the JSON res
     http://127.0.0.1:6400/api/workflows/test.yaml/delete
   ```
 
+10) List local tools (function_calling)
+- Method: GET
+- URL: http://127.0.0.1:6400/api/tools/local
+- Example:
+  ```
+  curl --noproxy 127.0.0.1 -X GET http://127.0.0.1:6400/api/tools/local
+  ```
+
 ## Tools hot updates
-Run the MCP server separately from the main backend. Use `cache_ttl: 0` in the
-MCP tooling config to disable tool list caching.
+Local function tools are managed via the same backend (port 6400).
 
 Endpoints:
-- List tools: `GET http://127.0.0.1:8010/admin/tools/list` (returns `source` and `call_methods`)
-- Upload tool: `POST http://127.0.0.1:8010/admin/tools/upload`
-- Reload tools: `POST http://127.0.0.1:8010/admin/tools/reload`
+- List local tools: `GET http://127.0.0.1:6400/api/tools/local`
+- Create/overwrite local tool file: `POST http://127.0.0.1:6400/api/tools/local`
 
-Wiring rules (from `source`):
-- `local_tools`: can wire via `tooling.type: function` or `tooling.type: mcp_remote`.
-- `mcp_tools`: wire via `tooling.type: mcp_remote` only.
-
-Upload example:
+Create example:
 ```
-curl --noproxy 127.0.0.1 -v -X POST http://127.0.0.1:8010/admin/tools/upload \
+curl --noproxy 127.0.0.1 -X POST http://127.0.0.1:6400/api/tools/local \
   -H "Content-Type: application/json" \
   -d '{
-    "filename": "test.py",
+    "filename": "add.py",
     "content": "def add(a: int, b: int) -> dict:\n    return {\"result\": a + b}\n",
-    "functions": ["add"],
-    "replace": true
+    "overwrite": true
   }'
-```
-
-YAML example (MCP):
-```
-tooling:
-  - type: mcp_remote
-    config:
-      server: "http://127.0.0.1:8010/mcp"
-      cache_ttl: 0
 ```
 
 YAML example (local function_calling):
