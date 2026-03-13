@@ -1,5 +1,5 @@
 <template>
-    <div class="sidebar">
+    <div class="sidebar" :class="{ 'is-hidden': isHidden }" @mouseenter="isHidden = false">
 
         <nav class="sidebar-nav">
             <router-link to="/">Home</router-link>
@@ -20,6 +20,7 @@
             </button>
         </div>
     </div>
+    <div class="sidebar-hit-area" v-if="isHidden" @mouseenter="isHidden = false"></div>
     <SettingsModal
       :is-visible="showSettingsModal"
       @update:is-visible="showSettingsModal = $event"
@@ -28,21 +29,53 @@
 
 <script setup>
 import { RouterLink, useRoute } from 'vue-router'
-import { computed, ref } from 'vue'
+import { computed, ref, onMounted, onUnmounted, watch } from 'vue'
 import SettingsModal from './SettingsModal.vue'
 
 const showSettingsModal = ref(false)
+const isHidden = ref(false)
+
+watch(isHidden, (val) => {
+    if (val) {
+        document.body.classList.add('nav-hidden')
+    } else {
+        document.body.classList.remove('nav-hidden')
+    }
+})
 
 const route = useRoute()
 const isWorkflowsActive = computed(() => route.path.startsWith('/workflows'))
 
+let lastScrollY = 0
+const handleScroll = (e) => {
+    const currentScrollY = e.target.scrollTop || window.scrollY || 0;
+    // Minimize small scroll jitters
+    if (Math.abs(currentScrollY - lastScrollY) < 5) return;
 
+    // Scrolling down -> hide (if past slight threshold). Scrolling up -> show
+    if (currentScrollY > lastScrollY && currentScrollY > 10) {
+        isHidden.value = true;
+    } else if (currentScrollY < lastScrollY) {
+        isHidden.value = false;
+    }
+    lastScrollY = currentScrollY <= 0 ? 0 : currentScrollY;
+}
+
+onMounted(() => {
+    // Listen to scroll events during the capture phase to track child scrolling (like TutorialView)
+    window.addEventListener('scroll', handleScroll, true);
+})
+
+onUnmounted(() => {
+    window.removeEventListener('scroll', handleScroll, true);
+    document.body.classList.remove('nav-hidden');
+})
 </script>
 
 <style scoped>
 .sidebar {
     width: 100%;
-    background-color: #1a1a1a; /* Dark theme background */
+    background-color: #1a1a1a;
     padding: 0 24px 0 0;
     box-sizing: border-box;
     display: flex;
@@ -52,8 +85,24 @@ const isWorkflowsActive = computed(() => route.path.startsWith('/workflows'))
     top: 0;
     z-index: 100;
     border-bottom: 1px solid #4d4d4d;
-    position: relative; /* For absolute positioning of actions */
     justify-content: center;
+    transition: margin-top 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    margin-top: 0;
+    transform: translateY(0);
+}
+
+.sidebar.is-hidden {
+    margin-top: -55px;
+    transform: translateY(-100%);
+}
+
+.sidebar-hit-area {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 25px;
+    z-index: 99;
 }
 
 .sidebar-actions {
