@@ -13,14 +13,28 @@
     <div class="content">
       <!-- Left panel -->
       <div class="left-panel">
-        <!-- Chat area -->
-        <div v-show="viewMode === 'chat'" class="chat-box">
-          <div class="chat-messages" ref="chatMessagesRef">
-            <!-- Notifications and dialogues in order -->
-            <div
-              v-for="(message, index) in chatMessages"
-              :key="`message-${index}`"
-            >
+        <!-- Chat Panel: fullscreen in chat mode, overlay in graph -->
+        <div
+          class="chat-panel"
+          :class="{
+            'chat-panel-fullscreen': viewMode === 'chat',
+            'chat-panel-collapsed': viewMode !== 'chat' && !isChatPanelOpen
+          }"
+          v-show="viewMode === 'chat' || true"
+        >
+          <button v-show="viewMode !== 'chat'" class="chat-panel-toggle" @click="isChatPanelOpen = !isChatPanelOpen" :title="isChatPanelOpen ? 'Collapse chat' : 'Expand chat'">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" :class="{ 'chevron-collapsed': !isChatPanelOpen }">
+              <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+          </button>
+          <div v-show="viewMode === 'chat' || isChatPanelOpen" class="chat-panel-content">
+            <div class="chat-box">
+              <div class="chat-messages" ref="chatMessagesRef">
+                <!-- Notifications and dialogues in order -->
+                <div
+                  v-for="(message, index) in chatMessages"
+                  :key="`message-${index}`"
+                >
               <!-- Notification -->
               <div
                 v-if="['notification', 'warning', 'error'].includes(message.type)"
@@ -169,7 +183,130 @@
               </div>
             </div>
           </div>
+            </div>
+            <div class="input-area">
+              <div
+                :class="['input-shell', { glow: shouldGlow, 'drag-active': isDragActive }]"
+                @dragenter="handleDragEnter"
+                @dragover="handleDragOver"
+                @dragleave="handleDragLeave"
+                @drop="handleDrop"
+              >
+                <textarea
+                  v-model="taskPrompt"
+                  class="task-input"
+                  :disabled="!isConnectionReady || (isWorkflowRunning && status !== 'Waiting for input...')"
+                  placeholder="Please enter task prompt..."
+                  ref="taskInputRef"
+                  @keydown.enter="handleEnterKey"
+                  @paste="handlePaste"
+                ></textarea>
+                <div class="input-footer">
+                  <div class="input-footer-buttons">
+                    <div
+                      class="attachment-upload"
+                      @mouseenter="handleAttachmentHover(true)"
+                      @mouseleave="handleAttachmentHover(false)"
+                    >
+                      <div class="attachment-button-wrapper">
+                        <button
+                          type="button"
+                          class="attachment-button"
+                          :disabled="!isConnectionReady || !sessionId || isUploadingAttachment || (isWorkflowRunning && status !== 'Waiting for input...')"
+                          @click="handleAttachmentButtonClick"
+                        >
+                          {{ isUploadingAttachment ? 'Uploading...' : 'Upload File' }}
+                        </button>
+                        <span
+                          v-if="uploadedAttachments.length"
+                          class="attachment-count"
+                        >
+                          {{ uploadedAttachments.length }}
+                        </span>
+                      </div>
+                      <input
+                        ref="attachmentInputRef"
+                        type="file"
+                        class="hidden-file-input"
+                        @change="onAttachmentSelected"
+                      />
+                      <Transition name="attachment-popover">
+                        <div
+                          v-if="showAttachmentPopover"
+                          class="attachment-modal"
+                          @mouseenter="handleAttachmentHover(true)"
+                          @mouseleave="handleAttachmentHover(false)"
+                        >
+                          <div
+                            v-for="attachment in uploadedAttachments"
+                            :key="attachment.attachmentId"
+                            class="attachment-item"
+                          >
+                            <span class="attachment-name">{{ attachment.name }}</span>
+                            <button
+                              type="button"
+                              class="remove-attachment"
+                              @click.stop="removeAttachment(attachment.attachmentId)"
+                            >
+                              ×
+                            </button>
+                          </div>
+                          <div
+                            v-if="!uploadedAttachments.length"
+                            class="attachment-empty"
+                          >
+                            No files uploaded
+                          </div>
+                        </div>
+                      </Transition>
+                    </div>
+                    <button
+                      v-if="false"
+                      type="button"
+                      class="microphone-button"
+                      :class="{ 'recording': isRecording, 'pulsating': isRecording }"
+                      :disabled="!isConnectionReady || !sessionId || isUploadingAttachment || (isWorkflowRunning && status !== 'Waiting for input...')"
+                      @mousedown.prevent="startRecording"
+                      @mouseup.prevent="stopRecording"
+                      @mouseleave="handleMicrophoneMouseLeave"
+                      @touchstart.prevent="startRecording"
+                      @touchend.prevent="stopRecording"
+                    >
+                      <svg
+                        width="20"
+                        height="20"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M12 1C10.34 1 9 2.34 9 4V12C9 13.66 10.34 15 12 15C13.66 15 15 13.66 15 12V4C15 2.34 13.66 1 12 1Z"
+                          fill="currentColor"
+                        />
+                        <path
+                          d="M19 10V12C19 15.87 15.87 19 12 19C8.13 19 5 15.87 5 12V10H7V12C7 14.76 9.24 17 12 17C14.76 17 17 14.76 17 12V10H19Z"
+                          fill="currentColor"
+                        />
+                        <path
+                          d="M11 22H13V20H11V22Z"
+                          fill="currentColor"
+                        />
+                        <path
+                          d="M6 19H18V21H6V19Z"
+                          fill="currentColor"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+                <div v-if="isDragActive" class="drag-overlay">
+                  <div class="drag-overlay-content">Drop files to upload</div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
+
         <div v-show="viewMode === 'graph'" class="graph-panel">
           <VueFlow class="vueflow-graph">
             <template #node-workflow-node="props">
@@ -207,127 +344,6 @@
           </VueFlow>
         </div>
 
-        <!-- Input area -->
-        <div class="input-area">
-          <div
-            :class="['input-shell', { glow: shouldGlow, 'drag-active': isDragActive }]"
-            @dragenter="handleDragEnter"
-            @dragover="handleDragOver"
-            @dragleave="handleDragLeave"
-            @drop="handleDrop"
-          >
-            <textarea
-              v-model="taskPrompt"
-              class="task-input"
-              :disabled="!isConnectionReady || (isWorkflowRunning && status !== 'Waiting for input...')"
-              placeholder="Please enter task prompt..."
-              ref="taskInputRef"
-              @keydown.enter="handleEnterKey"
-              @paste="handlePaste"
-            ></textarea>
-            <div class="input-footer">
-              <div class="input-footer-buttons">
-                <div
-                  class="attachment-upload"
-                  @mouseenter="handleAttachmentHover(true)"
-                  @mouseleave="handleAttachmentHover(false)"
-                >
-                  <div class="attachment-button-wrapper">
-                    <button
-                      type="button"
-                      class="attachment-button"
-                      :disabled="!isConnectionReady || !sessionId || isUploadingAttachment || (isWorkflowRunning && status !== 'Waiting for input...')"
-                      @click="handleAttachmentButtonClick"
-                    >
-                      {{ isUploadingAttachment ? 'Uploading...' : 'Upload File' }}
-                    </button>
-                    <span
-                      v-if="uploadedAttachments.length"
-                      class="attachment-count"
-                    >
-                      {{ uploadedAttachments.length }}
-                    </span>
-                  </div>
-                  <input
-                    ref="attachmentInputRef"
-                    type="file"
-                    class="hidden-file-input"
-                    @change="onAttachmentSelected"
-                  />
-                  <Transition name="attachment-popover">
-                    <div
-                      v-if="showAttachmentPopover"
-                      class="attachment-modal"
-                      @mouseenter="handleAttachmentHover(true)"
-                      @mouseleave="handleAttachmentHover(false)"
-                    >
-                      <div
-                        v-for="attachment in uploadedAttachments"
-                        :key="attachment.attachmentId"
-                        class="attachment-item"
-                      >
-                        <span class="attachment-name">{{ attachment.name }}</span>
-                        <button
-                          type="button"
-                          class="remove-attachment"
-                          @click.stop="removeAttachment(attachment.attachmentId)"
-                        >
-                          ×
-                        </button>
-                      </div>
-                      <div
-                        v-if="!uploadedAttachments.length"
-                        class="attachment-empty"
-                      >
-                        No files uploaded
-                      </div>
-                    </div>
-                  </Transition>
-                </div>
-                <button
-                  v-if="false"
-                  type="button"
-                  class="microphone-button"
-                  :class="{ 'recording': isRecording, 'pulsating': isRecording }"
-                  :disabled="!isConnectionReady || !sessionId || isUploadingAttachment || (isWorkflowRunning && status !== 'Waiting for input...')"
-                  @mousedown.prevent="startRecording"
-                  @mouseup.prevent="stopRecording"
-                  @mouseleave="handleMicrophoneMouseLeave"
-                  @touchstart.prevent="startRecording"
-                  @touchend.prevent="stopRecording"
-                >
-                  <svg
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M12 1C10.34 1 9 2.34 9 4V12C9 13.66 10.34 15 12 15C13.66 15 15 13.66 15 12V4C15 2.34 13.66 1 12 1Z"
-                      fill="currentColor"
-                    />
-                    <path
-                      d="M19 10V12C19 15.87 15.87 19 12 19C8.13 19 5 15.87 5 12V10H7V12C7 14.76 9.24 17 12 17C14.76 17 17 14.76 17 12V10H19Z"
-                      fill="currentColor"
-                    />
-                    <path
-                      d="M11 22H13V20H11V22Z"
-                      fill="currentColor"
-                    />
-                    <path
-                      d="M6 19H18V21H6V19Z"
-                      fill="currentColor"
-                    />
-                  </svg>
-                </button>
-              </div>
-            </div>
-            <div v-if="isDragActive" class="drag-overlay">
-              <div class="drag-overlay-content">Drop files to upload</div>
-            </div>
-          </div>
-        </div>
       </div>
 
       <!-- Right panel -->
@@ -645,6 +661,7 @@ const showSettingsModal = ref(false)
 
 // View mode
 const viewMode = ref('chat')
+const isChatPanelOpen = ref(true)
 
 // WebSocket reference
 let ws = null
@@ -2319,18 +2336,106 @@ watch(
   flex-direction: column;
   gap: 20px;
   min-width: 0; /* Prevents overflow */
+  position: relative;
+}
+
+/* Persistent Chat Panel */
+.chat-panel {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 380px;
+  max-width: 50%;
+  z-index: 10;
+  display: flex;
+  flex-direction: row;
+  pointer-events: none;
+  transition: width 0.3s ease;
+}
+
+/* Full-screen chat mode */
+.chat-panel-fullscreen {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  flex: 1;
+  flex-direction: column;
+  pointer-events: auto;
+  z-index: auto;
+}
+
+.chat-panel-fullscreen .chat-panel-content {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(5px);
+}
+
+.chat-panel-collapsed {
+  width: 0;
+}
+
+.chat-panel-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+  pointer-events: auto;
+  background: rgba(26, 26, 26, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  backdrop-filter: blur(12px);
+  overflow: hidden;
+  padding: 0;
+}
+
+.chat-panel-toggle {
+  position: absolute;
+  top: 12px;
+  right: -32px;
+  width: 28px;
+  height: 28px;
+  border-radius: 0 8px 8px 0;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-left: none;
+  background: rgba(26, 26, 26, 0.92);
+  backdrop-filter: blur(8px);
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+  transition: all 0.2s ease;
+  padding: 0;
+  z-index: 11;
+}
+
+.chat-panel-toggle:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #f2f2f2;
+}
+
+.chat-panel-toggle svg {
+  transition: transform 0.3s ease;
+}
+
+.chat-panel-toggle .chevron-collapsed {
+  transform: rotate(180deg);
+}
+
+.chat-panel-collapsed .chat-panel-toggle {
+  right: -32px;
+  left: auto;
 }
 
 /* Chat Box */
 .chat-box {
   flex: 1;
-  background-color: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  backdrop-filter: blur(5px);
 }
 
 .chat-messages::-webkit-scrollbar {
