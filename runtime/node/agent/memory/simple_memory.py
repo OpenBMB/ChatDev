@@ -1,5 +1,6 @@
 import hashlib
 import json
+import logging
 import os
 import re
 import time
@@ -15,6 +16,8 @@ from runtime.node.agent.memory.memory_base import (
 )
 import faiss
 import numpy as np
+
+logger = logging.getLogger(__name__)
 
 class SimpleMemory(MemoryBase):
     def __init__(self, store: MemoryStoreConfig):
@@ -107,10 +110,18 @@ class SimpleMemory(MemoryBase):
         inputs_embedding = inputs_embedding.reshape(1, -1)
         faiss.normalize_L2(inputs_embedding)
 
+        expected_dim = inputs_embedding.shape[1]
+
         memory_embeddings = []
         valid_items = []
         for item in self.contents:
             if item.embedding is not None:
+                if len(item.embedding) != expected_dim:
+                    logger.warning(
+                        "Skipping memory item %s: embedding dim %d != expected %d",
+                        item.id, len(item.embedding), expected_dim,
+                    )
+                    continue
                 memory_embeddings.append(item.embedding)
                 valid_items.append(item)
         
