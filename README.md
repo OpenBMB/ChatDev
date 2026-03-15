@@ -303,13 +303,16 @@ By contributing to DevAll, you'll be recognized in our **Contributors** list bel
 #### Contributors
 <table>
   <tr>
+    <td align="center"><a href="https://github.com/LaansDole"><img src="https://github.com/LaansDole.png?size=100" width="64px;" alt=""/><br /><sub><b>LaansDole</b></sub></a></td>
+    <td align="center"><a href="https://github.com/zivkovicp"><img src="https://github.com/zivkovicp.png?size=100" width="64px;" alt=""/><br /><sub><b>zivkovicp</b></sub></a></td>
     <td align="center"><a href="https://github.com/shiowen"><img src="https://github.com/shiowen.png?size=100" width="64px;" alt=""/><br /><sub><b>shiowen</b></sub></a></td>
     <td align="center"><a href="https://github.com/kilo2127"><img src="https://github.com/kilo2127.png?size=100" width="64px;" alt=""/><br /><sub><b>kilo2127</b></sub></a></td>
     <td align="center"><a href="https://github.com/AckerlyLau"><img src="https://github.com/AckerlyLau.png?size=100" width="64px;" alt=""/><br /><sub><b>AckerlyLau</b></sub></a></td>
-    <td align="center"><a href="https://github.com/LaansDole"><img src="https://github.com/LaansDole.png?size=100" width="64px;" alt=""/><br /><sub><b>LaansDole</b></sub></a></td>
-    <td align="center"><a href="https://github.com/zivkovicp"><img src="https://github.com/zivkovicp.png?size=100" width="64px;" alt=""/><br /><sub><b>zivkovicp</b></sub></a></td>
     <td align="center"><a href="https://github.com/rainoeelmae"><img src="https://github.com/rainoeelmae.png?size=100" width="64px;" alt=""/><br /><sub><b>rainoeelmae</b></sub></a></td>
     <td align="center"><a href="https://github.com/conprour"><img src="https://github.com/conprour.png?size=100" width="64px;" alt=""/><br /><sub><b>conprour</b></sub></a></td>
+    <td align="center"><a href="https://github.com/Br1an67"><img src="https://github.com/Br1an67.png?size=100" width="64px;" alt=""/><br /><sub><b>Br1an67</b></sub></a></td>
+    <td align="center"><a href="https://github.com/NINE-J"><img src="https://github.com/NINE-J.png?size=100" width="64px;" alt=""/><br /><sub><b>NINE-J</b></sub></a></td>
+    <td align="center"><a href="https://github.com/Yanghuabei-design"><img src="https://github.com/Yanghuabei-design.png?size=100" width="64px;" alt=""/><br /><sub><b>Yanghuabei</b></sub></a></td>
 </table>
 
 ## 🤝 Acknowledgments
