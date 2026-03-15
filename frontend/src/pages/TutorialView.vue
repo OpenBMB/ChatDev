@@ -128,26 +128,36 @@ onMounted(() => {
   width: 100%;
   max-width: 100%;
   margin: 0 auto;
-  height: 100vh;
+  height: calc(100vh - 55px); /* Adjust the height of the .sidebar */
   background: linear-gradient(135deg, #232526 0%, #1e1e1e 100%);
   overflow-y: auto;
   overflow-x: hidden;
   box-sizing: border-box;
+  transition: height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   /* Glowing border and card shadow */
   border-radius: 18px;
   box-shadow: 0 4px 32px 0 rgba(0, 255, 255, 0.08), 0 0 0 2px #00eaff33;
   border: 1.5px solid #00eaff33;
-  transition: box-shadow 0.3s;
+  transition: box-shadow 0.3s, height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   scroll-behavior: smooth;
+}
+
+:global(body.nav-hidden .tutorial-view) {
+  height: 100vh;
 }
 
 .lang-switch {
   position: absolute;
-  top: 80px; /* Move down from 32px to 80px */
+  top: 80px; /* 55px nav + 25px spacing */
   right: 48px;
   z-index: 10;
   display: flex;
   gap: 12px;
+  transition: top 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+:global(body.nav-hidden .lang-switch) {
+  top: 25px; /* Adjust to 25px spacing from top of screen when nav is hidden */
 }
 .lang-switch button {
   background: linear-gradient(90deg, #232526 60%, #00eaff22 100%);
