@@ -2436,6 +2436,7 @@ watch(
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  min-height: 0;
 }
 
 .chat-messages::-webkit-scrollbar {
