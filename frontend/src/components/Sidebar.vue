@@ -61,13 +61,21 @@ const handleScroll = (e) => {
     lastScrollY = currentScrollY <= 0 ? 0 : currentScrollY;
 }
 
-onMounted(() => {
-    // Listen to scroll events during the capture phase to track child scrolling (like TutorialView)
-    window.addEventListener('scroll', handleScroll, true);
-})
+const toggleScrollListener = (shouldListen) => {
+    if (shouldListen) {
+        window.addEventListener('scroll', handleScroll, true);
+    } else {
+        window.removeEventListener('scroll', handleScroll, true);
+        isHidden.value = false; // Reset state when leaving
+    }
+}
+
+watch(() => route.path, () => {
+    toggleScrollListener(!!route.meta.hideNavOnScroll);
+}, { immediate: true }) // immediate: true runs this once on mount
 
 onUnmounted(() => {
-    window.removeEventListener('scroll', handleScroll, true);
+    toggleScrollListener(false);
     document.body.classList.remove('nav-hidden');
 })
 </script>

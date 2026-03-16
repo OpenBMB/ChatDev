@@ -7,7 +7,8 @@ const routes = [
     },
     {
         path: '/tutorial',
-        component: () => import('../pages/TutorialView.vue')
+        component: () => import('../pages/TutorialView.vue'),
+        meta: { hideNavOnScroll: true }
     },
     {
         path: '/launch',
