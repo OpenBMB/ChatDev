@@ -3,11 +3,6 @@ from unittest.mock import MagicMock, patch
 from runtime.node.agent.memory.memory_base import MemoryContentSnapshot, MemoryItem
 from runtime.node.agent.memory.simple_memory import SimpleMemory
 
-
-# ---------------------------------------------------------------------------
-# Helpers
-# ---------------------------------------------------------------------------
-
 def _make_store(memory_path=None):
     """Build a minimal MemoryStoreConfig mock for SimpleMemory."""
     simple_cfg = MagicMock()
@@ -37,12 +32,7 @@ def _make_memory_item(item_id: str, dim: int):
     )
 
 
-# ---------------------------------------------------------------------------
-# Tests
-# ---------------------------------------------------------------------------
-
 class TestSimpleMemoryRetrieveMixedDimensions:
-    """Task 2.1: verify retrieve() handles mixed-dimension embeddings."""
 
     def test_mixed_dimensions_does_not_crash(self):
         """Retrieve with mixed-dimensional embeddings MUST not raise."""
@@ -112,7 +102,6 @@ class TestSimpleMemoryRetrieveMixedDimensions:
 
 
 class TestOpenAIEmbeddingDynamicFallback:
-    """Task 2.2: verify dynamic fallback dimension caching."""
 
     def test_fallback_uses_model_dimension_after_success(self):
         """After a successful call the fallback dimension MUST match the model."""
