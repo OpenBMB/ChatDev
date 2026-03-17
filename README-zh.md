@@ -170,6 +170,33 @@ make dev
     ```
     检查所有 YAML 文件的语法与 schema 错误。
 
+### 🦞 使用 OpenClaw 运行
+
+OpenClaw 可以与 ChatDev 集成，通过 **调用已有的 agent 团队**，或在 ChatDev 中 **动态创建新的 agent 团队** 来完成任务。
+
+开始使用：
+
+1. 启动 ChatDev 2.0 后端。
+2. 为你的 OpenClaw 实例安装所需的技能：
+
+    ```bash
+    clawdhub install chatdev
+    ```
+
+3. 让 OpenClaw 创建一个 ChatDev 工作流。例如：
+
+  * **自动化信息收集与内容发布**
+
+    ```
+    创建一个 ChatDev 工作流，用于自动收集热点信息，生成一篇小红书文案，并发布该内容
+    ```
+
+  * **多智能体地缘政治模拟**
+
+    ```
+    创建一个 ChatDev 工作流，构建多个 agent，用于模拟中东局势未来可能的发展
+    ```
+
 
 ### 🐳 使用 Docker 运行
 你也可以通过 Docker Compose 运行整个应用。该方式可简化依赖管理，并提供一致的运行环境。

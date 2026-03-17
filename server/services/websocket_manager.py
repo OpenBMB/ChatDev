@@ -49,8 +49,6 @@ class WebSocketManager:
     ):
         self.active_connections: Dict[str, WebSocket] = {}
         self.connection_timestamps: Dict[str, float] = {}
-        self.send_locks: Dict[str, asyncio.Lock] = {}
-        self.loop: asyncio.AbstractEventLoop | None = None
         self.session_store = session_store or WorkflowSessionStore()
         self.session_controller = session_controller or SessionExecutionController(self.session_store)
         self.attachment_service = attachment_service or AttachmentService()
@@ -67,16 +65,10 @@ class WebSocketManager:
 
     async def connect(self, websocket: WebSocket, session_id: Optional[str] = None) -> str:
         await websocket.accept()
-        if self.loop is None:
-            try:
-                self.loop = asyncio.get_running_loop()
-            except RuntimeError:
-                self.loop = None
         if not session_id:
             session_id = str(uuid.uuid4())
         self.active_connections[session_id] = websocket
         self.connection_timestamps[session_id] = time.time()
-        self.send_locks[session_id] = asyncio.Lock()
         logging.info("WebSocket connected: %s", session_id)
         await self.send_message(
             session_id,
@@ -98,8 +90,6 @@ class WebSocketManager:
             del self.active_connections[session_id]
         if session_id in self.connection_timestamps:
             del self.connection_timestamps[session_id]
-        if session_id in self.send_locks:
-            del self.send_locks[session_id]
         self.session_controller.cleanup_session(session_id)
         remaining_session = self.session_store.get_session(session_id)
         if remaining_session and remaining_session.executor is None:
@@ -111,12 +101,7 @@ class WebSocketManager:
         if session_id in self.active_connections:
             websocket = self.active_connections[session_id]
             try:
-                lock = self.send_locks.get(session_id)
-                if lock is None:
-                    await websocket.send_text(_encode_ws_message(message))
-                else:
-                    async with lock:
-                        await websocket.send_text(_encode_ws_message(message))
+                await websocket.send_text(_encode_ws_message(message))
             except Exception as exc:
                 traceback.print_exc()
                 logging.error("Failed to send message to %s: %s", session_id, exc)
@@ -130,13 +115,7 @@ class WebSocketManager:
             else:
                 asyncio.run(self.send_message(session_id, message))
         except RuntimeError:
-            if self.loop and self.loop.is_running():
-                asyncio.run_coroutine_threadsafe(
-                    self.send_message(session_id, message),
-                    self.loop,
-                )
-            else:
-                asyncio.run(self.send_message(session_id, message))
+            asyncio.run(self.send_message(session_id, message))
 
     async def broadcast(self, message: Dict[str, Any]) -> None:
         for session_id in list(self.active_connections.keys()):

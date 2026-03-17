@@ -312,6 +312,8 @@ class McpRemoteConfig(BaseConfig):
     server: str
     headers: Dict[str, str] = field(default_factory=dict)
     timeout: float | None = None
+    cache_ttl: float = 0.0
+    tool_sources: List[str] | None = None
 
     FIELD_SPECS = {
         "server": ConfigFieldSpec(
@@ -337,6 +339,22 @@ class McpRemoteConfig(BaseConfig):
             description="Per-request timeout in seconds",
             advance=True,
         ),
+        "cache_ttl": ConfigFieldSpec(
+            name="cache_ttl",
+            display_name="Tool Cache TTL",
+            type_hint="float",
+            required=False,
+            description="Seconds to cache MCP tool list; 0 disables cache for hot updates",
+            advance=True,
+        ),
+        "tool_sources": ConfigFieldSpec(
+            name="tool_sources",
+            display_name="Tool Sources Filter",
+            type_hint="list[str]",
+            required=False,
+            description="Only include MCP tools whose meta.source is in this list; omit to default to ['mcp_tools'].",
+            advance=True,
+        ),
     }
 
     @classmethod
@@ -360,7 +378,40 @@ class McpRemoteConfig(BaseConfig):
         else:
             raise ConfigError("timeout must be numeric", extend_path(path, "timeout"))
 
-        return cls(server=server, headers=headers, timeout=timeout, path=path)
+        cache_ttl_value = mapping.get("cache_ttl", 0.0)
+        if cache_ttl_value is None:
+            cache_ttl = 0.0
+        elif isinstance(cache_ttl_value, (int, float)):
+            cache_ttl = float(cache_ttl_value)
+        else:
+            raise ConfigError("cache_ttl must be numeric", extend_path(path, "cache_ttl"))
+
+        tool_sources_raw = mapping.get("tool_sources")
+        tool_sources: List[str] | None = None
+        if tool_sources_raw is not None:
+            entries = ensure_list(tool_sources_raw)
+            normalized: List[str] = []
+            for idx, entry in enumerate(entries):
+                if not isinstance(entry, str):
+                    raise ConfigError(
+                        "tool_sources must be a list of strings",
+                        extend_path(path, f"tool_sources[{idx}]"),
+                    )
+                value = entry.strip()
+                if value:
+                    normalized.append(value)
+            tool_sources = normalized
+        else:
+            tool_sources = ["mcp_tools"]
+
+        return cls(
+            server=server,
+            headers=headers,
+            timeout=timeout,
+            cache_ttl=cache_ttl,
+            tool_sources=tool_sources,
+            path=path,
+        )
 
     def cache_key(self) -> str:
         payload = (
@@ -380,6 +431,7 @@ class McpLocalConfig(BaseConfig):
     inherit_env: bool = True
     startup_timeout: float = 10.0
     wait_for_log: str | None = None
+    cache_ttl: float = 0.0
 
     FIELD_SPECS = {
         "command": ConfigFieldSpec(
@@ -438,6 +490,14 @@ class McpLocalConfig(BaseConfig):
             description="Regex that marks readiness when matched against stdout",
             advance=True,
         ),
+        "cache_ttl": ConfigFieldSpec(
+            name="cache_ttl",
+            display_name="Tool Cache TTL",
+            type_hint="float",
+            required=False,
+            description="Seconds to cache MCP tool list; 0 disables cache for hot updates",
+            advance=True,
+        ),
     }
 
     @classmethod
@@ -474,6 +534,13 @@ class McpLocalConfig(BaseConfig):
             raise ConfigError("startup_timeout must be numeric", extend_path(path, "startup_timeout"))
 
         wait_for_log = optional_str(mapping, "wait_for_log", path)
+        cache_ttl_value = mapping.get("cache_ttl", 0.0)
+        if cache_ttl_value is None:
+            cache_ttl = 0.0
+        elif isinstance(cache_ttl_value, (int, float)):
+            cache_ttl = float(cache_ttl_value)
+        else:
+            raise ConfigError("cache_ttl must be numeric", extend_path(path, "cache_ttl"))
         return cls(
             command=command,
             args=normalized_args,
@@ -482,6 +549,7 @@ class McpLocalConfig(BaseConfig):
             inherit_env=bool(inherit_env),
             startup_timeout=startup_timeout,
             wait_for_log=wait_for_log,
+            cache_ttl=cache_ttl,
             path=path,
         )
 
