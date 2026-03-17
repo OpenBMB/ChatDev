@@ -123,11 +123,19 @@ class FileMemory(MemoryBase):
         query_embedding = query_embedding.reshape(1, -1)
         faiss.normalize_L2(query_embedding)
 
+        expected_dim = query_embedding.shape[1]
+
         # Collect embeddings from memory items
         memory_embeddings = []
         valid_items = []
         for item in self.contents:
             if item.embedding is not None:
+                if len(item.embedding) != expected_dim:
+                    logger.warning(
+                        "Skipping memory item %s: embedding dim %d != expected %d",
+                        item.id, len(item.embedding), expected_dim,
+                    )
+                    continue
                 memory_embeddings.append(item.embedding)
                 valid_items.append(item)
 

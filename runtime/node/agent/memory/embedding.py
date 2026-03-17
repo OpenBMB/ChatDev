@@ -86,6 +86,7 @@ class OpenAIEmbedding(EmbeddingBase):
         self.max_length = embedding_config.params.get('max_length', 8191)
         self.use_chunking = embedding_config.params.get('use_chunking', False)
         self.chunk_strategy = embedding_config.params.get('chunk_strategy', 'average')
+        self._fallback_dim = 1536  # Default; updated after first successful call
 
         if self.base_url:
             self.client = openai.OpenAI(api_key=self.api_key, base_url=self.base_url)
@@ -99,7 +100,7 @@ class OpenAIEmbedding(EmbeddingBase):
         
         if not processed_text:
             logger.warning("Empty text after preprocessing")
-            return [0.0] * 1536  # Return a zero vector
+            return [0.0] * self._fallback_dim
         
         # Handle long text via chunking
         if self.use_chunking and len(processed_text) > self.max_length:
@@ -115,17 +116,18 @@ class OpenAIEmbedding(EmbeddingBase):
                 encoding_format="float"
             )
             embedding = response.data[0].embedding
+            self._fallback_dim = len(embedding)
             return embedding
         except Exception as e:
             logger.error(f"Error getting embedding: {e}")
-            return [0.0] * 1536  # Return zero vector as fallback
+            return [0.0] * self._fallback_dim
 
     def _get_chunked_embedding(self, text: str) -> List[float]:
         """Chunk long text, embed each chunk, then aggregate."""
         chunks = self._chunk_text(text, self.max_length // 2)  # Halve the chunk length
         
         if not chunks:
-            return [0.0] * 1536
+            return [0.0] * self._fallback_dim
         
         chunk_embeddings = []
         for chunk in chunks:
@@ -141,7 +143,7 @@ class OpenAIEmbedding(EmbeddingBase):
                 continue
         
         if not chunk_embeddings:
-            return [0.0] * 1536
+            return [0.0] * self._fallback_dim
         
         # Aggregation strategy
         if self.chunk_strategy == 'average':
@@ -163,6 +165,7 @@ class LocalEmbedding(EmbeddingBase):
         super().__init__(embedding_config)
         self.model_path = embedding_config.params.get('model_path')
         self.device = embedding_config.params.get('device', 'cpu')
+        self._fallback_dim = 768  # Default; updated after first successful call
         
         if not self.model_path:
             raise ValueError("LocalEmbedding requires model_path parameter")
@@ -179,11 +182,13 @@ class LocalEmbedding(EmbeddingBase):
         processed_text = self._preprocess_text(text)
         
         if not processed_text:
-            return [0.0] * 768  # Return zero vector
+            return [0.0] * self._fallback_dim
         
         try:
             embedding = self.model.encode(processed_text, convert_to_tensor=False)
-            return embedding.tolist()
+            result = embedding.tolist()
+            self._fallback_dim = len(result)
+            return result
         except Exception as e:
             logger.error(f"Error getting local embedding: {e}")
-            return [0.0] * 768  # Return zero vector as fallback
+            return [0.0] * self._fallback_dim
