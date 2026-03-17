@@ -1,0 +1,280 @@
+version: 0.0.1
+vars: {}
+graph:
+  id: middle_east_simulation
+  description: Simulate Middle East situation from multiple parties perspectives
+  log_level: INFO
+  is_majority_voting: false
+  start:
+    - Situation Brief
+  end:
+    - Final Report
+  nodes:
+    - id: Situation Brief
+      type: agent
+      context_window: -1
+      config:
+        provider: openai
+        name: gpt-4o
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        role: |-
+          You are a News Analyst. Your task is to search for the latest Middle East news and create a situation brief.
+
+          [Instructions]
+          1. Use web_search to get the latest Middle East news
+          2. Focus on: US-Israel operations, Iran tensions, Lebanon/Syria situation, Gulf states response
+          3. Create a brief summary (2-3 paragraphs) of the current situation
+
+          [Output]
+          Save the situation brief to a file named situation_brief.txt
+        tooling:
+          - type: function
+            config:
+              auto_load: true
+              tools:
+                - name: web_search
+                - name: describe_available_files
+                - name: load_file
+
+    - id: US Perspective
+      type: agent
+      context_window: -1
+      config:
+        provider: openai
+        name: gpt-4o
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        role: |-
+          You are playing the role of the United States Government. Analyze the current Middle East situation from the US perspective.
+
+          [Your Role]
+          - You represent American strategic interests
+          - Support Israel right to self-defense
+          - Want to contain Iran influence
+          - Protect US military personnel in the region
+
+          [Task]
+          Based on the situation brief, write 2-3 paragraphs analyzing:
+          1. Current US objectives in the Middle East
+          2. How US views Iran, Israel, and other actors
+          3. What US likely will do next
+
+          Write in first person as the US government. Be realistic and strategic.
+        tooling:
+          - type: function
+            config:
+              auto_load: true
+              tools:
+                - name: describe_available_files
+                - name: load_file
+
+    - id: Israel Perspective
+      type: agent
+      context_window: -1
+      config:
+        provider: openai
+        name: gpt-4o
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        role: |-
+          You are playing the role of the Israeli Government. Analyze the current Middle East situation from Israel perspective.
+
+          [Your Role]
+          - You represent Israeli security interests
+          - Face existential threats from Iran and proxies
+          - Need to maintain military superiority
+          - Navigate international pressure
+
+          [Task]
+          Based on the situation brief, write 2-3 paragraphs analyzing:
+          1. Israel current security concerns
+          2. How Israel views Iran, Hezbollah, Hamas
+          3. What Israel likely will do next
+
+          Write in first person as the Israeli government. Be defensive but determined.
+
+          [Note: This is a simulation for educational purposes]
+        tooling:
+          - type: function
+            config:
+              auto_load: true
+              tools:
+                - name: describe_available_files
+                - name: load_file
+
+    - id: Iran Perspective
+      type: agent
+      context_window: -1
+      config:
+        provider: openai
+        name: gpt-4o
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        role: |-
+          You are playing the role of the Iranian Government. Analyze the current Middle East situation from Iran perspective.
+
+          [Your Role]
+          - You represent Iranian regional interests
+          - Support Axis of Resistance (Hezbollah, Hamas, Houthis)
+          - Face US/Israel military pressure
+          - Navigate internal political challenges
+
+          [Task]
+          Based on the situation brief, write 2-3 paragraphs analyzing:
+          1. Iran regional strategy and allies
+          2. How Iran views US, Israel, Saudi Arabia
+          3. What Iran likely will do next
+
+          Write in first person as the Iranian government. Be defensive about sovereignty.
+
+          [Note: This is a simulation for educational purposes]
+        tooling:
+          - type: function
+            config:
+              auto_load: true
+              tools:
+                - name: describe_available_files
+                - name: load_file
+
+    - id: Arab League Perspective
+      type: agent
+      context_window: -1
+      config:
+        provider: openai
+        name: gpt-4o
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        role: |-
+          You are playing the role of the Arab League / Gulf States. Analyze the current Middle East situation from the Arab world perspective.
+
+          [Your Role]
+          - You represent Saudi Arabia, UAE, and other Gulf states
+          - Compete with Iran for regional influence
+          - Concerned about instability and refugees
+          - Have normalization deals with Israel but cautious
+
+          [Task]
+          Based on the situation brief, write 2-3 paragraphs analyzing:
+          1. How Arab states view the US-Iran-Israel triangle
+          2. Regional stability concerns
+          3. What Arab states likely will do
+
+          Write in first person as the Arab League.
+
+          [Note: This is a simulation for educational purposes]
+        tooling:
+          - type: function
+            config:
+              auto_load: true
+              tools:
+                - name: describe_available_files
+                - name: load_file
+
+    - id: Simulation Orchestrator
+      type: agent
+      context_window: -1
+      config:
+        provider: openai
+        name: gpt-4o
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        role: |-
+          You are a Political Simulation Orchestrator. Your task is to synthesize all perspectives and create an interactive simulation scenario.
+
+          [Input]
+          You have perspective analyses from:
+          - United States
+          - Israel
+          - Iran
+          - Arab League
+
+          [Task]
+          1. Read all perspective files
+          2. Identify key conflicts and opportunities for dialogue
+          3. Create 3-5 simulation scenarios showing how these parties might interact
+          4. For each scenario, predict possible outcomes
+
+          [Output Format]
+          Create a simulation scenarios document with:
+          - Brief: Current deadlock points
+          - Scenario 1: [Title] - How parties might react
+          - Scenario 2: [Title] - How parties might react
+          - Scenario 3: [Title] - How parties might react
+          - Risk Assessment: What could trigger major escalation
+          - De-escalation Path: What could lead to peace
+
+          Write in English, use clear formatting.
+        tooling:
+          - type: function
+            config:
+              auto_load: true
+              tools:
+                - name: describe_available_files
+                - name: load_file
+
+    - id: Final Report
+      type: agent
+      context_window: -1
+      config:
+        provider: openai
+        name: gpt-4o
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        role: |-
+          You are a Senior Political Analyst. Create a final comprehensive report on the Middle East simulation.
+
+          [Task]
+          Compile all inputs into a professional analysis report:
+
+          1. Executive Summary (1 paragraph)
+          2. Current Situation Overview
+          3. Party Perspectives Summary:
+             - US Position
+             - Israel Position
+             - Iran Position
+             - Arab States Position
+          4. Simulation Scenarios
+          5. Key Takeaways
+          6. Outlook (next 3-6 months)
+
+          [Format]
+          Use markdown. Write in Chinese (Simplified). Make it comprehensive but readable.
+
+          This is for educational/analytical purposes only.
+        tooling:
+          - type: function
+            config:
+              auto_load: true
+              tools:
+                - name: describe_available_files
+                - name: load_file
+
+  edges:
+    - from: Situation Brief
+      to: US Perspective
+      condition: true
+    - from: Situation Brief
+      to: Israel Perspective
+      condition: true
+    - from: Situation Brief
+      to: Iran Perspective
+      condition: true
+    - from: Situation Brief
+      to: Arab League Perspective
+      condition: true
+    - from: US Perspective
+      to: Simulation Orchestrator
+      condition: true
+    - from: Israel Perspective
+      to: Simulation Orchestrator
+      condition: true
+    - from: Iran Perspective
+      to: Simulation Orchestrator
+      condition: true
+    - from: Arab League Perspective
+      to: Simulation Orchestrator
+      condition: true
+    - from: Simulation Orchestrator
+      to: Final Report
+      condition: true

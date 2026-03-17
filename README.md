@@ -188,7 +188,7 @@ To get started:
 1. Start the ChatDev 2.0 backend.
 2. Install the required skills for your OpenClaw instance:
     ```bash
-    clawdbot install chatdev
+    clawdhub install chatdev
     ```
 
 3. Ask your OpenClaw to create a ChatDev workflow. For example:
