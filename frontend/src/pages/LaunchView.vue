@@ -2390,6 +2390,7 @@ watch(
   flex-direction: column;
   pointer-events: auto;
   z-index: auto;
+  min-height: 0;
 }
 
 .chat-panel-fullscreen .chat-panel-content {
@@ -2408,6 +2409,7 @@ watch(
   flex-direction: column;
   gap: 12px;
   min-width: 0;
+  min-height: 0;
   pointer-events: auto;
   background: rgba(26, 26, 26, 0.92);
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -2463,6 +2465,7 @@ watch(
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  min-height: 0;
 }
 
 .chat-messages::-webkit-scrollbar {
