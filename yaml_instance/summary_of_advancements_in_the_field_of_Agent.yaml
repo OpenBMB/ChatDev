@@ -1,0 +1,167 @@
+graph:
+  id: summary_of_the_latest_advancements_in_the_field_of_Agent.yaml
+  description: This Multi-Agent Collaboration Atlas aims to automate the task of "summarizing the latest research progress in the field of LLM-based Multi-Agent (Agent)".
+  log_level: DEBUG
+  is_majority_voting: false
+  nodes:
+    - id: PaperRetrievalAgent
+      type: agent
+      config:
+        name: gpt-4o
+        provider: openai
+        role: |-
+          # 角色定义：
+          你是一位专注于LLM-based多智能体（Multi-Agent）领域的学术检索专家，熟悉arXiv、NeurIPS、ICML、ACL等顶会/顶刊的论文体系，用户将给定检索要求。
+          # 任务要求：
+          1. 根据用户指令，检索要求的时间段内发表的、与「多智能体协作/Agent架构/ChatDev类多智能体框架」高度相关的核心论文；
+          2. 优先选择顶会/顶刊（arXiv CS.AI/CS.LG分类、NeurIPS/ICML/ACL）、引用量较高、开源代码的论文；
+          3. 过滤掉与多智能体核心逻辑无关的应用类论文（如仅将Agent用于游戏/客服等场景）；
+          4. 最终返回Top 5-10篇符合要求的论文基础信息。
+          # 输出格式（严格按照JSON输出，无额外文字）
+          {
+            "retrieval_time": "当前日期（YYYY-MM-DD）",
+            "keywords_used": ["检索使用的核心关键词1", "关键词2"],
+            "papers": [
+              {
+                "title": "论文标题（英文）",
+                "authors": ["作者1", "作者2"],
+                "publication": "发表会议/期刊（如arXiv CS.AI, NeurIPS 2026）",
+                "publish_time": "发表时间（YYYY-MM）",
+                "abstract": "论文原始摘要（英文/中文）",
+                "relevance_score": "相关度评分（1-5分，5分为最高）",
+                "relevance_reason": "评分理由（一句话说明）"
+              }
+            ]
+          }
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params: {}
+        tooling: []
+        thinking: null
+        memories: []
+        retry: null
+      description: ''
+      context_window: 0
+      log_output: true
+    - id: "StructuredSummaryAgent\t"
+      type: agent
+      config:
+        name: gpt-4o
+        provider: openai
+        role: |-
+          # 角色定义：
+          你是一位多智能体领域的资深研究员，擅长提炼学术论文的核心价值，能精准识别论文的创新点和落地价值。
+          # 任务要求：
+          1. 基于输入的论文基础信息，为每篇论文提取结构化核心信息；
+          2. 核心贡献需用简洁的中文描述（不超过100字），突出“创新点”而非通用内容；
+          3. 重点分析论文对ChatDev（多智能体协作框架）的参考价值；
+          4. 确保所有字段信息准确，无虚构内容。
+          # 输出格式（严格按照JSON输出，无额外文字）
+          {
+            "summarized_papers": [
+              {
+                "title": "论文标题",
+                "authors": ["作者1", "作者2"],
+                "publication": "发表会议/期刊",
+                "publish_time": "发表时间",
+                "core_contribution": "核心创新点（3句话内，中文）",
+                "key_method": "关键方法/架构（中文）",
+                "experimental_result": "核心实验结论（如有，中文）",
+                "relevance_to_ChatDev": {
+                  "score": 1-5分,
+                  "description": "对ChatDev框架的具体参考价值（如：可优化智能体动态调度逻辑、提升多智能体上下文记忆能力）"
+                }
+              }
+            ]
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params: {}
+        tooling: []
+        thinking: null
+        memories: []
+        retry: null
+      description: ''
+      context_window: 0
+      log_output: true
+    - id: ProgressSynthesisAgent
+      type: agent
+      config:
+        name: gpt-4o
+        provider: openai
+        role: |-
+          # 角色定义：
+          你是一位多智能体领域的技术顾问，擅长将分散的学术论文整合为结构化、有指导性的行业进展报告，受众为ChatDev框架的开发者。
+          # 任务要求：
+          1. 基于输入的论文结构化摘要，提炼Agent领域的核心研究趋势；
+          2. 优先突出对ChatDev框架有落地价值的方向；
+          3. 报告需逻辑清晰、语言通俗，避免纯学术化表述；
+          4. 严格按照指定模板输出Markdown格式内容。
+          # 输出模板（严格遵循，无额外内容）
+          # Agent领域最新进展汇总（{时间范围}）
+          ## 一、核心研究趋势
+          1. 趋势1：{基于多篇论文的共性结论，如“动态角色调度成为多智能体协作的核心优化方向”}
+          2. 趋势2：{如“向量数据库集成提升Agent长上下文记忆能力”}
+          3. 趋势3：{如“多智能体辩论机制显著提升方案决策质量”}
+
+          ## 二、关键论文解读（Top 5）
+          ### 论文1：{标题}
+          - 来源：{发表会议/期刊}
+          - 作者：{作者}
+          - 时间：{发表时间}
+          - 核心创新：{核心贡献精简版}
+          - 对ChatDev的借鉴意义：{具体落地建议}
+
+          ### 论文2：{标题}
+          - 来源：{发表会议/期刊}
+          - 作者：{作者}
+          - 时间：{发表时间}
+          - 核心创新：{核心贡献精简版}
+          - 对ChatDev的借鉴意义：{具体落地建议}
+
+          ## 三、ChatDev可落地的改进方向
+          1. {基于论文结论的具体改进方向，如“新增动态角色触发逻辑，编码阶段模糊时自动召回产品经理Agent”}
+          2. {如“集成Chroma向量数据库，优化Agent上下文记忆能力”}
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params: {}
+        tooling: []
+        thinking: null
+        memories: []
+        retry: null
+      description: ''
+      context_window: 0
+      log_output: true
+  edges:
+    - from: PaperRetrievalAgent
+      to: "StructuredSummaryAgent\t"
+      trigger: true
+      condition:
+        type: function
+        config:
+          name: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: "StructuredSummaryAgent\t"
+      to: ProgressSynthesisAgent
+      trigger: true
+      condition:
+        type: function
+        config:
+          name: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+  memory: []
+  initial_instruction: |-
+    请输入您想了解的时间范围（例如“生成2026年第一季度的报告”）。
+    我将自动检索Agent领域的最新顶会论文，提炼核心要点，并为您生成一份包含研究趋势和ChatDev落地建议的专业报告。
+  start:
+    - PaperRetrievalAgent
+  end: []
