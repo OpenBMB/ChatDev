@@ -1,4 +1,3 @@
-import yaml from 'js-yaml'
 
 const apiUrl = (path) => path
 
@@ -201,7 +200,7 @@ export async function fetchWorkflowsWithDesc() {
           const fileData = await response.json()
           return {
             name: filename,
-            description: getYAMLDescription(fileData.content)
+            description: fileData.description || 'No description'
           }
         } catch {
           return { name: filename, description: 'No description' }
@@ -221,14 +220,6 @@ export async function fetchWorkflowsWithDesc() {
     }
   }
 
-  function getYAMLDescription(content) {
-    try {
-      const doc = yaml.load(content)
-      return doc.graph.description || 'No description'
-    } catch {
-      return 'No description'
-    }
-  }
 }
 
 // Fetch YAML file content
