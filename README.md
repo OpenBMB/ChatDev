@@ -25,6 +25,8 @@ ChatDev has evolved from a specialized software development multi-agent system i
 ## 🎉 News
 • **Jan 07, 2026: 🚀 We are excited to announce the official release of ChatDev 2.0 (DevAll)!** This version introduces a zero-code multi-agent orchestration platform. The classic ChatDev (v1.x) has been moved to the [`chatdev1.0`](https://github.com/OpenBMB/ChatDev/tree/chatdev1.0) branch for maintenance. More details about ChatDev 2.0 can be found on [our official post](https://x.com/OpenBMB/status/2008916790399701335).
 
+• **March 21, 2026: 🚀 We have released the ChatDev Python SDK (PyPI package chatdev)**, so you can run YAML workflow and multi-agent tasks directly in Python. For installation and version details, see [PyPI：chatdev 0.1.0](https://pypi.org/project/chatdev/0.1.0/).
+
 <details>
 <summary>Old News</summary>
 
