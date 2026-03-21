@@ -25,8 +25,6 @@ ChatDev 已从一个专门的软件开发多智能体系统演变为一个全面
 ## 🎉 新闻
 • **2026年1月7日：🚀 我们非常高兴地宣布 ChatDev 2.0 (DevAll) 正式发布！** 该版本引入了全新的零代码多智能体编排平台。经典的 ChatDev (v1.x) 已移至 [`chatdev1.0`](https://github.com/OpenBMB/ChatDev/tree/chatdev1.0) 分支进行维护。
 
-• **2026年3月21日：🚀 我们发布了 ChatDev Python SDK（PyPI 包 `chatdev`）**，便于在 Python 中直接运行 YAML 工作流编排并执行多智能体任务。安装详情与版本说明见 [PyPI：chatdev 0.1.0](https://pypi.org/project/chatdev/0.1.0/)。
-
 <details>
 <summary>历史新闻</summary>
 
@@ -259,6 +257,8 @@ result = run_workflow(
 if result.final_message:
     print(f"Output: {result.final_message.text_content()}")
 ```
+
+**我们也发布了 ChatDev Python SDK（PyPI 包 `chatdev`）**，便于在 Python 中直接运行 YAML 工作流编排并执行多智能体任务。安装详情与版本说明见 [PyPI：chatdev 0.1.0](https://pypi.org/project/chatdev/0.1.0/)。
 
 ---
 
