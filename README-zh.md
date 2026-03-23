@@ -258,6 +258,8 @@ if result.final_message:
     print(f"Output: {result.final_message.text_content()}")
 ```
 
+**我们也发布了 ChatDev Python SDK（PyPI 包 `chatdev`）**，便于在 Python 中直接运行 YAML 工作流编排并执行多智能体任务。安装详情与版本说明见 [PyPI：chatdev 0.1.0](https://pypi.org/project/chatdev/0.1.0/)。
+
 ---
 
 <a id="开发者"></a>

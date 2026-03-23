@@ -259,6 +259,8 @@ if result.final_message:
     print(f"Output: {result.final_message.text_content()}")
 ```
 
+**We have released the ChatDev Python SDK (PyPI package `chatdev`)**, so you can also run YAML workflow and multi-agent tasks directly in Python. For installation and version details, see [PyPI: chatdev 0.1.0](https://pypi.org/project/chatdev/0.1.0/).
+
 ---
 
 <a id="developers"></a>
