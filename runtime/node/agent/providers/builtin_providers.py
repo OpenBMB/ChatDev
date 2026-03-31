@@ -25,3 +25,12 @@ if GeminiProvider is not None:
     )
 else:
     print("Gemini provider not registered: google-genai library not found.")
+
+from runtime.node.agent.providers.minimax_provider import MiniMaxProvider
+
+ProviderRegistry.register(
+    "minimax",
+    MiniMaxProvider,
+    label="MiniMax",
+    summary="MiniMax models (M2.7, M2.5) via OpenAI-compatible API",
+)
