@@ -46,3 +46,31 @@ def should_stop_loop(data: str) -> bool:
     if verdict is None:
         return False
     return verdict in {"STOP", "DONE"}
+
+
+# -- AgentID identity conditions --
+
+def identity_verified(data: str) -> bool:
+    """Return True when agent output contains a successful identity verification."""
+    lower = data.lower()
+    return '"verified": true' in lower or '"verified":true' in lower
+
+
+def identity_not_verified(data: str) -> bool:
+    """Return True when agent output indicates identity verification failed."""
+    return not identity_verified(data)
+
+
+def trust_score_above_threshold(data: str) -> bool:
+    """Return True when a verified agent's trust score is >= 0.7."""
+    import json as _json
+    try:
+        result = _json.loads(data)
+        return float(result.get("trust_score", 0)) >= 0.7
+    except (ValueError, TypeError, _json.JSONDecodeError):
+        # Try to extract from text output
+        import re
+        match = re.search(r'"trust_score"\s*:\s*([\d.]+)', data)
+        if match:
+            return float(match.group(1)) >= 0.7
+        return False

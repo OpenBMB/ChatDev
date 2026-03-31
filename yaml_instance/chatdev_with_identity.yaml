@@ -1,0 +1,162 @@
+version: 0.4.0
+vars:
+  COMMON_PROMPT: >-
+    ChatDev is a software company powered by multiple intelligent agents with
+    cryptographic identity verification via AgentID. Each agent must verify
+    the identity of collaborating agents before trusting their output.
+graph:
+  id: chatdev_identity_demo
+  description: >-
+    Demonstrates AgentID identity verification in a ChatDev pipeline.
+    The Identity Verifier checks each agent before allowing them to
+    collaborate. Unverified agents are blocked from the pipeline.
+  is_majority_voting: false
+  start:
+    - USER
+    - Identity Gate Prompt
+
+  nodes:
+    - id: USER
+      type: passthrough
+      config: {}
+
+    - id: Identity Gate Prompt
+      type: literal
+      config:
+        content: >-
+          Before any agent can participate in this software development
+          pipeline, verify their identity using the AgentID tools.
+
+          1. Call verify_agent_identity for each agent_id in the pipeline.
+          2. Only allow agents with verified=true and trust_score >= 0.7.
+          3. Output a JSON summary: {"all_verified": true/false, "agents": [...]}.
+
+          If all agents are verified, output "VERIFIED: All agents passed
+          identity checks" at the end.
+        role: user
+
+    - id: Identity Verifier
+      type: agent
+      config:
+        provider: openai
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        name: gpt-4o
+        role: >-
+          ${COMMON_PROMPT}
+
+          You are the Identity Verifier. Your sole responsibility is to
+          verify the cryptographic identity of every agent in the pipeline
+          using the AgentID protocol. Call the verify_agent_identity tool
+          for each agent_id you are given. Summarise the results and clearly
+          state whether all agents passed verification.
+        tooling:
+          - type: function
+            config:
+              tools:
+                - name: verify_agent_identity
+                - name: discover_agents
+                - name: register_agent_identity
+        params:
+          temperature: 0.1
+          max_tokens: 1000
+
+    - id: Programmer
+      type: agent
+      config:
+        provider: openai
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        name: gpt-4o
+        role: >-
+          ${COMMON_PROMPT}
+
+          You are Programmer. You write code to fulfil the user's task.
+          Your identity has been cryptographically verified via AgentID.
+          You can write Python, JavaScript, and other languages.
+        tooling:
+          - type: function
+            config:
+              tools:
+                - name: save_file
+                - name: read_file_segment
+                - name: describe_available_files
+                - name: list_directory
+                - name: verify_agent_identity
+        params:
+          temperature: 0.3
+
+    - id: Code Reviewer
+      type: agent
+      config:
+        provider: openai
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        name: gpt-4o
+        role: >-
+          ${COMMON_PROMPT}
+
+          You are Code Reviewer. You review code written by the Programmer
+          for correctness, security, and quality. Your identity has been
+          cryptographically verified via AgentID.
+
+          Before reviewing, you may verify the Programmer's identity using
+          verify_agent_identity to ensure the code came from a trusted source.
+        tooling:
+          - type: function
+            config:
+              tools:
+                - name: read_file_segment
+                - name: describe_available_files
+                - name: list_directory
+                - name: verify_agent_identity
+        params:
+          temperature: 0.2
+
+    - id: FINAL
+      type: passthrough
+      config: {}
+
+  edges:
+    # Identity gate: verify agents before coding begins
+    - from: Identity Gate Prompt
+      to: Identity Verifier
+      condition: "true"
+
+    # Only proceed to Programmer if identity checks pass
+    - from: Identity Verifier
+      to: Programmer
+      condition:
+        type: keyword
+        config:
+          any:
+            - "VERIFIED"
+          none: []
+          regex: []
+          case_sensitive: false
+
+    # Pass user task context to Programmer
+    - from: USER
+      to: Programmer
+      trigger: false
+      carry_data: true
+      keep_message: true
+
+    # Programmer output goes to Code Reviewer
+    - from: Programmer
+      to: Code Reviewer
+      condition: "true"
+      carry_data: true
+
+    # Pass user task context to Code Reviewer
+    - from: USER
+      to: Code Reviewer
+      trigger: false
+      carry_data: true
+      keep_message: true
+
+    # Code Reviewer output is the final result
+    - from: Code Reviewer
+      to: FINAL
+      condition: "true"
+      carry_data: true
