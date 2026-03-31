@@ -27,6 +27,7 @@ class WebSocketGraphExecutor(GraphExecutor):
         websocket_manager,
         session_store: WorkflowSessionStore,
         cancel_event=None,
+        task_prompt: str = None,
     ):
         self.session_id = session_id
         self.session_controller = session_controller
@@ -34,6 +35,7 @@ class WebSocketGraphExecutor(GraphExecutor):
         self.websocket_manager = websocket_manager
         self.session_store = session_store
         self.results = {}
+        self.task_prompt = task_prompt
         self.artifact_dispatcher = ArtifactDispatcher(session_id, session_store, websocket_manager)
 
         def hook_factory(runtime_context):
@@ -60,7 +62,9 @@ class WebSocketGraphExecutor(GraphExecutor):
     def _create_logger(self) -> WorkflowLogger:
         from server.services.websocket_logger import WebSocketLogger
 
-        return WebSocketLogger(self.websocket_manager, self.session_id, self.graph.name, self.graph.log_level)
+        return WebSocketLogger(self.websocket_manager, self.session_id, self.graph.name,
+                               self.graph.log_level, task_prompt=self.task_prompt,
+                               graph_config=self.graph.config)
 
     async def execute_graph_async(self, task_prompt):
         await asyncio.get_event_loop().run_in_executor(None, self._execute, task_prompt)

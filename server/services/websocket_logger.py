@@ -1,16 +1,20 @@
 import asyncio
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 
 from entity.enums import LogLevel, EventType
-from utils.logger import WorkflowLogger, LogEntry
+from utils.logger import LogEntry
+from utils.visibility_bridge import VisibilityLogger
 from utils.structured_logger import get_workflow_logger
 
 
-class WebSocketLogger(WorkflowLogger):
+class WebSocketLogger(VisibilityLogger):
     """Workflow logger that also pushes entries via WebSocket."""
 
-    def __init__(self, websocket_manager, session_id: str, workflow_id: str = None, log_level: LogLevel = LogLevel.DEBUG):
-        super().__init__(workflow_id, log_level, log_to_console=False)
+    def __init__(self, websocket_manager, session_id: str, workflow_id: str = None,
+                 log_level: LogLevel = LogLevel.DEBUG, task_prompt: Optional[str] = None,
+                 graph_config=None):
+        super().__init__(workflow_id, log_level, log_to_console=False,
+                         task_prompt=task_prompt, graph_config=graph_config)
         self.websocket_manager = websocket_manager
         self.session_id = session_id
 
@@ -26,5 +30,5 @@ class WebSocketLogger(WorkflowLogger):
             "type": "log",
             "data": log_entry.to_dict()
         })
-        
+
         return log_entry

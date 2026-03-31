@@ -1299,6 +1299,9 @@ const handleYAMLSelection = async (fileName) => {
     return
   }
 
+  // Preview workflow graph in visibility dashboard (fire-and-forget)
+  fetch(`/api/workflow/preview/${encodeURIComponent(fileName)}`).catch(() => {})
+
   // Clear the chat
   chatMessages.value = []
 
