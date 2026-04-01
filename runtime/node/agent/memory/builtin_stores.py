@@ -3,6 +3,7 @@
 from entity.configs.node.memory import (
     BlackboardMemoryConfig,
     FileMemoryConfig,
+    Mem0MemoryConfig,
     SimpleMemoryConfig,
     MemoryStoreConfig,
 )
@@ -31,6 +32,19 @@ register_memory_store(
     config_cls=BlackboardMemoryConfig,
     factory=lambda store: BlackboardMemory(store),
     summary="Shared blackboard memory allowing multiple nodes to read/write",
+)
+
+
+def _create_mem0_memory(store):
+    from runtime.node.agent.memory.mem0_memory import Mem0Memory
+    return Mem0Memory(store)
+
+
+register_memory_store(
+    "mem0",
+    config_cls=Mem0MemoryConfig,
+    factory=_create_mem0_memory,
+    summary="Mem0 managed memory with semantic search and graph relationships",
 )
 
 

@@ -32,12 +32,23 @@ memory:
         model: text-embedding-3-small
 ```
 
+### Mem0 Memory Config
+```yaml
+memory:
+  - name: agent_memory
+    type: mem0
+    config:
+      api_key: ${MEM0_API_KEY}
+      agent_id: my-agent
+```
+
 ## 3. Built-in Store Comparison
 | Type | Path | Highlights | Best for |
 | --- | --- | --- | --- |
 | `simple` | `node/agent/memory/simple_memory.py` | Optional disk persistence (JSON) after runs; FAISS + semantic rerank; read/write capable. | Small conversation history, prototypes. |
 | `file` | `node/agent/memory/file_memory.py` | Chunks files/dirs into a vector index, read-only, auto rebuilds when files change. | Knowledge bases, doc QA. |
 | `blackboard` | `node/agent/memory/blackboard_memory.py` | Lightweight append-only log trimmed by time/count; no vector search. | Broadcast boards, pipeline debugging. |
+| `mem0` | `node/agent/memory/mem0_memory.py` | Cloud-managed by Mem0; semantic search + graph relationships; no local embeddings or persistence needed. Requires `mem0ai` package. | Production memory, cross-session persistence, multi-agent memory sharing. |
 
 All stores register through `register_memory_store()` so summaries show up in UI via `MemoryStoreConfig.field_specs()`.
 
@@ -97,6 +108,14 @@ This schema lets multimodal outputs flow into Memory/Thinking modules without ex
 - **Config** – `memory_path` (or `auto`) plus `max_items`. Creates the file in the session directory if missing.
 - **Retrieval** – Returns the latest `top_k` entries ordered by time.
 - **Write** – `update()` appends the latest snapshot (input/output blocks, attachments, previews). No embeddings are generated, so retrieval is purely recency-based.
+
+### 5.4 Mem0Memory
+- **Config** – Requires `api_key` (from [app.mem0.ai](https://app.mem0.ai)). Optional `user_id`, `agent_id`, `org_id`, `project_id` for scoping.
+- **Important**: `user_id` and `agent_id` are mutually exclusive in Mem0 API calls. If both are configured, two separate searches are made and results merged. For writes, `agent_id` takes precedence. Agent-generated content is stored with `role: "assistant"`.
+- **Retrieval** – Uses Mem0's server-side semantic search. Supports `top_k` and `similarity_threshold` via `MemoryAttachmentConfig`.
+- **Write** – `update()` sends conversation messages to Mem0 via the SDK. Agent outputs use `role: "assistant"`, user inputs use `role: "user"`.
+- **Persistence** – Fully cloud-managed. `load()` and `save()` are no-ops. Memories persist across runs and sessions automatically.
+- **Dependencies** – Requires `mem0ai` package (`pip install mem0ai`).
 
 ## 6. EmbeddingConfig Notes
 - Fields: `provider`, `model`, `api_key`, `base_url`, `params`.
