@@ -22,13 +22,13 @@ const shouldShowTooltip = computed(() => configStore.ENABLE_HELP_TOOLTIPS)
 <template>
   <RichTooltip v-if="shouldShowTooltip" :content="helpContent.startNode" placement="right">
     <div class="start-node" :style="{ opacity: data.opacity ?? 1 }">
-      <div class="start-node-bubble" title="Start Node"></div>
+      <div class="start-node-bubble" :title="$t('components.start_node.title')"></div>
       <!-- Provide source handle at right -->
       <Handle id="source" type="source" :position="Position.Right" class="start-node-handle" />
     </div>
   </RichTooltip>
   <div v-else class="start-node" :style="{ opacity: data.opacity ?? 1 }">
-    <div class="start-node-bubble" title="Start Node"></div>
+    <div class="start-node-bubble" :title="$t('components.start_node.title')"></div>
     <!-- Provide source handle at right -->
     <Handle id="source" type="source" :position="Position.Right" class="start-node-handle" />
   </div>

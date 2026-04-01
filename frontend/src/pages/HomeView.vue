@@ -48,17 +48,17 @@ const cubes = Array.from({ length: 80 }, (_, i) => ({
     </div>
     <div class="content-wrapper">
       <h1 class="title">
-        <span class="title-line">ChatDev 2.0</span>
-        <span class="title-line title-highlight">DevAll</span>
+        <span class="title-line">{{ $t('home.title') }}</span>
+        <span class="title-line title-highlight">{{ $t('home.highlight') }}</span>
       </h1>
       
       <p class="introduction">
-        ChatDev 2.0 - DevAll is a zero-code multi-agent platform for developing everything, with a workspace built for designing, visualizing, and running agent workflows.
+        {{ $t('home.introduction') }}
       </p>
 
       <div class="actions">
         <button class="btn get-started-btn" @click="goToTutorial">
-          Get Started →
+          {{ $t('home.get_started') }}
         </button>
       </div>
     </div>
@@ -299,7 +299,7 @@ const cubes = Array.from({ length: 80 }, (_, i) => ({
   }
 }
 
-@media (max-width: 768px) {
+  @media (max-width: 768px) {
   .title {
     font-size: 42px;
   }

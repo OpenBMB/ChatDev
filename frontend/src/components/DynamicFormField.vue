@@ -3,11 +3,11 @@
     <template v-if="field.childNode">
       <div v-if="recursive" class="form-group form-group-inline child-node-group">
         <label>
-          {{ field.displayName || field.name }}
+          {{ $te('schema.' + field.name) ? $t('schema.' + field.name) : (field.displayName || field.name) }}
           <span v-if="field.required" class="required-asterisk">*</span>
           <RichTooltip
             v-if="field.description"
-            :content="{ description: field.description }"
+            :content="{ description: $te('schema_desc.' + field.name) ? $t('schema_desc.' + field.name) : field.description }"
             placement="top"
           >
             <span class="help-icon" tabindex="0">?</span>
@@ -62,7 +62,7 @@
               v-if="hasChildValue"
               class="clear-child-button"
               @click.stop="$emit('clear-child-entry', field.name)"
-              title="Clear configuration"
+              :title="$t('dynamic_form_field.clear_configuration')"
             >
               ×
             </button>
@@ -87,7 +87,7 @@
                   <button
                     class="delete-child-button"
                     @click.stop="$emit('delete-child-entry', field.name, childIndex)"
-                    title="Delete child"
+                    :title="$t('dynamic_form_field.delete_child')"
                   >
                     ×
                   </button>
@@ -118,11 +118,11 @@
       <!-- Standard Popup Style (if not expanded) -->
       <div v-if="!expandInline" class="form-group form-group-inline child-node-group">
         <label>
-          {{ field.displayName || field.name }}
+          {{ $te('schema.' + field.name) ? $t('schema.' + field.name) : (field.displayName || field.name) }}
           <span v-if="field.required" class="required-asterisk">*</span>
           <RichTooltip
             v-if="field.description"
-            :content="{ description: field.description }"
+            :content="{ description: $te('schema_desc.' + field.name) ? $t('schema_desc.' + field.name) : field.description }"
             placement="top"
           >
             <span class="help-icon" tabindex="0">?</span>
@@ -189,7 +189,7 @@
             v-if="!canOpenConditionalChildModal"
             class="child-node-hint"
           >
-            Please select a type and configure
+            {{ $t('dynamic_form_field.select_type_and_configure') }}
           </div>
           <div
             v-if="hasChildValue && childSummaries[field.name]"
@@ -230,11 +230,11 @@
       <!-- Choice dropdown fields-->
       <div v-if="field.enum && !isList" class="form-group">
         <label :for="`${modalId}-${field.name}`">
-          {{ field.displayName || field.name }}
+          {{ $te('schema.' + field.name) ? $t('schema.' + field.name) : (field.displayName || field.name) }}
           <span v-if="field.required" class="required-asterisk">*</span>
           <RichTooltip
             v-if="field.description"
-            :content="{ description: field.description }"
+            :content="{ description: $te('schema_desc.' + field.name) ? $t('schema_desc.' + field.name) : field.description }"
             placement="top"
           >
             <span class="help-icon" tabindex="0">?</span>
@@ -250,7 +250,7 @@
             class="form-input custom-select-input"
             :readonly="isReadOnly"
             :class="{'input-readonly': isReadOnly}"
-            placeholder="Type to filter options..."
+            :placeholder="$t('dynamic_form_field.type_to_filter')"
             autocomplete="off"
           />
           <div v-if="showDropdown && !isReadOnly" class="custom-select-dropdown">
@@ -277,7 +277,7 @@
               }}
             </div>
             <div v-if="filteredOptions.length === 0" class="custom-select-no-results">
-              No options found
+              {{ $t('dynamic_form_field.no_options_found') }}
             </div>
           </div>
           <div class="custom-select-arrow" :class="{ 'arrow-open': showDropdown }">
@@ -289,11 +289,11 @@
       <!-- Multi-choice fields -->
       <div v-else-if="field.enum && isList" class="form-group">
         <label>
-          {{ field.displayName || field.name }}
+          {{ $te('schema.' + field.name) ? $t('schema.' + field.name) : (field.displayName || field.name) }}
           <span v-if="field.required" class="required-asterisk">*</span>
           <RichTooltip
             v-if="field.description"
-            :content="{ description: field.description }"
+            :content="{ description: $te('schema_desc.' + field.name) ? $t('schema_desc.' + field.name) : field.description }"
             placement="top"
           >
             <span class="help-icon" tabindex="0">?</span>
@@ -326,11 +326,11 @@
       <div v-else-if="field.type === 'bool' && !isList" class="form-group">
         <div class="switch-wrapper">
           <label :for="`${modalId}-${field.name}`" class="switch-label-text">
-            {{ field.displayName || field.name }}
+            {{ $te('schema.' + field.name) ? $t('schema.' + field.name) : (field.displayName || field.name) }}
             <span v-if="field.required" class="required-asterisk">*</span>
             <RichTooltip
               v-if="field.description"
-              :content="{ description: field.description }"
+              :content="{ description: $te('schema_desc.' + field.name) ? $t('schema_desc.' + field.name) : field.description }"
               placement="top"
             >
               <span class="help-icon" tabindex="0">?</span>
@@ -352,11 +352,11 @@
       <!-- String input fields -->
       <div v-else-if="field.type === 'str' && !isList" class="form-group">
         <label :for="`${modalId}-${field.name}`">
-          {{ field.displayName || field.name }}
+          {{ $te('schema.' + field.name) ? $t('schema.' + field.name) : (field.displayName || field.name) }}
           <span v-if="field.required" class="required-asterisk">*</span>
           <RichTooltip
             v-if="field.description"
-            :content="{ description: field.description }"
+            :content="{ description: $te('schema_desc.' + field.name) ? $t('schema_desc.' + field.name) : field.description }"
             placement="top"
           >
             <span class="help-icon" tabindex="0">?</span>
@@ -376,11 +376,11 @@
       <!-- Multiline text fields -->
       <div v-else-if="field.type === 'text' && !isList" class="form-group">
         <label :for="`${modalId}-${field.name}`">
-          {{ field.displayName || field.name }}
+          {{ $te('schema.' + field.name) ? $t('schema.' + field.name) : (field.displayName || field.name) }}
           <span v-if="field.required" class="required-asterisk">*</span>
           <RichTooltip
             v-if="field.description"
-            :content="{ description: field.description }"
+            :content="{ description: $te('schema_desc.' + field.name) ? $t('schema_desc.' + field.name) : field.description }"
             placement="top"
           >
             <span class="help-icon" tabindex="0">?</span>
@@ -400,11 +400,11 @@
       <!-- Integer input fields -->
       <div v-else-if="field.type === 'int' && !isList" class="form-group">
         <label :for="`${modalId}-${field.name}`">
-          {{ field.displayName || field.name }}
+          {{ $te('schema.' + field.name) ? $t('schema.' + field.name) : (field.displayName || field.name) }}
           <span v-if="field.required" class="required-asterisk">*</span>
           <RichTooltip
             v-if="field.description"
-            :content="{ description: field.description }"
+            :content="{ description: $te('schema_desc.' + field.name) ? $t('schema_desc.' + field.name) : field.description }"
             placement="top"
           >
             <span class="help-icon" tabindex="0">?</span>
@@ -425,11 +425,11 @@
       <!-- Float input fields -->
       <div v-else-if="field.type === 'float' && !isList" class="form-group">
         <label :for="`${modalId}-${field.name}`">
-          {{ field.displayName || field.name }}
+          {{ $te('schema.' + field.name) ? $t('schema.' + field.name) : (field.displayName || field.name) }}
           <span v-if="field.required" class="required-asterisk">*</span>
           <RichTooltip
             v-if="field.description"
-            :content="{ description: field.description }"
+            :content="{ description: $te('schema_desc.' + field.name) ? $t('schema_desc.' + field.name) : field.description }"
             placement="top"
           >
             <span class="help-icon" tabindex="0">?</span>
@@ -450,11 +450,11 @@
       <!-- Key-value fields -->
       <div v-else-if="field.type === 'dict[str, Any]' || field.type === 'dict[str, str]'" class="form-group form-group-inline">
         <label>
-          {{ field.displayName || field.name }}
+          {{ $te('schema.' + field.name) ? $t('schema.' + field.name) : (field.displayName || field.name) }}
           <span v-if="field.required" class="required-asterisk">*</span>
           <RichTooltip
             v-if="field.description"
-            :content="{ description: field.description }"
+            :content="{ description: $te('schema_desc.' + field.name) ? $t('schema_desc.' + field.name) : field.description }"
             placement="top"
           >
             <span class="help-icon" tabindex="0">?</span>
@@ -475,7 +475,7 @@
                 />
               </svg>
             </span>
-            Add key-value
+            {{ $t('dynamic_form_field.add_key_value') }}
           </button>
           <div
             v-if="formData[field.name] && hasDictEntries(formData[field.name])"
@@ -493,7 +493,7 @@
               <button
                 class="delete-var-button"
                 @click.stop="$emit('delete-var', field.name, varKey)"
-                title="Delete variable"
+                :title="$t('dynamic_form_field.delete_variable')"
               >
                 ×
               </button>
@@ -505,11 +505,11 @@
       <!-- List of strings field -->
       <div v-else-if="isList && field.type.includes('str')" class="form-group form-group-inline">
         <label>
-          {{ field.displayName || field.name }}
+          {{ $te('schema.' + field.name) ? $t('schema.' + field.name) : (field.displayName || field.name) }}
           <span v-if="field.required" class="required-asterisk">*</span>
           <RichTooltip
             v-if="field.description"
-            :content="{ description: field.description }"
+            :content="{ description: $te('schema_desc.' + field.name) ? $t('schema_desc.' + field.name) : field.description }"
             placement="top"
           >
             <span class="help-icon" tabindex="0">?</span>
@@ -542,7 +542,7 @@
               <button
                 class="delete-item-button"
                 @click.stop="$emit('delete-list-item', field.name, index)"
-                title="Delete item"
+                :title="$t('dynamic_form_field.delete_item')"
               >
                 ×
               </button>
@@ -556,7 +556,10 @@
 
 <script setup>
 import { computed, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import RichTooltip from './RichTooltip.vue'
+
+const { t } = useI18n()
 
 const props = defineProps({
   field: {
@@ -648,9 +651,9 @@ const hasChildValue = computed(() => {
 
 const childNodeButtonLabel = computed(() => {
   if (isList.value) {
-    return `Add Entry`
+    return t('dynamic_form_field.add_entry')
   }
-  return props.formData[props.field.name] ? `Edit ${props.field.childNode}` : `Configure ${props.field.childNode}`
+  return props.formData[props.field.name] ? t('dynamic_form_field.edit_child', { child: props.field.childNode }) : t('dynamic_form_field.configure_child', { child: props.field.childNode })
 })
 
 // Filtered options for custom select

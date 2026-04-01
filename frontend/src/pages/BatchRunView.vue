@@ -2,8 +2,8 @@
   <div class="launch-view">
     <div class="launch-bg"></div>
     <div class="header">
-      <h1>Labaratory</h1>
-      <button class="settings-button" @click="showBatchSettingsModal()" title="Batch Settings">
+      <h1>{{ $t('batch_run.title') }}</h1>
+      <button class="settings-button" @click="showBatchSettingsModal()" :title="$t('batch_run.batch_settings')">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="12" cy="12" r="3"></circle>
           <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
@@ -20,7 +20,7 @@
               <span :class="`log-timestamp log-timestamp-${logMessage.type}`">{{ logMessage.timestamp }}</span> : {{ logMessage.message }}
             </div>
             <div v-if="logMessages.length === 0" class="log-placeholder">
-              Batch processing logs will appear here...
+              {{ $t('batch_run.logs_placeholder') }}
             </div>
           </div>
         </div>
@@ -31,26 +31,26 @@
             <!-- Metrics Grid -->
             <div class="metrics-grid">
               <div class="metric-card" :class="{ 'status-active': status === 'In Progress' }">
-                <div class="metric-title">Rows Completed</div>
+                <div class="metric-title">{{ $t('batch_run.rows_completed') }}</div>
                 <div class="metric-value">{{ completedRows }}</div>
               </div>
               <div class="metric-card" :class="{ 'status-active': status === 'In Progress' }">
-                <div class="metric-title">Total Time</div>
+                <div class="metric-title">{{ $t('batch_run.total_time') }}</div>
                 <div class="metric-value">{{ totalTime }}</div>
               </div>
               <div class="metric-card" :class="{ 'status-active': status === 'In Progress' }">
-                <div class="metric-title">Success Rate</div>
+                <div class="metric-title">{{ $t('batch_run.success_rate') }}</div>
                 <div class="metric-value">{{ successRate }}</div>
               </div>
               <div class="metric-card" :class="{ 'status-active': status === 'In Progress' }">
-                <div class="metric-title">Current Status</div>
+                <div class="metric-title">{{ $t('batch_run.current_status') }}</div>
                 <div class="metric-value" :class="{ 'status-active': status === 'In Progress' }">{{ computedStatus }}</div>
               </div>
             </div>
 
             <!-- Progress Bar -->
             <div class="progress-section">
-              <div class="progress-label">Overall Progress</div>
+              <div class="progress-label">{{ $t('batch_run.overall_progress') }}</div>
               <div class="progress-bar" :style="{ '--process-width': progressPercentage + '%'}">
                 <div class="progress-fill" :class="{ 'processing': status === 'In Progress' }" :style="{ width: progressPercentage + '%' }"></div>
               </div>
@@ -63,7 +63,7 @@
       <!-- Right panel -->
       <div class="right-panel">
         <div class="control-section">
-          <label class="section-label">Workflow Selection</label>
+          <label class="section-label">{{ $t('batch_run.workflow_selection') }}</label>
       <div
         class="select-wrapper custom-file-selector"
         ref="fileSelectorWrapperRef"
@@ -73,7 +73,7 @@
           v-model="fileSearchQuery"
           type="text"
           class="file-selector-input"
-          :placeholder="loading ? 'Loading...' : 'Select YAML file...'"
+          :placeholder="loading ? $t('batch_run.loading') : $t('batch_run.select_yaml')"
           :disabled="loading || isWorkflowRunning"
           @focus="handleFileInputFocus"
           @input="handleFileInputChange"
@@ -104,13 +104,13 @@
               v-if="!filteredWorkflowFiles.length"
               class="file-empty"
             >
-              No results
+              {{ $t('batch_run.no_results') }}
             </li>
           </ul>
         </Transition>
       </div>
 
-          <label class="section-label">Input File Selection</label>
+          <label class="section-label">{{ $t('batch_run.input_file_selection') }}</label>
           <div class="input-file-section">
             <div class="file-upload-wrapper">
               <input
@@ -126,14 +126,14 @@
                 :disabled="loading || isWorkflowRunning"
                 @click="handleInputFileButtonClick"
               >
-                {{ selectedInputFile ? selectedInputFile.name : 'Select input file...' }}
+                {{ selectedInputFile ? selectedInputFile.name : $t('batch_run.select_input_file') }}
               </button>
             </div>
           </div>
 
           <div class="input-manual">
             <div class="manual-title" @click="showColumnGuideModal = true">
-              Input File Format
+              {{ $t('batch_run.input_file_format') }}
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="info-icon">
                 <circle cx="12" cy="12" r="10"></circle>
                 <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
@@ -142,21 +142,21 @@
             </div>
           </div>
 
-          <label class="section-label">View</label>
+          <label class="section-label">{{ $t('batch_run.view') }}</label>
           <div class="view-toggle">
             <button
               class="toggle-button"
               :class="{ active: viewMode === 'dashboard' }"
               @click="switchToDashboard"
             >
-              Dashboard
+              {{ $t('batch_run.dashboard') }}
             </button>
             <button
               class="toggle-button"
               :class="{ active: viewMode === 'terminal' }"
               @click="viewMode = 'terminal'"
             >
-              Terminal
+              {{ $t('batch_run.terminal') }}
             </button>
           </div>
 
@@ -177,7 +177,7 @@
               :disabled="status !== 'In Progress'"
               @click="cancelBatchWorkflow"
             >
-              Cancel
+              {{ $t('common.cancel') }}
             </button>
 
             <button
@@ -185,7 +185,7 @@
               :disabled="status !== 'Batch completed' && status !== 'Batch cancelled'"
               @click="downloadLogs"
             >
-              Download Logs
+              {{ $t('batch_run.download_logs') }}
             </button>
           </div>
         </div>
@@ -225,16 +225,16 @@
         <div class="modal-content">
           <div class="manual-content">
             <div class="manual-item">
-              Input file should contain at least <code>task</code> and/or <code>attachments</code> columns
+              {{ $t('batch_run.manual_intro') }}
             </div>
             <div class="manual-item">
-              <code>id</code> - Must be unique, auto-generated if column not found
+              <code>id</code> - {{ $t('batch_run.manual_id') }}
             </div>
             <div class="manual-item">
-              <code>task</code> - Holds user input
+              <code>task</code> - {{ $t('batch_run.manual_task') }}
             </div>
             <div class="manual-item">
-              <code>vars</code> - JSON object containing key-value pairs of global variables
+              <code>vars</code> - {{ $t('batch_run.manual_vars') }}
               <div class="manual-example">
                 <pre>{{
 JSON.stringify({"BASE_URL": "openai.com","API_KEY": "123"}, null, 2)
@@ -242,7 +242,7 @@ JSON.stringify({"BASE_URL": "openai.com","API_KEY": "123"}, null, 2)
               </div>
             </div>
             <div class="manual-item">
-              <code>attachments</code> - JSON array containing absolute file paths of attachments for workflow
+              <code>attachments</code> - {{ $t('batch_run.manual_attachments') }}
               <div class="manual-example">
                 <pre>{{
 JSON.stringify(["C:\\a_sheep.png"], null, 2)
@@ -265,12 +265,12 @@ JSON.stringify(["C:\\a_sheep.png"], null, 2)
       <div class="batch-settings-modal">
         <div class="modal-content">
           <div class="modal-header">
-            <h3>Batch Settings</h3>
+            <h3>{{ $t('batch_run.batch_settings') }}</h3>
             <button class="close-button" @click="isBatchSettingsModalVisible = false">×</button>
           </div>
           <div class="modal-body">
             <div class="settings-item">
-              <label class="setting-label">Max. Parallel Launches</label>
+              <label class="setting-label">{{ $t('batch_run.max_parallel') }}</label>
               <input
                 type="number"
                 v-model.number="maxParallel"
@@ -279,21 +279,21 @@ JSON.stringify(["C:\\a_sheep.png"], null, 2)
                 max="50"
                 step="1"
               />
-              <p class="setting-desc">Maximum number of parallel workflow launches</p>
+              <p class="setting-desc">{{ $t('batch_run.max_parallel_desc') }}</p>
             </div>
             <div class="settings-item">
-              <label class="setting-label">Log Level</label>
+              <label class="setting-label">{{ $t('batch_run.log_level') }}</label>
               <select v-model="logLevel" class="setting-select">
                 <option v-for="level in logLevelOptions" :key="level" :value="level">
                   {{ level }}
                 </option>
               </select>
-              <p class="setting-desc">Logging verbosity level</p>
+              <p class="setting-desc">{{ $t('batch_run.log_level_desc') }}</p>
             </div>
           </div>
           <div class="modal-footer">
-            <button class="cancel-button" @click="isBatchSettingsModalVisible = false">Cancel</button>
-            <button class="confirm-button" @click="isBatchSettingsModalVisible = false">Save</button>
+            <button class="cancel-button" @click="isBatchSettingsModalVisible = false">{{ $t('common.cancel') }}</button>
+            <button class="confirm-button" @click="isBatchSettingsModalVisible = false">{{ $t('common.save') }}</button>
           </div>
         </div>
       </div>
@@ -304,6 +304,8 @@ JSON.stringify(["C:\\a_sheep.png"], null, 2)
 <script setup>
 import { ref, computed, onMounted, onUnmounted, watch, nextTick } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
 import { fetchWorkflowsWithDesc, fetchLogsZip, fetchWorkflowYAML, postFile, getAttachment, fetchVueGraph, postBatchWorkflow } from '../utils/apiFunctions.js'
 import { configStore } from '../utils/configStore.js'
 import { spriteFetcher } from '../utils/spriteFetcher.js'
@@ -350,6 +352,7 @@ import CollapsibleMessage from '../components/CollapsibleMessage.vue'
 
 const router = useRouter()
 const route = useRoute()
+const { fromObject, fitView, onPaneReady, onNodesInitialized, setNodes, setEdges, nodes, edges } = useVueFlow()
 
 // Log box state
 const logMessages = ref([])
@@ -380,10 +383,17 @@ const loading = ref(false)
 
 // Computed status from workflow and input file selection
 const computedStatus = computed(() => {
-  if (loading.value) return 'Loading...'
-  if (status.value === 'Pending workflow selection') return status.value
-  if (!selectedYamlFile.value) return 'Pending workflow selection'
-  if (!selectedInputFile.value) return 'Pending file selection'
+  if (loading.value) return t('batch_run.loading')
+  if (status.value === 'Pending workflow selection') return t('batch_run.status_waiting_workflow')
+  if (!selectedYamlFile.value) return t('batch_run.status_waiting_workflow')
+  if (!selectedInputFile.value) return t('batch_run.status_waiting_file')
+  
+  // Handle specific statuses from logic
+  if (status.value === 'Idle') return t('batch_run.status_idle')
+  if (status.value === 'In Progress') return t('batch_run.status_in_progress')
+  if (status.value === 'Batch completed') return t('batch_run.status_completed')
+  if (status.value === 'Batch cancelled') return t('batch_run.status_cancelled')
+  
   return status.value
 })
 
@@ -504,9 +514,9 @@ const filteredWorkflowFiles = computed(() => {
 // Button label computed property
 const buttonLabel = computed(() => {
   if (status.value === 'Batch completed' || status.value === 'Batch cancelled') {
-    return 'Relaunch'
+    return t('batch_run.relaunch')
   }
-  return 'Launch'
+  return t('batch_run.launch')
 })
 
 // Computed button state

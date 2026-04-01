@@ -5,8 +5,10 @@ import { useVueFlow } from '@vue-flow/core'
 import RichTooltip from './RichTooltip.vue'
 import { getEdgeHelp } from '../utils/helpContent.js'
 import { configStore } from '../utils/configStore.js'
+import { useI18n } from 'vue-i18n'
 
 const { findNode } = useVueFlow()
+const { t } = useI18n()
 
 const props = defineProps({
   id: {
@@ -512,13 +514,13 @@ const edgeLabel = computed(() => {
       const config = condition.config || {}
       
       if (config.any && Array.isArray(config.any) && config.any.length > 0) {
-        parts.push(`Includes: ${config.any.join(', ')}`)
+        parts.push(t('components.workflow_edge.includes', { values: config.any.join(', ') }))
       }
       if (config.none && Array.isArray(config.none) && config.none.length > 0) {
-        parts.push(`Excludes: ${config.none.join(', ')}`)
+        parts.push(t('components.workflow_edge.excludes', { values: config.none.join(', ') }))
       }
       if (config.regex && Array.isArray(config.regex) && config.regex.length > 0) {
-        parts.push(`Regex: ${config.regex.join(', ')}`)
+        parts.push(t('components.workflow_edge.regex', { values: config.regex.join(', ') }))
       }
       
       return parts.join('\n')

@@ -11,13 +11,13 @@
         <input 
           type="text" 
           v-model="searchQuery" 
-          placeholder="Search" 
+          :placeholder="$t('common.search')" 
           class="search-input"
         />
       </div>
 
-      <button class="btn create-btn" @click="openFormGenerator" title="Create New Workflow">
-        <span>Create Workflow</span>
+      <button class="btn create-btn" @click="openFormGenerator" :title="$t('workflow_list.create')">
+        <span>{{ $t('workflow_list.create') }}</span>
         <span class="plus-icon">+</span>
       </button>
     </div>
@@ -25,14 +25,14 @@
     <!-- Loading State -->
     <div v-if="loading" class="loading">
       <div class="spinner"></div>
-      <p>Loading workflows...</p>
+      <p>{{ $t('workflow_list.loading') }}</p>
     </div>
     
     <!-- Error State -->
     <div v-else-if="error" class="error-message">
       <div class="error-icon">⚠️</div>
       <p>{{ error }}</p>
-      <button @click="loadWorkflows()" class="retry-button">Retry</button>
+      <button @click="loadWorkflows()" class="retry-button">{{ $t('common.retry') }}</button>
     </div>
     
     <!-- File List -->
@@ -59,7 +59,7 @@
       
       <!-- Empty State -->
       <div v-if="filteredFiles.length === 0" class="empty-state">
-        <p>No workflow files found</p>
+        <p>{{ $t('workflow_list.no_files') }}</p>
       </div>
     </div>
 
@@ -80,10 +80,12 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import { fetchWorkflowsWithDesc } from '../utils/apiFunctions.js'
 import FormGenerator from '../components/FormGenerator.vue'
 
 const router = useRouter()
+const { t } = useI18n()
 const props = defineProps({
   selected: {
     type: String,
