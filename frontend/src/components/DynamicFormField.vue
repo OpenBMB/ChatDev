@@ -1312,13 +1312,14 @@ input:checked + .switch-slider:before {
 }
 
 .custom-select-dropdown {
-  position: static;
+  position: absolute;
+  z-index: 100;
   max-height: 200px;
   overflow-y: auto;
   background-color: rgba(25, 25, 25, 0.95);
   border: 1px solid rgba(255, 255, 255, 0.14);
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
   margin-top: 2px;
   width: 100%;
 }
