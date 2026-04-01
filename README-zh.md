@@ -329,6 +329,7 @@ if result.final_message:
   <tr>
     <td align="center"><a href="https://github.com/LaansDole"><img src="https://github.com/LaansDole.png?size=100" width="64px;" alt=""/><br /><sub><b>LaansDole</b></sub></a></td>
     <td align="center"><a href="https://github.com/zivkovicp"><img src="https://github.com/zivkovicp.png?size=100" width="64px;" alt=""/><br /><sub><b>zivkovicp</b></sub></a></td>
+    <td align="center"><a href="https://github.com/ACE-Prism"><img src="https://github.com/ACE-Prism.png?size=100" width="64px;" alt=""/><br /><sub><b>ACE-Prism</b></sub></a></td>
     <td align="center"><a href="https://github.com/shiowen"><img src="https://github.com/shiowen.png?size=100" width="64px;" alt=""/><br /><sub><b>shiowen</b></sub></a></td>
     <td align="center"><a href="https://github.com/kilo2127"><img src="https://github.com/kilo2127.png?size=100" width="64px;" alt=""/><br /><sub><b>kilo2127</b></sub></a></td>
     <td align="center"><a href="https://github.com/AckerlyLau"><img src="https://github.com/AckerlyLau.png?size=100" width="64px;" alt=""/><br /><sub><b>AckerlyLau</b></sub></a></td>
