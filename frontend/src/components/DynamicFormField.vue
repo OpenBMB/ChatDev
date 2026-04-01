@@ -240,46 +240,45 @@
             <span class="help-icon" tabindex="0">?</span>
           </RichTooltip>
         </label>
-        <div class="custom-select-wrapper" :class="{ 'select-disabled': isReadOnly }">
+        <div ref="selectWrapper" class="custom-select-wrapper" :class="{ 'select-disabled': isReadOnly }" @click="toggleDropdown">
           <input
             :id="`${modalId}-${field.name}`"
             :value="inputValue"
-            @input="onFilterInput"
-            @focus="showDropdown = true"
-            @blur="handleInputBlur"
             class="form-input custom-select-input"
-            :readonly="isReadOnly"
+            readonly
             :class="{'input-readonly': isReadOnly}"
             :placeholder="$t('dynamic_form_field.type_to_filter')"
             autocomplete="off"
           />
-          <div v-if="showDropdown && !isReadOnly" class="custom-select-dropdown">
-            <div
-              v-if="!field.required"
-              class="custom-select-option"
-              :class="{ 'option-selected': formData[field.name] === null }"
-              @mousedown="selectOption(null)"
-            >
-              None
+          <Teleport to="body">
+            <div v-if="showDropdown && !isReadOnly" class="custom-select-dropdown" :style="dropdownStyle">
+              <div
+                v-if="!field.required"
+                class="custom-select-option"
+                :class="{ 'option-selected': formData[field.name] === null }"
+                @mousedown.stop="selectOption(null)"
+              >
+                None
+              </div>
+              <div
+                v-for="option in filteredOptions"
+                :key="typeof option === 'string' ? option : option.value"
+                class="custom-select-option"
+                :class="{ 'option-selected': formData[field.name] === (typeof option === 'string' ? option : option.value) }"
+                :title="typeof option === 'string' ? '' : (option.description || '')"
+                @mousedown.stop="selectOption(typeof option === 'string' ? option : option.value)"
+              >
+                {{
+                  typeof option === 'string'
+                    ? option
+                    : (option.label || option.value)
+                }}
+              </div>
+              <div v-if="filteredOptions.length === 0" class="custom-select-no-results">
+                {{ $t('dynamic_form_field.no_options_found') }}
+              </div>
             </div>
-            <div
-              v-for="option in filteredOptions"
-              :key="typeof option === 'string' ? option : option.value"
-              class="custom-select-option"
-              :class="{ 'option-selected': formData[field.name] === (typeof option === 'string' ? option : option.value) }"
-              :title="typeof option === 'string' ? '' : (option.description || '')"
-              @mousedown="selectOption(typeof option === 'string' ? option : option.value)"
-            >
-              {{
-                typeof option === 'string'
-                  ? option
-                  : (option.label || option.value)
-              }}
-            </div>
-            <div v-if="filteredOptions.length === 0" class="custom-select-no-results">
-              {{ $t('dynamic_form_field.no_options_found') }}
-            </div>
-          </div>
+          </Teleport>
           <div class="custom-select-arrow" :class="{ 'arrow-open': showDropdown }">
             ▼
           </div>
@@ -555,7 +554,7 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, ref, reactive, watch, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import RichTooltip from './RichTooltip.vue'
 
@@ -610,6 +609,8 @@ const props = defineProps({
   }
 })
 
+const isReadOnly = computed(() => props.isReadOnly)
+
 const emit = defineEmits([
   'update:form-data',
   'open-child-modal',
@@ -632,6 +633,58 @@ const internalFormData = computed(() => props.formData)
 // Custom select filtering state
 const showDropdown = ref(false)
 const filterText = ref('')
+const selectWrapper = ref(null)
+const dropdownRect = reactive({
+  top: 0,
+  left: 0,
+  width: 0
+})
+
+const updateDropdownPosition = () => {
+  if (selectWrapper.value) {
+    const rect = selectWrapper.value.getBoundingClientRect()
+    dropdownRect.top = rect.bottom
+    dropdownRect.left = rect.left
+    dropdownRect.width = rect.width
+  }
+}
+
+const dropdownStyle = computed(() => ({
+  position: 'fixed',
+  top: `${dropdownRect.top + 4}px`,
+  left: `${dropdownRect.left}px`,
+  width: `${dropdownRect.width}px`,
+  zIndex: 10000
+}))
+
+const toggleDropdown = () => {
+  if (props.isReadOnly) return
+  if (!showDropdown.value) {
+    updateDropdownPosition()
+    showDropdown.value = true
+    // Add escape listener
+    window.addEventListener('scroll', closeOnScroll, true)
+    window.addEventListener('mousedown', handleOutsideClick)
+  } else {
+    closeDropdown()
+  }
+}
+
+const closeDropdown = () => {
+  showDropdown.value = false
+  window.removeEventListener('scroll', closeOnScroll, true)
+  window.removeEventListener('mousedown', handleOutsideClick)
+}
+
+const closeOnScroll = () => {
+  if (showDropdown.value) closeDropdown()
+}
+
+const handleOutsideClick = (e) => {
+  if (selectWrapper.value && !selectWrapper.value.contains(e.target)) {
+    closeDropdown()
+  }
+}
 
 const isList = computed(() => {
   return props.field.type && props.field.type.includes('list[')
@@ -728,8 +781,7 @@ const handleInputBlur = () => {
 
 const selectOption = (value) => {
   props.formData[props.field.name] = value
-  showDropdown.value = false
-  filterText.value = ''
+  closeDropdown()
   emit('handle-enum-change', props.field)
 }
 
@@ -1286,10 +1338,12 @@ input:checked + .switch-slider:before {
 
 .custom-select-wrapper {
   position: relative;
+  height: 38px; /* Fixed height to prevent absolute child from stretching parent */
 }
 
 .custom-select-input {
   cursor: pointer;
+  height: 100%;
 }
 
 .custom-select-input:focus {
@@ -1299,7 +1353,202 @@ input:checked + .switch-slider:before {
 .custom-select-arrow {
   position: absolute;
   right: 12px;
-  top: 18px;
+  margin-left: 8px;
+}
+
+.delete-item-button:hover {
+  color: #ff6b6b;
+}
+
+.child-node-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.child-node-controls {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.clear-child-button {
+  background: transparent;
+  border: none;
+  color: #999;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s ease;
+  line-height: 1;
+}
+
+.clear-child-button:hover {
+  color: #ff6b6b;
+}
+
+.add-child-button,
+.add-list-button,
+.add-var-button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background-color: rgba(255, 255, 255, 0.14);
+  color: rgba(242, 242, 242, 0.9);
+  cursor: pointer;
+  font-size: 13px;
+  transition: all 0.2s ease;
+}
+
+.add-child-button:hover,
+.add-list-button:hover,
+.add-var-button:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+.add-child-button .plus-icon,
+.add-list-button .plus-icon,
+.add-var-button .plus-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
+}
+
+.add-child-button .plus-icon svg,
+.add-list-button .plus-icon svg,
+.add-var-button .plus-icon svg {
+  display: block;
+}
+
+.add-child-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  border-color: rgba(255, 255, 255, 0.1);
+  background-color: rgba(74, 74, 74, 0.8);
+  color: rgba(200, 200, 200, 0.7);
+}
+
+.child-node-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.child-node-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 9px 14px;
+  background-color: rgba(90, 90, 90, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 10px;
+  color: #f2f2f2;
+  font-size: 13px;
+  gap: 12px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.child-node-item:hover {
+  background-color: rgba(110, 110, 110, 0.95);
+  border-color: rgba(160, 196, 255, 0.7);
+}
+
+.child-node-name {
+  flex: 1;
+}
+
+.child-node-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.child-node-item-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.child-node-summary {
+  padding: 6px 12px;
+  margin-left: 0;
+  background-color: rgba(60, 60, 60, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  color: rgba(200, 200, 200, 0.85);
+  font-size: 12px;
+  line-height: 1.4;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: pre-line;
+}
+
+.edit-child-button,
+.delete-child-button {
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.edit-child-button {
+  background-color: rgba(117, 117, 117, 0.95);
+  color: #f2f2f2;
+}
+
+.edit-child-button:hover {
+  background-color: rgba(136, 136, 136, 0.98);
+}
+
+.delete-child-button {
+  background-color: rgba(90, 90, 90, 0.9);
+  color: #f2f2f2;
+}
+
+.delete-child-button:hover {
+  background-color: rgba(110, 110, 110, 0.95);
+}
+
+.child-node-hint {
+  padding: 6px 8px;
+  color: rgba(189, 189, 189, 0.9);
+  font-size: 12px;
+}
+
+/* Custom select styles */
+
+.custom-select-wrapper {
+  position: relative;
+  height: 38px; /* Fixed height to prevent absolute child from stretching parent */
+}
+
+.custom-select-input {
+  cursor: pointer;
+  height: 100%;
+}
+
+.custom-select-input:focus {
+  cursor: text;
+}
+
+.custom-select-arrow {
+  position: absolute;
+  right: 12px;
+  top: 50%;
   transform: translateY(-50%);
   color: rgba(242, 242, 242, 0.7);
   font-size: 12px;
@@ -1311,38 +1560,37 @@ input:checked + .switch-slider:before {
   transform: translateY(-50%) rotate(180deg);
 }
 
-.custom-select-dropdown {
-  position: absolute;
-  z-index: 100;
+:global(.custom-select-dropdown) {
+  position: fixed;
+  z-index: 10000;
   max-height: 200px;
   overflow-y: auto;
-  background-color: rgba(25, 25, 25, 0.95);
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  background-color: #1e1e1e;
+  border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 8px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
-  margin-top: 2px;
-  width: 100%;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+  box-sizing: border-box;
 }
 
-.custom-select-option {
-  padding: 6px 6px;
+:global(.custom-select-option) {
+  padding: 10px 14px;
   cursor: pointer;
   color: #f2f2f2;
   font-size: 13px;
   transition: background-color 0.2s ease;
 }
 
-.custom-select-option:hover {
+:global(.custom-select-option:hover) {
   background-color: rgba(255, 255, 255, 0.1);
 }
 
-.custom-select-option.option-selected {
+:global(.custom-select-option.option-selected) {
   background-color: rgba(160, 196, 255, 0.2);
   color: #a0c4ff;
   font-weight: 500;
 }
 
-.custom-select-no-results {
+:global(.custom-select-no-results) {
   padding: 10px 12px;
   color: rgba(189, 189, 189, 0.7);
   font-size: 12px;
