@@ -49,6 +49,7 @@ class WebSocketManager:
     ):
         self.active_connections: Dict[str, WebSocket] = {}
         self.connection_timestamps: Dict[str, float] = {}
+        self._owner_loop: Optional[asyncio.AbstractEventLoop] = None
         self.session_store = session_store or WorkflowSessionStore()
         self.session_controller = session_controller or SessionExecutionController(self.session_store)
         self.attachment_service = attachment_service or AttachmentService()
@@ -65,6 +66,10 @@ class WebSocketManager:
 
     async def connect(self, websocket: WebSocket, session_id: Optional[str] = None) -> str:
         await websocket.accept()
+        # Capture the event loop that owns the WebSocket connections so that
+        # worker threads can safely schedule sends via run_coroutine_threadsafe.
+        if self._owner_loop is None:
+            self._owner_loop = asyncio.get_running_loop()
         if not session_id:
             session_id = str(uuid.uuid4())
         self.active_connections[session_id] = websocket
@@ -108,14 +113,38 @@ class WebSocketManager:
                 # self.disconnect(session_id)
 
     def send_message_sync(self, session_id: str, message: Dict[str, Any]) -> None:
+        """Send a WebSocket message from any thread (including worker threads).
+
+        WebSocket objects are bound to the event loop that created them (the main
+        uvicorn loop).  Previous code called ``asyncio.run()`` from worker threads
+        which spins up a *new* event loop, causing ``RuntimeError: … attached to a
+        different loop`` or silent delivery failures.
+
+        The fix: always schedule the coroutine on the loop that owns the sockets
+        via ``asyncio.run_coroutine_threadsafe`` and wait for the result with a
+        short timeout so the caller knows if delivery failed.
+        """
+        loop = self._owner_loop
+        if loop is None or loop.is_closed():
+            logging.warning(
+                "Cannot send sync message to %s: owner event loop unavailable",
+                session_id,
+            )
+            return
+
+        future = asyncio.run_coroutine_threadsafe(
+            self.send_message(session_id, message), loop
+        )
         try:
-            loop = asyncio.get_running_loop()
-            if loop.is_running():
-                asyncio.create_task(self.send_message(session_id, message))
-            else:
-                asyncio.run(self.send_message(session_id, message))
-        except RuntimeError:
-            asyncio.run(self.send_message(session_id, message))
+            future.result(timeout=10)
+        except TimeoutError:
+            logging.warning(
+                "Timed out sending sync WS message to %s", session_id
+            )
+        except Exception as exc:
+            logging.error(
+                "Error sending sync WS message to %s: %s", session_id, exc
+            )
 
     async def broadcast(self, message: Dict[str, Any]) -> None:
         for session_id in list(self.active_connections.keys()):
