@@ -26,10 +26,13 @@
           @mouseleave="handleTooltipMouseLeave"
         >
           <div class="tooltip-content">
-            <h4 v-if="content.title" class="tooltip-title">{{ content.title }}</h4>
-            <p class="tooltip-description">{{ content.description }}</p>
+            <h4 v-if="content.title" class="tooltip-title">{{ $t(content.title) }}</h4>
+            <template v-if="content.descriptions && content.descriptions.length">
+              <p v-for="(desc, index) in content.descriptions" :key="'desc-'+index" class="tooltip-description">{{ $t(desc) }}</p>
+            </template>
+            <p v-else-if="content.description" class="tooltip-description">{{ $t(content.description) }}</p>
             <ul v-if="content.examples && content.examples.length" class="tooltip-examples">
-              <li v-for="(example, index) in content.examples" :key="index">{{ example }}</li>
+              <li v-for="(example, index) in content.examples" :key="index">{{ $t(example) }}</li>
             </ul>
             <a
               v-if="content.learnMoreUrl"
@@ -39,7 +42,7 @@
               class="tooltip-learn-more"
               @click="handleLearnMore"
             >
-              Learn More →
+              {{ $t('components.rich_tooltip.learn_more') }}
             </a>
           </div>
           <div class="tooltip-arrow" :data-placement="placement"></div>

@@ -39,7 +39,7 @@
         class="advanced-toggle-button"
         @click="$emit('toggle-advanced-fields', modal.id)"
       >
-        Advanced Settings
+        {{ $t('components.inline_config.advanced_settings') }}
         <span class="advanced-toggle-arrow">
           {{ modal.showAdvanced ? '▲' : '▼' }}
         </span>
