@@ -13,6 +13,7 @@ from entity.configs.node.literal import LiteralNodeConfig
 from entity.configs.node.python_runner import PythonRunnerConfig
 from entity.configs.node.loop_counter import LoopCounterConfig
 from entity.configs.node.loop_timer import LoopTimerConfig
+from entity.configs.node.template import TemplateNodeConfig
 from runtime.node.executor.agent_executor import AgentNodeExecutor
 from runtime.node.executor.human_executor import HumanNodeExecutor
 from runtime.node.executor.passthrough_executor import PassthroughNodeExecutor
@@ -21,6 +22,7 @@ from runtime.node.executor.python_executor import PythonNodeExecutor
 from runtime.node.executor.subgraph_executor import SubgraphNodeExecutor
 from runtime.node.executor.loop_counter_executor import LoopCounterNodeExecutor
 from runtime.node.executor.loop_timer_executor import LoopTimerNodeExecutor
+from runtime.node.executor.template_executor import TemplateNodeExecutor
 from runtime.node.registry import NodeCapabilities, register_node_type
 
 
@@ -96,6 +98,14 @@ register_node_type(
     "loop_timer",
     config_cls=LoopTimerConfig,
     executor_cls=LoopTimerNodeExecutor,
+    capabilities=NodeCapabilities(),
+    summary="Blocks downstream edges until the configured time limit is reached, then emits a message to release the loop.",
+)
+
+register_node_type(
+    "template",
+    config_cls=TemplateNodeConfig,
+    executor_cls=TemplateNodeExecutor,
     capabilities=NodeCapabilities(),
     summary="Blocks downstream edges until the configured time limit is reached, then emits a message to release the loop.",
 )
