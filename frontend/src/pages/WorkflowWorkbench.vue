@@ -26,8 +26,8 @@
         @refresh-workflows="handleRefreshWorkflows"
       />
       <div v-else class="placeholder">
-        <div class="placeholder-title"> Select a workflow</div>
-        <div class="placeholder-subtitle">Choose a workflow from the list to view or edit.</div>
+        <div class="placeholder-title"> {{ $t('workbench.select_workflow') }}</div>
+        <div class="placeholder-subtitle">{{ $t('workbench.choose_workflow') }}</div>
       </div>
     </div>
   </div>
@@ -36,11 +36,13 @@
 <script setup>
 import { onMounted, onBeforeUnmount, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import WorkflowList from './WorkflowList.vue'
 import WorkflowView from './WorkflowView.vue'
 
 const route = useRoute()
 const router = useRouter()
+const { t } = useI18n()
 const workflowListRef = ref(null)
 
 const normalizeName = (name) => name?.replace?.('.yaml', '') ?? ''

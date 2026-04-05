@@ -1,13 +1,14 @@
 <script setup>
-import { ref, onMounted, nextTick } from 'vue'
+import { ref, onMounted, nextTick, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import MarkdownIt from 'markdown-it'
 import markdownItAnchor from 'markdown-it-anchor'
+import { useI18n } from 'vue-i18n'
 
 const route = useRoute()
+const { locale, t } = useI18n()
 
 const renderedContent = ref('')
-const currentLang = ref('en') // 'zh' for Chinese, 'en' for English
 const markdownBody = ref(null)
 const md = new MarkdownIt({
   html: true,
@@ -29,7 +30,7 @@ md.use(markdownItAnchor, {
       .replace(/\s+/g, '-')
 })
 
-const getTutorialFile = () => (currentLang.value === 'en' ? '/tutorial-en.md' : '/tutorial-zh.md')
+const getTutorialFile = () => (locale.value === 'en' ? '/tutorial-en.md' : '/tutorial-zh.md')
 
 const scrollToHash = () => {
   // Wait for DOM to update, then scroll to hash if present
@@ -58,18 +59,18 @@ const addCopyButtons = () => {
       const button = document.createElement('button')
       button.type = 'button'
       button.className = 'copy-code-btn'
-      button.textContent = 'Copy'
+      button.textContent = t('tutorial.copy')
       button.addEventListener('click', async () => {
         const code = block.querySelector('code')
         const text = code ? code.innerText : block.innerText
         try {
           await navigator.clipboard.writeText(text)
-          button.textContent = 'Copied'
+          button.textContent = t('tutorial.copied')
           setTimeout(() => {
-            button.textContent = 'Copy'
+            button.textContent = t('tutorial.copy')
           }, 1200)
         } catch (error) {
-          console.error('Failed to copy code: ', error)
+          console.error(t('tutorial.failed_to_copy'), error)
         }
       })
       block.classList.add('has-copy-button')
@@ -93,19 +94,22 @@ const loadTutorial = async () => {
       addCopyButtons()
       scrollToHash()
     } else {
-      console.error('Failed to fetch tutorial markdown')
+      console.error(t('tutorial.failed_to_fetch'))
     }
   } catch (error) {
-    console.error('Failed to load tutorial:', error)
+    console.error(t('tutorial.failed_to_load'), error)
   }
 }
 
 const switchLang = (lang) => {
-  if (currentLang.value !== lang) {
-    currentLang.value = lang
-    loadTutorial()
+  if (locale.value !== lang) {
+    locale.value = lang
   }
 }
+
+watch(locale, () => {
+  loadTutorial()
+})
 
 onMounted(() => {
   loadTutorial()
@@ -115,8 +119,8 @@ onMounted(() => {
 <template>
   <div class="tutorial-view">
     <div class="lang-switch">
-      <button :class="{ active: currentLang === 'zh' }" @click="switchLang('zh')">中文</button>
-      <button :class="{ active: currentLang === 'en' }" @click="switchLang('en')">English</button>
+      <button :class="{ active: locale === 'zh' }" @click="switchLang('zh')">{{ $t('tutorial.zh') }}</button>
+      <button :class="{ active: locale === 'en' }" @click="switchLang('en')">{{ $t('tutorial.en') }}</button>
     </div>
     <div ref="markdownBody" class="markdown-body" v-html="renderedContent"></div>
   </div>

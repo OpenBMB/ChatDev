@@ -1,11 +1,11 @@
 export const helpContent = {
   // Start Node Help
   startNode: {
-    title: "Start Node",
-    description: "The entry point for your workflow. All nodes connected to the Start node will run in parallel when the workflow launches.",
+    title: "help.startNode.title",
+    description: "help.startNode.description",
     examples: [
-      "Connect multiple nodes to start them simultaneously",
-      "The first nodes to execute receive your initial input"
+      "help.startNode.examples.0",
+      "help.startNode.examples.1"
     ],
     learnMoreUrl: "/tutorial#2-create-nodes"
   },
@@ -13,78 +13,78 @@ export const helpContent = {
   // Workflow Node Types
   workflowNode: {
     agent: {
-      title: "Agent Node",
-      description: "An AI agent that can reason, generate content, and use tools. Agents receive messages and produce responses based on their configuration.",
+      title: "help.workflowNode.agent.title",
+      description: "help.workflowNode.agent.description",
       examples: [
-        "Content generation (writing, coding, analysis)",
-        "Decision making and routing",
-        "Tool usage (search, file operations, API calls)"
+        "help.workflowNode.agent.examples.0",
+        "help.workflowNode.agent.examples.1",
+        "help.workflowNode.agent.examples.2"
       ],
       learnMoreUrl: "/tutorial#agent-node"
     },
     human: {
-      title: "Human Node",
-      description: "Pauses workflow execution and waits for human input. Use this to review content, make decisions, or provide feedback.",
+      title: "help.workflowNode.human.title",
+      description: "help.workflowNode.human.description",
       examples: [
-        "Review and approve generated content",
-        "Provide additional instructions or corrections",
-        "Choose between workflow paths"
+        "help.workflowNode.human.examples.0",
+        "help.workflowNode.human.examples.1",
+        "help.workflowNode.human.examples.2"
       ],
       learnMoreUrl: "/tutorial#human-node"
     },
     python: {
-      title: "Python Node",
-      description: "Executes Python code on your local environment. The code runs in the workspace directory and can access uploaded files.",
+      title: "help.workflowNode.python.title",
+      description: "help.workflowNode.python.description",
       examples: [
-        "Data processing and analysis",
-        "Running generated code",
-        "File manipulation"
+        "help.workflowNode.python.examples.0",
+        "help.workflowNode.python.examples.1",
+        "help.workflowNode.python.examples.2"
       ],
       learnMoreUrl: "/tutorial#python-node"
     },
     passthrough: {
-      title: "Passthrough Node",
-      description: "Passes messages to the next node without modification. Useful for workflow organization and filtering outputs in loops.",
+      title: "help.workflowNode.passthrough.title",
+      description: "help.workflowNode.passthrough.description",
       examples: [
-        "Preserve initial context in loops",
-        "Filter redundant outputs",
-        "Organize workflow structure"
+        "help.workflowNode.passthrough.examples.0",
+        "help.workflowNode.passthrough.examples.1",
+        "help.workflowNode.passthrough.examples.2"
       ],
       learnMoreUrl: "/tutorial#passthrough-node"
     },
     literal: {
-      title: "Literal Node",
-      description: "Outputs fixed text, ignoring all input. Use this to inject instructions or context at specific points in the workflow.",
+      title: "help.workflowNode.literal.title",
+      description: "help.workflowNode.literal.description",
       examples: [
-        "Add fixed instructions before a node",
-        "Inject context or constraints",
-        "Provide test data"
+        "help.workflowNode.literal.examples.0",
+        "help.workflowNode.literal.examples.1",
+        "help.workflowNode.literal.examples.2"
       ],
       learnMoreUrl: "/tutorial#literal-node"
     },
     loop_counter: {
-      title: "Loop Counter Node",
-      description: "Limits loop iterations. Only produces output when the maximum count is reached, helping control infinite loops.",
+      title: "help.workflowNode.loop_counter.title",
+      description: "help.workflowNode.loop_counter.description",
       examples: [
-        "Prevent runaway loops",
-        "Set maximum revision cycles",
-        "Control iterative processes"
+        "help.workflowNode.loop_counter.examples.0",
+        "help.workflowNode.loop_counter.examples.1",
+        "help.workflowNode.loop_counter.examples.2"
       ],
       learnMoreUrl: "/tutorial#loop-counter-node"
     },
     subgraph: {
-      title: "Subgraph Node",
-      description: "Embeds another workflow as a reusable module. Enables modular design and workflow composition.",
+      title: "help.workflowNode.subgraph.title",
+      description: "help.workflowNode.subgraph.description",
       examples: [
-        "Reuse common patterns across workflows",
-        "Break complex workflows into manageable pieces",
-        "Share workflows between teams"
+        "help.workflowNode.subgraph.examples.0",
+        "help.workflowNode.subgraph.examples.1",
+        "help.workflowNode.subgraph.examples.2"
       ],
       learnMoreUrl: "/tutorial#subgraph-node"
     },
     unknown: {
-      title: "Workflow Node",
-      description: "A node in your workflow. Click to view and edit its configuration.",
+      title: "help.workflowNode.unknown.title",
+      description: "help.workflowNode.unknown.description",
       learnMoreUrl: "/tutorial#2-create-nodes"
     }
   },
@@ -92,25 +92,25 @@ export const helpContent = {
   // Workflow Edge Help
   edge: {
     basic: {
-      title: "Connection",
-      description: "Connects two nodes to control information flow and execution order. The upstream node's output becomes the downstream node's input.",
+      title: "help.edge.basic.title",
+      description: "help.edge.basic.description",
       examples: [
-        "Data flows from source to target",
-        "Target executes after source completes"
+        "help.edge.basic.examples.0",
+        "help.edge.basic.examples.1"
       ],
       learnMoreUrl: "/tutorial#what-is-an-edge"
     },
     trigger: {
       enabled: {
-        description: "This connection triggers the downstream node to execute.",
+        description: "help.edge.trigger.enabled.description",
       },
       disabled: {
-        description: "This connection passes data but does NOT trigger execution. The downstream node only runs if triggered by another edge.",
+        description: "help.edge.trigger.disabled.description",
       }
     },
     condition: {
       hasCondition: {
-        description: "This connection has a condition. It only activates when the condition evaluates to true.",
+        description: "help.edge.condition.hasCondition.description",
         learnMoreUrl: "/tutorial#edge-condition"
       }
     }
@@ -119,40 +119,40 @@ export const helpContent = {
   // Context Menu Actions
   contextMenu: {
     createNode: {
-      description: "Create a new node in your workflow. Choose from Agent, Human, Python, and other node types.",
+      description: "help.contextMenu.createNode.description",
     },
     copyNode: {
-      description: "Duplicate this node with all its settings. The copy will have a blank ID that you must fill in.",
+      description: "help.contextMenu.copyNode.description",
     },
     deleteNode: {
-      description: "Remove this node and all its connections from the workflow.",
+      description: "help.contextMenu.deleteNode.description",
     },
     deleteEdge: {
-      description: "Remove this connection between nodes.",
+      description: "help.contextMenu.deleteEdge.description",
     },
     createNodeButton: {
-      description: "Open the node creation form. You can also right-click the canvas to create a node at a specific position.",
+      description: "help.contextMenu.createNodeButton.description",
     },
     configureGraph: {
-      description: "Configure workflow-level settings like name, description, and global variables.",
+      description: "help.contextMenu.configureGraph.description",
     },
     launch: {
-      description: "Run your workflow with a task prompt. The workflow will execute and show you the results.",
+      description: "help.contextMenu.launch.description",
     },
     createEdge: {
-      description: "Create a connection between nodes. You can also drag from a node's handle to create connections visually.",
+      description: "help.contextMenu.createEdge.description",
     },
     manageVariables: {
-      description: "Define global variables (like API keys) that all nodes can access using ${VARIABLE_NAME} syntax.",
+      description: "help.contextMenu.manageVariables.description",
     },
     manageMemories: {
-      description: "Configure memory modules for long-term information storage and retrieval across workflow runs.",
+      description: "help.contextMenu.manageMemories.description",
     },
     renameWorkflow: {
-      description: "Change the name of this workflow file.",
+      description: "help.contextMenu.renameWorkflow.description",
     },
     copyWorkflow: {
-      description: "Create a duplicate of this entire workflow with a new name.",
+      description: "help.contextMenu.copyWorkflow.description",
     }
   }
 }
@@ -208,16 +208,17 @@ export function getNodeHelp(nodeType) {
  */
 export function getEdgeHelp(edgeData) {
   const base = { ...helpContent.edge.basic }
+  base.descriptions = [base.description] // Change to array to support multiple parts
 
   // Add trigger information
   const trigger = edgeData?.trigger !== undefined ? edgeData.trigger : true
   if (!trigger) {
-    base.description += " " + helpContent.edge.trigger.disabled.description
+    base.descriptions.push(helpContent.edge.trigger.disabled.description)
   }
 
   // Add condition information
   if (edgeData?.condition) {
-    base.description += " " + helpContent.edge.condition.hasCondition.description
+    base.descriptions.push(helpContent.edge.condition.hasCondition.description)
     if (!base.learnMoreUrl) {
       base.learnMoreUrl = helpContent.edge.condition.hasCondition.learnMoreUrl
     }

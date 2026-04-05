@@ -8,20 +8,20 @@
           <path d="M19 12H5M5 12L12 19M5 12L12 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </button> -->
-      <h1 class="workflow-name">{{ workflowName }}</h1>
+      <h1 class="workflow-name">{{ currentWorkflowName }}</h1>
     </div>
     
     <div class="content">
       <!-- YAML Editor Tab -->
       <div v-if="activeTab === 'yaml'" class="yaml-editor">
         <div v-if="yamlParseError" class="yaml-error">
-          YAML Parse Error: {{ yamlParseError }}
+          {{ $t('workflow_view.yaml_parse_error') }} {{ yamlParseError }}
         </div>
         <textarea 
           v-model="yamlTextString" 
           class="yaml-textarea"
           :class="{ 'yaml-error-border': yamlParseError }"
-          placeholder="Loading YAML content..."
+          :placeholder="$t('workflow_view.loading_yaml')"
           readonly
         ></textarea>
       </div>
@@ -92,7 +92,7 @@
                   class="context-menu-item"
                   @click.stop="() => { hideContextMenu(); openCreateNodeModal(); }"
                 >
-                  Create Node
+                  {{ $t('workflow_view.create_node') }}
                 </div>
               </RichTooltip>
               <div
@@ -100,7 +100,7 @@
                 class="context-menu-item"
                 @click.stop="() => { hideContextMenu(); openCreateNodeModal(); }"
               >
-                Create Node
+                {{ $t('workflow_view.create_node') }}
               </div>
             </template>
 
@@ -111,7 +111,7 @@
                   class="context-menu-item"
                   @click.stop="() => { hideContextMenu(); onCopyNodeFromContext(); }"
                 >
-                  Copy Node
+                  {{ $t('workflow_view.copy_node') }}
                 </div>
               </RichTooltip>
               <div
@@ -119,14 +119,14 @@
                 class="context-menu-item"
                 @click.stop="() => { hideContextMenu(); onCopyNodeFromContext(); }"
               >
-                Copy Node
+                {{ $t('workflow_view.copy_node') }}
               </div>
               <RichTooltip v-if="shouldShowTooltip" :content="helpContent.contextMenu.deleteNode" placement="right">
                 <div
                   class="context-menu-item"
                   @click.stop="() => { hideContextMenu(); onDeleteNodeFromContext(); }"
                 >
-                  Delete Node
+                  {{ $t('workflow_view.delete_node') }}
                 </div>
               </RichTooltip>
               <div
@@ -134,7 +134,7 @@
                 class="context-menu-item"
                 @click.stop="() => { hideContextMenu(); onDeleteNodeFromContext(); }"
               >
-                Delete Node
+                {{ $t('workflow_view.delete_node') }}
               </div>
             </template>
 
@@ -145,7 +145,7 @@
                   class="context-menu-item"
                   @click.stop="() => { hideContextMenu(); onDeleteEdgeFromContext(); }"
                 >
-                  Delete Edge
+                  {{ $t('workflow_view.delete_edge') }}
                 </div>
               </RichTooltip>
               <div
@@ -153,7 +153,7 @@
                 class="context-menu-item"
                 @click.stop="() => { hideContextMenu(); onDeleteEdgeFromContext(); }"
               >
-                Delete Edge
+                {{ $t('workflow_view.delete_edge') }}
               </div>
             </template>
           </div>
@@ -163,43 +163,42 @@
 
     <div class="tabs">
       <div class="tab-buttons">
-        <button 
+        <button
           :class="['tab', { active: activeTab === 'graph' }]"
           @click="activeTab = 'graph'"
         >
-          Workflow Graph
+          {{ $t('workflow_view.workflow_graph') }}
         </button>
-        <button 
+        <button
           :class="['tab', { active: activeTab === 'yaml' }]"
           @click="activeTab = 'yaml'"
         >
-          YAML Configuration
-        </button>
-      </div>
+          {{ $t('workflow_view.yaml_configuration') }}
+        </button>      </div>
       <div v-if="activeTab === 'graph'" class="editor-actions">
         <RichTooltip v-if="shouldShowTooltip" :content="helpContent.contextMenu.createNodeButton" placement="bottom">
           <button @click="openCreateNodeModal" class="glass-button">
-            <span>Create Node</span>
+            <span>{{ $t('workflow_view.create_node') }}</span>
           </button>
         </RichTooltip>
         <button v-else @click="openCreateNodeModal" class="glass-button">
-          <span>Create Node</span>
+          <span>{{ $t('workflow_view.create_node') }}</span>
         </button>
         <RichTooltip v-if="shouldShowTooltip" :content="helpContent.contextMenu.configureGraph" placement="bottom">
           <button @click="openConfigureGraphModal" class="glass-button">
-            <span>Configure Graph</span>
+            <span>{{ $t('workflow_view.configure_graph') }}</span>
           </button>
         </RichTooltip>
         <button v-else @click="openConfigureGraphModal" class="glass-button">
-          <span>Configure Graph</span>
+          <span>{{ $t('workflow_view.configure_graph') }}</span>
         </button>
         <RichTooltip v-if="shouldShowTooltip" :content="helpContent.contextMenu.launch" placement="bottom">
           <button @click="goToLaunch" class="launch-button-primary">
-            <span>Launch</span>
+            <span>{{ $t('workflow_view.launch') }}</span>
           </button>
         </RichTooltip>
         <button v-else @click="goToLaunch" class="launch-button-primary">
-          <span>Launch</span>
+          <span>{{ $t('workflow_view.launch') }}</span>
         </button>
         
         <div
@@ -218,25 +217,25 @@
           <transition name="fade">
             <div v-if="showMenu" class="menu-dropdown">
               <RichTooltip v-if="shouldShowTooltip" :content="helpContent.contextMenu.renameWorkflow" placement="left">
-                <div @click="openRenameWorkflowModal" class="menu-item">Rename Workflow</div>
+                <div @click="openRenameWorkflowModal" class="menu-item">{{ $t('workflow_view.rename_workflow') }}</div>
               </RichTooltip>
-              <div v-else @click="openRenameWorkflowModal" class="menu-item">Rename Workflow</div>
+              <div v-else @click="openRenameWorkflowModal" class="menu-item">{{ $t('workflow_view.rename_workflow') }}</div>
               <RichTooltip v-if="shouldShowTooltip" :content="helpContent.contextMenu.copyWorkflow" placement="left">
-                <div @click="openCopyWorkflowModal" class="menu-item">Copy Workflow</div>
+                <div @click="openCopyWorkflowModal" class="menu-item">{{ $t('workflow_view.copy_workflow') }}</div>
               </RichTooltip>
-              <div v-else @click="openCopyWorkflowModal" class="menu-item">Copy Workflow</div>
+              <div v-else @click="openCopyWorkflowModal" class="menu-item">{{ $t('workflow_view.copy_workflow') }}</div>
               <RichTooltip v-if="shouldShowTooltip" :content="helpContent.contextMenu.manageVariables" placement="left">
-                <div @click="openManageVarsModal" class="menu-item">Manage Variables</div>
+                <div @click="openManageVarsModal" class="menu-item">{{ $t('workflow_view.manage_variables') }}</div>
               </RichTooltip>
-              <div v-else @click="openManageVarsModal" class="menu-item">Manage Variables</div>
+              <div v-else @click="openManageVarsModal" class="menu-item">{{ $t('workflow_view.manage_variables') }}</div>
               <RichTooltip v-if="shouldShowTooltip" :content="helpContent.contextMenu.manageMemories" placement="left">
-                <div @click="openManageMemoriesModal" class="menu-item">Manage Memories</div>
+                <div @click="openManageMemoriesModal" class="menu-item">{{ $t('workflow_view.manage_memories') }}</div>
               </RichTooltip>
-              <div v-else @click="openManageMemoriesModal" class="menu-item">Manage Memories</div>
+              <div v-else @click="openManageMemoriesModal" class="menu-item">{{ $t('workflow_view.manage_memories') }}</div>
               <RichTooltip v-if="shouldShowTooltip" :content="helpContent.contextMenu.createEdge" placement="left">
-                <div @click="openCreateEdgeModal" class="menu-item">Create Edge</div>
+                <div @click="openCreateEdgeModal" class="menu-item">{{ $t('workflow_view.create_edge') }}</div>
               </RichTooltip>
-              <div v-else @click="openCreateEdgeModal" class="menu-item">Create Edge</div>
+              <div v-else @click="openCreateEdgeModal" class="menu-item">{{ $t('workflow_view.create_edge') }}</div>
             </div>
           </transition>
         </div>
@@ -249,7 +248,7 @@
     v-if="showDynamicFormGenerator"
     :breadcrumbs="formGeneratorBreadcrumbs"
     :recursive="formGeneratorRecursive"
-    :workflow-name="workflowName"
+    :workflow-name="currentWorkflowName"
     :initial-yaml="formGeneratorInitialYaml ?? yamlContent"
     :initial-form-data="formGeneratorInitialFormData"
     :mode="formGeneratorMode"
@@ -264,7 +263,7 @@
   <div v-if="showRenameModal" class="modal-overlay" @click.self="closeRenameModal">
     <div class="modal-content">
       <div class="modal-header">
-        <h3 class="modal-title">Rename Workflow</h3>
+        <h3 class="modal-title">{{ $t('workflow_view.rename_workflow') }}</h3>
         <button @click="closeRenameModal" class="close-button">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -273,20 +272,20 @@
       </div>
       <div class="modal-body">
         <div class="form-group">
-          <label for="rename-workflow-name" class="form-label">Workflow Name</label>
+          <label for="rename-workflow-name" class="form-label">{{ $t('workflow_view.workflow_name') }}</label>
           <input
             id="rename-workflow-name"
             v-model="renameWorkflowName"
             type="text"
             class="form-input"
-            placeholder="Enter new workflow name"
+            :placeholder="$t('workflow_view.enter_new_name')"
             @keyup.enter="handleRenameSubmit"
           />
         </div>
       </div>
       <div class="modal-footer">
-        <button @click="closeRenameModal" class="cancel-button">Cancel</button>
-        <button @click="handleRenameSubmit" class="submit-button" :disabled="!renameWorkflowName.trim()">Submit</button>
+        <button @click="closeRenameModal" class="cancel-button">{{ $t('common.cancel') }}</button>
+        <button @click="handleRenameSubmit" class="submit-button" :disabled="!renameWorkflowName.trim()">{{ $t('common.submit') }}</button>
       </div>
     </div>
   </div>
@@ -317,7 +316,7 @@
       </div>
       <div class="modal-footer">
         <button @click="closeCopyModal" class="cancel-button">Cancel</button>
-        <button @click="handleCopySubmit" class="submit-button" :disabled="!copyWorkflowName.trim()">Submit</button>
+        <button @click="handleCopySubmit" class="submit-button" :disabled="!copyWorkflowName.trim()">{{ $t('common.submit') }}</button>
       </div>
     </div>
   </div>
@@ -326,6 +325,7 @@
 <script setup>
 import { ref, watch, nextTick, onMounted, onBeforeUnmount, computed } from 'vue'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import { VueFlow, useVueFlow, MarkerType } from '@vue-flow/core'
 import { Background } from '@vue-flow/background'
 import { Controls } from '@vue-flow/controls'
@@ -352,6 +352,7 @@ const props = defineProps({
 })
 const emit = defineEmits(['refresh-workflows'])
 const router = useRouter()
+const { t } = useI18n()
 const { toObject, fromObject, fitView, getViewport } = useVueFlow()
 
 const vueflowContainerRef = ref(null)
@@ -365,7 +366,7 @@ const onNodeLeave = (_nodeId) => {
   hoveredNodeId.value = null
 }
 
-const workflowName = ref('')
+const currentWorkflowName = ref('')
 const activeTab = ref('graph')
 const yamlContent = ref({}) // YAML object
 const yamlTextString = ref('') // YAML string
@@ -568,11 +569,11 @@ const dimStartNode = () => {
 // Persist an updated YAML snapshot back to the server and refresh local state
 const persistYamlSnapshot = async (snapshot) => {
   try {
-    if (!workflowName.value) {
+    if (!currentWorkflowName.value) {
       return false
     }
     const yamlString = yaml.dump(snapshot ?? {})
-    const result = await updateYaml(workflowName.value, yamlString)
+    const result = await updateYaml(currentWorkflowName.value, yamlString)
     if (!result?.success) {
       console.error('Failed to update workflow YAML:', result?.message || result?.detail)
       return false
@@ -728,8 +729,8 @@ const initializeWorkflow = async (name) => {
   if (!name) {
     return
   }
-  workflowName.value = name
-  console.log('Workflow initialized: ', workflowName.value)
+  currentWorkflowName.value = name
+  console.log('Workflow initialized: ', currentWorkflowName.value)
   await loadYamlFile()
   loadAndSyncVueFlowGraph()
   await nextTick()
@@ -763,7 +764,7 @@ watch(activeTab, async (newTab) => {
 const saveVueFlowGraph = async () => {
   try {
     const flowObj = toObject()
-    const key = workflowName.value
+    const key = currentWorkflowName.value
     const result = await postVuegraphs({
       filename: key,
       content: JSON.stringify(flowObj)
@@ -782,7 +783,7 @@ const saveVueFlowGraph = async () => {
 
 const loadAndSyncVueFlowGraph = async () => {
   try {
-    const key = workflowName.value
+    const key = currentWorkflowName.value
     const result = await fetchVueGraph(key)
 
     if(result?.success === true) {
@@ -824,10 +825,10 @@ const loadAndSyncVueFlowGraph = async () => {
 
 const loadYamlFile = async () => {
   try {
-    if (!workflowName.value) {
+    if (!currentWorkflowName.value) {
       return
     }
-    const result = await fetchYaml(workflowName.value)
+    const result = await fetchYaml(currentWorkflowName.value)
 
     if (!result?.success) {
       console.error('Failed to load YAML file', result?.message || result?.detail)
@@ -1740,12 +1741,12 @@ const openCreateEdgeModal = () => {
 }
 
 const goToLaunch = () => {
-  if (!workflowName.value) {
+  if (!currentWorkflowName.value) {
     return
   }
-  const fileName = workflowName.value.endsWith('.yaml')
-    ? workflowName.value
-    : `${workflowName.value}.yaml`
+  const fileName = currentWorkflowName.value.endsWith('.yaml')
+    ? currentWorkflowName.value
+    : `${currentWorkflowName.value}.yaml`
 
   const resolved = router.resolve({
     path: '/launch',
@@ -1758,7 +1759,7 @@ const goToLaunch = () => {
 // Modal functions for rename and copy workflow
 const openRenameWorkflowModal = () => {
   showMenu.value = false
-  renameWorkflowName.value = workflowName.value.replace('.yaml', '')
+  renameWorkflowName.value = currentWorkflowName.value.replace('.yaml', '')
   showRenameModal.value = true
 }
 
@@ -1773,11 +1774,11 @@ const handleRenameSubmit = async () => {
   }
 
   const newName = renameWorkflowName.value.trim()
-  const result = await postYamlNameChange(workflowName.value, newName)
+  const result = await postYamlNameChange(currentWorkflowName.value, newName)
 
   if (result.success) {
     // Handle VueGraph rename
-    const oldWorkflowKey = workflowName.value.replace('.yaml', '')
+    const oldWorkflowKey = currentWorkflowName.value.replace('.yaml', '')
     const newWorkflowKey = newName
 
     // Save VueGraph into new workflow
@@ -1816,7 +1817,7 @@ const handleRenameSubmit = async () => {
 
 const openCopyWorkflowModal = () => {
   showMenu.value = false
-  copyWorkflowName.value = workflowName.value.replace('.yaml', '') + '_copy'
+  copyWorkflowName.value = currentWorkflowName.value.replace('.yaml', '') + '_copy'
   showCopyModal.value = true
 }
 
@@ -1831,11 +1832,11 @@ const handleCopySubmit = async () => {
   }
 
   const newName = copyWorkflowName.value.trim()
-  const result = await postYamlCopy(workflowName.value, newName)
+  const result = await postYamlCopy(currentWorkflowName.value, newName)
 
   if (result.success) {
     // Handle VueGraph copy
-    const sourceWorkflowKey = workflowName.value.replace('.yaml', '')
+    const sourceWorkflowKey = currentWorkflowName.value.replace('.yaml', '')
     const targetWorkflowKey = newName
 
     try {

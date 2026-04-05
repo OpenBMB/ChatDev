@@ -2,8 +2,8 @@
   <div class="launch-view">
     <div class="launch-bg"></div>
     <div class="header">
-      <h1>Launch</h1>
-      <button class="settings-button" @click="showSettingsModal = true" title="Settings">
+      <h1>{{ $t('launch.title') }}</h1>
+      <button class="settings-button" @click="showSettingsModal = true" :title="$t('launch.settings')">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="12" cy="12" r="3"></circle>
           <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
@@ -22,7 +22,7 @@
           }"
           v-show="viewMode === 'chat' || true"
         >
-          <button v-show="viewMode !== 'chat'" class="chat-panel-toggle" @click="isChatPanelOpen = !isChatPanelOpen" :title="isChatPanelOpen ? 'Collapse chat' : 'Expand chat'">
+          <button v-show="viewMode !== 'chat'" class="chat-panel-toggle" @click="isChatPanelOpen = !isChatPanelOpen" :title="isChatPanelOpen ? $t('launch.collapse_chat') : $t('launch.expand_chat')">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" :class="{ 'chevron-collapsed': !isChatPanelOpen }">
               <polyline points="15 18 9 12 15 6"></polyline>
             </svg>
@@ -107,7 +107,7 @@
                       v-if="message.loading"
                       class="artifact-status"
                     >
-                      Loading image...
+                      {{ $t('launch.loading_image') }}
                     </div>
                     <div
                       v-else-if="message.error"
@@ -142,7 +142,7 @@
                         :disabled="message.loading"
                         @click="downloadArtifact(message)"
                       >
-                        Download
+                        {{ $t('launch.download') }}
                       </button>
                     </div>
                   </div>
@@ -167,7 +167,7 @@
                       :disabled="message.loading"
                       @click="downloadArtifact(message)"
                     >
-                      {{ message.loading ? 'Preparing...' : 'Download' }}
+                      {{ message.loading ? $t('launch.preparing') : $t('launch.download') }}
                     </button>
                   </div>
 
@@ -196,7 +196,7 @@
                   v-model="taskPrompt"
                   class="task-input"
                   :disabled="!isConnectionReady || (isWorkflowRunning && status !== 'Waiting for input...')"
-                  placeholder="Please enter task prompt..."
+                  :placeholder="$t('launch.enter_prompt')"
                   ref="taskInputRef"
                   @keydown.enter="handleEnterKey"
                   @paste="handlePaste"
@@ -215,7 +215,7 @@
                           :disabled="!isConnectionReady || !sessionId || isUploadingAttachment || (isWorkflowRunning && status !== 'Waiting for input...')"
                           @click="handleAttachmentButtonClick"
                         >
-                          {{ isUploadingAttachment ? 'Uploading...' : 'Upload File' }}
+                          {{ isUploadingAttachment ? $t('launch.uploading') : $t('launch.upload_file') }}
                         </button>
                         <span
                           v-if="uploadedAttachments.length"
@@ -255,7 +255,7 @@
                             v-if="!uploadedAttachments.length"
                             class="attachment-empty"
                           >
-                            No files uploaded
+                            {{ $t('launch.no_files_uploaded') }}
                           </div>
                         </div>
                       </Transition>
@@ -300,7 +300,7 @@
                   </div>
                 </div>
                 <div v-if="isDragActive" class="drag-overlay">
-                  <div class="drag-overlay-content">Drop files to upload</div>
+                  <div class="drag-overlay-content">{{ $t('launch.drop_files') }}</div>
                 </div>
               </div>
             </div>
@@ -349,7 +349,7 @@
       <!-- Right panel -->
       <div class="right-panel">
         <div class="control-section">
-          <label class="section-label">Workflow Selection</label>
+          <label class="section-label">{{ $t('launch.workflow_selection') }}</label>
       <div
         class="select-wrapper custom-file-selector"
         ref="fileSelectorWrapperRef"
@@ -359,7 +359,7 @@
           v-model="fileSearchQuery"
           type="text"
           class="file-selector-input"
-          :placeholder="loading ? 'Loading...' : 'Select YAML file...'"
+          :placeholder="loading ? $t('launch.loading') : $t('launch.select_yaml')"
           :disabled="loading || isWorkflowRunning"
           @focus="handleFileInputFocus"
           @input="handleFileInputChange"
@@ -390,32 +390,32 @@
               v-if="!filteredWorkflowFiles.length"
               class="file-empty"
             >
-              No results
+              {{ $t('launch.no_results') }}
             </li>
           </ul>
         </Transition>
       </div>
 
-          <label class="section-label">Status</label>
+          <label class="section-label">{{ $t('launch.status') }}</label>
           <div class="status-display" :class="{ 'status-active': status === 'Running...' }">
-            {{ status }}
+            {{ getTranslatedStatus(status) }}
           </div>
 
-          <label class="section-label">View</label>
+          <label class="section-label">{{ $t('launch.view') }}</label>
           <div class="view-toggle">
             <button
               class="toggle-button"
               :class="{ active: viewMode === 'chat' }"
               @click="viewMode = 'chat'"
             >
-              Chat
+              {{ $t('launch.chat') }}
             </button>
             <button
               class="toggle-button"
               :class="{ active: viewMode === 'graph' }"
               @click="switchToGraph"
             >
-              Graph
+              {{ $t('launch.graph') }}
             </button>
           </div>
 
@@ -434,7 +434,7 @@
               :disabled="status !== 'Running...'"
               @click="cancelWorkflow"
             >
-              Cancel
+              {{ $t('common.cancel') }}
             </button>
 
             <button
@@ -442,7 +442,7 @@
               :disabled="status !== 'Completed' && status !== 'Cancelled'"
               @click="downloadLogs"
             >
-              Download Logs
+              {{ $t('launch.download_logs') }}
             </button>
           </div>
         </div>
@@ -475,6 +475,7 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted, watch, nextTick } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import { fetchWorkflowsWithDesc, fetchLogsZip, fetchWorkflowYAML, postFile, getAttachment, fetchVueGraph } from '../utils/apiFunctions.js'
 import { configStore } from '../utils/configStore.js'
 import { spriteFetcher } from '../utils/spriteFetcher.js'
@@ -509,6 +510,29 @@ import CollapsibleMessage from '../components/CollapsibleMessage.vue'
 
 const router = useRouter()
 const route = useRoute()
+const { t } = useI18n()
+const { fromObject, fitView, onPaneReady, onNodesInitialized, setNodes, setEdges, nodes, edges } = useVueFlow()
+
+const getTranslatedStatus = (statusText) => {
+  if (!statusText) return ''
+  const statusMap = {
+    'Waiting for workflow selection...': t('launch.status_waiting_workflow'),
+    'Connecting...': t('launch.status_connecting'),
+    'Connected': t('launch.status_connected'),
+    'Connection error': t('launch.status_connection_error'),
+    'Disconnected': t('launch.status_disconnected'),
+    'Pending launch': t('launch.status_pending_launch'),
+    'Launching...': t('launch.status_launching'),
+    'In Progress': t('launch.status_in_progress'),
+    'Completed': t('launch.status_completed'),
+    'Cancelled': t('launch.status_cancelled'),
+    'Failed': t('launch.status_failed'),
+    'Error': t('launch.status_error'),
+    'Pending workflow selection': t('launch.status_waiting_workflow'),
+    'Pending file selection': t('launch.status_waiting_file')
+  }
+  return statusMap[statusText] || statusText
+}
 
 // Task input state
 const taskPrompt = ref('')
@@ -718,12 +742,12 @@ const filteredWorkflowFiles = computed(() => {
 // Button label computed property
 const buttonLabel = computed(() => {
   if (isWorkflowRunning.value) {
-    return 'Send'
+    return t('launch.send')
   }
   if (status.value === 'Completed' || status.value === 'Cancelled') {
-    return 'Relaunch'
+    return t('launch.relaunch')
   }
-  return 'Launch'
+  return t('launch.launch_button')
 })
 
 const clearUploadedAttachments = () => {
@@ -968,7 +992,7 @@ const uploadFiles = async (files) => {
   }
 
   if (!sessionId) {
-    alert('Session is not ready yet. Please wait for connection.')
+    alert(t('launch.alert_session_not_ready'))
     return
   }
 
@@ -983,11 +1007,11 @@ const uploadFiles = async (files) => {
           uploadedAttachments.value.push(result)
         } else {
           console.error('File upload failed:', result)
-          alert(result?.message || 'Failed to upload file')
+          alert(result?.message || t('launch.alert_failed_upload'))
         }
       } catch (error) {
         console.error('Failed to upload attachment:', error)
-        alert('File upload failed, please try again.')
+        alert(t('launch.alert_file_upload_failed'))
       }
     }
   } finally {
@@ -1081,7 +1105,7 @@ const startRecording = async () => {
         }
       } catch (error) {
         console.error('Failed to upload recording:', error)
-        alert('Recording upload failed, please try again.')
+        alert(t('launch.alert_recording_upload_failed'))
       } finally {
         isUploadingAttachment.value = false
         cleanupRecording()
@@ -1090,7 +1114,7 @@ const startRecording = async () => {
 
     mediaRecorder.onerror = (event) => {
       console.error('MediaRecorder error:', event.error)
-      alert('Recording error occurred')
+      alert(t('launch.alert_recording_error'))
       cleanupRecording()
     }
 
@@ -1098,7 +1122,7 @@ const startRecording = async () => {
     isRecording.value = true
   } catch (error) {
     console.error('Failed to start recording:', error)
-    alert('Failed to access microphone. Please check permissions.')
+    alert(t('launch.alert_mic_access_failed'))
     cleanupRecording()
   }
 }
@@ -1312,7 +1336,7 @@ const handleYAMLSelection = async (fileName) => {
     if (initialInstructions) {
       addChatNotification(initialInstructions)
     } else {
-      addChatNotification("No initial instructions provided")
+      addChatNotification(t('launch.no_initial_instructions'))
     }
 
     // Prefetch sprites for all nodes in the workflow
@@ -1333,7 +1357,7 @@ const handleYAMLSelection = async (fileName) => {
   } catch (error) {
     console.error('Failed to load YAML file:', error)
     workflowYaml.value = {}
-    addChatNotification("Failed to load YAML file")
+    addChatNotification(t('launch.notif_failed_load_yaml'))
     nodeSpriteMap.value.clear()
   }
 
@@ -1351,7 +1375,7 @@ const handleButtonClick = () => {
   } else if (status.value === 'Completed' || status.value === 'Cancelled') {
     // If Relaunch, restart the same workflow and re-enter Launch state
     if (!selectedFile.value) {
-      alert('Please choose a workflow file！')
+      alert(t('launch.alert_choose_workflow'))
       return
     }
 
@@ -1455,7 +1479,7 @@ const establishWebSocketConnection = () => {
 
       if (!sessionId) {
         status.value = 'Connection error'
-        alert('Missing session information from server.')
+        alert(t('launch.alert_missing_session'))
         resetConnectionState()
         return
       }
@@ -1478,7 +1502,7 @@ const establishWebSocketConnection = () => {
 
     console.error('WebSocket error:', error)
     status.value = 'Connection error'
-    alert('WebSocket connection error!')
+    alert(t('launch.alert_ws_error'))
     resetConnectionState({ closeSocket: false })
   }
 
@@ -1548,7 +1572,6 @@ onUnmounted(() => {
   runningLoadingEntries.value = 0
 })
 
-const { fromObject, fitView, onPaneReady, onNodesInitialized, setNodes, setEdges, edges } = useVueFlow()
 
 // Fit the view after the pane is ready or nodes are initialized
 onPaneReady(() => {
@@ -1752,7 +1775,7 @@ const switchToGraph = async () => {
 
 const launchWorkflow = async () => {
   if (!selectedFile.value) {
-    alert('Please choose a workflow file！')
+    alert(t('launch.alert_choose_workflow'))
     return
   }
 
@@ -1763,7 +1786,7 @@ const launchWorkflow = async () => {
   )
 
   if (!trimmedPrompt && attachmentIds.length === 0) {
-    alert('Please enter task prompt or upload files.')
+    alert(t('launch.alert_enter_prompt'))
     return
   }
 
@@ -1772,7 +1795,7 @@ const launchWorkflow = async () => {
     !isConnectionReady.value ||
     !sessionId
   ) {
-    alert('WebSocket connection is not ready yet.')
+    alert(t('launch.alert_ws_not_ready'))
     return
   }
 
@@ -1817,7 +1840,7 @@ const launchWorkflow = async () => {
       const error = await response.json().catch(() => ({}))
       console.error('Failed to launch workflow:', error)
       status.value = 'Failed'
-      alert(`Failed to launch workflow: ${error.detail || 'Unknown error'}`)
+      alert(`${t('launch.alert_failed_launch')}: ${error.detail || t('launch.unknown_error')}`)
       shouldGlow.value = true
       if (isConnectionReady.value) {
         status.value = 'Waiting for launch...'
@@ -1826,7 +1849,7 @@ const launchWorkflow = async () => {
   } catch (error) {
     console.error('Error calling execute API:', error)
     status.value = 'Error'
-    alert(`Failed to call execute API: ${error.message}`)
+    alert(`${t('launch.alert_failed_execute')}: ${error.message}`)
     shouldGlow.value = true
     if (isConnectionReady.value) {
       status.value = 'Waiting for launch...'
@@ -1867,7 +1890,7 @@ const downloadArtifact = async (message) => {
     document.body.removeChild(link)
   } catch (error) {
     console.error('Failed to download artifact:', error)
-    alert('Failed to download file, please try again.')
+    alert(t('launch.alert_download_failed'))
   } finally {
     if (message.loading) {
       message.loading = false
@@ -2176,7 +2199,7 @@ const cancelWorkflow = () => {
   if (!isWorkflowRunning.value || !ws) {
     return
   }
-  addChatNotification('Workflow cancelled')
+  addChatNotification(t('launch.workflow_cancelled'))
   status.value = 'Cancelled'
   isWorkflowRunning.value = false
   sessionIdToDownload = sessionId
@@ -2208,7 +2231,7 @@ const downloadLogs = async () => {
     await fetchLogsZip(sessionIdToDownload)
   } catch (error) {
     console.error('Download failed:', error)
-    alert('Download failed, please try again later')
+    alert(t('launch.alert_download_logs_failed'))
   }
 }
 
