@@ -197,8 +197,8 @@ class TestMem0MemoryRetrieve:
 
 class TestMem0MemoryUpdate:
 
-    def test_update_with_agent_id_uses_assistant_role(self):
-        """Agent-scoped update sends role=assistant messages with agent_id."""
+    def test_update_sends_only_user_input(self):
+        """Update sends only user input, not assistant output, to prevent noise."""
         memory, client = _make_mem0_memory(agent_id="agent-1")
         client.add.return_value = [{"id": "new", "event": "ADD"}]
 
@@ -215,8 +215,26 @@ class TestMem0MemoryUpdate:
         assert call_kwargs["agent_id"] == "agent-1"
         assert "user_id" not in call_kwargs
         messages = call_kwargs["messages"]
+        assert len(messages) == 1
         assert messages[0]["role"] == "user"
-        assert messages[1]["role"] == "assistant"
+        assert messages[0]["content"] == "Write about AI"
+
+    def test_update_does_not_send_async_mode(self):
+        """Update does not send deprecated async_mode parameter."""
+        memory, client = _make_mem0_memory(agent_id="agent-1")
+        client.add.return_value = []
+
+        payload = MemoryWritePayload(
+            agent_role="writer",
+            inputs_text="test",
+            input_snapshot=None,
+            output_snapshot=MemoryContentSnapshot(text="output"),
+        )
+        memory.update(payload)
+
+        call_kwargs = client.add.call_args[1]
+        assert "async_mode" not in call_kwargs
+        assert call_kwargs["infer"] is True
 
     def test_update_with_user_id(self):
         """User-scoped update uses user_id, not agent_id."""
@@ -227,7 +245,7 @@ class TestMem0MemoryUpdate:
             agent_role="writer",
             inputs_text="I prefer Python",
             input_snapshot=None,
-            output_snapshot=MemoryContentSnapshot(text="Noted your preference"),
+            output_snapshot=None,
         )
         memory.update(payload)
 
@@ -244,15 +262,15 @@ class TestMem0MemoryUpdate:
             agent_role="coder",
             inputs_text="test input",
             input_snapshot=None,
-            output_snapshot=MemoryContentSnapshot(text="test output"),
+            output_snapshot=None,
         )
         memory.update(payload)
 
         call_kwargs = client.add.call_args[1]
         assert call_kwargs["agent_id"] == "coder"
 
-    def test_update_with_both_ids_prefers_agent_id(self):
-        """When both user_id and agent_id configured, agent_id takes precedence for writes."""
+    def test_update_with_both_ids_includes_both(self):
+        """When both user_id and agent_id configured, both are included in add() call."""
         memory, client = _make_mem0_memory(user_id="user-1", agent_id="agent-1")
         client.add.return_value = []
 
@@ -260,37 +278,37 @@ class TestMem0MemoryUpdate:
             agent_role="writer",
             inputs_text="input",
             input_snapshot=None,
-            output_snapshot=MemoryContentSnapshot(text="output"),
+            output_snapshot=None,
         )
         memory.update(payload)
 
         call_kwargs = client.add.call_args[1]
         assert call_kwargs["agent_id"] == "agent-1"
-        assert "user_id" not in call_kwargs
+        assert call_kwargs["user_id"] == "user-1"
 
-    def test_update_empty_output_is_noop(self):
-        """Empty output snapshot skips API call."""
+    def test_update_empty_input_is_noop(self):
+        """Empty inputs_text skips API call."""
+        memory, client = _make_mem0_memory(agent_id="a1")
+
+        payload = MemoryWritePayload(
+            agent_role="writer",
+            inputs_text="   ",
+            input_snapshot=None,
+            output_snapshot=MemoryContentSnapshot(text="some output"),
+        )
+        memory.update(payload)
+
+        client.add.assert_not_called()
+
+    def test_update_no_input_is_noop(self):
+        """No inputs_text skips API call."""
         memory, client = _make_mem0_memory(agent_id="a1")
 
         payload = MemoryWritePayload(
             agent_role="writer",
             inputs_text="",
             input_snapshot=None,
-            output_snapshot=MemoryContentSnapshot(text="   "),
-        )
-        memory.update(payload)
-
-        client.add.assert_not_called()
-
-    def test_update_no_snapshot_is_noop(self):
-        """No snapshot at all skips API call."""
-        memory, client = _make_mem0_memory(agent_id="a1")
-
-        payload = MemoryWritePayload(
-            agent_role="writer",
-            inputs_text="test",
-            input_snapshot=None,
-            output_snapshot=None,
+            output_snapshot=MemoryContentSnapshot(text="output"),
         )
         memory.update(payload)
 
@@ -303,12 +321,61 @@ class TestMem0MemoryUpdate:
 
         payload = MemoryWritePayload(
             agent_role="writer",
-            inputs_text="test",
+            inputs_text="test user input",
             input_snapshot=None,
-            output_snapshot=MemoryContentSnapshot(text="output"),
+            output_snapshot=None,
         )
         # Should not raise
         memory.update(payload)
+
+
+class TestMem0MemoryPipelineTextCleaning:
+
+    def test_strips_input_from_task_header(self):
+        """Pipeline headers like '=== INPUT FROM TASK (user) ===' are stripped."""
+        memory, client = _make_mem0_memory(agent_id="a1")
+        client.add.return_value = []
+
+        payload = MemoryWritePayload(
+            agent_role="writer",
+            inputs_text="=== INPUT FROM TASK (user) ===\n\nMy name is Alex, I love Python",
+            input_snapshot=None,
+            output_snapshot=MemoryContentSnapshot(text="Nice to meet you Alex!"),
+        )
+        memory.update(payload)
+
+        call_kwargs = client.add.call_args[1]
+        messages = call_kwargs["messages"]
+        assert messages[0]["role"] == "user"
+        assert messages[0]["content"] == "My name is Alex, I love Python"
+        assert "INPUT FROM" not in messages[0]["content"]
+
+    def test_strips_multiple_input_headers(self):
+        """Multiple pipeline headers from different sources are all stripped."""
+        memory, client = _make_mem0_memory(agent_id="a1")
+        client.add.return_value = []
+
+        payload = MemoryWritePayload(
+            agent_role="writer",
+            inputs_text=(
+                "=== INPUT FROM TASK (user) ===\n\nHello\n\n"
+                "=== INPUT FROM reviewer (assistant) ===\n\nWorld"
+            ),
+            input_snapshot=None,
+            output_snapshot=MemoryContentSnapshot(text="Hi!"),
+        )
+        memory.update(payload)
+
+        call_kwargs = client.add.call_args[1]
+        user_content = call_kwargs["messages"][0]["content"]
+        assert "INPUT FROM" not in user_content
+        assert "Hello" in user_content
+        assert "World" in user_content
+
+    def test_clean_text_without_headers_unchanged(self):
+        """Text without pipeline headers passes through unchanged."""
+        from runtime.node.agent.memory.mem0_memory import Mem0Memory
+        assert Mem0Memory._clean_pipeline_text("Just normal text") == "Just normal text"
 
 
 class TestMem0MemoryLoadSave:

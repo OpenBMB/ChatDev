@@ -1,6 +1,7 @@
 """Mem0 managed memory store implementation."""
 
 import logging
+import re
 import time
 import uuid
 from typing import Any, Dict, List
@@ -45,8 +46,8 @@ class Mem0Memory(MemoryBase):
 
     Important API constraints:
     - Agent memories use role="assistant" + agent_id
-    - user_id and agent_id are stored as separate records in Mem0;
-      if both are configured, an OR filter is used to search across both scopes.
+    - user_id and agent_id are independent scoping dimensions and can be
+      combined in both add() and search() calls.
     - search() uses filters dict; add() uses top-level kwargs.
     - SDK returns {"memories": [...]} from search.
     """
@@ -151,53 +152,68 @@ class Mem0Memory(MemoryBase):
     # -------- Update --------
 
     def update(self, payload: MemoryWritePayload) -> None:
-        """Store a memory in Mem0.
+        """Store user input as a memory in Mem0.
 
-        Uses role="assistant" + agent_id for agent-generated memories,
-        and role="user" + user_id for user-scoped memories.
+        Only user input is sent for extraction. Assistant output is excluded
+        to prevent noise memories from the LLM's responses.
         """
-        snapshot = payload.output_snapshot or payload.input_snapshot
-        if not snapshot or not snapshot.text.strip():
+        raw_input = payload.inputs_text or ""
+        if not raw_input.strip():
             return
 
         messages = self._build_messages(payload)
         if not messages:
             return
 
-        add_kwargs: Dict[str, Any] = {"messages": messages}
+        add_kwargs: Dict[str, Any] = {
+            "messages": messages,
+            "infer": True,
+        }
 
-        # Determine scoping: agent_id takes precedence for agent-generated content
+        # Include both user_id and agent_id when available — they are
+        # independent scoping dimensions in Mem0, not mutually exclusive.
         if self.agent_id:
             add_kwargs["agent_id"] = self.agent_id
-        elif self.user_id:
+        if self.user_id:
             add_kwargs["user_id"] = self.user_id
-        else:
-            # Default: use agent_role as agent_id
+
+        # Fallback when neither is configured
+        if "agent_id" not in add_kwargs and "user_id" not in add_kwargs:
             add_kwargs["agent_id"] = payload.agent_role
 
         try:
-            self.client.add(**add_kwargs)
+            result = self.client.add(**add_kwargs)
+            logger.info("Mem0 add result: %s", result)
         except Exception as e:
             logger.error("Mem0 add failed: %s", e)
+
+    @staticmethod
+    def _clean_pipeline_text(text: str) -> str:
+        """Strip ChatDev pipeline headers so Mem0 sees clean conversational text.
+
+        The executor wraps each input with '=== INPUT FROM <source> (<role>) ==='
+        headers. Mem0's extraction LLM treats these as system metadata and skips
+        them, resulting in zero memories extracted.
+        """
+        cleaned = re.sub(r"===\s*INPUT FROM\s+\S+\s*\(\w+\)\s*===\s*", "", text)
+        return cleaned.strip()
 
     def _build_messages(self, payload: MemoryWritePayload) -> List[Dict[str, str]]:
         """Build Mem0-compatible message list from write payload.
 
-        Agent-generated content uses role="assistant".
-        User input uses role="user".
+        Only sends user input to Mem0. Assistant output is excluded because
+        Mem0's extraction LLM processes ALL messages and extracts facts from
+        assistant responses too, creating noise memories like "Assistant says
+        Python is fascinating" instead of actual user facts.
         """
         messages: List[Dict[str, str]] = []
 
-        if payload.inputs_text and payload.inputs_text.strip():
+        raw_input = payload.inputs_text or ""
+        clean_input = self._clean_pipeline_text(raw_input)
+        if clean_input:
             messages.append({
                 "role": "user",
-                "content": payload.inputs_text.strip(),
-            })
-
-        if payload.output_snapshot and payload.output_snapshot.text.strip():
-            messages.append({
-                "role": "assistant",
-                "content": payload.output_snapshot.text.strip(),
+                "content": clean_input,
             })
 
         return messages

@@ -111,9 +111,9 @@ This schema lets multimodal outputs flow into Memory/Thinking modules without ex
 
 ### 5.4 Mem0Memory
 - **Config** – Requires `api_key` (from [app.mem0.ai](https://app.mem0.ai)). Optional `user_id`, `agent_id`, `org_id`, `project_id` for scoping.
-- **Important**: `user_id` and `agent_id` are mutually exclusive in Mem0 API calls. If both are configured, two separate searches are made and results merged. For writes, `agent_id` takes precedence. Agent-generated content is stored with `role: "assistant"`.
+- **Entity scoping**: `user_id` and `agent_id` are independent dimensions — both can be included simultaneously in `add()` and `search()` calls. When both are configured, retrieval uses an OR filter (`{"OR": [{"user_id": ...}, {"agent_id": ...}]}`) to search across both scopes. Writes include both IDs when available.
 - **Retrieval** – Uses Mem0's server-side semantic search. Supports `top_k` and `similarity_threshold` via `MemoryAttachmentConfig`.
-- **Write** – `update()` sends conversation messages to Mem0 via the SDK. Agent outputs use `role: "assistant"`, user inputs use `role: "user"`.
+- **Write** – `update()` sends only user input to Mem0 via the SDK (as `role: "user"` messages). Assistant output is excluded to prevent noise memories from the LLM's responses being extracted as facts.
 - **Persistence** – Fully cloud-managed. `load()` and `save()` are no-ops. Memories persist across runs and sessions automatically.
 - **Dependencies** – Requires `mem0ai` package (`pip install mem0ai`).
 

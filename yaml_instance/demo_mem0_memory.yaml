@@ -28,19 +28,15 @@ graph:
             write: true
   edges: []
   memory:
-    # Agent-scoped memory: uses agent_id for storing and retrieving
+    # User-scoped: extracts facts about the user (name, preferences, etc.)
+    # Agent-scoped: extracts what the agent learned (decisions, context)
+    # Both can be used together for different memory dimensions.
     - name: mem0_store
       type: mem0
       config:
         api_key: ${MEM0_API_KEY}
+        user_id: project-user-123
         agent_id: writer-agent
-
-    # Alternative: User-scoped memory (uncomment to use instead)
-    # - name: mem0_store
-    #   type: mem0
-    #   config:
-    #     api_key: ${MEM0_API_KEY}
-    #     user_id: project-user-123
   start:
     - writer
   end: []
