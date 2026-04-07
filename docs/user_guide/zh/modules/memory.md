@@ -32,12 +32,23 @@ memory:
         model: text-embedding-3-small
 ```
 
+### Mem0 Memory 配置
+```yaml
+memory:
+  - name: agent_memory
+    type: mem0
+    config:
+      api_key: ${MEM0_API_KEY}
+      agent_id: my-agent
+```
+
 ## 3. 内置 Memory Store 对比
 | 类型 | 路径 | 特点 | 适用场景 |
 | --- | --- | --- | --- |
 | `simple` | `node/agent/memory/simple_memory.py` | 运行结束后可选择落盘（JSON）；使用向量搜索（FAISS）+语义重打分；支持读写 | 小规模对话记忆、快速原型 |
 | `file` | `node/agent/memory/file_memory.py` | 将指定文件/目录切片为向量索引，只读；自动检测文件变更并更新索引 | 知识库、文档问答 |
 | `blackboard` | `node/agent/memory/blackboard_memory.py` | 轻量附加日志，按时间/条数裁剪；不依赖向量检索 | 简易广播板、流水线调试 |
+| `mem0` | `node/agent/memory/mem0_memory.py` | 由 Mem0 云端托管；支持语义搜索 + 图关系；无需本地 embedding 或持久化。需安装 `mem0ai` 包。 | 生产级记忆、跨会话持久化、多 Agent 记忆共享 |
 
 > 所有内置 store 都会在 `register_memory_store()` 中注册，摘要可通过 `MemoryStoreConfig.field_specs()` 在 UI 中展示。
 
@@ -99,6 +110,14 @@ nodes:
 - **配置**：`memory_path`（可 `auto`）、`max_items`。若路径不存在则在 Session 目录内创建。
 - **检索**：直接返回最近 `top_k` 条，按时间排序。
 - **写入**：`update()` 以 append 方式存储最新的输入/输出 snapshot（文本 + 块 + 附件信息），不生成向量，适合事件流或人工批注。
+
+### 5.4 Mem0Memory
+- **配置**：必须提供 `api_key`（从 [app.mem0.ai](https://app.mem0.ai) 获取）。可选参数 `user_id`、`agent_id`、`org_id`、`project_id` 用于记忆范围控制。
+- **实体范围**：`user_id` 和 `agent_id` 是独立的维度，可在 `add()` 和 `search()` 调用中同时使用。若同时配置，检索时使用 OR 过滤器（`{"OR": [{"user_id": ...}, {"agent_id": ...}]}`）在一次 API 调用中搜索两个范围。写入时两个 ID 同时包含。
+- **检索**：使用 Mem0 服务端语义搜索。通过 `MemoryAttachmentConfig` 中的 `top_k` 和 `similarity_threshold` 控制。
+- **写入**：`update()` 仅将用户输入（`role: "user"` 消息）发送至 Mem0。不包含 Agent 输出，以避免 LLM 响应中的内容被提取为噪声记忆。
+- **持久化**：完全由云端托管。`load()` 和 `save()` 为空操作（no-op）。记忆在不同运行和会话间自动持久化。
+- **依赖**：需安装 `mem0ai` 包（`pip install mem0ai`）。
 
 ## 6. EmbeddingConfig 提示
 - 字段：`provider`, `model`, `api_key`, `base_url`, `params`。

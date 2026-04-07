@@ -280,6 +280,75 @@ class BlackboardMemoryConfig(BaseConfig):
 
 
 @dataclass
+class Mem0MemoryConfig(BaseConfig):
+    """Configuration for Mem0 managed memory service."""
+
+    api_key: str = ""
+    org_id: str | None = None
+    project_id: str | None = None
+    user_id: str | None = None
+    agent_id: str | None = None
+
+    @classmethod
+    def from_dict(cls, data: Mapping[str, Any], *, path: str) -> "Mem0MemoryConfig":
+        mapping = require_mapping(data, path)
+        api_key = require_str(mapping, "api_key", path)
+        org_id = optional_str(mapping, "org_id", path)
+        project_id = optional_str(mapping, "project_id", path)
+        user_id = optional_str(mapping, "user_id", path)
+        agent_id = optional_str(mapping, "agent_id", path)
+        return cls(
+            api_key=api_key,
+            org_id=org_id,
+            project_id=project_id,
+            user_id=user_id,
+            agent_id=agent_id,
+            path=path,
+        )
+
+    FIELD_SPECS = {
+        "api_key": ConfigFieldSpec(
+            name="api_key",
+            display_name="Mem0 API Key",
+            type_hint="str",
+            required=True,
+            description="Mem0 API key (get one from app.mem0.ai)",
+            default="${MEM0_API_KEY}",
+        ),
+        "org_id": ConfigFieldSpec(
+            name="org_id",
+            display_name="Organization ID",
+            type_hint="str",
+            required=False,
+            description="Mem0 organization ID for scoping",
+            advance=True,
+        ),
+        "project_id": ConfigFieldSpec(
+            name="project_id",
+            display_name="Project ID",
+            type_hint="str",
+            required=False,
+            description="Mem0 project ID for scoping",
+            advance=True,
+        ),
+        "user_id": ConfigFieldSpec(
+            name="user_id",
+            display_name="User ID",
+            type_hint="str",
+            required=False,
+            description="User ID for user-scoped memories. Mutually exclusive with agent_id in API calls.",
+        ),
+        "agent_id": ConfigFieldSpec(
+            name="agent_id",
+            display_name="Agent ID",
+            type_hint="str",
+            required=False,
+            description="Agent ID for agent-scoped memories. Mutually exclusive with user_id in API calls.",
+        ),
+    }
+
+
+@dataclass
 class MemoryStoreConfig(BaseConfig):
     name: str
     type: str
