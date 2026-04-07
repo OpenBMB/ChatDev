@@ -341,6 +341,9 @@ By contributing to DevAll, you'll be recognized in our **Contributors** list bel
     <td align="center"><a href="https://github.com/Br1an67"><img src="https://github.com/Br1an67.png?size=100" width="64px;"/><br /><sub><b>Br1an67</b></sub></a></td>
     <td align="center"><a href="https://github.com/NINE-J"><img src="https://github.com/NINE-J.png?size=100" width="64px;"/><br /><sub><b>NINE-J</b></sub></a></td>
     <td align="center"><a href="https://github.com/Yanghuabei-design"><img src="https://github.com/Yanghuabei-design.png?size=100" width="64px;"/><br /><sub><b>Yanghuabei</b></sub></a></td>
+    <td align="center"><a href="https://github.com/nregret"><img src="https://github.com/nregret.png?size=100" width="64px;"/><br /><sub><b>nregret</b></sub></a></td>
+    <td align="center"><a href="  https://github.com/kartik-mem0"><img src="  https://github.com/kartik-mem0.png?size=100" width="64px;"/><br /><sub><b>kartik-mem0</b></sub></a></td>
+    <td align="center"><a href="https://github.com/voidborne-d"><img src="https://github.com/voidborne-d.png?size=100" width="64px;"/><br /><sub><b>voidborne-d</b></sub></a></td>
   </tr>
 </table>
 
