@@ -1,4 +1,4 @@
-"""CLI entry point for executing ChatDev_new workflows."""
+"""CLI entry point for executing MovieDev workflows."""
 import argparse
 import json
 from pathlib import Path
@@ -36,7 +36,7 @@ def build_task_input_payload(
     return builder.build_from_file_paths(prompt, attachment_paths)
 
 def parse_arguments():
-    parser = argparse.ArgumentParser(description="Run ChatDev_new workflow")
+    parser = argparse.ArgumentParser(description="Run MovieDev workflow")
     parser.add_argument(
         "--path",
         type=Path,

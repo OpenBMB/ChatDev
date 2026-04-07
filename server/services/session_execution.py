@@ -97,6 +97,52 @@ class SessionExecutionController:
             session.pending_input_data = None
             session.human_input_future = None
 
+    def set_waiting_for_approval(self, session_id: str, approval_ids: list[str]) -> None:
+        session = self.store.get_session(session_id)
+        if not session:
+            raise ValidationError("Session not found", details={"session_id": session_id})
+        session.waiting_for_approval = True
+        session.pending_approval_ids = list(approval_ids)
+        session.status = SessionStatus.WAITING_FOR_APPROVAL
+        session.approval_future = Future()
+        self.logger.info("Session %s waiting for approval on %s", session_id, approval_ids)
+
+    def wait_for_approval(self, session_id: str, timeout: float = 86400.0) -> Any:
+        session = self.store.get_session(session_id)
+        if not session:
+            raise ValidationError("Session not found", details={"session_id": session_id})
+
+        future: Optional[Future] = session.approval_future
+        if not session.waiting_for_approval or future is None:
+            raise ValidationError(
+                "Session is not waiting for approval",
+                details={"session_id": session_id, "waiting_for_approval": session.waiting_for_approval},
+            )
+
+        start_time = time.time()
+        poll_interval = 1.0
+        try:
+            while True:
+                if session.cancel_event.is_set():
+                    raise WorkflowCancelledError("Workflow execution cancelled", workflow_id=session_id)
+
+                elapsed = time.time() - start_time
+                remaining = timeout - elapsed
+                if remaining <= 0:
+                    raise concurrent.futures.TimeoutError()
+
+                wait_time = min(poll_interval, remaining)
+                try:
+                    return future.result(timeout=wait_time)
+                except concurrent.futures.TimeoutError:
+                    continue
+        except concurrent.futures.TimeoutError:
+            raise CustomTimeoutError("Approval timeout", operation="wait_for_approval", timeout_duration=timeout)
+        finally:
+            session.waiting_for_approval = False
+            session.pending_approval_ids = []
+            session.approval_future = None
+
     def provide_human_input(self, session_id: str, user_input: Any) -> None:
         session = self.store.get_session(session_id)
         if not session:
@@ -130,6 +176,30 @@ class SessionExecutionController:
             input_length=length,
         )
 
+    def notify_approval_state(self, session_id: str) -> bool:
+        session = self.store.get_session(session_id)
+        if not session or not session.waiting_for_approval:
+            return False
+
+        approvals = ((session.team_state or {}).get("approvals") or [])
+        open_blocking = [
+            approval for approval in approvals
+            if isinstance(approval, dict)
+            and approval.get("blocking")
+            and approval.get("status") != "resolved"
+        ]
+
+        if open_blocking:
+            session.pending_approval_ids = [str(item.get("id") or "") for item in open_blocking if str(item.get("id") or "").strip()]
+            return False
+
+        future: Optional[Future] = session.approval_future
+        if future and not future.done():
+            future.set_result(session.team_state)
+        session.waiting_for_approval = False
+        session.pending_approval_ids = []
+        return True
+
     def cleanup_session(self, session_id: str) -> None:
         session = self.store.get_session(session_id)
         if not session:
@@ -140,9 +210,15 @@ class SessionExecutionController:
         promise = session.input_promise
         if promise and not promise.done():
             promise.cancel()
+        approval_future: Optional[Future] = session.approval_future
+        if approval_future and not approval_future.done():
+            approval_future.cancel()
         session.waiting_for_input = False
+        session.waiting_for_approval = False
         session.current_node_id = None
         session.pending_input_data = None
         session.human_input_future = None
         session.human_input_value = None
+        session.pending_approval_ids = []
+        session.approval_future = None
         self.logger.info("Session %s cleaned from execution controller", session_id)

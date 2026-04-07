@@ -39,7 +39,7 @@
               class="tooltip-learn-more"
               @click="handleLearnMore"
             >
-              Learn More →
+              {{ t('tooltip.learnMore') }}
             </a>
           </div>
           <div class="tooltip-arrow" :data-placement="placement"></div>
@@ -51,6 +51,7 @@
 
 <script setup>
 import { ref, computed, onMounted, onBeforeUnmount, nextTick } from 'vue'
+import { t } from '../utils/i18n.js'
 
 const props = defineProps({
   content: {
@@ -245,19 +246,20 @@ onBeforeUnmount(() => {
   position: fixed;
   z-index: 10000;
   max-width: 320px;
-  background: rgba(26, 26, 26, 0.95);
-  color: #f2f2f2;
-  border-radius: 8px;
-  padding: 12px 16px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
+  background: rgba(255, 252, 246, 0.96);
+  color: #17353c;
+  border-radius: 16px;
+  padding: 14px 16px;
+  box-shadow: 0 18px 36px rgba(27, 54, 61, 0.16);
+  border: 1px solid rgba(21, 58, 64, 0.08);
+  backdrop-filter: blur(14px);
   font-size: 13px;
   line-height: 1.5;
   pointer-events: auto;
 }
 
 .tooltip-keyboard-active {
-  outline: 2px solid #60b7ff;
+  outline: 2px solid #1f676d;
   outline-offset: 2px;
 }
 
@@ -268,19 +270,19 @@ onBeforeUnmount(() => {
 .tooltip-title {
   margin: 0 0 8px 0;
   font-size: 14px;
-  font-weight: 600;
-  color: #ffffff;
+  font-weight: 700;
+  color: #17353c;
 }
 
 .tooltip-description {
   margin: 0 0 8px 0;
-  color: #e0e0e0;
+  color: #53676b;
 }
 
 .tooltip-examples {
   margin: 8px 0;
   padding-left: 20px;
-  color: #c0c0c0;
+  color: #647679;
   font-size: 12px;
 }
 
@@ -291,15 +293,15 @@ onBeforeUnmount(() => {
 .tooltip-learn-more {
   display: inline-block;
   margin-top: 8px;
-  color: #60b7ff;
+  color: #1f676d;
   text-decoration: none;
-  font-weight: 500;
+  font-weight: 700;
   font-size: 12px;
   transition: color 0.2s;
 }
 
 .tooltip-learn-more:hover {
-  color: #99ffeb;
+  color: #134b51;
   text-decoration: underline;
 }
 

@@ -6,6 +6,10 @@
 dev: ## Run both backend and frontend development servers
 	@$(MAKE) -j2 server client
 
+.PHONY: dev-local
+dev-local: ## Start both services via the local launcher script (macOS/Linux)
+	@bash scripts/dev.sh
+
 
 .PHONY: server
 server: ## Start the backend server in the background
@@ -17,11 +21,12 @@ client: ## Start the frontend development server
 	@cd frontend && npx cross-env VITE_API_BASE_URL=http://localhost:6400 npm run dev
 
 .PHONY: stop
-stop: ## Stop backend and frontend servers cross-platform
-	@echo "Stopping backend server (port 6400)..."
-	@npx kill-port 6400
-	@echo "Stopping frontend server (port 5173)..."
-	@npx kill-port 5173
+stop: ## Stop MovieDev dev services on macOS/Linux
+	@bash scripts/stop.sh
+
+.PHONY: stop-local
+stop-local: ## Stop services started by scripts/dev.sh (macOS/Linux)
+	@bash scripts/stop.sh
 
 # ==============================================================================
 # Tools & Maintenance

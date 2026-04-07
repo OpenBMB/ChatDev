@@ -1,4 +1,4 @@
-"""Custom middleware for the DevAll workflow system."""
+"""Custom middleware for the MovieDev workflow system."""
 
 import uuid
 from typing import Callable, Awaitable

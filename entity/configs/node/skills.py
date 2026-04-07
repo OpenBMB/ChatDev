@@ -18,30 +18,46 @@ from entity.configs.base import (
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
-DEFAULT_SKILLS_ROOT = (REPO_ROOT / ".agents" / "skills").resolve()
-def _discover_default_skills() -> List[tuple[str, str]]:
-    if not DEFAULT_SKILLS_ROOT.exists() or not DEFAULT_SKILLS_ROOT.is_dir():
-        return []
+WORKSPACE_SKILLS_ROOT = (REPO_ROOT / "skills").resolve()
+BUNDLED_SKILLS_ROOT = (REPO_ROOT / ".agents" / "skills").resolve()
+DEFAULT_SKILLS_ROOTS = (
+    WORKSPACE_SKILLS_ROOT,
+    BUNDLED_SKILLS_ROOT,
+)
 
+
+def _discover_default_skills() -> List[tuple[str, str]]:
     discovered: List[tuple[str, str]] = []
-    for candidate in sorted(DEFAULT_SKILLS_ROOT.iterdir()):
-        if not candidate.is_dir():
+    seen_names: set[str] = set()
+    for root in DEFAULT_SKILLS_ROOTS:
+        if not root.exists() or not root.is_dir():
             continue
-        skill_file = candidate / "SKILL.md"
-        if not skill_file.is_file():
-            continue
-        try:
-            frontmatter = _parse_frontmatter(skill_file)
-        except Exception:
-            continue
-        raw_name = frontmatter.get("name")
-        raw_description = frontmatter.get("description")
-        if not isinstance(raw_name, str) or not raw_name.strip():
-            continue
-        if not isinstance(raw_description, str) or not raw_description.strip():
-            continue
-        discovered.append((raw_name.strip(), raw_description.strip()))
+        for candidate in sorted(root.iterdir()):
+            if not candidate.is_dir():
+                continue
+            skill_file = candidate / "SKILL.md"
+            if not skill_file.is_file():
+                continue
+            try:
+                frontmatter = _parse_frontmatter(skill_file)
+            except Exception:
+                continue
+            raw_name = frontmatter.get("name")
+            raw_description = frontmatter.get("description")
+            if not isinstance(raw_name, str) or not raw_name.strip():
+                continue
+            if not isinstance(raw_description, str) or not raw_description.strip():
+                continue
+            normalized_name = raw_name.strip()
+            if normalized_name in seen_names:
+                continue
+            seen_names.add(normalized_name)
+            discovered.append((normalized_name, raw_description.strip()))
     return discovered
+
+
+def _describe_skill_roots() -> str:
+    return ", ".join(str(root) for root in DEFAULT_SKILLS_ROOTS)
 
 
 def _parse_frontmatter(skill_file: Path) -> Mapping[str, object]:
@@ -73,7 +89,7 @@ class AgentSkillSelectionConfig(BaseConfig):
             display_name="Skill Name",
             type_hint="str",
             required=True,
-            description="Discovered skill name from the default repo-level skills directory.",
+            description="Discovered skill name from the workspace or bundled skill directories.",
         ),
     }
 
@@ -101,11 +117,11 @@ class AgentSkillSelectionConfig(BaseConfig):
         description = name_spec.description or "Skill name"
         if not discovered:
             description = (
-                f"{description} (no skills found in {DEFAULT_SKILLS_ROOT})"
+                f"{description} (no skills found in {_describe_skill_roots()})"
             )
         else:
             description = (
-                f"{description} Picker options come from {DEFAULT_SKILLS_ROOT}."
+                f"{description} Picker options come from {_describe_skill_roots()}."
             )
         specs["name"] = replace(
             name_spec,

@@ -34,6 +34,9 @@ class GraphDefinition(BaseConfig):
     edges: List[EdgeConfig] = field(default_factory=list)
     memory: List[MemoryStoreConfig] | None = None
     organization: str | None = None
+    triggers: Dict[str, Any] | None = None
+    handoffs: List[Dict[str, Any]] | None = None
+    team_mode: str | None = None
     initial_instruction: str | None = None
     start_nodes: List[str] = field(default_factory=list)
     end_nodes: List[str] | None = None
@@ -41,90 +44,113 @@ class GraphDefinition(BaseConfig):
     FIELD_SPECS = {
         "id": ConfigFieldSpec(
             name="id",
-            display_name="Graph ID",
+            display_name="工作流 ID",
             type_hint="str",
             required=True,
-            description="Graph identifier for referencing. Can only contain alphanumeric characters, underscores or hyphens, no spaces",
+            description="用于保存和引用工作流的唯一 ID。建议只使用英文、数字、下划线或短横线，不要包含空格。",
         ),
         "description": ConfigFieldSpec(
             name="description",
-            display_name="Graph Description",
+            display_name="工作流说明",
             type_hint="text",
             required=False,
-            description="Human-readable narrative shown in UI/templates that explains the workflow goal, scope, and manual touchpoints.",
+            description="展示在流程库中的说明，用来描述这个工作流的目标、适用范围和需要人工介入的地方。",
         ),
         "log_level": ConfigFieldSpec(
             name="log_level",
-            display_name="Log Level",
+            display_name="日志级别",
             type_hint="enum:LogLevel",
             required=False,
             default=LogLevel.DEBUG.value,
             enum=[lvl.value for lvl in LogLevel],
-            description="Runtime log level",
+            description="运行时日志详细程度。",
             advance=True,
             enum_options=enum_options_for(LogLevel),
         ),
         "is_majority_voting": ConfigFieldSpec(
             name="is_majority_voting",
-            display_name="Majority Voting Mode",
+            display_name="多数投票模式",
             type_hint="bool",
             required=False,
             default=False,
-            description="Whether this is a majority voting graph",
+            description="是否启用多数投票式工作流。",
             advance=True,
         ),
         "nodes": ConfigFieldSpec(
             name="nodes",
-            display_name="Node List",
+            display_name="节点列表",
             type_hint="list[Node]",
             required=False,
-            description="Node list, must contain at least one node",
+            description="工作流中的节点列表。新建时可以先留空，之后在编辑器中添加。",
             child=Node,
         ),
         "edges": ConfigFieldSpec(
             name="edges",
-            display_name="Edge List",
+            display_name="连线列表",
             type_hint="list[EdgeConfig]",
             required=False,
-            description="Directed edges between nodes",
+            description="节点之间的有向连线。通常建议在图编辑器里创建。",
             child=EdgeConfig,
         ),
         "memory": ConfigFieldSpec(
             name="memory",
-            display_name="Memory Stores",
+            display_name="记忆存储",
             type_hint="list[MemoryStoreConfig]",
             required=False,
-            description="Optional list of memory stores that nodes can reference through their model.memories attachments.",
+            description="可选的记忆存储列表，Agent 节点可以通过 model.memories 引用。",
             child=MemoryStoreConfig,
         ),
-        # "organization": ConfigFieldSpec(
-        #     name="organization",
-        #     display_name="Organization Name",
-        #     type_hint="str",
-        #     required=False,
-        #     description="Organization name",
-        # ),
+        "organization": ConfigFieldSpec(
+            name="organization",
+            display_name="工作流分组",
+            type_hint="str",
+            required=False,
+            description="用于在流程库中分类展示。留空时会显示在“未分组”。",
+        ),
+        "triggers": ConfigFieldSpec(
+            name="triggers",
+            display_name="触发点",
+            type_hint="dict[str, Any]",
+            required=False,
+            default={},
+            description="记录这个工作流可被哪些外部入口触发，例如 bot_message、app_webhook、schedule。实际触发可通过 /api/triggers/run 接入。",
+        ),
+        "handoffs": ConfigFieldSpec(
+            name="handoffs",
+            display_name="工作流接力",
+            type_hint="list[dict[str, Any]]",
+            required=False,
+            default=[],
+            description="工作流完成后自动把输出交给下一个工作流。常用字段：target_workflow、input_from、prompt_template、variables、enabled。",
+        ),
+        "team_mode": ConfigFieldSpec(
+            name="team_mode",
+            display_name="团队模式",
+            type_hint="str",
+            required=False,
+            description="可选的协作模式，例如 human_governed 或 autonomous。",
+        ),
         "initial_instruction": ConfigFieldSpec(
             name="initial_instruction",
-            display_name="Initial Instruction",
+            display_name="初始说明",
             type_hint="text",
             required=False,
-            description="Graph level initial instruction (for user)",
+            description="运行工作流前展示给用户的初始说明。",
         ),
         "start": ConfigFieldSpec(
             name="start",
-            display_name="Start Node",
+            display_name="开始节点",
             type_hint="list[str]",
             required=False,
-            description="Start node ID list (entry list executed at workflow start; not recommended to edit manually)",
+            description="工作流启动时执行的入口节点 ID 列表。通常不建议手动编辑。",
             advance=True,
         ),
         "end": ConfigFieldSpec(
             name="end",
-            display_name="End Node",
+            display_name="结束节点",
             type_hint="list[str]",
             required=False,
-            description="End node ID list (used to collect final graph output, not part of execution logic). Commonly needed in subgraphs. This is an ordered list: earlier nodes are checked first; the first with output becomes the graph output, otherwise continue down the list.",
+            description="用于收集最终输出的结束节点 ID 列表，常用于子图。系统会按顺序检查节点输出。",
             advance=True,
         ),
     }
@@ -156,6 +182,13 @@ class GraphDefinition(BaseConfig):
 
         is_majority = optional_bool(mapping, "is_majority_voting", path, default=False)
         organization = optional_str(mapping, "organization", path)
+        triggers = optional_dict(mapping, "triggers", path)
+        handoffs = None
+        if "handoffs" in mapping and mapping["handoffs"] is not None:
+            handoffs = []
+            for idx, item in enumerate(ensure_list(mapping.get("handoffs"))):
+                handoffs.append(dict(require_mapping(item, extend_path(path, f"handoffs[{idx}]"))))
+        team_mode = optional_str(mapping, "team_mode", path)
         initial_instruction = optional_str(mapping, "initial_instruction", path)
 
         nodes_raw = ensure_list(mapping.get("nodes"))
@@ -220,6 +253,9 @@ class GraphDefinition(BaseConfig):
             edges=edges,
             memory=memory_cfg,
             organization=organization,
+            triggers=triggers,
+            handoffs=handoffs,
+            team_mode=team_mode,
             initial_instruction=initial_instruction,
             start_nodes=start_nodes,
             end_nodes=end_nodes,
@@ -277,27 +313,27 @@ class DesignConfig(BaseConfig):
     FIELD_SPECS = {
         "version": ConfigFieldSpec(
             name="version",
-            display_name="Configuration Version",
+            display_name="配置版本",
             type_hint="str",
             required=False,
             default="0.0.0",
-            description="Configuration version number",
+            description="工作流配置版本号。",
             advance=True,
         ),
         "vars": ConfigFieldSpec(
             name="vars",
-            display_name="Global Variables",
+            display_name="全局变量",
             type_hint="dict[str, Any]",
             required=False,
             default={},
-            description="Global variables that can be referenced via ${VAR}",
+            description="可通过 ${VAR} 引用的全局变量。",
         ),
         "graph": ConfigFieldSpec(
             name="graph",
-            display_name="Graph Definition",
+            display_name="工作流定义",
             type_hint="GraphDefinition",
             required=True,
-            description="Core graph definition",
+            description="工作流核心结构定义。",
             child=GraphDefinition,
         ),
     }

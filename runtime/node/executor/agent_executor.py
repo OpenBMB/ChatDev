@@ -36,6 +36,11 @@ from runtime.node.agent import ModelProvider, ProviderRegistry, ModelResponse
 from runtime.node.agent.skills import AgentSkillManager
 from tenacity import Retrying, retry_if_exception, stop_after_attempt, wait_random_exponential
 
+CONTEXT_COMPRESSION_MAX_MESSAGES = 8
+CONTEXT_COMPRESSION_MAX_CHARS = 6000
+CONTEXT_COMPRESSION_KEEP_RECENT = 4
+CONTEXT_COMPRESSION_PREVIEW_CHARS = 220
+
 
 class AgentNodeExecutor(NodeExecutor):
     """Executor that runs agent nodes."""
@@ -67,7 +72,8 @@ class AgentNodeExecutor(NodeExecutor):
             agent_config.token_tracker = self.context.get_token_tracker()
             agent_config.node_id = node.id
 
-            input_data = self._inputs_to_text(inputs)
+            conversation_inputs = self._compress_inputs_for_context(node, inputs)
+            input_data = self._inputs_to_text(conversation_inputs)
             input_payload = self._build_thinking_payload_from_inputs(inputs, input_data)
             memory_query_snapshot = self._build_memory_query_snapshot(inputs, input_data)
             input_mode = agent_config.input_mode or AgentInputMode.PROMPT
@@ -80,7 +86,7 @@ class AgentNodeExecutor(NodeExecutor):
             if input_mode is AgentInputMode.PROMPT:
                 conversation = self._prepare_prompt_messages(node, input_data, skill_manager)
             else:
-                conversation = self._prepare_message_conversation(node, inputs, skill_manager)
+                conversation = self._prepare_message_conversation(node, conversation_inputs, skill_manager)
             call_options = self._prepare_call_options(node)
             tool_specs = self._merge_skill_tool_specs(external_tool_specs, skill_manager)
 
@@ -257,6 +263,20 @@ class AgentNodeExecutor(NodeExecutor):
         parts: List[str] = []
         if node.role:
             parts.append(node.role)
+
+        replay_context = self.context.global_state.get("replay_context") or {}
+        replay_context_text = str(replay_context.get("text") or "").strip()
+        retained_tasks = replay_context.get("retained_tasks") or []
+        if replay_context_text and retained_tasks:
+            parts.append(
+                "\n".join(
+                    [
+                        "Replay context is active for this run.",
+                        "Treat the retained task outputs below as previously approved context unless new evidence clearly invalidates them.",
+                        replay_context_text,
+                    ]
+                )
+            )
 
         if skill_manager is not None:
             skills_xml = skill_manager.build_available_skills_xml()
@@ -1219,6 +1239,101 @@ class AgentNodeExecutor(NodeExecutor):
 
     def _coerce_inputs_to_messages(self, inputs: List[Message]) -> List[Message]:
         return [message.clone() for message in inputs if isinstance(message, Message)]
+
+    def _compress_inputs_for_context(self, node: Node, inputs: List[Message]) -> List[Message]:
+        normalized = self._coerce_inputs_to_messages(inputs)
+        if not normalized:
+            return normalized
+
+        config = self._context_compression_config()
+        total_chars = sum(len(message.text_content()) for message in normalized)
+        should_compress = (
+            len(normalized) > config["max_messages"]
+            or total_chars > config["max_chars"]
+        )
+        if not should_compress:
+            return normalized
+
+        pinned: List[Message] = []
+        ordinary: List[Message] = []
+        for message in normalized:
+            if message.keep or message.preserve_role or message.role is MessageRole.SYSTEM:
+                pinned.append(message.clone())
+            else:
+                ordinary.append(message.clone())
+
+        keep_recent = max(1, min(config["keep_recent"], len(ordinary))) if ordinary else 0
+        preserved_recent = ordinary[-keep_recent:] if keep_recent else []
+        summarized = ordinary[:-keep_recent] if keep_recent else ordinary
+
+        if not summarized:
+            return normalized
+
+        summary_message = self._build_compressed_context_message(node, summarized, total_chars)
+        compressed_messages = pinned + [summary_message] + preserved_recent
+        compressed_chars = sum(len(message.text_content()) for message in compressed_messages)
+        self.log_manager.info(
+            f"[Node: {node.id}] Compressed context from {len(normalized)} to {len(compressed_messages)} messages",
+            node_id=node.id,
+            details={
+                "original_message_count": len(normalized),
+                "compressed_message_count": len(compressed_messages),
+                "original_char_count": total_chars,
+                "compressed_char_count": compressed_chars,
+            },
+        )
+        return compressed_messages
+
+    def _context_compression_config(self) -> Dict[str, int]:
+        global_state = self.context.global_state or {}
+        config = global_state.get("context_compression")
+        if not isinstance(config, dict):
+            config = {}
+
+        def _int_value(key: str, default: int) -> int:
+            try:
+                return max(1, int(config.get(key, default)))
+            except (TypeError, ValueError):
+                return default
+
+        return {
+            "max_messages": _int_value("max_messages", CONTEXT_COMPRESSION_MAX_MESSAGES),
+            "max_chars": _int_value("max_chars", CONTEXT_COMPRESSION_MAX_CHARS),
+            "keep_recent": _int_value("keep_recent", CONTEXT_COMPRESSION_KEEP_RECENT),
+            "preview_chars": _int_value("preview_chars", CONTEXT_COMPRESSION_PREVIEW_CHARS),
+        }
+
+    def _build_compressed_context_message(
+        self,
+        node: Node,
+        messages: List[Message],
+        original_char_count: int,
+    ) -> Message:
+        preview_chars = self._context_compression_config()["preview_chars"]
+        lines = [
+            "[Compressed Earlier Context]",
+            f"Older context was compressed for this node to reduce token usage. Original chars: {original_char_count}.",
+            "Summaries:",
+        ]
+        for index, message in enumerate(messages, start=1):
+            source = str(message.metadata.get("source") or "unknown").strip()
+            preview = " ".join(message.text_content().split())
+            if len(preview) > preview_chars:
+                preview = f"{preview[: preview_chars - 1].rstrip()}..."
+            lines.append(f"{index}. ({message.role.value}) {source}: {preview}")
+
+        return Message(
+            role=MessageRole.SYSTEM,
+            content="\n".join(lines),
+            metadata={
+                "source": "CONTEXT_SUMMARY",
+                "compressed": True,
+                "compressed_message_count": len(messages),
+                "node_id": node.id,
+            },
+            preserve_role=True,
+            keep=True,
+        )
 
     def _append_user_message(self, conversation: List[Message], content: str, *, node_id: str) -> None:
         conversation.append(

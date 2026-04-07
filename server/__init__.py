@@ -1,1 +1,1 @@
-"""Server package for DevAll workflow system"""
+"""Server package for the MovieDev workflow system."""

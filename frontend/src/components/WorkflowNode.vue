@@ -20,6 +20,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  isHighlighted: {
+    type: Boolean,
+    default: false,
+  },
   sprite: {
     type: String,
     default: '',
@@ -38,7 +42,30 @@ const nodeType = computed(() => props.data?.type || 'unknown')
 const nodeId = computed(() => props.data?.id || props.id)
 const nodeDescription = computed(() => props.data?.description || '')
 const isActive = computed(() => props.isActive)
+const isHighlighted = computed(() => props.isHighlighted)
 const dynamicStyles = computed(() => getNodeStyles(nodeType.value))
+const mcpPrefixes = computed(() => {
+  const tooling = Array.isArray(props.data?.config?.tooling) ? props.data.config.tooling : []
+  const seen = new Set()
+  const result = []
+
+  for (const item of tooling) {
+    const type = String(item?.type || '').trim()
+    if (type !== 'mcp_remote' && type !== 'mcp_local') {
+      continue
+    }
+    const prefix = String(item?.prefix || type).trim()
+    if (!prefix || seen.has(prefix)) {
+      continue
+    }
+    seen.add(prefix)
+    result.push(prefix)
+  }
+
+  return result
+})
+const visibleMcpBadges = computed(() => mcpPrefixes.value.slice(0, 3))
+const hiddenMcpBadgeCount = computed(() => Math.max(0, mcpPrefixes.value.length - visibleMcpBadges.value.length))
 
 const nodeHelpContent = computed(() => getNodeHelp(nodeType.value))
 
@@ -97,7 +124,7 @@ onUnmounted(() => {
       </div>
       <div
         class="workflow-node"
-        :class="{ 'workflow-node-active': isActive }"
+        :class="{ 'workflow-node-active': isActive, 'workflow-node-highlighted': isHighlighted }"
         :data-type="nodeType"
         :style="dynamicStyles"
         @mouseenter="$emit('hover', nodeId)"
@@ -109,6 +136,18 @@ onUnmounted(() => {
         </div>
         <div v-if="nodeDescription" class="workflow-node-description">
           {{ nodeDescription }}
+        </div>
+        <div v-if="visibleMcpBadges.length" class="workflow-node-badges">
+          <span
+            v-for="prefix in visibleMcpBadges"
+            :key="`${nodeId}-${prefix}`"
+            class="workflow-node-badge"
+          >
+            {{ prefix }}
+          </span>
+          <span v-if="hiddenMcpBadgeCount > 0" class="workflow-node-badge workflow-node-badge-more">
+            +{{ hiddenMcpBadgeCount }}
+          </span>
         </div>
 
         <Handle
@@ -132,7 +171,7 @@ onUnmounted(() => {
     </div>
     <div
       class="workflow-node"
-      :class="{ 'workflow-node-active': isActive }"
+      :class="{ 'workflow-node-active': isActive, 'workflow-node-highlighted': isHighlighted }"
       :data-type="nodeType"
       :style="dynamicStyles"
       @mouseenter="$emit('hover', nodeId)"
@@ -144,6 +183,18 @@ onUnmounted(() => {
       </div>
       <div v-if="nodeDescription" class="workflow-node-description">
         {{ nodeDescription }}
+      </div>
+      <div v-if="visibleMcpBadges.length" class="workflow-node-badges">
+        <span
+          v-for="prefix in visibleMcpBadges"
+          :key="`${nodeId}-${prefix}`"
+          class="workflow-node-badge"
+        >
+          {{ prefix }}
+        </span>
+        <span v-if="hiddenMcpBadgeCount > 0" class="workflow-node-badge workflow-node-badge-more">
+          +{{ hiddenMcpBadgeCount }}
+        </span>
       </div>
 
       <Handle
@@ -176,6 +227,33 @@ onUnmounted(() => {
   display: block;
 }
 
+.workflow-node-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+  max-width: 200px;
+}
+
+.workflow-node-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  background: rgba(31, 103, 109, 0.12);
+  border: 1px solid rgba(31, 103, 109, 0.18);
+  color: #1f676d;
+}
+
+.workflow-node-badge-more {
+  background: rgba(227, 180, 89, 0.12);
+  border-color: rgba(227, 180, 89, 0.18);
+  color: #9c6b12;
+}
+
 .workflow-node-sprite {
   position: absolute;
   top: -25px;
@@ -188,5 +266,10 @@ onUnmounted(() => {
   width: 32px;
   height: 40px;
   object-fit: contain;
+}
+
+:deep(.workflow-node-highlighted) {
+  box-shadow: 0 0 0 4px rgba(31, 103, 109, 0.18), 0 18px 36px rgba(31, 103, 109, 0.18);
+  border-color: rgba(31, 103, 109, 0.55) !important;
 }
 </style>

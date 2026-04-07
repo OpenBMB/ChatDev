@@ -1,158 +1,154 @@
 export const helpContent = {
-  // Start Node Help
   startNode: {
-    title: "Start Node",
-    description: "The entry point for your workflow. All nodes connected to the Start node will run in parallel when the workflow launches.",
+    title: "开始节点",
+    description: "这是工作流的入口。所有连接到开始节点的下游节点，会在流程启动时并行进入可执行状态。",
     examples: [
-      "Connect multiple nodes to start them simultaneously",
-      "The first nodes to execute receive your initial input"
+      "把多个节点连到开始节点上，就能并行起跑",
+      "第一批执行节点会收到你的初始输入"
     ],
     learnMoreUrl: "/tutorial#2-create-nodes"
   },
 
-  // Workflow Node Types
   workflowNode: {
     agent: {
-      title: "Agent Node",
-      description: "An AI agent that can reason, generate content, and use tools. Agents receive messages and produce responses based on their configuration.",
+      title: "Agent 节点",
+      description: "用于放置一个可推理、可生成、可调工具的 AI Agent。它会接收消息，并按自身配置产出结果。",
       examples: [
-        "Content generation (writing, coding, analysis)",
-        "Decision making and routing",
-        "Tool usage (search, file operations, API calls)"
+        "写作、编码、分析等内容生成",
+        "分流判断和路径决策",
+        "搜索、文件处理、API 调用等工具使用"
       ],
       learnMoreUrl: "/tutorial#agent-node"
     },
     human: {
-      title: "Human Node",
-      description: "Pauses workflow execution and waits for human input. Use this to review content, make decisions, or provide feedback.",
+      title: "人工节点",
+      description: "在这里暂停工作流并等待人工输入，适合做审核、补充说明、纠偏和关键决策。",
       examples: [
-        "Review and approve generated content",
-        "Provide additional instructions or corrections",
-        "Choose between workflow paths"
+        "审核并批准生成结果",
+        "补充额外要求或修正方向",
+        "在多条路径之间做选择"
       ],
       learnMoreUrl: "/tutorial#human-node"
     },
     python: {
-      title: "Python Node",
-      description: "Executes Python code on your local environment. The code runs in the workspace directory and can access uploaded files.",
+      title: "Python 节点",
+      description: "在本地环境中执行 Python 代码。代码会运行在当前工作区，并可读取已上传文件。",
       examples: [
-        "Data processing and analysis",
-        "Running generated code",
-        "File manipulation"
+        "数据处理与分析",
+        "执行生成出的代码",
+        "文件读写与转换"
       ],
       learnMoreUrl: "/tutorial#python-node"
     },
     passthrough: {
-      title: "Passthrough Node",
-      description: "Passes messages to the next node without modification. Useful for workflow organization and filtering outputs in loops.",
+      title: "透传节点",
+      description: "不修改消息内容，直接把输入传给下一个节点，适合做流程整理、上下文保留或循环链路中的结果筛选。",
       examples: [
-        "Preserve initial context in loops",
-        "Filter redundant outputs",
-        "Organize workflow structure"
+        "在循环中保留初始上下文",
+        "过滤多余输出",
+        "整理工作流结构"
       ],
       learnMoreUrl: "/tutorial#passthrough-node"
     },
     literal: {
-      title: "Literal Node",
-      description: "Outputs fixed text, ignoring all input. Use this to inject instructions or context at specific points in the workflow.",
+      title: "字面量节点",
+      description: "忽略上游输入，直接输出一段固定文本。适合在流程的特定位置插入规则、说明或上下文。",
       examples: [
-        "Add fixed instructions before a node",
-        "Inject context or constraints",
-        "Provide test data"
+        "在某个节点前插入固定指令",
+        "注入额外约束或背景",
+        "提供测试数据"
       ],
       learnMoreUrl: "/tutorial#literal-node"
     },
     loop_counter: {
-      title: "Loop Counter Node",
-      description: "Limits loop iterations. Only produces output when the maximum count is reached, helping control infinite loops.",
+      title: "循环计数节点",
+      description: "限制循环次数。只有达到最大次数时才会产出结果，用来防止流程无限循环。",
       examples: [
-        "Prevent runaway loops",
-        "Set maximum revision cycles",
-        "Control iterative processes"
+        "防止流程失控循环",
+        "设置最大修订轮次",
+        "控制迭代过程"
       ],
       learnMoreUrl: "/tutorial#loop-counter-node"
     },
     subgraph: {
-      title: "Subgraph Node",
-      description: "Embeds another workflow as a reusable module. Enables modular design and workflow composition.",
+      title: "子图节点",
+      description: "把另一个工作流嵌入为可复用模块，适合做模块化设计和复杂流程复合编排。",
       examples: [
-        "Reuse common patterns across workflows",
-        "Break complex workflows into manageable pieces",
-        "Share workflows between teams"
+        "在多个工作流里复用通用模式",
+        "把复杂流程拆成可管理的片段",
+        "跨团队共享流程能力"
       ],
       learnMoreUrl: "/tutorial#subgraph-node"
     },
     unknown: {
-      title: "Workflow Node",
-      description: "A node in your workflow. Click to view and edit its configuration.",
+      title: "工作流节点",
+      description: "这是工作流中的一个节点。点击后可以查看并编辑它的配置。",
       learnMoreUrl: "/tutorial#2-create-nodes"
     }
   },
 
-  // Workflow Edge Help
   edge: {
     basic: {
-      title: "Connection",
-      description: "Connects two nodes to control information flow and execution order. The upstream node's output becomes the downstream node's input.",
+      title: "连线",
+      description: "用于连接两个节点，决定信息流向和执行顺序。上游节点的输出会成为下游节点的输入。",
       examples: [
-        "Data flows from source to target",
-        "Target executes after source completes"
+        "数据会从源节点流向目标节点",
+        "目标节点会在源节点完成后触发"
       ],
       learnMoreUrl: "/tutorial#what-is-an-edge"
     },
     trigger: {
       enabled: {
-        description: "This connection triggers the downstream node to execute.",
+        description: "这条连线会触发下游节点执行。",
       },
       disabled: {
-        description: "This connection passes data but does NOT trigger execution. The downstream node only runs if triggered by another edge.",
+        description: "这条连线会传递数据，但不会触发执行。下游节点只有被其他连线触发时才会运行。",
       }
     },
     condition: {
       hasCondition: {
-        description: "This connection has a condition. It only activates when the condition evaluates to true.",
+        description: "这条连线带有条件，只有条件计算为真时才会生效。",
         learnMoreUrl: "/tutorial#edge-condition"
       }
     }
   },
 
-  // Context Menu Actions
   contextMenu: {
     createNode: {
-      description: "Create a new node in your workflow. Choose from Agent, Human, Python, and other node types.",
+      description: "在当前工作流中新增一个节点。你可以从 Agent、人工、Python 等类型里选择。",
     },
     copyNode: {
-      description: "Duplicate this node with all its settings. The copy will have a blank ID that you must fill in.",
+      description: "复制当前节点及其配置。副本会保留内容，但需要你填写新的节点 ID。",
     },
     deleteNode: {
-      description: "Remove this node and all its connections from the workflow.",
+      description: "从工作流中删除当前节点及其所有相关连线。",
     },
     deleteEdge: {
-      description: "Remove this connection between nodes.",
+      description: "删除这条节点之间的连接关系。",
     },
     createNodeButton: {
-      description: "Open the node creation form. You can also right-click the canvas to create a node at a specific position.",
+      description: "打开新建节点表单。你也可以在画布上右键，在指定位置直接创建节点。",
     },
     configureGraph: {
-      description: "Configure workflow-level settings like name, description, and global variables.",
+      description: "配置工作流级别设置，比如名称、描述和全局变量。",
     },
     launch: {
-      description: "Run your workflow with a task prompt. The workflow will execute and show you the results.",
+      description: "带着任务提示运行当前工作流，并在运行台里查看执行结果。",
     },
     createEdge: {
-      description: "Create a connection between nodes. You can also drag from a node's handle to create connections visually.",
+      description: "创建节点之间的连线。你也可以直接拖拽节点句柄来可视化建边。",
     },
     manageVariables: {
-      description: "Define global variables (like API keys) that all nodes can access using ${VARIABLE_NAME} syntax.",
+      description: "定义全局变量，例如 API Key，所有节点都可以通过 ${VARIABLE_NAME} 方式访问。",
     },
     manageMemories: {
-      description: "Configure memory modules for long-term information storage and retrieval across workflow runs.",
+      description: "配置记忆模块，用于跨多次运行存储和检索长期信息。",
     },
     renameWorkflow: {
-      description: "Change the name of this workflow file.",
+      description: "修改当前工作流文件名称。",
     },
     copyWorkflow: {
-      description: "Create a duplicate of this entire workflow with a new name.",
+      description: "以新名字复制出一份完整的工作流副本。",
     }
   }
 }
@@ -180,7 +176,16 @@ export function getHelpContent(key) {
     return { description: content }
   }
 
-  return content || null
+  if (!content || typeof content !== 'object') {
+    return content || null
+  }
+
+  const normalized = { ...content }
+  if (typeof normalized.learnMoreUrl === 'string' && normalized.learnMoreUrl.startsWith('/tutorial')) {
+    delete normalized.learnMoreUrl
+  }
+
+  return normalized
 }
 
 /**
@@ -221,6 +226,10 @@ export function getEdgeHelp(edgeData) {
     if (!base.learnMoreUrl) {
       base.learnMoreUrl = helpContent.edge.condition.hasCondition.learnMoreUrl
     }
+  }
+
+  if (typeof base.learnMoreUrl === 'string' && base.learnMoreUrl.startsWith('/tutorial')) {
+    delete base.learnMoreUrl
   }
 
   return base

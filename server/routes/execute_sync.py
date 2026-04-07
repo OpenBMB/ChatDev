@@ -18,6 +18,7 @@ from entity.messages import Message
 from runtime.bootstrap.schema import ensure_schema_registry_populated
 from runtime.sdk import OUTPUT_ROOT, run_workflow
 from server.models import WorkflowRunRequest
+from server.services.workflow_handoff_service import load_handoffs_from_workflow, run_handoffs
 from server.settings import YAML_DIR
 from utils.attachments import AttachmentStore
 from utils.exceptions import ValidationError, WorkflowExecutionError
@@ -138,6 +139,7 @@ def _run_workflow_with_logger(
         "session_name": normalized_session,
         "yaml_file": str(yaml_path),
         "log_id": log_id,
+        "outputs": executor.outputs,
         "token_usage": token_usage,
         "output_dir": graph_context.directory,
     }
@@ -184,6 +186,16 @@ async def run_workflow_sync(request: WorkflowRunRequest, http_request: Request):
 
         final_message = result.final_message.text_content() if result.final_message else ""
         meta = result.meta_info
+        handoff_results = await run_in_threadpool(
+            run_handoffs,
+            load_handoffs_from_workflow(meta.yaml_file, request.variables),
+            source_workflow=meta.yaml_file,
+            final_message=final_message,
+            results=meta.outputs,
+            token_usage=meta.token_usage,
+            variables=request.variables,
+            log_level=resolved_log_level,
+        )
 
         logger = get_server_logger()
         logger.info(
@@ -198,6 +210,7 @@ async def run_workflow_sync(request: WorkflowRunRequest, http_request: Request):
             "final_message": final_message,
             "token_usage": meta.token_usage,
             "output_dir": str(meta.output_dir.resolve()),
+            "handoffs": handoff_results,
         }
 
     event_queue: queue.Queue[tuple[str, Any]] = queue.Queue()
@@ -221,15 +234,27 @@ async def run_workflow_sync(request: WorkflowRunRequest, http_request: Request):
                 log_level=resolved_log_level,
                 log_callback=enqueue,
             )
+            final_text = final_message.text_content() if final_message else ""
             enqueue(
                 "completed",
                 {
                     "status": "completed",
-                    "final_message": final_message.text_content() if final_message else "",
+                    "final_message": final_text,
                     "token_usage": meta["token_usage"],
                     "output_dir": str(meta["output_dir"].resolve()),
                 },
             )
+            handoff_results = run_handoffs(
+                load_handoffs_from_workflow(meta["yaml_file"], request.variables),
+                source_workflow=meta["yaml_file"],
+                final_message=final_text,
+                results=meta.get("outputs"),
+                token_usage=meta["token_usage"],
+                variables=request.variables,
+                log_level=resolved_log_level,
+            )
+            if handoff_results:
+                enqueue("handoffs_completed", {"handoffs": handoff_results})
         except (FileNotFoundError, ValidationError) as exc:
             enqueue("error", {"message": str(exc)})
         except Exception as exc:

@@ -1,4 +1,4 @@
-﻿"""Graph orchestration adapted to ChatDev design_0.4.0 workflows."""
+﻿"""Graph orchestration adapted to the MovieDev workflow runtime."""
 
 import threading
 from typing import Any, Callable, Dict, List, Optional
@@ -51,7 +51,7 @@ class ExecutionError(RuntimeError):
 
 
 class GraphExecutor:
-    """Executes ChatDev_new graph workflows with integrated memory and thinking management."""
+    """Executes MovieDev graph workflows with integrated memory and thinking management."""
 
     def __init__(
         self,
@@ -548,7 +548,7 @@ class GraphExecutor:
         """Execute a single node."""
         self._raise_if_cancelled()
         with self.resource_manager.guard_node(node):
-            input_results = node.input
+            input_results, injected_predecessor_ids = self._inject_retained_predecessor_messages(node, node.input)
 
             # Clear incoming triggers so future iterations wait for fresh signals
             node.reset_triggers()
@@ -559,7 +559,8 @@ class GraphExecutor:
             self.log_manager.record_node_start(node.id, serialized_inputs, node.node_type, {
                 "input_count": len(input_results),
                 "predecessors": [p.id for p in node.predecessors],
-                "successors": [s.id for s in node.successors]
+                "successors": [s.id for s in node.successors],
+                "replay_injected_predecessors": injected_predecessor_ids,
             })
 
             self.log_manager.debug(f"Processing {len(input_results)} inputs together for node {node.id}")
@@ -625,12 +626,24 @@ class GraphExecutor:
                 output_text = ""
                 output_role = "none"
                 output_source = None
+            reused_replay_output = bool(
+                unified_output is not None
+                and isinstance(unified_output.metadata, dict)
+                and unified_output.metadata.get("reused_replay_output")
+            )
+            retained_task_output = (
+                unified_output.metadata.get("retained_task_output")
+                if unified_output is not None and isinstance(unified_output.metadata, dict)
+                else None
+            )
 
             self.log_manager.record_node_end(node.id, output_text if node.log_output else "", {
                 "output_size": len(output_text),
                 "output_count": len(output_messages),
                 "output_role": output_role,
-                "output_source": output_source
+                "output_source": output_source,
+                "reused_replay_output": reused_replay_output,
+                "retained_task_output": retained_task_output,
             })
 
             # Pass results to successor nodes via edges
@@ -660,6 +673,10 @@ class GraphExecutor:
         This method delegates to specific node executors based on node type.
         Returns a list of messages (maybe empty if node suppresses output).
         """
+        reused_outputs = self._maybe_reuse_retained_output(node)
+        if reused_outputs is not None:
+            return reused_outputs
+
         if not self.node_executors:
             raise RuntimeError("Node executors not initialized. Call _build_memories_and_thinking() first.")
         
@@ -685,6 +702,102 @@ class GraphExecutor:
                     hook.after_node(node, workspace, success=success)
                 except Exception:
                     self.log_manager.warning("workspace hook after_node failed for %s", node.id)
+
+    def _maybe_reuse_retained_output(self, node: Node) -> List[Message] | None:
+        if str(node.type or "").strip() != "agent":
+            return None
+
+        retained_node_ids = self.runtime_context.global_state.get("retained_node_ids") or []
+        if isinstance(retained_node_ids, list) and retained_node_ids:
+            normalized_ids = {str(item or "").strip() for item in retained_node_ids if str(item or "").strip()}
+            if node.id not in normalized_ids:
+                return None
+
+        retained_map = self.runtime_context.global_state.get("retained_task_output_map") or {}
+        if not isinstance(retained_map, dict):
+            return None
+
+        retained = retained_map.get(node.id)
+        if not isinstance(retained, dict):
+            return None
+
+        output_text = str(retained.get("output_text") or "").strip()
+        preview = str(retained.get("output_preview") or retained.get("preview") or "").strip()
+        if not output_text and not preview:
+            return None
+
+        reused_text = output_text or preview
+        self.log_manager.info(
+            f"Reusing retained replay output for node {node.id} instead of executing the agent again"
+        )
+        return [
+            Message(
+                role=MessageRole.ASSISTANT,
+                content=reused_text,
+                metadata={
+                    "source": node.id,
+                    "reused_replay_output": True,
+                    "retained_task_output": retained,
+                },
+            )
+        ]
+
+    def _inject_retained_predecessor_messages(self, node: Node, inputs: List[Message]) -> tuple[List[Message], List[str]]:
+        retained_node_ids = self.runtime_context.global_state.get("retained_node_ids") or []
+        retained_map = self.runtime_context.global_state.get("retained_task_output_map") or {}
+
+        if not isinstance(retained_node_ids, list) or not retained_node_ids:
+            return list(inputs), []
+        if not isinstance(retained_map, dict) or not retained_map:
+            return list(inputs), []
+
+        retained_set = {str(item or "").strip() for item in retained_node_ids if str(item or "").strip()}
+        if not retained_set:
+            return list(inputs), []
+
+        existing_sources = {
+            str((message.metadata or {}).get("source") or "").strip()
+            for message in (inputs or [])
+            if isinstance(getattr(message, "metadata", None), dict)
+        }
+        injected_messages: List[Message] = []
+        injected_ids: List[str] = []
+
+        for predecessor in node.predecessors:
+            predecessor_id = str(getattr(predecessor, "id", "") or "").strip()
+            if not predecessor_id or predecessor_id not in retained_set or predecessor_id in existing_sources:
+                continue
+
+            retained = retained_map.get(predecessor_id)
+            if not isinstance(retained, dict):
+                continue
+
+            output_text = str(retained.get("output_text") or "").strip()
+            preview = str(retained.get("output_preview") or retained.get("preview") or "").strip()
+            content = output_text or preview
+            if not content:
+                continue
+
+            injected_messages.append(
+                Message(
+                    role=MessageRole.ASSISTANT,
+                    content=content,
+                    metadata={
+                        "source": predecessor_id,
+                        "replay_injected_dependency": True,
+                        "retained_task_output": retained,
+                    },
+                    keep=True,
+                )
+            )
+            injected_ids.append(predecessor_id)
+
+        if injected_messages:
+            self.log_manager.info(
+                f"Injected {len(injected_messages)} retained predecessor output(s) into node {node.id} for replay continuity"
+            )
+
+        return list(inputs) + injected_messages, injected_ids
 
 
     def _collect_all_outputs(self) -> None:

@@ -2,13 +2,20 @@
   <div class="launch-view">
     <div class="launch-bg"></div>
     <div class="header">
-      <h1>Labaratory</h1>
-      <button class="settings-button" @click="showBatchSettingsModal()" title="Batch Settings">
+      <div class="header-copy">
+        <div class="header-eyebrow">批量运行台</div>
+        <h1>批量实验室</h1>
+        <p class="header-subtitle">把批量运行、进度监控和日志查看收在同一块控制面板里。</p>
+      </div>
+      <div class="header-actions">
+        <div class="header-status-pill">{{ computedStatus }}</div>
+      <button class="settings-button" @click="showBatchSettingsModal()" title="批处理设置">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="12" cy="12" r="3"></circle>
           <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
         </svg>
       </button>
+      </div>
     </div>
     <div class="content">
       <!-- Left panel -->
@@ -20,7 +27,7 @@
               <span :class="`log-timestamp log-timestamp-${logMessage.type}`">{{ logMessage.timestamp }}</span> : {{ logMessage.message }}
             </div>
             <div v-if="logMessages.length === 0" class="log-placeholder">
-              Batch processing logs will appear here...
+              批量运行日志会显示在这里
             </div>
           </div>
         </div>
@@ -31,26 +38,26 @@
             <!-- Metrics Grid -->
             <div class="metrics-grid">
               <div class="metric-card" :class="{ 'status-active': status === 'In Progress' }">
-                <div class="metric-title">Rows Completed</div>
+                <div class="metric-title">已完成行数</div>
                 <div class="metric-value">{{ completedRows }}</div>
               </div>
               <div class="metric-card" :class="{ 'status-active': status === 'In Progress' }">
-                <div class="metric-title">Total Time</div>
+                <div class="metric-title">总耗时</div>
                 <div class="metric-value">{{ totalTime }}</div>
               </div>
               <div class="metric-card" :class="{ 'status-active': status === 'In Progress' }">
-                <div class="metric-title">Success Rate</div>
+                <div class="metric-title">成功率</div>
                 <div class="metric-value">{{ successRate }}</div>
               </div>
               <div class="metric-card" :class="{ 'status-active': status === 'In Progress' }">
-                <div class="metric-title">Current Status</div>
+                <div class="metric-title">当前状态</div>
                 <div class="metric-value" :class="{ 'status-active': status === 'In Progress' }">{{ computedStatus }}</div>
               </div>
             </div>
 
             <!-- Progress Bar -->
             <div class="progress-section">
-              <div class="progress-label">Overall Progress</div>
+              <div class="progress-label">整体进度</div>
               <div class="progress-bar" :style="{ '--process-width': progressPercentage + '%'}">
                 <div class="progress-fill" :class="{ 'processing': status === 'In Progress' }" :style="{ width: progressPercentage + '%' }"></div>
               </div>
@@ -63,7 +70,7 @@
       <!-- Right panel -->
       <div class="right-panel">
         <div class="control-section">
-          <label class="section-label">Workflow Selection</label>
+          <label class="section-label">工作流选择</label>
       <div
         class="select-wrapper custom-file-selector"
         ref="fileSelectorWrapperRef"
@@ -73,7 +80,7 @@
           v-model="fileSearchQuery"
           type="text"
           class="file-selector-input"
-          :placeholder="loading ? 'Loading...' : 'Select YAML file...'"
+          :placeholder="loading ? '加载中...' : '选择工作流文件...'"
           :disabled="loading || isWorkflowRunning"
           @focus="handleFileInputFocus"
           @input="handleFileInputChange"
@@ -104,13 +111,13 @@
               v-if="!filteredWorkflowFiles.length"
               class="file-empty"
             >
-              No results
+              暂无结果
             </li>
           </ul>
         </Transition>
       </div>
 
-          <label class="section-label">Input File Selection</label>
+          <label class="section-label">输入文件</label>
           <div class="input-file-section">
             <div class="file-upload-wrapper">
               <input
@@ -126,14 +133,14 @@
                 :disabled="loading || isWorkflowRunning"
                 @click="handleInputFileButtonClick"
               >
-                {{ selectedInputFile ? selectedInputFile.name : 'Select input file...' }}
+                {{ selectedInputFile ? selectedInputFile.name : '选择输入文件...' }}
               </button>
             </div>
           </div>
 
           <div class="input-manual">
             <div class="manual-title" @click="showColumnGuideModal = true">
-              Input File Format
+              输入文件格式
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="info-icon">
                 <circle cx="12" cy="12" r="10"></circle>
                 <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
@@ -142,21 +149,21 @@
             </div>
           </div>
 
-          <label class="section-label">View</label>
+          <label class="section-label">视图</label>
           <div class="view-toggle">
             <button
               class="toggle-button"
               :class="{ active: viewMode === 'dashboard' }"
               @click="switchToDashboard"
             >
-              Dashboard
+              仪表盘
             </button>
             <button
               class="toggle-button"
               :class="{ active: viewMode === 'terminal' }"
               @click="viewMode = 'terminal'"
             >
-              Terminal
+              终端
             </button>
           </div>
 
@@ -177,7 +184,7 @@
               :disabled="status !== 'In Progress'"
               @click="cancelBatchWorkflow"
             >
-              Cancel
+              取消
             </button>
 
             <button
@@ -185,7 +192,7 @@
               :disabled="status !== 'Batch completed' && status !== 'Batch cancelled'"
               @click="downloadLogs"
             >
-              Download Logs
+              下载日志
             </button>
           </div>
         </div>
@@ -225,16 +232,16 @@
         <div class="modal-content">
           <div class="manual-content">
             <div class="manual-item">
-              Input file should contain at least <code>task</code> and/or <code>attachments</code> columns
+              输入文件至少需要包含 <code>task</code> 和/或 <code>attachments</code> 列
             </div>
             <div class="manual-item">
-              <code>id</code> - Must be unique, auto-generated if column not found
+              <code>id</code> - 必须唯一，如果没有该列会自动生成
             </div>
             <div class="manual-item">
-              <code>task</code> - Holds user input
+              <code>task</code> - 用户输入内容
             </div>
             <div class="manual-item">
-              <code>vars</code> - JSON object containing key-value pairs of global variables
+              <code>vars</code> - 全局变量的 JSON 对象
               <div class="manual-example">
                 <pre>{{
 JSON.stringify({"BASE_URL": "openai.com","API_KEY": "123"}, null, 2)
@@ -242,7 +249,7 @@ JSON.stringify({"BASE_URL": "openai.com","API_KEY": "123"}, null, 2)
               </div>
             </div>
             <div class="manual-item">
-              <code>attachments</code> - JSON array containing absolute file paths of attachments for workflow
+              <code>attachments</code> - 工作流附件的绝对路径 JSON 数组
               <div class="manual-example">
                 <pre>{{
 JSON.stringify(["C:\\a_sheep.png"], null, 2)
@@ -265,12 +272,12 @@ JSON.stringify(["C:\\a_sheep.png"], null, 2)
       <div class="batch-settings-modal">
         <div class="modal-content">
           <div class="modal-header">
-            <h3>Batch Settings</h3>
+            <h3>批处理设置</h3>
             <button class="close-button" @click="isBatchSettingsModalVisible = false">×</button>
           </div>
           <div class="modal-body">
             <div class="settings-item">
-              <label class="setting-label">Max. Parallel Launches</label>
+              <label class="setting-label">最大并行运行数</label>
               <input
                 type="number"
                 v-model.number="maxParallel"
@@ -279,21 +286,21 @@ JSON.stringify(["C:\\a_sheep.png"], null, 2)
                 max="50"
                 step="1"
               />
-              <p class="setting-desc">Maximum number of parallel workflow launches</p>
+              <p class="setting-desc">允许同时发起的最大工作流数量</p>
             </div>
             <div class="settings-item">
-              <label class="setting-label">Log Level</label>
+              <label class="setting-label">日志级别</label>
               <select v-model="logLevel" class="setting-select">
                 <option v-for="level in logLevelOptions" :key="level" :value="level">
                   {{ level }}
                 </option>
               </select>
-              <p class="setting-desc">Logging verbosity level</p>
+              <p class="setting-desc">控制日志输出详细程度</p>
             </div>
           </div>
           <div class="modal-footer">
-            <button class="cancel-button" @click="isBatchSettingsModalVisible = false">Cancel</button>
-            <button class="confirm-button" @click="isBatchSettingsModalVisible = false">Save</button>
+            <button class="cancel-button" @click="isBatchSettingsModalVisible = false">取消</button>
+            <button class="confirm-button" @click="isBatchSettingsModalVisible = false">保存</button>
           </div>
         </div>
       </div>
@@ -2748,5 +2755,223 @@ watch(
   background: rgba(255, 255, 255, 0.05);
   color: #fff;
   border-color: rgba(255, 255, 255, 0.3);
+}
+
+.launch-view {
+  min-height: 100vh;
+  height: auto;
+  padding: 18px;
+  box-sizing: border-box;
+  background:
+    radial-gradient(circle at top left, rgba(32, 152, 140, 0.14), transparent 24%),
+    radial-gradient(circle at 86% 16%, rgba(234, 192, 104, 0.18), transparent 28%),
+    linear-gradient(180deg, #f6f3ea 0%, #ebe5d9 100%);
+  color: #17353c;
+}
+
+.launch-bg {
+  top: -120px;
+  left: 8%;
+  right: 8%;
+  height: 360px;
+  background: linear-gradient(90deg, rgba(52, 166, 153, 0.2), rgba(236, 197, 122, 0.18), rgba(85, 148, 185, 0.14));
+  filter: blur(100px);
+  opacity: 1;
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+  height: auto;
+  min-height: 110px;
+  padding: 24px 30px;
+  border-radius: 30px;
+  border: 1px solid rgba(14, 46, 52, 0.08);
+  background: linear-gradient(135deg, rgba(22, 88, 95, 0.95) 0%, rgba(31, 104, 108, 0.94) 52%, rgba(238, 197, 120, 0.92) 140%);
+  box-shadow: 0 24px 60px rgba(27, 54, 61, 0.16);
+}
+
+.header-copy {
+  max-width: 760px;
+}
+
+.header-eyebrow {
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(244, 249, 246, 0.66);
+}
+
+.header h1 {
+  margin: 10px 0 0;
+  font-size: clamp(28px, 3.8vw, 44px);
+  color: #f8fcfa;
+  letter-spacing: -0.03em;
+}
+
+.header-subtitle {
+  margin: 12px 0 0;
+  max-width: 620px;
+  font-size: 14px;
+  line-height: 1.75;
+  color: rgba(244, 249, 246, 0.84);
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.header-status-pill {
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: rgba(250, 251, 248, 0.14);
+  color: #fff7dc;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.settings-button {
+  padding: 12px;
+  border-radius: 16px;
+  color: #fff4d1;
+  background: rgba(250, 251, 248, 0.12);
+}
+
+.settings-button:hover {
+  background: rgba(250, 251, 248, 0.18);
+}
+
+.content {
+  gap: 18px;
+  padding: 18px 0 0;
+}
+
+.left-panel,
+.right-panel {
+  border-radius: 28px;
+  background: rgba(255, 250, 243, 0.76);
+  border: 1px solid rgba(21, 58, 64, 0.08);
+  box-shadow: 0 24px 60px rgba(33, 55, 63, 0.08);
+  backdrop-filter: blur(14px);
+}
+
+.left-panel,
+.right-panel {
+  padding: 20px;
+}
+
+.log-box,
+.dashboard-box,
+.control-section,
+.select-wrapper,
+.view-toggle,
+.manual-content,
+.column-guide-modal,
+.batch-settings-modal {
+  background: rgba(255, 255, 255, 0.8) !important;
+  border: 1px solid rgba(22, 58, 64, 0.08) !important;
+  color: #17353c;
+}
+
+.log-messages,
+.dashboard-content {
+  color: #17353c;
+}
+
+.metric-card,
+.attachment-item,
+.manual-example pre {
+  background: rgba(250, 252, 249, 0.9) !important;
+  border: 1px solid rgba(22, 58, 64, 0.08) !important;
+}
+
+.metric-title,
+.progress-label,
+.log-placeholder,
+.manual-title,
+.batch-settings-modal .setting-desc,
+.section-label {
+  color: #6b7d80 !important;
+}
+
+.metric-value,
+.batch-settings-modal .modal-header h3,
+.batch-settings-modal .setting-label,
+.manual-item,
+.file-selector-input,
+.file-upload-button {
+  color: #17353c !important;
+}
+
+.progress-bar {
+  background: rgba(24, 70, 77, 0.08);
+}
+
+.progress-fill {
+  background: linear-gradient(90deg, #19555c, #2c8a7f, #e2b459);
+}
+
+.toggle-button,
+.file-upload-button,
+.file-selector-input,
+.batch-settings-modal .setting-input,
+.batch-settings-modal .setting-select {
+  background: rgba(255, 255, 255, 0.92) !important;
+  border: 1px solid rgba(22, 58, 64, 0.1) !important;
+  color: #17353c !important;
+}
+
+.toggle-button.active,
+.confirm-button,
+.launch-button {
+  background: linear-gradient(135deg, #19555c, #23707b, #e2b459) !important;
+  color: #ffffff !important;
+  border: none !important;
+}
+
+.cancel-button {
+  background: rgba(255, 255, 255, 0.92) !important;
+  color: #8b4d41 !important;
+  border: 1px solid rgba(139, 77, 65, 0.16) !important;
+}
+
+.download-button {
+  background: rgba(255, 255, 255, 0.92) !important;
+  color: #18464d !important;
+  border: 1px solid rgba(24, 70, 77, 0.12) !important;
+}
+
+.column-guide-modal-overlay,
+.batch-settings-modal-overlay {
+  background: rgba(22, 33, 37, 0.42);
+  backdrop-filter: blur(6px);
+}
+
+.modal-content {
+  color: #17353c;
+}
+
+@media (max-width: 980px) {
+  .launch-view {
+    padding: 14px;
+  }
+
+  .header {
+    flex-direction: column;
+  }
+
+  .content {
+    flex-direction: column;
+  }
+
+  .left-panel,
+  .right-panel {
+    padding: 16px;
+  }
 }
 </style>

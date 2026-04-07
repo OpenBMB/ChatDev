@@ -1,69 +1,87 @@
 :root {
   scrollbar-gutter: auto;
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  color-scheme: light;
+  font-family: "Inter", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
   line-height: 1.5;
   font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
+  color: #182a2e;
+  background: #f4efe6;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  --mv-canvas: #f4efe6;
+  --mv-canvas-strong: #ebe2d3;
+  --mv-panel: #fffaf2;
+  --mv-panel-muted: #f8f1e6;
+  --mv-panel-green: #edf6f0;
+  --mv-ink: #182a2e;
+  --mv-ink-soft: #5f7175;
+  --mv-ink-muted: #849195;
+  --mv-line: rgba(24, 42, 46, 0.11);
+  --mv-line-strong: rgba(24, 42, 46, 0.18);
+  --mv-primary: #1e646b;
+  --mv-primary-strong: #164b51;
+  --mv-accent: #c58b2a;
+  --mv-danger: #9c4f3f;
+  --mv-radius-lg: 24px;
+  --mv-radius-md: 18px;
+  --mv-radius-sm: 12px;
+  --mv-shadow-soft: 0 18px 50px rgba(39, 49, 45, 0.08);
+  --mv-shadow-tight: 0 10px 28px rgba(39, 49, 45, 0.07);
+  --mv-heading-font: "Iowan Old Style", "Songti SC", "Noto Serif CJK SC", Georgia, serif;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
+* {
+  box-sizing: border-box;
 }
 
-body {
-  margin: 0;
+html,
+body,
+#app {
+  width: 100%;
   min-width: 320px;
   min-height: 100vh;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+body {
+  margin: 0;
+  background:
+    radial-gradient(circle at 12% -8%, rgba(30, 100, 107, 0.12), transparent 28%),
+    radial-gradient(circle at 88% 4%, rgba(197, 139, 42, 0.14), transparent 24%),
+    linear-gradient(180deg, var(--mv-canvas) 0%, var(--mv-canvas-strong) 100%);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
 }
 
 button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
+  border: 1px solid var(--mv-line);
+  background: var(--mv-panel);
+  color: var(--mv-ink);
 }
 
-.card {
-  padding: 2em;
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 3px solid rgba(30, 100, 107, 0.2);
+  outline-offset: 2px;
 }
 
-#app {
-  width: 100%;
-  height: 100vh;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+h1,
+h2,
+h3,
+p {
+  margin-top: 0;
 }

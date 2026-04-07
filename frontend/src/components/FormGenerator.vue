@@ -9,44 +9,117 @@
     >
       <div class="modal-content">
         <div class="modal-header">
-          <div v-if="modal.formError" class="submit-error">
-            {{ modal.formError }}
+          <div class="modal-header-copy">
+            <div class="modal-eyebrow">
+              {{ getModalEyebrow(modal) }}
+            </div>
+            <h2 class="modal-title modal-title--primary">
+              {{ getModalTitle(modal) }}
+            </h2>
+            <p class="modal-subtitle">
+              {{ getModalSubtitle(modal) }}
+            </p>
           </div>
           <button class="close-button" @click="closeModal(modal.id)">×</button>
         </div>
         <div class="modal-body">
-          <div
-            v-for="field in getMainDisplayFields(modal)"
-            :key="field.name + '-' + (modal.formData[field.name]?.type || '')"
-          >
-            <!-- Main Field Rendering -->
-            <DynamicFormField
-              :field="field"
-              :modal-id="modal.id"
-              :form-data="modal.formData"
-              :child-summaries="modal.childSummaries"
-              :recursive="modal.recursive"
-              :is-visible="isFieldVisible(modal, field)"
-              :expand-inline="isInlineConfigField(field)"
-              :can-open-conditional-child-modal="canOpenConditionalChildModal(modal, field)"
-              :conditional-child-button-label="conditionalChildButtonLabel(modal, field)"
-              :is-read-only="isFieldReadOnly(field)"
-              @open-child-modal="(f, idx) => openChildModal(modal.id, f, idx)"
-              @clear-child-entry="(fname) => clearChildEntry(modal.id, fname)"
-              @delete-child-entry="(fname, idx) => deleteChildEntry(modal.id, fname, idx)"
-              @open-conditional-child-modal="(f) => openConditionalChildModal(modal.id, f)"
-              @handle-enum-change="(f) => handleEnumChange(modal.id, f)"
-              @open-var-modal="(fname) => openVarModal(modal.id, fname)"
-              @edit-var="(fname, key) => editVar(modal.id, fname, key)"
-              @delete-var="(fname, key) => deleteVar(modal.id, fname, key)"
-              @open-list-item-modal="(fname) => openListItemModal(modal.id, fname)"
-              @delete-list-item="(fname, idx) => deleteListItem(modal.id, fname, idx)"
-            />
+          <div v-if="modal.formError" class="submit-error">
+            {{ modal.formError }}
           </div>
+
+          <section
+            v-if="getPrimaryDisplayFields(modal).length"
+            class="form-section form-section--primary"
+          >
+            <div class="form-section-header">
+              <div>
+                <div class="form-section-kicker">{{ t('formGenerator.basicSectionKicker') }}</div>
+                <h3 class="form-section-title">{{ t('formGenerator.basicSectionTitle') }}</h3>
+              </div>
+              <div class="form-section-meta">
+                {{ getPrimaryDisplayFields(modal).length }} {{ t('formGenerator.fieldsUnit') }}
+              </div>
+            </div>
+            <div class="form-section-grid">
+              <div
+                v-for="field in getPrimaryDisplayFields(modal)"
+                :key="field.name + '-' + (modal.formData[field.name]?.type || '')"
+                class="form-section-item"
+              >
+                <DynamicFormField
+                  :field="field"
+                  :modal-id="modal.id"
+                  :form-data="modal.formData"
+                  :child-summaries="modal.childSummaries"
+                  :recursive="modal.recursive"
+                  :is-visible="true"
+                  :expand-inline="isInlineConfigField(field)"
+                  :can-open-conditional-child-modal="canOpenConditionalChildModal(modal, field)"
+                  :conditional-child-button-label="conditionalChildButtonLabel(modal, field)"
+                  :is-read-only="isFieldReadOnly(field)"
+                  @open-child-modal="(f, idx) => openChildModal(modal.id, f, idx)"
+                  @clear-child-entry="(fname) => clearChildEntry(modal.id, fname)"
+                  @delete-child-entry="(fname, idx) => deleteChildEntry(modal.id, fname, idx)"
+                  @open-conditional-child-modal="(f) => openConditionalChildModal(modal.id, f)"
+                  @handle-enum-change="(f) => handleEnumChange(modal.id, f)"
+                  @open-var-modal="(fname) => openVarModal(modal.id, fname)"
+                  @edit-var="(fname, key) => editVar(modal.id, fname, key)"
+                  @delete-var="(fname, key) => deleteVar(modal.id, fname, key)"
+                  @open-list-item-modal="(fname) => openListItemModal(modal.id, fname)"
+                  @delete-list-item="(fname, idx) => deleteListItem(modal.id, fname, idx)"
+                />
+              </div>
+            </div>
+          </section>
+
+          <section
+            v-if="getSecondaryDisplayFields(modal).length"
+            class="form-section"
+          >
+            <div class="form-section-header">
+              <div>
+                <div class="form-section-kicker">{{ t('formGenerator.detailSectionKicker') }}</div>
+                <h3 class="form-section-title">{{ t('formGenerator.detailSectionTitle') }}</h3>
+              </div>
+              <div class="form-section-meta">
+                {{ getSecondaryDisplayFields(modal).length }} {{ t('formGenerator.fieldsUnit') }}
+              </div>
+            </div>
+            <div class="form-section-stack">
+              <div
+                v-for="field in getSecondaryDisplayFields(modal)"
+                :key="field.name + '-' + (modal.formData[field.name]?.type || '')"
+                class="form-section-item"
+              >
+                <DynamicFormField
+                  :field="field"
+                  :modal-id="modal.id"
+                  :form-data="modal.formData"
+                  :child-summaries="modal.childSummaries"
+                  :recursive="modal.recursive"
+                  :is-visible="true"
+                  :expand-inline="isInlineConfigField(field)"
+                  :can-open-conditional-child-modal="canOpenConditionalChildModal(modal, field)"
+                  :conditional-child-button-label="conditionalChildButtonLabel(modal, field)"
+                  :is-read-only="isFieldReadOnly(field)"
+                  @open-child-modal="(f, idx) => openChildModal(modal.id, f, idx)"
+                  @clear-child-entry="(fname) => clearChildEntry(modal.id, fname)"
+                  @delete-child-entry="(fname, idx) => deleteChildEntry(modal.id, fname, idx)"
+                  @open-conditional-child-modal="(f) => openConditionalChildModal(modal.id, f)"
+                  @handle-enum-change="(f) => handleEnumChange(modal.id, f)"
+                  @open-var-modal="(fname) => openVarModal(modal.id, fname)"
+                  @edit-var="(fname, key) => editVar(modal.id, fname, key)"
+                  @delete-var="(fname, key) => deleteVar(modal.id, fname, key)"
+                  @open-list-item-modal="(fname) => openListItemModal(modal.id, fname)"
+                  @delete-list-item="(fname, idx) => deleteListItem(modal.id, fname, idx)"
+                />
+              </div>
+            </div>
+          </section>
 
           <!-- Advanced Settings Toggle (Between Normal Fields and Inline Config) -->
           <div
-            v-if="modal.hasAdvancedFields"
+            v-if="getAdvancedDisplayFields(modal).length"
             class="advanced-toggle"
           >
             <button
@@ -54,18 +127,73 @@
               class="advanced-toggle-button"
               @click="toggleAdvancedFields(modal.id)"
             >
-              Advanced Settings
+              {{ t('formGenerator.advancedSettings') }}
               <span class="advanced-toggle-arrow">
                 {{ modal.showAdvanced ? '▲' : '▼' }}
               </span>
             </button>
           </div>
 
-          <!-- Inline Config Fields (Rendered at bottom) -->
-          <div
-            v-for="field in getInlineDisplayFields(modal)"
-            :key="field.name"
+          <section
+            v-if="modal.showAdvanced && getAdvancedDisplayFields(modal).length"
+            class="form-section form-section--advanced"
           >
+            <div class="form-section-header">
+              <div>
+                <div class="form-section-kicker">{{ t('formGenerator.advancedSectionKicker') }}</div>
+                <h3 class="form-section-title">{{ t('formGenerator.advancedSectionTitle') }}</h3>
+              </div>
+              <div class="form-section-meta">
+                {{ getAdvancedDisplayFields(modal).length }} {{ t('formGenerator.fieldsUnit') }}
+              </div>
+            </div>
+            <div class="form-section-stack">
+              <div
+                v-for="field in getAdvancedDisplayFields(modal)"
+                :key="field.name + '-' + (modal.formData[field.name]?.type || '')"
+                class="form-section-item"
+              >
+                <DynamicFormField
+                  :field="field"
+                  :modal-id="modal.id"
+                  :form-data="modal.formData"
+                  :child-summaries="modal.childSummaries"
+                  :recursive="modal.recursive"
+                  :is-visible="true"
+                  :expand-inline="isInlineConfigField(field)"
+                  :can-open-conditional-child-modal="canOpenConditionalChildModal(modal, field)"
+                  :conditional-child-button-label="conditionalChildButtonLabel(modal, field)"
+                  :is-read-only="isFieldReadOnly(field)"
+                  @open-child-modal="(f, idx) => openChildModal(modal.id, f, idx)"
+                  @clear-child-entry="(fname) => clearChildEntry(modal.id, fname)"
+                  @delete-child-entry="(fname, idx) => deleteChildEntry(modal.id, fname, idx)"
+                  @open-conditional-child-modal="(f) => openConditionalChildModal(modal.id, f)"
+                  @handle-enum-change="(f) => handleEnumChange(modal.id, f)"
+                  @open-var-modal="(fname) => openVarModal(modal.id, fname)"
+                  @edit-var="(fname, key) => editVar(modal.id, fname, key)"
+                  @delete-var="(fname, key) => deleteVar(modal.id, fname, key)"
+                  @open-list-item-modal="(fname) => openListItemModal(modal.id, fname)"
+                  @delete-list-item="(fname, idx) => deleteListItem(modal.id, fname, idx)"
+                />
+              </div>
+            </div>
+          </section>
+
+          <!-- Inline Config Fields (Rendered at bottom) -->
+          <section
+            v-if="getInlineDisplayFields(modal).some((field) => modal.inlineChildModals?.[field.name])"
+            class="form-section form-section--inline"
+          >
+            <div class="form-section-header">
+              <div>
+                <div class="form-section-kicker">{{ t('formGenerator.inlineSectionKicker') }}</div>
+                <h3 class="form-section-title">{{ t('formGenerator.inlineSectionTitle') }}</h3>
+              </div>
+            </div>
+            <div
+              v-for="field in getInlineDisplayFields(modal)"
+              :key="field.name"
+            >
               <!-- Inline Config Expansion -->
               <div
                 v-if="isInlineConfigField(field) && modal.inlineChildModals?.[field.name]"
@@ -91,7 +219,8 @@
                   @toggle-advanced-fields="(mid) => toggleAdvancedFields(mid)"
                 />
               </div>
-          </div>
+            </div>
+          </section>
         </div>
         <div class="submit-button-container">
           <button
@@ -100,7 +229,7 @@
             class="add-child-button"
             :disabled="modal.submitting"
           >
-            Copy Node
+            {{ t('formGenerator.copyNode') }}
           </button>
           <button
             v-if="showDeleteButton(modal)"
@@ -115,7 +244,7 @@
             class="submit-button"
             :disabled="modal.submitting"
           >
-            Submit
+            {{ t('common.submit') }}
           </button>
         </div>
       </div>
@@ -133,7 +262,7 @@
           {{ varFormError }}
         </div>
         <div class="form-group">
-          <label for="var-key">Key <span class="required-asterisk">*</span></label>
+          <label for="var-key">{{ t('formGenerator.key') }} <span class="required-asterisk">*</span></label>
           <input
             id="var-key"
             v-model="varForm.key"
@@ -142,7 +271,7 @@
           />
         </div>
         <div class="form-group">
-          <label for="var-value">Value <span class="required-asterisk">*</span></label>
+          <label for="var-value">{{ t('formGenerator.value') }} <span class="required-asterisk">*</span></label>
           <input
             id="var-value"
             v-model="varForm.value"
@@ -151,8 +280,8 @@
           />
         </div>
         <div class="modal-actions">
-          <button @click="closeVarModal" class="cancel-button">Cancel</button>
-          <button @click="confirmVar" class="confirm-button">Confirm</button>
+          <button @click="closeVarModal" class="cancel-button">{{ t('common.cancel') }}</button>
+          <button @click="confirmVar" class="confirm-button">{{ t('formGenerator.confirm') }}</button>
         </div>
       </div>
     </div>
@@ -166,7 +295,7 @@
   >
     <div class="modal-content list-item-modal">
       <div class="modal-header">
-        <h3 class="modal-title">{{ editingListItemIndex !== null ? 'Edit Entry' : 'Add Entry' }}</h3>
+        <h3 class="modal-title">{{ editingListItemIndex !== null ? t('formGenerator.editEntry') : t('formGenerator.addEntry') }}</h3>
         <button class="close-button" @click="closeListItemModal">×</button>
       </div>
       <div class="modal-body">
@@ -174,7 +303,7 @@
           {{ listItemFormError }}
         </div>
         <div class="form-group">
-          <label for="list-item-value">Value <span class="required-asterisk">*</span></label>
+          <label for="list-item-value">{{ t('formGenerator.value') }} <span class="required-asterisk">*</span></label>
           <input
             id="list-item-value"
             v-model="listItemForm.value"
@@ -183,8 +312,8 @@
           />
         </div>
         <div class="modal-actions">
-          <button @click="closeListItemModal" class="cancel-button">Cancel</button>
-          <button @click="confirmListItem" class="confirm-button">Confirm</button>
+          <button @click="closeListItemModal" class="cancel-button">{{ t('common.cancel') }}</button>
+          <button @click="confirmListItem" class="confirm-button">{{ t('formGenerator.confirm') }}</button>
         </div>
       </div>
     </div>
@@ -212,6 +341,7 @@ import {
   getSchemaFields,
   determineRouteControllerField
 } from '../utils/formUtils.js'
+import { t } from '../utils/i18n.js'
 
 const props = defineProps({
   breadcrumbs: {
@@ -426,6 +556,101 @@ const getInlineDisplayFields = (modal) => {
   return fields.filter(field => isInlineConfigField(field))
 }
 
+const preferredFieldOrder = ['name', 'description', 'organization', 'start', 'goal', 'task', 'model']
+
+const humanizeSchemaName = (value) => {
+  if (!value) {
+    return ''
+  }
+  return String(value)
+    .replace(/([a-z0-9])([A-Z])/g, '$1 $2')
+    .replace(/[_-]+/g, ' ')
+    .trim()
+}
+
+const getVisibleMainFields = (modal) => {
+  return getMainDisplayFields(modal).filter(field => isFieldVisible(modal, field))
+}
+
+const getPrimaryDisplayFields = (modal) => {
+  const nonAdvancedFields = getVisibleMainFields(modal).filter(field => !field.advance)
+  if (!nonAdvancedFields.length) {
+    return []
+  }
+
+  const rankedFields = [...nonAdvancedFields].sort((a, b) => {
+    const indexA = preferredFieldOrder.indexOf(a.name)
+    const indexB = preferredFieldOrder.indexOf(b.name)
+    const rankA = indexA === -1 ? Number.MAX_SAFE_INTEGER : indexA
+    const rankB = indexB === -1 ? Number.MAX_SAFE_INTEGER : indexB
+    if (rankA !== rankB) {
+      return rankA - rankB
+    }
+
+    const simpleA = !a.childNode && !hasChildRoutes(a) && !isListField(a) && !String(a.type || '').startsWith('dict[')
+    const simpleB = !b.childNode && !hasChildRoutes(b) && !isListField(b) && !String(b.type || '').startsWith('dict[')
+    if (simpleA !== simpleB) {
+      return simpleA ? -1 : 1
+    }
+    return 0
+  })
+
+  return rankedFields.slice(0, Math.min(3, rankedFields.length))
+}
+
+const getSecondaryDisplayFields = (modal) => {
+  const primaryFieldNames = new Set(getPrimaryDisplayFields(modal).map(field => field.name))
+  return getVisibleMainFields(modal).filter(field => !field.advance && !primaryFieldNames.has(field.name))
+}
+
+const getAdvancedDisplayFields = (modal) => {
+  return getVisibleMainFields(modal).filter(field => field.advance)
+}
+
+const getModalEyebrow = (modal) => {
+  if (!modal?.parentContext && formMode.value === 'create') {
+    return t('formGenerator.createEyebrow')
+  }
+  if (!modal?.parentContext && formMode.value === 'edit') {
+    return t('formGenerator.editEyebrow')
+  }
+  return t('formGenerator.nestedEyebrow')
+}
+
+const getModalTitle = (modal) => {
+  if (!modal?.parentContext && formMode.value === 'create') {
+    return t('formGenerator.createWorkflowTitle')
+  }
+  if (!modal?.parentContext && formMode.value === 'edit') {
+    return t('formGenerator.editWorkflowTitle')
+  }
+  const schemaName = modal?.schema?.displayName || humanizeSchemaName(modal?.schema?.node)
+  if (schemaName) {
+    return t('formGenerator.configureTargetTitle', { target: schemaName })
+  }
+  return t('formGenerator.configureTitle')
+}
+
+const getModalSubtitle = (modal) => {
+  if (!modal?.parentContext && formMode.value === 'create') {
+    return t('formGenerator.createWorkflowSubtitle')
+  }
+  if (!modal?.parentContext && formMode.value === 'edit') {
+    return t('formGenerator.editWorkflowSubtitle')
+  }
+  const breadcrumbTrail = Array.isArray(modal?.breadcrumbs)
+    ? modal.breadcrumbs
+        .map(crumb => crumb?.field || crumb?.node)
+        .filter(Boolean)
+        .map(humanizeSchemaName)
+        .join(' / ')
+    : ''
+  if (breadcrumbTrail) {
+    return t('formGenerator.configureSubtitleWithPath', { path: breadcrumbTrail })
+  }
+  return t('formGenerator.configureSubtitle')
+}
+
 
 
 const hasChildValue = (modal, field) => {
@@ -608,7 +833,7 @@ const validateModalForm = (modal) => {
 
     const value = modal.formData[field.name]
     if (isValueEmpty(value)) {
-      modal.formError = `"${field.displayName || field.name}" is required`
+      modal.formError = t('formGenerator.errors.requiredField', { field: field.displayName || field.name })
       return false
     }
   }
@@ -1942,17 +2167,17 @@ const editVar = (modalId, fieldName, key) => {
 
 const validateVarForm = (modal) => {
   if (!varForm.key.trim()) {
-    varFormError.value = 'Key is required'
+    varFormError.value = t('formGenerator.errors.keyRequired')
     return false
   }
   if (!varForm.value.trim()) {
-    varFormError.value = 'Value is required'
+    varFormError.value = t('formGenerator.errors.valueRequired')
     return false
   }
 
   const fieldName = activeVarFieldName.value
   if (!fieldName) {
-    varFormError.value = 'Invalid field context'
+    varFormError.value = t('formGenerator.errors.invalidFieldContext')
     return false
   }
 
@@ -1966,7 +2191,7 @@ const validateVarForm = (modal) => {
     Object.prototype.hasOwnProperty.call(modal.formData[fieldName], trimmedKey) &&
     editingVarIndex.value !== trimmedKey
   ) {
-    varFormError.value = 'Key already exists'
+    varFormError.value = t('formGenerator.errors.keyExists')
     return false
   }
 
@@ -2047,7 +2272,7 @@ const resetListItemForm = () => {
 
 const validateListItemForm = () => {
   if (!listItemForm.value.trim()) {
-    listItemFormError.value = 'Value is required'
+    listItemFormError.value = t('formGenerator.errors.valueRequired')
     return false
   }
   return true
@@ -2777,5 +3002,247 @@ defineExpose({
   background-color: rgba(255, 255, 255, 0.3);
   margin-bottom: 16px;
   width: 100%;
+}
+
+.modal-content {
+  background: rgba(255, 252, 246, 0.96);
+  border: 1px solid rgba(21, 58, 64, 0.08);
+  box-shadow: 0 24px 60px rgba(27, 54, 61, 0.16);
+  max-width: 980px;
+  border-radius: 24px;
+}
+
+.modal-header {
+  height: auto;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 24px 28px 18px;
+  border-bottom: 1px solid rgba(21, 58, 64, 0.08);
+}
+
+.modal-header-copy {
+  flex: 1;
+  min-width: 0;
+}
+
+.modal-eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #23707b;
+  margin-bottom: 8px;
+}
+
+.modal-title,
+.modal-title--primary,
+.modal-body,
+.form-group label {
+  color: #17353c;
+}
+
+.modal-title--primary {
+  margin: 0;
+  font-size: 28px;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+}
+
+.modal-subtitle {
+  margin: 10px 0 0;
+  max-width: 640px;
+  color: #607477;
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+.modal-body {
+  padding: 22px 28px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.form-section {
+  padding: 20px 22px;
+  border-radius: 18px;
+  border: 1px solid rgba(21, 58, 64, 0.08);
+  background: rgba(255, 255, 255, 0.7);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+.form-section--primary {
+  background: linear-gradient(180deg, rgba(244, 249, 246, 0.96), rgba(255, 255, 255, 0.82));
+}
+
+.form-section--advanced {
+  background: linear-gradient(180deg, rgba(250, 246, 239, 0.92), rgba(255, 255, 255, 0.82));
+}
+
+.form-section-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.form-section-kicker {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #7b918e;
+  margin-bottom: 6px;
+}
+
+.form-section-title {
+  margin: 0;
+  color: #17353c;
+  font-size: 18px;
+  line-height: 1.3;
+}
+
+.form-section-meta {
+  flex-shrink: 0;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(35, 112, 123, 0.08);
+  color: #23707b;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.form-section-grid,
+.form-section-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.form-section-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px 18px;
+}
+
+.form-section-item {
+  min-width: 0;
+}
+
+.advanced-toggle {
+  margin: -2px 0 0;
+  text-align: left;
+  padding: 0 4px;
+}
+
+.advanced-toggle-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: rgba(35, 112, 123, 0.08) !important;
+  color: #1f676d !important;
+  border: 1px solid rgba(35, 112, 123, 0.12) !important;
+}
+
+.advanced-toggle-button:hover {
+  color: #174f55 !important;
+  background: rgba(35, 112, 123, 0.12) !important;
+}
+
+.submit-error {
+  background: rgba(181, 96, 73, 0.12);
+  color: #8f4c40;
+  border: 1px solid rgba(143, 76, 64, 0.12);
+  margin-bottom: 0;
+}
+
+.form-input,
+.field-input,
+.field-select,
+.field-textarea,
+.advanced-toggle-button,
+.add-child-button,
+.add-list-button,
+.add-var-button,
+.template-toolbar-button,
+.cancel-button {
+  background: rgba(255, 255, 255, 0.92) !important;
+  color: #17353c !important;
+  border: 1px solid rgba(21, 58, 64, 0.1) !important;
+}
+
+.confirm-button,
+.submit-button {
+  background: linear-gradient(135deg, #19555c, #23707b, #e2b459) !important;
+  color: #ffffff !important;
+  border: none !important;
+}
+
+.child-node-item,
+.child-node-summary {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(21, 58, 64, 0.08);
+  color: #17353c;
+}
+
+.edit-child-button {
+  background: rgba(231, 240, 236, 0.96);
+  color: #1f676d;
+}
+
+.delete-child-button {
+  background: rgba(248, 236, 231, 0.96);
+  color: #8b4d41;
+}
+
+.advanced-toggle-button {
+  color: #1f676d !important;
+}
+
+.inline-separator {
+  background-color: rgba(31, 103, 109, 0.16);
+}
+
+.submit-button-container {
+  margin: 0;
+  padding: 18px 28px 24px;
+  border-top: 1px solid rgba(21, 58, 64, 0.08);
+  background: rgba(255, 252, 246, 0.88);
+}
+
+.close-button {
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.8);
+  color: #607477;
+  border: 1px solid rgba(21, 58, 64, 0.08);
+}
+
+.close-button:hover {
+  color: #17353c;
+  background: rgba(255, 255, 255, 0.96);
+}
+
+@media (max-width: 900px) {
+  .modal-content {
+    width: min(96vw, 860px);
+    max-height: 94vh;
+  }
+
+  .modal-header,
+  .modal-body,
+  .submit-button-container {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+
+  .form-section-grid {
+    grid-template-columns: 1fr;
+  }
 }
 </style>

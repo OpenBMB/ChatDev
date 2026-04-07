@@ -38,7 +38,7 @@ tooling:
 | `move_path` | 移动文件或目录 |
 | `search_in_files` | 在工作区文件中搜索文本或正则模式 |
 
-**示例 YAML**：[ChatDev_v1.yaml](../../../../../yaml_instance/ChatDev_v1.yaml)、[file_tool_use_case.yaml](../../../../../yaml_instance/file_tool_use_case.yaml)
+**示例 YAML**：[demo_function_call.yaml](../../../../../yaml_instance/demo_function_call.yaml)、[demo_code.yaml](../../../../../yaml_instance/demo_code.yaml)
 
 ---
 
@@ -52,7 +52,7 @@ tooling:
 | `init_python_env` | 初始化 Python 环境（uv lock + venv） |
 | `uv_run` | 在工作区内执行 uv run，运行模块或脚本 |
 
-**示例 YAML**：[ChatDev_v1.yaml](../../../../../yaml_instance/ChatDev_v1.yaml)
+**示例 YAML**：[demo_code.yaml](../../../../../yaml_instance/demo_code.yaml)
 
 ---
 

@@ -27,6 +27,8 @@ async def execute_workflow(request: WorkflowRequest):
                 request.task_prompt,
                 manager,
                 attachments=request.attachments,
+                variables=request.variables,
+                team_state=request.team_state,
                 log_level=log_level,
             )
         )

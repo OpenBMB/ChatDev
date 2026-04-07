@@ -1,403 +1,451 @@
-# ChatDev 2.0 - DevAll
+# MovieDev
 
 <p align="center">
-  <img src="frontend/public/media/logo.png" alt="DevAll Logo" width="500"/>
-</p>
-
-
-<p align="center">
-  <strong>A Zero-Code Multi-Agent Platform for Developing Everything</strong>
+  <img src="frontend/public/media/logo.png" alt="MovieDev Logo" width="420"/>
 </p>
 
 <p align="center">
-  【<a href="./README.md">English</a> | <a href="./README-zh.md">简体中文</a>】
-</p>
-<p align="center">
-    【📚 <a href="#developers">Developers</a> | 👥 <a href="#primary-contributors">Contributors</a>｜⭐️ <a href="https://github.com/OpenBMB/ChatDev/tree/chatdev1.0">ChatDev 1.0 (Legacy)</a>】
+  <strong>一个正在改造中的“人类导演式”多智能体工作台</strong>
 </p>
 
-## 📖 Overview
-ChatDev has evolved from a specialized software development multi-agent system into a comprehensive multi-agent orchestration platform.
+## 📖 项目说明
 
-- <a href="https://github.com/OpenBMB/ChatDev/tree/main">**ChatDev 2.0 (DevAll)**</a> is a **Zero-Code Multi-Agent Platform** for "Developing Everything". It empowers users to rapidly build and execute customized multi-agent systems through simple configuration. No coding is required—users can define agents, workflows, and tasks to orchestrate complex scenarios such as data visualization, 3D generation, and deep research.
-- <a href="https://github.com/OpenBMB/ChatDev/tree/chatdev1.0">**ChatDev 1.0 (Legacy)**</a> operates as a **Virtual Software Company**. It utilizes various intelligent agents (e.g., CEO, CTO, Programmer) participating in specialized functional seminars to automate the entire software development life cycle—including designing, coding, testing, and documenting. It serves as the foundational paradigm for communicative agent collaboration.
+MovieDev 是基于上游多智能体工作流运行时做的一次二次改造。目前它更准确的状态是：**可运行的改造原型 / 半成品工作台**，而不是一个已经打磨完成的成熟 SaaS 产品。
 
-## 🎉 News
-• **Jan 07, 2026: 🚀 We are excited to announce the official release of ChatDev 2.0 (DevAll)!** This version introduces a zero-code multi-agent orchestration platform. The classic ChatDev (v1.x) has been moved to the [`chatdev1.0`](https://github.com/OpenBMB/ChatDev/tree/chatdev1.0) branch for maintenance. More details about ChatDev 2.0 can be found on [our official post](https://x.com/OpenBMB/status/2008916790399701335).
+这次改造的目标不是推翻原有运行时，也不是做一个 Dify 或 LangGraph 的完整替代品，而是把原来的“工作流引擎 + 原型 UI”推进成一个更接近 **人可以看见、干预、回溯和导演的多智能体控制台**。
 
-<details>
-<summary>Old News</summary>
+这次改造主要集中在几件事：
 
-•Sep 24, 2025: 🎉 Our paper [Multi-Agent Collaboration via Evolving Orchestration](https://arxiv.org/abs/2505.19591) has been accepted to NeurIPS 2025. The implementation is available in the `puppeteer` branch of this repository.
+1. 中文优先的工作台和更直接的主导航
+2. 多模型命名配置，避免频繁改 API 地址和密钥
+3. 团队状态、审批点、review 返工、replay 续跑
+4. 模板化编排和本地模板资产管理
+5. 更适合“人参与过程”的构建-运行闭环
 
-•May 26, 2025: 🎉 We propose a novel puppeteer-style paradigm for multi-agent collaboration among large language model based agents. By leveraging a learnable central orchestrator optimized with reinforcement learning, our method dynamically activates and sequences agents to construct efficient, context-aware reasoning paths. This approach not only improves reasoning quality but also reduces computational costs, enabling scalable and adaptable multi-agent cooperation in complex tasks.
-See our paper in [Multi-Agent Collaboration via Evolving Orchestration](https://arxiv.org/abs/2505.19591).
-  <p align="center">
-  <img src='./assets/puppeteer.png' width=800>
-  </p>
+## ⚠️ 当前状态
 
-•June 25, 2024: 🎉To foster development in LLM-powered multi-agent collaboration🤖🤖 and related fields, the ChatDev team has curated a collection of seminal papers📄 presented in a [open-source](https://github.com/OpenBMB/ChatDev/tree/main/MultiAgentEbook) interactive e-book📚 format. Now you can explore the latest advancements on the [Ebook Website](https://thinkwee.top/multiagent_ebook) and download the [paper list](https://github.com/OpenBMB/ChatDev/blob/main/MultiAgentEbook/papers.csv).
-  <p align="center">
-  <img src='./assets/ebook.png' width=800>
-  </p>
-  
-•June 12, 2024: We introduced Multi-Agent Collaboration Networks (MacNet) 🎉, which utilize directed acyclic graphs to facilitate effective task-oriented collaboration among agents through linguistic interactions 🤖🤖. MacNet supports co-operation across various topologies and among more than a thousand agents without exceeding context limits. More versatile and scalable, MacNet can be considered as a more advanced version of ChatDev's chain-shaped topology. Our preprint paper is available at [https://arxiv.org/abs/2406.07155](https://arxiv.org/abs/2406.07155). This technique has been incorporated into the [macnet](https://github.com/OpenBMB/ChatDev/tree/macnet) branch, enhancing support for diverse organizational structures and offering richer solutions beyond software development (e.g., logical reasoning, data analysis, story generation, and more).
-  <p align="center">
-  <img src='./assets/macnet.png' width=500>
-  </p>
+这个仓库现在适合：
 
-• May 07, 2024, we introduced "Iterative Experience Refinement" (IER), a novel method where instructor and assistant agents enhance shortcut-oriented experiences to efficiently adapt to new tasks. This approach encompasses experience acquisition, utilization, propagation and elimination across a series of tasks and making the pricess shorter and efficient. Our preprint paper is available at https://arxiv.org/abs/2405.04219, and this technique will soon be incorporated into ChatDev.
-  <p align="center">
-  <img src='./assets/ier.png' width=220>
-  </p>
+* 本地运行和继续二次开发
+* 验证多 agent 编排、人工审批、replay、接力和技能/MCP 集成思路
+* 做内部原型、演示和小范围试用
 
-• January 25, 2024: We have integrated Experiential Co-Learning Module into ChatDev. Please see the [Experiential Co-Learning Guide](wiki.md#co-tracking).
+暂时不建议直接当作生产级产品使用。当前仍然存在这些明显边界：
 
-• December 28, 2023: We present Experiential Co-Learning, an innovative approach where instructor and assistant agents accumulate shortcut-oriented experiences to effectively solve new tasks, reducing repetitive errors and enhancing efficiency.  Check out our preprint paper at https://arxiv.org/abs/2312.17025 and this technique will soon be integrated into ChatDev.
-  <p align="center">
-  <img src='./assets/ecl.png' width=860>
-  </p>
-• November 15, 2023: We launched ChatDev as a SaaS platform that enables software developers and innovative entrepreneurs to build software efficiently at a very low cost and remove the barrier to entry. Try it out at https://chatdev.modelbest.cn/.
-  <p align="center">
-  <img src='./assets/saas.png' width=560>
-  </p>
+* UI 已做中文化和重排，但还没有完整设计系统，部分页面仍在持续收口
+* `handoffs`、AI 路由接力、审批和 replay 已经有后端能力，但还需要更多实际 workflow 样例验证
+* ClawHub 与 MCP 是“预设入口 + 安装/注入能力”，不是全量内置市场
+* 外部触发接口默认面向本地或内网环境，公网使用前需要额外鉴权、签名校验和限流
+* 工作流样例里仍可能有历史遗留配置，需要按实际用途继续整理
 
-• November 2, 2023: ChatDev is now supported with a new feature: incremental development, which allows agents to develop upon existing codes. Try ```--config "incremental" --path "[source_code_directory_path]"``` to start it.
-  <p align="center">
-  <img src='./assets/increment.png' width=700>
-  </p>
+## 🎬 为什么做这次改造
 
-• October 26, 2023: ChatDev is now supported with Docker for safe execution (thanks to contribution from [ManindraDeMel](https://github.com/ManindraDeMel)). Please see [Docker Start Guide](wiki.md#docker-start).
-  <p align="center">
-  <img src='./assets/docker.png' width=400>
-  </p>
-  
-• September 25, 2023: The **Git** mode is now available, enabling the programmer <img src='visualizer/static/figures/programmer.png' height=20> to utilize Git for version control. To enable this feature, simply set ``"git_management"`` to ``"True"`` in ``ChatChainConfig.json``. See [guide](wiki.md#git-mode).
-  <p align="center">
-  <img src='./assets/github.png' width=600>
-  </p>
+上游引擎本身很强，但原始产品体验还有几个明显痛点：
 
-• September 20, 2023: The **Human-Agent-Interaction** mode is now available! You can get involved with the ChatDev team by playing the role of reviewer <img src='visualizer/static/figures/reviewer.png' height=20> and making suggestions to the programmer <img src='visualizer/static/figures/programmer.png' height=20>;
-  try ``python3 run.py --task [description_of_your_idea] --config "Human"``. See [guide](wiki.md#human-agent-interaction) and [example](WareHouse/Gomoku_HumanAgentInteraction_20230920135038).
-  <p align="center">
-  <img src='./assets/Human_intro.png' width=600>
-  </p>
+1. 关键判断、回溯和协作过程埋在 prompt 与日志里
+2. 一旦运行起来，人想插手并不顺畅
+3. 多模型切换成本高
+4. 默认 UI 更像内部原型，而不是一个导演控制台
 
-• September 1, 2023: The **Art** mode is available now! You can activate the designer agent <img src='visualizer/static/figures/designer.png' height=20> to generate images used in the software;
-  try ``python3 run.py --task [description_of_your_idea] --config "Art"``. See [guide](wiki.md#art) and [example](WareHouse/gomokugameArtExample_THUNLP_20230831122822).
-  
-• August 28, 2023: The system is publicly available.
+MovieDev 的方向不是做“更黑盒的自动化”，而是把这些过程尽量外显，让人可以真正参与 agent team 的推进。
 
-• August 17, 2023: The v1.0.0 version was ready for release.
+简单说：
 
-• July 30, 2023: Users can customize ChatChain, Phasea and Role settings. Additionally, both online Log mode and replay
-  mode are now supported.
+* Dify 更像标准化 AI 应用流水线
+* LangGraph 更像面向开发者的状态图 runtime
+* MovieDev 这版更想做“导演台”：让人可以看到计划、记忆、审批、返工、接力和工具能力分布
 
-• July 16, 2023: The [preprint paper](https://arxiv.org/abs/2307.07924) associated with this project was published.
+这也是为什么它现在看起来不像一个“完成品”，而更像一个正在从工作流工具向 agent team cockpit 演进的项目。
 
-• June 30, 2023: The initial version of the ChatDev repository was released.
-</details>
+## 🚀 快速开始
 
+### 📋 环境要求
 
-## 🚀 Quick Start
+* **操作系统**：macOS / Linux / WSL / Windows
+* **Python**：3.12+
+* **Node.js**：18+
+* **包管理器**：[uv](https://docs.astral.sh/uv/)
 
-### 📋 Prerequisites
+### 📦 安装
 
-*   **OS**: macOS / Linux / WSL / Windows
-*   **Python**: 3.12+
-*   **Node.js**: 18+
-*   **Package Manager**: [uv](https://docs.astral.sh/uv/)
+1. 安装后端依赖：
+   ```bash
+   uv sync
+   ```
+2. 安装前端依赖：
+   ```bash
+   cd frontend && npm install
+   ```
 
-### 📦 Installation
+### 🔑 配置
 
-1.  **Backend Dependencies** (Python managed by `uv`):
-    ```bash
-    uv sync
-    ```
+1. 复制环境变量模板：
+   ```bash
+   cp .env.example .env
+   ```
+2. 在 `.env` 中填写默认模型提供商的 `API_KEY` 和 `BASE_URL`。
+3. 在 YAML 中使用 `${API_KEY}`、`${BASE_URL}` 这类占位符进行运行时注入。
+4. 在 Web 设置页中，也可以维护多套命名模型配置，并在运行时切换。
 
-2.  **Frontend Dependencies** (Vite + Vue 3):
-    ```bash
-    cd frontend && npm install
-    ```
+## ⚡️ 一键本地启动
 
-### 🔑 Configuration
+MovieDev 附带了按操作系统区分的启动脚本，会同时拉起后端和前端，并把日志写到 `logs/`。
 
-*   **Environment Variables**:
-    ```bash
-    cp .env.example .env
-    ```
-*   **Model Keys**: Set `API_KEY` and `BASE_URL` in `.env` for your LLM provider.
-*   **YAML placeholders**: Use `${VAR}`（e.g., `${API_KEY}`）in configuration files to reference these variables.
+### macOS / Linux / WSL
 
-### ⚡️ Run the Application
-
-#### Using Makefile (Recommended)
-
-**Start both Backend and Frontent**:
 ```bash
-make dev
+bash scripts/dev.sh
 ```
 
-> Then access the Web Console at **[http://localhost:5173](http://localhost:5173)**.
+停止：
 
-#### Manual Commands
+```bash
+bash scripts/stop.sh
+```
 
-1.  **Start Backend**:
-    ```bash
-    # Run from the project root
-    uv run python server_main.py --port 6400 --reload
-    ```
-    > Remove `--reload` if output files (e.g., GameDev) trigger restarts, which interrupts tasks and loses progress.
+也可以使用：
 
-2.  **Start Frontend**:
-    ```bash
-    cd frontend
-    VITE_API_BASE_URL=http://localhost:6400 npm run dev
-    ```
-    > Then access the Web Console at **[http://localhost:5173](http://localhost:5173)**. 
-    
-    
-    > **💡 Tip**: If the frontend fails to connect to the backend, the default port `6400` may already be occupied.
-    > Please switch both services to an available port, for example:
-    >
-    > * **Backend**: start with `--port 6401`
-    > * **Frontend**: set `VITE_API_BASE_URL=http://localhost:6401`
+```bash
+make dev-local
+```
 
-#### Utility Commands
+### Windows PowerShell
 
-*   **Help command**:
-    ```bash
-    make help
-    ```
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\dev.ps1
+```
 
-*   **Sync YAML workflows to frontend**:
-    ```bash
-    make sync
-    ```
-    Uploads all workflow files from `yaml_instance/` to the database.
+停止：
 
-*   **Validate all YAML workflows**:
-    ```bash
-    make validate-yamls
-    ```
-    Checks all YAML files for syntax and schema errors.
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\stop.ps1
+```
 
-### 🦞 Run with OpenClaw
-OpenClaw can integrate with ChatDev by invoking existing agent teams or dynamically creating new agent teams within ChatDev.
-To get started:
-1. Start the ChatDev 2.0 backend.
-2. Install the required skills for your OpenClaw instance:
-    ```bash
-    clawdhub install chatdev
-    ```
+### Windows CMD
 
-3. Ask your OpenClaw to create a ChatDev workflow. For example:
+```bat
+scripts\dev.bat
+```
 
-* **Automated information collection and content publishing**
+停止：
 
+```bat
+scripts\stop.bat
+```
+
+### 可选环境变量
+
+启动脚本支持这些可选变量：
+
+* `BACKEND_HOST` 默认：`127.0.0.1`
+* `BACKEND_PORT` 默认：`6400`
+* `FRONTEND_HOST` 默认：`127.0.0.1`
+* `FRONTEND_PORT` 默认：`5173`
+* `BACKEND_RELOAD` 默认：`0`
+
+例如：
+
+```bash
+BACKEND_PORT=6401 FRONTEND_PORT=5174 BACKEND_RELOAD=1 bash scripts/dev.sh
+```
+
+启动后可访问：
+
+* 前端：`http://127.0.0.1:5173`
+* 后端健康检查：`http://127.0.0.1:6400/health`
+* 后端就绪检查：`http://127.0.0.1:6400/health/ready`
+
+日志文件：
+
+* `logs/dev-backend.log`
+* `logs/dev-frontend.log`
+
+## 🧰 手动启动
+
+1. 启动后端：
+   ```bash
+   uv run python server_main.py --host 127.0.0.1 --port 6400
+   ```
+2. 启动前端：
+   ```bash
+   cd frontend
+   VITE_API_BASE_URL=http://127.0.0.1:6400 npm run dev -- --host 127.0.0.1 --port 5173
+   ```
+
+`--reload` 可以按需自行开启，但默认不打开，因为会生成文件的工作流很容易触发重启，打断当前任务。
+
+## 🛠 常用命令
+
+* 帮助命令：
+  ```bash
+  make help
   ```
-  Create a ChatDev workflow to automatically collect trending information, generate a Xiaohongshu post, and publish it.
+* 停止 macOS / Linux 启动脚本：
+  ```bash
+  make stop-local
+  ```
+* 同步 YAML 工作流到前端：
+  ```bash
+  make sync
+  ```
+* 校验所有 YAML 工作流：
+  ```bash
+  make validate-yamls
   ```
 
-* **Multi-agent geopolitical simulation**
-  ```
-  Create a ChatDev workflow with multiple agents to simulate possible future developments of the Middle East situation.
-  ```
+## 💡 如何使用
 
+### Web 控制台
 
-### 🐳 Run with Docker
-Alternatively, you can run the entire application using Docker Compose. This method simplifies dependency management and provides a consistent environment.
+MovieDev 更强调“人参与过程”的构建和运行闭环：
 
-1.  **Prerequisites**:
-    *   [Docker](https://docs.docker.com/get-docker/) and [Docker Compose](https://docs.docker.com/compose/install/) installed.
-    *   Ensure you have a `.env` file in the project root for your API keys.
-
-2.  **Build and Run**:
-    ```bash
-    # From the project root
-    docker compose up --build
-    ```
-
-3.  **Access**:
-    *   **Backend**: `http://localhost:6400`
-    *   **Frontend**: `http://localhost:5173`
-
-> The services will automatically restart if they crash, and local file changes will be reflected inside the containers for live development.
-
----
-
-## 💡 How to Use
-
-### 🖥️ Web Console
-
-The DevAll interface provides a seamless experience for both construction and execution
-
-*   **Tutorial**: Comprehensive step-by-step guides and documentation integrated directly into the platform to help you get started quickly.
-<img src="assets/tutorial-en.png"/> 
-
-*   **Workflow**: A visual canvas to design your multi-agent systems. Configure node parameters, define context flows, and orchestrate complex agent interactions with drag-and-drop ease.
+* **工作流工作台**：设计 agent team、套用模板、管理本地模板资产，并在需要时直接编辑 YAML。
 <img src="assets/workflow.gif"/>
 
-*   **Launch**: Initiate workflows, monitor real-time logs, inspect intermediate artifacts, and provide human-in-the-loop feedback.
+* **运行控制台**：启动工作流、查看团队状态、review 建议、审批门和 replay 返工链路。
 <img src="assets/launch.gif"/>
 
-### 🧰 Python SDK
-For automation and batch processing, use our lightweight Python SDK to execute workflows programmatically and retrieve results directly.
+* **批量实验室**：保留批处理入口，但不再作为默认主入口。
+
+## 🧩 内置 Skills 与 MCP 预设
+
+MovieDev 现在已经预置了一批更贴近实际使用场景的 skills 和模板，不再只保留最小示例。
+
+### 已内置的 Skills
+
+当前仓库内置 skill 位于 `.agents/skills/`，包括：
+
+* `python-scratchpad`：适合快速计算、数据转换和脚本验证
+* `rest-api-caller`：适合 REST API 调用与 JSON 结果提取
+* `browser-researcher`：适合网页搜索、证据采集和研究摘要
+* `repo-analyst`：适合代码仓结构分析、入口定位和风险梳理
+* `report-orchestrator`：适合多章节报告的持续编排与导出
+* `content-packager`：适合把研究结果整理成更适合发布的内容
+
+当前仓库已经把上游遗留示例大幅精简。如果本地 `yaml_instance/` 里没有可直接运行的主工作流，可以先在 Web 工作台中新建工作流，或者从模板库套用一套 agent team 骨架后再运行。
+
+### ClawHub 安装入口
+
+MovieDev 现在也会自动发现工作区 `skills/` 目录中的技能。这意味着：
+
+1. 仓库内置技能仍然放在 `.agents/skills/`
+2. 通过 ClawHub CLI 安装到当前项目的技能，只要进入 `skills/`，MovieDev 也能直接识别
+
+仓库已经附带了一份 ClawHub starter 清单：
+
+* [tools/clawhub_featured_skills.json](./tools/clawhub_featured_skills.json)
+
+并提供了一个安装脚本：
+
+```bash
+python scripts/install_clawhub_skills.py --list-packs
+python scripts/install_clawhub_skills.py --pack starter --dry-run
+python scripts/install_clawhub_skills.py --pack starter
+```
+
+如果你更希望走界面操作，也可以直接在：
+
+* `设置 -> ClawHub 技能包`
+
+里查看 starter packs、先做“试装预览”，再执行正式安装。安装后，MovieDev 会自动刷新当前可发现的 skills 列表；每个技能包也会附带推荐的 MCP 预设和团队模板，并支持一键跳转到工作流页查看推荐模板。
+
+同一个设置面板里还提供了一组热门 MCP 预设目录，包含：
+
+* 默认服务地址
+* 适用场景说明
+* 可直接复制的 `tooling` 片段
+* 当前服务在线状态检测
+* 一键跳到当前 workflow 并注入到指定 agent 节点
+* 推荐 MCP 组合可一次性注入到同一个 agent
+* 节点卡片上直接显示已挂载的 MCP 前缀徽标
+
+适合在你手动配置 agent tooling 时直接粘贴使用。
+
+可选安装包：
+
+* `starter`
+* `research`
+* `coding`
+
+如果你只想额外安装某几个技能，也可以：
+
+```bash
+python scripts/install_clawhub_skills.py --skill agent-browser --skill agent-brain
+```
+
+前提：
+
+* 机器上已安装 `clawhub` CLI
+* 当前项目根目录允许生成 `skills/` 目录
+
+这条链路的目标不是把 ClawHub 全量 vendoring 进仓库，而是给 MovieDev 留一个稳定的“可安装热门技能入口”。
+
+### 已预置的热门 MCP 模板方向
+
+参考 ClawHub 的 skill bundle 思路，以及官方 MCP servers 常见组合，MovieDev 在模板库里新增了这几类预设团队：
+
+* **浏览器研究 MCP 团队**：对应 `fetch / browser` 风格能力，适合网页调研与证据整理
+* **仓库分析 MCP 团队**：对应 `filesystem / git / github` 风格能力，适合代码仓理解和修改前分析
+* **技能驱动研究写作团队**：先用内置 skills 做研究和章节编排，再做最终内容包装
+
+这些模板可以在工作流编辑页的模板弹窗里直接找到，分类位于 `Skills` 和 `MCP`。
+
+### 推荐优先接入的 MCP 家族
+
+如果你准备继续扩展，我建议优先接这些高频能力：
+
+* `filesystem`
+* `git`
+* `github`
+* `fetch`
+* `memory`
+* `postgres`
+
+这几类能力对研究、编码、审阅和回溯都很有帮助，而且和 MovieDev 当前的人机协作工作台最契合。
+
+## 🔔 触发点与外部应用接入
+
+除了在运行控制台里手动对话执行，MovieDev 也支持把工作流作为外部应用或机器人消息的触发目标。
+
+在工作流编辑页中，可以通过右上角菜单里的 **管理触发点** 维护 `graph.triggers`。它是一个轻量元数据区，用来记录这个工作流允许哪些入口触发，例如：
+
+```yaml
+graph:
+  triggers:
+    bot_message: "机器人消息转发到 /api/triggers/run"
+    app_webhook: "业务系统事件通过 HTTP POST 触发"
+```
+
+外部应用可以直接调用：
+
+```bash
+curl -X POST http://127.0.0.1:6400/api/triggers/run \
+  -H "Content-Type: application/json" \
+  -d '{
+    "yaml_file": "your_workflow.yaml",
+    "source": "bot_message",
+    "event": "message.created",
+    "message": "请把这条用户消息交给技能驱动研究写作团队处理",
+    "payload": {
+      "user_id": "u_001",
+      "channel": "demo"
+    }
+  }'
+```
+
+这个接口适合先接：
+
+* 机器人消息：企业微信、飞书、Telegram、Discord 等平台先把消息转成 HTTP 请求
+* 业务应用事件：表单提交、工单创建、CRM 更新、内容发布任务
+* 自动化系统：由 n8n、Zapier、GitHub Actions 或内部调度器发起
+
+注意：当前触发接口默认面向本地或内网使用。如果要暴露到公网，请先加鉴权、签名校验和速率限制。
+
+## 🔗 工作流接力
+
+如果一个工作流跑完后的结果需要继续交给另一个工作流，可以在上游工作流的 `graph.handoffs` 中声明接力目标。
+
+最小示例：
+
+```yaml
+graph:
+  id: research_first
+  handoffs:
+    - target_workflow: writer_review.yaml
+      input_from: final_message
+```
+
+更完整的示例：
+
+```yaml
+graph:
+  id: research_first
+  handoffs:
+    - id: send_to_writer
+      enabled: true
+      target_workflow: writer_review.yaml
+      input_from: final_message
+      prompt_prefix: "请基于上游研究结果继续写作和审阅。"
+      variables:
+        MODEL_NAME: "${MODEL_NAME}"
+```
+
+支持的常用字段：
+
+* `target_workflow`：下一个 workflow 文件名，支持省略 `.yaml`
+* `input_from`：传递内容来源，常用 `final_message`、`results`、`json`、`token_usage`
+* `prompt_prefix`：追加给下游工作流的说明
+* `prompt_template`：自定义传递模板，可使用 `{final_message}`、`{source_workflow}`、`{results_json}`、`{token_usage_json}`、`{payload_json}`
+* `variables`：传给下游工作流的变量覆盖
+* `enabled`：是否启用这条接力
+
+运行控制台里，WebSocket 会在接力时发出：
+
+* `workflow_handoff_started`
+* `workflow_handoff_completed`
+* `workflow_handoff_failed`
+* `workflow_handoffs_completed`
+
+同步 API `/api/workflow/run` 和触发 API `/api/triggers/run` 也会在返回 JSON 中带上 `handoffs` 字段。这样你既可以在页面里观察接力状态，也可以用 API 把多个工作流串成一条自动化链路。
+
+### AI 判断接力方向
+
+如果不是固定传给某一个工作流，而是希望由 AI 判断“交给 B、交给 C，还是停止”，可以使用 `mode: route`：
+
+```yaml
+graph:
+  id: workflow_a
+  handoffs:
+    - id: ai_router
+      mode: route
+      router_workflow: route_decider.yaml
+      input_from: final_message
+      routes:
+        send_to_b: workflow_b.yaml
+        send_to_c: workflow_c.yaml
+        stop: ""
+```
+
+其中 `route_decider.yaml` 是一个轻量判断工作流。系统会把上游输出和可选路由发给它，并要求它输出类似：
+
+```json
+{"route": "send_to_b", "reason": "结果更适合进入写作流程"}
+```
+
+如果返回 `stop`，系统会记录接力状态为 `stopped`，不会继续触发下游工作流。
+
+### Python SDK
+
+对于自动化和批量处理，可以直接使用 SDK 调用运行时：
 
 ```python
 from runtime.sdk import run_workflow
 
-# Execute a workflow and get the final node message
 result = run_workflow(
     yaml_file="yaml_instance/demo.yaml",
-    task_prompt="Summarize the attached document in one sentence.",
+    task_prompt="用一句话总结附件文档。",
     attachments=["/path/to/document.pdf"],
-    variables={"API_KEY": "sk-xxxx"} # Override .env variables if needed
+    variables={"API_KEY": "sk-xxxx"}
 )
 
 if result.final_message:
-    print(f"Output: {result.final_message.text_content()}")
+    print(result.final_message.text_content())
 ```
 
-**We have released the ChatDev Python SDK (PyPI package `chatdev`)**, so you can also run YAML workflow and multi-agent tasks directly in Python. For installation and version details, see [PyPI: chatdev 0.1.0](https://pypi.org/project/chatdev/0.1.0/).
+## ⚙️ 给开发者
 
----
+如果你打算继续做二次开发，核心目录大致如下：
 
-<a id="developers"></a>
-## ⚙️ For Developers
+* `server/`：FastAPI 后端和会话执行链路
+* `runtime/`：agent 抽象与工具执行
+* `workflow/`：图编排和运行时逻辑
+* `entity/`：配置 schema
+* `frontend/`：Vue 3 工作台
+* `functions/`：自定义 Python 工具
 
-**For secondary development and extensions, please proceed with this section.**
+相关文档：
 
-Extend DevAll with new nodes, providers, and tools.
-The project is organized into a modular structure:
-*   **Core Systems**: `server/` hosts the FastAPI backend, while `runtime/` manages agent abstraction and tool execution.
-*   **Orchestration**: `workflow/` handles the multi-agent logic, driven by configurations in `entity/`.
-*   **Frontend**: `frontend/` contains the Vue 3 Web Console.
-*   **Extensibility**: `functions/` is the place for custom Python tools.
-
-Relevant reference documentation:
-*   **Getting Started**: [Start Guide](./docs/user_guide/en/index.md)
-*   **Core Modules**: [Workflow Authoring](./docs/user_guide/en/workflow_authoring.md), [Memory](./docs/user_guide/en/modules/memory.md), and [Tooling](./docs/user_guide/en/modules/tooling/index.md)
-
----
-
-## 🌟 Featured Workflows
-We provide robust, out-of-the-box templates for common scenarios. All runnable workflow configs are located in `yaml_instance/`.
-*   **Demos**: Files named `demo_*.yaml` showcase specific features or modules.
-*   **Implementations**: Files named directly (e.g., `ChatDev_v1.yaml`) are full in-house or recreated workflows. As follows:
-
-### 📋 Workflow Collection
-
-| Category | Workflow                                                                                                    | Case | 
-| :--- |:------------------------------------------------------------------------------------------------------------| :--- | 
-| **📈 Data Visualization** | `data_visualization_basic.yaml`<br>`data_visualization_enhanced.yaml`                                       | <img src="assets/cases/data_analysis/data_analysis.gif" width="100%"><br>Prompt: *"Create 4–6 high-quality PNG charts for my large real-estate transactions dataset."* |
-| **🛠️ 3D Generation**<br>*(Requires [Blender](https://www.blender.org/) & [blender-mcp](https://github.com/ahujasid/blender-mcp))* | `blender_3d_builder_simple.yaml`<br>`blender_3d_builder_hub.yaml`<br>`blender_scientific_illustration.yaml` | <img src="assets/cases/3d_generation/3d.gif" width="100%"><br>Prompt: *"Please build a Christmas tree."* |
-| **🎮 Game Dev** | `GameDev_v1.yaml`<br>`ChatDev_v1.yaml`                                                                      | <img src="assets/cases/game_development/game.gif" width="100%"><br>Prompt: *"Please help me design and develop a Tank Battle game."* |
-| **📚 Deep Research** | `deep_research_v1.yaml`                                                                                     | <img src="assets/cases/deep_research/deep_research.gif" width="85%"><br>Prompt: *"Research about recent advances in the field of LLM-based agent RL"* |
-| **🎓 Teach Video** | `teach_video.yaml` (Please run command `uv add manim` before running this workflow)                         | <img src="assets/cases/video_generation/video.gif" width="140%"><br>Prompt: *"讲一下什么是凸优化"* |
-
----
-
-### 💡 Usage Guide
-For those implementations, you can use the **Launch** tab to execute them.
-1.  **Select**: Choose a workflow in the **Launch** tab.
-2.  **Upload**: Upload necessary files (e.g., `.csv` for data analysis) if required.
-3.  **Prompt**: Enter your request (e.g., *"Visualize the sales trends"* or *"Design a snake game"*).
-
----
-
-## 🤝 Contributing
-
-We welcome contributions from the community! Whether you're fixing bugs, adding new workflow templates, or sharing high-quality cases/artifacts produced by DevAll, your help is much appreciated. Feel free to contribute by submitting **Issues** or **Pull Requests**.
-
-By contributing to DevAll, you'll be recognized in our **Contributors** list below. Check out our [Developer Guide](#developers) to get started!
-
-### 👥 Contributors
-
-#### Primary Contributors
-
-<table>
-  <tr>
-    <td align="center"><a href="https://github.com/NA-Wen"><img src="https://github.com/NA-Wen.png?size=100" width="64px;" alt=""/><br /><sub><b>NA-Wen</b></sub></a></td>
-    <td align="center"><a href="https://github.com/zxrys"><img src="https://github.com/zxrys.png?size=100" width="64px;" alt=""/><br /><sub><b>zxrys</b></sub></a></td>
-    <td align="center"><a href="https://github.com/swugi"><img src="https://github.com/swugi.png?size=100" width="64px;" alt=""/><br /><sub><b>swugi</b></sub></a></td>
-    <td align="center"><a href="https://github.com/huatl98"><img src="https://github.com/huatl98.png?size=100" width="64px;" alt=""/><br /><sub><b>huatl98</b></sub></a></td>
-  </tr>
-</table>
-
-#### Contributors
-<table>
-  <tr>
-    <td align="center"><a href="https://github.com/LaansDole"><img src="https://github.com/LaansDole.png?size=100" width="64px;"/><br /><sub><b>LaansDole</b></sub></a></td>
-    <td align="center"><a href="https://github.com/zivkovicp"><img src="https://github.com/zivkovicp.png?size=100" width="64px;"/><br /><sub><b>zivkovicp</b></sub></a></td>
-    <td align="center"><a href="https://github.com/ACE-Prism"><img src="https://github.com/ACE-Prism.png?size=100" width="64px;"/><br /><sub><b>ACE-Prism</b></sub></a></td>
-    <td align="center"><a href="https://github.com/shiowen"><img src="https://github.com/shiowen.png?size=100" width="64px;"/><br /><sub><b>shiowen</b></sub></a></td>
-    <td align="center"><a href="https://github.com/kilo2127"><img src="https://github.com/kilo2127.png?size=100" width="64px;"/><br /><sub><b>kilo2127</b></sub></a></td>
-    <td align="center"><a href="https://github.com/AckerlyLau"><img src="https://github.com/AckerlyLau.png?size=100" width="64px;"/><br /><sub><b>AckerlyLau</b></sub></a></td>
-    <td align="center"><a href="https://github.com/rainoeelmae"><img src="https://github.com/rainoeelmae.png?size=100" width="64px;"/><br /><sub><b>rainoeelmae</b></sub></a></td>
-    <td align="center"><a href="https://github.com/conprour"><img src="https://github.com/conprour.png?size=100" width="64px;"/><br /><sub><b>conprour</b></sub></a></td>
-  </tr>
-  <tr>
-    <td align="center"><a href="https://github.com/Br1an67"><img src="https://github.com/Br1an67.png?size=100" width="64px;"/><br /><sub><b>Br1an67</b></sub></a></td>
-    <td align="center"><a href="https://github.com/NINE-J"><img src="https://github.com/NINE-J.png?size=100" width="64px;"/><br /><sub><b>NINE-J</b></sub></a></td>
-    <td align="center"><a href="https://github.com/Yanghuabei-design"><img src="https://github.com/Yanghuabei-design.png?size=100" width="64px;"/><br /><sub><b>Yanghuabei</b></sub></a></td>
-  </tr>
-</table>
-
-## 🤝 Acknowledgments
-
-<a href="http://nlp.csai.tsinghua.edu.cn/"><img src="assets/thunlp.png" height=50pt></a>&nbsp;&nbsp;
-<a href="https://modelbest.cn/"><img src="assets/modelbest.png" height=50pt></a>&nbsp;&nbsp;
-<a href="https://github.com/OpenBMB/AgentVerse/"><img src="assets/agentverse.png" height=50pt></a>&nbsp;&nbsp;
-<a href="https://github.com/OpenBMB/RepoAgent"><img src="assets/repoagent.png"  height=50pt></a>
-<a href="https://app.commanddash.io/agent?github=https://github.com/OpenBMB/ChatDev"><img src="assets/CommandDash.png" height=50pt></a>
-<a href="www.teachmaster.cn"><img src="assets/teachmaster.png" height=50pt></a>
-<a href="https://github.com/OpenBMB/AppCopilot"><img src="assets/appcopilot.png" height=50pt></a>
-
-## 🔎 Citation
-
-```
-@article{chatdev,
-    title = {ChatDev: Communicative Agents for Software Development},
-    author = {Chen Qian and Wei Liu and Hongzhang Liu and Nuo Chen and Yufan Dang and Jiahao Li and Cheng Yang and Weize Chen and Yusheng Su and Xin Cong and Juyuan Xu and Dahai Li and Zhiyuan Liu and Maosong Sun},
-    journal = {arXiv preprint arXiv:2307.07924},
-    url = {https://arxiv.org/abs/2307.07924},
-    year = {2023}
-}
-
-@article{colearning,
-    title = {Experiential Co-Learning of Software-Developing Agents},
-    author = {Chen Qian and Yufan Dang and Jiahao Li and Wei Liu and Zihao Xie and Yifei Wang and Weize Chen and Cheng Yang and Xin Cong and Xiaoyin Che and Zhiyuan Liu and Maosong Sun},
-    journal = {arXiv preprint arXiv:2312.17025},
-    url = {https://arxiv.org/abs/2312.17025},
-    year = {2023}
-}
-
-@article{macnet,
-    title={Scaling Large-Language-Model-based Multi-Agent Collaboration},
-    author={Chen Qian and Zihao Xie and Yifei Wang and Wei Liu and Yufan Dang and Zhuoyun Du and Weize Chen and Cheng Yang and Zhiyuan Liu and Maosong Sun}
-    journal={arXiv preprint arXiv:2406.07155},
-    url = {https://arxiv.org/abs/2406.07155},
-    year={2024}
-}
-
-@article{iagents,
-    title={Autonomous Agents for Collaborative Task under Information Asymmetry},
-    author={Wei Liu and Chenxi Wang and Yifei Wang and Zihao Xie and Rennai Qiu and Yufan Dnag and Zhuoyun Du and Weize Chen and Cheng Yang and Chen Qian},
-    journal={arXiv preprint arXiv:2406.14928},
-    url = {https://arxiv.org/abs/2406.14928},
-    year={2024}
-}
-
-@article{puppeteer,
-      title={Multi-Agent Collaboration via Evolving Orchestration}, 
-      author={Yufan Dang and Chen Qian and Xueheng Luo and Jingru Fan and Zihao Xie and Ruijie Shi and Weize Chen and Cheng Yang and Xiaoyin Che and Ye Tian and Xuantang Xiong and Lei Han and Zhiyuan Liu and Maosong Sun},
-      journal={arXiv preprint arXiv:2505.19591},
-      url={https://arxiv.org/abs/2505.19591},
-      year={2025}
-}
-```
-
-## 📬 Contact
-
-If you have any questions, feedback, or would like to get in touch, please feel free to reach out to us via email at [qianc62@gmail.com](mailto:qianc62@gmail.com)
+* 快速开始：[docs/user_guide/zh/index.md](./docs/user_guide/zh/index.md)
+* 工作流编写：[docs/user_guide/zh/workflow_authoring.md](./docs/user_guide/zh/workflow_authoring.md)
+* Memory 模块：[docs/user_guide/zh/modules/memory.md](./docs/user_guide/zh/modules/memory.md)
+* Tooling 模块：[docs/user_guide/zh/modules/tooling/README.md](./docs/user_guide/zh/modules/tooling/README.md)

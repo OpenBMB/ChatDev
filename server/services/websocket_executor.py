@@ -12,6 +12,7 @@ from server.services.artifact_dispatcher import ArtifactDispatcher
 from server.services.prompt_channel import WebPromptChannel
 from server.services.session_store import WorkflowSessionStore
 from server.services.session_execution import SessionExecutionController
+from server.services.team_state_service import TeamStateService
 from workflow.hooks.workspace_artifact import WorkspaceArtifact, WorkspaceArtifactHook
 
 
@@ -60,7 +61,15 @@ class WebSocketGraphExecutor(GraphExecutor):
     def _create_logger(self) -> WorkflowLogger:
         from server.services.websocket_logger import WebSocketLogger
 
-        return WebSocketLogger(self.websocket_manager, self.session_id, self.graph.name, self.graph.log_level)
+        return WebSocketLogger(
+            self.websocket_manager,
+            self.session_id,
+            self.graph.name,
+            self.graph.log_level,
+            session_store=self.session_store,
+            session_controller=self.session_controller,
+            team_state_service=TeamStateService(),
+        )
 
     async def execute_graph_async(self, task_prompt):
         await asyncio.get_event_loop().run_in_executor(None, self._execute, task_prompt)

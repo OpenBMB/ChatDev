@@ -1,6 +1,6 @@
 # Tooling 模块总览
 
-DevAll 目前支持两类工具绑定到 Agent 节点：
+MovieDev 目前支持两类工具绑定到 Agent 节点：
 1. **Function Tooling**：调用仓库内的 Python 函数（`functions/function_calling/`），通过 JSON Schema 自动生成工具签名。
 2. **MCP Tooling**：连接符合 Model Context Protocol 的外部服务，可直接复用 FastMCP、Claude Desktop 等工具生态。
 

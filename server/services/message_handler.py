@@ -25,6 +25,10 @@ class MessageHandler:
         message_type = data.get("type")
         if message_type == "human_input":
             await self._handle_human_input(session_id, data, websocket_manager)
+        elif message_type == "team_state_update":
+            await self._handle_team_state_update(session_id, data, websocket_manager)
+        elif message_type == "get_team_state":
+            await self._handle_get_team_state(session_id, websocket_manager)
         elif message_type == "ping":
             await self._handle_ping(session_id, websocket_manager)
         elif message_type == "get_status":
@@ -79,3 +83,34 @@ class MessageHandler:
             session_id,
             {"type": "status", "data": session_info or {"message": "Session not found"}},
         )
+
+    async def _handle_get_team_state(self, session_id: str, websocket_manager):
+        team_state = None
+        if self.workflow_run_service:
+            team_state = self.workflow_run_service.get_team_state(session_id)
+        await websocket_manager.send_message(
+            session_id,
+            {
+                "type": "team_state",
+                "data": {
+                    "team_state": team_state,
+                },
+            },
+        )
+
+    async def _handle_team_state_update(self, session_id: str, data: Dict[str, Any], websocket_manager):
+        if not self.workflow_run_service:
+            await websocket_manager.send_message(
+                session_id,
+                {"type": "error", "data": {"message": "Workflow service unavailable"}},
+            )
+            return
+
+        payload = data.get("data", {}) or {}
+        team_state = payload.get("team_state")
+        updated = await self.workflow_run_service.update_team_state(session_id, team_state, websocket_manager)
+        if updated is None:
+            await websocket_manager.send_message(
+                session_id,
+                {"type": "error", "data": {"message": "Session not found for team state update"}},
+            )

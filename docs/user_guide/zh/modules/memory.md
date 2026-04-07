@@ -1,6 +1,6 @@
 # Memory 模块指南
 
-本文档解释 DevAll 的 Memory 体系：memory 列表配置、内置存储实现、Agent 节点如何引用记忆，以及排障建议。代码主要位于 `entity/configs/memory.py`、`node/agent/memory/*.py`。
+本文档解释 MovieDev 的 Memory 体系：memory 列表配置、内置存储实现、Agent 节点如何引用记忆，以及排障建议。代码主要位于 `entity/configs/memory.py`、`node/agent/memory/*.py`。
 
 ## 1. 体系结构
 1. **Memory Store**：在 YAML `memory[]` 中声明，包含 `name`、`type` 和 `config`。`type` 由 `register_memory_store()` 注册，并映射到具体实现。

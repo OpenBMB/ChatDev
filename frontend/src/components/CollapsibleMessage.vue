@@ -4,7 +4,7 @@
       <button 
         class="copy-btn" 
         @click="copyToClipboard" 
-        :title="copyStatus === 'copied' ? 'Copied!' : 'Copy original content'"
+        :title="copyStatus === 'copied' ? t('collapsible.copied') : t('collapsible.copyOriginal')"
       >
         <svg v-if="copyStatus === 'idle'" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
@@ -36,7 +36,7 @@
         class="toggle-btn" 
         @click="toggle"
       >
-        {{ isCollapsed ? 'Show More' : 'Show Less' }}
+        {{ isCollapsed ? t('collapsible.showMore') : t('collapsible.showLess') }}
       </button>
     </div>
   </div>
@@ -44,6 +44,7 @@
 
 <script setup>
 import { ref, onMounted, computed, watch, nextTick } from 'vue'
+import { t } from '../utils/i18n.js'
 
 const props = defineProps({
   htmlContent: {

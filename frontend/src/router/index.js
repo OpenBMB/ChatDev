@@ -3,12 +3,11 @@ import { createRouter, createWebHistory } from 'vue-router'
 const routes = [
     {
         path: '/',
-        component: () => import('../pages/HomeView.vue')
+        redirect: '/workflows'
     },
     {
         path: '/tutorial',
-        component: () => import('../pages/TutorialView.vue'),
-        meta: { hideNavOnScroll: true }
+        redirect: '/workflows'
     },
     {
         path: '/launch',

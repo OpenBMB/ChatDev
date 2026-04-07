@@ -1,6 +1,6 @@
 # 配置 Schema API 契约
 
-本参考说明 `/api/config/schema` 与 `/api/config/schema/validate` 如何暴露 DevAll 的动态配置元数据，便于前端表单、IDE/CLI 通过 breadcrumbs（路径面包屑）按需获取局部 Schema。
+本参考说明 `/api/config/schema` 与 `/api/config/schema/validate` 如何暴露 MovieDev 的动态配置元数据，便于前端表单、IDE/CLI 通过 breadcrumbs（路径面包屑）按需获取局部 Schema。
 
 ## 1. 接口
 | 方法 | 作用 |

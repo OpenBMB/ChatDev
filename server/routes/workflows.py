@@ -1,8 +1,11 @@
 from fastapi import APIRouter, HTTPException
 from typing import Any
 
+import yaml
+
 from server.models import (
     WorkflowCopyRequest,
+    WorkflowMoveGroupRequest,
     WorkflowRenameRequest,
     WorkflowUpdateContentRequest,
     WorkflowUploadContentRequest,
@@ -25,6 +28,26 @@ from utils.exceptions import (
 from utils.structured_logger import get_server_logger, LogType
 
 router = APIRouter()
+
+
+def _load_workflow_metadata(file_path):
+    raw_content = file_path.read_text(encoding="utf-8")
+    yaml_content = yaml.safe_load(raw_content) or {}
+
+    description = ""
+    organization = ""
+
+    if isinstance(yaml_content, dict):
+        graph = yaml_content.get("graph") or {}
+        if isinstance(graph, dict):
+            description = str(graph.get("description") or "")
+            organization = str(graph.get("organization") or "")
+
+    return {
+        "name": file_path.name,
+        "description": description,
+        "organization": organization,
+    }
 
 
 def _persist_workflow_from_content(
@@ -65,7 +88,22 @@ def _persist_workflow_from_content(
 async def list_workflows():
     if not YAML_DIR.exists():
         return {"workflows": []}
-    return {"workflows": [file.name for file in YAML_DIR.glob("*.yaml")]}
+
+    workflows = []
+    for file_path in sorted(YAML_DIR.glob("*.yaml")):
+        try:
+            workflows.append(_load_workflow_metadata(file_path))
+        except Exception as exc:
+            logger = get_server_logger()
+            logger.log_exception(exc, f"Failed to load workflow metadata for {file_path.name}")
+            workflows.append(
+                {
+                    "name": file_path.name,
+                    "description": "",
+                    "organization": "",
+                }
+            )
+    return {"workflows": workflows}
 
 
 @router.get("/api/workflows/{filename}/args")
@@ -171,23 +209,19 @@ async def get_workflow_desc(filename: str):
         _, yaml_content = validate_workflow_content(safe_filename, raw_content)
 
         desc = ""
+        organization = ""
         if isinstance(yaml_content, dict):
             graph = yaml_content.get("graph") or {}
             if isinstance(graph, dict):
                 desc = graph.get("description") or ""
-                if len(desc) == 0:
-                        raise ResourceNotFoundError(
-                            "Workflow file does not have args",
-                            resource_type="workflow",
-                            resource_id=safe_filename,
-                        )
+                organization = graph.get("organization") or ""
         logger = get_server_logger()
         logger.info(
             "Workflow description retrieved",
             log_type=LogType.WORKFLOW,
             filename=safe_filename,
         )
-        return {"description": desc}
+        return {"description": desc, "organization": organization}
     except ValidationError as exc:
         # 参数或文件名等校验错误
         raise HTTPException(
@@ -236,6 +270,54 @@ async def update_workflow_content(filename: str, request: WorkflowUpdateContentR
         action="update",
         success_message="Workflow {filename} updated successfully",
     )
+
+
+@router.put("/api/workflows/{filename}/organization")
+async def update_workflow_organization(filename: str, request: WorkflowMoveGroupRequest):
+    try:
+        safe_filename = validate_workflow_filename(filename, require_yaml_extension=True)
+        file_path = YAML_DIR / safe_filename
+        if not file_path.exists() or not file_path.is_file():
+            raise ResourceNotFoundError(
+                "Workflow file not found",
+                resource_type="workflow",
+                resource_id=safe_filename,
+            )
+
+        raw_content = file_path.read_text(encoding="utf-8")
+        yaml_content = yaml.safe_load(raw_content) or {}
+        if not isinstance(yaml_content, dict):
+            raise ValidationError("Workflow YAML root must be a mapping", field="content")
+
+        graph = yaml_content.get("graph")
+        if not isinstance(graph, dict):
+            graph = {}
+            yaml_content["graph"] = graph
+
+        organization = (request.organization or "").strip()
+        if organization:
+            graph["organization"] = organization
+        else:
+            graph.pop("organization", None)
+
+        file_path.write_text(
+            yaml.safe_dump(yaml_content, allow_unicode=True, sort_keys=False),
+            encoding="utf-8",
+        )
+        return {
+            "status": "success",
+            "filename": safe_filename,
+            "organization": organization,
+            "message": "Workflow organization updated successfully",
+        }
+    except ValidationError:
+        raise
+    except ResourceNotFoundError:
+        raise
+    except Exception as exc:
+        logger = get_server_logger()
+        logger.log_exception(exc, f"Failed to update workflow organization for {filename}")
+        raise WorkflowExecutionError(f"Failed to update workflow organization: {exc}")
 
 
 @router.delete("/api/workflows/{filename}/delete")
@@ -358,4 +440,3 @@ async def get_workflow_raw_content(filename: str):
         logger = get_server_logger()
         logger.log_exception(exc, f"Unexpected error retrieving workflow: {filename}")
         raise WorkflowExecutionError(f"Failed to retrieve workflow: {exc}")
-

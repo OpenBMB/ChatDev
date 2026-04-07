@@ -12,7 +12,7 @@ ensure_schema_registry_populated()
 def main():
     import uvicorn
 
-    parser = argparse.ArgumentParser(description="DevAll Workflow Server")
+    parser = argparse.ArgumentParser(description="MovieDev Workflow Server")
     parser.add_argument(
         "--host",
         type=str,
@@ -58,7 +58,7 @@ def main():
     )
     
     logger = logging.getLogger(__name__)
-    logger.info(f"Starting DevAll Workflow Server on {args.host}:{args.port}")
+    logger.info(f"Starting MovieDev Workflow Server on {args.host}:{args.port}")
     
     # Launch the server
     uvicorn.run(

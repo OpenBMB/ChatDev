@@ -39,6 +39,20 @@ class RuntimeBuilder:
             "vars": self.graph.config.vars,
             "python_workspace_root": code_workspace,
             "attachment_store": attachment_store,
+            "graph_metadata": self.graph.config.metadata,
+            "replay_context": self.graph.config.metadata.get("replay_context", {}),
+            "retained_task_outputs": self.graph.config.metadata.get("retained_task_outputs", []),
+            "retained_node_ids": [
+                str(item or "").strip()
+                for item in ((self.graph.config.metadata.get("replay_context", {}) or {}).get("retained_node_ids") or [])
+                if str(item or "").strip()
+            ],
+            "retained_task_output_map": {
+                str(item.get("node_id") or item.get("task_id") or "").strip(): item
+                for item in (self.graph.config.metadata.get("retained_task_outputs", []) or [])
+                if isinstance(item, dict) and str(item.get("node_id") or item.get("task_id") or "").strip()
+            },
+            "human_governed_team_state": self.graph.config.metadata.get("team_state", {}),
         }
 
         context = RuntimeContext(

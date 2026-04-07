@@ -1,4 +1,4 @@
-"""Error handling utilities for the DevAll workflow system."""
+"""Error handling utilities for the MovieDev workflow system."""
 
 from fastapi import Request
 from fastapi.responses import JSONResponse
@@ -65,13 +65,13 @@ async def handle_external_service_error(request: Request, exc: ExternalServiceEr
 
 
 async def handle_mac_exception(request: Request, exc: MACException) -> JSONResponse:
-    """Handle DevAll exceptions and return standardized error response."""
+    """Handle MovieDev exceptions and return a standardized error response."""
     logger = get_server_logger()
     
     # Log the error
     logger.log_exception(
         exc,
-        f"DevAll exception occurred: {exc.error_code} - {exc.message}",
+        f"MovieDev exception occurred: {exc.error_code} - {exc.message}",
         correlation_id=getattr(request.state, 'correlation_id', None),
         url=str(request.url),
         method=request.method

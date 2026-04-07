@@ -1,27 +1,37 @@
 <template>
-  <div class="workflow-view">
-    <div class="workflow-bg"></div>
-    <div class="header">
-      <!-- Back button disabled -->
-      <!-- <button @click="goBack" class="back-button">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M19 12H5M5 12L12 19M5 12L12 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </button> -->
-      <h1 class="workflow-name">{{ workflowName }}</h1>
+  <div class="workflow-view" :class="{ 'workflow-view--embedded': embedded }">
+    <div v-if="!embedded" class="workflow-bg"></div>
+    <div class="header" :class="{ 'header--embedded': embedded }">
+      <div class="header-copy">
+        <div v-if="!embedded" class="header-eyebrow">{{ t('workflowView.eyebrow') }}</div>
+        <h1 class="workflow-name">{{ workflowName }}</h1>
+        <p v-if="!embedded" class="header-subtitle">{{ t('workflowView.subtitle') }}</p>
+      </div>
+      <div v-if="!embedded" class="header-chip">{{ activeTab === 'graph' ? t('workflowView.workflowGraph') : t('workflowView.yamlConfig') }}</div>
     </div>
-    
+
+    <div v-if="injectionFocusNodeId" class="injection-focus-banner">
+      <div class="injection-focus-copy">
+        <strong>{{ t('workflowView.mcpInjectionBannerTitle', { node: injectionFocusNodeId }) }}</strong>
+        <span>{{ t('workflowView.mcpInjectionBannerDesc') }}</span>
+      </div>
+      <div class="injection-focus-actions">
+        <button class="glass-button" @click="openInjectedNodeEditor">{{ t('workflowView.mcpInjectionOpenNode') }}</button>
+        <button class="glass-button" @click="clearInjectionFocus">{{ t('workflowView.mcpInjectionDismiss') }}</button>
+      </div>
+    </div>
+
     <div class="content">
       <!-- YAML Editor Tab -->
       <div v-if="activeTab === 'yaml'" class="yaml-editor">
         <div v-if="yamlParseError" class="yaml-error">
-          YAML Parse Error: {{ yamlParseError }}
+          {{ t('workflowView.yamlParseError') }}: {{ yamlParseError }}
         </div>
         <textarea 
           v-model="yamlTextString" 
           class="yaml-textarea"
           :class="{ 'yaml-error-border': yamlParseError }"
-          placeholder="Loading YAML content..."
+          :placeholder="t('workflowView.loadingYaml')"
           readonly
         ></textarea>
       </div>
@@ -49,6 +59,7 @@
           <WorkflowNode
             :id="props.id"
             :data="props.data"
+            :is-highlighted="injectionFocusNodeId === props.id"
             @hover="onNodeHover"
             @leave="onNodeLeave"
           />
@@ -92,7 +103,7 @@
                   class="context-menu-item"
                   @click.stop="() => { hideContextMenu(); openCreateNodeModal(); }"
                 >
-                  Create Node
+                  {{ t('workflowView.createNode') }}
                 </div>
               </RichTooltip>
               <div
@@ -100,7 +111,7 @@
                 class="context-menu-item"
                 @click.stop="() => { hideContextMenu(); openCreateNodeModal(); }"
               >
-                Create Node
+                {{ t('workflowView.createNode') }}
               </div>
             </template>
 
@@ -111,7 +122,7 @@
                   class="context-menu-item"
                   @click.stop="() => { hideContextMenu(); onCopyNodeFromContext(); }"
                 >
-                  Copy Node
+                  {{ t('workflowView.copyNode') }}
                 </div>
               </RichTooltip>
               <div
@@ -119,14 +130,14 @@
                 class="context-menu-item"
                 @click.stop="() => { hideContextMenu(); onCopyNodeFromContext(); }"
               >
-                Copy Node
+                {{ t('workflowView.copyNode') }}
               </div>
               <RichTooltip v-if="shouldShowTooltip" :content="helpContent.contextMenu.deleteNode" placement="right">
                 <div
                   class="context-menu-item"
                   @click.stop="() => { hideContextMenu(); onDeleteNodeFromContext(); }"
                 >
-                  Delete Node
+                  {{ t('workflowView.deleteNode') }}
                 </div>
               </RichTooltip>
               <div
@@ -134,7 +145,7 @@
                 class="context-menu-item"
                 @click.stop="() => { hideContextMenu(); onDeleteNodeFromContext(); }"
               >
-                Delete Node
+                {{ t('workflowView.deleteNode') }}
               </div>
             </template>
 
@@ -145,7 +156,7 @@
                   class="context-menu-item"
                   @click.stop="() => { hideContextMenu(); onDeleteEdgeFromContext(); }"
                 >
-                  Delete Edge
+                  {{ t('workflowView.deleteEdge') }}
                 </div>
               </RichTooltip>
               <div
@@ -153,7 +164,7 @@
                 class="context-menu-item"
                 @click.stop="() => { hideContextMenu(); onDeleteEdgeFromContext(); }"
               >
-                Delete Edge
+                {{ t('workflowView.deleteEdge') }}
               </div>
             </template>
           </div>
@@ -167,39 +178,42 @@
           :class="['tab', { active: activeTab === 'graph' }]"
           @click="activeTab = 'graph'"
         >
-          Workflow Graph
+          {{ t('workflowView.workflowGraph') }}
         </button>
         <button 
           :class="['tab', { active: activeTab === 'yaml' }]"
           @click="activeTab = 'yaml'"
         >
-          YAML Configuration
+          {{ t('workflowView.yamlConfig') }}
         </button>
       </div>
       <div v-if="activeTab === 'graph'" class="editor-actions">
         <RichTooltip v-if="shouldShowTooltip" :content="helpContent.contextMenu.createNodeButton" placement="bottom">
           <button @click="openCreateNodeModal" class="glass-button">
-            <span>Create Node</span>
+            <span>{{ t('workflowView.createNode') }}</span>
           </button>
         </RichTooltip>
         <button v-else @click="openCreateNodeModal" class="glass-button">
-          <span>Create Node</span>
+          <span>{{ t('workflowView.createNode') }}</span>
+        </button>
+        <button @click="openTemplateModal" class="glass-button">
+          <span>{{ t('workflowView.applyTemplate') }}</span>
         </button>
         <RichTooltip v-if="shouldShowTooltip" :content="helpContent.contextMenu.configureGraph" placement="bottom">
           <button @click="openConfigureGraphModal" class="glass-button">
-            <span>Configure Graph</span>
+            <span>{{ t('workflowView.configureGraph') }}</span>
           </button>
         </RichTooltip>
         <button v-else @click="openConfigureGraphModal" class="glass-button">
-          <span>Configure Graph</span>
+          <span>{{ t('workflowView.configureGraph') }}</span>
         </button>
         <RichTooltip v-if="shouldShowTooltip" :content="helpContent.contextMenu.launch" placement="bottom">
           <button @click="goToLaunch" class="launch-button-primary">
-            <span>Launch</span>
+            <span>{{ t('workflowView.launch') }}</span>
           </button>
         </RichTooltip>
         <button v-else @click="goToLaunch" class="launch-button-primary">
-          <span>Launch</span>
+          <span>{{ t('workflowView.launch') }}</span>
         </button>
         
         <div
@@ -218,25 +232,26 @@
           <transition name="fade">
             <div v-if="showMenu" class="menu-dropdown">
               <RichTooltip v-if="shouldShowTooltip" :content="helpContent.contextMenu.renameWorkflow" placement="left">
-                <div @click="openRenameWorkflowModal" class="menu-item">Rename Workflow</div>
+                <div @click="openRenameWorkflowModal" class="menu-item">{{ t('workflowView.renameWorkflow') }}</div>
               </RichTooltip>
-              <div v-else @click="openRenameWorkflowModal" class="menu-item">Rename Workflow</div>
+              <div v-else @click="openRenameWorkflowModal" class="menu-item">{{ t('workflowView.renameWorkflow') }}</div>
               <RichTooltip v-if="shouldShowTooltip" :content="helpContent.contextMenu.copyWorkflow" placement="left">
-                <div @click="openCopyWorkflowModal" class="menu-item">Copy Workflow</div>
+                <div @click="openCopyWorkflowModal" class="menu-item">{{ t('workflowView.copyWorkflow') }}</div>
               </RichTooltip>
-              <div v-else @click="openCopyWorkflowModal" class="menu-item">Copy Workflow</div>
+              <div v-else @click="openCopyWorkflowModal" class="menu-item">{{ t('workflowView.copyWorkflow') }}</div>
               <RichTooltip v-if="shouldShowTooltip" :content="helpContent.contextMenu.manageVariables" placement="left">
-                <div @click="openManageVarsModal" class="menu-item">Manage Variables</div>
+                <div @click="openManageVarsModal" class="menu-item">{{ t('workflowView.manageVariables') }}</div>
               </RichTooltip>
-              <div v-else @click="openManageVarsModal" class="menu-item">Manage Variables</div>
+              <div v-else @click="openManageVarsModal" class="menu-item">{{ t('workflowView.manageVariables') }}</div>
               <RichTooltip v-if="shouldShowTooltip" :content="helpContent.contextMenu.manageMemories" placement="left">
-                <div @click="openManageMemoriesModal" class="menu-item">Manage Memories</div>
+                <div @click="openManageMemoriesModal" class="menu-item">{{ t('workflowView.manageMemories') }}</div>
               </RichTooltip>
-              <div v-else @click="openManageMemoriesModal" class="menu-item">Manage Memories</div>
+              <div v-else @click="openManageMemoriesModal" class="menu-item">{{ t('workflowView.manageMemories') }}</div>
+              <div @click="openManageTriggersModal" class="menu-item">{{ t('workflowView.manageTriggers') }}</div>
               <RichTooltip v-if="shouldShowTooltip" :content="helpContent.contextMenu.createEdge" placement="left">
-                <div @click="openCreateEdgeModal" class="menu-item">Create Edge</div>
+                <div @click="openCreateEdgeModal" class="menu-item">{{ t('workflowView.createEdge') }}</div>
               </RichTooltip>
-              <div v-else @click="openCreateEdgeModal" class="menu-item">Create Edge</div>
+              <div v-else @click="openCreateEdgeModal" class="menu-item">{{ t('workflowView.createEdge') }}</div>
             </div>
           </transition>
         </div>
@@ -264,7 +279,7 @@
   <div v-if="showRenameModal" class="modal-overlay" @click.self="closeRenameModal">
     <div class="modal-content">
       <div class="modal-header">
-        <h3 class="modal-title">Rename Workflow</h3>
+        <h3 class="modal-title">{{ t('workflowView.renameTitle') }}</h3>
         <button @click="closeRenameModal" class="close-button">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -273,20 +288,20 @@
       </div>
       <div class="modal-body">
         <div class="form-group">
-          <label for="rename-workflow-name" class="form-label">Workflow Name</label>
+          <label for="rename-workflow-name" class="form-label">{{ t('workflowView.workflowName') }}</label>
           <input
             id="rename-workflow-name"
             v-model="renameWorkflowName"
             type="text"
             class="form-input"
-            placeholder="Enter new workflow name"
+            :placeholder="t('workflowView.enterWorkflowName')"
             @keyup.enter="handleRenameSubmit"
           />
         </div>
       </div>
       <div class="modal-footer">
-        <button @click="closeRenameModal" class="cancel-button">Cancel</button>
-        <button @click="handleRenameSubmit" class="submit-button" :disabled="!renameWorkflowName.trim()">Submit</button>
+        <button @click="closeRenameModal" class="cancel-button">{{ t('common.cancel') }}</button>
+        <button @click="handleRenameSubmit" class="submit-button" :disabled="!renameWorkflowName.trim()">{{ t('common.submit') }}</button>
       </div>
     </div>
   </div>
@@ -295,7 +310,7 @@
   <div v-if="showCopyModal" class="modal-overlay" @click.self="closeCopyModal">
     <div class="modal-content">
       <div class="modal-header">
-        <h3 class="modal-title">Copy Workflow</h3>
+        <h3 class="modal-title">{{ t('workflowView.copyTitle') }}</h3>
         <button @click="closeCopyModal" class="close-button">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -304,20 +319,273 @@
       </div>
       <div class="modal-body">
         <div class="form-group">
-          <label for="copy-workflow-name" class="form-label">Workflow Name</label>
+          <label for="copy-workflow-name" class="form-label">{{ t('workflowView.workflowName') }}</label>
           <input
             id="copy-workflow-name"
             v-model="copyWorkflowName"
             type="text"
             class="form-input"
-            placeholder="Enter new workflow name"
+            :placeholder="t('workflowView.enterWorkflowName')"
             @keyup.enter="handleCopySubmit"
           />
         </div>
       </div>
       <div class="modal-footer">
-        <button @click="closeCopyModal" class="cancel-button">Cancel</button>
-        <button @click="handleCopySubmit" class="submit-button" :disabled="!copyWorkflowName.trim()">Submit</button>
+        <button @click="closeCopyModal" class="cancel-button">{{ t('common.cancel') }}</button>
+        <button @click="handleCopySubmit" class="submit-button" :disabled="!copyWorkflowName.trim()">{{ t('common.submit') }}</button>
+      </div>
+    </div>
+  </div>
+
+  <div v-if="showTemplateModal" class="modal-overlay" @click.self="closeTemplateModal">
+    <div class="modal-content template-modal">
+      <div class="modal-header">
+        <h3 class="modal-title">{{ t('workflowView.templatesTitle') }}</h3>
+        <div class="template-header-actions">
+          <button type="button" class="template-toolbar-button" @click="exportCurrentWorkflowTemplate">
+            {{ t('workflowView.exportTemplate') }}
+          </button>
+          <button type="button" class="template-toolbar-button" @click="triggerTemplateImport">
+            {{ t('workflowView.importTemplate') }}
+          </button>
+          <button @click="closeTemplateModal" class="close-button">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+      <div class="modal-body">
+        <p class="template-intro">{{ t('workflowView.templatesSubtitle') }}</p>
+        <input
+          v-model="templateSearchQuery"
+          type="text"
+          class="template-search-input"
+          :placeholder="t('workflowView.templateSearchPlaceholder')"
+        />
+        <div class="template-category-row">
+          <button
+            v-for="category in templateCategories"
+            :key="category.id"
+            class="template-category-chip"
+            :class="{ 'is-active': selectedTemplateCategory === category.id }"
+            @click="selectedTemplateCategory = category.id"
+          >
+            {{ t(category.labelKey) }}
+          </button>
+        </div>
+        <div class="template-grid">
+          <div
+            v-for="templateItem in filteredWorkflowTemplates"
+            :key="templateItem.id"
+            class="template-card"
+            :class="{ 'is-recommended': isRecommendedTemplate(templateItem.id) }"
+            role="button"
+            tabindex="0"
+            @click="applyTemplate(templateItem.id)"
+            @keydown.enter.prevent="applyTemplate(templateItem.id)"
+            @keydown.space.prevent="applyTemplate(templateItem.id)"
+          >
+            <div class="template-card-header">
+              <div class="template-card-title">{{ getTemplateTitle(templateItem) }}</div>
+              <button
+                type="button"
+                class="template-favorite-button"
+                :class="{ 'is-active': isTemplateFavorite(templateItem.id) }"
+                @click.stop="toggleTemplateFavorite(templateItem.id)"
+              >
+                {{ isTemplateFavorite(templateItem.id) ? '★' : '☆' }}
+              </button>
+            </div>
+            <div class="template-card-meta-row">
+              <span v-if="isRecommendedTemplate(templateItem.id)" class="template-card-meta is-recommended">
+                {{ recommendedPackId ? t('workflowView.recommendedPackBadge', { pack: recommendedPackId }) : t('workflowView.recommendedTemplateBadge') }}
+              </span>
+              <span v-if="isTemplateFavorite(templateItem.id)" class="template-card-meta is-favorite">
+                {{ t('workflowView.favoriteBadge') }}
+              </span>
+              <span v-if="isTemplateRecent(templateItem.id)" class="template-card-meta is-recent">
+                {{ t('workflowView.recentBadge') }}
+              </span>
+              <span v-if="templateUsageCount(templateItem.id) > 0" class="template-card-meta is-usage">
+                {{ t('workflowView.templateUsedCount', { count: templateUsageCount(templateItem.id) }) }}
+              </span>
+            </div>
+            <div class="template-card-category">{{ getTemplateCategoryLabel(templateItem) }}</div>
+            <div class="template-card-description">{{ getTemplateDescription(templateItem) }}</div>
+            <div v-if="getTemplateTags(templateItem).length" class="template-tag-row">
+              <span
+                v-for="tag in getTemplateTags(templateItem)"
+                :key="`${templateItem.id}-${tag}`"
+                class="template-tag-chip"
+              >
+                {{ tag }}
+              </span>
+            </div>
+            <div v-if="isLocalImportedTemplate(templateItem)" class="template-card-library-actions">
+              <button
+                type="button"
+                class="template-library-button"
+                @click.stop="togglePinImportedTemplate(templateItem.id)"
+              >
+                {{ isPinnedImportedTemplate(templateItem.id) ? t('workflowView.unpinImportedTemplate') : t('workflowView.pinImportedTemplate') }}
+              </button>
+              <button
+                type="button"
+                class="template-library-button"
+                @click.stop="renameImportedTemplate(templateItem.id)"
+              >
+                {{ t('workflowView.renameImportedTemplate') }}
+              </button>
+              <button
+                type="button"
+                class="template-library-button is-danger"
+                @click.stop="deleteImportedTemplate(templateItem.id)"
+              >
+                {{ t('workflowView.deleteImportedTemplate') }}
+              </button>
+            </div>
+            <div class="template-card-action">{{ t('workflowView.useThisTemplate') }}</div>
+          </div>
+        </div>
+        <div v-if="!filteredWorkflowTemplates.length" class="template-empty-state">
+          {{ t('common.noResults') }}
+        </div>
+        <div v-if="pendingImportedTemplate" class="template-import-preview">
+          <div class="template-import-preview-title">{{ t('workflowView.templateImportPreview') }}</div>
+          <div class="template-import-preview-meta">
+            {{ pendingImportedTemplate.fileName }}
+          </div>
+          <div class="template-import-preview-meta">
+            {{ t('workflowView.workflowName') }}: {{ pendingImportedTemplate.workflowName }}
+          </div>
+          <div class="template-import-preview-meta">
+            {{ t('workflowView.templateImportStats', {
+              nodes: pendingImportedTemplate.nodeCount,
+              edges: pendingImportedTemplate.edgeCount,
+              start: pendingImportedTemplate.startCount
+            }) }}
+          </div>
+          <div v-if="pendingImportedTemplate.startNodes.length" class="template-import-preview-meta">
+            {{ t('workflowView.templateImportStartNodes') }}: {{ pendingImportedTemplate.startNodes.join(', ') }}
+          </div>
+          <div v-if="pendingImportedTemplate.tags.length" class="template-import-preview-meta">
+            {{ t('workflowView.templateImportTags') }}: {{ pendingImportedTemplate.tags.join(', ') }}
+          </div>
+          <div v-if="pendingImportedTemplate.edgeSummaries.length" class="template-import-node-list">
+            <div class="template-import-node-list-title">{{ t('workflowView.templateImportEdgesPreview') }}</div>
+            <div
+              v-for="edge in pendingImportedTemplate.edgeSummaries"
+              :key="edge.id"
+              class="template-import-edge-item"
+            >
+              <span class="template-import-edge-endpoint">{{ edge.from }}</span>
+              <span class="template-import-edge-arrow">-></span>
+              <span class="template-import-edge-endpoint">{{ edge.to }}</span>
+            </div>
+            <div v-if="pendingImportedTemplate.remainingEdgeCount > 0" class="template-import-preview-meta">
+              {{ t('workflowView.templateImportMoreEdges', { count: pendingImportedTemplate.remainingEdgeCount }) }}
+            </div>
+          </div>
+          <div v-if="pendingImportedTemplate.nodeSummaries.length" class="template-import-node-list">
+            <div class="template-import-node-list-title">{{ t('workflowView.templateImportNodesPreview') }}</div>
+            <div
+              v-for="node in pendingImportedTemplate.nodeSummaries"
+              :key="node.id"
+              class="template-import-node-item"
+            >
+              <div class="template-import-node-main">
+                <span class="template-import-node-id">{{ node.id }}</span>
+                <span class="template-import-node-type">{{ node.type }}</span>
+              </div>
+              <div v-if="node.summary" class="template-import-node-summary">{{ node.summary }}</div>
+            </div>
+            <div v-if="pendingImportedTemplate.remainingNodeCount > 0" class="template-import-preview-meta">
+              {{ t('workflowView.templateImportMoreNodes', { count: pendingImportedTemplate.remainingNodeCount }) }}
+            </div>
+          </div>
+          <div
+            class="template-import-preview-status"
+            :class="{ 'is-valid': pendingImportedTemplate.isValid, 'is-invalid': !pendingImportedTemplate.isValid }"
+          >
+            {{ pendingImportedTemplate.validationMessage }}
+          </div>
+          <div class="template-import-preview-actions">
+            <button
+              type="button"
+              class="template-toolbar-button"
+              :disabled="!pendingImportedTemplate.isValid"
+              @click="applyImportedTemplate"
+            >
+              {{ t('workflowView.applyImportedTemplate') }}
+            </button>
+            <button
+              type="button"
+              class="template-toolbar-button"
+              @click="clearTemplateImportPreview"
+            >
+              {{ t('common.cancel') }}
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button @click="closeTemplateModal" class="cancel-button">{{ t('common.cancel') }}</button>
+      </div>
+    </div>
+  </div>
+  <input
+    ref="templateImportInputRef"
+    type="file"
+    accept="application/json,.json"
+    class="template-import-input"
+    @change="handleTemplateImport"
+  />
+
+  <div v-if="showMcpInjectionModal" class="modal-overlay" @click.self="closeMcpInjectionModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">{{ t('workflowView.mcpInjectionTitle') }}</h3>
+        <button @click="closeMcpInjectionModal" class="close-button">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p class="template-intro">
+          {{ t('workflowView.mcpInjectionDesc') }}
+        </p>
+        <div class="template-import-preview-meta">
+          {{ t('workflowView.mcpInjectionPresetLabel') }}: {{ pendingMcpInjectionLabel }}
+        </div>
+        <div v-if="pendingMcpInjectionPresets.length" class="template-tag-row">
+          <span
+            v-for="preset in pendingMcpInjectionPresets"
+            :key="`${preset.id}-${preset.server}`"
+            class="template-tag-chip"
+          >
+            {{ preset.title || preset.id }} · {{ preset.prefix }}
+          </span>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="mcp-injection-node">{{ t('workflowView.mcpInjectionTargetLabel') }}</label>
+          <select id="mcp-injection-node" v-model="selectedMcpInjectionNodeId" class="form-input">
+            <option v-for="node in availableAgentNodesForInjection" :key="node.id" :value="node.id">
+              {{ node.id }}
+            </option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button @click="closeMcpInjectionModal" class="cancel-button">{{ t('common.cancel') }}</button>
+        <button
+          @click="applyMcpInjection"
+          class="submit-button"
+          :disabled="!selectedMcpInjectionNodeId"
+        >
+          {{ t('workflowView.mcpInjectionApply') }}
+        </button>
       </div>
     </div>
   </div>
@@ -325,7 +593,7 @@
 
 <script setup>
 import { ref, watch, nextTick, onMounted, onBeforeUnmount, computed } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { VueFlow, useVueFlow, MarkerType } from '@vue-flow/core'
 import { Background } from '@vue-flow/background'
 import { Controls } from '@vue-flow/controls'
@@ -341,6 +609,8 @@ import yaml from 'js-yaml'
 import { fetchYaml, fetchVueGraph, postVuegraphs, updateYaml, postYamlNameChange, postYamlCopy } from '../utils/apiFunctions'
 import { helpContent } from '../utils/helpContent.js'
 import { configStore } from '../utils/configStore.js'
+import { t } from '../utils/i18n.js'
+import { workflowTemplates, buildWorkflowTemplate } from '../utils/workflowTemplates.js'
 
 const shouldShowTooltip = computed(() => configStore.ENABLE_HELP_TOOLTIPS)
 
@@ -348,9 +618,14 @@ const props = defineProps({
   workflowName: {
     type: String,
     required: true
+  },
+  embedded: {
+    type: Boolean,
+    default: false
   }
 })
 const emit = defineEmits(['refresh-workflows'])
+const route = useRoute()
 const router = useRouter()
 const { toObject, fromObject, fitView, getViewport } = useVueFlow()
 
@@ -384,8 +659,170 @@ const formGeneratorReadOnlyFields = ref([])
 // Modal states for rename and copy
 const showRenameModal = ref(false)
 const showCopyModal = ref(false)
+const showTemplateModal = ref(false)
+const templateImportInputRef = ref(null)
+const pendingImportedTemplate = ref(null)
 const renameWorkflowName = ref('')
 const copyWorkflowName = ref('')
+const selectedTemplateCategory = ref('all')
+const templateSearchQuery = ref('')
+const templateFavorites = ref([])
+const templateRecent = ref([])
+const templateUsageCounts = ref({})
+const localImportedTemplates = ref([])
+const pinnedImportedTemplateIds = ref([])
+const recommendedTemplateIds = ref([])
+const recommendedPackId = ref('')
+const showMcpInjectionModal = ref(false)
+const pendingMcpInjection = ref({ presets: [] })
+const selectedMcpInjectionNodeId = ref('')
+const injectionFocusNodeId = ref('')
+const TEMPLATE_FAVORITES_STORAGE_KEY = 'moviedev.workflow-template-favorites'
+const TEMPLATE_RECENT_STORAGE_KEY = 'moviedev.workflow-template-recent'
+const TEMPLATE_USAGE_STORAGE_KEY = 'moviedev.workflow-template-usage-counts'
+const LOCAL_IMPORTED_TEMPLATES_STORAGE_KEY = 'moviedev.workflow-template-imports'
+const PINNED_IMPORTED_TEMPLATES_STORAGE_KEY = 'moviedev.workflow-template-imports-pinned'
+const LEGACY_TEMPLATE_FAVORITES_STORAGE_KEY = 'chatdev.workflow-template-favorites'
+const LEGACY_TEMPLATE_RECENT_STORAGE_KEY = 'chatdev.workflow-template-recent'
+const LEGACY_TEMPLATE_USAGE_STORAGE_KEY = 'chatdev.workflow-template-usage-counts'
+const LEGACY_LOCAL_IMPORTED_TEMPLATES_STORAGE_KEY = 'chatdev.workflow-template-imports'
+const LEGACY_PINNED_IMPORTED_TEMPLATES_STORAGE_KEY = 'chatdev.workflow-template-imports-pinned'
+const MAX_TEMPLATE_RECENT = 6
+
+const templateCategories = Object.freeze([
+  { id: 'all', labelKey: 'workflowView.templateCategories.all' },
+  { id: 'favorites', labelKey: 'workflowView.templateCategories.favorites' },
+  { id: 'recent', labelKey: 'workflowView.templateCategories.recent' },
+  { id: 'imported', labelKey: 'workflowView.templateCategories.imported' },
+  { id: 'core', labelKey: 'workflowView.templateCategories.core' },
+  { id: 'research', labelKey: 'workflowView.templateCategories.research' },
+  { id: 'writing', labelKey: 'workflowView.templateCategories.writing' },
+  { id: 'decision', labelKey: 'workflowView.templateCategories.decision' },
+  { id: 'human', labelKey: 'workflowView.templateCategories.human' },
+  { id: 'skills', labelKey: 'workflowView.templateCategories.skills' },
+  { id: 'mcp', labelKey: 'workflowView.templateCategories.mcp' },
+])
+
+const normalizedTemplateSearch = computed(() => String(templateSearchQuery.value || '').trim().toLowerCase())
+const allTemplateItems = computed(() => [...workflowTemplates, ...localImportedTemplates.value])
+const isRecommendedTemplate = (templateId) => recommendedTemplateIds.value.includes(templateId)
+const availableAgentNodesForInjection = computed(() => (
+  Array.isArray(yamlContent.value?.graph?.nodes)
+    ? yamlContent.value.graph.nodes.filter((node) => node?.type === 'agent' && node?.id)
+    : []
+))
+const pendingMcpInjectionPresets = computed(() => (
+  Array.isArray(pendingMcpInjection.value?.presets)
+    ? pendingMcpInjection.value.presets
+    : []
+))
+const pendingMcpInjectionLabel = computed(() => {
+  const presets = pendingMcpInjectionPresets.value
+  if (!presets.length) {
+    return ''
+  }
+  if (presets.length === 1) {
+    return presets[0]?.title || presets[0]?.id || ''
+  }
+  return t('workflowView.mcpInjectionPresetCount', { count: presets.length })
+})
+
+const filteredWorkflowTemplates = computed(() => {
+  const search = normalizedTemplateSearch.value
+  return allTemplateItems.value
+    .filter((templateItem) => {
+      if (selectedTemplateCategory.value === 'favorites' && !isTemplateFavorite(templateItem.id)) {
+        return false
+      }
+      if (selectedTemplateCategory.value === 'recent' && !isTemplateRecent(templateItem.id)) {
+        return false
+      }
+      if (selectedTemplateCategory.value === 'imported' && templateItem.source !== 'local_import') {
+        return false
+      }
+      if (
+        selectedTemplateCategory.value !== 'all'
+        && selectedTemplateCategory.value !== 'favorites'
+        && selectedTemplateCategory.value !== 'recent'
+        && selectedTemplateCategory.value !== 'imported'
+      ) {
+        const targetKey = `workflowView.templateCategories.${selectedTemplateCategory.value}`
+        if (templateItem.categoryKey !== targetKey) {
+          return false
+        }
+      }
+      if (!search) {
+        return true
+      }
+      const searchable = [
+        getTemplateTitle(templateItem),
+        getTemplateDescription(templateItem),
+        getTemplateCategoryLabel(templateItem),
+        getTemplateTags(templateItem).join(' '),
+      ]
+        .join(' ')
+        .toLowerCase()
+      return searchable.includes(search)
+    })
+    .sort((left, right) => {
+      const leftRecommended = isRecommendedTemplate(left.id) ? 1 : 0
+      const rightRecommended = isRecommendedTemplate(right.id) ? 1 : 0
+      const leftRecentRank = recentRank(left.id)
+      const rightRecentRank = recentRank(right.id)
+      const leftFavorite = isTemplateFavorite(left.id) ? 1 : 0
+      const rightFavorite = isTemplateFavorite(right.id) ? 1 : 0
+      const leftPinned = isPinnedImportedTemplate(left.id) ? 1 : 0
+      const rightPinned = isPinnedImportedTemplate(right.id) ? 1 : 0
+      const leftUsageCount = templateUsageCount(left.id)
+      const rightUsageCount = templateUsageCount(right.id)
+      if (leftRecommended !== rightRecommended) {
+        return rightRecommended - leftRecommended
+      }
+      if (selectedTemplateCategory.value === 'recent' && leftRecentRank !== rightRecentRank) {
+        return leftRecentRank - rightRecentRank
+      }
+      if (leftRecentRank !== rightRecentRank) {
+        return leftRecentRank - rightRecentRank
+      }
+      if (leftPinned !== rightPinned) {
+        return rightPinned - leftPinned
+      }
+      if (leftFavorite !== rightFavorite) {
+        return rightFavorite - leftFavorite
+      }
+      if (leftUsageCount !== rightUsageCount) {
+        return rightUsageCount - leftUsageCount
+      }
+      return left.id.localeCompare(right.id)
+    })
+})
+
+const getTemplateTitle = (templateItem) => {
+  if (templateItem?.titleKey) {
+    return t(templateItem.titleKey)
+  }
+  return String(templateItem?.title || t('common.unnamed'))
+}
+
+const getTemplateDescription = (templateItem) => {
+  if (templateItem?.descriptionKey) {
+    return t(templateItem.descriptionKey)
+  }
+  return String(templateItem?.description || '')
+}
+
+const getTemplateCategoryLabel = (templateItem) => {
+  if (templateItem?.categoryKey) {
+    return t(templateItem.categoryKey)
+  }
+  return ''
+}
+
+const getTemplateTags = (templateItem) => (
+  Array.isArray(templateItem?.tags)
+    ? templateItem.tags.map((tag) => String(tag || '').trim()).filter(Boolean)
+    : []
+)
 
 const FORM_GENERATOR_CONFIG = Object.freeze({
   graph: [
@@ -673,7 +1110,7 @@ const deleteEdgeByEndpoints = async (fromId, toId) => {
     // Empty start node array is not allowed
     const startArray = Array.isArray(nextStart) ? nextStart : []
     if (startArray.length === 0) {
-      alert("At least one connection required from start node!")
+      alert(t('workflowView.startConnectionRequired'))
       return
     }
   }
@@ -701,7 +1138,7 @@ const deleteEdgeByEndpoints = async (fromId, toId) => {
 const onDeleteNodeFromContext = async () => {
   const nodeId = contextNodeId.value
   contextNodeId.value = null
-  const confirmed = window.confirm(`Are you sure you want to delete this node?`)
+  const confirmed = window.confirm(t('workflowView.confirmDeleteNode'))
   if (!confirmed) {
     return
   }
@@ -714,7 +1151,7 @@ const onDeleteNodeFromContext = async () => {
 const onDeleteEdgeFromContext = async () => {
   const info = contextEdgeInfo.value
   contextEdgeInfo.value = null
-  const confirmed = window.confirm(`Are you sure you want to delete this edge?`)
+  const confirmed = window.confirm(t('workflowView.confirmDeleteEdge'))
   if (!confirmed) {
     return
   }
@@ -728,6 +1165,7 @@ const initializeWorkflow = async (name) => {
   if (!name) {
     return
   }
+  injectionFocusNodeId.value = ''
   workflowName.value = name
   console.log('Workflow initialized: ', workflowName.value)
   await loadYamlFile()
@@ -746,12 +1184,40 @@ watch(
 
 onMounted(async () => {
   window.addEventListener('click', onGlobalClick)
+  loadTemplateFavorites()
+  loadTemplateRecent()
+  loadTemplateUsageCounts()
+  loadLocalImportedTemplates()
+  loadPinnedImportedTemplateIds()
   await initializeWorkflow(props.workflowName)
+  syncRecommendedTemplatesFromRoute()
+  syncPendingMcpInjectionFromRoute()
+  if (String(route.query.openTemplates || '') === '1') {
+    openTemplateModal()
+  }
+  if (String(route.query.injectMcpPreset || '')) {
+    openMcpInjectionModalIfNeeded()
+  }
 })
 
 onBeforeUnmount(() => {
   window.removeEventListener('click', onGlobalClick)
 })
+
+watch(
+  () => route.query,
+  (query) => {
+    syncRecommendedTemplatesFromRoute()
+    syncPendingMcpInjectionFromRoute()
+    if (String(query.openTemplates || '') === '1') {
+      openTemplateModal()
+    }
+    if (String(query.injectMcpPreset || '')) {
+      openMcpInjectionModalIfNeeded()
+    }
+  },
+  { deep: true }
+)
 
 watch(activeTab, async (newTab) => {
   if (newTab === 'graph') {
@@ -1367,6 +1833,22 @@ const buildYamlWithoutMemory = () => {
   return source
 }
 
+const buildYamlWithoutTriggers = () => {
+  const source = yamlContent.value
+  if (!source?.graph) {
+    return source
+  }
+  if (Object.prototype.hasOwnProperty.call(source.graph, 'triggers')) {
+    const newGraph = { ...source.graph }
+    delete newGraph.triggers
+    return {
+      ...source,
+      graph: newGraph
+    }
+  }
+  return source
+}
+
 const buildYamlWithoutGraph = () => {
   const source = yamlContent.value
   if (!source || typeof source !== 'object') {
@@ -1549,6 +2031,715 @@ const openCreateNodeModal = () => {
   openDynamicFormGenerator('node', { mode: 'create' })
 }
 
+const openTemplateModal = () => {
+  selectedTemplateCategory.value = 'all'
+  templateSearchQuery.value = ''
+  clearTemplateImportPreview()
+  showTemplateModal.value = true
+}
+
+const syncRecommendedTemplatesFromRoute = () => {
+  const rawTemplates = String(route.query.recommendedTemplates || '')
+  recommendedTemplateIds.value = rawTemplates
+    .split(',')
+    .map((item) => item.trim())
+    .filter(Boolean)
+  recommendedPackId.value = String(route.query.recommendedPack || '').trim()
+}
+
+const clearTemplateRecommendationQuery = async () => {
+  const nextQuery = { ...route.query }
+  delete nextQuery.openTemplates
+  delete nextQuery.recommendedPack
+  delete nextQuery.recommendedTemplates
+  await router.replace({ query: nextQuery })
+}
+
+const syncPendingMcpInjectionFromRoute = () => {
+  const payload = String(route.query.injectMcpPayload || '').trim()
+  if (payload) {
+    try {
+      const parsed = JSON.parse(decodeURIComponent(payload))
+      const presets = Array.isArray(parsed)
+        ? parsed.map((item) => ({
+            id: String(item?.id || '').trim(),
+            title: String(item?.title || item?.id || '').trim(),
+            mode: String(item?.mode || 'mcp_remote').trim(),
+            prefix: String(item?.prefix || '').trim(),
+            server: String(item?.server || '').trim(),
+          })).filter((item) => item.id && item.server)
+        : []
+      pendingMcpInjection.value = { presets }
+      return
+    } catch (_error) {
+      // Fall back to legacy single-preset query parsing below.
+    }
+  }
+
+  const presetId = String(route.query.injectMcpPreset || '').trim()
+  if (!presetId) {
+    pendingMcpInjection.value = { presets: [] }
+    return
+  }
+  pendingMcpInjection.value = {
+    presets: [
+      {
+        id: presetId,
+        title: String(route.query.injectMcpTitle || presetId).trim(),
+        mode: String(route.query.injectMcpMode || 'mcp_remote').trim(),
+        prefix: String(route.query.injectMcpPrefix || '').trim(),
+        server: String(route.query.injectMcpServer || '').trim(),
+      }
+    ],
+  }
+}
+
+const clearMcpInjectionQuery = async () => {
+  const nextQuery = { ...route.query }
+  delete nextQuery.injectMcpPreset
+  delete nextQuery.injectMcpTitle
+  delete nextQuery.injectMcpMode
+  delete nextQuery.injectMcpPrefix
+  delete nextQuery.injectMcpServer
+  delete nextQuery.injectMcpPayload
+  await router.replace({ query: nextQuery })
+}
+
+const openMcpInjectionModalIfNeeded = () => {
+  if (!pendingMcpInjectionPresets.value.length) {
+    return
+  }
+  if (!availableAgentNodesForInjection.value.length) {
+    alert(t('workflowView.mcpInjectionNoAgentNodes'))
+    clearMcpInjectionQuery()
+    return
+  }
+  selectedMcpInjectionNodeId.value = availableAgentNodesForInjection.value[0]?.id || ''
+  showMcpInjectionModal.value = true
+}
+
+const closeTemplateModal = async () => {
+  clearTemplateImportPreview()
+  showTemplateModal.value = false
+  if (
+    String(route.query.openTemplates || '') ||
+    String(route.query.recommendedPack || '') ||
+    String(route.query.recommendedTemplates || '')
+  ) {
+    await clearTemplateRecommendationQuery()
+  }
+}
+
+const closeMcpInjectionModal = async () => {
+  showMcpInjectionModal.value = false
+  selectedMcpInjectionNodeId.value = ''
+  await clearMcpInjectionQuery()
+}
+
+const clearInjectionFocus = () => {
+  injectionFocusNodeId.value = ''
+}
+
+const openInjectedNodeEditor = () => {
+  if (!injectionFocusNodeId.value) {
+    return
+  }
+  openNodeEditor(injectionFocusNodeId.value)
+}
+
+const clearTemplateImportPreview = () => {
+  pendingImportedTemplate.value = null
+}
+
+const exportCurrentWorkflowTemplate = () => {
+  if (!yamlContent.value?.graph) {
+    alert(t('workflowView.templateExportFailed'))
+    return
+  }
+
+  const exportPayload = {
+    version: 1,
+    exported_at: new Date().toISOString(),
+    workflow_name: workflowName.value,
+    source: 'moviedev-template-export',
+    tags: ['moviedev', 'agent-team', 'workflow-template'],
+    snapshot: cloneDeep(yamlContent.value),
+  }
+
+  try {
+    const blob = new Blob([JSON.stringify(exportPayload, null, 2)], { type: 'application/json' })
+    const url = window.URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    const safeName = String(workflowName.value || 'workflow_template')
+      .replace(/\.(yaml|yml)$/i, '')
+      .replace(/[^A-Za-z0-9_-]+/g, '_')
+    link.href = url
+    link.download = `${safeName || 'workflow_template'}.template.json`
+    link.click()
+    window.URL.revokeObjectURL(url)
+  } catch (_error) {
+    alert(t('workflowView.templateExportFailed'))
+  }
+}
+
+const triggerTemplateImport = () => {
+  templateImportInputRef.value?.click?.()
+}
+
+const normalizeImportedTemplateSnapshot = (raw) => {
+  if (!raw || typeof raw !== 'object') {
+    return null
+  }
+
+  const candidate = raw?.snapshot && typeof raw.snapshot === 'object'
+    ? raw.snapshot
+    : raw
+
+  if (!candidate?.graph || typeof candidate.graph !== 'object') {
+    return null
+  }
+
+  const nodes = Array.isArray(candidate.graph.nodes) ? candidate.graph.nodes : []
+  const start = Array.isArray(candidate.graph.start) ? candidate.graph.start : []
+  if (!nodes.length || !start.length) {
+    return null
+  }
+
+  return cloneDeep(candidate)
+}
+
+const buildImportedTemplatePreview = (fileName, snapshot) => {
+  const nodes = Array.isArray(snapshot?.graph?.nodes) ? snapshot.graph.nodes : []
+  const edges = Array.isArray(snapshot?.graph?.edges) ? snapshot.graph.edges : []
+  const start = Array.isArray(snapshot?.graph?.start) ? snapshot.graph.start : []
+  const tags = Array.isArray(snapshot?.tags)
+    ? snapshot.tags.map((item) => String(item || '').trim()).filter(Boolean)
+    : []
+  const isValid = nodes.length > 0 && start.length > 0
+  const edgeSummaries = edges.slice(0, 6).map((edge, index) => ({
+    id: `${String(edge?.from || 'unknown')}-${String(edge?.to || 'unknown')}-${index}`,
+    from: String(edge?.from || t('common.unnamed')),
+    to: String(edge?.to || t('common.unnamed')),
+  }))
+  const nodeSummaries = nodes.slice(0, 6).map((node) => {
+    const summary = String(
+      node?.config?.role
+      || node?.config?.description
+      || node?.type
+      || ''
+    )
+      .split('\n')[0]
+      .trim()
+
+    return {
+      id: String(node?.id || t('common.unnamed')),
+      type: String(node?.type || 'node'),
+      summary,
+    }
+  })
+
+  return {
+    fileName: String(fileName || t('common.unnamed')),
+    workflowName: String(snapshot?.name || snapshot?.workflow_name || workflowName.value || t('common.unnamed')),
+    nodeCount: nodes.length,
+    edgeCount: edges.length,
+    startCount: start.length,
+    tags,
+    startNodes: start.map((item) => String(item || '').trim()).filter(Boolean),
+    edgeSummaries,
+    remainingEdgeCount: Math.max(0, edges.length - edgeSummaries.length),
+    nodeSummaries,
+    remainingNodeCount: Math.max(0, nodes.length - nodeSummaries.length),
+    isValid,
+    snapshot,
+    validationMessage: isValid
+      ? t('workflowView.templateImportValidationPassed')
+      : t('workflowView.templateImportValidationFailed'),
+  }
+}
+
+const handleTemplateImport = async (event) => {
+  const file = event?.target?.files?.[0]
+  if (!file) {
+    return
+  }
+
+  try {
+    const text = await file.text()
+    const parsed = JSON.parse(text)
+    const importedSnapshot = normalizeImportedTemplateSnapshot(parsed)
+
+    if (!importedSnapshot) {
+      pendingImportedTemplate.value = {
+        fileName: String(file?.name || t('common.unnamed')),
+        workflowName: t('common.unknownError'),
+        nodeCount: 0,
+        edgeCount: 0,
+        startCount: 0,
+        tags: [],
+        startNodes: [],
+        edgeSummaries: [],
+        remainingEdgeCount: 0,
+        nodeSummaries: [],
+        remainingNodeCount: 0,
+        isValid: false,
+        snapshot: null,
+        validationMessage: t('workflowView.templateImportValidationFailed'),
+      }
+      alert(t('workflowView.templateImportFailed'))
+      return
+    }
+    pendingImportedTemplate.value = buildImportedTemplatePreview(file?.name, importedSnapshot)
+  } catch (_error) {
+    pendingImportedTemplate.value = {
+      fileName: String(file?.name || t('common.unnamed')),
+      workflowName: t('common.unknownError'),
+      nodeCount: 0,
+      edgeCount: 0,
+      startCount: 0,
+      tags: [],
+      startNodes: [],
+      edgeSummaries: [],
+      remainingEdgeCount: 0,
+      nodeSummaries: [],
+      remainingNodeCount: 0,
+      isValid: false,
+      snapshot: null,
+      validationMessage: t('workflowView.templateImportValidationFailed'),
+    }
+    alert(t('workflowView.templateImportFailed'))
+  } finally {
+    if (event?.target) {
+      event.target.value = ''
+    }
+  }
+}
+
+const applyImportedTemplate = async () => {
+  const preview = pendingImportedTemplate.value
+  const importedSnapshot = pendingImportedTemplate.value?.snapshot
+  if (!pendingImportedTemplate.value?.isValid || !importedSnapshot) {
+    alert(t('workflowView.templateImportFailed'))
+    return
+  }
+
+  const existingNodes = Array.isArray(yamlContent.value?.graph?.nodes) ? yamlContent.value.graph.nodes : []
+  if (existingNodes.length > 0) {
+    const confirmed = window.confirm(t('workflowView.templateReplaceConfirm'))
+    if (!confirmed) {
+      return
+    }
+  }
+
+  const ok = await persistYamlSnapshot(importedSnapshot)
+  if (!ok) {
+    alert(t('workflowView.templateImportFailed'))
+    return
+  }
+
+  saveImportedTemplateToLibrary(preview)
+  clearTemplateImportPreview()
+  await loadYamlFile()
+  await generateNodesAndEdges({ fit: true })
+  closeTemplateModal()
+  alert(t('workflowView.templateImported'))
+}
+
+const loadTemplateFavorites = () => {
+  try {
+    const raw = window.localStorage.getItem(TEMPLATE_FAVORITES_STORAGE_KEY)
+      ?? window.localStorage.getItem(LEGACY_TEMPLATE_FAVORITES_STORAGE_KEY)
+    const parsed = JSON.parse(raw || '[]')
+    templateFavorites.value = Array.isArray(parsed)
+      ? parsed.map((item) => String(item || '').trim()).filter(Boolean)
+      : []
+    if (!window.localStorage.getItem(TEMPLATE_FAVORITES_STORAGE_KEY) && raw) {
+      persistTemplateFavorites()
+    }
+  } catch (_error) {
+    templateFavorites.value = []
+  }
+}
+
+const persistTemplateFavorites = () => {
+  try {
+    window.localStorage.setItem(
+      TEMPLATE_FAVORITES_STORAGE_KEY,
+      JSON.stringify(templateFavorites.value),
+    )
+  } catch (_error) {
+    // Ignore storage failures and keep the in-memory state.
+  }
+}
+
+const isTemplateFavorite = (templateId) => templateFavorites.value.includes(String(templateId || '').trim())
+const isTemplateRecent = (templateId) => templateRecent.value.includes(String(templateId || '').trim())
+const templateUsageCount = (templateId) => {
+  const normalizedId = String(templateId || '').trim()
+  return Number(templateUsageCounts.value?.[normalizedId] || 0)
+}
+const recentRank = (templateId) => {
+  const normalizedId = String(templateId || '').trim()
+  const index = templateRecent.value.indexOf(normalizedId)
+  return index >= 0 ? index : Number.MAX_SAFE_INTEGER
+}
+
+const toggleTemplateFavorite = (templateId) => {
+  const normalizedId = String(templateId || '').trim()
+  if (!normalizedId) {
+    return
+  }
+  if (isTemplateFavorite(normalizedId)) {
+    templateFavorites.value = templateFavorites.value.filter((item) => item !== normalizedId)
+  } else {
+    templateFavorites.value = [...templateFavorites.value, normalizedId]
+  }
+  persistTemplateFavorites()
+}
+
+const loadTemplateRecent = () => {
+  try {
+    const raw = window.localStorage.getItem(TEMPLATE_RECENT_STORAGE_KEY)
+      ?? window.localStorage.getItem(LEGACY_TEMPLATE_RECENT_STORAGE_KEY)
+    const parsed = JSON.parse(raw || '[]')
+    templateRecent.value = Array.isArray(parsed)
+      ? parsed.map((item) => String(item || '').trim()).filter(Boolean).slice(0, MAX_TEMPLATE_RECENT)
+      : []
+    if (!window.localStorage.getItem(TEMPLATE_RECENT_STORAGE_KEY) && raw) {
+      persistTemplateRecent()
+    }
+  } catch (_error) {
+    templateRecent.value = []
+  }
+}
+
+const persistTemplateRecent = () => {
+  try {
+    window.localStorage.setItem(
+      TEMPLATE_RECENT_STORAGE_KEY,
+      JSON.stringify(templateRecent.value),
+    )
+  } catch (_error) {
+    // Ignore storage failures and keep the in-memory state.
+  }
+}
+
+const markTemplateRecent = (templateId) => {
+  const normalizedId = String(templateId || '').trim()
+  if (!normalizedId) {
+    return
+  }
+  templateRecent.value = [
+    normalizedId,
+    ...templateRecent.value.filter((item) => item !== normalizedId),
+  ].slice(0, MAX_TEMPLATE_RECENT)
+  persistTemplateRecent()
+}
+
+const loadTemplateUsageCounts = () => {
+  try {
+    const raw = window.localStorage.getItem(TEMPLATE_USAGE_STORAGE_KEY)
+      ?? window.localStorage.getItem(LEGACY_TEMPLATE_USAGE_STORAGE_KEY)
+    const parsed = JSON.parse(raw || '{}')
+    templateUsageCounts.value = (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) ? parsed : {}
+    if (!window.localStorage.getItem(TEMPLATE_USAGE_STORAGE_KEY) && raw) {
+      persistTemplateUsageCounts()
+    }
+  } catch (_error) {
+    templateUsageCounts.value = {}
+  }
+}
+
+const persistTemplateUsageCounts = () => {
+  try {
+    window.localStorage.setItem(
+      TEMPLATE_USAGE_STORAGE_KEY,
+      JSON.stringify(templateUsageCounts.value),
+    )
+  } catch (_error) {
+    // Ignore storage failures and keep the in-memory state.
+  }
+}
+
+const incrementTemplateUsage = (templateId) => {
+  const normalizedId = String(templateId || '').trim()
+  if (!normalizedId) {
+    return
+  }
+  templateUsageCounts.value = {
+    ...templateUsageCounts.value,
+    [normalizedId]: Number(templateUsageCounts.value?.[normalizedId] || 0) + 1,
+  }
+  persistTemplateUsageCounts()
+}
+
+const loadLocalImportedTemplates = () => {
+  try {
+    const raw = window.localStorage.getItem(LOCAL_IMPORTED_TEMPLATES_STORAGE_KEY)
+      ?? window.localStorage.getItem(LEGACY_LOCAL_IMPORTED_TEMPLATES_STORAGE_KEY)
+    const parsed = JSON.parse(raw || '[]')
+    localImportedTemplates.value = Array.isArray(parsed)
+      ? parsed
+          .filter((item) => item && typeof item === 'object')
+          .map((item) => ({
+            id: String(item.id || ''),
+            source: 'local_import',
+            categoryKey: 'workflowView.templateCategories.imported',
+            title: String(item.title || t('common.unnamed')),
+            description: String(item.description || ''),
+            tags: Array.isArray(item.tags)
+              ? item.tags.map((tag) => String(tag || '').trim()).filter(Boolean)
+              : [],
+            snapshot: cloneDeep(item.snapshot || {}),
+          }))
+          .filter((item) => item.id && item.snapshot?.graph)
+      : []
+    if (!window.localStorage.getItem(LOCAL_IMPORTED_TEMPLATES_STORAGE_KEY) && raw) {
+      persistLocalImportedTemplates()
+    }
+  } catch (_error) {
+    localImportedTemplates.value = []
+  }
+}
+
+const persistLocalImportedTemplates = () => {
+  try {
+    window.localStorage.setItem(
+      LOCAL_IMPORTED_TEMPLATES_STORAGE_KEY,
+      JSON.stringify(localImportedTemplates.value.map((item) => ({
+        id: item.id,
+        title: item.title,
+        description: item.description,
+        tags: item.tags || [],
+        snapshot: item.snapshot,
+      }))),
+    )
+  } catch (_error) {
+    // Ignore storage failures and keep the in-memory state.
+  }
+}
+
+const isLocalImportedTemplate = (templateItem) => templateItem?.source === 'local_import'
+const isPinnedImportedTemplate = (templateId) => pinnedImportedTemplateIds.value.includes(String(templateId || '').trim())
+
+const loadPinnedImportedTemplateIds = () => {
+  try {
+    const raw = window.localStorage.getItem(PINNED_IMPORTED_TEMPLATES_STORAGE_KEY)
+      ?? window.localStorage.getItem(LEGACY_PINNED_IMPORTED_TEMPLATES_STORAGE_KEY)
+    const parsed = JSON.parse(raw || '[]')
+    pinnedImportedTemplateIds.value = Array.isArray(parsed)
+      ? parsed.map((item) => String(item || '').trim()).filter(Boolean)
+      : []
+    if (!window.localStorage.getItem(PINNED_IMPORTED_TEMPLATES_STORAGE_KEY) && raw) {
+      persistPinnedImportedTemplateIds()
+    }
+  } catch (_error) {
+    pinnedImportedTemplateIds.value = []
+  }
+}
+
+const persistPinnedImportedTemplateIds = () => {
+  try {
+    window.localStorage.setItem(
+      PINNED_IMPORTED_TEMPLATES_STORAGE_KEY,
+      JSON.stringify(pinnedImportedTemplateIds.value),
+    )
+  } catch (_error) {
+    // Ignore storage failures and keep the in-memory state.
+  }
+}
+
+const saveImportedTemplateToLibrary = (preview) => {
+  const snapshot = cloneDeep(preview?.snapshot || {})
+  if (!snapshot?.graph) {
+    return
+  }
+  const normalizedTitle = String(preview?.workflowName || t('common.unnamed')).trim()
+  const normalizedId = `imported_${normalizedTitle.replace(/[^A-Za-z0-9_]+/g, '_') || Date.now()}`
+  const description = `${preview?.nodeCount || 0} nodes · ${preview?.edgeCount || 0} edges`
+  const nextItem = {
+    id: normalizedId,
+    source: 'local_import',
+    categoryKey: 'workflowView.templateCategories.imported',
+    title: normalizedTitle,
+    description,
+    tags: Array.isArray(preview?.tags) ? preview.tags : [],
+    snapshot,
+  }
+  localImportedTemplates.value = [
+    nextItem,
+    ...localImportedTemplates.value.filter((item) => item.id !== normalizedId),
+  ].slice(0, 20)
+  persistLocalImportedTemplates()
+}
+
+const togglePinImportedTemplate = (templateId) => {
+  const normalizedId = String(templateId || '').trim()
+  if (!normalizedId) {
+    return
+  }
+  if (isPinnedImportedTemplate(normalizedId)) {
+    pinnedImportedTemplateIds.value = pinnedImportedTemplateIds.value.filter((item) => item !== normalizedId)
+  } else {
+    pinnedImportedTemplateIds.value = [normalizedId, ...pinnedImportedTemplateIds.value.filter((item) => item !== normalizedId)]
+  }
+  persistPinnedImportedTemplateIds()
+}
+
+const renameImportedTemplate = (templateId) => {
+  const normalizedId = String(templateId || '').trim()
+  if (!normalizedId) {
+    return
+  }
+  const current = localImportedTemplates.value.find((item) => item.id === normalizedId)
+  if (!current) {
+    return
+  }
+  const nextTitle = window.prompt(t('workflowView.templateRenamePrompt'), current.title)
+  if (nextTitle == null) {
+    return
+  }
+  const normalizedTitle = String(nextTitle || '').trim()
+  if (!normalizedTitle) {
+    return
+  }
+  localImportedTemplates.value = localImportedTemplates.value.map((item) => (
+    item.id === normalizedId
+      ? { ...item, title: normalizedTitle }
+      : item
+  ))
+  persistLocalImportedTemplates()
+}
+
+const deleteImportedTemplate = (templateId) => {
+  const normalizedId = String(templateId || '').trim()
+  if (!normalizedId) {
+    return
+  }
+  const current = localImportedTemplates.value.find((item) => item.id === normalizedId)
+  if (!current) {
+    return
+  }
+  const confirmed = window.confirm(t('workflowView.templateDeleteConfirm', { name: current.title }))
+  if (!confirmed) {
+    return
+  }
+  localImportedTemplates.value = localImportedTemplates.value.filter((item) => item.id !== normalizedId)
+  templateFavorites.value = templateFavorites.value.filter((item) => item !== normalizedId)
+  templateRecent.value = templateRecent.value.filter((item) => item !== normalizedId)
+  const nextUsageCounts = { ...templateUsageCounts.value }
+  delete nextUsageCounts[normalizedId]
+  templateUsageCounts.value = nextUsageCounts
+  pinnedImportedTemplateIds.value = pinnedImportedTemplateIds.value.filter((item) => item !== normalizedId)
+  persistLocalImportedTemplates()
+  persistTemplateFavorites()
+  persistTemplateRecent()
+  persistTemplateUsageCounts()
+  persistPinnedImportedTemplateIds()
+}
+
+const applyTemplate = async (templateId) => {
+  const existingNodes = Array.isArray(yamlContent.value?.graph?.nodes)
+    ? yamlContent.value.graph.nodes
+    : []
+
+  if (existingNodes.length > 0) {
+    const confirmed = window.confirm(t('workflowView.templateReplaceConfirm'))
+    if (!confirmed) {
+      return
+    }
+  }
+
+  const localTemplate = localImportedTemplates.value.find((item) => item.id === templateId)
+  const nextSnapshot = localTemplate
+    ? cloneDeep(localTemplate.snapshot)
+    : buildWorkflowTemplate(templateId, {
+        workflowName: workflowName.value,
+        currentSnapshot: yamlContent.value,
+      })
+
+  if (!nextSnapshot) {
+    alert(t('workflowView.templateApplyFailed'))
+    return
+  }
+
+  const ok = await persistYamlSnapshot(nextSnapshot)
+  if (!ok) {
+    alert(t('workflowView.templateApplyFailed'))
+    return
+  }
+
+  await loadYamlFile()
+  await generateNodesAndEdges({ fit: true })
+  markTemplateRecent(templateId)
+  incrementTemplateUsage(templateId)
+  closeTemplateModal()
+  alert(t('workflowView.templateApplied'))
+}
+
+const applyMcpInjection = async () => {
+  const targetNodeId = String(selectedMcpInjectionNodeId.value || '').trim()
+  const presets = pendingMcpInjectionPresets.value
+  const source = yamlContent.value
+
+  if (!targetNodeId || !presets.length || !source?.graph || !Array.isArray(source.graph.nodes)) {
+    return
+  }
+
+  const nextSnapshot = cloneDeep(source)
+  const targetNode = nextSnapshot.graph.nodes.find((node) => node?.id === targetNodeId)
+  if (!targetNode) {
+    return
+  }
+
+  if (!targetNode.config || typeof targetNode.config !== 'object') {
+    targetNode.config = {}
+  }
+
+  const tooling = Array.isArray(targetNode.config.tooling) ? targetNode.config.tooling : []
+  const newEntries = presets.filter((preset) => !tooling.some((item) => (
+    item?.type === preset.mode
+    && String(item?.prefix || '').trim() === preset.prefix
+    && String(item?.config?.server || '').trim() === preset.server
+  )))
+
+  if (!newEntries.length) {
+    alert(t('workflowView.mcpInjectionAlreadyExists'))
+    await closeMcpInjectionModal()
+    return
+  }
+
+  newEntries.forEach((preset) => {
+    tooling.push({
+      type: preset.mode || 'mcp_remote',
+      prefix: preset.prefix || '',
+      config: {
+        server: preset.server || '',
+        timeout: 30,
+        cache_ttl: 0,
+      },
+    })
+  })
+  targetNode.config.tooling = tooling
+
+  const ok = await persistYamlSnapshot(nextSnapshot)
+  if (!ok) {
+    alert(t('workflowView.mcpInjectionFailed'))
+    return
+  }
+
+  await loadYamlFile()
+  await generateNodesAndEdges({ fit: false })
+  injectionFocusNodeId.value = targetNodeId
+  await closeMcpInjectionModal()
+  alert(t('workflowView.mcpInjectionApplied', {
+    preset: newEntries.length === 1
+      ? (newEntries[0]?.title || newEntries[0]?.id || '')
+      : t('workflowView.mcpInjectionPresetCount', { count: newEntries.length }),
+    node: targetNodeId
+  }))
+}
+
 const openManageVarsModal = () => {
   const currentVars = yamlContent.value?.vars || null
   const sanitizedYaml = buildYamlWithoutVars()
@@ -1569,6 +2760,18 @@ const openManageMemoriesModal = () => {
     initialFormData: currentMemories ? { memory: currentMemories } : null,
     mode: currentMemories ? 'edit' : 'create',
     fieldFilter: ['memory']
+  })
+}
+
+const openManageTriggersModal = () => {
+  const currentTriggers = yamlContent.value?.graph?.triggers || null
+  const sanitizedYaml = buildYamlWithoutTriggers()
+  openDynamicFormGenerator('graph', {
+    recursive: false,
+    initialYaml: sanitizedYaml,
+    initialFormData: currentTriggers ? { triggers: currentTriggers } : null,
+    mode: currentTriggers ? 'edit' : 'create',
+    fieldFilter: ['triggers']
   })
 }
 
@@ -1810,7 +3013,7 @@ const handleRenameSubmit = async () => {
     const workflowNameWithoutExtension = newWorkflowName.replace('.yaml', '')
     router.push({ path: `/workflows/${workflowNameWithoutExtension}` })
   } else {
-    alert(result.error?.message || 'Failed to rename workflow')
+    alert(result.error?.message || t('workflowView.renameFailed'))
   }
 }
 
@@ -1869,7 +3072,7 @@ const handleCopySubmit = async () => {
       const workflowNameWithoutExtension = newWorkflowName.replace('.yaml', '')
     router.push({ path: `/workflows/${workflowNameWithoutExtension}` })
   } else {
-    alert(result.message || result.error?.message || 'Failed to copy workflow')
+    alert(result.message || result.error?.message || t('workflowView.copyFailed'))
   }
 }
 </script>
@@ -2091,11 +3294,11 @@ const handleCopySubmit = async () => {
     #99eaf9,
     #a0c4ff
   );
-  -webkit-mask: 
-     linear-gradient(#f2f2f2 0 0) content-box, 
+  -webkit-mask:
+     linear-gradient(#f2f2f2 0 0) content-box,
      linear-gradient(#f2f2f2 0 0);
-  mask: 
-     linear-gradient(#f2f2f2 0 0) content-box, 
+  mask:
+     linear-gradient(#f2f2f2 0 0) content-box,
      linear-gradient(#f2f2f2 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
@@ -2285,6 +3488,10 @@ const handleCopySubmit = async () => {
   backdrop-filter: blur(10px);
 }
 
+.template-modal {
+  max-width: 760px;
+}
+
 .modal-header {
   flex-shrink: 0;
   height: 28px;
@@ -2333,6 +3540,384 @@ const handleCopySubmit = async () => {
 
 .modal-body::-webkit-scrollbar {
   display: none;
+}
+
+.template-intro {
+  margin: 0 0 18px;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.template-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.template-toolbar-button {
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.04);
+  color: #f2f2f2;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.template-toolbar-button:hover {
+  border-color: rgba(153, 234, 249, 0.35);
+  background: rgba(153, 234, 249, 0.08);
+}
+
+.template-import-input {
+  display: none;
+}
+
+.template-import-preview {
+  margin-top: 16px;
+  padding: 14px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.template-import-preview-title {
+  color: #f2f2f2;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.template-import-preview-meta {
+  color: rgba(255, 255, 255, 0.68);
+  font-size: 12px;
+}
+
+.template-import-node-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 4px;
+}
+
+.template-import-edge-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 12px;
+}
+
+.template-import-edge-endpoint {
+  color: #f2f2f2;
+  font-weight: 600;
+}
+
+.template-import-edge-arrow {
+  color: #99eaf9;
+  font-size: 11px;
+}
+
+.template-import-node-list-title {
+  color: #f2f2f2;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.template-import-node-item {
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.template-import-node-main {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.template-import-node-id {
+  color: #f2f2f2;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.template-import-node-type {
+  color: #99eaf9;
+  font-size: 11px;
+  text-transform: uppercase;
+}
+
+.template-import-node-summary {
+  margin-top: 6px;
+  color: rgba(255, 255, 255, 0.66);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.template-import-preview-status {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.template-import-preview-status.is-valid {
+  color: #aaffcd;
+}
+
+.template-import-preview-status.is-invalid {
+  color: #ffd580;
+}
+
+.template-import-preview-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.template-search-input {
+  width: 100%;
+  margin-bottom: 14px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.04);
+  color: #f2f2f2;
+  font-size: 13px;
+  box-sizing: border-box;
+}
+
+.template-search-input:focus {
+  outline: none;
+  border-color: rgba(153, 234, 249, 0.4);
+}
+
+.template-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 14px;
+}
+
+.template-category-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.template-category-chip {
+  padding: 7px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.72);
+  cursor: pointer;
+  font-size: 12px;
+  transition: all 0.2s ease;
+}
+
+.template-category-chip.is-active,
+.template-category-chip:hover {
+  border-color: rgba(153, 234, 249, 0.45);
+  color: #f2f2f2;
+  background: rgba(153, 234, 249, 0.12);
+}
+
+.template-card {
+  text-align: left;
+  padding: 18px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  color: #f2f2f2;
+  cursor: pointer;
+  transition: transform 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.template-card:hover {
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(170, 255, 205, 0.45);
+}
+
+.template-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.template-card-meta-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+.template-card-title {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.template-card-meta {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.template-card-meta.is-favorite {
+  color: #ffd580;
+  background: rgba(255, 213, 128, 0.12);
+}
+
+.template-card-meta.is-recommended {
+  color: #6fe2c7;
+  background: rgba(111, 226, 199, 0.14);
+}
+
+.template-card-meta.is-recent {
+  color: #a0c4ff;
+  background: rgba(160, 196, 255, 0.12);
+}
+
+.template-card-meta.is-usage {
+  color: #aaffcd;
+  background: rgba(170, 255, 205, 0.12);
+}
+
+.injection-focus-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 14px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  border: 1px solid rgba(111, 226, 199, 0.18);
+  background: rgba(111, 226, 199, 0.08);
+}
+
+.injection-focus-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  color: #eafbf6;
+}
+
+.injection-focus-copy strong {
+  font-size: 14px;
+}
+
+.injection-focus-copy span {
+  font-size: 13px;
+  color: rgba(234, 251, 246, 0.78);
+}
+
+.injection-focus-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.template-favorite-button {
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.72);
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1;
+}
+
+.template-favorite-button.is-active {
+  color: #ffd580;
+  border-color: rgba(255, 213, 128, 0.35);
+  background: rgba(255, 213, 128, 0.08);
+}
+
+.template-card-category {
+  color: #99eaf9;
+  font-size: 11px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.template-card-description {
+  color: rgba(255, 255, 255, 0.68);
+  font-size: 13px;
+  line-height: 1.5;
+  min-height: 58px;
+}
+
+.template-tag-row {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+.template-tag-chip {
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: rgba(153, 234, 249, 0.08);
+  color: #99eaf9;
+  font-size: 10px;
+  letter-spacing: 0.02em;
+}
+
+.template-card-library-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+.template-library-button {
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.template-library-button.is-danger {
+  color: #ffd580;
+  border-color: rgba(255, 213, 128, 0.22);
+  background: rgba(255, 213, 128, 0.08);
+}
+
+.template-card-action {
+  margin-top: 14px;
+  color: #aaffcd;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.template-empty-state {
+  margin-top: 10px;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 13px;
 }
 
 .form-group {
@@ -2418,5 +4003,718 @@ const handleCopySubmit = async () => {
   opacity: 0.5;
   cursor: not-allowed;
   transform: none;
+}
+
+.workflow-view {
+  min-height: 100%;
+  padding: 0;
+  background:
+    radial-gradient(circle at top left, rgba(35, 156, 145, 0.1), transparent 24%),
+    radial-gradient(circle at 88% 10%, rgba(236, 197, 122, 0.14), transparent 28%),
+    linear-gradient(180deg, rgba(248, 245, 239, 0.88) 0%, rgba(239, 233, 222, 0.82) 100%);
+  color: #17353c;
+  border-radius: 28px;
+  overflow: hidden;
+}
+
+.workflow-view--embedded {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  overflow: hidden;
+}
+
+.workflow-bg {
+  top: -120px;
+  left: 10%;
+  right: 10%;
+  height: 300px;
+  background: linear-gradient(90deg, rgba(52, 166, 153, 0.16), rgba(236, 197, 122, 0.14), rgba(85, 148, 185, 0.12));
+  filter: blur(95px);
+  opacity: 1;
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+  min-height: 112px;
+  padding: 26px 28px 20px;
+  border-bottom: 1px solid rgba(21, 58, 64, 0.06);
+  background: linear-gradient(135deg, rgba(20, 84, 90, 0.95) 0%, rgba(32, 106, 110, 0.92) 58%, rgba(240, 204, 134, 0.88) 140%);
+}
+
+.header--embedded {
+  min-height: auto;
+  padding: 0 0 10px;
+  border-bottom: none;
+  background: transparent;
+}
+
+.header-copy {
+  max-width: 760px;
+}
+
+.header-eyebrow {
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(243, 249, 246, 0.66);
+}
+
+.workflow-name {
+  margin: 10px 0 0;
+  font-size: clamp(28px, 3.8vw, 42px);
+  line-height: 1.06;
+  color: #f8fcfa;
+  letter-spacing: -0.03em;
+}
+
+.header-subtitle {
+  margin: 12px 0 0;
+  max-width: 620px;
+  font-size: 14px;
+  line-height: 1.75;
+  color: rgba(243, 249, 246, 0.84);
+}
+
+.header-chip {
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: rgba(250, 251, 248, 0.14);
+  color: #fff7dc;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.injection-focus-banner {
+  margin: 18px 22px 0;
+  border: 1px solid rgba(31, 103, 109, 0.12);
+  background: rgba(235, 246, 242, 0.9);
+  box-shadow: 0 16px 34px rgba(22, 55, 62, 0.06);
+}
+
+.injection-focus-copy {
+  color: #17353c;
+}
+
+.injection-focus-copy span {
+  color: #5f7276;
+}
+
+.tabs {
+  order: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 22px 0;
+}
+
+.tab-buttons {
+  padding: 6px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(21, 58, 64, 0.08);
+  display: inline-flex;
+  flex-wrap: wrap;
+}
+
+.tab {
+  min-height: 42px;
+  border-radius: 999px;
+  padding: 0 18px;
+  color: #5c7074;
+}
+
+.tab.active {
+  background: #1f676d;
+  color: #ffffff;
+}
+
+.editor-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(21, 58, 64, 0.08);
+  box-shadow: 0 12px 28px rgba(29, 54, 61, 0.06);
+}
+
+.glass-button,
+.menu-trigger,
+.template-toolbar-button,
+.cancel-button,
+.form-input,
+.template-search-input,
+.template-category-chip,
+.template-library-button {
+  background: rgba(255, 255, 255, 0.92) !important;
+  color: #17353c !important;
+  border: 1px solid rgba(21, 58, 64, 0.1) !important;
+  border-radius: 14px !important;
+}
+
+.glass-button:hover,
+.menu-trigger:hover,
+.template-toolbar-button:hover,
+.template-category-chip:hover,
+.template-category-chip.is-active {
+  border-color: rgba(28, 104, 113, 0.2) !important;
+  background: rgba(237, 246, 242, 0.96) !important;
+}
+
+.launch-button-primary,
+.submit-button {
+  background: linear-gradient(135deg, #19555c, #23707b, #e2b459) !important;
+  color: #ffffff !important;
+  border: none !important;
+}
+
+.glass-button,
+.launch-button-primary,
+.menu-trigger {
+  min-height: 42px;
+}
+
+.content {
+  order: 3;
+  flex: 1;
+  min-height: 0;
+  padding: 18px 22px 22px;
+}
+
+.workflow-view--embedded .tabs {
+  padding: 0 0 14px;
+}
+
+.workflow-view--embedded .content {
+  padding: 0;
+  flex: 1;
+  min-height: 0;
+}
+
+.workflow-view--embedded .injection-focus-banner {
+  margin: 0 0 14px;
+}
+
+.vueflow-container,
+.yaml-editor {
+  border-radius: 24px;
+  background: rgba(255, 250, 243, 0.82);
+  border: 1px solid rgba(21, 58, 64, 0.08);
+  box-shadow: 0 24px 60px rgba(33, 55, 63, 0.08);
+}
+
+.yaml-error {
+  background: rgba(181, 96, 73, 0.12);
+  color: #8f4c40;
+  border: 1px solid rgba(143, 76, 64, 0.12);
+}
+
+.yaml-textarea,
+.form-input,
+.template-search-input {
+  background: rgba(255, 255, 255, 0.94);
+  color: #17353c;
+  border: 1px solid rgba(21, 58, 64, 0.1);
+}
+
+.yaml-textarea {
+  background: rgba(255, 255, 255, 0.98) !important;
+  color: #17353c !important;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, 'Roboto Mono', 'Courier New', monospace;
+  line-height: 1.7;
+}
+
+.context-menu,
+.menu-dropdown,
+.modal-content,
+.template-card {
+  background: #fffdf8 !important;
+  border: 1px solid rgba(21, 58, 64, 0.08) !important;
+  color: #17353c !important;
+  box-shadow: 0 24px 50px rgba(24, 50, 57, 0.12);
+}
+
+.menu-item,
+.modal-title,
+.form-label,
+.template-card-title,
+.template-import-node-id,
+.template-import-node-type {
+  color: #17353c !important;
+}
+
+.modal-header,
+.modal-body,
+.modal-footer {
+  background: #fffdf8 !important;
+  color: #17353c !important;
+  border-color: rgba(21, 58, 64, 0.08) !important;
+}
+
+.modal-header {
+  height: auto !important;
+  min-height: 68px;
+  padding: 18px 22px !important;
+  align-items: center !important;
+}
+
+.modal-body {
+  padding: 20px 22px !important;
+}
+
+.modal-footer {
+  padding: 16px 22px 20px;
+}
+
+.template-intro,
+.yaml-error,
+.template-import-preview-meta,
+.template-import-node-summary,
+.template-card-description,
+.template-card-category,
+.template-empty-state,
+.menu-item,
+.context-menu-item {
+  color: #607477 !important;
+}
+
+.context-menu,
+.menu-dropdown {
+  background: rgba(255, 253, 248, 0.98) !important;
+}
+
+.context-menu-item:hover,
+.menu-item:hover {
+  background: rgba(237, 246, 242, 0.96) !important;
+  color: #17353c !important;
+}
+
+.template-search-input::placeholder,
+.form-input::placeholder {
+  color: #7b8d90 !important;
+}
+
+.workflow-view--embedded .vueflow-container,
+.workflow-view--embedded .yaml-editor {
+  height: 100%;
+  min-height: 0;
+}
+
+.template-card-description,
+.template-empty-state,
+.template-intro,
+.template-card-category,
+.template-import-preview-meta,
+.template-import-node-summary {
+  color: #617477 !important;
+}
+
+.template-card-action,
+.template-tag-chip,
+.template-card-meta.is-recent,
+.template-card-meta.is-usage {
+  color: #1c6871 !important;
+}
+
+.template-card-meta.is-favorite,
+.template-favorite-button.is-active,
+.template-library-button.is-danger {
+  color: #9c6b12 !important;
+}
+
+.template-card.is-recommended {
+  border-color: rgba(31, 103, 109, 0.22) !important;
+  box-shadow: 0 18px 40px rgba(31, 103, 109, 0.08);
+}
+
+.template-card-meta.is-recommended {
+  color: #1f676d !important;
+  background: rgba(31, 103, 109, 0.08);
+}
+
+:deep(.vue-flow__background) {
+  background:
+    radial-gradient(circle at 20% 20%, rgba(30, 126, 128, 0.08), transparent 20%),
+    linear-gradient(180deg, #fffdf7 0%, #f3efe5 100%);
+}
+
+:deep(.vue-flow__controls) {
+  box-shadow: 0 10px 24px rgba(27, 54, 61, 0.12);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+:deep(.vue-flow__controls button) {
+  background: rgba(255, 251, 243, 0.96);
+  color: #18464d;
+  border-bottom: 1px solid rgba(22, 58, 64, 0.08);
+}
+
+@media (max-width: 1100px) {
+  .header,
+  .tabs {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .header-chip {
+    align-self: flex-start;
+  }
+
+  .editor-actions {
+    width: 100%;
+  }
+}
+
+.workflow-view,
+.workflow-view--embedded {
+  --mv-surface: #fffdf8;
+  --mv-surface-soft: rgba(255, 250, 243, 0.96);
+  --mv-surface-muted: rgba(245, 239, 229, 0.9);
+  --mv-border: rgba(21, 58, 64, 0.1);
+  --mv-text: #17353c;
+  --mv-text-soft: #607477;
+  --mv-accent: #1f676d;
+}
+
+.workflow-view .yaml-editor,
+.workflow-view .vueflow-container,
+.workflow-view .context-menu,
+.workflow-view .menu-dropdown,
+.workflow-view .modal-content,
+.workflow-view .template-card,
+.workflow-view .template-import-preview,
+.workflow-view .template-import-node-item,
+.workflow-view .template-import-edge-item,
+.workflow-view .template-category-chip,
+.workflow-view .template-toolbar-button,
+.workflow-view .glass-button,
+.workflow-view .menu-trigger,
+.workflow-view .cancel-button,
+.workflow-view .form-input,
+.workflow-view .template-search-input {
+  color: var(--mv-text) !important;
+  border-color: var(--mv-border) !important;
+}
+
+.workflow-view .yaml-editor,
+.workflow-view .vueflow-container,
+.workflow-view .context-menu,
+.workflow-view .menu-dropdown,
+.workflow-view .modal-content,
+.workflow-view .template-card,
+.workflow-view .template-import-preview,
+.workflow-view .template-import-node-item,
+.workflow-view .template-import-edge-item {
+  background: var(--mv-surface) !important;
+}
+
+.workflow-view .modal-header,
+.workflow-view .modal-body,
+.workflow-view .modal-footer,
+.workflow-view .template-intro,
+.workflow-view .template-import-preview-meta,
+.workflow-view .template-import-node-summary,
+.workflow-view .template-card-description,
+.workflow-view .template-card-category,
+.workflow-view .template-empty-state,
+.workflow-view .menu-item,
+.workflow-view .context-menu-item,
+.workflow-view .yaml-error,
+.workflow-view .header-subtitle {
+  color: var(--mv-text-soft) !important;
+}
+
+.workflow-view .modal-title,
+.workflow-view .form-label,
+.workflow-view .template-card-title,
+.workflow-view .template-import-node-id,
+.workflow-view .template-import-node-type,
+.workflow-view .workflow-name,
+.workflow-view .header-chip,
+.workflow-view .tab,
+.workflow-view .menu-item:hover,
+.workflow-view .context-menu-item:hover {
+  color: var(--mv-text) !important;
+}
+
+.workflow-view .yaml-textarea,
+.workflow-view textarea,
+.workflow-view input,
+.workflow-view select {
+  background: #ffffff !important;
+  color: var(--mv-text) !important;
+  border: 1px solid var(--mv-border) !important;
+  -webkit-text-fill-color: var(--mv-text) !important;
+}
+
+.workflow-view .yaml-textarea::placeholder,
+.workflow-view input::placeholder,
+.workflow-view textarea::placeholder {
+  color: #7b8d90 !important;
+  -webkit-text-fill-color: #7b8d90 !important;
+}
+
+.workflow-view select option {
+  background: var(--mv-surface) !important;
+  color: var(--mv-text) !important;
+}
+
+.workflow-view .yaml-editor,
+.workflow-view .yaml-textarea {
+  background: var(--mv-surface-soft) !important;
+}
+
+.workflow-view .context-menu-item:hover,
+.workflow-view .menu-item:hover,
+.workflow-view .template-category-chip:hover,
+.workflow-view .template-category-chip.is-active,
+.workflow-view .glass-button:hover,
+.workflow-view .template-toolbar-button:hover,
+.workflow-view .menu-trigger:hover {
+  background: rgba(237, 246, 242, 0.96) !important;
+  color: var(--mv-text) !important;
+}
+
+.workflow-view .modal-header,
+.workflow-view .modal-body,
+.workflow-view .modal-footer {
+  background: var(--mv-surface) !important;
+}
+
+.workflow-view .close-button {
+  background: rgba(255, 255, 255, 0.92) !important;
+  color: var(--mv-text-soft) !important;
+  border: 1px solid var(--mv-border) !important;
+}
+
+.workflow-view .close-button:hover {
+  color: var(--mv-text) !important;
+  background: #ffffff !important;
+}
+
+.workflow-view .template-card-action,
+.workflow-view .template-tag-chip,
+.workflow-view .template-card-meta,
+.workflow-view .group-name {
+  color: var(--mv-accent) !important;
+}
+
+.workflow-view .tab.active,
+.workflow-view .launch-button-primary,
+.workflow-view .submit-button {
+  color: #ffffff !important;
+}
+
+.workflow-view {
+  color: var(--mv-ink) !important;
+}
+
+.workflow-view .tabs,
+.workflow-view .editor-actions {
+  background: rgba(255, 250, 242, 0.72) !important;
+  border: 1px solid var(--mv-line) !important;
+  box-shadow: none !important;
+}
+
+.workflow-view .tab {
+  color: var(--mv-ink-soft) !important;
+  background: transparent !important;
+}
+
+.workflow-view .tab.active {
+  background: var(--mv-primary) !important;
+  color: #fffaf2 !important;
+}
+
+.workflow-view .glass-button,
+.workflow-view .menu-trigger,
+.workflow-view .template-toolbar-button,
+.workflow-view .cancel-button {
+  background: #fffaf2 !important;
+  color: var(--mv-ink) !important;
+  border: 1px solid var(--mv-line) !important;
+  box-shadow: none !important;
+}
+
+.workflow-view .glass-button::before {
+  display: none !important;
+}
+
+.workflow-view .glass-button:hover,
+.workflow-view .menu-trigger:hover,
+.workflow-view .template-toolbar-button:hover,
+.workflow-view .cancel-button:hover {
+  transform: translateY(-1px);
+  background: var(--mv-panel-green) !important;
+  border-color: rgba(30, 100, 107, 0.22) !important;
+}
+
+.workflow-view .launch-button-primary,
+.workflow-view .submit-button {
+  background: var(--mv-primary) !important;
+  color: #fffaf2 !important;
+  box-shadow: 0 12px 24px rgba(30, 100, 107, 0.18) !important;
+}
+
+.workflow-view .launch-button-primary:hover,
+.workflow-view .submit-button:hover:not(:disabled) {
+  background: var(--mv-primary-strong) !important;
+}
+
+.workflow-view .header--embedded {
+  padding: 0 0 14px !important;
+  border-bottom: 1px solid var(--mv-line) !important;
+  background: transparent !important;
+}
+
+.workflow-view--embedded .workflow-name {
+  display: inline-flex;
+  align-items: center;
+  min-height: 42px;
+  margin: 0 !important;
+  padding: 0 4px;
+  font-family: var(--mv-heading-font);
+  font-size: 30px !important;
+  line-height: 1.1 !important;
+  color: var(--mv-ink) !important;
+  -webkit-text-fill-color: var(--mv-ink) !important;
+}
+
+.workflow-view .tab-buttons {
+  gap: 6px !important;
+  padding: 5px !important;
+  border-radius: 16px !important;
+  background: #f5eadc !important;
+  border: 1px solid var(--mv-line) !important;
+}
+
+.workflow-view .tab {
+  min-height: 38px !important;
+  height: auto !important;
+  padding: 0 16px !important;
+  border: 1px solid transparent !important;
+  border-radius: 12px !important;
+  background: transparent !important;
+  color: #4e6266 !important;
+  -webkit-text-fill-color: #4e6266 !important;
+  background-clip: border-box !important;
+  -webkit-background-clip: border-box !important;
+  font-weight: 700 !important;
+}
+
+.workflow-view .tab:hover {
+  background: rgba(255, 250, 242, 0.74) !important;
+  color: var(--mv-ink) !important;
+  -webkit-text-fill-color: var(--mv-ink) !important;
+}
+
+.workflow-view .tab.active {
+  background: #fffdf8 !important;
+  color: var(--mv-ink) !important;
+  -webkit-text-fill-color: var(--mv-ink) !important;
+  border-color: rgba(30, 100, 107, 0.32) !important;
+  box-shadow: inset 0 0 0 1px rgba(30, 100, 107, 0.12), 0 6px 14px rgba(39, 49, 45, 0.08) !important;
+}
+
+.workflow-view .editor-actions {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+}
+
+.workflow-view .glass-button,
+.workflow-view .launch-button-primary,
+.workflow-view .menu-trigger {
+  min-height: 38px !important;
+  border-radius: 12px !important;
+}
+
+.workflow-view .launch-button-primary {
+  background: #183f45 !important;
+  color: #fffaf2 !important;
+  -webkit-text-fill-color: #fffaf2 !important;
+}
+
+.workflow-view .glass-button {
+  background: #fffdf8 !important;
+  color: var(--mv-ink) !important;
+  -webkit-text-fill-color: var(--mv-ink) !important;
+}
+
+.workflow-view .yaml-editor {
+  background: #fffdf8 !important;
+}
+
+.workflow-view .yaml-textarea {
+  background: #fffdf8 !important;
+  color: #172f34 !important;
+  -webkit-text-fill-color: #172f34 !important;
+}
+
+.workflow-view--embedded {
+  border: 0 !important;
+}
+
+.workflow-view .header--embedded {
+  border-bottom: 0 !important;
+  padding-bottom: 10px !important;
+}
+
+.workflow-view .tabs {
+  border: 0 !important;
+  background: transparent !important;
+  padding-bottom: 12px !important;
+}
+
+.workflow-view .tab-buttons {
+  border: 0 !important;
+  background: #efe4d4 !important;
+  box-shadow: inset 0 0 0 1px rgba(24, 42, 46, 0.08) !important;
+}
+
+.workflow-view .tab {
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+.workflow-view .tab.active {
+  border: 0 !important;
+  box-shadow: 0 5px 14px rgba(39, 49, 45, 0.1) !important;
+}
+
+.workflow-view .vueflow-container,
+.workflow-view .yaml-editor {
+  border: 0 !important;
+  box-shadow: inset 0 0 0 1px rgba(24, 42, 46, 0.08) !important;
+}
+
+.workflow-view .yaml-textarea {
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+.workflow-view .glass-button,
+.workflow-view .launch-button-primary,
+.workflow-view .menu-trigger {
+  border: 0 !important;
+  box-shadow: inset 0 0 0 1px rgba(24, 42, 46, 0.11) !important;
+}
+
+.workflow-view .launch-button-primary {
+  box-shadow: none !important;
 }
 </style>

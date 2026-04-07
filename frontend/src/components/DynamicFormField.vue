@@ -62,7 +62,7 @@
               v-if="hasChildValue"
               class="clear-child-button"
               @click.stop="$emit('clear-child-entry', field.name)"
-              title="Clear configuration"
+              :title="t('dynamicForm.clearConfig')"
             >
               ×
             </button>
@@ -87,7 +87,7 @@
                   <button
                     class="delete-child-button"
                     @click.stop="$emit('delete-child-entry', field.name, childIndex)"
-                    title="Delete child"
+                    :title="t('dynamicForm.deleteChild')"
                   >
                     ×
                   </button>
@@ -180,7 +180,7 @@
               v-if="hasChildValue"
               class="clear-child-button"
               @click.stop="$emit('clear-child-entry', field.name)"
-              title="Clear configuration"
+              :title="t('dynamicForm.clearConfig')"
             >
               ×
             </button>
@@ -189,7 +189,7 @@
             v-if="!canOpenConditionalChildModal"
             class="child-node-hint"
           >
-            Please select a type and configure
+            {{ t('dynamicForm.selectTypeFirst') }}
           </div>
           <div
             v-if="hasChildValue && childSummaries[field.name]"
@@ -250,7 +250,7 @@
             class="form-input custom-select-input"
             :readonly="isReadOnly"
             :class="{'input-readonly': isReadOnly}"
-            placeholder="Type to filter options..."
+            :placeholder="t('dynamicForm.filterOptions')"
             autocomplete="off"
           />
           <div v-if="showDropdown && !isReadOnly" class="custom-select-dropdown">
@@ -260,7 +260,7 @@
               :class="{ 'option-selected': formData[field.name] === null }"
               @mousedown="selectOption(null)"
             >
-              None
+              {{ t('dynamicForm.noneOption') }}
             </div>
             <div
               v-for="option in filteredOptions"
@@ -277,7 +277,7 @@
               }}
             </div>
             <div v-if="filteredOptions.length === 0" class="custom-select-no-results">
-              No options found
+              {{ t('dynamicForm.noOptions') }}
             </div>
           </div>
           <div class="custom-select-arrow" :class="{ 'arrow-open': showDropdown }">
@@ -475,7 +475,7 @@
                 />
               </svg>
             </span>
-            Add key-value
+            {{ t('dynamicForm.addKeyValue') }}
           </button>
           <div
             v-if="formData[field.name] && hasDictEntries(formData[field.name])"
@@ -493,7 +493,7 @@
               <button
                 class="delete-var-button"
                 @click.stop="$emit('delete-var', field.name, varKey)"
-                title="Delete variable"
+                :title="t('dynamicForm.deleteVariable')"
               >
                 ×
               </button>
@@ -530,7 +530,7 @@
                 />
               </svg>
             </span>
-            Add Entry
+            {{ t('formGenerator.addEntry') }}
           </button>
           <div v-if="formData[field.name] && formData[field.name].length > 0" class="list-items">
             <div
@@ -542,7 +542,7 @@
               <button
                 class="delete-item-button"
                 @click.stop="$emit('delete-list-item', field.name, index)"
-                title="Delete item"
+                :title="t('dynamicForm.deleteItem')"
               >
                 ×
               </button>
@@ -557,6 +557,7 @@
 <script setup>
 import { computed, ref } from 'vue'
 import RichTooltip from './RichTooltip.vue'
+import { t } from '../utils/i18n.js'
 
 const props = defineProps({
   field: {
@@ -595,7 +596,7 @@ const props = defineProps({
   },
   conditionalChildButtonLabel: {
     type: String,
-    default: 'Configure'
+    default: ''
   },
   activeChildRoute: {
     type: Object,
@@ -648,9 +649,11 @@ const hasChildValue = computed(() => {
 
 const childNodeButtonLabel = computed(() => {
   if (isList.value) {
-    return `Add Entry`
+    return t('formGenerator.addEntry')
   }
-  return props.formData[props.field.name] ? `Edit ${props.field.childNode}` : `Configure ${props.field.childNode}`
+  return props.formData[props.field.name]
+    ? `${t('formGenerator.edit')} ${props.field.childNode}`
+    : `${t('formGenerator.configure')} ${props.field.childNode}`
 })
 
 // Filtered options for custom select
@@ -1348,5 +1351,197 @@ input:checked + .switch-slider:before {
 
 .select-disabled .custom-select-input {
   cursor: not-allowed;
+}
+
+.form-group label,
+.form-group-inline label,
+.child-node-hint,
+.var-value,
+.item-value,
+.child-node-name,
+.custom-select-option,
+.custom-select-no-results {
+  color: #17353c;
+}
+
+.help-icon {
+  border-color: rgba(21, 58, 64, 0.16);
+  color: #6f8387;
+}
+
+.form-input,
+.form-textarea,
+.form-select,
+.custom-select-input {
+  background: rgba(255, 255, 255, 0.94);
+  border-color: rgba(21, 58, 64, 0.12);
+  color: #17353c;
+}
+
+.form-input::placeholder,
+.input-readonly,
+.custom-select-arrow {
+  color: #7a8d90;
+}
+
+.form-input:focus,
+.form-textarea:focus,
+.form-select:focus,
+.custom-select-input:focus {
+  border-color: rgba(31, 103, 109, 0.34);
+  background: #ffffff;
+  box-shadow: 0 0 0 1px rgba(31, 103, 109, 0.14);
+}
+
+.form-select option {
+  background: #fffdf8;
+  color: #17353c;
+}
+
+.switch-slider {
+  background-color: rgba(21, 58, 64, 0.12);
+  border-color: rgba(21, 58, 64, 0.12);
+}
+
+.switch-slider:before {
+  background-color: #ffffff;
+  box-shadow: 0 1px 3px rgba(23, 53, 60, 0.16);
+}
+
+.multi-select-option,
+.var-item,
+.list-item,
+.child-node-item,
+.child-node-summary {
+  background: rgba(255, 255, 255, 0.92);
+  border-color: rgba(21, 58, 64, 0.1);
+  color: #17353c;
+}
+
+.multi-select-option:hover,
+.var-item:hover,
+.list-item:hover,
+.child-node-item:hover {
+  background: rgba(239, 246, 242, 0.96);
+  border-color: rgba(31, 103, 109, 0.2);
+}
+
+.add-child-button,
+.add-list-button,
+.add-var-button,
+.edit-child-button,
+.delete-child-button {
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid rgba(21, 58, 64, 0.1);
+  color: #17353c;
+}
+
+.add-child-button:hover,
+.add-list-button:hover,
+.add-var-button:hover,
+.edit-child-button:hover,
+.delete-child-button:hover {
+  background: rgba(239, 246, 242, 0.96);
+}
+
+.add-child-button:disabled {
+  background: rgba(240, 240, 240, 0.9);
+  border-color: rgba(21, 58, 64, 0.08);
+  color: #92a1a4;
+}
+
+.delete-var-button,
+.delete-item-button,
+.clear-child-button {
+  color: #8b4d41;
+}
+
+.custom-select-dropdown {
+  background: #fffdf8;
+  border-color: rgba(21, 58, 64, 0.1);
+  box-shadow: 0 12px 26px rgba(23, 53, 60, 0.12);
+}
+
+.custom-select-option.option-selected {
+  background-color: rgba(31, 103, 109, 0.1);
+  color: #1f676d;
+}
+
+.form-field {
+  margin-bottom: 0;
+}
+
+.form-group {
+  margin-bottom: 0;
+}
+
+.form-group label,
+.form-group-inline label,
+.switch-label-text {
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.form-group-inline {
+  display: grid;
+  grid-template-columns: minmax(150px, 200px) minmax(0, 1fr);
+  gap: 12px 18px;
+  align-items: start;
+}
+
+.form-group-inline label {
+  min-width: 0;
+  padding-top: 12px;
+}
+
+.switch-wrapper {
+  align-items: flex-start;
+  gap: 16px;
+  padding: 10px 0 2px;
+}
+
+.vars-container,
+.list-container,
+.child-node-container,
+.custom-select-wrapper {
+  min-width: 0;
+}
+
+.form-input,
+.form-textarea,
+.form-select,
+.custom-select-input {
+  min-height: 46px;
+  padding: 11px 14px;
+  font-size: 14px;
+}
+
+.form-textarea {
+  min-height: 110px;
+}
+
+.add-child-button,
+.add-list-button,
+.add-var-button {
+  min-height: 42px;
+  padding: 8px 14px;
+  font-weight: 600;
+}
+
+.child-node-summary,
+.child-node-hint {
+  margin-top: 2px;
+}
+
+@media (max-width: 900px) {
+  .form-group-inline {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .form-group-inline label {
+    padding-top: 0;
+  }
 }
 </style>

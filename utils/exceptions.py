@@ -1,11 +1,11 @@
-"""Custom exceptions for the DevAll workflow system."""
+"""Custom exceptions for the MovieDev workflow system."""
 
 from typing import Optional, Dict, Any
 import json
 
 
 class MACException(Exception):
-    """Base exception for DevAll workflow system."""
+    """Base exception for the MovieDev workflow system."""
     
     def __init__(self, message: str, error_code: str = None, details: Dict[str, Any] = None):
         super().__init__(message)

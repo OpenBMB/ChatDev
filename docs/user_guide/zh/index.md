@@ -1,6 +1,6 @@
-# DevAll 后端用户文档
+# MovieDev 后端用户文档
 
-本目录作为导航页，面向需要部署、编排或扩展 DevAll 后端的读者。详尽步骤与示例请在下表中找到目标子文档。
+本目录作为导航页，面向需要部署、编排或扩展 MovieDev 后端的读者。详尽步骤与示例请在下表中找到目标子文档。
 
 ## 1. 文档地图
 
@@ -33,7 +33,7 @@
 
 ## 4. 角色导航
 - **解决方案工程师/Prompt 工程师**：从 [工作流编排](workflow_authoring.md) 入手，若需要上下文记忆或工具扩展，分别阅读 Memory 与 Tooling 模块文档。
-- **扩展开发者**：结合 [FIELD_SPECS](field_specs.md) 与 [Tooling 模块](modules/tooling/README.md) 了解注册流程，必要时参照 [配置 Schema API 契约](config_schema_contract.md) 调试 UI 交互（英文版见 `docs/en/config_schema_contract.md`）。
+- **扩展开发者**：结合 [FIELD_SPECS](field_specs.md) 与 [Tooling 模块](modules/tooling/README.md) 了解注册流程，必要时参照 [配置 Schema API 契约](config_schema_contract.md) 调试 UI 交互。
 
 ## 5. 常用术语
 - **Session**：一次完整运行的 ID（由时间戳+名称组成），贯穿 Web UI、后端和 `WareHouse/`。

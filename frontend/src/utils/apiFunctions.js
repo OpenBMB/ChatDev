@@ -1,5 +1,3 @@
-import yaml from 'js-yaml'
-
 const apiUrl = (path) => path
 
 const addYamlSuffix = (filename) => {
@@ -104,6 +102,77 @@ export async function updateYaml(filename, content) {
   }
 }
 
+export async function updateWorkflowOrganization(filename, organization) {
+  try {
+    const yamlFilename = addYamlSuffix(filename)
+    const response = await fetch(apiUrl(`/api/workflows/${encodeURIComponent(yamlFilename)}/organization`), {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        organization
+      })
+    })
+
+    const data = await response.json().catch(() => ({}))
+
+    if (response.ok) {
+      return {
+        success: true,
+        filename: data?.filename || yamlFilename,
+        organization: data?.organization || '',
+        message: data?.message || 'Workflow organization updated successfully'
+      }
+    }
+
+    return {
+      success: false,
+      detail: data?.detail,
+      message: data?.detail?.message || data?.error?.message || data?.message || 'Failed to update workflow organization',
+      status: response.status
+    }
+  } catch (error) {
+    console.error('Error updating workflow organization:', error)
+    return {
+      success: false,
+      message: 'API error'
+    }
+  }
+}
+
+export async function deleteWorkflow(filename) {
+  try {
+    const yamlFilename = addYamlSuffix(filename)
+    const response = await fetch(apiUrl(`/api/workflows/${encodeURIComponent(yamlFilename)}/delete`), {
+      method: 'DELETE'
+    })
+
+    const data = await response.json().catch(() => ({}))
+
+    if (response.ok) {
+      return {
+        success: true,
+        filename: data?.filename || yamlFilename,
+        message: data?.message || 'Workflow deleted successfully'
+      }
+    }
+
+    return {
+      success: false,
+      detail: data?.detail,
+      message: data?.detail?.message || data?.error?.message || data?.message || 'Failed to delete workflow',
+      status: response.status
+    }
+  } catch (error) {
+    console.error('Error deleting workflow:', error)
+    return {
+      success: false,
+      message: 'API error'
+    }
+  }
+}
+
 // Rename YAML file
 export async function postYamlNameChange(filename, newFilename) {
   try {
@@ -193,21 +262,21 @@ export async function fetchWorkflowsWithDesc() {
     }
     const data = await response.json()
 
-    // Fetch YAML descriptions by filename
-    const filesWithDesc = await Promise.all(
-      data.workflows.map(async (filename) => {
-        try {
-          const response = await fetch(apiUrl(`/api/workflows/${encodeURIComponent(filename)}/desc`))
-          const fileData = await response.json()
-          return {
-            name: filename,
-            description: getYAMLDescription(fileData.content)
-          }
-        } catch {
-          return { name: filename, description: 'No description' }
+    const filesWithDesc = (Array.isArray(data.workflows) ? data.workflows : []).map((workflow) => {
+      if (typeof workflow === 'string') {
+        return {
+          name: workflow,
+          description: '',
+          organization: ''
         }
-      })
-    )
+      }
+
+      return {
+        name: workflow?.name || '',
+        description: workflow?.description || '',
+        organization: workflow?.organization || ''
+      }
+    }).filter((workflow) => workflow.name)
 
     return {
       success: true,
@@ -218,15 +287,6 @@ export async function fetchWorkflowsWithDesc() {
     return {
       success: false,
       error: 'Failure loading YAML files, please run API service'
-    }
-  }
-
-  function getYAMLDescription(content) {
-    try {
-      const doc = yaml.load(content)
-      return doc.graph.description || 'No description'
-    } catch {
-      return 'No description'
     }
   }
 }
@@ -269,6 +329,101 @@ export async function fetchYaml(filename) {
     }
   } catch (error) {
     console.error('Error fetching YAML file:', error)
+    return {
+      success: false,
+      message: 'API error'
+    }
+  }
+}
+
+export async function fetchClawHubStarterPacks() {
+  try {
+    const response = await fetch(apiUrl('/api/skills/clawhub/packs'))
+    const data = await response.json().catch(() => ({}))
+
+    if (response.ok) {
+      return {
+        success: true,
+        packs: Array.isArray(data?.packs) ? data.packs : [],
+        mcpPresets: Array.isArray(data?.mcp_presets) ? data.mcp_presets : [],
+        notes: Array.isArray(data?.notes) ? data.notes : [],
+        installedSkills: Array.isArray(data?.installed_skills) ? data.installed_skills : [],
+        clawhubAvailable: Boolean(data?.clawhub_available)
+      }
+    }
+
+    return {
+      success: false,
+      message: data?.detail || 'Failed to load ClawHub starter packs'
+    }
+  } catch (error) {
+    console.error('Error loading ClawHub starter packs:', error)
+    return {
+      success: false,
+      message: 'API error'
+    }
+  }
+}
+
+export async function installClawHubStarterPack({ packs = [], skills = [], dryRun = false } = {}) {
+  try {
+    const response = await fetch(apiUrl('/api/skills/clawhub/install'), {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        packs,
+        skills,
+        dry_run: dryRun
+      })
+    })
+
+    const data = await response.json().catch(() => ({}))
+    const detail = data?.detail && typeof data.detail === 'object' ? data.detail : data
+
+    if (response.ok) {
+      return {
+        success: true,
+        output: detail?.output || '',
+        installedSkills: Array.isArray(detail?.installed_skills) ? detail.installed_skills : [],
+        dryRun: Boolean(detail?.dry_run)
+      }
+    }
+
+    return {
+      success: false,
+      message: detail?.output || detail?.message || 'Failed to install ClawHub starter pack',
+      installedSkills: Array.isArray(detail?.installed_skills) ? detail.installed_skills : []
+    }
+  } catch (error) {
+    console.error('Error installing ClawHub starter pack:', error)
+    return {
+      success: false,
+      message: 'API error',
+      installedSkills: []
+    }
+  }
+}
+
+export async function fetchMcpPresetStatuses() {
+  try {
+    const response = await fetch(apiUrl('/api/skills/mcp/status'))
+    const data = await response.json().catch(() => ({}))
+
+    if (response.ok) {
+      return {
+        success: true,
+        statuses: Array.isArray(data?.statuses) ? data.statuses : []
+      }
+    }
+
+    return {
+      success: false,
+      message: data?.detail || 'Failed to check MCP preset status'
+    }
+  } catch (error) {
+    console.error('Error checking MCP preset status:', error)
     return {
       success: false,
       message: 'API error'

@@ -1,3 +1,5 @@
+import { t } from './i18n.js'
+
 export const isListField = (field) => {
   return field.type && field.type.includes('list[')
 }
@@ -86,15 +88,19 @@ export const isFieldVisible = (modal, field) => {
 
 export const childNodeButtonLabel = (modal, field) => {
   if (isListField(field)) {
-    return `Add Entry`
+    return t('formGenerator.addEntry')
   }
-  return modal.formData[field.name] ? `Edit ${field.childNode}` : `Configure ${field.childNode}`
+  return modal.formData[field.name]
+    ? `${t('formGenerator.edit')} ${field.childNode}`
+    : `${t('formGenerator.configure')} ${field.childNode}`
 }
 
 export const conditionalChildButtonLabel = (modal, field) => {
   if (!canOpenConditionalChildModal(modal, field)) {
-    return 'Configure'
+    return t('formGenerator.configure')
   }
   const childNodeName = getConditionalChildKeyValue(modal, field)
-  return modal.formData[field.name] ? `Edit ${childNodeName}` : `Configure ${childNodeName}`
+  return modal.formData[field.name]
+    ? `${t('formGenerator.edit')} ${childNodeName}`
+    : `${t('formGenerator.configure')} ${childNodeName}`
 }

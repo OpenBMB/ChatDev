@@ -71,7 +71,7 @@ nodes:
 ## 5. 扩展流程
 1. 在 `functions/function_calling/` 新建模块或函数。
 2. 使用类型注解 + `ParamMeta` 描述参数；如需禁止自动 Schema，可设置 `auto_fill: false` 并提供手写 `parameters`。
-3. 若函数依赖额外第三方库，可在仓库 `requirements.txt`/`pyproject.toml` 中声明，或在函数内调用 `install_python_packages`（同目录提供）动态安装。
+3. 若函数依赖额外第三方库，可在仓库 `pyproject.toml` 中声明，或在函数内调用 `install_python_packages`（同目录提供）动态安装。
 4. 运行 `python -m tools.export_design_template ...` 以刷新前端枚举。
 
 ## 6. 调试与排错

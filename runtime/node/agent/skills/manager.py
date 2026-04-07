@@ -11,7 +11,12 @@ from entity.tool_spec import ToolSpec
 
 
 REPO_ROOT = Path(__file__).resolve().parents[4]
-DEFAULT_SKILLS_ROOT = (REPO_ROOT / ".agents" / "skills").resolve()
+WORKSPACE_SKILLS_ROOT = (REPO_ROOT / "skills").resolve()
+BUNDLED_SKILLS_ROOT = (REPO_ROOT / ".agents" / "skills").resolve()
+DEFAULT_SKILLS_ROOTS = (
+    WORKSPACE_SKILLS_ROOT,
+    BUNDLED_SKILLS_ROOT,
+)
 MAX_SKILL_FILE_BYTES = 128 * 1024
 
 
@@ -119,7 +124,7 @@ class AgentSkillManager:
         available_tool_names: Sequence[str] | None = None,
         warning_reporter: Callable[[str], None] | None = None,
     ) -> None:
-        self.root = DEFAULT_SKILLS_ROOT
+        self.roots = DEFAULT_SKILLS_ROOTS
         self.allow = {item.strip() for item in (allow or []) if item and item.strip()}
         self.available_tool_names = {item.strip() for item in (available_tool_names or []) if item and item.strip()}
         self.warning_reporter = warning_reporter
@@ -132,8 +137,9 @@ class AgentSkillManager:
     def discover(self) -> List[SkillMetadata]:
         if self._skills_by_name is None:
             discovered: Dict[str, SkillMetadata] = {}
-            root = self.root
-            if root.exists() and root.is_dir():
+            for root in self.roots:
+                if not root.exists() or not root.is_dir():
+                    continue
                 for metadata in self._iter_root_skills(root):
                     if self.allow and metadata.name not in self.allow:
                         continue

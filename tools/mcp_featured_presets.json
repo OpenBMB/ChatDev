@@ -1,0 +1,132 @@
+{
+  "version": 1,
+  "source": "movie-dev-curated-mcp-presets",
+  "presets": [
+    {
+      "id": "fetch",
+      "title": "Fetch 抓取服务",
+      "description": "适合网页抓取、页面正文提取和链接内容读取。",
+      "mode": "mcp_remote",
+      "prefix": "fetch",
+      "server": "http://127.0.0.1:3001/mcp",
+      "setup_hint": "适合研究、新闻整理、资料抓取类任务。通常可和 browser 预设一起使用。",
+      "tooling_snippet": {
+        "type": "mcp_remote",
+        "prefix": "fetch",
+        "config": {
+          "server": "http://127.0.0.1:3001/mcp",
+          "timeout": 30,
+          "cache_ttl": 0
+        }
+      }
+    },
+    {
+      "id": "browser",
+      "title": "Browser 浏览器服务",
+      "description": "适合网页自动化、页面点击、表单填写和需要浏览器上下文的流程。",
+      "mode": "mcp_remote",
+      "prefix": "browser",
+      "server": "http://127.0.0.1:3002/mcp",
+      "setup_hint": "适合浏览器研究、网页操作和需要真实页面交互的任务。",
+      "tooling_snippet": {
+        "type": "mcp_remote",
+        "prefix": "browser",
+        "config": {
+          "server": "http://127.0.0.1:3002/mcp",
+          "timeout": 30,
+          "cache_ttl": 0
+        }
+      }
+    },
+    {
+      "id": "filesystem",
+      "title": "Filesystem 文件系统服务",
+      "description": "适合列目录、读写文件、分析工程结构。",
+      "mode": "mcp_remote",
+      "prefix": "filesystem",
+      "server": "http://127.0.0.1:3101/mcp",
+      "setup_hint": "适合代码仓分析、文档整理和本地文件操作型 agent。",
+      "tooling_snippet": {
+        "type": "mcp_remote",
+        "prefix": "filesystem",
+        "config": {
+          "server": "http://127.0.0.1:3101/mcp",
+          "timeout": 30,
+          "cache_ttl": 0
+        }
+      }
+    },
+    {
+      "id": "git",
+      "title": "Git 仓库服务",
+      "description": "适合查看变更、分支、提交和仓库状态。",
+      "mode": "mcp_remote",
+      "prefix": "git",
+      "server": "http://127.0.0.1:3102/mcp",
+      "setup_hint": "适合代码审查、变更分析和开发辅助团队。",
+      "tooling_snippet": {
+        "type": "mcp_remote",
+        "prefix": "git",
+        "config": {
+          "server": "http://127.0.0.1:3102/mcp",
+          "timeout": 30,
+          "cache_ttl": 0
+        }
+      }
+    },
+    {
+      "id": "github",
+      "title": "GitHub 服务",
+      "description": "适合结合远端仓库、PR、issue 等上下文进行分析。",
+      "mode": "mcp_remote",
+      "prefix": "github",
+      "server": "http://127.0.0.1:3103/mcp",
+      "setup_hint": "适合 GitHub 协作、issue 排查和 PR 评审类任务。",
+      "tooling_snippet": {
+        "type": "mcp_remote",
+        "prefix": "github",
+        "config": {
+          "server": "http://127.0.0.1:3103/mcp",
+          "timeout": 30,
+          "cache_ttl": 0
+        }
+      }
+    },
+    {
+      "id": "memory",
+      "title": "Memory 记忆服务",
+      "description": "适合跨轮次保存事实、状态、待办和阶段结论。",
+      "mode": "mcp_remote",
+      "prefix": "memory",
+      "server": "http://127.0.0.1:3201/mcp",
+      "setup_hint": "适合长任务、多轮协作和需要外部记忆层的 agent team。",
+      "tooling_snippet": {
+        "type": "mcp_remote",
+        "prefix": "memory",
+        "config": {
+          "server": "http://127.0.0.1:3201/mcp",
+          "timeout": 30,
+          "cache_ttl": 0
+        }
+      }
+    },
+    {
+      "id": "time",
+      "title": "Time 时间服务",
+      "description": "适合读取当前时间、时区和带时间语义的任务。",
+      "mode": "mcp_remote",
+      "prefix": "time",
+      "server": "http://127.0.0.1:3202/mcp",
+      "setup_hint": "适合日报、计划、提醒和时间敏感型工作流。",
+      "tooling_snippet": {
+        "type": "mcp_remote",
+        "prefix": "time",
+        "config": {
+          "server": "http://127.0.0.1:3202/mcp",
+          "timeout": 30,
+          "cache_ttl": 0
+        }
+      }
+    }
+  ]
+}

@@ -39,7 +39,7 @@
         class="advanced-toggle-button"
         @click="$emit('toggle-advanced-fields', modal.id)"
       >
-        Advanced Settings
+        {{ t('formGenerator.advancedSettings') }}
         <span class="advanced-toggle-arrow">
           {{ modal.showAdvanced ? '▲' : '▼' }}
         </span>
@@ -84,6 +84,7 @@
 <script setup>
 import { computed } from 'vue'
 import DynamicFormField from './DynamicFormField.vue'
+import { t } from '../utils/i18n.js'
 import {
   isInlineConfigField,
   getDisplayFields,
@@ -150,7 +151,7 @@ const isFieldReadOnly = (field) => {
 .advanced-toggle-button {
   background: transparent;
   border: none;
-  color: #a0c4ff;
+  color: #1f676d;
   font-size: 13px;
   cursor: pointer;
   display: flex;
@@ -174,7 +175,7 @@ const isFieldReadOnly = (field) => {
 
 .inline-separator {
   height: 1px;
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgba(31, 103, 109, 0.16);
   margin: 16px 0 20px;
 }
 </style>

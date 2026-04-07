@@ -16,6 +16,7 @@ class SessionStatus(Enum):
     IDLE = "idle"
     RUNNING = "running"
     WAITING_FOR_INPUT = "waiting_for_input"
+    WAITING_FOR_APPROVAL = "waiting_for_approval"
     COMPLETED = "completed"
     ERROR = "error"
     CANCELLED = "cancelled"
@@ -44,10 +45,14 @@ class WorkflowSession:
     pending_input_data: Optional[Dict[str, Any]] = None
     human_input_future: Optional[Any] = None
     human_input_value: Optional[str] = None
+    waiting_for_approval: bool = False
+    pending_approval_ids: list[str] = field(default_factory=list)
+    approval_future: Optional[Any] = None
 
     # Results + errors
     results: Dict[str, Any] = field(default_factory=dict)
     error_message: Optional[str] = None
+    team_state: Dict[str, Any] = field(default_factory=dict)
 
     # Artifact streaming
     artifact_queue: ArtifactEventQueue = field(default_factory=ArtifactEventQueue)
@@ -71,12 +76,14 @@ class WorkflowSessionStore:
         task_prompt: str,
         session_id: str,
         attachments: Optional[list[str]] = None,
+        team_state: Optional[Dict[str, Any]] = None,
     ) -> WorkflowSession:
         session = WorkflowSession(
             session_id=session_id,
             yaml_file=yaml_file,
             task_prompt=task_prompt,
             task_attachments=list(attachments or []),
+            team_state=dict(team_state or {}),
         )
         self._sessions[session_id] = session
         self.logger.info("Created session %s for workflow %s", session_id, yaml_file)
@@ -120,7 +127,10 @@ class WorkflowSessionStore:
             "updated_at": session.updated_at,
             "current_node_id": session.current_node_id,
             "waiting_for_input": session.waiting_for_input,
+            "waiting_for_approval": session.waiting_for_approval,
+            "pending_approval_ids": session.pending_approval_ids,
             "error_message": session.error_message,
+            "team_state": session.team_state,
         }
 
     def list_sessions(self) -> Dict[str, Dict[str, Any]]:
