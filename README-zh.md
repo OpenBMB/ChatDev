@@ -136,7 +136,7 @@ make dev
     # 从项目根目录运行
     uv run python server_main.py --port 6400 --reload
     ```
-    > 若输出文件（如 GameDev）触发重启导致任务中断、进度丢失，请去掉 `--reload`。
+    > `--reload` 仅监听服务端 Python 源代码目录，`WareHouse/` 下的智能体生成文件不会再触发重启。可通过 `--reload-dir` / `--reload-exclude`（可多次指定）自定义。
 
 2.  **启动前端**：
     ```bash
