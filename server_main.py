@@ -26,16 +26,33 @@ RELOAD_SOURCE_DIRS = [
     "workflow",
 ]
 
-# Glob patterns excluded from reload watching. Only has effect when
-# ``watchfiles`` is installed (StatReload ignores these patterns), but
-# matches .gitignore intent as a second line of defence.
+# Directory names whose contents must never trigger a reload. These are
+# expanded into multi-depth glob patterns below so nested files (e.g.
+# ``WareHouse/demo/foo.py``) are also excluded: uvicorn applies these via
+# ``Path.match``, which on Python < 3.13 does not understand ``**`` and
+# matches a pattern of N components only against the last N path parts.
+_RELOAD_EXCLUDE_DIRS = ("WareHouse", "logs", "data", "temp", "node_modules")
+_RELOAD_EXCLUDE_MAX_DEPTH = 10
+
+# Glob patterns excluded from reload watching. Only honoured when
+# ``watchfiles`` is installed; StatReload (the pure-Python fallback that
+# ships with uvicorn core) ignores exclude patterns entirely, so the
+# primary defence is the reload_dirs restriction to RELOAD_SOURCE_DIRS.
 RELOAD_EXCLUDES = [
-    "WareHouse/*",
-    "logs/*",
-    "data/*",
-    "temp/*",
-    "node_modules/*",
+    f"{d}{'/*' * (depth + 1)}"
+    for d in _RELOAD_EXCLUDE_DIRS
+    for depth in range(_RELOAD_EXCLUDE_MAX_DEPTH)
 ]
+
+
+def _watchfiles_available() -> bool:
+    """Return ``True`` when the ``watchfiles`` package is importable.
+
+    Split out so tests can patch it without touching ``sys.modules``.
+    """
+    import importlib.util
+
+    return importlib.util.find_spec("watchfiles") is not None
 
 
 def build_reload_kwargs(args: argparse.Namespace) -> dict:
@@ -126,6 +143,14 @@ def main():
 
     logger = logging.getLogger(__name__)
     logger.info(f"Starting DevAll Workflow Server on {args.host}:{args.port}")
+
+    if args.reload and not _watchfiles_available():
+        logger.warning(
+            "--reload is active but 'watchfiles' is not installed; uvicorn will "
+            "fall back to StatReload, which ignores --reload-exclude patterns "
+            "(including the WareHouse/ defaults). Install watchfiles (or "
+            "`pip install uvicorn[standard]`) to enable exclude filtering."
+        )
 
     # Launch the server
     uvicorn.run(

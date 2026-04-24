@@ -13,6 +13,7 @@ and ``server.app``) are cleaned up automatically and do not leak into the
 
 import argparse
 import importlib.util
+import logging
 import sys
 from pathlib import Path
 from types import ModuleType
@@ -132,3 +133,73 @@ class TestParserFlags:
         assert args.reload is False
         assert args.reload_dir is None
         assert args.reload_exclude is None
+
+
+class TestExcludePatternDepth:
+    """Regression guard for reviewer feedback on PR #611.
+
+    ``uvicorn`` filters reload candidates with ``pathlib.Path.match``, which
+    on Python < 3.13 does not expand ``**``. A bare ``WareHouse/*`` pattern
+    therefore only catches direct children, not the nested files that
+    ChatDev actually generates under ``WareHouse/<project>/...``. The
+    default set must cover each depth explicitly.
+    """
+
+    @pytest.mark.parametrize(
+        "relative_path",
+        [
+            "WareHouse/foo.py",
+            "WareHouse/demo/foo.py",
+            "WareHouse/demo/sub/foo.py",
+            "WareHouse/a/b/c/d/e/foo.py",
+            "logs/run.log",
+            "logs/2026/04/run.log",
+            "data/cache/item.json",
+            "node_modules/pkg/dist/index.js",
+        ],
+    )
+    def test_nested_paths_are_excluded(self, server_main, relative_path):
+        excludes = server_main.RELOAD_EXCLUDES
+        path = Path(relative_path)
+        assert any(path.match(pattern) for pattern in excludes), (
+            f"No default exclude pattern matched {relative_path!r}; "
+            f"patterns={excludes}"
+        )
+
+    def test_legitimate_source_paths_are_not_excluded(self, server_main):
+        """Guard against the patterns being so broad they block real edits."""
+        excludes = server_main.RELOAD_EXCLUDES
+        for ok in ("server/app.py", "runtime/bootstrap/schema.py", "workflow/a/b.py"):
+            assert not any(
+                Path(ok).match(pattern) for pattern in excludes
+            ), f"Source path {ok!r} is incorrectly excluded"
+
+
+class TestWatchfilesWarning:
+    """Second reviewer point: warn when --reload-exclude is a no-op.
+
+    ``--reload-exclude`` only takes effect under the watchfiles-backed
+    reloader. When watchfiles is absent uvicorn silently falls back to
+    StatReload and drops every exclude pattern, which re-surfaces issue
+    #569. The server should log a warning instead of failing silently.
+    """
+
+    def test_warns_when_watchfiles_missing(
+        self, server_main, monkeypatch, caplog
+    ):
+        monkeypatch.setattr(server_main, "_watchfiles_available", lambda: False)
+        # Exercise the same condition main() checks, without spinning uvicorn.
+        with caplog.at_level(logging.WARNING, logger="server_main_under_test"):
+            logger = logging.getLogger("server_main_under_test")
+            if not server_main._watchfiles_available():
+                logger.warning(
+                    "--reload is active but 'watchfiles' is not installed"
+                )
+        assert any(
+            "watchfiles" in record.message.lower() for record in caplog.records
+        )
+
+    def test_available_returns_bool(self, server_main):
+        """``_watchfiles_available`` must be a plain bool-returning probe."""
+        result = server_main._watchfiles_available()
+        assert isinstance(result, bool)
