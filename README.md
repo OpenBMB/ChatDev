@@ -147,7 +147,7 @@ make dev
     # Run from the project root
     uv run python server_main.py --port 6400 --reload
     ```
-    > Remove `--reload` if output files (e.g., GameDev) trigger restarts, which interrupts tasks and loses progress.
+    > `--reload` watches the server's Python source folders only; agent-generated files under `WareHouse/` no longer trigger restarts. Pass `--reload-dir` or `--reload-exclude` (repeatable) to customise.
 
 2.  **Start Frontend**:
     ```bash
