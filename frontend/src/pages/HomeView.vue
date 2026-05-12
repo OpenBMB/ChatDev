@@ -68,7 +68,7 @@ const cubes = Array.from({ length: 80 }, (_, i) => ({
 <style scoped>
 .home-view {
   width: 100%;
-  min-height: calc(100vh - 55px); /* Match sidebar height to avoid bottom gap */
+  height: 100%;
   background-color: #1a1a1a;
   display: flex;
   justify-content: center;

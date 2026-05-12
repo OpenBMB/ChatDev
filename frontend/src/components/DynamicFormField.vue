@@ -251,7 +251,16 @@
             autocomplete="off"
           />
           <Teleport to="body">
-            <div v-if="showDropdown && !isReadOnly" class="custom-select-dropdown" :style="dropdownStyle">
+            <div
+              v-if="showDropdown && !isReadOnly"
+              class="custom-select-dropdown"
+              data-local-scroll
+              :style="dropdownStyle"
+              @mousedown.prevent
+              @wheel="handleLocalScrollWheel"
+              @scroll.stop
+              @touchmove.stop
+            >
               <div
                 v-if="!field.required"
                 class="custom-select-option"
@@ -389,7 +398,10 @@
           :id="`${modalId}-${field.name}`"
           :value="formData[field.name]"
           @input="onInput($event.target.value)"
+          @wheel="handleLocalScrollWheel"
+          @scroll.stop
           class="form-textarea"
+          data-local-scroll
           rows="4"
           :readonly="isReadOnly"
           :class="{'input-readonly': isReadOnly}"
@@ -771,6 +783,34 @@ const onFilterInput = (event) => {
   showDropdown.value = true
 }
 
+const handleLocalScrollWheel = (event) => {
+  const target = event.currentTarget
+  if (!target) {
+    return
+  }
+
+  const isDropdown = target.classList.contains('custom-select-dropdown')
+
+  if (target.scrollHeight <= target.clientHeight) {
+    if (isDropdown) {
+      event.stopPropagation()
+      event.preventDefault()
+    }
+    return
+  }
+
+  const isScrollingUp = event.deltaY < 0
+  const isScrollingDown = event.deltaY > 0
+  const atTop = target.scrollTop <= 0
+  const atBottom = Math.ceil(target.scrollTop + target.clientHeight) >= target.scrollHeight
+
+  event.stopPropagation()
+
+  if ((isScrollingUp && atTop) || (isScrollingDown && atBottom)) {
+    event.preventDefault()
+  }
+}
+
 const handleInputBlur = () => {
   // Delay hiding dropdown to allow option selection
   setTimeout(() => {
@@ -897,6 +937,7 @@ const getSelectedLabel = () => {
   box-sizing: border-box;
   min-height: 80px;
   resize: vertical;
+  overscroll-behavior: contain;
   transition: border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
 }
 
@@ -1565,6 +1606,7 @@ input:checked + .switch-slider:before {
   z-index: 10000;
   max-height: 200px;
   overflow-y: auto;
+  overscroll-behavior: contain;
   background-color: #1e1e1e;
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 8px;

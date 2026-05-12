@@ -48,6 +48,10 @@ const isWorkflowsActive = computed(() => route.path.startsWith('/workflows'))
 
 let lastScrollY = 0
 const handleScroll = (e) => {
+    if (e.target instanceof Element && e.target.closest('[data-local-scroll]')) {
+        return;
+    }
+
     const currentScrollY = e.target.scrollTop || window.scrollY || 0;
     // Minimize small scroll jitters
     if (Math.abs(currentScrollY - lastScrollY) < 5) return;
