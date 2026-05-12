@@ -14,7 +14,7 @@
           </div>
           <button class="close-button" @click="closeModal(modal.id)">×</button>
         </div>
-        <div class="modal-body">
+        <div class="modal-body" data-local-scroll @wheel="handleLocalScrollWheel">
           <div
             v-for="field in getMainDisplayFields(modal)"
             :key="field.name + '-' + (modal.formData[field.name]?.type || '')"
@@ -128,7 +128,7 @@
       <div class="modal-header">
         <button class="close-button" @click="closeVarModal">×</button>
       </div>
-      <div class="modal-body">
+      <div class="modal-body" data-local-scroll @wheel="handleLocalScrollWheel">
         <div v-if="varFormError" class="submit-error">
           {{ varFormError }}
         </div>
@@ -169,7 +169,7 @@
         <h3 class="modal-title">{{ editingListItemIndex !== null ? t('form_generator.edit_entry') : t('form_generator.add_entry') }}</h3>
         <button class="close-button" @click="closeListItemModal">×</button>
       </div>
-      <div class="modal-body">
+      <div class="modal-body" data-local-scroll @wheel="handleLocalScrollWheel">
         <div v-if="listItemFormError" class="submit-error">
           {{ listItemFormError }}
         </div>
@@ -1672,6 +1672,29 @@ const submitForm = async (modalId) => {
 }
 
 // Press Enter to submit topmost modal, Esc to close
+const handleLocalScrollWheel = (event) => {
+  const target = event.currentTarget
+  if (!target) {
+    return
+  }
+
+  event.stopPropagation()
+
+  if (target.scrollHeight <= target.clientHeight) {
+    event.preventDefault()
+    return
+  }
+
+  const isScrollingUp = event.deltaY < 0
+  const isScrollingDown = event.deltaY > 0
+  const atTop = target.scrollTop <= 0
+  const atBottom = Math.ceil(target.scrollTop + target.clientHeight) >= target.scrollHeight
+
+  if ((isScrollingUp && atTop) || (isScrollingDown && atBottom)) {
+    event.preventDefault()
+  }
+}
+
 const handleKeystrokes = (event) => {
   if (event.key === 'Enter') {
     // Do not intercept Enter inside textarea to allow newlines
@@ -2140,6 +2163,7 @@ defineExpose({
   padding: 15px 20px 30px 15px;
   max-height: none;
   overflow-y: auto;
+  overscroll-behavior: contain;
   border-top: 1px solid rgba(255, 255, 255, 0.04);
   border-bottom: 1px solid rgba(255, 255, 255, 0.04);
   scrollbar-width: none;

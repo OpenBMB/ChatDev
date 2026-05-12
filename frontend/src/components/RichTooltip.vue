@@ -213,7 +213,11 @@ const calculatePosition = () => {
 }
 
 // Listen to scroll and zoom events to dismiss tooltip
-const handleScroll = () => {
+const handleScroll = (event) => {
+  if (event.target instanceof Element && event.target.closest('[data-local-scroll]')) {
+    return
+  }
+
   if (isVisible.value && !keyboardActive.value) {
     hideTooltip()
   }
