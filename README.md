@@ -129,6 +129,16 @@ See our paper in [Multi-Agent Collaboration via Evolving Orchestration](https://
 *   **Model Keys**: Set `API_KEY` and `BASE_URL` in `.env` for your LLM provider.
 *   **YAML placeholders**: Use `${VAR}`（e.g., `${API_KEY}`）in configuration files to reference these variables.
 
+#### Supported Model Providers
+
+| Provider | `provider` value | Models | Environment Variable |
+|----------|------------------|--------|---------------------|
+| OpenAI | `openai` | GPT-4o, o1, etc. | `OPENAI_API_KEY` |
+| Google Gemini | `gemini` | Gemini 2.5, etc. | `GOOGLE_API_KEY` |
+| [MiniMax](https://www.minimaxi.com/) | `minimax` | MiniMax-M2.7, MiniMax-M2.7-highspeed, MiniMax-M2.5, MiniMax-M2.5-highspeed (204K context) | `MINIMAX_API_KEY` |
+
+To use MiniMax models, set `MINIMAX_API_KEY` in your `.env` file and configure the agent node with `provider: minimax`.
+
 ### ⚡️ Run the Application
 
 #### Using Makefile (Recommended)
