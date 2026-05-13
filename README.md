@@ -1,3 +1,5 @@
+[![MseeP.ai Security Assessment Badge](https://mseep.net/pr/openbmb-chatdev-badge.png)](https://mseep.ai/app/openbmb-chatdev)
+
 # ChatDev 2.0 - DevAll
 
 <p align="center">
