@@ -2,6 +2,7 @@
 
 import base64
 import hashlib
+import re
 
 import binascii
 import os
@@ -383,18 +384,31 @@ class OpenAIProvider(ModelProvider):
                     type="function"
                 ))
         
+        content = self._get_attr(msg, "content") or ""
+        content = self._strip_thinking_tokens(content)
+
         return Message(
             role=MessageRole.ASSISTANT,
-            content=self._get_attr(msg, "content") or "",
+            content=content,
             tool_calls=tool_calls
         )
+
+    _THINK_PATTERN = re.compile(r"<think>.*?</think>\s*", re.DOTALL)
+
+    @classmethod
+    def _strip_thinking_tokens(cls, text: str) -> str:
+        """Strip <think>...</think> blocks from model output (e.g. DeepSeek-R1, MiniMax-M2.7)."""
+        if "<think>" not in text:
+            return text
+        return cls._THINK_PATTERN.sub("", text).strip()
 
     def _append_chat_response_output(self, timeline: List[Any], response: Any) -> None:
         """Add chat response to timeline, preserving tool_calls (Chat API compatible)."""
         msg = response.choices[0].message
+        content = self._strip_thinking_tokens(msg.content or "")
         assistant_msg = {
             "role": "assistant",
-            "content": msg.content or ""
+            "content": content
         }
 
         if getattr(msg, "tool_calls", None):
