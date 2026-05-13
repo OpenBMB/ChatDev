@@ -9,6 +9,7 @@ from entity.graph_config import GraphConfig
 from entity.messages import Message
 from entity.enums import LogLevel
 from utils.exceptions import ValidationError, WorkflowCancelledError
+from utils.visibility_bridge import _reset_sync
 from utils.structured_logger import get_server_logger, LogType
 from utils.task_input import TaskInputBuilder
 from workflow.graph_context import GraphContext
@@ -166,6 +167,7 @@ class WorkflowRunService:
                 websocket_manager,
                 self.session_store,
                 cancel_event=cancel_event,
+                task_prompt=task_prompt,
             )
 
             if session:
@@ -182,6 +184,7 @@ class WorkflowRunService:
                 executor.attachment_store,
             )
 
+            _reset_sync()  # clear dashboard before every run
             await executor.execute_graph_async(task_input)
 
             # If cancellation was requested during execution but not raised inside threads,
