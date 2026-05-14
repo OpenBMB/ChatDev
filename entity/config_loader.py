@@ -27,7 +27,7 @@ def load_design_from_mapping(data: Mapping[str, Any], *, source: str | None = No
 def load_design_from_file(path: Path) -> DesignConfig:
     """Read a YAML file and parse it into a :class:`DesignConfig`."""
     with path.open("r", encoding="utf-8") as handle:
-        data = yaml.load(handle, Loader=yaml.FullLoader)
+        data = yaml.safe_load(handle)
     if not isinstance(data, Mapping):
         raise ConfigError("YAML root must be a mapping", path=str(path))
     return load_design_from_mapping(data, source=str(path))
