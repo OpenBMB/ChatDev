@@ -61,6 +61,7 @@ class LogLevel(str, Enum):
 class EventType(str, Enum):
     NODE_START = "NODE_START"
     NODE_END = "NODE_END"
+    NODE_RESPONSE = "NODE_RESPONSE"
     EDGE_PROCESS = "EDGE_PROCESS"
     MODEL_CALL = "MODEL_CALL"
     TOOL_CALL = "TOOL_CALL"

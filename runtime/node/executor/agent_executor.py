@@ -122,6 +122,21 @@ class AgentNodeExecutor(NodeExecutor):
                 node,
             )
 
+            # Emit MODEL_RESPONSE for the *initial* raw model output, but only
+            # when it will differ from the final NODE_END output to avoid the
+            # frontend showing duplicate bubbles. The raw response differs from
+            # the final output when:
+            #   - has_tool_calls: tool execution will produce additional turns
+            #   - thinking enabled: post-generation thinking may rewrite output
+            # When neither holds, the initial response IS the final output and
+            # NODE_END alone is enough.
+            self._maybe_emit_model_response(
+                node,
+                agent_config,
+                response_obj,
+                tool_iteration=None,
+            )
+
             if response_obj.has_tool_calls():
                 response_message = self._handle_tool_calls(
                     node,
@@ -136,31 +151,6 @@ class AgentNodeExecutor(NodeExecutor):
                 )
             else:
                 response_message = response_obj.message
-
-            # Emit MODEL_RESPONSE event so the frontend can display
-            # the raw model output separately from the final node output.
-            # Only emit when the raw response will differ from the final NODE_END output:
-            # - has_tool_calls: the final output will be different after tool execution
-            # - thinking enabled: post-generation thinking may modify the output
-            # This avoids duplicate display when there's no processing difference.
-            model_response_text = response_obj.message.text_content() if response_obj.message else ""
-            has_tool_calls = response_obj.has_tool_calls()
-            will_differ_from_final = has_tool_calls or bool(agent_config.thinking)
-            if will_differ_from_final and (model_response_text or has_tool_calls):
-                display_text = model_response_text
-                if has_tool_calls and not model_response_text:
-                    tool_names = [tc.function_name for tc in response_obj.message.tool_calls]
-                    display_text = f"[Calling tools: {', '.join(tool_names)}]"
-                self.log_manager.info(
-                    f"Model response for node {node.id}",
-                    node_id=node.id,
-                    event_type=EventType.MODEL_RESPONSE,
-                    details={
-                        "output": display_text,
-                        "has_tool_calls": has_tool_calls,
-                        "model_name": agent_config.name,
-                    },
-                )
 
             self._persist_message_attachments(response_message, node.id)
 
@@ -363,6 +353,50 @@ class AgentNodeExecutor(NodeExecutor):
 
         return invoke
 
+    def _maybe_emit_model_response(
+        self,
+        node: Node,
+        agent_config: AgentConfig | None,
+        response: ModelResponse,
+        *,
+        tool_iteration: int | None,
+    ) -> None:
+        """Emit a MODEL_RESPONSE log entry only when the raw output differs
+        from what NODE_END will eventually render.
+
+        Avoids duplicate chat bubbles on the frontend. The raw response will
+        differ from the final NODE_END output when:
+          - has_tool_calls: tool execution will produce additional turns
+          - thinking enabled: post-generation thinking may rewrite output
+
+        When neither holds, the raw response IS the final NODE_END output, so
+        emitting both would show two identical bubbles back-to-back.
+        """
+        if response is None or response.message is None:
+            return
+
+        text = response.message.text_content() or ""
+        has_tool_calls = response.has_tool_calls()
+        will_differ_from_final = has_tool_calls or bool(agent_config and agent_config.thinking)
+        if not will_differ_from_final:
+            return
+        if not (text or has_tool_calls):
+            return
+
+        display_text = text
+        if has_tool_calls and not text:
+            tool_names = [tc.function_name for tc in response.message.tool_calls]
+            display_text = f"[Calling tools: {', '.join(tool_names)}]"
+
+        model_name = agent_config.name if agent_config else "unknown"
+        self.log_manager.record_model_response(
+            node.id,
+            model_name,
+            output=display_text,
+            has_tool_calls=has_tool_calls,
+            tool_iteration=tool_iteration,
+        )
+
     def _invoke_provider(
         self,
         provider: ModelProvider,
@@ -377,6 +411,8 @@ class AgentNodeExecutor(NodeExecutor):
         self._ensure_not_cancelled()
         if self.context.token_tracker:
             self.context.token_tracker.current_node_id = node.id
+
+        self._enforce_tool_call_pairing(conversation, node)
 
         agent_config = node.as_config(AgentConfig)
         retry_policy = self._resolve_retry_policy(node, agent_config)
@@ -396,6 +432,52 @@ class AgentNodeExecutor(NodeExecutor):
         self.log_manager.debug(response.str_raw_response())
         self._record_model_call(node, last_input, response, CallStage.AFTER)
         return response
+
+    def _enforce_tool_call_pairing(self, conversation: List[Message], node: Node) -> None:
+        """Last-mile guard: ensure every assistant(tool_calls) is followed by
+        matching tool messages, or strip the tool_calls outright.
+
+        This protects the request from violating the OpenAI Chat Completions
+        invariant ("An assistant message with 'tool_calls' must be followed by
+        tool messages responding to each 'tool_call_id'") even if upstream
+        sanitation missed an edge case (e.g. tool_calls injected via thinking).
+        Rather than hard-failing here, we mutate the offending message in place
+        and emit a warning so the call still has a chance to succeed.
+        """
+        if not conversation:
+            return
+
+        idx = 0
+        while idx < len(conversation):
+            msg = conversation[idx]
+            if msg.role is MessageRole.ASSISTANT and msg.tool_calls:
+                expected_ids = [tc.id for tc in msg.tool_calls if tc.id]
+                # Collect contiguous following tool messages.
+                seen_ids: set[str] = set()
+                cursor = idx + 1
+                while cursor < len(conversation) and conversation[cursor].role is MessageRole.TOOL:
+                    tcid = conversation[cursor].tool_call_id
+                    if tcid:
+                        seen_ids.add(tcid)
+                    cursor += 1
+                missing = [tcid for tcid in expected_ids if tcid not in seen_ids]
+                if missing:
+                    tool_names = [tc.function_name for tc in msg.tool_calls if tc.function_name]
+                    source = (msg.metadata or {}).get("source")
+                    self.log_manager.warning(
+                        f"[Node: {node.id}] Detected unmatched tool_calls in conversation "
+                        f"(source={source}, tools={tool_names}, missing_ids={missing}); "
+                        "stripping tool_calls before sending to provider",
+                        node_id=node.id,
+                    )
+                    existing_text = msg.text_content().strip()
+                    summary = f"[Unpaired tool calls stripped before send: {tool_names}]"
+                    merged = f"{summary}\n\n{existing_text}" if existing_text else summary
+                    sanitized = msg.with_content(merged)
+                    sanitized.tool_calls = []
+                    sanitized.tool_call_id = None
+                    conversation[idx] = sanitized
+            idx += 1
 
     def _record_model_call(
         self,
@@ -657,26 +739,16 @@ class AgentNodeExecutor(NodeExecutor):
             )
             assistant_message = follow_up_response.message
 
-            # Emit MODEL_RESPONSE for each follow-up model response during tool calls
-            follow_up_text = follow_up_response.message.text_content() if follow_up_response.message else ""
-            follow_up_has_tools = follow_up_response.has_tool_calls()
-            # Always emit when there is text content OR tool calls
-            if follow_up_text or follow_up_has_tools:
-                display_text = follow_up_text
-                if follow_up_has_tools and not follow_up_text:
-                    tool_names = [tc.function_name for tc in follow_up_response.message.tool_calls]
-                    display_text = f"[Calling tools: {', '.join(tool_names)}]"
-                self.log_manager.info(
-                    f"Model response for node {node.id} (tool call iteration {iteration})",
-                    node_id=node.id,
-                    event_type=EventType.MODEL_RESPONSE,
-                    details={
-                        "output": display_text,
-                        "has_tool_calls": follow_up_has_tools,
-                        "model_name": node.as_config(AgentConfig).name if node.as_config(AgentConfig) else "unknown",
-                        "tool_iteration": iteration,
-                    },
-                )
+            # Emit MODEL_RESPONSE for each follow-up. The helper deduplicates
+            # against NODE_END: when the follow-up has no tool_calls AND no
+            # thinking is configured, this IS the final output and NODE_END
+            # would render the same text — so the helper skips it.
+            self._maybe_emit_model_response(
+                node,
+                node.as_config(AgentConfig),
+                follow_up_response,
+                tool_iteration=iteration,
+            )
 
     def _build_placeholder_tool_messages(
         self,
@@ -1115,6 +1187,32 @@ class AgentNodeExecutor(NodeExecutor):
         node_id: str,
     ) -> Message:
         final_message = self._clone_with_source(message, node_id)
+
+        # Cross-node boundary protocol invariant: a Message returned to downstream
+        # nodes must NEVER carry `tool_calls` (OpenAI requires `tool_calls` to be
+        # immediately followed by matching `tool` messages, which only exist inside
+        # this node's own conversation). When the tool-call loop hit its limit the
+        # incoming `message` may still have `tool_calls` populated; replace the
+        # content with a textual summary so downstream still gets useful context,
+        # then strip the tool-call fields.
+        if final_message.tool_calls:
+            tool_names = [tc.function_name for tc in final_message.tool_calls if tc.function_name]
+            existing_text = final_message.text_content().strip()
+            summary_lines: List[str] = []
+            if not complete:
+                summary_lines.append(
+                    f"[Tool call loop limit reached; pending tools were not executed: {tool_names}]"
+                )
+            else:
+                summary_lines.append(f"[Pending tool calls dropped at node boundary: {tool_names}]")
+            if existing_text:
+                summary_lines.append(existing_text)
+            final_message = final_message.with_content("\n\n".join(summary_lines))
+            final_message.tool_calls = []
+        # Defensively clear `tool_call_id` too — assistant messages should never
+        # carry one, and downstream serializers would emit it if present.
+        final_message.tool_call_id = None
+
         if trace_messages:
             metadata = dict(final_message.metadata)
             metadata["context_trace"] = [item.to_dict() for item in trace_messages]
@@ -1324,7 +1422,48 @@ class AgentNodeExecutor(NodeExecutor):
         return result
 
     def _coerce_inputs_to_messages(self, inputs: List[Message]) -> List[Message]:
-        return [message.clone() for message in inputs if isinstance(message, Message)]
+        # Defensive sanitation at the node boundary: upstream nodes must not
+        # leak protocol fragments (assistant messages with `tool_calls`, or
+        # orphan `tool` messages) because OpenAI requires `tool_calls` to be
+        # immediately followed by matching `tool` messages — a pairing that only
+        # holds inside the producing node's own conversation.
+        sanitized: List[Message] = []
+        for message in inputs:
+            if not isinstance(message, Message):
+                continue
+            cloned = message.clone()
+
+            if cloned.role is MessageRole.ASSISTANT and cloned.tool_calls:
+                tool_names = [tc.function_name for tc in cloned.tool_calls if tc.function_name]
+                source = cloned.metadata.get("source") if cloned.metadata else None
+                self.log_manager.warning(
+                    f"Stripping dangling tool_calls from upstream assistant message "
+                    f"(source={source}, tools={tool_names}) to preserve OpenAI protocol",
+                    node_id=getattr(self, "_current_node_id", None),
+                )
+                existing_text = cloned.text_content().strip()
+                summary = f"[Upstream pending tool calls dropped: {tool_names}]"
+                merged = f"{summary}\n\n{existing_text}" if existing_text else summary
+                cloned = cloned.with_content(merged)
+                cloned.tool_calls = []
+
+            if cloned.role is MessageRole.TOOL:
+                tool_name = (cloned.metadata or {}).get("tool_name") or "unknown_tool"
+                source = (cloned.metadata or {}).get("source")
+                self.log_manager.warning(
+                    f"Converting orphan tool message from upstream "
+                    f"(source={source}, tool={tool_name}) into a user message",
+                    node_id=getattr(self, "_current_node_id", None),
+                )
+                existing_text = cloned.text_content()
+                cloned = cloned.with_role(MessageRole.USER)
+                cloned = cloned.with_content(
+                    f"[Upstream tool result from `{tool_name}`]\n{existing_text}"
+                )
+                cloned.tool_call_id = None
+
+            sanitized.append(cloned)
+        return sanitized
 
     def _append_user_message(self, conversation: List[Message], content: str, *, node_id: str) -> None:
         conversation.append(

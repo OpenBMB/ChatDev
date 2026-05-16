@@ -2128,6 +2128,17 @@ const processMessage = async (msg) => {
       }
     }
 
+    // Raw model response (intermediate output, e.g. before tool calls or
+    // before post-generation thinking modifies the final node output).
+    // Render it as a dialogue bubble so users can see what the LLM said
+    // before any post-processing happens.
+    else if (eventType === 'MODEL_RESPONSE') {
+      const output = msg.data?.details?.output
+      if (output) {
+        addDialogue(`${nodeId}`, `${output}`)
+      }
+    }
+
     // Tool call (a node may call tools multiple times)
     else if (eventType === 'TOOL_CALL') {
       // Tool call started
@@ -2164,7 +2175,6 @@ const processMessage = async (msg) => {
 
       addDialogue(`${nodeId}`, `${msg.data.details.output}`)
     }
-
     // Edge condition met - trigger sprite animation
     else if (msg.data.message && msg.data.message.includes('Edge condition met for')) {
       handleEdgeConditionMessage(msg.data.message)

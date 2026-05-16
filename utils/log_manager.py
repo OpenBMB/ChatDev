@@ -134,6 +134,30 @@ class LogManager:
             node_id, model_name, input_data, output, duration, call_details, stage
         )
 
+    def record_model_response(self, node_id: str, model_name: str,
+                              output: Any = None,
+                              has_tool_calls: bool = False,
+                              tool_iteration: int | None = None,
+                              details: Dict[str, Any] = None) -> None:
+        """Record a raw model response for the frontend to display."""
+        output_size = len(str(output)) if output is not None else 0
+        duration = self.logger.get_timer(f"model_{node_id}")
+
+        response_details = {
+            "output_size": output_size,
+            **(details or {})
+        }
+
+        self.logger.record_model_response(
+            node_id,
+            model_name,
+            output=output,
+            has_tool_calls=has_tool_calls,
+            tool_iteration=tool_iteration,
+            duration=duration,
+            details=response_details,
+        )
+
     def record_tool_call(self, node_id: str, tool_name: str,
                          success: bool | None = True, tool_result: Any = None,
                          details: Dict[str, Any] = None,

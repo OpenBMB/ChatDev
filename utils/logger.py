@@ -245,6 +245,35 @@ class WorkflowLogger:
             duration=duration
         )
 
+    def record_model_response(self, node_id: str, model_name: str,
+                              output: str = None,
+                              has_tool_calls: bool = False,
+                              tool_iteration: int | None = None,
+                              duration: float = None,
+                              details: Dict[str, Any] = None) -> None:
+        """Record a raw model response (the assistant's intermediate reply
+        before tool execution or post-generation thinking modifies it).
+
+        Emitted as ``EventType.MODEL_RESPONSE`` so the frontend can display
+        the LLM output in real time, separately from ``NODE_END``.
+        """
+        response_details = {
+            "model_name": model_name,
+            "output": output,
+            "has_tool_calls": has_tool_calls,
+            **(details or {})
+        }
+        if tool_iteration is not None:
+            response_details["tool_iteration"] = tool_iteration
+
+        self.info(
+            f"Model response for node {node_id}",
+            node_id=node_id,
+            event_type=EventType.MODEL_RESPONSE,
+            details=response_details,
+            duration=duration
+        )
+
     def record_tool_call(self, node_id: str, tool_name: str, tool_result: str,
                          duration: float = None, success: bool | None = True,
                          details: Dict[str, Any] = None,

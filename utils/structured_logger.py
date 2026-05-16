@@ -78,13 +78,23 @@ class StructuredLogger:
             **kwargs
         }
         return json.dumps(log_entry, default=str)
+
+    @staticmethod
+    def _try_decode_unicode(text: str) -> str:
+        """Decode unicode escape sequences (e.g. \\u4e2d); return original on failure."""
+        try:
+            return text.encode("utf-8").decode("unicode_escape")
+        except Exception:
+            return text
     
     def _log(self, log_type: LogType, level: LogLevel, message: str, 
              correlation_id: str = None, **kwargs):
         """Internal logging method."""
         if self._should_log(level):
             formatted_log = self._format_log(log_type, level, message, correlation_id, **kwargs)
+            formatted_log = self._try_decode_unicode(formatted_log)
             log_level = self._get_logging_level(level)
+            
             self.logger.log(log_level, formatted_log)
     
     def info(self, message: str, correlation_id: str = None, log_type: LogType = LogType.WORKFLOW, **kwargs):
