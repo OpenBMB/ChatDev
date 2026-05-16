@@ -1,0 +1,47 @@
+version: 0.4.0
+vars: {}
+graph:
+  id: improved_memory_demo
+  description: Demo of the improved memory module for retrieval-augmented writing.
+  is_majority_voting: false
+  memory:
+    - name: EnhancedMemory
+      type: simple
+      config:
+        memory_path: memory_test/improved_memory.json
+        embedding:
+          provider: openai
+          model: text-embedding-3-small
+          base_url: ${BASE_URL}
+          api_key: ${API_KEY}
+          params:
+            use_chunking: true
+            chunk_strategy: weighted
+            max_length: 1000
+  start:
+    - Writer
+  nodes:
+  - id: Writer
+    type: agent
+    config:
+      provider: openai
+      base_url: ${BASE_URL}
+      api_key: ${API_KEY}
+      name: gpt-4o
+      role: 'You are a professional writer, skilled at creating high-quality articles based on topics input by the user.
+
+        Your writing style is beautiful, and your content is rich, capable of naturally integrating relevant memory content.
+
+        When you see the "===== Relevant Memory =====" section, please naturally incorporate these memory contents into your article.
+
+        '
+      params:
+        temperature: 0.7
+        max_tokens: 2000
+      memories:
+      - name: EnhancedMemory
+        top_k: 3
+        similarity_threshold: 0.2
+        retrieve_stage:
+        - gen
+  edges: []

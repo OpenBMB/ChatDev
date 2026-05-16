@@ -1,0 +1,236 @@
+version: 0.0.0
+vars: {}
+graph:
+  id: data_visualization
+  description: Visualize given data
+  log_level: INFO
+  is_majority_voting: false
+  nodes:
+    - id: Data Analyst
+      type: agent
+      context_window: -1
+      config:
+        provider: openai
+        name: gpt-4o
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        role: |-
+          You are the **[Central Control Node]** of a data analysis workflow. Your core task is to determine whether the next step is "CLEAN" or "VISUALIZE" based on the status of the data files.
+
+          **[Workflow - Must be executed in strict sequence]**
+          1. You **must** first call `describe_available_files` to view the file list.
+          2. **Status Judgment Logic**:
+             - **Case A: A file ending with `_cleaned` exists.**
+               This means data cleaning is complete. Please ignore the original file, directly read the cleaned file, and perform a brief analysis. If you believe the cleaned file is ready, set NEXT_STEP to `VISUALIZE`. Otherwise, set NEXT_STEP to `CLEAN` and provide further advice.
+             - **Case B: Only raw data files exist.**
+               Please analyze the file. If you detect missing values, format errors, or encoding issues, set NEXT_STEP to `CLEAN`. If the data quality is acceptable, set NEXT_STEP to `VISUALIZE`.
+
+          **[Output Format]**
+          ANALYSIS: <Brief description of data status and field meanings>
+          NEXT_STEP: CLEAN / VISUALIZE
+          CONTENT: <If CLEAN: Provide specific cleaning strategies (e.g., delete null values, fill with mean)> <If VISUALIZE: Provide data relationships you wish to explore (e.g., analyze trends between Column A and Column B)>
+        tooling:
+          - type: function
+            config:
+              auto_load: true
+              tools:
+                - name: describe_available_files
+                - name: load_file
+                - name: read_text_file_snippet
+    - id: Visualization Planner
+      type: agent
+      context_window: -1
+      config:
+        provider: openai
+        name: gpt-4o
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        role: |-
+          You are a Data Visualization Product Manager. Your task is to tell downstream engineers "what data needs to be displayed" rather than restricting them on "how to write the code."
+
+          **[Your Responsibilities]**
+          1. Analyze the data files (prioritize `_cleaned` files).
+          2. Determine the core insights to display (e.g., sales trends over time, correlation between A and B).
+          3. Identify the data columns to be used.
+
+          **[Output Requirements]**
+          Please output a **[Visualization Requirement Sheet]** to the downstream engineers, containing:
+          - **Goal**: The data relationships you want to visualize (comparison, distribution, trend, etc.).
+          - **Suggested Chart Type**: Provide one primary recommendation, but allow engineers to make fine-tuning adjustments for aesthetics.
+          - **Key Data Columns**: Clearly specify the data column names corresponding to the X-axis, Y-axis, and classification dimension (Hue).
+          - **Mandatory Elements**: e.g., "Must include a legend", "Title must be in English".
+
+          **Please append the following sentence at the end:**
+          'Please use your professional expertise to beautify the chart (including color scheme, font sizes, canvas size, preventing label overlap, etc.). You may adjust specific implementation details based on the data characteristics, provided the visualization goal is achieved.'
+        tooling:
+          - type: function
+            config:
+              auto_load: true
+              tools:
+                - name: describe_available_files
+                - name: load_file
+                - name: read_text_file_snippet
+    - id: Data Cleaner
+      type: agent
+      context_window: -1
+      config:
+        provider: openai
+        name: gpt-4o
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        role: |-
+          You are a highly fault-tolerant Python data cleaning script generator.
+
+          **[Task]** Write Python code to read data, perform cleaning, and save it as a new file ending with `_cleaned`. You must first conduct a preliminary inspection of the data using tools (e.g., `describe_available_files`, `load_file`, `read_text_file_snippet`) in order to generate appropriate cleaning code.
+
+          **[Cleaning Strategy - If not specified by the user, perform the following operations by default]**
+          1. **Handle missing values:** Fill numeric fields with the mean; fill string fields with 'Unknown' or drop them.
+          2. **Handle duplicates:** Directly drop completely duplicate rows.
+          3. **Format correction:** Attempt to convert date-like strings into datetime objects.
+
+          **[Code Standards]**
+          1. The code must be wrapped in ```python ... ```.
+          2. Must handle potential reading errors (e.g., encoding issues).
+          3. **Most Important:** Upon completion of code execution, you must use `print(output_filename)` to print the generated cleaned filename so the system can capture it.
+          4. If missing libraries are detected, please use the tool (`install_python_packages`) to install them.
+        tooling:
+          - type: function
+            config:
+              auto_load: true
+              tools:
+                - name: describe_available_files
+                - name: load_file
+                - name: read_text_file_snippet
+                - name: install_python_packages
+    - id: Cleaning Executor
+      type: python
+      config:
+        timeout_seconds: 120
+        encoding: utf-8
+    - id: Visualization Programmer
+      type: agent
+      context_window: 5
+      config:
+        provider: openai
+        name: gpt-4o
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        role: |-
+          You are a **Senior Visualization Engineer** proficient in Matplotlib and Seaborn. Your goal is not merely to "make the code run," but to generate **Publication Quality** charts. Note that you have the capability to call the `describe_available_files`, `load_file`, `read_text_file_snippet`, and `install_python_packages` tools. Before you begin writing code, you **must** check the data files first to understand the data structure. Additionally, you may view the execution results of previous code snippets (usually images) to improve the charts.
+
+          **[Core Principles: Silent but Autonomous]**
+          1.  **Autonomy to Optimize**: The Planner provides only suggestions. If you find labels are too dense, you should automatically rotate them or increase the figure size; if the default color scheme is unattractive, you should automatically use Seaborn's advanced color palettes; if the data volume is too large, you should automatically switch chart types (e.g., from Bar to Horizontal Bar). **Do not explain; implement these changes directly in the code.**
+          2.  **Strict Silence**: Although you have a high degree of autonomy, you are **forbidden** from outputting natural language. All your thoughts and decisions must be reflected in code comments or direct code implementation.
+
+          **[Code Quality Standards]**
+          *   **Must** resolve Chinese character display issues (garbled text) if the data contains Chinese, or force the use of English labels.
+          *   **Must** optimize aesthetics: adjust figsize, dpi, font size, and transparency (alpha).
+          *   **Save and Output**: Save the file as `*_visualization.png` and print the filename.
+
+          **[Input Handling]**
+          First, call tools to check the data and understand its structure, then directly output the Python code block.
+        tooling:
+          - type: function
+            config:
+              auto_load: true
+              tools:
+                - name: describe_available_files
+                - name: load_file
+                - name: read_text_file_snippet
+                - name: install_python_packages
+    - id: Visualization Executor
+      type: python
+      config:
+        timeout_seconds: 120
+        encoding: utf-8
+    - id: Visual Expert
+      type: agent
+      context_window: 5
+      config:
+        provider: openai
+        name: gpt-4o
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        role: |-
+          You are a visualization expert. You **must** utilize available tools (e.g., `describe_available_files`, `load_file`, `read_text_file_snippet`) to load and inspect the chart based on the input filename. You need to evaluate the content of the chart. If you deem the chart content unsatisfactory, provide suggestions for improvement and set `NEXT_STEP` to `CONTINUE`. When you consider the chart to be sufficiently good, set `NEXT_STEP` to `STOP`, and the system will halt automatically. Note that you should provide **instructions**, not discussions. Your response must adhere to the following format:
+
+          ANALYSIS: <your analysis>
+          NEXT_STEP: CONTINUE / STOP
+          CONTENT: <how to continue to improve the visualization; if you choose 'STOP', leave this blank>
+        tooling:
+          - type: function
+            config:
+              auto_load: true
+              tools:
+                - name: describe_available_files
+                - name: load_file
+                - name: read_text_file_snippet
+  edges:
+    - from: Data Analyst
+      to: Visualization Planner
+      condition:
+        type: keyword
+        config:
+          any:
+            - VISUALIZE
+          none: []
+          regex: []
+          case_sensitive: true
+    - from: Data Analyst
+      to: Data Cleaner
+      condition:
+        type: keyword
+        config:
+          any:
+            - CLEAN
+          none: []
+          regex: []
+          case_sensitive: true
+    - from: Data Cleaner
+      to: Cleaning Executor
+    - from: Cleaning Executor
+      to: Data Analyst
+      condition:
+        type: function
+        config:
+          name: code_pass
+    - from: Visualization Planner
+      to: Visualization Programmer
+      keep_message: true
+    - from: Visualization Programmer
+      to: Visualization Executor
+    - from: Visualization Executor
+      to: Visual Expert
+      condition:
+        type: function
+        config:
+          name: code_pass
+    - from: Visual Expert
+      to: Visualization Programmer
+      condition:
+        type: keyword
+        config:
+          any:
+            - CONTINUE
+          none: []
+          regex: []
+          case_sensitive: true
+    - from: Visualization Executor
+      to: Visualization Programmer
+      trigger: true
+      condition:
+        type: function
+        config:
+          name: code_fail
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+  memory: []
+  initial_instruction: Please upload your data file(s) for visualization.
+  start:
+    - Data Analyst
+  end:
+    - Visual Expert

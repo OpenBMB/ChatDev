@@ -1,0 +1,66 @@
+version: 0.4.0
+vars: {}
+graph:
+  id: weather_graph
+  description: "Weather assistant: fetch temperature then generate clothing advice."
+  is_majority_voting: false
+  start:
+    - A
+  nodes:
+    - id: A
+      type: agent
+      config:
+        provider: openai
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        name: gpt-4o
+        role: 'You are a weather inquiry assistant, responsible for calling tools to get the real-time temperature of a specified city.
+
+          The user will input a city name. You need to:
+
+          1. Continuously call functions to obtain the information until you get the city''s temperature.
+
+          2. Directly return the result of the call in the format: City Name: Temperature. '
+        tooling:
+          - type: function
+            config:
+              auto_load: true
+              tools:
+                - name: get_weather
+                - name: get_city_num
+        params:
+          temperature: 0.3
+          max_tokens: 200
+    - id: B
+      type: agent
+      config:
+        provider: openai
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        name: gpt-4o
+        role: 'You are a lifestyle assistant. The user will provide you with the current temperature of a city (unit might be Celsius or Fahrenheit).
+
+          You need to generate clothing advice based on the temperature.
+
+          - If the temperature is below 10℃: Suggest wearing a thick coat.
+
+          - If the temperature is between 10–20℃: Suggest wearing long sleeves or a light jacket.
+
+          - If the temperature is between 20–30℃: Suggest wearing short sleeves.
+
+          - If the temperature is above 30℃: Suggest wearing cool clothing and paying attention to sun protection.
+
+          Output format:
+
+          ### Clothing Advice
+
+          - City: xxx
+
+          - Current temperature: xx℃
+
+          - Advice: xxxx
+
+          '
+  edges:
+    - from: A
+      to: B

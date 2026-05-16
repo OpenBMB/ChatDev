@@ -1,0 +1,332 @@
+graph:
+  id: Video_Creator
+  description: 'Teaching video pipeline using Manim: outline, paginate, render, and concat.'
+  log_level: DEBUG
+  is_majority_voting: false
+  nodes:
+    - id: Visualization Executor
+      type: python
+      config:
+        args: []
+        env: {}
+        timeout_seconds: 60
+        encoding: utf-8
+      description: ''
+      context_window: 0
+    - id: Video Concat
+      type: agent
+      config:
+        name: gemini-3-flash-preview
+        provider: gemini
+        role: 请先调用 describe_available_files，检查当前目录中的.mp4文件的路径；不同mp4文件的名称代表了他们的内容，请你根据他们的名称排序，并调用concat_videos工具对其进行拼接。注意，concat_videos工具需要的参数是排好序的绝对路径构成的列表
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params: {}
+        tooling:
+          - type: function
+            config:
+              tools:
+                - name: concat_videos
+                - name: describe_available_files
+              timeout: null
+            prefix: ''
+        thinking: null
+        memories: []
+        retry: null
+      description: ''
+      context_window: 0
+    - id: Content Composer
+      type: agent
+      config:
+        name: gemini-3-flash-preview
+        provider: gemini
+        role: |-
+          你是一名严谨的课程内容助教，请对你收到的内容生成一份教学大纲。
+
+          要求：
+          1. 语言保持简洁、客观，避免夸张描述；不要写成营销文案。
+          2. 不要插入代码块、表格、多级列表；最多使用无序列表补充 1–3 条要点。
+          3. 输出仅为 Markdown 正文，不要包含额外说明。
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params: {}
+        tooling: []
+        thinking: null
+        memories: []
+        retry: null
+      description: ''
+      context_window: 0
+    - id: Code Generator
+      type: agent
+      config:
+        name: gemini-3-flash-preview
+        provider: gemini
+        role: |-
+          你是一名 **Manim 动画生成 Agent**，具备自动规划、代码生成与执行能力。
+          你将接收一段题目信息（Markdown 格式），以及该内容在整套课程中的上下文位置信息。
+          **上下文仅用于理解，不得在动画中体现**；你只负责当前这部分内容的一页动画生成。
+
+          你的任务流程如下（需自动完成，不得向用户提问）：
+
+          1. 解析当前内容，自动规划一页 Manim 动画的内容结构，确保逻辑清晰、且包含所有信息；
+          2. 生成 **完整、可直接运行的 Manim Python 源代码**；
+          3. 不输出任何非代码内容。
+
+          ---
+
+          ### 强制约束（必须严格遵守，违背任一条视为错误）：
+
+          1. **最终仅允许输出完整 Python 源代码**，不得包含任何说明性文本、注释性解释或自然语言内容；
+          2. 页面无需标题页，但**必须在页面顶部显示标题**；
+          3. 标题内容应为对本页教学内容的**高度概括**，**禁止使用 Page x 等编号形式**；
+          4. 标题的字体、字号、位置与动画方式 **必须严格使用以下模板**（仅允许替换标题文本）：
+
+          ```
+          title = Text("......",
+                       font_size=34,
+                       font="AR PL UKai CN",
+                       color=WHITE,
+                       weight=BOLD)
+          title.to_edge(UP, buff=0.5)
+
+          title_line = Line(LEFT, RIGHT, color=ORANGE).next_to(title, DOWN, buff=0.1)
+          title_line.match_width(title)
+
+          title_group = VGroup(title, title_line)
+
+          self.play(
+              Write(title, run_time=1.5),
+              GrowFromCenter(title_line, run_time=0.8)
+          )
+          ```
+
+          5. 所有讲解文字 **必须为中文**（代码与必要的专业术语除外），
+             且所有中文文本 **必须使用 AR PL UKai CN 字体**；
+          6. 页面内容需严格控制在 **15 秒以内的动画时长**；
+          7. 字体大小不得过小，需保证视频环境下清晰可读；
+          8. 所有内容必须通过 `self.play(Write(...))`、`self.play(FadeIn(...))` 等方式**渐进式呈现**；
+          9. 可使用文本、几何图形、框图、坐标系、点与线等基础元素进行可视化，
+             适用于算法流程、数据结构、分类边界、特征空间等教学场景；
+          10. 禁止任何花哨或复杂动画，避免遮挡、重叠、元素出屏；
+          11. **必须使用 `SurroundingRectangle`**，禁止使用 `Rectangle` 与 `RoundedRectangle`；
+          12. **严禁使用任何图片内容**，不得出现 `ImageMobject()`；
+          13. 数学公式必须使用 `MathTex()` 清晰展示；
+          14. 算法步骤可使用 `BulletedList` 或逐步动画展开；
+          15. **严禁使用任何中英文引号**；
+          16. **严禁输出任何额外信息**，包括解释、日志、提示语或自然语言描述。
+
+
+          下面是 manim 中常报错的问题，请你一定要注意哦！
+          问题类型一：IndexError: list index out of range  
+          在 Manim 中调用 .get_rows()[x][y] 或 BulletedList 时，如果表格或 bullet 列表项数量不足，就会出现 索引越界，或者某些对象的结构并没有你预期的层级，会导致取不到想要的元素
+          问题类型二：Text() 和 MathTex() 不支持 alignment 参数  
+          Text(..., alignment="CENTER")，这是无效参数
+          问题类型三：LaTeX 语法错误，这一点很重要！
+          BulletedList 内部用的是 MathTex，而 & 是 LaTeX 中的对齐符号，不允许直接使用，可以使用转义字符, 也没有TextBulletedList这种用法！
+          问题类型四：BulletedList 的用法注意事项
+          BulletedList 在 Manim 中的创建方式和参数可能因版本或使用场景产生预期外的行为。常见错误包括：直接对 BulletedList 使用索引访问内部元素（如 bullet_list[0][1]）、错误修改其内部结构，或误以为支持类似 HTML 的嵌套列表功能。需严格按照文档规范创建（如 BulletedList("item1", "item2")），避免对返回对象进行不合理操作。
+          问题类型五：Manim Community 版本兼容性
+          当前代码基于 Manim Community v0.19.0 开发，不同版本间存在 API 差异。请勿参考更高版本（如 0.20.0+）的示例代码，可能遇到方法名变更、参数调整或功能移除等问题（例如 Text 类的某些样式参数在新版本中已被弃用），严格使用对应版本的文档或示例。也不要使用旧版本的Manim开发：例如ShowCreation 是旧版 Manim 的动画类，新版（尤其是 manimCE v0.12.0+）推荐使用Create()画出线条或图形
+          问题类型六：页面元素布局控制，
+          在场景设计中，图片和文字的排版易出现位置偏移或间距失衡问题：
+          1.​图片定位​：未显式设置坐标时，图片可能默认出现在画布左上角或随机位置。需通过 move_to()、to_edge() 或相对定位（如 next_to(title, DOWN)）明确位置；
+          2.​标题与内容间距​：直接连续添加标题和内容可能导致重叠。建议使用 VGroup 组合元素后，通过 arrange(DOWN, buff=0.5) 调节垂直间距（buff 控制间隔大小），或单独设置 shift(DOWN*2) 微调位置；
+          3.​居中问题​：文本/图片默认左对齐，需通过 move_to(ORIGIN) 或结合 align_to(LEFT/RIGHT/UP/DOWN) 实现精准居中或对齐边界。
+          问题类型七：内容可视化注意事项
+          在制作教学动画时需要特别注意：
+          1.​数学公式​：复杂的ML公式应分步展示，避免一次性显示过长的公式导致超出屏幕；
+          2.​算法流程​：用简洁的流程图展示算法步骤，避免过度复杂的逻辑图；
+          3.​数据可视化​：展示数据点时注意坐标范围，确保所有点都在可视区域内；
+          4.​概念层次​：概念具有层次性，应按照从简单到复杂的顺序渐进展示。
+          问题类型八：Code()不支持font_size参数，不支持code参数，同时Code物件也没有.code这个属性，要千万注意哦！！！
+          5.在生成多行字符串时，字符串内部的所有代码行必须保留缩进，严禁顶格书写，确保与外层代码缩进对齐。
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params: {}
+        tooling: []
+        thinking: null
+        memories: []
+        retry: null
+      description: ''
+      context_window: 0
+    - id: Concluder
+      type: agent
+      config:
+        name: gemini-3-flash-preview
+        provider: gemini
+        role: |-
+          请先调用 describe_available_files，检查当前目录中的.py脚本文件的路径；之后直接使用render_manim工具进行渲染，此工具的参数只需要{script_path}（脚本路径（绝对路径））；如果有多个py文件，则需要对每个py文件均运行render_manim工具进行渲染
+          如果你在render_manim中发现出现问题，请你将具体的报错输出，同时输出“ERROR”
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params: {}
+        tooling:
+          - type: function
+            config:
+              tools:
+                - name: render_manim
+                - name: describe_available_files
+              timeout: null
+            prefix: ''
+        thinking: null
+        memories: []
+        retry: null
+      description: ''
+      context_window: 0
+    - id: Paginator
+      type: agent
+      config:
+        name: gemini-3-flash-preview
+        provider: gemini
+        role: |-
+          你是一位专业的文档格式处理专家，擅长为教学文档添加合适的分页标记。
+
+          任务：对提供的章节markdown内容进行分页处理，添加分页标记但完全保留所有原有内容。
+
+          章节内容：
+          {section_content}
+
+          ## 处理原则：
+          1. **完全保留原有内容** - 逐字逐句完整保留，包括所有文字、标点、空行、格式和结构
+          2. **只添加分页标记** - 仅在合适位置插入分页符
+          3. **保持逻辑结构** - 确保分页不会破坏内容的逻辑连贯性
+          4. **内容完整性第一** - 保证内容完整
+
+          ## 分页标记规则：
+          - 使用 `<!-- PAGEBREAK -->` 作为分页标记
+          - 分页标记必须单独占一行
+
+          ## 分页策略：
+          - 你分割的一页是后续要在 manim 一页中展示的，所以尽量细致一些，但也不要太细
+          - 确保代码示例完整性
+          - 重要概念不被分页截断
+          - 如果某一章节不需要分页，就什么都不改变就可以
+          - 不要将各级标题单独分为一页，这很重要
+
+          ## 输出要求：
+          - 保持原有的markdown格式
+          - 分页标记单独占一行
+          - **绝对不能截断或省略任何部分**
+
+          ## 输出格式：
+          直接输出处理后的完整markdown内容，不要添加任何解释文字。
+
+          请严格按照上述要求处理章节内容，确保输出内容的完整性。
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params: {}
+        tooling: []
+        thinking: null
+        memories: []
+        retry: null
+      description: ''
+      context_window: 0
+  edges:
+    - from: Visualization Executor
+      to: Code Generator
+      trigger: true
+      condition:
+        type: function
+        config:
+          name: code_fail
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: Visualization Executor
+      to: Concluder
+      trigger: true
+      condition:
+        type: function
+        config:
+          name: code_pass
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: Concluder
+      to: Code Generator
+      trigger: true
+      condition:
+        type: keyword
+        config:
+          any:
+            - ERROR
+          none: []
+          regex: []
+          case_sensitive: true
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: Concluder
+      to: Video Concat
+      trigger: true
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: Content Composer
+      to: Paginator
+      trigger: true
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: Code Generator
+      to: Visualization Executor
+      trigger: true
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic:
+        type: map
+        split:
+          type: message
+          config: {}
+        config:
+          max_parallel: 10
+    - from: Paginator
+      to: Code Generator
+      trigger: true
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic:
+        type: map
+        split:
+          type: regex
+          config:
+            pattern: (.*?)<!--\s*PAGEBREAK\s*-->
+            group: ''
+            case_sensitive: true
+            multiline: false
+            dotall: false
+            on_no_match: pass
+        config:
+          max_parallel: 10
+  memory: []
+  initial_instruction: ''
+  start:
+    - Content Composer
+  end: []
+version: 0.0.0
+vars: {}

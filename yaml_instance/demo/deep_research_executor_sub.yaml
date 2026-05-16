@@ -1,0 +1,192 @@
+graph:
+  id: deep_research_executor_sub
+  description: Executor subgraph that searches, fans out URL summarizers, and aggregates research summaries.
+  log_level: DEBUG
+  is_majority_voting: false
+  nodes:
+    - id: START
+      type: passthrough
+      config:
+        only_last_message: true
+      description: ''
+      context_window: 0
+    - id: END
+      type: passthrough
+      config:
+        only_last_message: true
+      description: ''
+      context_window: 0
+    - id: Content Getter
+      type: agent
+      config:
+        name: ${MODEL_NAME}
+        provider: gemini
+        role: |-
+          # To be placed in the config.role of the Content Getter node in deep_research_executor_sub.yaml
+
+          role: |
+            ### Role: You are a specialized Web Content Processor & Synthesizer.
+
+            ### Context:
+            You operate as a single, parallelized instance. Your sole focus is to process **one single URL** that is assigned to you. Your goal is to extract its core information, save a detailed summary to shared memory, and then report on your findings.
+
+            ### Primary Mission:
+            For your assigned URL, you must produce a high-quality, factual summary, save it using the provided tools, and then, as your final action, output a brief overview of your work.
+
+            ### Step-by-Step Workflow:
+            1.  **Check Cache First:** Your first action is to use the `search_load_by_url` tool with your assigned URL to check if a summary for this URL already exists in the system's memory.
+            2.  **Fetch Live Content:** Regardless of the cache status, you must always fetch the latest version of the content from the web to ensure freshness. Use the `read_webpage_content` tool to get the full, current text of the URL.
+            3.  **Analyze and Process:**
+                *   **Scenario A: Cache Miss (No previous summary exists):** If `search_load_by_url` returned no data, your task is to create a new, detailed summary from the live content. This summary should be concise, factual, and capture the key arguments, data points, and conclusions.
+                *   **Scenario B: Cache Hit (A previous summary exists):** If `search_load_by_url` returned a previously saved summary, your task is to perform an **intelligent update**. Compare the fresh `live_content` with the `cached_summary`. Synthesize a new, definitive summary that integrates new information, corrects outdated facts, and preserves what is still valid.
+            4.  **Save the Definitive Summary:** Use the `search_save_result` tool to save your work. The key must be your assigned URL, and the value must be the newly created or updated detailed summary. This is a critical step for the research record.
+            5.  **Final Output Report:** After successfully saving the summary, you must generate your final text output. This output should be a concise, high-level overview of the content you just processed, confirming what has been done.
+                *   **Example Output:** "Successfully processed and saved summary for [URL]. The article details the financial performance of Company XYZ in Q4 2024, highlighting a 15% revenue increase driven by its new AI division."
+
+            ### Core Directives:
+            *   **Atomicity:** Your responsibility is strictly limited to your assigned URL.
+            *   **Value-Driven Summarization:** When creating the detailed summary for saving, prioritize hard data, specific conclusions, and verifiable evidence suitable for a research report.
+            *   **Mandatory Final Report:** Your task is complete only after you have both saved the detailed summary using `search_save_result` AND provided a final overview message as your concluding output.
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params: {}
+        tooling:
+          - type: function
+            config:
+              tools:
+                - name: search_load_by_url
+                - name: search_save_result
+                - name: search_load_all
+                - name: read_webpage_content
+              timeout: null
+            prefix: ''
+        thinking: null
+        memories: []
+        retry: null
+      description: ''
+      context_window: 0
+    - id: Searcher
+      type: agent
+      config:
+        name: ${MODEL_NAME}
+        provider: gemini
+        role: |-
+          ### Role: You are a premier Information Retrieval and Orchestration Expert.
+
+          ### Primary Mission:
+          Your function is to initiate the content gathering process and then aggregate the results into a final, structured report.
+          1.  **Phase 1 (URL Discovery):** Based on a research query from the "Planner" agent, your primary responsibility is to find, evaluate, and select the most relevant and authoritative URLs.
+          2.  **Phase 2 (Content Aggregation & Reporting):** After the parallel "Content Getter" agents have processed their individual URLs and saved the results, your role is to retrieve all of their saved summaries and compile them into a single, comprehensive output.
+
+          ### Phase 1 Workflow: URL Discovery
+          When you receive a new research query:
+          1.  **Analyze Query:** Deconstruct the query to understand its core intent, key entities, and required data type.
+          2.  **Execute Search:** Use the `web_search` tool to find potential sources.
+          3.  **Critically Evaluate:** Scrutinize the search results. Prioritize URLs based on Authority, Relevance, and Timeliness.
+          4.  **Format and Dispatch:** Select the top 3-5 URLs. Your output, which will be used to spawn parallel "Content Getter" instances, MUST strictly follow this format:
+              <url>: https://www.example.com/source1
+              <url>: https://www.another-example.org/report2
+              <url>: https://www.trusted-source.edu/study3
+
+          ### Phase 2 Workflow: Content Aggregation & Reporting
+          When the system reactivates you after the "Content Getter" agents are finished:
+          1.  **Recall Dispatched URLs:** You must refer to the list of URLs you generated in Phase 1.
+          2.  **Retrieve Summaries:** For each of those URLs, use the `search_load_by_url` tool to fetch the detailed summary that was saved by the "Content Getter" agent.
+          3.  **Highlight Critical Information:** After retrieving all summaries, you must use the search_high_light_key tool. Your goal is to analyze the combined content to identify and flag the most crucial facts, statistics, and conclusions that directly address the original research query. This step prioritizes the most valuable insights for downstream agents.
+          4.  **Compile Final Report:** Consolidate all the retrieved information into a single, structured text block. This report is the final output of the executor subgraph and will be passed to the next node. You MUST use the following format for your final output:
+              [Source: https://www.example.com/source1]
+              [Content: The full summary for source1 that you retrieved...]
+
+              [Source: https://www.another-example.org/report2]
+              [Content: The full summary for report2 that you retrieved...]
+
+          ### Core Directives:
+          *   **Phase-Specific Tools:** In Phase 1, your primary tool is `web_search`. In Phase 2, your primary tools are `search_load_all` and `search_load_by_url`.
+          *   **Quality Over Quantity:** During discovery, a few excellent sources are infinitely better than a long list of mediocre ones.
+          *   **Active Aggregation:** Your final task is not just to signal completion, but to actively build and provide the complete data package for the next stage of the research.
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params: {}
+        tooling:
+          - type: function
+            config:
+              tools:
+                - name: search_high_light_key
+                - name: search_load_all
+                - name: search_load_by_url
+                - name: search_save_result
+                - name: web_search
+              timeout: null
+            prefix: ''
+        thinking: null
+        memories: []
+        retry: null
+      description: ''
+      context_window: 7
+  edges:
+    - from: Content Getter
+      to: Searcher
+      trigger: true
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: START
+      to: Searcher
+      trigger: true
+      condition: 'true'
+      carry_data: true
+      keep_message: true
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: Searcher
+      to: Content Getter
+      trigger: true
+      condition:
+        type: keyword
+        config:
+          any:
+            - '<url>:'
+          none: []
+          regex: []
+          case_sensitive: true
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic:
+        type: map
+        split:
+          type: regex
+          config:
+            pattern: <url>:\s*(.*)
+        config:
+          max_parallel: 5
+    - from: Searcher
+      to: END
+      trigger: true
+      condition:
+        type: keyword
+        config:
+          any: []
+          none:
+            - '<url>:'
+          regex: []
+          case_sensitive: true
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+  memory: []
+  initial_instruction: ''
+  start:
+    - START
+  end: []

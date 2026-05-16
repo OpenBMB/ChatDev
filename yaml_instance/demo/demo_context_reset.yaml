@@ -1,0 +1,69 @@
+version: 0.4.0
+graph:
+  id: context_reset_demo
+  description: Minimal demo of clear_context and clear_kept_context behavior via human nodes.
+  log_level: DEBUG
+  is_majority_voting: false
+  start:
+    - entry_normal
+    - entry_keep
+    - soft_reset
+    - hard_reset
+  nodes:
+    - id: entry_normal
+      type: human
+      config:
+        description: First input, simulates an ordinary message with keep=false.
+    - id: entry_keep
+      type: human
+      config:
+        description: Second input, triggers a message with keep_message=true.
+    - id: soft_reset
+      type: human
+      config:
+        description: Clears only keep=false messages, then writes a new prompt.
+    - id: hard_reset
+      type: human
+      config:
+        description: Clears all context (including keep=true), then writes a new prompt.
+    - id: collector
+      type: human
+      config:
+        description: Node used to observe changes in the input queue.
+    - id: reviewer
+      type: human
+      config:
+        description: Final node, reads the output from collector.
+  edges:
+    - from: entry_normal
+      to: collector
+      trigger: true
+      condition: 'true'
+      keep_message: false
+      description: Passes a normal message, can be removed by soft_reset later.
+    - from: entry_keep
+      to: collector
+      trigger: true
+      condition: 'true'
+      keep_message: true
+      description: Passes a keep=true message, will not be cleared by the node by default.
+    - from: soft_reset
+      to: collector
+      trigger: true
+      condition: 'true'
+      clear_context: true
+      keep_message: false
+      description: Clears keep=false messages first, then writes soft_reset output.
+    - from: hard_reset
+      to: collector
+      trigger: true
+      condition: 'true'
+      clear_context: true
+      clear_kept_context: true
+      keep_message: false
+      description: Writes hard_reset output after clearing all messages, verifying that keep=true messages are removed.
+    - from: collector
+      to: reviewer
+      trigger: true
+      condition: 'true'
+      description: Passes collector output to reviewer.

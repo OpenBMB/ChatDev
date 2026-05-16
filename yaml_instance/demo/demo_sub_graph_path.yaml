@@ -1,0 +1,53 @@
+version: 0.4.0
+vars: {}
+graph:
+  id: paper_gen
+  description: Article generation with a critique subgraph loaded from file.
+  is_majority_voting: false
+  log_level: INFO
+  start:
+    - A
+  nodes:
+  - id: A
+    type: agent
+    config:
+      provider: openai
+      base_url: ${BASE_URL}
+      api_key: ${API_KEY}
+      name: gpt-4o
+      role: 'You are a writer, skilled at generating a full article based on a word or phrase input by the user.
+
+        The user will input a word or a short sentence, and you need to generate an article of no less than 2000 words based on it, requiring multiple paragraphs.
+
+        '
+      params:
+        temperature: 0.1
+        max_tokens: 4000
+  - id: B
+    type: subgraph
+    config:
+      type: file
+      config:
+        path: "subgraphs/article_discuss.yaml"
+  - id: C
+    type: agent
+    config:
+      base_url: ${BASE_URL}
+      api_key: ${API_KEY}
+      provider: openai
+      name: gpt-4o
+      role: 'You are a writer, skilled at revising articles.
+
+        Please revise the article based on the article and revision suggestions provided.
+
+        '
+      params:
+        temperature: 0.1
+        max_tokens: 4000
+  edges:
+  - from: A
+    to: B
+  - from: A
+    to: C
+  - from: B
+    to: C

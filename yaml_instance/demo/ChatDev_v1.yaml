@@ -1,0 +1,1021 @@
+graph:
+  id: ChatDev_v1
+  description: ChatDev multi-agent software development workflow with planning, coding, review, and testing loops.
+  log_level: DEBUG
+  is_majority_voting: false
+  nodes:
+    - id: Code Complete All Phase Loop Counter
+      type: loop_counter
+      description: ''
+      context_window: 0
+      config:
+        max_iterations: 5
+        reset_on_emit: true
+        message: ''
+    - id: Test Phase Loop Counter
+      type: loop_counter
+      description: ''
+      context_window: 0
+      config:
+        max_iterations: 3
+        reset_on_emit: true
+        message: ''
+    - id: FINAL
+      type: passthrough
+      description: ''
+      context_window: 0
+      config: {}
+    - id: USER
+      type: passthrough
+      description: ''
+      context_window: 0
+      config: {}
+    - id: PSEUDO
+      type: passthrough
+      config: {}
+      description: ''
+      context_window: 0
+    - id: Programmer Code Review
+      type: agent
+      config:
+        name: gpt-4o
+        role: |-
+          ${COMMON_PROMPT}
+          You are Programmer. we are both working at ChatDev. We share a common interest in collaborating to successfully complete a task assigned by a new customer.
+          You can write/create computer software or applications by providing a specific programming language to the computer. You have extensive computing and coding experience in many varieties of programming languages and platforms, such as Python, Java, C, C++, HTML, CSS, JavaScript, XML, SQL, PHP, etc,.
+          You will receive the task from user.
+          To complete the task, you must call the functions to save or edit the codes that appropriately solves the requested instruction based on your expertise and customer's needs.
+        provider: openai
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params: {}
+        tooling:
+          - type: function
+            config:
+              tools:
+                - name: uv_related:All
+                - name: apply_text_edits
+                - name: create_folder
+                - name: describe_available_files
+                - name: delete_path
+                - name: read_file_segment
+                - name: search_in_files
+                - name: save_file
+                - name: list_directory
+              timeout:
+        thinking:
+        memories: []
+        retry:
+      description: ''
+      context_window: -1
+    - id: Programmer Test Modification
+      type: agent
+      config:
+        name: gpt-4o
+        role: |-
+          ${COMMON_PROMPT}
+          You are Programmer. we are both working at ChatDev. We share a common interest in collaborating to successfully complete a task assigned by a new customer.
+          You can write/create computer software or applications by providing a specific programming language to the computer. You have extensive computing and coding experience in many varieties of programming languages and platforms, such as Python, Java, C, C++, HTML, CSS, JavaScript, XML, SQL, PHP, etc,.
+          You will receive the task from user.
+          To complete the task, you must call the functions to save or edit the codes that appropriately solves the requested instruction based on your expertise and customer's needs.
+        provider: openai
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params: {}
+        tooling:
+          - type: function
+            config:
+              tools:
+                - name: uv_related:All
+                - name: apply_text_edits
+                - name: create_folder
+                - name: describe_available_files
+                - name: delete_path
+                - name: read_file_segment
+                - name: search_in_files
+                - name: save_file
+                - name: list_directory
+              timeout:
+        thinking:
+        memories: []
+        retry:
+      description: ''
+      context_window: -1
+    - id: Chief Executive Officer
+      type: agent
+      config:
+        name: gpt-4o
+        provider: openai
+        role: |-
+          ${COMMON_PROMPT}
+          You are Chief Executive Officer. Now, we are both working at ChatDev and we share a common interest in collaborating to successfully complete a task assigned by a new customer.
+          Your main responsibilities include being an active decision-maker on users' demands and other key policy issues, leader, manager, and executor. Your decision-making role involves high-level decisions about policy and strategy; and your communicator role can involve speaking to the organization's management and employees.
+          You will receive the task from user.
+          To complete the task, I will give you one or more instructions, and you must help me to write a specific solution that appropriately solves the requested instruction based on your expertise and my needs.
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params: {}
+        tooling:
+          - type: function
+            config:
+              tools:
+                - name: uv_related:All
+                - name: apply_text_edits
+                - name: create_folder
+                - name: describe_available_files
+                - name: delete_path
+                - name: read_file_segment
+                - name: search_in_files
+                - name: save_file
+                - name: list_directory
+              timeout:
+        thinking:
+        memories: []
+        retry:
+      description: ''
+      context_window: 0
+    - id: Code Review Comment Phase Prompt for Assistant
+      type: literal
+      config:
+        content: |-
+          According to the new user's task and our software designs:
+          Task: Please refer to the input from user.
+          Modality: Code.
+          Programming Language: Python.
+          Source Code: You should call the provided functions to load source codes.
+          As the Code Reviewer, to make the software directly operable without further coding, ChatDev have formulated the following regulations:
+          1) all referenced classes should be imported;
+          2) all methods should be implemented;
+          3) all methods need to have the necessary comments;
+          4) no potential bugs;
+          5) The entire project conforms to the tasks proposed by the user;
+          6) most importantly, do not only check the errors in the code, but also the logic of code. Make sure that user can interact with generated software without losing any feature in the requirement;
+          You should call provided function to load the codes.
+          Now, you should check the above regulations one by one and review the codes in detail, propose one comment with the highest priority about the codes, and give me instructions on how to fix. Tell me your comment with the highest priority and corresponding suggestions on revision. If the codes are perfect and you have no comment on them, return only one line like "<INFO> Finished"
+        role: user
+      description: ''
+      context_window: 0
+    - id: Test Modification Phase Loop Counter
+      type: loop_counter
+      config:
+        max_iterations: 5
+        reset_on_emit: true
+        message: ''
+      description: ''
+      context_window: 0
+    - id: Programmer Code Complete
+      type: agent
+      config:
+        name: gpt-4o
+        provider: openai
+        role: |-
+          ${COMMON_PROMPT}
+          You are Programmer. we are both working at ChatDev. We share a common interest in collaborating to successfully complete a task assigned by a new customer.
+          You can write/create computer software or applications by providing a specific programming language to the computer. You have extensive computing and coding experience in many varieties of programming languages and platforms, such as Python, Java, C, C++, HTML, CSS, JavaScript, XML, SQL, PHP, etc,.
+          You will receive the task from user.
+          To complete the task, you must call the functions to save or edit the codes that appropriately solves the requested instruction based on your expertise and customer's needs.
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params: {}
+        tooling:
+          - type: function
+            config:
+              tools:
+                - name: uv_related:All
+                - name: apply_text_edits
+                - name: create_folder
+                - name: describe_available_files
+                - name: delete_path
+                - name: read_file_segment
+                - name: search_in_files
+                - name: save_file
+                - name: list_directory
+              timeout:
+        thinking:
+        memories: []
+        retry:
+      description: ''
+      context_window: 0
+    - id: Code Complete Phase for Assistant
+      type: literal
+      config:
+        content: |-
+          According to the new user's task and our software designs listed below:
+          Modality: Code.
+          Programming Language: Python.
+          Task: Please refer to the input from user.
+          Source Code: Yous should call the provided functions to load the codes.
+          Unimplemented File: You should find all umplemented classes and methods by calling provided functions and then, implement them. 
+          As the Programmer, to satisfy the complete function of our developed software, you have to implement all methods in the unimplemented files which contains a unimplemented class. Now, implement all methods of the unimplemented files and all other codes needed.
+          If you find all the files are fully implemented, output "<INFO> FINISHED"
+        role: user
+      description: ''
+      context_window: 0
+    - id: Programmer Coding
+      type: agent
+      config:
+        name: gpt-4o
+        provider: openai
+        role: |-
+          ${COMMON_PROMPT}
+          You are Programmer. we are both working at ChatDev. We share a common interest in collaborating to successfully complete a task assigned by a new customer.
+          You can write/create computer software or applications by providing a specific programming language to the computer. You have extensive computing and coding experience in many varieties of programming languages and platforms, such as Python, Java, C, C++, HTML, CSS, JavaScript, XML, SQL, PHP, etc,.
+          You will receive the task from user.
+          To complete the task, you must call the functions to save or edit the codes that appropriately solves the requested instruction based on your expertise and customer's needs.
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params: {}
+        tooling:
+          - type: function
+            config:
+              tools:
+                - name: uv_related:All
+                - name: apply_text_edits
+                - name: create_folder
+                - name: describe_available_files
+                - name: delete_path
+                - name: read_file_segment
+                - name: search_in_files
+                - name: save_file
+                - name: list_directory
+              timeout:
+        thinking:
+        memories: []
+        retry:
+      description: ''
+      context_window: 0
+    - id: Test Error Summary Phase Prompt for Assistant
+      type: literal
+      config:
+        content: |
+          Programming Language: Python
+          Source Codes: You should call provided the functions to load the codes.
+          Test Reports of Source Codes: You should use `uv_run` function to run the code (don't forget to set timeout for the code running) and observe whether the code passed.
+
+          [CRITICAL INSTRUCTION FOR TIMEOUTS]
+          Since the target program might be an endless loop application (e.g., a Snake game, a GUI app, or a server), the test runner MUST use a timeout to terminate it.
+          If the test report shows `"timed_out": True`, you must analyze the `stdout` and `stderr`:
+          1. **Pass**: If the logs indicate the application started successfully (e.g., "Game started", "Listening on port", or simply running without crashing) and was eventually killed by the timeout, **DO NOT classify this as a bug**. You should consider this a successful run.
+          2. **Fail**: Only classify a timeout as a bug if the program was supposed to finish quickly (like a calculation script) but hung, or if it produced no output/errors before timing out.
+
+          According to the test reports, please locate and summarize the bugs that cause the problem. You should NEVER write or edit the codes. You should ONLY "locate and summarize the bugs that cause the problem".
+        role: user
+      description: ''
+      context_window: 0
+    - id: Chief Product Officer
+      type: agent
+      config:
+        name: gpt-4o
+        provider: openai
+        role: |-
+          ${COMMON_PROMPT}
+          You are Chief Product Officer. we are both working at ChatDev. We share a common interest in collaborating to successfully complete a task assigned by a new customer.
+          You are responsible for all product-related matters in ChatDev. Usually includes product design, product strategy, product vision, product innovation, project management and product marketing.
+          You will receive the task from user.
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params: {}
+        tooling:
+          - type: function
+            config:
+              tools:
+                - name: uv_related:All
+                - name: apply_text_edits
+                - name: create_folder
+                - name: describe_available_files
+                - name: delete_path
+                - name: read_file_segment
+                - name: search_in_files
+                - name: save_file
+                - name: list_directory
+              timeout:
+        thinking:
+        memories: []
+        retry:
+      description: ''
+      context_window: -1
+    - id: Manual Phase Prompt for Assistant
+      type: literal
+      config:
+        content: |-
+          Modality: Code.
+          Programming Language: Python.
+          Task: Please refer to the input from user.
+          Source Code: You MUST call the provided functions to load source codes.
+          You should NEVER write your own code, but only write user manual for existing code.
+          As the Chief Product Officer, by using Markdown, you should write a manual.md file which is a detailed user manual to use the software, including introducing main functions of the software, how to install environment dependencies and how to use/play it.
+        role: user
+      description: ''
+      context_window: 0
+    - id: Manual Phase Prompt for User
+      type: literal
+      config:
+        content: |-
+          Modality: Code.
+          Programming Language: Python.
+          Task: Please refer to the input from user.
+          Source Code: You MUST call the provided functions to load source codes.
+          You should NEVER write your own code, but only write user manual for existing code.
+          As the Chief Product Officer, by using Markdown, you should write a manual.md file which is a detailed user manual to use the software, including introducing main functions of the software, how to install environment dependencies and how to use/play it.
+        role: assistant
+      description: ''
+      context_window: 0
+    - id: Programmer Test Error Summary
+      type: agent
+      config:
+        name: gpt-4o
+        provider: openai
+        role: |-
+          ${COMMON_PROMPT}
+          You are Programmer. we are both working at ChatDev. We share a common interest in collaborating to successfully complete a task assigned by a new customer.
+          You can write/create computer software or applications by providing a specific programming language to the computer. You have extensive computing and coding experience in many varieties of programming languages and platforms, such as Python, Java, C, C++, HTML, CSS, JavaScript, XML, SQL, PHP, etc,.
+          You will receive the task from user.
+          To complete the task, you must call the functions to save or edit the codes that appropriately solves the requested instruction based on your expertise and customer's needs.
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params: {}
+        tooling:
+          - type: function
+            config:
+              tools:
+                - name: uv_related:All
+                - name: describe_available_files
+                - name: read_file_segment
+                - name: search_in_files
+                - name: list_directory
+              timeout:
+        thinking:
+        memories: []
+        retry:
+      description: ''
+      context_window: -1
+    - id: Manual Phase Loop Counter
+      type: loop_counter
+      config:
+        max_iterations: 1
+        reset_on_emit: true
+        message: ''
+      description: ''
+      context_window: 0
+    - id: Code Reviewer
+      type: agent
+      config:
+        name: gpt-4o
+        provider: openai
+        role: |-
+          ${COMMON_PROMPT}
+          You are Code Reviewer. we are both working at ChatDev. We share a common interest in collaborating to successfully complete a task assigned by a new customer.
+          You can help programmers to assess source codes for software troubleshooting, fix bugs to increase code quality and robustness, and offer proposals to improve the source codes.
+          You will receive the task from user.
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params: {}
+        tooling:
+          - type: function
+            config:
+              tools:
+                - name: uv_related:All
+                - name: describe_available_files
+                - name: read_file_segment
+                - name: search_in_files
+                - name: list_directory
+              timeout:
+        thinking:
+        memories: []
+        retry:
+      description: ''
+      context_window: -1
+    - id: Code Review Modification Phase Prompt for Assistant
+      type: literal
+      config:
+        content: |-
+          Modality: Code.
+          Programming Language: Python.
+          Task: Please refer to the input from user.
+          Comments on Codes: Please refer to the input from Reviewer.
+          Source Code: You MUST firstly call the functions to load the source codes.
+          As the Programmer, to satisfy the new user's demand and make the software creative, executive and robust, you should modify corresponding codes according to the comments. Then, update the codes with all bugs fixed based on the comments. You should call the provided functions to save your modification. You should modify existing codes, rather than create your own codes.
+        role: user
+      description: ''
+      context_window: 0
+    - id: Test Modification Phase Prompt for Assistant
+      type: literal
+      config:
+        content: |-
+          Modality: Code.
+          Programming Language: Python.
+          Task: Please refer to the input from user.
+          Source Code: Yous MUST firstly call the provided functions to load the codes.
+          Error Summary of Test Reports: Please refer to the input
+          You MUST modify the existing codes. If you try to implement it from scratch yourself, you'll be fired!
+          As the Programmer, to satisfy the new user's demand and make the software execute smoothly and robustly, you should modify the source codes based on the error summary. If no bugs are reported, please return only one line like "<INFO> Finished".
+        role: user
+      description: ''
+      context_window: 0
+    - id: Test Modification Phase Prompt for User
+      type: literal
+      config:
+        content: |-
+          Modality: Code.
+          Programming Language: Python.
+          Task: Please refer to the input from user.
+          Source Code: Yous MUST firstly call the provided functions to load the codes.
+          Error Summary of Test Reports: Please refer to the input
+          You MUST modify the existing codes. If you try to implement it from scratch yourself, you'll be fired!
+          As the Programmer, to satisfy the new user's demand and make the software execute smoothly and robustly, you should modify the source codes based on the error summary. If no bugs are reported, please return only one line like "<INFO> Finished".
+        role: assistant
+      description: ''
+      context_window: 0
+    - id: Coding Phase Prompt for Assistant
+      type: literal
+      config:
+        content: |-
+          According to the new user's task and our software designs listed below: 
+          Modality: Code.
+          Programming Language: Python.
+          Task: Please refer to the input from user.
+          We have decided to complete the task through a executable software with multiple files implemented via Python. As the Programmer, to satisfy the new user's demands, you should write one or multiple files and make sure that every detail of the architecture is, in the end, implemented as code.
+          Think step by step and reason yourself to the right decisions to make sure we get it right.
+          You will first lay out the names of the core classes, functions, methods that will be necessary, as well as a quick comment on their purpose.
+          Then you will call the functions provided to firstly create Python venv, and then install packages. After that, you should implement the codes and call the functions to save them. 
+          Note: the code should be equipped with doc, such as:
+
+
+          """
+          This is the main module to launch the program
+          """
+          from server import run
+
+          if __name__ == "__main__":
+              run()
+
+
+          Please note that the code should be fully functional. Ensure to implement all functions. No placeholders (such as 'pass' in Python).
+          You should call the provided functions to save your code.
+        role: user
+      description: ''
+      context_window: 0
+    - id: Software Test Engineer
+      type: agent
+      config:
+        name: gpt-4o
+        provider: openai
+        role: |-
+          ${COMMON_PROMPT}
+          You are Software Test Engineer. we are both working at ChatDev. We share a common interest in collaborating to successfully complete a task assigned by a new customer.
+          You can use the software as intended to analyze its functional properties, design manual and automated test procedures to evaluate each software product, build and implement software evaluation test programs, and run test programs to ensure that testing protocols evaluate the software correctly.
+          You will receive the task from user.
+
+          If you need to run the code, don't forget to set timeout.
+          [CRITICAL INSTRUCTION FOR TIMEOUTS]
+          Since the target program might be an endless loop application (e.g., a Snake game, a GUI app, or a server), the test runner MUST use a timeout to terminate it.
+          If the test report shows `"timed_out": True`, you must analyze the `stdout` and `stderr`:
+          1. **Pass**: If the logs indicate the application started successfully (e.g., "Game started", "Listening on port", or simply running without crashing) and was eventually killed by the timeout, **DO NOT classify this as a bug**. You should consider this a successful run.
+          2. **Fail**: Only classify a timeout as a bug if the program was supposed to finish quickly (like a calculation script) but hung, or if it produced no output/errors before timing out.
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params: {}
+        tooling:
+          - type: function
+            config:
+              tools:
+                - name: uv_related:All
+                - name: apply_text_edits
+                - name: create_folder
+                - name: describe_available_files
+                - name: delete_path
+                - name: read_file_segment
+                - name: search_in_files
+                - name: save_file
+                - name: list_directory
+              timeout:
+        thinking:
+        memories: []
+        retry:
+      description: ''
+      context_window: -1
+    - id: Code Review Phase Loop Counter
+      type: loop_counter
+      config:
+        max_iterations: 10
+        reset_on_emit: true
+        message: ''
+      description: ''
+      context_window: 0
+  edges:
+    - from: Coding Phase Prompt for Assistant
+      to: Programmer Coding
+      trigger: true
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+      process:
+    - from: Programmer Coding
+      to: Code Complete Phase for Assistant
+      trigger: true
+      condition: 'true'
+      carry_data: false
+      keep_message: false
+      process:
+    - from: Programmer Code Complete
+      to: Code Complete All Phase Loop Counter
+      trigger: true
+      condition: 'true'
+      carry_data: false
+      keep_message: false
+      process:
+    - from: Code Complete All Phase Loop Counter
+      to: Code Complete Phase for Assistant
+      trigger: true
+      condition: 'true'
+      carry_data: false
+      keep_message: false
+      process:
+    - from: Programmer Code Complete
+      to: Code Complete Phase for Assistant
+      trigger: true
+      condition: 'true'
+      carry_data: false
+      keep_message: false
+      process:
+    - from: Code Complete All Phase Loop Counter
+      to: Code Review Comment Phase Prompt for Assistant
+      trigger: true
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process:
+    - from: Code Reviewer
+      to: Code Review Modification Phase Prompt for Assistant
+      trigger: true
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process:
+    - from: Code Reviewer
+      to: Programmer Code Review
+      trigger: false
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process:
+    - from: Programmer Code Review
+      to: Code Review Comment Phase Prompt for Assistant
+      trigger: true
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process:
+    - from: Programmer Code Review
+      to: Code Review Phase Loop Counter
+      trigger: true
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process:
+    - from: Code Review Phase Loop Counter
+      to: Code Review Comment Phase Prompt for Assistant
+      trigger: true
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process:
+    - from: Code Review Comment Phase Prompt for Assistant
+      to: Programmer Code Review
+      trigger: false
+      condition: 'true'
+      carry_data: false
+      keep_message: false
+      clear_context: true
+      clear_kept_context: false
+      process:
+    - from: Test Error Summary Phase Prompt for Assistant
+      to: Programmer Test Error Summary
+      trigger: true
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: true
+      clear_kept_context: false
+      process:
+    - from: Test Error Summary Phase Prompt for Assistant
+      to: Programmer Test Modification
+      trigger: false
+      condition: 'true'
+      carry_data: false
+      keep_message: false
+      clear_context: true
+      clear_kept_context: false
+      process:
+    - from: Programmer Test Error Summary
+      to: Programmer Test Modification
+      trigger: false
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process:
+    - from: Code Review Phase Loop Counter
+      to: Test Error Summary Phase Prompt for Assistant
+      trigger: true
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process:
+    - from: Programmer Test Error Summary
+      to: Test Modification Phase Prompt for Assistant
+      trigger: true
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process:
+    - from: Code Review Modification Phase Prompt for Assistant
+      to: Programmer Code Review
+      trigger: true
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process:
+    - from: Test Phase Loop Counter
+      to: Test Error Summary Phase Prompt for Assistant
+      trigger: true
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process:
+    - from: Programmer Test Modification
+      to: Software Test Engineer
+      trigger: true
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process:
+    - from: Software Test Engineer
+      to: Test Modification Phase Loop Counter
+      trigger: true
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process:
+    - from: Software Test Engineer
+      to: Programmer Test Modification
+      trigger: true
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process:
+    - from: Test Modification Phase Loop Counter
+      to: Programmer Test Modification
+      trigger: true
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process:
+    - from: Test Modification Phase Loop Counter
+      to: PSEUDO
+      trigger: true
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process:
+    - from: Programmer Test Modification
+      to: PSEUDO
+      trigger: true
+      condition:
+        type: keyword
+        config:
+          any:
+            - <INFO>
+          none: []
+          regex: []
+          case_sensitive: true
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process:
+    - from: Software Test Engineer
+      to: PSEUDO
+      trigger: true
+      condition:
+        type: keyword
+        config:
+          any:
+            - <INFO>
+          none: []
+          regex: []
+          case_sensitive: true
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process:
+    - from: USER
+      to: Programmer Coding
+      trigger: false
+      condition: 'true'
+      carry_data: true
+      keep_message: true
+      clear_context: false
+      clear_kept_context: false
+      process:
+    - from: USER
+      to: Programmer Code Complete
+      trigger: false
+      condition: 'true'
+      carry_data: true
+      keep_message: true
+      clear_context: false
+      clear_kept_context: false
+      process:
+    - from: USER
+      to: Code Reviewer
+      trigger: false
+      condition: 'true'
+      carry_data: true
+      keep_message: true
+      clear_context: false
+      clear_kept_context: false
+      process:
+    - from: USER
+      to: Programmer Code Review
+      trigger: false
+      condition: 'true'
+      carry_data: true
+      keep_message: true
+      clear_context: false
+      clear_kept_context: false
+      process:
+    - from: USER
+      to: Programmer Test Error Summary
+      trigger: false
+      condition: 'true'
+      carry_data: true
+      keep_message: true
+      clear_context: false
+      clear_kept_context: false
+      process:
+    - from: USER
+      to: Software Test Engineer
+      trigger: false
+      condition: 'true'
+      carry_data: true
+      keep_message: true
+      clear_context: false
+      clear_kept_context: false
+      process:
+    - from: USER
+      to: Programmer Test Modification
+      trigger: false
+      condition: 'true'
+      carry_data: true
+      keep_message: true
+      clear_context: false
+      clear_kept_context: false
+      process:
+    - from: Code Complete Phase for Assistant
+      to: Programmer Code Complete
+      trigger: true
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: true
+      clear_kept_context: false
+      process:
+    - from: Code Review Comment Phase Prompt for Assistant
+      to: Code Reviewer
+      trigger: true
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: true
+      clear_kept_context: false
+      process:
+    - from: PSEUDO
+      to: Test Error Summary Phase Prompt for Assistant
+      trigger: true
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process:
+    - from: PSEUDO
+      to: Test Phase Loop Counter
+      trigger: true
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process:
+    - from: Programmer Test Error Summary
+      to: Test Modification Phase Prompt for User
+      trigger: true
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process:
+    - from: Manual Phase Prompt for User
+      to: Chief Executive Officer
+      trigger: false
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: true
+      clear_kept_context: false
+      process:
+    - from: Manual Phase Prompt for Assistant
+      to: Chief Product Officer
+      trigger: true
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: true
+      clear_kept_context: false
+      process:
+    - from: USER
+      to: Chief Executive Officer
+      trigger: false
+      condition: 'true'
+      carry_data: true
+      keep_message: true
+      clear_context: false
+      clear_kept_context: false
+      process:
+    - from: USER
+      to: Chief Product Officer
+      trigger: false
+      condition: 'true'
+      carry_data: true
+      keep_message: true
+      clear_context: false
+      clear_kept_context: false
+      process:
+    - from: Chief Product Officer
+      to: Chief Executive Officer
+      trigger: true
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process:
+    - from: Manual Phase Loop Counter
+      to: FINAL
+      trigger: true
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process:
+    - from: PSEUDO
+      to: Manual Phase Prompt for User
+      trigger: true
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process:
+    - from: PSEUDO
+      to: Manual Phase Prompt for Assistant
+      trigger: true
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process:
+    - from: Code Reviewer
+      to: Test Error Summary Phase Prompt for Assistant
+      trigger: true
+      condition:
+        type: keyword
+        config:
+          any:
+            - <INFO> Finished
+          none: []
+          regex: []
+          case_sensitive: true
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process:
+    - from: Programmer Code Complete
+      to: Code Review Comment Phase Prompt for Assistant
+      trigger: true
+      condition:
+        type: keyword
+        config:
+          any:
+            - <INFO> FINISHED
+          none: []
+          regex: []
+          case_sensitive: true
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process:
+    - from: Chief Executive Officer
+      to: Manual Phase Loop Counter
+      trigger: true
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process:
+    - from: Chief Executive Officer
+      to: Chief Product Officer
+      trigger: true
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process:
+    - from: Manual Phase Loop Counter
+      to: Chief Product Officer
+      trigger: true
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process:
+    - from: Test Modification Phase Prompt for Assistant
+      to: Programmer Test Modification
+      trigger: true
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process:
+    - from: Test Modification Phase Prompt for User
+      to: Software Test Engineer
+      trigger: false
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process:
+    - from: Test Error Summary Phase Prompt for Assistant
+      to: Software Test Engineer
+      trigger: false
+      condition: 'true'
+      carry_data: false
+      keep_message: false
+      clear_context: true
+      clear_kept_context: false
+      process:
+  memory: []
+  initial_instruction: ''
+  start:
+    - USER
+    - Coding Phase Prompt for Assistant
+  end: []
+vars:
+  COMMON_PROMPT: ChatDev is a software company powered by multiple intelligent 
+    agents, such as chief executive officer, chief human resources officer, 
+    chief product officer, chief technology officer, etc, with a multi-agent 
+    organizational structure and the mission of \"changing the digital world 
+    through programming\".

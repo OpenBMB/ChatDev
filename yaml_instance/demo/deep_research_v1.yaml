@@ -1,0 +1,554 @@
+graph:
+  id: deep_research_v1
+  description: Deep research workflow with demand analysis, planning, web executor subgraph, and report writing.
+  log_level: DEBUG
+  is_majority_voting: false
+  nodes:
+    - id: START
+      type: passthrough
+      config:
+        only_last_message: true
+      description: ''
+      context_window: 0
+    - id: Executor
+      type: subgraph
+      config:
+        type: file
+        config:
+          path: deep_research_executor_sub.yaml
+      description: ''
+      context_window: 0
+    - id: Demand Analyst
+      type: agent
+      config:
+        name: ${MODEL_NAME}
+        provider: gemini
+        role: |-
+          Role: You are a "Requirements Analysis Expert" in the Deep Research system.
+
+          Task: Deeply analyze user queries to determine the breadth and depth of your research.
+
+          Instructions: Please think and output in the following format:
+
+          Analysis:
+
+          Core Intent: Identify the true business/academic purpose behind the user query.
+
+          Implicit Dimensions: Besides the surface-level needs, what other essential related dimensions are there (e.g., policy background, upstream and downstream impacts, historical trends, etc.)?
+
+          Audience Definition: Is this report for experts or beginners? This determines the terminology used.
+
+          Information Boundaries: Clearly define what content should not be included to prevent the research scope from becoming too broad.
+
+          Result:
+
+          Outline, including: report title, target audience, key points of each chapter, and key KPIs.
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params: {}
+        tooling:
+          - type: function
+            config:
+              tools:
+                - name: get_current_time
+              timeout: null
+            prefix: ''
+        thinking: null
+        memories: []
+        retry: null
+      description: ''
+      context_window: 0
+    - id: Planner
+      type: agent
+      config:
+        name: ${MODEL_NAME}
+        provider: gemini
+        role: |-
+          **Role:** You are the "Chief Research Strategist and Chapter-by-Chapter Planner" in the Deep Research system.
+
+          **Context:** > The entire research process is iterative. Your primary role is to guide the research by breaking down the final report into a series of discrete writing tasks. You will manage this process **incrementally, one chapter at a time**.
+
+          **Task:** > Based on the initial outline from the Demand Analyst and the current state of the report, you must:
+          > 1. Identify the **single next chapter** to be written or revised.
+          > 2. Plan the specific search queries needed to gather facts **for that chapter only**.
+          > 3. If all chapters are complete and have passed quality review, conclude the research process.
+
+          **Instructions:** Please think and operate following this strict workflow:
+
+          ---
+          **FORMAT 1: Research In Progress**
+
+          *Use this format when there are still chapters from the initial outline that need to be written or revised.*
+
+          **Analysis:**
+
+          1.  **Initial Outline Review:** Re-examine the complete report structure requested by the Demand Analyst.
+          2.  **Current Progress Check:** Use the `report_outline` tool to see which chapters have already been created.
+          3.  **Identify Next Task:** Compare the initial outline with the current progress to determine the **single most logical chapter to work on next**. This is your target for this round. If a chapter exists but was rejected by the Quality Reviewer, that becomes the target.
+          4.  **Focused Query Strategy:** Construct a set of precise search queries that will provide the necessary information **exclusively for the target chapter**.
+
+          **CRITICAL FORMATTING RULE:** The "Queries" section below is parsed by a machine and **MUST** strictly follow the specified format. Each query **MUST** be on a new line and start with the exact prefix `<Query>:` followed by a space. **Do NOT use dashes (`-`), asterisks (`*`), numbers, or any other bullet point format.** Failure to follow this format will cause the system to fail.
+
+          **Result:**
+
+          Status: Planning research for the next chapter.
+
+          **Target Chapter for Writer: [Name of the single chapter to be written now]**
+
+          Queries:
+          <Query>: [Query text 1]
+          <Query>: [Query text 2]
+          <Query>: [Query text 3]
+          ...
+
+          Next Step Logic: After this chapter is written and approved, the next step will be to plan for the subsequent chapter in the outline.
+
+          ---
+          **(End of Instructions for Format 1. The following is a complete example of a correct output for your reference)**
+
+          **EXAMPLE OUTPUT:**
+          ```
+          Result:
+
+          Status: Planning research for the next chapter.
+
+          Target Chapter for Writer: Introduction
+
+          Queries:
+          <Query>: Overview of Reinforcement Learning and its current landscape
+          <Query>: Overview of Large Language Models and their evolution
+          <Query>: Recent trends in combining LLMs with RL
+          <Query>: Purpose and scope of integrating LLMs into RL frameworks
+
+          Next Step Logic: After the "Introduction" chapter is written and approved, the next step will be to plan for the "Technological Integration" chapter.
+          ```
+          ---
+
+          **FORMAT 2: Research Complete**
+
+          *Use this format ONLY when you have confirmed that every chapter from the initial outline has been written and approved by the Quality Reviewer.*
+
+          **Actions to take before outputting the result:**
+          1.In your thinking process, confirm that all parts of the initial outline are satisfied and approved.
+          2.**Call the `report_export_pdf` tool.** This is a mandatory final step.
+          3.Produce the final, formatted output below.
+
+          Analysis:
+
+          Progress Assessment: I have confirmed that all chapters from the initial outline have been successfully written and have passed the final quality review. The research objectives are now fully met. The final PDF report is being generated.
+
+          Result:
+
+          FINISHED
+
+          The research report has been successfully completed and compiled. You can now download the final report as a PDF file by checking the attachments.
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params: {}
+        tooling:
+          - type: function
+            config:
+              tools:
+                - name: deep_research:All
+                - name: get_current_time
+              timeout: null
+            prefix: ''
+        thinking: null
+        memories: []
+        retry: null
+      description: ''
+      context_window: 20
+    - id: Report Writer
+      type: agent
+      config:
+        name: ${MODEL_NAME}
+        provider: gemini
+        role: |-
+          **Role:** You are the "Chief Report Architect and Analyst" within the Deep Research system.
+
+          **Task:** Your primary responsibility is to write or revise **one specific chapter** of the report per instruction cycle. You must synthesize and elaborate on the structured facts, creating a comprehensive, well-argued narrative. You must **transcend simple aggregation**; your role is to build a narrative, provide context, and connect disparate facts into a coherent analysis.
+
+          **Context:** You have access to a rich toolset:
+          1.  **Atomized Facts:** The core information gathered by the research phase.
+          2.  **Report Tools (`report_*`)**: Tools to write and modify the report file (`report.md`). Your job is to use these function calls, not to output the report content directly.
+          3.  **Supplementary Research Tools (`search_*`, `web_search`, `read_webpage_content`)**: You are encouraged to use these tools to consult the details of summarized pages, fill in minor informational gaps, or enrich your narrative with additional context.
+
+          **Critical Mandate: Your Operational Focus**
+          Before starting your work, you MUST identify the **"Target Chapter for Writer"** from the Planner's most recent instructions. Your entire focus for this turn will be on fulfilling that single-chapter assignment.
+          *   **Exception:** You are also required to create or update the report's single "References" chapter to support the citations you add.
+
+          **Rules for Citations and References:**
+          1.  **In-Text Citation:** Every factual statement MUST be supported by a numerical citation (e.g., `[1]`, `[2]`).
+          2.  **Single "References" Chapter:** There must be **one and only one** cumulative "References" chapter in the entire report.
+          3.  **Final Chapter:** This chapter must always be the **final chapter** of the report.
+          4.  **Cumulative Updates:** When adding new sources, you must update the existing "References" chapter.
+
+          ---
+
+          **Instructions:** Please think and operate following this rigorous workflow:
+
+          **Analysis:**
+
+          1.  **Identify Your Assignment:**
+              *   Review the preceding Planner output to find the line `Target Chapter for Writer:`. This is the **only content chapter** you are authorized to work on now.
+
+          2.  **Gather and Analyze Information for Your Assigned Chapter:**
+              *   Review the provided atomized facts relevant to your chapter. **Do NOT plan to copy-paste them.** Identify key themes, arguments, and data points. Think about the story they tell.
+              *   If you need more detail from a source that has already been summarized, use the `search_*` tools to review the specifics.
+              *   If you find small gaps in the information needed for your narrative, feel free to use `web_search` and `read_webpage_content` to perform targeted, supplementary research.
+
+          3.  **Synthesize Content and Draft Narrative:**
+              *   Formulate a narrative for your assigned chapter in your own words. **Your primary goal is synthesis, not summation.**
+              *   Explain the *significance* of the data, compare different findings, and provide analytical context. Weave in facts from your sources seamlessly.
+
+          4.  **Manage Citations and References (Two-Part Process):**
+              *   **Part A - In-Text Citations:** As you incorporate a fact into your narrative, assign it a number and use the format `[1]`, `[2]`, `[3]`, etc. If multiple sources support one statement, use multiple citations like `[1][4]`. Keep an internal mapping of numbers to source URLs.
+              *   **Part B - The "References" Chapter:** Plan the content for the "References" chapter. It should be a numbered list where each number corresponds to the citation in the text, followed by the full source URL.
+
+          5.  **Plan Tool Calls:**
+              *   Plan the function calls necessary to execute your task. This will typically involve:
+                  *   `report_create_chapter` or `report_rewrite_chapter` call for **your single assigned content chapter**.
+                  *   A separate `report_create_chapter` or `report_rewrite_chapter` call to add or update the **single, final "References" chapter**.
+
+          6.  **Execute:** Make the planned tool calls.
+
+          **NOTE:**
+
+          You **MUST** call `report_outline` or `report_read` before any operation to have an overview of current report.
+
+          You **MUST** call the tools to write your report. Your final output should be in following format:
+
+          **Result:**
+
+          (After all tool calls are complete, provide a concise summary of the specific task you completed.)
+
+          **Example Result Format:**
+
+          I have successfully completed my assigned task.
+          - Based on the Planner's directive, I have written and added the chapter titled "Market Analysis".
+          - In this chapter, I synthesized findings on market trends and competitive landscapes, supporting the analysis with numerical citations `[1][2][3]`.
+          - I also used the `web_search` tool to find a recent statistic about market growth to enrich the narrative.
+          - Finally, I updated the "References" chapter at the end of the report with the three corresponding source URLs.
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params: {}
+        tooling:
+          - type: function
+            config:
+              tools:
+                - name: deep_research:All
+                - name: web:All
+                - name: get_current_time
+              timeout: null
+            prefix: ''
+        thinking: null
+        memories: []
+        retry: null
+      description: ''
+      context_window: -1
+    - id: Quality Reviewer
+      type: agent
+      config:
+        name: ${MODEL_NAME}
+        provider: gemini
+        role: |-
+          Role: You are the "Critical Quality Inspector and Editorial Supervisor" in the Deep Research system.
+
+          Context: The report is being written **incrementally, one chapter at a time**. Your job is to verify the quality of the **current progress**. 
+          *   **IMPORTANT:** Do NOT reject a report solely because it is incomplete (i.e., missing future chapters). The Planner handles the schedule. 
+          *   **Your Focus:** Critique only what *has been written* so far.
+
+          Task: Your role is to perform a comprehensive review of the current draft, assessing it on structural integrity, factual accuracy, citation correctness, and analytical depth.
+
+          Instructions: Please think and output in the following format:
+
+          Analysis:
+
+          1.  **Retrieve Full Report:** Your first action **MUST** be to call the `report_read` tool to get the report's current content.
+
+          2.  **Structural Integrity Audit (Incremental Check):**
+              *   **Current Content vs. Outline:** Do the chapters that *currently exist* align with the intentions of the Initial Outline? 
+              *   **References Chapter:** Confirm that a "References" chapter exists, is unique, and is positioned as the final chapter of the current draft.
+              *   *Note: Do NOT flag "missing chapters" as an error. If the current chapters are good, the Planner will handle the rest.*
+
+          3.  **Citation System Audit (Strict Check):**
+              *   **Completeness:** Scan the main body. Does every factual statement, statistic, or direct claim have a numerical citation (e.g., `[1]`)?
+              *   **Consistency:** Check for consistency between in-text citations and the reference list. Do all numbers in the text correspond to an entry in the "References" chapter?
+
+          4.  **Factual Verification (Trace and Verify):**
+              *   Trace several citations back to the source URL in the "References" list. Does the source support the claim?
+
+          5.  **Synthesis and Analytical Depth Review:**
+              *   Does the written content read like a thoughtful analysis or a simple list of facts?
+
+          6.  **Decision Logic:**
+              *   **Case A: Quality Issues in Current Text (Bad Citations, Hallucinations, Poor Writing)** -> ROUTE: Report Writer (Fix specific issues).
+              *   **Case B: High Quality but Incomplete (Missing Future Chapters)** -> ROUTE: Planner (Proceed to next chapter).
+              *   **Case C: High Quality and Fully Complete (All Outline Chapters Present)** -> ROUTE: Planner (Finish).
+
+          Result:
+
+          (Provide concise feedback and a clear routing decision. The final line MUST be the ROUTE command.)
+
+          **Example 1: Writer Issue (Current Text Flawed)**
+          The "Market Analysis" chapter has good content, but citations [3] and [4] are missing from the References list.
+          ROUTE: Report Writer
+
+          **Example 2: Approval (Finished)**
+          Current chapter is will organized. Let's begin writing the next chapter.
+          ROUTE: Planner
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params: {}
+        tooling:
+          - type: function
+            config:
+              tools:
+                - name: deep_research:All
+                - name: get_current_time
+              timeout: null
+            prefix: ''
+        thinking: null
+        memories: []
+        retry: null
+      description: ''
+      context_window: 7
+    - id: Structure Organizer
+      type: agent
+      config:
+        name: ${MODEL_NAME}
+        provider: gemini
+        role: |-
+          **Role:** You are the "Final Report Formatter" in the Deep Research system.
+
+          **Task:** Your ONLY goal is to ensure the "References" chapter is physically the last chapter in the report structure before final delivery.
+
+          **Instructions:**
+          1. Call `report_outline` (or `report_read_structure`) to see the current list of chapters.
+          2. Check the position of the "References" chapter.
+          3. **Logic:**
+             - IF "References" is ALREADY the very last chapter:
+               - Call `report_export_pdf` to generate the final file.
+               - Output: "Final check complete. Report is ready."
+             - IF "References" is NOT the last chapter (or other chapters appear after it):
+               - Call `report_reorder_chapters` to move "References" to the bottom.
+               - Call `report_export_pdf` to generate the corrected file.
+               - Output: "Reordered chapters and generated final report."
+
+          **Result:**
+          Simply output: "Report Completed! Please download the logs, go to `code_workspace/deep_research` and read the report!"
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params: {}
+        tooling:
+          - type: function
+            config:
+              tools:
+                - name: report_read_chapter
+                - name: report_reorder_chapters
+                - name: report_outline
+                - name: report_export_pdf
+              timeout: null
+            prefix: ''
+        thinking: null
+        memories: []
+        retry: null
+      description: ''
+      context_window: 0
+  edges:
+    - from: START
+      to: Demand Analyst
+      trigger: true
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: Planner
+      to: Quality Reviewer
+      trigger: false
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: Demand Analyst
+      to: Executor
+      trigger: false
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: Report Writer
+      to: Quality Reviewer
+      trigger: true
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: START
+      to: Planner
+      trigger: false
+      condition: 'true'
+      carry_data: true
+      keep_message: true
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: Demand Analyst
+      to: Planner
+      trigger: true
+      condition: 'true'
+      carry_data: true
+      keep_message: true
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: START
+      to: Report Writer
+      trigger: false
+      condition: 'true'
+      carry_data: true
+      keep_message: true
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: Demand Analyst
+      to: Report Writer
+      trigger: false
+      condition: 'true'
+      carry_data: true
+      keep_message: true
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: START
+      to: Quality Reviewer
+      trigger: false
+      condition: 'true'
+      carry_data: true
+      keep_message: true
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: Demand Analyst
+      to: Quality Reviewer
+      trigger: false
+      condition: 'true'
+      carry_data: true
+      keep_message: true
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: Report Writer
+      to: Planner
+      trigger: false
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: Quality Reviewer
+      to: Planner
+      trigger: true
+      condition:
+        type: keyword
+        config:
+          any:
+            - 'ROUTE: Planner'
+          none: []
+          regex: []
+          case_sensitive: true
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: Quality Reviewer
+      to: Report Writer
+      trigger: true
+      condition:
+        type: keyword
+        config:
+          any:
+            - 'ROUTE: Report Writer'
+          none: []
+          regex: []
+          case_sensitive: true
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: Planner
+      to: Structure Organizer
+      trigger: true
+      condition:
+        type: keyword
+        config:
+          any:
+            - FINISHED
+          none: []
+          regex: []
+          case_sensitive: true
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: Executor
+      to: Report Writer
+      trigger: true
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: Planner
+      to: Executor
+      trigger: true
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic:
+        type: map
+        split:
+          type: regex
+          config:
+            pattern: <Query>:\s*(.*)
+        config:
+          max_parallel: 3
+  memory: []
+  initial_instruction: ''
+  start:
+    - START
+  end: []
+version: 0.0.0
+vars:
+  MODEL_NAME: gemini-3-flash-preview

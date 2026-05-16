@@ -1,0 +1,227 @@
+version: 0.0.0
+vars: {}
+graph:
+  id: dynamic_test
+  description: Dynamic map/tree demo for multi-part travel planning and aggregation.
+  log_level: DEBUG
+  is_majority_voting: false
+  nodes:
+    - id: B
+      type: literal
+      config:
+        content: Please plan what to do for fun in Shanghai for me.
+        role: user
+      description: ''
+      context_window: 0
+      dynamic: null
+    - id: D
+      type: literal
+      config:
+        content: >-
+          Please plan how to get around in Shanghai for me (public
+          transportation, taxis, car rentals, etc.).
+        role: user
+      description: ''
+      context_window: 0
+      dynamic: null
+    - id: C
+      type: literal
+      config:
+        content: Please plan where to stay in Shanghai for me.
+        role: user
+      description: ''
+      context_window: 0
+      dynamic: null
+    - id: Z
+      type: agent
+      config:
+        name: gpt-4o
+        provider: openai
+        role: >-
+          You need to plan according to user requests. Use your imagination and
+          do not ask the user any questions.
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params: {}
+        tooling: null
+        thinking: null
+        memories: []
+        retry: null
+      description: ''
+      context_window: 0
+      dynamic:
+        type: map
+        split:
+          type: message
+        config:
+          max_parallel: 10
+    - id: P
+      type: passthrough
+      config:
+        only_last_message: false
+      description: ''
+      context_window: 0
+    - id: E
+      type: literal
+      config:
+        content: Please also add content about Beijing.
+        role: user
+      description: ''
+      context_window: 0
+    - id: F
+      type: literal
+      config:
+        content: >-
+          Please plan how to experience the university academic atmosphere in
+          Shanghai for me.
+        role: user
+      description: ''
+      context_window: 0
+      dynamic: null
+    - id: 'Y'
+      type: agent
+      config:
+        name: gpt-4o
+        provider: openai
+        role: >-
+          Please aggregate the input content into a final result. Note that you
+          must not omit anything! If there is only one input, output it as is.
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params: {}
+        tooling: null
+        thinking: null
+        memories: []
+        retry: null
+      description: ''
+      context_window: 0
+      dynamic:
+        type: tree
+        split:
+          type: message
+        config:
+          group_size: 2
+          max_parallel: 10
+    - id: A
+      type: literal
+      config:
+        content: Please plan what to eat in Shanghai for me.
+        role: user
+      description: ''
+      context_window: 0
+      dynamic: null
+  edges:
+    - from: A
+      to: P
+      trigger: true
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: B
+      to: P
+      trigger: true
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: C
+      to: P
+      trigger: true
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: D
+      to: P
+      trigger: true
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: E
+      to: Z
+      trigger: true
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: P
+      to: E
+      trigger: true
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: Z
+      to: 'Y'
+      trigger: true
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic:
+        type: tree
+        split: null
+        config:
+          group_size: 3
+          max_parallel: 10
+    - from: P
+      to: Z
+      trigger: true
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic:
+        type: map
+        split: null
+        config:
+          max_parallel: 5
+    - from: F
+      to: Z
+      trigger: true
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic:
+        type: map
+        split:
+          type: message
+          config: {}
+        config:
+          max_parallel: 5
+  memory: []
+  initial_instruction: ''
+  start:
+    - B
+    - D
+    - C
+    - A
+    - F
+  end: []

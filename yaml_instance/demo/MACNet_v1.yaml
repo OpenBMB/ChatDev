@@ -1,0 +1,217 @@
+graph:
+  id: MACNet_v1
+  description: MACNet pipeline chaining multiple node subgraphs and final passthrough.
+  log_level: DEBUG
+  is_majority_voting: false
+  nodes:
+    - id: '-1'
+      type: subgraph
+      config:
+        type: file
+        config:
+          path: MACNet_Node_sub.yaml
+      description: ''
+      context_window: 0
+    - id: '0'
+      type: subgraph
+      config:
+        type: file
+        config:
+          path: MACNet_Node_sub.yaml
+      description: ''
+      context_window: 0
+    - id: '1'
+      type: subgraph
+      config:
+        type: file
+        config:
+          path: MACNet_Node_sub.yaml
+      description: ''
+      context_window: 0
+    - id: '2'
+      type: subgraph
+      config:
+        type: file
+        config:
+          path: MACNet_Node_sub.yaml
+      description: ''
+      context_window: 0
+    - id: '3'
+      type: subgraph
+      config:
+        type: file
+        config:
+          path: MACNet_Node_sub.yaml
+      description: ''
+      context_window: 0
+    - id: '-2'
+      type: subgraph
+      config:
+        type: file
+        config:
+          path: MACNet_Node_sub.yaml
+      description: ''
+      context_window: 0
+    - id: END
+      type: passthrough
+      config:
+        only_last_message: true
+      description: ''
+      context_window: 0
+    - id: USER
+      type: passthrough
+      config:
+        only_last_message: true
+      description: ''
+      context_window: 0
+  edges:
+    - from: '-1'
+      to: '0'
+      trigger: true
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: '0'
+      to: '1'
+      trigger: true
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: '0'
+      to: '2'
+      trigger: true
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: '0'
+      to: '3'
+      trigger: true
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: '1'
+      to: '-2'
+      trigger: true
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: '2'
+      to: '-2'
+      trigger: true
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: '3'
+      to: '-2'
+      trigger: true
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: '-2'
+      to: END
+      trigger: true
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process:
+        type: function
+        config:
+          name: code_save_and_run
+      dynamic: null
+    - from: USER
+      to: '-1'
+      trigger: true
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: USER
+      to: '1'
+      trigger: false
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: USER
+      to: '0'
+      trigger: false
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: USER
+      to: '2'
+      trigger: false
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: USER
+      to: '3'
+      trigger: false
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: USER
+      to: '-2'
+      trigger: false
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+  memory: []
+  initial_instruction: ''
+  start:
+    - USER
+  end: []
+version: 0.0.0
+vars: {}

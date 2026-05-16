@@ -15,7 +15,7 @@ from typing import Any, Callable, Dict, List, Optional, Sequence
 
 from entity.configs import Node
 from entity.configs.node.agent import AgentConfig, AgentRetryConfig
-from entity.enums import CallStage, AgentExecFlowStage, AgentInputMode
+from entity.enums import CallStage, AgentExecFlowStage, AgentInputMode, EventType
 from entity.messages import (
     AttachmentRef,
     FunctionCallOutputEvent,
@@ -136,6 +136,31 @@ class AgentNodeExecutor(NodeExecutor):
                 )
             else:
                 response_message = response_obj.message
+
+            # Emit MODEL_RESPONSE event so the frontend can display
+            # the raw model output separately from the final node output.
+            # Only emit when the raw response will differ from the final NODE_END output:
+            # - has_tool_calls: the final output will be different after tool execution
+            # - thinking enabled: post-generation thinking may modify the output
+            # This avoids duplicate display when there's no processing difference.
+            model_response_text = response_obj.message.text_content() if response_obj.message else ""
+            has_tool_calls = response_obj.has_tool_calls()
+            will_differ_from_final = has_tool_calls or bool(agent_config.thinking)
+            if will_differ_from_final and (model_response_text or has_tool_calls):
+                display_text = model_response_text
+                if has_tool_calls and not model_response_text:
+                    tool_names = [tc.function_name for tc in response_obj.message.tool_calls]
+                    display_text = f"[Calling tools: {', '.join(tool_names)}]"
+                self.log_manager.info(
+                    f"Model response for node {node.id}",
+                    node_id=node.id,
+                    event_type=EventType.MODEL_RESPONSE,
+                    details={
+                        "output": display_text,
+                        "has_tool_calls": has_tool_calls,
+                        "model_name": agent_config.name,
+                    },
+                )
 
             self._persist_message_attachments(response_message, node.id)
 
@@ -567,7 +592,12 @@ class AgentNodeExecutor(NodeExecutor):
         tool_specs: List[ToolSpec],
         skill_manager: AgentSkillManager | None,
     ) -> Message:
-        """Handle tool calls until completion or until the loop limit is reached."""
+        """Handle tool calls until completion or until the loop limit is reached.
+
+        Invariant: the conversation always satisfies the OpenAI protocol constraint
+        that every ``assistant`` message with ``tool_calls`` is immediately followed
+        by a ``tool`` message for each ``tool_call_id``.
+        """
         assistant_message = initial_response.message
         trace_messages: List[Message] = []
         loop_limit = self._get_tool_loop_limit(node)
@@ -575,17 +605,33 @@ class AgentNodeExecutor(NodeExecutor):
 
         while True:
             self._ensure_not_cancelled()
+
+            if not assistant_message.tool_calls:
+                # Terminal assistant — no tool_calls, safe to append as-is.
+                cloned_assistant = self._clone_with_source(assistant_message, node.id)
+                conversation.append(cloned_assistant)
+                trace_messages.append(cloned_assistant)
+                return self._finalize_tool_trace(assistant_message, trace_messages, True, node.id)
+
+            # Assistant has tool_calls — we MUST append it together with the
+            # corresponding tool response messages in a single atomic step so
+            # the conversation is never left in a protocol-invalid state.
             cloned_assistant = self._clone_with_source(assistant_message, node.id)
             conversation.append(cloned_assistant)
             trace_messages.append(cloned_assistant)
 
-            if not assistant_message.tool_calls:
-                return self._finalize_tool_trace(assistant_message, trace_messages, True, node.id)
-
             if iteration >= loop_limit:
                 self.log_manager.warning(
-                    f"[Node: {node.id}] Tool call limit {loop_limit} reached, returning last assistant response"
+                    f"[Node: {node.id}] Tool call limit {loop_limit} reached, "
+                    "adding placeholder tool messages to satisfy API protocol"
                 )
+                # Append placeholder tool messages so the conversation stays
+                # protocol-valid (assistant with tool_calls → tool messages).
+                placeholder_msgs = self._build_placeholder_tool_messages(
+                    assistant_message.tool_calls, node.id,
+                )
+                conversation.extend(placeholder_msgs)
+                trace_messages.extend(self._clone_with_source(msg, node.id) for msg in placeholder_msgs)
                 return self._finalize_tool_trace(assistant_message, trace_messages, False, node.id)
 
             iteration += 1
@@ -611,6 +657,49 @@ class AgentNodeExecutor(NodeExecutor):
             )
             assistant_message = follow_up_response.message
 
+            # Emit MODEL_RESPONSE for each follow-up model response during tool calls
+            follow_up_text = follow_up_response.message.text_content() if follow_up_response.message else ""
+            follow_up_has_tools = follow_up_response.has_tool_calls()
+            # Always emit when there is text content OR tool calls
+            if follow_up_text or follow_up_has_tools:
+                display_text = follow_up_text
+                if follow_up_has_tools and not follow_up_text:
+                    tool_names = [tc.function_name for tc in follow_up_response.message.tool_calls]
+                    display_text = f"[Calling tools: {', '.join(tool_names)}]"
+                self.log_manager.info(
+                    f"Model response for node {node.id} (tool call iteration {iteration})",
+                    node_id=node.id,
+                    event_type=EventType.MODEL_RESPONSE,
+                    details={
+                        "output": display_text,
+                        "has_tool_calls": follow_up_has_tools,
+                        "model_name": node.as_config(AgentConfig).name if node.as_config(AgentConfig) else "unknown",
+                        "tool_iteration": iteration,
+                    },
+                )
+
+    def _build_placeholder_tool_messages(
+        self,
+        tool_calls: List[ToolCallPayload],
+        node_id: str,
+    ) -> List[Message]:
+        """Build placeholder tool messages for tool_calls that won't be executed.
+
+        When the tool-call loop limit is reached the assistant message with
+        ``tool_calls`` has already been appended to the conversation.  The
+        OpenAI Chat API requires a ``tool`` message for every ``tool_call_id``
+        immediately after such an assistant message, so we inject placeholders.
+        """
+        messages: List[Message] = []
+        for tc in tool_calls:
+            messages.append(Message(
+                role=MessageRole.TOOL,
+                content=f"Tool call limit reached — {tc.function_name} was not executed.",
+                tool_call_id=tc.id,
+                metadata={"tool_name": tc.function_name, "source": node_id, "placeholder": True},
+            ))
+        return messages
+
     def _execute_tool_batch(
         self,
         node: Node,
@@ -618,9 +707,20 @@ class AgentNodeExecutor(NodeExecutor):
         tool_specs: List[ToolSpec],
         skill_manager: AgentSkillManager | None,
     ) -> tuple[List[Message], List[Any]]:
-        """Execute a batch of tool calls and return conversation + timeline events."""
+        """Execute a batch of tool calls and return conversation + timeline events.
+
+        Protocol invariant: all returned ``messages`` that have
+        ``role=TOOL`` come first (one per ``tool_call_id``), followed by any
+        supplementary system messages.  This guarantees the conversation always
+        satisfies the OpenAI constraint that ``tool`` messages must immediately
+        follow an ``assistant`` message with ``tool_calls``.
+        """
         messages: List[Message] = []
         events: List[Any] = []
+        # Collect non-tool messages (e.g. skill followup system messages)
+        # separately so they can be appended AFTER all tool messages, keeping
+        # the OpenAI protocol sequence valid: assistant(tool_calls) → tool → tool → system
+        deferred_messages: List[Message] = []
         model = node.as_config(AgentConfig)
         
         # Build map for fast lookup
@@ -672,7 +772,10 @@ class AgentNodeExecutor(NodeExecutor):
                         events.append(self._build_function_call_output_event(tool_call, result))
                         system_message = self._build_skill_followup_message(tool_name, result, node.id)
                         if system_message is not None:
-                            messages.append(system_message)
+                            # Defer system message so tool messages come first —
+                            # OpenAI requires tool responses immediately after
+                            # assistant(tool_calls).
+                            deferred_messages.append(system_message)
                             events.append(system_message)
                         self.log_manager.record_tool_call(
                             node.id,
@@ -845,6 +948,9 @@ class AgentNodeExecutor(NodeExecutor):
                 else:
                     context_state["node_id"] = previous_node_id
 
+        # Append deferred (non-tool) messages after all tool messages to
+        # preserve the OpenAI protocol sequence: assistant(tool_calls) → tool* → system*
+        messages.extend(deferred_messages)
         return messages, events
 
     def _build_skill_followup_message(

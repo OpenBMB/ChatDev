@@ -1,0 +1,116 @@
+version: 0.0.0
+graph:
+  id: paper_gen
+  description: Article generation and polishing workflow with poem and editor feedback.
+  is_majority_voting: false
+  initial_instruction: 这是一个文章生成与润色的工作流。请你输入一个词语或一个短句，系统会根据你的输入生成一篇文章，并附上一首古体诗。随后，你可以对文章提出修改建议，系统会根据你的建议对文章进行润色和修改。你可以多次提出修改建议，直到你满意为止。
+  log_level: INFO
+  start:
+    - Article Writer
+    - Poet
+  end:
+    - Editor 2
+    - Editor 1
+  nodes:
+    - id: Article Writer
+      type: agent
+      config:
+        provider: openai
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        input_mode: messages
+        name: gpt-4o
+        role: |
+          你是一位作家，擅长根据用户输入的一个词句生成一整篇文章。
+          用户会输入一个词语或一个短句，你需要据此生成一篇不少于 2000 字的文章，要求含有多个段落。
+        params:
+          temperature: 0.1
+          max_tokens: 4000
+    - id: Editor 1
+      type: agent
+      config:
+        provider: openai
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        input_mode: messages
+        name: gpt-4o
+        role: |
+          你是一位编辑，请你根据输入的文章与诗词，进行结合，文章最后应当附上诗词。
+        params:
+          temperature: 0.1
+          max_tokens: 4000
+    - id: Human Viewer
+      type: human
+      config:
+        description: 请对文章给出修改建议，或输入 ACCEPT 跳出循环。
+      description: ''
+      context_window: 0
+    - id: Editor 2
+      type: agent
+      config:
+        name: gpt-4o
+        provider: openai
+        role: |
+          你是一位编辑，擅长对文章进行整合和润色。
+          请根据输入的文章与修改建议，对文章进行润色和修改，直接输出修改后的文章。
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params:
+          max_tokens: 4000
+        tooling: []
+        thinking: null
+        memories: []
+        retry: null
+        input_mode: messages
+      description: ''
+      context_window: 7
+    - id: Poet
+      type: agent
+      config:
+        name: gpt-4o
+        provider: openai
+        role: |
+          你是一位诗人，擅长根据用户输入的一个词句生成一首古体诗。
+          用户会输入一个词语或一个短句，你需要据此生成一首古体诗，每句五字还是七字由你决定。
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params:
+          temperature: 0.1
+          max_tokens: 4000
+        tooling: []
+        thinking: null
+        memories: []
+        retry: null
+        input_mode: messages
+      description: ''
+      context_window: 0
+  edges:
+    - from: Article Writer
+      to: Editor 1
+    - from: Poet
+      to: Editor 1
+    - from: Editor 1
+      to: Human Viewer
+    - from: Editor 1
+      to: Editor 2
+      trigger: false
+    - from: Editor 2
+      to: Human Viewer
+    - from: Human Viewer
+      to: Editor 2
+      trigger: true
+      condition:
+        type: keyword
+        config:
+          any: []
+          none:
+            - ACCEPT
+          regex: []
+          case_sensitive: true
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+vars: {}

@@ -131,3 +131,41 @@ def run_workflow(
     )
 
     return WorkflowRunResult(final_message=final_message, meta_info=meta_info)
+
+
+def _cli_main() -> None:
+    """CLI entry point: ``python -m runtime.sdk --yaml <file> --task <prompt>``."""
+    import argparse
+    import logging
+
+    parser = argparse.ArgumentParser(description="Run a workflow YAML via the SDK (debug-friendly)")
+    parser.add_argument("--yaml", required=True, help="Path to workflow YAML file")
+    parser.add_argument("--task", required=True, help="Task prompt to send to the workflow")
+    parser.add_argument("--name", default=None, help="Session name (auto-generated if omitted)")
+    parser.add_argument("--attachment", action="append", default=[], help="File to attach (repeatable)")
+    parser.add_argument("--log-level", default="DEBUG", choices=["DEBUG", "INFO", "WARNING", "ERROR"])
+    args = parser.parse_args()
+
+    logging.basicConfig(level=getattr(logging, args.log_level), format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+
+    result = run_workflow(
+        yaml_file=args.yaml,
+        task_prompt=args.task,
+        attachments=args.attachment or None,
+        session_name=args.name,
+        log_level=args.log_level,
+    )
+
+    print(f"\n{'=' * 50}")
+    print(f"  Workflow completed: {args.yaml}")
+    print(f"  Session: {result.meta_info.session_name}")
+    print(f"  Output dir: {result.meta_info.output_dir}")
+    if result.final_message:
+        text = result.final_message.text_content()
+        preview = text[:500] + ("..." if len(text) > 500 else "")
+        print(f"  Final message: {preview}")
+    print(f"{'=' * 50}")
+
+
+if __name__ == "__main__":
+    _cli_main()

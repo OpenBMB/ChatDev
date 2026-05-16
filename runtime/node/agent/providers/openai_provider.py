@@ -296,11 +296,16 @@ class OpenAIProvider(ModelProvider):
              content = item.get("content")
              tool_calls = item.get("tool_calls")
              if role and (content or tool_calls):
-                  return {
+                  result = {
                        "role": role,
                        "content": self._transform_blocks_for_chat(content) if isinstance(content, list) else content,
                        "tool_calls": tool_calls
                   }
+                  # Preserve reasoning_content for DeepSeek thinking mode
+                  reasoning_content = item.get("reasoning_content")
+                  if reasoning_content:
+                      result["reasoning_content"] = reasoning_content
+                  return result
         return None
 
     def _serialize_message_for_chat(self, message: Message) -> Dict[str, Any]:
@@ -322,6 +327,9 @@ class OpenAIProvider(ModelProvider):
             payload["tool_call_id"] = message.tool_call_id
         if message.tool_calls:
             payload["tool_calls"] = [tc.to_openai_dict() for tc in message.tool_calls]
+        # Pass back reasoning_content for DeepSeek thinking mode compatibility
+        if message.role == MessageRole.ASSISTANT and message.metadata.get("reasoning_content"):
+            payload["reasoning_content"] = message.metadata["reasoning_content"]
         return payload
 
     def _serialize_function_call_output_event_for_chat(self, event: FunctionCallOutputEvent) -> Dict[str, Any]:
@@ -383,10 +391,17 @@ class OpenAIProvider(ModelProvider):
                     type="function"
                 ))
         
+        # Capture reasoning_content from DeepSeek thinking mode
+        metadata: Dict[str, Any] = {}
+        reasoning_content = self._get_attr(msg, "reasoning_content")
+        if reasoning_content:
+            metadata["reasoning_content"] = reasoning_content
+
         return Message(
             role=MessageRole.ASSISTANT,
             content=self._get_attr(msg, "content") or "",
-            tool_calls=tool_calls
+            tool_calls=tool_calls,
+            metadata=metadata,
         )
 
     def _append_chat_response_output(self, timeline: List[Any], response: Any) -> None:
@@ -396,6 +411,11 @@ class OpenAIProvider(ModelProvider):
             "role": "assistant",
             "content": msg.content or ""
         }
+
+        # Preserve reasoning_content for DeepSeek thinking mode
+        reasoning_content = getattr(msg, "reasoning_content", None)
+        if reasoning_content:
+            assistant_msg["reasoning_content"] = reasoning_content
 
         if getattr(msg, "tool_calls", None):
             assistant_msg["tool_calls"] = []

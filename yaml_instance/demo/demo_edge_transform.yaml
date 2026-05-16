@@ -1,0 +1,47 @@
+graph:
+  id: test
+  description: "Extract code blocks with regex and pass to next node. Please input: Please write code snippets surrounded by ```python ... ``` blocks."
+  log_level: DEBUG
+  is_majority_voting: false
+  nodes:
+    - id: B
+      type: human
+      description: ''
+      context_window: 0
+      config:
+        description: '1'
+    - id: A
+      type: literal
+      config:
+        content: |-
+          ```python
+          print("hello")
+          ```
+        role: user
+      description: ''
+      context_window: 0
+  edges:
+    - from: A
+      to: B
+      trigger: true
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+      process:
+        type: regex_extract
+        config:
+          pattern: '```(?P<lang>[a-zA-Z0-9_+-]*)?\s*\n(?P<code>.*?)```'
+          group: code
+          case_sensitive: true
+          multiline: false
+          dotall: true
+          multiple: false
+          template: ''
+          on_no_match: pass
+          default_value: ''
+  memory: []
+  initial_instruction: ''
+  start:
+    - A
+  end: []
+vars: {}

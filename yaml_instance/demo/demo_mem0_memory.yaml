@@ -1,0 +1,43 @@
+version: 0.4.0
+vars: {}
+graph:
+  id: ''
+  description: Memory-backed conversation using Mem0 managed memory service.
+  is_majority_voting: false
+  nodes:
+    - id: writer
+      type: agent
+      config:
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        provider: openai
+        name: gpt-5.4
+        role: |
+          You are a knowledgeable writer. Use your memories to build on past interactions.
+          If memory sections are provided (wrapped by ===== Related Memories =====),
+          incorporate relevant context from those memories into your response.
+        params:
+          temperature: 0.7
+          max_tokens: 2000
+        memories:
+          - name: mem0_store
+            top_k: 5
+            retrieve_stage:
+              - gen
+            read: true
+            write: true
+  edges: []
+  memory:
+    # User-scoped: extracts facts about the user (name, preferences, etc.)
+    # Agent-scoped: extracts what the agent learned (decisions, context)
+    # Both can be used together for different memory dimensions.
+    - name: mem0_store
+      type: mem0
+      config:
+        api_key: ${MEM0_API_KEY}
+        user_id: project-user-123
+        agent_id: writer-agent
+  start:
+    - writer
+  end: []
+  initial_instruction: ''

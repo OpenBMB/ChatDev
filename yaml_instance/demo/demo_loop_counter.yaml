@@ -1,0 +1,54 @@
+version: 0.4.0
+graph:
+  start:
+    - Writer
+  end:
+    - Finalizer
+  id: loop_counter_demo
+  description: LoopCounter demo that releases output on the third iteration.
+  is_majority_voting: false
+  log_level: INFO
+  nodes:
+    - id: Writer
+      type: literal
+      description: Responsible for outputting a fixed draft.
+      config:
+        content: Draft iteration from Writer
+        role: assistant
+    - id: Critic
+      type: literal
+      description: Simulates human feedback, always requesting further revisions.
+      config:
+        content: Please revise again
+        role: user
+    - id: Loop Gate
+      type: loop_counter
+      description: Counts the number of entries, only granting passage on the 3rd time.
+      config:
+        max_iterations: 3
+        reset_on_emit: true
+        message: Loop finished after three passes
+    - id: Finalizer
+      type: literal
+      description: Receives the release signal from Loop Gate and outputs the final statement.
+      config:
+        content: Final summary released
+        role: assistant
+  edges:
+    - from: Writer
+      to: Critic
+    - from: Critic
+      to: Writer
+    - from: Critic
+      to: Loop Gate
+    - from: Loop Gate
+      to: Writer  # keep Loop Gate inside the cycle
+    - from: Loop Gate
+      to: Finalizer
+    - from: Loop Gate
+      to: Writer
+      trigger: true
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+      process: null

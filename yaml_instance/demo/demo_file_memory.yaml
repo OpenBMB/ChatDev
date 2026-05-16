@@ -1,0 +1,49 @@
+version: 0.4.0
+vars: {}
+graph:
+  id: file_memory_demo
+  description: Workflow demonstrating FileMemory-based retrieval over local documents.
+  is_majority_voting: false
+  memory:
+    - name: DocumentMemory
+      type: file
+      config:
+        index_path: tests/file_memory_test/file_memory_index.json
+        file_sources:
+        - path: tests/file_memory_test
+          file_types:
+          - .md
+          recursive: false
+          encoding: utf-8
+        embedding:
+          provider: openai
+          model: text-embedding-3-small
+          base_url: ${BASE_URL}
+          api_key: ${API_KEY}
+  start:
+    - Assistant
+  nodes:
+  - id: Assistant
+    type: agent
+    config:
+      provider: openai
+      base_url: ${BASE_URL}
+      api_key: ${API_KEY}
+      name: gpt-4o
+      role: 'You are an intelligent assistant, skilled at answering user questions based on documents and codebases.
+
+        When you see the "===== Relevant Memory =====" section, please use this information to answer the user''s questions.
+
+        These memories contain the system''s documentation and code; you should provide accurate answers based on this information.
+
+        '
+      params:
+        temperature: 0.7
+        max_tokens: 2000
+      memories:
+      - name: DocumentMemory
+        top_k: 3
+        similarity_threshold: 0.2
+        retrieve_stage:
+        - gen
+  edges: []
