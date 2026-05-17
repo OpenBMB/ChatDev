@@ -561,19 +561,23 @@ const chatMessagesRef = ref(null) // Extra ref
 // Map<nodeId, { message, entryMap, baseKeyToKey, counters }>
 const nodesLoadingMessagesMap = new Map()
 
-// Create or fetch the loading bubble for a node
-const addTotalLoadingMessage = (nodeId) => {
-  if (!nodeId) return null
-
-  let nodeState = nodesLoadingMessagesMap.get(nodeId)
-  if (nodeState) return nodeState
-
+// Create a separate loading message for each model/tool call
+const addSingleLoadingMessage = (nodeId, baseKey, label) => {
   let avatar
   if (nameToSpriteMap.value.has(nodeId)) {
     avatar = nameToSpriteMap.value.get(nodeId)
   } else {
     avatar = spriteFetcher.fetchSprite(nodeId, 'D', 1)
     nameToSpriteMap.value.set(nodeId, avatar)
+  }
+
+  const entry = {
+    key: `${baseKey}-${Date.now()}`,
+    baseKey,
+    label,
+    status: 'running',
+    startedAt: Date.now(),
+    endedAt: null
   }
 
   const message = {
@@ -586,62 +590,44 @@ const addTotalLoadingMessage = (nodeId) => {
     isLoading: true,
     startedAt: Date.now(),
     timestamp: Date.now(),
-    loadingEntries: []
+    loadingEntries: [entry]
   }
 
   chatMessages.value.push(message)
 
-  nodeState = {
+  const nodeState = {
     message,
-    entryMap: new Map(),
-    baseKeyToKey: new Map(),
-    counters: new Map()
+    entryMap: new Map([[entry.key, entry]]),
+    baseKeyToKey: new Map([[baseKey, entry.key]]),
+    counters: new Map([[baseKey, 1]])
   }
-  nodesLoadingMessagesMap.set(nodeId, nodeState)
-  return nodeState
-}
-
-// Add a loading entry (model/tool call) and associate it with baseKey
-const addLoadingEntry = (nodeId, baseKey, label) => {
-  const nodeState = addTotalLoadingMessage(nodeId)
-  if (!nodeState || !baseKey) return null
-
-  const count = (nodeState.counters.get(baseKey) || 0) + 1
-  nodeState.counters.set(baseKey, count)
-  const key = `${baseKey}-${count}`
-
-  const entry = {
-    key,
-    baseKey,
-    label,
-    status: 'running',
-    startedAt: Date.now(),
-    endedAt: null
-  }
-
-  nodeState.entryMap.set(key, entry)
-  nodeState.baseKeyToKey.set(baseKey, key)
-  nodeState.message.loadingEntries.push(entry)
+  nodesLoadingMessagesMap.set(`${nodeId}-${baseKey}`, nodeState)
+  
   runningLoadingEntries.value += 1
   if (runningLoadingEntries.value === 1) {
     startLoadingTimer()
   }
-  return entry
+  
+  return nodeState
 }
 
-// Finish a loading entry
-const finishLoadingEntry = (nodeId, baseKey) => {
-  const nodeState = nodesLoadingMessagesMap.get(nodeId)
-  if (!nodeState || !baseKey) return null
+// Finish a single loading message
+const finishSingleLoadingMessage = (nodeId, baseKey) => {
+  const key = `${nodeId}-${baseKey}`
+  const nodeState = nodesLoadingMessagesMap.get(key)
+  if (!nodeState) return null
 
-  const key = nodeState.baseKeyToKey.get(baseKey)
-  const entry = key ? nodeState.entryMap.get(key) : null
+  const entryKey = nodeState.baseKeyToKey.get(baseKey)
+  const entry = entryKey ? nodeState.entryMap.get(entryKey) : null
   if (!entry) return null
 
   const wasRunning = entry.status === 'running'
   entry.status = 'done'
   entry.endedAt = Date.now()
-  nodeState.baseKeyToKey.delete(baseKey)
+  nodeState.message.isLoading = false
+  nodeState.message.duration = formatDuration(nodeState.message.startedAt, Date.now())
+  nodesLoadingMessagesMap.delete(key)
+  
   if (wasRunning) {
     runningLoadingEntries.value = Math.max(0, runningLoadingEntries.value - 1)
     if (runningLoadingEntries.value === 0) {
@@ -649,26 +635,6 @@ const finishLoadingEntry = (nodeId, baseKey) => {
     }
   }
   return entry
-}
-
-// Finish all running entries when a node ends or cancels
-const finalizeAllLoadingEntries = (nodeState, endedAt = Date.now()) => {
-  if (!nodeState) return
-  let finishedCount = 0
-  for (const entry of nodeState.entryMap.values()) {
-    if (entry.status === 'running') {
-      entry.status = 'done'
-      entry.endedAt = endedAt
-      finishedCount += 1
-    }
-  }
-  nodeState.baseKeyToKey.clear()
-  if (finishedCount) {
-    runningLoadingEntries.value = Math.max(0, runningLoadingEntries.value - finishedCount)
-    if (runningLoadingEntries.value === 0) {
-      stopLoadingTimer()
-    }
-  }
 }
 
 // Global timer for updating loading bubble durations
@@ -2118,13 +2084,13 @@ const processMessage = async (msg) => {
       // Model call started
       if (msg.data.details.stage === "before") {
         const baseKey = `model-${msg.data.details.model_name || 'unknown'}`
-        addLoadingEntry(nodeId, baseKey, `Model ${msg.data.details.model_name}`)
+        addSingleLoadingMessage(nodeId, baseKey, `Model ${msg.data.details.model_name}`)
       }
 
       // Model call ended
       if (msg.data.details.stage === "after") {
         const baseKey = `model-${msg.data.details.model_name || 'unknown'}`
-        finishLoadingEntry(nodeId, baseKey)
+        finishSingleLoadingMessage(nodeId, baseKey)
       }
     }
 
@@ -2144,13 +2110,13 @@ const processMessage = async (msg) => {
       // Tool call started
       if (msg.data.details.stage === "before") {
         const baseKey = `tool-${msg.data.details.tool_name || 'unknown'}`
-        addLoadingEntry(nodeId, baseKey, `Tool ${msg.data.details.tool_name}`)
+        addSingleLoadingMessage(nodeId, baseKey, `Tool ${msg.data.details.tool_name}`)
       }
 
       // Tool call ended
       if (msg.data.details.stage === "after") {
         const baseKey = `tool-${msg.data.details.tool_name || 'unknown'}`
-        finishLoadingEntry(nodeId, baseKey)
+        finishSingleLoadingMessage(nodeId, baseKey)
       }
     }
 
@@ -2161,15 +2127,6 @@ const processMessage = async (msg) => {
         const index = activeNodes.value.indexOf(nodeId)
         if (index > -1) {
           activeNodes.value.splice(index, 1)
-        }
-
-        const nodeState = nodesLoadingMessagesMap.get(nodeId)
-        if (nodeState) {
-          const endedAt = Date.now()
-          finalizeAllLoadingEntries(nodeState, endedAt)
-          nodeState.message.isLoading = false
-          nodeState.message.duration = formatDuration(nodeState.message.startedAt, endedAt)
-          nodesLoadingMessagesMap.delete(nodeId)
         }
       }
 
@@ -2216,14 +2173,20 @@ const cancelWorkflow = () => {
 
   // Finish all loading messages
   const endedAt = Date.now()
-  for (const [nodeId, nodeState] of nodesLoadingMessagesMap.entries()) {
+  for (const [key, nodeState] of nodesLoadingMessagesMap.entries()) {
     if (nodeState?.message) {
-      finalizeAllLoadingEntries(nodeState, endedAt)
+      // Finalize any remaining running entries
+      for (const entry of nodeState.entryMap.values()) {
+        if (entry.status === 'running') {
+          entry.status = 'done'
+          entry.endedAt = endedAt
+        }
+      }
       nodeState.message.isLoading = false
       nodeState.message.duration = formatDuration(nodeState.message.startedAt, endedAt)
-      nodesLoadingMessagesMap.delete(nodeId)
     }
   }
+  nodesLoadingMessagesMap.clear()
 
   try {
     ws.close()
@@ -2297,17 +2260,6 @@ const svgIconDataUri = (label, bgColor) => {
   </svg>`
   return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`
 }
-
-// Auto-scroll to bottom
-watch(
-  () => chatMessages.value.length,
-  async () => {
-    await nextTick()
-    if (chatMessagesRef.value) {
-      chatMessagesRef.value.scrollTop = chatMessagesRef.value.scrollHeight
-    }
-  }
-)
 </script>
 
 <style scoped>

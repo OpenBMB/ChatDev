@@ -19,8 +19,8 @@ class LogLevel(str, Enum):
 
     __level_values = {
         "DEBUG": 10,
-        "INFO": 20,
-        "WARNING": 30,
+        "WARNING": 20,
+        "INFO": 30,
         "ERROR": 40,
         "CRITICAL": 50,
     }
