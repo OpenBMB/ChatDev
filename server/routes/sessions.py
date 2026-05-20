@@ -21,8 +21,7 @@ async def download_session(session_id: str):
             logger = get_server_logger()
             logger.log_security_event(
                 "INVALID_SESSION_ID_FORMAT",
-                f"Invalid session_id format: {session_id}",
-                details={"received_session_id": session_id},
+                "Invalid session_id format rejected",
             )
             raise ValidationError(
                 "Invalid session_id: only letters, digits, underscores, and hyphens are allowed",
