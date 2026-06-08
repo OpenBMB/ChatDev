@@ -9,7 +9,9 @@ from utils.io_utils import read_yaml
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 _DEFAULT_SUBGRAPH_ROOT = (_REPO_ROOT / "yaml_instance").resolve()
-_SUBGRAPH_CACHE: Dict[Path, Dict[str, Any]] = {}
+# Cache parsed subgraphs keyed on the resolved path, alongside the file's
+# mtime at load time so an on-disk edit invalidates the cached copy (see #622).
+_SUBGRAPH_CACHE: Dict[Path, Tuple[float, Dict[str, Any]]] = {}
 
 
 def _resolve_candidate_paths(file_path: str, parent_source: str | None) -> List[Path]:
@@ -69,10 +71,12 @@ def load_subgraph_config(file_path: str, *, parent_source: str | None = None) ->
     candidates = _resolve_candidate_paths(file_path, parent_source)
     resolved_path = _resolve_existing_path(candidates).resolve()
 
-    if resolved_path not in _SUBGRAPH_CACHE:
-        _SUBGRAPH_CACHE[resolved_path] = _load_graph_dict(resolved_path)
+    mtime = resolved_path.stat().st_mtime
+    cached = _SUBGRAPH_CACHE.get(resolved_path)
+    if cached is None or cached[0] != mtime:
+        _SUBGRAPH_CACHE[resolved_path] = (mtime, _load_graph_dict(resolved_path))
 
-    payload = _SUBGRAPH_CACHE[resolved_path]
+    payload = _SUBGRAPH_CACHE[resolved_path][1]
     graph_dict = deepcopy(payload["graph"])
     vars_dict = dict(payload["vars"])
     return graph_dict, vars_dict, str(resolved_path)
