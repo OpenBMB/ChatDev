@@ -1,0 +1,2459 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tools & Integrations — ChatDev Enterprise</title>
+    <meta name="description" content="MCP 무기고 + API Vault + 외부 서비스 통합">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="/static/css/design_system.css?v=20260630r6">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Outfit', sans-serif; background: #ffffff; color: #1e293b; min-height: 100vh; overflow-y: auto; }
+
+        .gnb-header {
+            height: 56px; display: flex; align-items: center; justify-content: space-between;
+            padding: 0 24px; border-bottom: 1px solid #e2e8f0;
+            background: rgba(255,255,255,0.97); backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 100;
+        }
+        .gnb-left { display: flex; align-items: center; gap: 20px; }
+        .gnb-logo { font-weight: 700; font-size: 14px; color: #1e293b; text-decoration: none; display: flex; align-items: center; gap: 8px; }
+        .gnb-logo i { color: #16a34a; }
+        .gnb-nav { display: flex; gap: 2px; }
+        .gnb-tab {
+            padding: 8px 16px; font-size: 12px; font-weight: 600; color: #94a3b8; border-radius: 4px;
+            text-decoration: none; transition: all 0.2s; letter-spacing: 0.3px; display: flex; align-items: center; gap: 6px;
+        }
+        .gnb-tab:hover { color: #64748b; background: rgba(0,0,0,0.02); }
+        .gnb-tab.active { color: #16a34a; background: rgba(22,163,74,0.06); border: 1px solid rgba(22,163,74,0.1); }
+
+        /* === Sub-Tab Nav === */
+        .sub-tabs {
+            display: flex; gap: 0; border-bottom: 1px solid #e2e8f0; padding: 0 24px;
+            background: #fafbfc; position: sticky; top: 56px; z-index: 99;
+        }
+        .sub-tab {
+            padding: 12px 20px; font-size: 12px; font-weight: 600; color: #94a3b8; cursor: pointer;
+            border-bottom: 2px solid transparent; transition: all 0.2s; display: flex; align-items: center; gap: 7px;
+            user-select: none;
+        }
+        .sub-tab:hover { color: #64748b; }
+        .sub-tab.active { color: #16a34a; border-bottom-color: #16a34a; }
+        .sub-tab .tab-badge {
+            padding: 1px 6px; border-radius: 8px; font-size: 9px; font-weight: 700;
+            background: rgba(22,163,74,0.08); color: #16a34a;
+        }
+
+        /* === Tab Panels === */
+        .tab-panel { display: none; }
+        .tab-panel.active { display: block; }
+
+        .page-container { max-width: 1200px; margin: 0 auto; padding: 24px; }
+
+        /* === Stats === */
+        .stats-bar { display: flex; gap: 12px; margin-bottom: 24px; }
+        .stat-card {
+            flex: 1; padding: 14px 16px; background: #ffffff; border: 1px solid #e2e8f0;
+            border-radius: 6px; display: flex; align-items: center; gap: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        .stat-icon { width: 36px; height: 36px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 14px; }
+        .stat-number { font-size: 18px; font-weight: 700; color: #0f172a; }
+        .stat-label { font-size: 10px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; }
+
+        /* === MCP Section === */
+        .mcp-section { margin-bottom: 32px; }
+        .mcp-section-header {
+            font-size: 12px; font-weight: 700; color: #16a34a; letter-spacing: 0.5px; display: flex; align-items: center; gap: 8px;
+            padding-bottom: 12px; border-bottom: 1px solid rgba(22,163,74,0.1); margin-bottom: 14px;
+        }
+        .mcp-section-header .mcp-badge {
+            padding: 2px 8px; border-radius: 3px; font-size: 9px; font-weight: 700;
+            background: rgba(22,163,74,0.1); color: #16a34a; border: 1px solid rgba(22,163,74,0.25);
+            animation: mcpPulse 2s ease-in-out infinite;
+        }
+        @keyframes mcpPulse { 0%,100%{ box-shadow: 0 0 6px rgba(22,163,74,0.2); } 50%{ box-shadow: 0 0 16px rgba(22,163,74,0.4); } }
+
+        .mcp-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 12px; }
+
+        .mcp-card {
+            background: #ffffff; border: 1px solid rgba(22,163,74,0.12); border-radius: 10px;
+            transition: all 0.3s ease; cursor: pointer; position: relative; overflow: hidden;
+        }
+        .mcp-card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(22,163,74,0.3), transparent);
+            animation: mcpScan 3s linear infinite;
+        }
+        @keyframes mcpScan { 0%{ transform: translateX(-100%); } 100%{ transform: translateX(100%); } }
+        .mcp-card:hover { border-color: rgba(22,163,74,0.25); box-shadow: 0 4px 20px rgba(22,163,74,0.06); }
+        .mcp-card.expanded { border-color: rgba(22,163,74,0.3); box-shadow: 0 6px 28px rgba(22,163,74,0.08); }
+
+        .mc-header {
+            display: flex; align-items: center; gap: 14px; padding: 16px 20px;
+            user-select: none; position: relative;
+        }
+        .mc-header .mc-icon {
+            width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center;
+            font-size: 18px; flex-shrink: 0;
+        }
+        .mc-header .mc-info { flex: 1; min-width: 0; }
+        .mc-header .mc-name { font-weight: 700; font-size: 15px; color: #0f172a; }
+        .mc-header .mc-meta { display: flex; align-items: center; gap: 8px; margin-top: 4px; }
+        .mc-header .mc-status-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; animation: statusGlow 2s ease-in-out infinite; }
+        .mc-status-dot.connected { background: #16a34a; box-shadow: 0 0 6px rgba(22,163,74,0.4); }
+        .mc-status-dot.disconnected { background: #ef4444; box-shadow: 0 0 6px rgba(239,68,68,0.4); animation: none; }
+        @keyframes statusGlow { 0%,100% { box-shadow: 0 0 4px rgba(22,163,74,0.3); } 50% { box-shadow: 0 0 10px rgba(22,163,74,0.6); } }
+        .mc-header .mc-status-text { font-size: 11px; color: #16a34a; font-weight: 600; }
+        .mc-header .mc-tool-count { font-size: 10px; color: #64748b; font-weight: 500; padding: 2px 8px; background: #f1f5f9; border-radius: 10px; }
+        .mc-header .mc-chevron { font-size: 12px; color: #94a3b8; transition: transform 0.3s ease; flex-shrink: 0; }
+        .mcp-card.expanded .mc-chevron { transform: rotate(180deg); color: #16a34a; }
+
+        .mc-detail { max-height: 0; overflow: hidden; transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        .mcp-card.expanded .mc-detail { max-height: 800px; }
+        .mc-detail-inner { padding: 0 20px 18px 20px; border-top: 1px solid #f1f5f9; }
+        .mc-detail-inner .mc-transport {
+            font-size: 10px; color: #94a3b8; padding: 10px 0 8px; letter-spacing: 0.3px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .mc-tools-list { display: flex; flex-direction: column; gap: 4px; }
+        .mcp-tool-item {
+            display: flex; align-items: center; gap: 8px; padding: 6px 10px; border-radius: 5px;
+            background: #f8fafc; border: 1px solid #f1f5f9; font-size: 11px; color: #64748b; transition: all 0.2s;
+        }
+        .mcp-tool-item:hover { background: rgba(22,163,74,0.04); border-color: rgba(22,163,74,0.12); color: #16a34a; }
+        .mcp-tool-item .tool-fn { font-weight: 600; color: #334155; font-family: 'JetBrains Mono', monospace; font-size: 11px; }
+        .mcp-tool-item .tool-desc { color: #64748b; font-size: 10px; }
+
+        /* === Legacy Tool Cards === */
+        .category-section { margin-bottom: 28px; }
+        .category-header {
+            font-size: 11px; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 0.8px;
+            padding-bottom: 10px; border-bottom: 1px solid #e2e8f0; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;
+        }
+        .tool-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 10px; }
+        .tool-card {
+            background: #ffffff; border: 1px solid #e2e8f0; border-radius: 6px; padding: 16px; transition: all 0.25s; cursor: pointer;
+        }
+        .tool-card:hover { border-color: rgba(22,163,74,0.15); transform: translateY(-1px); box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+        .tool-card .tc-top { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+        .tool-card .tc-icon {
+            width: 36px; height: 36px; border-radius: 6px; display: flex; align-items: center; justify-content: center;
+            font-size: 14px; background: rgba(22,163,74,0.04); border: 1px solid #e2e8f0;
+        }
+        .tool-card .tc-name { font-weight: 600; font-size: 13px; color: #1e293b; }
+        .tool-card .tc-desc { font-size: 11px; color: #64748b; line-height: 1.5; margin-bottom: 10px; }
+        .tool-card .tc-footer { display: flex; justify-content: space-between; align-items: center; }
+        .tool-card .tc-usage { font-size: 10px; color: #94a3b8; }
+        .api-status { padding: 2px 8px; border-radius: 3px; font-size: 9px; font-weight: 600; letter-spacing: 0.3px; }
+        .api-status.configured { background: rgba(22,163,74,0.06); color: #16a34a; border: 1px solid rgba(22,163,74,0.15); }
+        .api-status.missing { background: rgba(255,107,0,0.06); color: #ff6b00; border: 1px solid rgba(255,107,0,0.15); }
+        .legacy-divider {
+            display: flex; align-items: center; gap: 12px; margin: 32px 0 20px; color: #94a3b8; font-size: 10px; letter-spacing: 1px; text-transform: uppercase;
+        }
+        .legacy-divider::before, .legacy-divider::after { content: ''; flex: 1; height: 1px; background: #e2e8f0; }
+
+        /* ═══ Integrations Panel ═══ */
+        .int-container { max-width: 780px; }
+        .vault-banner {
+            display: flex; align-items: center; gap: 12px; padding: 12px 16px; margin-bottom: 20px;
+            background: rgba(22,163,74,0.02); border: 1px solid rgba(22,163,74,0.08); border-radius: 6px;
+        }
+        .vault-banner i { color: #16a34a; font-size: 16px; }
+        .vault-banner .vb-text { font-size: 11px; color: #64748b; }
+        .vault-banner .vb-text strong { color: #16a34a; }
+
+        .int-card {
+            background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px;
+            padding: 18px; margin-bottom: 12px; transition: all 0.3s;
+        }
+        .int-card:hover { border-color: #cbd5e1; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+        .int-card.connected { border-color: rgba(22,163,74,0.15); }
+        .int-header { display: flex; align-items: center; gap: 14px; margin-bottom: 12px; }
+        .int-icon {
+            width: 38px; height: 38px; border-radius: 8px; display: flex; align-items: center; justify-content: center;
+            font-size: 16px; background: rgba(22,163,74,0.04); border: 1px solid #e2e8f0;
+        }
+        .int-name { font-weight: 700; font-size: 14px; color: #1e293b; }
+        .int-status {
+            margin-left: auto; padding: 3px 10px; border-radius: 10px; font-size: 10px; font-weight: 600;
+        }
+        .int-status.stored { background: rgba(22,163,74,0.06); color: #16a34a; border: 1px solid rgba(22,163,74,0.15); }
+        .int-status.empty { background: rgba(0,0,0,0.02); color: #94a3b8; border: 1px solid #e2e8f0; }
+
+        .key-form { display: flex; gap: 8px; align-items: center; }
+        .key-input {
+            flex: 1; padding: 9px 14px; background: #ffffff; border: 1px solid #e2e8f0;
+            border-radius: 4px; color: #1e293b; font-size: 12px; font-family: 'JetBrains Mono', monospace;
+            outline: none; transition: border-color 0.2s;
+        }
+        .key-input:focus { border-color: rgba(22,163,74,0.3); }
+        .key-input::placeholder { color: #94a3b8; }
+        .btn-save {
+            padding: 9px 14px; border: none; border-radius: 4px; font-size: 11px; font-weight: 600;
+            cursor: pointer; transition: all 0.2s; font-family: inherit;
+            background: rgba(22,163,74,0.08); color: #16a34a; border: 1px solid rgba(22,163,74,0.2);
+        }
+        .btn-save:hover { background: rgba(22,163,74,0.15); }
+        .btn-test, .btn-delete {
+            padding: 9px 14px; border: none; border-radius: 4px; font-size: 11px; font-weight: 600;
+            cursor: pointer; transition: all 0.2s; font-family: inherit;
+            background: rgba(0,0,0,0.02); color: #64748b; border: 1px solid #e2e8f0;
+        }
+        .btn-test:hover { color: #16a34a; border-color: rgba(22,163,74,0.2); }
+        .btn-delete:hover { color: #ff6b6b; border-color: rgba(255,107,107,0.2); }
+        .key-preview {
+            display: flex; align-items: center; gap: 10px; padding: 8px 14px;
+            background: rgba(22,163,74,0.02); border: 1px solid rgba(22,163,74,0.08);
+            border-radius: 4px; font-family: 'JetBrains Mono', monospace; font-size: 12px;
+            color: #64748b; margin-bottom: 10px;
+        }
+        .key-preview .lock-icon { color: #16a34a; font-size: 10px; }
+        .test-result { font-size: 11px; padding: 6px 12px; border-radius: 4px; margin-top: 8px; display: none; }
+        .test-result.success { display: block; background: rgba(22,163,74,0.04); color: #16a34a; border: 1px solid rgba(22,163,74,0.1); }
+        .test-result.error { display: block; background: rgba(255,107,107,0.04); color: #ff6b6b; border: 1px solid rgba(255,107,107,0.1); }
+        .test-result.loading { display: block; background: rgba(0,0,0,0.02); color: #64748b; border: 1px solid #e2e8f0; }
+        .mcp-link { display: flex; align-items: center; gap: 6px; font-size: 10px; color: #94a3b8; margin-top: 8px; padding-top: 8px; border-top: 1px solid #f1f5f9; }
+        .mcp-link .mcp-tag { color: #16a34a; font-weight: 600; }
+
+        /* ═══ External Services Section ═══ */
+        .ext-section { margin-bottom: 28px; }
+        .ext-section-header {
+            display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;
+            padding-bottom: 12px; border-bottom: 1px solid #e2e8f0;
+        }
+        .ext-section-title { font-size: 15px; font-weight: 700; color: #1e293b; display: flex; align-items: center; gap: 8px; }
+        .ext-section-subtitle { font-size: 11px; color: #64748b; margin-top: 2px; }
+        .ext-section-badge {
+            padding: 3px 10px; border-radius: 10px; font-size: 10px; font-weight: 700;
+            background: rgba(22,163,74,0.06); color: #16a34a; border: 1px solid rgba(22,163,74,0.15);
+        }
+        .ext-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 12px; }
+        .ext-card {
+            background: #fff; border: 1px solid #e2e8f0; border-radius: 10px;
+            transition: all 0.3s; overflow: hidden;
+        }
+        .ext-card:hover { border-color: #cbd5e1; box-shadow: 0 3px 12px rgba(0,0,0,0.05); }
+        .ext-card.connected { border-left: 3px solid #16a34a; }
+        .ext-card-header {
+            display: flex; align-items: center; gap: 10px; padding: 14px 16px;
+            background: rgba(0,0,0,0.01); border-bottom: 1px solid #f1f5f9;
+        }
+        .ext-card-icon { font-size: 22px; }
+        .ext-card-name { font-size: 13px; font-weight: 700; color: #1e293b; flex: 1; }
+        .ext-card-dot {
+            width: 8px; height: 8px; border-radius: 50%; background: #cbd5e1;
+        }
+        .ext-card-dot.on { background: #16a34a; box-shadow: 0 0 6px rgba(22,163,74,0.4); }
+        .ext-card-docs {
+            font-size: 13px; text-decoration: none; opacity: 0.5; transition: opacity 0.2s;
+        }
+        .ext-card-docs:hover { opacity: 1; }
+        .ext-card-body { padding: 12px 16px; }
+        .ext-key-row { margin-bottom: 8px; }
+        .ext-key-label {
+            display: block; font-size: 10px; font-weight: 600; color: #64748b;
+            margin-bottom: 3px; text-transform: uppercase; letter-spacing: 0.4px;
+        }
+        .ext-key-input {
+            width: 100%; padding: 8px 12px; box-sizing: border-box;
+            background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px;
+            color: #1e293b; font-size: 12px; font-family: 'JetBrains Mono', monospace;
+            transition: all 0.2s; outline: none;
+        }
+        .ext-key-input:focus { border-color: rgba(22,163,74,0.3); box-shadow: 0 0 0 2px rgba(22,163,74,0.08); }
+        .ext-key-input::placeholder { color: #94a3b8; }
+        .ext-card-actions {
+            display: flex; gap: 8px; padding: 8px 16px 14px;
+        }
+        .ext-btn {
+            padding: 6px 14px; border: none; border-radius: 5px;
+            font-size: 11px; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: inherit;
+        }
+        .ext-btn.save { background: rgba(22,163,74,0.08); color: #16a34a; border: 1px solid rgba(22,163,74,0.2); }
+        .ext-btn.save:hover { background: rgba(22,163,74,0.15); }
+        .ext-btn.test { background: rgba(59,130,246,0.06); color: #3b82f6; border: 1px solid rgba(59,130,246,0.15); }
+        .ext-btn.test:hover { background: rgba(59,130,246,0.12); }
+        .ext-btn.delete { background: rgba(239,68,68,0.06); color: #ef4444; border: 1px solid rgba(239,68,68,0.12); margin-left: auto; }
+        .ext-btn.delete:hover { background: rgba(239,68,68,0.12); }
+        .ext-card-msg {
+            display: none; padding: 6px 16px 10px; font-size: 11px; font-weight: 600;
+        }
+        .ext-card-msg.success { display: block; color: #16a34a; }
+        .ext-card-msg.error { display: block; color: #ef4444; }
+        .section-divider {
+            display: flex; align-items: center; gap: 12px; margin: 28px 0 20px;
+            color: #94a3b8; font-size: 10px; letter-spacing: 1px; text-transform: uppercase;
+        }
+        .section-divider::before, .section-divider::after { content: ''; flex: 1; height: 1px; background: #e2e8f0; }
+
+        /* ═══ AI BRAIN PANEL ═══ */
+        .brain-layout { display: grid; grid-template-columns: 1fr 340px; gap: 0; height: calc(100vh - 112px); }
+
+        /* Filter Bar */
+        .brain-filter-bar {
+            display: flex; gap: 6px; flex-wrap: wrap; padding: 12px 16px; background: #fafbfc;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .brain-filter {
+            padding: 5px 12px; border: 1px solid #e2e8f0; border-radius: 14px; font-size: 11px;
+            font-weight: 600; cursor: pointer; transition: all 0.2s; background: #fff; color: #64748b;
+            display: flex; align-items: center; gap: 5px; font-family: inherit;
+        }
+        .brain-filter:hover { border-color: #cbd5e1; color: #334155; }
+        .brain-filter.active { background: #16a34a; color: #fff; border-color: #16a34a; }
+        .brain-filter .bf-count { font-size: 9px; opacity: 0.7; }
+
+        /* Graph Canvas */
+        .brain-graph-container {
+            flex: 1; position: relative; background: #fafbfc; overflow: hidden;
+        }
+        #brain-canvas { width: 100%; height: 100%; }
+
+        /* Brain Stats Strip */
+        .brain-stats-strip {
+            position: absolute; bottom: 12px; left: 12px; display: flex; gap: 8px;
+        }
+        .bs-chip {
+            padding: 4px 10px; background: rgba(255,255,255,0.95); border: 1px solid #e2e8f0;
+            border-radius: 10px; font-size: 10px; color: #64748b; font-weight: 600;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+        }
+
+        /* Chat Panel */
+        .brain-chat-panel {
+            border-left: 1px solid #e2e8f0; display: flex; flex-direction: column; background: #fff;
+        }
+        .bcp-header {
+            padding: 14px 16px; border-bottom: 1px solid #e2e8f0; font-size: 13px; font-weight: 700;
+            display: flex; align-items: center; gap: 8px; color: #1e293b;
+        }
+        .bcp-header i { color: #16a34a; }
+        .bcp-messages {
+            flex: 1; overflow-y: auto; padding: 12px 16px; display: flex; flex-direction: column; gap: 10px;
+        }
+        .bcp-msg {
+            padding: 10px 14px; border-radius: 8px; font-size: 12px; line-height: 1.6; max-width: 95%;
+        }
+        .bcp-msg.system {
+            background: rgba(22,163,74,0.04); border: 1px solid rgba(22,163,74,0.1); color: #334155;
+            align-self: flex-start;
+        }
+        .bcp-msg.user { background: #f1f5f9; border: 1px solid #e2e8f0; color: #1e293b; align-self: flex-end; }
+        .bcp-msg .msg-time { font-size: 9px; color: #94a3b8; margin-top: 4px; }
+        .bcp-msg pre {
+            background: rgba(0,0,0,0.03); padding: 8px 10px; border-radius: 4px; margin-top: 6px;
+            font-family: 'JetBrains Mono', monospace; font-size: 11px; overflow-x: auto; white-space: pre-wrap;
+        }
+        .bcp-input-area {
+            padding: 12px 16px; border-top: 1px solid #e2e8f0; display: flex; gap: 8px;
+        }
+        .bcp-input {
+            flex: 1; padding: 10px 14px; border: 1px solid #e2e8f0; border-radius: 6px;
+            font-size: 12px; font-family: inherit; outline: none; transition: border-color 0.2s;
+        }
+        .bcp-input:focus { border-color: rgba(22,163,74,0.3); }
+        .bcp-input::placeholder { color: #94a3b8; }
+        .bcp-send {
+            width: 40px; height: 40px; border: none; border-radius: 6px; cursor: pointer;
+            background: #16a34a; color: #fff; font-size: 14px; transition: all 0.2s;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .bcp-send:hover { background: #15803d; }
+
+        /* Node Tooltip */
+        .node-tooltip {
+            position: absolute; background: rgba(255,255,255,0.98); border: 1px solid #e2e8f0;
+            border-radius: 8px; padding: 12px 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            pointer-events: none; z-index: 50; display: none; max-width: 280px;
+        }
+        .node-tooltip .nt-title { font-weight: 700; font-size: 13px; color: #0f172a; margin-bottom: 4px; }
+        .node-tooltip .nt-type { font-size: 10px; color: #64748b; margin-bottom: 6px; }
+        .node-tooltip .nt-content { font-size: 11px; color: #475569; line-height: 1.5; }
+        .node-tooltip .nt-tags { margin-top: 6px; display: flex; gap: 4px; flex-wrap: wrap; }
+        .node-tooltip .nt-tag { padding: 1px 6px; background: #f1f5f9; border-radius: 3px; font-size: 9px; color: #64748b; }
+
+        @keyframes lockPulse { 0%,100%{ opacity:0.6; } 50%{ opacity:1; } }
+        @keyframes ftPulse { 0%{ transform:translateX(-100%); } 100%{ transform:translateX(300%); } }
+        .lock-animated { animation: lockPulse 2s ease-in-out infinite; }
+    </style>
+</head>
+<body>
+
+    <header class="gnb-header">
+        <div class="gnb-left">
+            <a href="/" class="gnb-logo"><i class="fa-solid fa-network-wired"></i> ChatDev</a>
+            <nav class="gnb-nav">
+                <a href="/" class="gnb-tab"><i class="fa-solid fa-map"></i> Dashboard</a>
+                <a href="/agents" class="gnb-tab"><i class="fa-solid fa-users"></i> Agents</a>
+                <a href="/tools" class="gnb-tab active"><i class="fa-solid fa-toolbox"></i> Tools</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Sub Tabs -->
+    <div class="sub-tabs">
+        <div class="sub-tab active" data-panel="panel-tools" onclick="switchTab(this)">
+            <i class="fa-solid fa-wrench"></i> MCP Tools
+            <span class="tab-badge" id="badge-tools">—</span>
+        </div>
+        <div class="sub-tab" data-panel="panel-integrations" onclick="switchTab(this)">
+            <i class="fa-solid fa-key"></i> Integrations
+            <span class="tab-badge" id="badge-integrations">—</span>
+        </div>
+        <div class="sub-tab" data-panel="panel-finetune" onclick="switchTab(this)">
+            <i class="fa-solid fa-brain"></i> 학습 시작
+            <span class="tab-badge" id="badge-finetune">—</span>
+        </div>
+    </div>
+
+    <!-- ═══ Panel 1: MCP Tools ═══ -->
+    <div class="tab-panel active" id="panel-tools">
+        <div class="page-container">
+            <div class="stats-bar" id="stats-bar"></div>
+            <div class="mcp-section" id="mcp-section"></div>
+            <div id="legacy-divider" class="legacy-divider" style="display: none;">Legacy API Tools</div>
+            <div id="tools-container"></div>
+        </div>
+    </div>
+
+    <!-- ═══ Panel 2: Integrations ═══ -->
+    <div class="tab-panel" id="panel-integrations">
+        <div class="page-container int-container">
+            <!-- AI Engine Control Tower Section -->
+            <div class="ext-section" style="margin-bottom: 32px;">
+                <div class="ext-section-header">
+                    <div>
+                        <div class="ext-section-title"><i class="fa-solid fa-microchip" style="color: #64748b;"></i> AI Engine Control Tower</div>
+                        <div class="ext-section-subtitle">토론 엔진 멀티 스위칭 및 로컬 엔드포인트 설정</div>
+                    </div>
+                </div>
+                <div class="int-card" style="padding: 18px 20px;">
+                    <!-- Provider Selector -->
+                    <div style="margin-bottom:14px;">
+                        <label style="font-size:10px;font-weight:700;color:#64748b;letter-spacing:0.4px;display:block;margin-bottom:8px;">AI PROVIDER</label>
+                        <div id="tools-ai-provider-grid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">
+                            <button class="tools-ai-provider-btn active" data-provider="openai" style="padding:12px 6px;border:1.5px solid #1e293b;background:#1e293b;color:#fff;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;transition:all 0.15s;">
+                                <div style="font-size:18px;margin-bottom:4px;">🤖</div>OpenAI
+                            </button>
+                            <button class="tools-ai-provider-btn" data-provider="anthropic" style="padding:12px 6px;border:1.5px solid #e2e8f0;background:#f8fafc;color:#64748b;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;transition:all 0.15s;">
+                                <div style="font-size:18px;margin-bottom:4px;">🧡</div>Anthropic
+                            </button>
+                            <button class="tools-ai-provider-btn" data-provider="google" style="padding:12px 6px;border:1.5px solid #e2e8f0;background:#f8fafc;color:#64748b;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;transition:all 0.15s;">
+                                <div style="font-size:18px;margin-bottom:4px;">🔵</div>Google
+                            </button>
+                            <button class="tools-ai-provider-btn" data-provider="local" style="padding:12px 6px;border:1.5px solid #e2e8f0;background:#f8fafc;color:#64748b;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;transition:all 0.15s;">
+                                <div style="font-size:18px;margin-bottom:4px;">🖥️</div>Local
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Model Selector -->
+                    <div style="margin-bottom:14px;">
+                        <label style="font-size:10px;font-weight:700;color:#64748b;letter-spacing:0.4px;display:block;margin-bottom:8px;">MODEL</label>
+                        <select id="tools-ai-model-select" style="width:100%;padding:10px 12px;font-size:12px;font-weight:600;color:#1e293b;border:1px solid #e2e8f0;border-radius:8px;background:#f8fafc;font-family:inherit;outline:none;cursor:pointer;">
+                        </select>
+                    </div>
+                    <!-- API Key Input -->
+                    <div style="margin-bottom:14px;" id="tools-ai-key-section">
+                        <label id="tools-ai-key-label" style="font-size:10px;font-weight:700;color:#64748b;letter-spacing:0.4px;display:block;margin-bottom:8px;">OPENAI API KEY (sk-...)</label>
+                        <div style="display:flex;gap:6px;">
+                            <input id="tools-ai-api-key-input" type="password" placeholder="sk-... / sk-ant-... / AIza..."
+                                style="flex:1;padding:10px 12px;font-size:12px;border:1px solid #e2e8f0;border-radius:8px;background:#fff;font-family:monospace;outline:none;transition:border-color 0.2s;"
+                            />
+                            <button id="tools-ai-key-visibility-btn" style="padding:10px 14px;border:1px solid #e2e8f0;border-radius:8px;background:#f8fafc;cursor:pointer;font-size:14px;transition:all 0.2s;">👁</button>
+                        </div>
+                        <!-- Local endpoint -->
+                        <div id="tools-local-endpoint-row" style="display:none;margin-top:10px;">
+                            <input id="tools-ai-local-endpoint" type="text" placeholder="http://localhost:11434"
+                                style="width:100%;box-sizing:border-box;padding:10px 12px;font-size:12px;border:1px solid #e2e8f0;border-radius:8px;background:#fff;font-family:monospace;outline:none;transition:border-color 0.2s;"
+                            />
+                        </div>
+                    </div>
+                    <!-- Status line -->
+                    <div id="tools-ai-engine-status-line" style="font-size:11px;font-weight:600;color:#94a3b8;min-height:16px;margin-bottom:14px;"></div>
+                    <!-- Actions -->
+                    <div style="display:flex;gap:8px;">
+                        <button id="tools-ai-engine-test-btn" style="flex:1;padding:11px;font-size:12px;font-weight:700;border:1px solid #e2e8f0;border-radius:8px;background:#f8fafc;color:#64748b;cursor:pointer;transition:all 0.2s;">🔌 연결 테스트</button>
+                        <button id="tools-ai-engine-save-btn" style="flex:2;padding:11px;font-size:12px;font-weight:700;border:none;border-radius:8px;background:#1e293b;color:#fff;cursor:pointer;transition:all 0.2s;">⚡ 엔진 스위칭 저장</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 🔗 Model Pipeline Section (LocateAnything ↔ Gemma 4) -->
+            <div class="ext-section" style="margin-bottom: 32px;">
+                <div class="ext-section-header">
+                    <div>
+                        <div class="ext-section-title"><i class="fa-solid fa-link" style="color: #8b5cf6;"></i> 모델 파이프라인</div>
+                        <div class="ext-section-subtitle">LocateAnything-3B (비전) → Gemma 4 31B-it (텍스트) 연동</div>
+                    </div>
+                    <span id="pipeline-mode-badge" style="padding:4px 10px;border-radius:10px;font-size:10px;font-weight:700;background:#f1f5f9;color:#64748b;">⏳ 확인 중</span>
+                </div>
+                <div class="int-card" style="padding: 18px 20px;">
+                    <!-- Pipeline Status -->
+                    <div id="pipeline-status-bar" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;">
+                        <div style="padding:12px;border-radius:10px;background:#f8fafc;border:1px solid #e2e8f0;">
+                            <div style="font-size:9px;font-weight:700;color:#94a3b8;letter-spacing:0.5px;margin-bottom:4px;">STAGE 1 — VISION</div>
+                            <div style="font-size:12px;font-weight:700;color:#1e293b;" id="pipeline-la-status">🔍 LocateAnything-3B</div>
+                            <div style="font-size:10px;color:#64748b;margin-top:2px;" id="pipeline-la-mode">확인 중...</div>
+                        </div>
+                        <div style="padding:12px;border-radius:10px;background:#f8fafc;border:1px solid #e2e8f0;">
+                            <div style="font-size:9px;font-weight:700;color:#94a3b8;letter-spacing:0.5px;margin-bottom:4px;">STAGE 2 — TEXT</div>
+                            <div style="font-size:12px;font-weight:700;color:#1e293b;" id="pipeline-gemma-status">🧠 Gemma 4 31B-it</div>
+                            <div style="font-size:10px;color:#64748b;margin-top:2px;" id="pipeline-gemma-mode">확인 중...</div>
+                        </div>
+                    </div>
+
+                    <!-- Pipeline Flow Diagram -->
+                    <div style="display:flex;align-items:center;gap:6px;justify-content:center;margin-bottom:16px;padding:10px;background:linear-gradient(135deg,rgba(139,92,246,0.04),rgba(59,130,246,0.04));border-radius:10px;">
+                        <span style="font-size:18px;">📷</span>
+                        <span style="font-size:10px;color:#8b5cf6;font-weight:700;">→</span>
+                        <span style="padding:4px 8px;background:rgba(139,92,246,0.1);border-radius:6px;font-size:9px;font-weight:700;color:#8b5cf6;">LocateAnything</span>
+                        <span style="font-size:10px;color:#8b5cf6;font-weight:700;">→</span>
+                        <span style="font-size:14px;">📝</span>
+                        <span style="font-size:10px;color:#3b82f6;font-weight:700;">→</span>
+                        <span style="padding:4px 8px;background:rgba(59,130,246,0.1);border-radius:6px;font-size:9px;font-weight:700;color:#3b82f6;">Gemma 4</span>
+                        <span style="font-size:10px;color:#3b82f6;font-weight:700;">→</span>
+                        <span style="font-size:18px;">💬</span>
+                    </div>
+
+                    <!-- Image Upload -->
+                    <div style="margin-bottom:14px;">
+                        <label style="font-size:10px;font-weight:700;color:#64748b;letter-spacing:0.4px;display:block;margin-bottom:8px;">📷 이미지 업로드</label>
+                        <div id="pipeline-dropzone" style="border:2px dashed #e2e8f0;border-radius:10px;padding:24px;text-align:center;cursor:pointer;transition:all 0.2s;background:#fafbfc;" ondragover="event.preventDefault();this.style.borderColor='#8b5cf6';this.style.background='rgba(139,92,246,0.03)'" ondragleave="this.style.borderColor='#e2e8f0';this.style.background='#fafbfc'" ondrop="event.preventDefault();this.style.borderColor='#e2e8f0';handlePipelineDrop(event)">
+                            <input type="file" id="pipeline-file-input" accept="image/*" style="display:none;" onchange="handlePipelineFile(this)"/>
+                            <div id="pipeline-file-label" style="font-size:11px;color:#94a3b8;">
+                                <i class="fa-solid fa-cloud-arrow-up" style="font-size:24px;color:#cbd5e1;display:block;margin-bottom:8px;"></i>
+                                이미지를 드래그하거나 <span style="color:#8b5cf6;font-weight:600;text-decoration:underline;cursor:pointer;" onclick="document.getElementById('pipeline-file-input').click()">클릭하여 선택</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Category Query -->
+                    <div style="margin-bottom:14px;">
+                        <label style="font-size:10px;font-weight:700;color:#64748b;letter-spacing:0.4px;display:block;margin-bottom:8px;">🏷️ 탐색 카테고리 (쉼표로 구분)</label>
+                        <input id="pipeline-query-input" type="text" placeholder="예: person, car, dog, building"
+                            style="width:100%;box-sizing:border-box;padding:10px 12px;font-size:12px;border:1px solid #e2e8f0;border-radius:8px;background:#fff;font-family:inherit;outline:none;"/>
+                    </div>
+
+                    <!-- User Question -->
+                    <div style="margin-bottom:14px;">
+                        <label style="font-size:10px;font-weight:700;color:#64748b;letter-spacing:0.4px;display:block;margin-bottom:8px;">💬 질문 (선택사항)</label>
+                        <input id="pipeline-question-input" type="text" placeholder="예: 이 사진에서 사람들은 무엇을 하고 있나요?"
+                            style="width:100%;box-sizing:border-box;padding:10px 12px;font-size:12px;border:1px solid #e2e8f0;border-radius:8px;background:#fff;font-family:inherit;outline:none;"/>
+                    </div>
+
+                    <!-- Run Button -->
+                    <button id="pipeline-run-btn" onclick="runPipeline()"
+                        style="width:100%;padding:13px;font-size:13px;font-weight:700;border:none;border-radius:10px;background:linear-gradient(135deg,#8b5cf6,#6366f1);color:#fff;cursor:pointer;transition:all 0.2s;box-shadow:0 4px 12px rgba(139,92,246,0.2);"
+                        onmouseover="this.style.transform='translateY(-1px)';this.style.boxShadow='0 6px 16px rgba(139,92,246,0.3)'"
+                        onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 4px 12px rgba(139,92,246,0.2)'">
+                        🚀 파이프라인 실행
+                    </button>
+
+                    <!-- Results Area -->
+                    <div id="pipeline-results" style="display:none;margin-top:16px;"></div>
+                </div>
+            </div>
+
+            <!-- External Services Section -->
+            <div class="ext-section">
+                <div class="ext-section-header">
+                    <div>
+                        <div class="ext-section-title">🔌 외부 서비스 통합</div>
+                        <div class="ext-section-subtitle">API 키를 입력하면 웹페이지 생성 시 자동으로 연동됩니다</div>
+                    </div>
+                    <span class="ext-section-badge" id="ext-connected-badge">—</span>
+                </div>
+                <div class="ext-grid" id="ext-services-container">
+                    <div style="text-align:center;padding:30px;color:#94a3b8;font-size:12px;grid-column:1/-1;">⏳ 로딩 중...</div>
+                </div>
+            </div>
+
+            <div class="section-divider">🔐 API Vault (암호화 저장소)</div>
+
+            <div class="vault-banner">
+                <i class="fa-solid fa-lock lock-animated"></i>
+                <div class="vb-text">
+                    <strong>Vault Engine</strong>: AES-256-GCM · PBKDF2 (100K iterations) · 키는 암호화 후 <code>.vault.json</code>에 저장
+                </div>
+            </div>
+            <div id="integrations-container"></div>
+        </div>
+    </div>
+
+    <!-- ═══ Panel 3: Fine-tuning (30 Improvements) ═══ -->
+    <div class="tab-panel" id="panel-finetune">
+        <div class="page-container">
+
+            <!-- GPU Status + Memory Gauge (#13) -->
+            <div class="ext-section" style="margin-bottom:20px;">
+                <div class="ext-section-header">
+                    <div>
+                        <div class="ext-section-title"><i class="fa-solid fa-microchip" style="color:#8b5cf6;"></i> GPU & 환경 상태</div>
+                        <div class="ext-section-subtitle">학습 실행 환경 정보</div>
+                    </div>
+                    <span id="ft-gpu-badge" style="padding:4px 10px;border-radius:10px;font-size:10px;font-weight:700;background:#f1f5f9;color:#64748b;">⏳ 확인 중</span>
+                </div>
+                <div id="ft-gpu-info" class="int-card" style="padding:14px 18px;">
+                    <div style="font-size:11px;color:#94a3b8;">로딩 중...</div>
+                </div>
+            </div>
+
+            <!-- Presets (#27) -->
+            <div class="ext-section" style="margin-bottom:20px;">
+                <div class="ext-section-header">
+                    <div>
+                        <div class="ext-section-title"><i class="fa-solid fa-wand-magic-sparkles" style="color:#a855f7;"></i> 학습 프리셋</div>
+                        <div class="ext-section-subtitle">원클릭 설정으로 빠르게 시작</div>
+                    </div>
+                </div>
+                <div id="ft-presets-grid" class="int-card" style="padding:14px 16px;">
+                    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;" id="ft-presets-container"></div>
+                </div>
+            </div>
+
+            <!-- Dataset Management (Enhanced) -->
+            <div class="ext-section" style="margin-bottom:20px;">
+                <div class="ext-section-header">
+                    <div>
+                        <div class="ext-section-title"><i class="fa-solid fa-database" style="color:#f59e0b;"></i> 데이터셋 관리</div>
+                        <div class="ext-section-subtitle">HuggingFace 검색 · 파일 업로드 · 병합 · 필터링</div>
+                    </div>
+                </div>
+                <div class="int-card" style="padding:18px 20px;">
+                    <!-- HF Search -->
+                    <div style="margin-bottom:14px;">
+                        <label style="font-size:10px;font-weight:700;color:#64748b;letter-spacing:0.4px;display:block;margin-bottom:8px;">🤗 HUGGINGFACE 데이터셋 검색</label>
+                        <div style="display:flex;gap:6px;">
+                            <input id="ft-hf-search" type="text" placeholder="예: korean-instructions, alpaca, openorca"
+                                style="flex:1;padding:10px 12px;font-size:12px;border:1px solid #e2e8f0;border-radius:8px;background:#fff;font-family:inherit;outline:none;"
+                                onkeydown="if(event.key==='Enter')searchHFDatasets()"/>
+                            <button onclick="searchHFDatasets()" style="padding:10px 16px;border:none;border-radius:8px;background:#f59e0b;color:#fff;font-size:11px;font-weight:700;cursor:pointer;">🔍 검색</button>
+                        </div>
+                    </div>
+                    <div id="ft-hf-results" style="display:none;margin-bottom:14px;max-height:280px;overflow-y:auto;"></div>
+
+                    <!-- File Upload (#6) -->
+                    <div style="margin-bottom:14px;">
+                        <label style="font-size:10px;font-weight:700;color:#64748b;letter-spacing:0.4px;display:block;margin-bottom:8px;">📤 파일 업로드 (JSONL / CSV / PDF)</label>
+                        <div id="ft-upload-zone" style="border:2px dashed #cbd5e1;border-radius:10px;padding:20px;text-align:center;cursor:pointer;transition:all 0.2s;background:#f8fafc;"
+                             onclick="document.getElementById('ft-file-input').click()">
+                            <div style="font-size:24px;margin-bottom:6px;">📁</div>
+                            <div style="font-size:11px;color:#64748b;">클릭 또는 드래그&드롭으로 파일 업로드</div>
+                            <div style="font-size:9px;color:#94a3b8;margin-top:4px;">JSONL, CSV, PDF 형식 지원</div>
+                        </div>
+                        <input id="ft-file-input" type="file" accept=".jsonl,.csv,.json,.pdf" style="display:none;" onchange="handleFileUpload(this.files[0])"/>
+                    </div>
+
+                    <!-- Local Datasets -->
+                    <div style="margin-top:10px;">
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                            <label style="font-size:10px;font-weight:700;color:#64748b;letter-spacing:0.4px;">📦 로컬 데이터셋</label>
+                            <div style="display:flex;gap:4px;">
+                                <button onclick="showMergeDialog()" style="padding:4px 10px;border:1px solid #e2e8f0;border-radius:6px;background:#fff;color:#64748b;font-size:9px;font-weight:700;cursor:pointer;">🔗 병합</button>
+                            </div>
+                        </div>
+                        <div id="ft-local-datasets" style="font-size:11px;color:#94a3b8;">로딩 중...</div>
+                    </div>
+                </div>
+
+                <!-- Dataset Stats Modal (#21) - OUTSIDE re-rendered containers -->
+                <div id="ft-stats-modal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.3);z-index:9999;align-items:center;justify-content:center;" onclick="if(event.target===this)this.style.display='none'">
+                    <div style="background:#fff;border-radius:14px;padding:20px;max-width:420px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,0.15);" onclick="event.stopPropagation()">
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+                            <span style="font-size:13px;font-weight:700;color:#0369a1;">📊 데이터셋 통계</span>
+                            <button onclick="document.getElementById('ft-stats-modal').style.display='none'" style="border:none;background:none;color:#94a3b8;cursor:pointer;font-size:18px;line-height:1;padding:4px 8px;">✕</button>
+                        </div>
+                        <div id="ft-stats-content" style="font-size:10px;color:#475569;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Training Configuration (Enhanced) -->
+            <div class="ext-section" style="margin-bottom:20px;">
+                <div class="ext-section-header">
+                    <div>
+                        <div class="ext-section-title"><i class="fa-solid fa-sliders" style="color:#6366f1;"></i> 학습 설정</div>
+                        <div class="ext-section-subtitle">LoRA / QLoRA / SFT 파인튜닝 설정</div>
+                    </div>
+                </div>
+                <div class="int-card" style="padding:18px 20px;">
+                    <div style="margin-bottom:14px;">
+                        <label style="font-size:10px;font-weight:700;color:#64748b;letter-spacing:0.4px;display:block;margin-bottom:8px;">📊 데이터셋</label>
+                        <select id="ft-dataset-select" style="width:100%;padding:10px 12px;font-size:12px;font-weight:600;border:1px solid #e2e8f0;border-radius:8px;background:#f8fafc;font-family:inherit;outline:none;cursor:pointer;">
+                            <option value="">데이터셋을 선택하세요</option>
+                        </select>
+                    </div>
+                    <div style="margin-bottom:14px;">
+                        <label style="font-size:10px;font-weight:700;color:#64748b;letter-spacing:0.4px;display:block;margin-bottom:8px;">🧠 베이스 모델</label>
+                        <select id="ft-model-select" style="width:100%;padding:10px 12px;font-size:12px;font-weight:600;border:1px solid #e2e8f0;border-radius:8px;background:#f8fafc;font-family:inherit;outline:none;cursor:pointer;">
+                            <option value="google/gemma-4-31B-it">google/gemma-4-31B-it</option>
+                            <option value="google/gemma-4-12B-it">google/gemma-4-12B-it</option>
+                            <option value="google/gemma-3-4b-it">google/gemma-3-4b-it</option>
+                        </select>
+                    </div>
+                    <!-- Method -->
+                    <div style="margin-bottom:14px;">
+                        <label style="font-size:10px;font-weight:700;color:#64748b;letter-spacing:0.4px;display:block;margin-bottom:8px;">⚡ 학습 방법</label>
+                        <div style="display:flex;gap:6px;align-items:center;margin-bottom:8px;">
+                            <button onclick="autoSelectMethod()" style="padding:6px 14px;border:1.5px solid #16a34a;border-radius:8px;background:rgba(22,163,74,0.05);color:#16a34a;font-size:10px;font-weight:700;cursor:pointer;">🤖 자동 선택</button>
+                            <span id="ft-auto-reason" style="font-size:9px;color:#94a3b8;"></span>
+                        </div>
+                        <div id="ft-method-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;">
+                            <button class="ft-method-btn active" data-method="lora" onclick="selectFTMethod(this)" style="padding:14px 8px;border:1.5px solid #6366f1;background:rgba(99,102,241,0.05);color:#6366f1;border-radius:10px;font-size:11px;font-weight:700;cursor:pointer;transition:all 0.15s;text-align:center;">
+                                <div style="font-size:20px;margin-bottom:4px;">🔧</div>LoRA
+                                <div style="font-size:8px;font-weight:500;margin-top:2px;opacity:0.7;">~16GB VRAM</div>
+                            </button>
+                            <button class="ft-method-btn" data-method="qlora" onclick="selectFTMethod(this)" style="padding:14px 8px;border:1.5px solid #e2e8f0;background:#f8fafc;color:#64748b;border-radius:10px;font-size:11px;font-weight:700;cursor:pointer;transition:all 0.15s;text-align:center;">
+                                <div style="font-size:20px;margin-bottom:4px;">⚡</div>QLoRA
+                                <div style="font-size:8px;font-weight:500;margin-top:2px;opacity:0.7;">~8GB VRAM</div>
+                            </button>
+                            <button class="ft-method-btn" data-method="sft" onclick="selectFTMethod(this)" style="padding:14px 8px;border:1.5px solid #e2e8f0;background:#f8fafc;color:#64748b;border-radius:10px;font-size:11px;font-weight:700;cursor:pointer;transition:all 0.15s;text-align:center;">
+                                <div style="font-size:20px;margin-bottom:4px;">🎯</div>SFT
+                                <div style="font-size:8px;font-weight:500;margin-top:2px;opacity:0.7;">~24GB+ VRAM</div>
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Hyperparameters (Enhanced #7 #8 #10) -->
+                    <div style="margin-bottom:14px;">
+                        <label style="font-size:10px;font-weight:700;color:#64748b;letter-spacing:0.4px;display:block;margin-bottom:8px;">📐 하이퍼파라미터</label>
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+                            <div>
+                                <label style="font-size:9px;color:#94a3b8;display:block;margin-bottom:4px;">Epochs</label>
+                                <input id="ft-epochs" type="number" value="3" min="1" max="50" style="width:100%;box-sizing:border-box;padding:8px 10px;font-size:12px;border:1px solid #e2e8f0;border-radius:6px;font-family:monospace;"/>
+                            </div>
+                            <div>
+                                <label style="font-size:9px;color:#94a3b8;display:block;margin-bottom:4px;">Batch Size</label>
+                                <input id="ft-batch" type="number" value="4" min="1" max="64" style="width:100%;box-sizing:border-box;padding:8px 10px;font-size:12px;border:1px solid #e2e8f0;border-radius:6px;font-family:monospace;"/>
+                            </div>
+                            <div>
+                                <label style="font-size:9px;color:#94a3b8;display:block;margin-bottom:4px;">Learning Rate</label>
+                                <input id="ft-lr" type="text" value="0.0002" style="width:100%;box-sizing:border-box;padding:8px 10px;font-size:12px;border:1px solid #e2e8f0;border-radius:6px;font-family:monospace;"/>
+                            </div>
+                            <div>
+                                <label style="font-size:9px;color:#94a3b8;display:block;margin-bottom:4px;">LoRA Rank (r)</label>
+                                <input id="ft-lora-r" type="number" value="16" min="4" max="128" style="width:100%;box-sizing:border-box;padding:8px 10px;font-size:12px;border:1px solid #e2e8f0;border-radius:6px;font-family:monospace;"/>
+                            </div>
+                            <div>
+                                <label style="font-size:9px;color:#94a3b8;display:block;margin-bottom:4px;">LR Scheduler (#7)</label>
+                                <select id="ft-lr-scheduler" style="width:100%;box-sizing:border-box;padding:8px 10px;font-size:11px;border:1px solid #e2e8f0;border-radius:6px;">
+                                    <option value="cosine">Cosine</option>
+                                    <option value="linear">Linear</option>
+                                    <option value="constant">Constant</option>
+                                    <option value="cosine_with_restarts">Cosine+Restarts</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label style="font-size:9px;color:#94a3b8;display:block;margin-bottom:4px;">Mixed Precision (#10)</label>
+                                <select id="ft-mixed-precision" style="width:100%;box-sizing:border-box;padding:8px 10px;font-size:11px;border:1px solid #e2e8f0;border-radius:6px;">
+                                    <option value="bf16">BFloat16</option>
+                                    <option value="fp16">Float16</option>
+                                    <option value="fp32">Float32</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div style="margin-top:8px;display:flex;gap:12px;align-items:center;">
+                            <label style="display:flex;align-items:center;gap:4px;font-size:10px;color:#64748b;cursor:pointer;">
+                                <input type="checkbox" id="ft-grad-checkpoint"/> Gradient Checkpointing (#8)
+                            </label>
+                        </div>
+                    </div>
+                    <!-- Start Training -->
+                    <button id="ft-start-btn" onclick="createAndStartTraining()" style="width:100%;padding:14px;font-size:13px;font-weight:700;border:none;border-radius:10px;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;cursor:pointer;box-shadow:0 4px 12px rgba(99,102,241,0.2);">
+                        🚀 학습 시작
+                    </button>
+                </div>
+            </div>
+
+            <!-- Training Progress + Loss Chart (#2) + ETA (#16) -->
+            <div class="ext-section" style="margin-bottom:20px;">
+                <div class="ext-section-header">
+                    <div>
+                        <div class="ext-section-title"><i class="fa-solid fa-chart-line" style="color:#16a34a;"></i> 학습 진행 & 모니터링</div>
+                        <div class="ext-section-subtitle">실시간 진행률 · Loss 차트 · 로그</div>
+                    </div>
+                </div>
+                <div class="int-card" style="padding:18px 20px;">
+                    <div id="ft-progress-area" style="display:none;"></div>
+                    <!-- Loss Chart Canvas (#2) -->
+                    <div id="ft-chart-area" style="display:none;margin-bottom:14px;">
+                        <canvas id="ft-loss-chart" width="600" height="200" style="width:100%;height:200px;border:1px solid #e2e8f0;border-radius:8px;background:#fafbfc;"></canvas>
+                    </div>
+                    <!-- Training Logs (#11) -->
+                    <div id="ft-log-area" style="display:none;margin-bottom:14px;">
+                        <label style="font-size:10px;font-weight:700;color:#64748b;display:block;margin-bottom:6px;">📋 실시간 로그</label>
+                        <div id="ft-log-terminal" style="background:#0f172a;color:#a3e635;font-family:'JetBrains Mono',monospace;font-size:10px;padding:12px;border-radius:8px;height:160px;overflow-y:auto;white-space:pre-wrap;line-height:1.6;"></div>
+                    </div>
+                    <div id="ft-runs-list" style="font-size:11px;color:#94a3b8;">로딩 중...</div>
+                </div>
+            </div>
+
+            <!-- Queue Panel (#26) -->
+            <div class="ext-section" style="margin-bottom:20px;">
+                <div class="ext-section-header">
+                    <div>
+                        <div class="ext-section-title"><i class="fa-solid fa-layer-group" style="color:#0ea5e9;"></i> 학습 큐</div>
+                        <div class="ext-section-subtitle">대기 중인 학습 작업</div>
+                    </div>
+                </div>
+                <div class="int-card" style="padding:14px 18px;">
+                    <div id="ft-queue-list" style="font-size:11px;color:#94a3b8;text-align:center;">큐가 비어있습니다.</div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <script src="/static/js/ux_foundation.js?v=20260628"></script>
+    <script src="/static/js/ux_enhancements.js?v=20260628"></script>
+    <script src="/static/js/ux_components.js?v=20260628"></script>
+    <script src="/static/js/ux_round2_core.js?v=20260628r2"></script>
+    <script src="/static/js/ux_round2_viz.js?v=20260628r2"></script>
+    <script src="/static/js/ux_round3_a11y.js?v=20260628r3"></script>
+    <script src="/static/js/ux_round3_data.js?v=20260628r3"></script>
+    <script src="/static/js/ux_round4_live.js?v=20260628r4"></script>
+    <script src="/static/js/ux_round4_polish.js?v=20260628r4"></script>
+    <script src="/static/js/ux_round5_polish.js?v=20260629r5"></script>
+    <script src="/static/js/ux_round6_polish.js?v=20260630r6"></script>
+    <script>
+    /* ═══════════════════════════════════════
+       TAB SWITCHING
+    ═══════════════════════════════════════ */
+    let _ftTabLoaded = false;
+    function switchTab(el) {
+        document.querySelectorAll('.sub-tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-panel').forEach(p => { p.classList.remove('active'); p.classList.remove('cd-tab-panel'); });
+        el.classList.add('active');
+        const panel = document.getElementById(el.dataset.panel);
+        panel.classList.add('active');
+        panel.classList.add('cd-tab-panel'); // #4 탭 전환 애니메이션
+
+        if (el.dataset.panel === 'panel-integrations' && !_intLoaded) loadIntegrations();
+        if (el.dataset.panel === 'panel-finetune') {
+            if (!_ftTabLoaded) {
+                _ftTabLoaded = true;
+                loadFinetuneTab();
+            } else {
+                // 탭 재진입 시에도 데이터셋 목록 갱신
+                loadFTDatasets();
+            }
+        }
+    }
+
+    /* ═══════════════════════════════════════
+       PANEL 1: MCP TOOLS
+    ═══════════════════════════════════════ */
+    const CATEGORY_META = {
+        search:        { label: "🔍 Search & Research", icon: "fa-solid fa-magnifying-glass" },
+        writing:       { label: "✏️ Writing & Documents", icon: "fa-solid fa-pen-nib" },
+        design:        { label: "🎨 Design & Visual", icon: "fa-solid fa-palette" },
+        communication: { label: "📡 Communication", icon: "fa-solid fa-paper-plane" },
+        data:          { label: "📊 Data & Analytics", icon: "fa-solid fa-chart-line" },
+        code:          { label: "💻 Code & DevOps", icon: "fa-solid fa-code" },
+        review:        { label: "🔎 Review & QA", icon: "fa-solid fa-magnifying-glass-chart" }
+    };
+
+    async function loadTools() {
+        const [toolsRes, mcpRes] = await Promise.all([
+            fetch("/api/tools").then(r => r.json()),
+            fetch("/api/mcp/servers").then(r => r.json())
+        ]);
+        const tools = toolsRes.tools || [];
+        const mcpServers = mcpRes.servers || [];
+
+        renderStats(tools, mcpServers);
+        renderMCPSection(mcpServers);
+        renderLegacyTools(tools.filter(t => !t.is_mcp));
+        document.getElementById("badge-tools").textContent = mcpServers.reduce((s, srv) => s + srv.tool_count, 0);
+    }
+
+    function renderStats(tools, mcpServers) {
+        const mcpCount = mcpServers.length;
+        const mcpTools = mcpServers.reduce((s, srv) => s + srv.tool_count, 0);
+        const configured = tools.filter(t => t.api_configured).length;
+        document.getElementById("stats-bar").innerHTML = `
+            <div class="stat-card">
+                <div class="stat-icon" style="background: rgba(22,163,74,0.06); color: #16a34a;"><i class="fa-solid fa-plug"></i></div>
+                <div><div class="stat-number">${mcpCount}</div><div class="stat-label">MCP Servers</div></div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon" style="background: rgba(22,163,74,0.06); color: #16a34a;"><i class="fa-solid fa-wrench"></i></div>
+                <div><div class="stat-number">${mcpTools}</div><div class="stat-label">MCP Tools</div></div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon" style="background: rgba(22,163,74,0.06); color: #16a34a;"><i class="fa-solid fa-toolbox"></i></div>
+                <div><div class="stat-number">${tools.length}</div><div class="stat-label">Total Tools</div></div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon" style="background: rgba(22,163,74,0.06); color: #16a34a;"><i class="fa-solid fa-circle-check"></i></div>
+                <div><div class="stat-number">${configured}</div><div class="stat-label">Configured</div></div>
+            </div>
+        `;
+    }
+
+    function renderMCPSection(servers) {
+        if (!servers.length) return;
+        const section = document.getElementById("mcp-section");
+        const totalTools = servers.reduce((s, srv) => s + srv.tool_count, 0);
+        section.innerHTML = `
+            <div class="mcp-section-header">
+                <i class="fa-solid fa-plug"></i> MCP Built-in Servers
+                <span class="mcp-badge">🟢 LIVE</span>
+                <span style="font-size: 10px; color: #555; font-weight: 400; margin-left: 8px;">Model Context Protocol — ${servers.length} servers · ${totalTools} tools</span>
+            </div>
+            <div class="mcp-grid">
+                ${servers.map((srv, idx) => {
+                    const isConn = srv.status === 'ready';
+                    return `
+                    <div class="mcp-card" id="mcp-card-${idx}" onclick="toggleMCPCard(${idx})">
+                        <div class="mc-header">
+                            <div class="mc-icon" style="color: ${srv.color}; background: ${srv.color}0a; border: 1px solid ${srv.color}18;">
+                                <i class="${srv.icon}"></i>
+                            </div>
+                            <div class="mc-info">
+                                <div class="mc-name">${srv.name}</div>
+                                <div class="mc-meta">
+                                    <span class="mc-status-dot ${isConn ? 'connected' : 'disconnected'}"></span>
+                                    <span class="mc-status-text" style="color: ${isConn ? '#16a34a' : '#ef4444'};">${isConn ? 'Connected' : 'Offline'}</span>
+                                    <span class="mc-tool-count"><i class="fa-solid fa-wrench" style="margin-right: 3px; font-size: 8px;"></i>${srv.tool_count} tools</span>
+                                </div>
+                            </div>
+                            <i class="fa-solid fa-chevron-down mc-chevron"></i>
+                        </div>
+                        <div class="mc-detail">
+                            <div class="mc-detail-inner">
+                                <div class="mc-transport">${srv.transport.toUpperCase()} · ${srv.command} ${srv.args.join(' ')} ${srv.builtin ? '· 📦 Built-in' : '· 🔗 External'}</div>
+                                <div class="mc-tools-list">
+                                    ${srv.tools.map(t => `
+                                        <div class="mcp-tool-item">
+                                            <span class="tool-fn">${t.name}</span>
+                                            <span class="tool-desc">— ${t.description}</span>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        </div>
+                    </div>`;
+                }).join('')}
+            </div>
+        `;
+    }
+
+    function toggleMCPCard(idx) { document.getElementById(`mcp-card-${idx}`)?.classList.toggle('expanded'); }
+
+    function renderLegacyTools(tools) {
+        if (!tools.length) return;
+        document.getElementById("legacy-divider").style.display = "flex";
+        const grouped = {};
+        tools.forEach(t => { (grouped[t.category] ||= []).push(t); });
+        const container = document.getElementById("tools-container");
+        container.innerHTML = '';
+        for (const [cat, catTools] of Object.entries(grouped)) {
+            const meta = CATEGORY_META[cat] || { label: cat, icon: "fa-solid fa-puzzle-piece" };
+            container.innerHTML += `
+                <div class="category-section">
+                    <div class="category-header"><i class="${meta.icon}"></i> ${meta.label} (${catTools.length})</div>
+                    <div class="tool-grid">
+                        ${catTools.map(t => `
+                            <div class="tool-card">
+                                <div class="tc-top">
+                                    <div class="tc-icon" style="color: ${t.color}"><i class="${t.icon}"></i></div>
+                                    <div>
+                                        <div class="tc-name">${t.name}</div>
+                                        <span class="api-status ${t.api_configured ? 'configured' : 'missing'}">${t.api_configured ? '✓ API Ready' : '✕ Key Missing'}</span>
+                                    </div>
+                                </div>
+                                <div class="tc-desc">${t.description}</div>
+                                <div class="tc-footer">
+                                    <div class="tc-usage"><i class="fa-solid fa-users" style="margin-right: 3px;"></i> ${t.equipped_by_count}명 장착</div>
+                                    <div style="font-size: 9px; color: #333;">${t.api_key_env}</div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>`;
+        }
+    }
+
+    /* ═══════════════════════════════════════
+       PANEL 2: INTEGRATIONS
+    ═══════════════════════════════════════ */
+    let _intLoaded = false;
+    async function loadIntegrations() {
+        try {
+            const res = await fetch("/api/vault/status");
+            const data = await res.json();
+            if (data.status === "success") {
+                renderIntegrations(data.integrations);
+                const stored = data.integrations.filter(i => i.has_key).length;
+                document.getElementById("badge-integrations").textContent = stored + '/' + data.integrations.length;
+                _intLoaded = true;
+            }
+        } catch(e) { console.error("Failed to load integrations:", e); }
+    }
+
+    function renderIntegrations(integrations) {
+        const container = document.getElementById("integrations-container");
+        container.innerHTML = integrations.map(int => {
+            const hasKey = int.has_key;
+            return `
+                <div class="int-card ${hasKey ? 'connected' : ''}" id="card-${int.integration_id}">
+                    <div class="int-header">
+                        <div class="int-icon" style="color: ${int.color}"><i class="${int.icon}"></i></div>
+                        <div>
+                            <div class="int-name">${int.name}</div>
+                            <div style="font-size: 10px; color: #444;">${int.integration_id}</div>
+                        </div>
+                        <span class="int-status ${hasKey ? 'stored' : 'empty'}">${hasKey ? '🔐 Key Stored' : '⚪ Not Set'}</span>
+                    </div>
+                    ${hasKey ? `
+                        <div class="key-preview">
+                            <span class="lock-icon"><i class="fa-solid fa-lock"></i></span>
+                            <span>${int.preview}</span>
+                            <span style="margin-left: auto; font-size: 9px; color: #333;">${int.key_length} chars</span>
+                        </div>
+                        <div style="display: flex; gap: 6px;">
+                            <button class="btn-test" onclick="testConnection('${int.integration_id}')"><i class="fa-solid fa-satellite-dish"></i> 연결 테스트</button>
+                            <button class="btn-delete" onclick="deleteKey('${int.integration_id}')"><i class="fa-solid fa-trash"></i></button>
+                        </div>
+                    ` : `
+                        <div class="key-form">
+                            <input type="password" class="key-input" id="input-${int.integration_id}" placeholder="${int.placeholder}" autocomplete="off">
+                            <button class="btn-save" onclick="saveKey('${int.integration_id}')"><i class="fa-solid fa-lock"></i> 암호화 저장</button>
+                        </div>
+                    `}
+                    <div class="test-result" id="result-${int.integration_id}"></div>
+                    <div class="mcp-link">
+                        <i class="fa-solid fa-plug"></i> MCP 서버: <span class="mcp-tag">${int.mcp_server_id}</span>
+                        <span style="margin-left: auto; color: #222;">Auto-Injection</span>
+                    </div>
+                </div>`;
+        }).join('');
+    }
+
+    async function saveKey(id) {
+        const input = document.getElementById(`input-${id}`);
+        const key = input.value.trim();
+        if (!key) { input.style.borderColor = 'rgba(255,107,107,0.5)'; return; }
+        const r = document.getElementById(`result-${id}`);
+        r.className = "test-result loading"; r.style.display = "block"; r.textContent = "🔒 암호화 중...";
+        try {
+            const res = await fetch("/api/vault/store", { method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({ integration_id: id, api_key: key }) });
+            const data = await res.json();
+            if (data.status === "success") {
+                r.className = "test-result success"; r.innerHTML = `<i class="fa-solid fa-check"></i> 🔐 암호화 저장 완료 (${data.preview})`;
+                setTimeout(() => loadIntegrations(), 1200);
+            } else { r.className = "test-result error"; r.textContent = `❌ ${data.message}`; }
+        } catch(e) { r.className = "test-result error"; r.textContent = `❌ ${e.message}`; }
+    }
+
+    async function testConnection(id) {
+        const r = document.getElementById(`result-${id}`);
+        r.className = "test-result loading"; r.style.display = "block"; r.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> 테스트 중...';
+        try {
+            const res = await fetch("/api/vault/test", { method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({ integration_id: id }) });
+            const data = await res.json();
+            r.className = data.connected ? "test-result success" : "test-result error";
+            r.innerHTML = `<i class="fa-solid fa-${data.connected ? 'check' : 'times'}-circle"></i> ${data.message}`;
+        } catch(e) { r.className = "test-result error"; r.textContent = `❌ ${e.message}`; }
+    }
+
+    async function deleteKey(id) {
+        if (!window.confirm(`${id} API 키를 삭제하시겠습니까?`)) return;
+        try { await fetch("/api/vault/delete", { method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({ integration_id: id }) }); loadIntegrations(); } catch(e) {}
+    }
+
+    /* ═══════════════════════════════════════
+       EXTERNAL SERVICE INTEGRATION
+    ═══════════════════════════════════════ */
+    let _extServices = [];
+
+    async function loadExtServices() {
+        try {
+            const res = await fetch('/api/integrations');
+            const data = await res.json();
+            if (data.status === 'success') {
+                _extServices = data.services;
+                renderExtServices();
+            }
+        } catch(e) { console.error('External services load failed:', e); }
+    }
+
+    function renderExtServices() {
+        const container = document.getElementById('ext-services-container');
+        if (!container) return;
+
+        const connected = _extServices.filter(s => s.status === 'connected');
+        const badge = document.getElementById('ext-connected-badge');
+        if (badge) badge.textContent = `${connected.length}/${_extServices.length} 연결됨`;
+
+        container.innerHTML = _extServices.map(svc => {
+            const isOn = svc.status === 'connected';
+            let keysHtml = '';
+            for (const [keyName, keyInfo] of Object.entries(svc.keys)) {
+                const val = keyInfo.set ? keyInfo.masked : '';
+                keysHtml += `
+                    <div class="ext-key-row">
+                        <label class="ext-key-label">${keyInfo.label}</label>
+                        <input type="password" class="ext-key-input"
+                            data-ext-service="${svc.id}" data-ext-key="${keyName}"
+                            placeholder="${keyInfo.label}" value="${val}" autocomplete="off">
+                    </div>`;
+            }
+
+            return `
+            <div class="ext-card ${isOn ? 'connected' : ''}" data-ext-id="${svc.id}">
+                <div class="ext-card-header">
+                    <span class="ext-card-icon">${svc.icon}</span>
+                    <span class="ext-card-name">${svc.name}</span>
+                    <span class="ext-card-dot ${isOn ? 'on' : ''}"></span>
+                    <a href="${svc.docs_url}" target="_blank" class="ext-card-docs" title="API 키 발급 방법">📖</a>
+                </div>
+                <div class="ext-card-body">${keysHtml}</div>
+                <div class="ext-card-actions">
+                    <button class="ext-btn save" onclick="saveExtService('${svc.id}')">💾 저장</button>
+                    <button class="ext-btn test" onclick="testExtService('${svc.id}')">🔍 연결 테스트</button>
+                    ${isOn ? `<button class="ext-btn delete" onclick="disconnectExtService('${svc.id}')">🗑️</button>` : ''}
+                </div>
+                <div class="ext-card-msg" id="ext-msg-${svc.id}"></div>
+            </div>`;
+        }).join('');
+    }
+
+    function showExtMsg(id, msg, ok) {
+        const el = document.getElementById(`ext-msg-${id}`);
+        if (el) {
+            el.textContent = msg;
+            el.className = `ext-card-msg ${ok ? 'success' : 'error'}`;
+            setTimeout(() => { el.style.display = 'none'; }, 5000);
+        }
+    }
+
+    async function saveExtService(id) {
+        const inputs = document.querySelectorAll(`input[data-ext-service="${id}"]`);
+        const keys = {};
+        let hasValue = false;
+        inputs.forEach(inp => {
+            const val = inp.value.trim();
+            if (val && !val.includes('****')) { keys[inp.dataset.extKey] = val; hasValue = true; }
+        });
+        if (!hasValue) { showExtMsg(id, '⚠️ 새로운 키를 입력해주세요', false); return; }
+        try {
+            const res = await fetch('/api/integrations', {
+                method: 'POST', headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ service: id, keys }),
+            });
+            const data = await res.json();
+            showExtMsg(id, data.message, data.status === 'success');
+            if (data.status === 'success') await loadExtServices();
+        } catch(e) { showExtMsg(id, `❌ 저장 실패: ${e.message}`, false); }
+    }
+
+    async function testExtService(id) {
+        showExtMsg(id, '🔍 연결 테스트 중...', true);
+        try {
+            const res = await fetch(`/api/integrations/${id}/test`, { method: 'POST' });
+            const data = await res.json();
+            showExtMsg(id, data.message, data.connected);
+        } catch(e) { showExtMsg(id, `❌ 테스트 실패: ${e.message}`, false); }
+    }
+
+    async function disconnectExtService(id) {
+        if (!window.confirm('정말로 이 서비스의 연결을 해제하시겠습니까?')) return;
+        try {
+            const res = await fetch(`/api/integrations/${id}`, { method: 'DELETE' });
+            const data = await res.json();
+            showExtMsg(id, data.message, data.status === 'success');
+            await loadExtServices();
+        } catch(e) { showExtMsg(id, `❌ 삭제 실패: ${e.message}`, false); }
+    }
+
+    /* ═══════════════════════════════════════
+       AI ENGINE CONTROL TOWER
+    ═══════════════════════════════════════ */
+    let _aiProviderModels = {};
+    let _aiSelectedProvider = "openai";
+
+    function _updateAIEngineUI() {
+        const select = document.getElementById("tools-ai-model-select");
+        select.innerHTML = '';
+
+        if (_aiSelectedProvider === "local") {
+            // Fetch live models from Ollama + HuggingFace
+            select.innerHTML = '<option value="">⏳ 로컬 모델 로딩 중...</option>';
+            fetch("/api/ai/engine/config")
+                .then(r => r.json())
+                .then(data => {
+                    if (data.provider_models && data.provider_models.local) {
+                        _aiProviderModels.local = data.provider_models.local;
+                    }
+                    const ollamaSet = new Set(data.ollama_models || []);
+                    select.innerHTML = '';
+                    const models = _aiProviderModels.local || [];
+                    if (models.length === 0) {
+                        select.innerHTML = '<option value="">⚠️ 설치된 모델 없음</option>';
+                    } else {
+                        models.forEach(m => {
+                            const tag = ollamaSet.has(m) ? '🟢 Ollama' : '🔷 HuggingFace';
+                            select.innerHTML += `<option value="${m}">[${tag}] ${m}</option>`;
+                        });
+                    }
+                })
+                .catch(() => {
+                    select.innerHTML = '';
+                    (_aiProviderModels[_aiSelectedProvider] || []).forEach(m => {
+                        select.innerHTML += `<option value="${m}">${m}</option>`;
+                    });
+                });
+        } else {
+            (_aiProviderModels[_aiSelectedProvider] || []).forEach(m => {
+                select.innerHTML += `<option value="${m}">${m}</option>`;
+            });
+        }
+
+        if (_aiSelectedProvider === "local") {
+            document.getElementById("tools-ai-key-label").textContent = "LOCAL ENDPOINT";
+            document.getElementById("tools-ai-api-key-input").style.display = "none";
+            document.getElementById("tools-ai-key-visibility-btn").style.display = "none";
+            document.getElementById("tools-local-endpoint-row").style.display = "block";
+        } else {
+            const keyLabels = { openai: "OPENAI API KEY (sk-...)", anthropic: "ANTHROPIC API KEY (sk-ant-...)", google: "GOOGLE API KEY (AIza...)" };
+            document.getElementById("tools-ai-key-label").textContent = keyLabels[_aiSelectedProvider] || "API KEY";
+            document.getElementById("tools-ai-api-key-input").style.display = "block";
+            document.getElementById("tools-ai-key-visibility-btn").style.display = "block";
+            document.getElementById("tools-local-endpoint-row").style.display = "none";
+        }
+
+        document.querySelectorAll(".tools-ai-provider-btn").forEach(btn => {
+            if (btn.dataset.provider === _aiSelectedProvider) {
+                btn.style.background = "#1e293b";
+                btn.style.color = "#fff";
+                btn.style.borderColor = "#1e293b";
+            } else {
+                btn.style.background = "#f8fafc";
+                btn.style.color = "#64748b";
+                btn.style.borderColor = "#e2e8f0";
+            }
+        });
+    }
+
+    async function loadAIEngineConfig() {
+        try {
+            const res = await fetch("/api/ai/engine/config");
+            const data = await res.json();
+            if (data.status === "ok") {
+                if (data.provider_models) _aiProviderModels = data.provider_models;
+                _aiSelectedProvider = data.provider;
+                _updateAIEngineUI();
+                
+                document.getElementById("tools-ai-model-select").value = data.model;
+                if (data.local_endpoint) document.getElementById("tools-ai-local-endpoint").value = data.local_endpoint;
+
+                const keyHint = data[`has_${data.provider}_key`] || data.has_openai_key;
+                const statusLine = document.getElementById("tools-ai-engine-status-line");
+                statusLine.textContent = keyHint 
+                    ? `✅ ${data.provider.toUpperCase()} API 키 로드됨 — ${data.model}`
+                    : `⚠️ API 키 미설정 — Sandbox 모드 동작 중`;
+                statusLine.style.color = keyHint ? "#16a34a" : "#d97706";
+                
+                if (keyHint) {
+                    document.getElementById("tools-ai-api-key-input").placeholder = "(기존 키 저장됨 - 새 키 입력 시 덮어씀)";
+                } else {
+                    document.getElementById("tools-ai-api-key-input").placeholder = "sk-... / sk-ant-... / AIza...";
+                }
+            }
+        } catch(e) { console.error("AI Engine Load Error:", e); }
+    }
+
+    document.querySelectorAll(".tools-ai-provider-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+            _aiSelectedProvider = btn.dataset.provider;
+            _updateAIEngineUI();
+            const statusLine = document.getElementById("tools-ai-engine-status-line");
+            statusLine.textContent = "";
+            statusLine.style.color = "#94a3b8";
+            document.getElementById("tools-ai-api-key-input").value = "";
+            document.getElementById("tools-ai-api-key-input").placeholder = "sk-... / sk-ant-... / AIza...";
+        });
+    });
+
+    const aiKeyInput = document.getElementById("tools-ai-api-key-input");
+    const aiKeyVisBtn = document.getElementById("tools-ai-key-visibility-btn");
+    if(aiKeyVisBtn) {
+        aiKeyVisBtn.addEventListener("click", () => {
+            const isPass = aiKeyInput.type === "password";
+            aiKeyInput.type = isPass ? "text" : "password";
+            aiKeyVisBtn.textContent = isPass ? "🙈" : "👁";
+        });
+    }
+
+    document.getElementById("tools-ai-engine-test-btn").addEventListener("click", async function() {
+        const btn = this;
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> 테스트 중...';
+        btn.disabled = true;
+
+        const payload = {
+            provider: _aiSelectedProvider,
+            model: document.getElementById("tools-ai-model-select").value,
+            api_key: document.getElementById("tools-ai-api-key-input").value.trim() || undefined,
+            local_endpoint: document.getElementById("tools-ai-local-endpoint").value.trim() || undefined
+        };
+
+        try {
+            const res = await fetch("/api/ai/engine/test", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify(payload)
+            });
+            const data = await res.json();
+            const statusLine = document.getElementById("tools-ai-engine-status-line");
+            statusLine.textContent = data.message;
+            statusLine.style.color = data.status === "ok" ? "#16a34a" : "#d97706";
+        } catch(e) {
+            const statusLine = document.getElementById("tools-ai-engine-status-line");
+            statusLine.textContent = "❌ 서버 오류";
+            statusLine.style.color = "#dc2626";
+        } finally {
+            btn.innerHTML = "🔌 연결 테스트";
+            btn.disabled = false;
+        }
+    });
+
+    document.getElementById("tools-ai-engine-save-btn").addEventListener("click", async function() {
+        const btn = this;
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> 저장 중...';
+        btn.disabled = true;
+
+        const payload = {
+            provider: _aiSelectedProvider,
+            model: document.getElementById("tools-ai-model-select").value
+        };
+        const apiKey = document.getElementById("tools-ai-api-key-input").value.trim();
+        const localEp = document.getElementById("tools-ai-local-endpoint").value.trim();
+        
+        if (apiKey) payload.api_key = apiKey;
+        if (localEp) payload.local_endpoint = localEp;
+
+        try {
+            const res = await fetch("/api/ai/engine/config", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify(payload)
+            });
+            const data = await res.json();
+            const statusLine = document.getElementById("tools-ai-engine-status-line");
+            if (data.status === "ok") {
+                statusLine.textContent = `✅ ${data.provider.toUpperCase()} / ${data.model} 로 스위칭 완료`;
+                statusLine.style.color = "#16a34a";
+            } else {
+                statusLine.textContent = "❌ 저장 실패";
+                statusLine.style.color = "#dc2626";
+            }
+        } catch(e) {
+            const statusLine = document.getElementById("tools-ai-engine-status-line");
+            statusLine.textContent = "❌ 서버 오류";
+            statusLine.style.color = "#dc2626";
+        } finally {
+            btn.innerHTML = "⚡ 엔진 스위칭 저장";
+            btn.disabled = false;
+        }
+    });
+
+    /* ═══════════════════════════════════════
+       MODEL PIPELINE (LocateAnything ↔ Gemma 4)
+    ═══════════════════════════════════════ */
+    let _pipelineFile = null;
+
+    function loadPipelineStatus() {
+        fetch("/api/ai/pipeline/status")
+            .then(r => r.json())
+            .then(data => {
+                // Stage 1 — LocateAnything
+                const la = data.locateanything || {};
+                const laMode = document.getElementById("pipeline-la-mode");
+                if (la.installed) {
+                    laMode.innerHTML = la.mode === "gpu" ?
+                        '<span style="color:#16a34a;">✅ GPU 추론 가능</span>' :
+                        '<span style="color:#3b82f6;">🔵 시뮬레이션 모드</span>';
+                } else {
+                    laMode.innerHTML = '<span style="color:#dc2626;">❌ 미설치</span>';
+                }
+
+                // Stage 2 — Gemma
+                const gm = data.gemma || {};
+                const gmMode = document.getElementById("pipeline-gemma-mode");
+                if (gm.installed) {
+                    gmMode.innerHTML = `<span style="color:#16a34a;">✅ Ollama 연결됨 (${gm.ollama_name})</span>`;
+                } else {
+                    gmMode.innerHTML = '<span style="color:#f59e0b;">⚡ Fallback LLM 사용</span>';
+                }
+
+                // Badge
+                const badge = document.getElementById("pipeline-mode-badge");
+                if (data.mode === "gpu") {
+                    badge.textContent = "🟢 GPU 모드";
+                    badge.style.background = "rgba(22,163,74,0.1)";
+                    badge.style.color = "#16a34a";
+                } else {
+                    badge.textContent = "🔵 시뮬레이션";
+                    badge.style.background = "rgba(59,130,246,0.1)";
+                    badge.style.color = "#3b82f6";
+                }
+            })
+            .catch(() => {
+                document.getElementById("pipeline-mode-badge").textContent = "❌ 오류";
+            });
+    }
+
+    function handlePipelineFile(input) {
+        if (input.files && input.files[0]) {
+            _pipelineFile = input.files[0];
+            const label = document.getElementById("pipeline-file-label");
+            label.innerHTML = `
+                <div style="display:flex;align-items:center;gap:8px;justify-content:center;">
+                    <i class="fa-solid fa-image" style="color:#8b5cf6;font-size:16px;"></i>
+                    <span style="color:#1e293b;font-weight:600;">${_pipelineFile.name}</span>
+                    <span style="color:#94a3b8;font-size:10px;">(${((_pipelineFile.size)/1024).toFixed(1)} KB)</span>
+                </div>
+            `;
+            document.getElementById("pipeline-dropzone").style.borderColor = "#8b5cf6";
+            document.getElementById("pipeline-dropzone").style.background = "rgba(139,92,246,0.03)";
+        }
+    }
+
+    function handlePipelineDrop(event) {
+        const files = event.dataTransfer.files;
+        if (files.length > 0) {
+            document.getElementById("pipeline-file-input").files = files;
+            handlePipelineFile(document.getElementById("pipeline-file-input"));
+        }
+    }
+
+    async function runPipeline() {
+        const query = document.getElementById("pipeline-query-input").value.trim();
+        const question = document.getElementById("pipeline-question-input").value.trim();
+        const btn = document.getElementById("pipeline-run-btn");
+        const results = document.getElementById("pipeline-results");
+
+        if (!_pipelineFile) {
+            alert("이미지를 선택해주세요.");
+            return;
+        }
+        if (!query) {
+            alert("탐색할 카테고리를 입력해주세요.");
+            return;
+        }
+
+        // Show loading
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> 파이프라인 실행 중...';
+        results.style.display = "block";
+        results.innerHTML = `
+            <div style="padding:20px;text-align:center;">
+                <div style="margin-bottom:12px;">
+                    <i class="fa-solid fa-spinner fa-spin" style="font-size:24px;color:#8b5cf6;"></i>
+                </div>
+                <div style="font-size:12px;font-weight:600;color:#1e293b;margin-bottom:4px;">파이프라인 실행 중...</div>
+                <div style="font-size:10px;color:#94a3b8;">Stage 1: LocateAnything-3B 비전 분석 → Stage 2: Gemma 4 텍스트 해석</div>
+            </div>
+        `;
+
+        try {
+            const formData = new FormData();
+            formData.append("image", _pipelineFile);
+            formData.append("query", query);
+            if (question) formData.append("question", question);
+
+            const resp = await fetch("/api/ai/pipeline/run", { method: "POST", body: formData });
+            const data = await resp.json();
+
+            if (data.status === "success") {
+                renderPipelineResults(data);
+            } else {
+                results.innerHTML = `
+                    <div style="padding:16px;background:#fef2f2;border:1px solid #fecaca;border-radius:10px;font-size:12px;color:#dc2626;">
+                        ⚠️ 오류: ${data.message || "알 수 없는 오류"}
+                    </div>
+                `;
+            }
+        } catch (err) {
+            results.innerHTML = `
+                <div style="padding:16px;background:#fef2f2;border:1px solid #fecaca;border-radius:10px;font-size:12px;color:#dc2626;">
+                    ⚠️ 통신 오류: ${err.message}
+                </div>
+            `;
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = "🚀 파이프라인 실행";
+        }
+    }
+
+    function renderPipelineResults(data) {
+        const results = document.getElementById("pipeline-results");
+        const s1 = data.stage1_vision || {};
+        const s2 = data.stage2_text || {};
+        const detections = s1.detections || [];
+
+        // Build detection rows
+        let detRows = "";
+        detections.forEach((d, i) => {
+            const bbox = d.bbox || {};
+            detRows += `
+                <tr style="border-bottom:1px solid #f1f5f9;">
+                    <td style="padding:6px 8px;font-size:11px;">${i+1}</td>
+                    <td style="padding:6px 8px;font-size:11px;font-weight:600;">${d.category}</td>
+                    <td style="padding:6px 8px;font-size:11px;">${(d.confidence*100).toFixed(1)}%</td>
+                    <td style="padding:6px 8px;font-size:10px;color:#64748b;font-family:monospace;">(${bbox.x1},${bbox.y1})→(${bbox.x2},${bbox.y2})</td>
+                    <td style="padding:6px 8px;font-size:11px;">${d.area_percent}%</td>
+                </tr>
+            `;
+        });
+
+        // Render interpretation with basic markdown
+        const interp = (s2.interpretation || "")
+            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+            .replace(/## (.*?)(\n|$)/g, '<div style="font-weight:700;font-size:13px;margin:8px 0 4px;">$1</div>')
+            .replace(/### (.*?)(\n|$)/g, '<div style="font-weight:600;font-size:12px;margin:6px 0 3px;">$1</div>')
+            .replace(/\n/g, '<br>');
+
+        results.innerHTML = `
+            <!-- Stage 1 Results -->
+            <div style="margin-bottom:14px;padding:14px;background:linear-gradient(135deg,rgba(139,92,246,0.04),rgba(139,92,246,0.01));border:1px solid rgba(139,92,246,0.15);border-radius:10px;">
+                <div style="display:flex;align-items:center;gap:6px;margin-bottom:10px;">
+                    <span style="padding:3px 8px;background:#8b5cf6;color:#fff;border-radius:6px;font-size:9px;font-weight:700;">STAGE 1</span>
+                    <span style="font-size:11px;font-weight:700;color:#1e293b;">LocateAnything-3B 비전 분석</span>
+                    <span style="margin-left:auto;font-size:9px;color:#94a3b8;">${s1.mode === 'gpu' ? '🟢 GPU' : '🔵 시뮬레이션'} · ${s1.duration_ms}ms</span>
+                </div>
+                <div style="font-size:11px;color:#64748b;margin-bottom:8px;">
+                    카테고리: <strong>${(s1.categories||[]).join(', ')}</strong> · 탐지: <strong>${detections.length}개</strong>
+                    ${s1.image_size ? ` · 이미지: ${s1.image_size.width}×${s1.image_size.height}px` : ''}
+                </div>
+                ${detections.length > 0 ? `
+                <div style="overflow-x:auto;">
+                    <table style="width:100%;border-collapse:collapse;font-family:inherit;">
+                        <thead>
+                            <tr style="background:#f1f5f9;">
+                                <th style="padding:6px 8px;font-size:9px;font-weight:700;color:#64748b;text-align:left;">#</th>
+                                <th style="padding:6px 8px;font-size:9px;font-weight:700;color:#64748b;text-align:left;">카테고리</th>
+                                <th style="padding:6px 8px;font-size:9px;font-weight:700;color:#64748b;text-align:left;">신뢰도</th>
+                                <th style="padding:6px 8px;font-size:9px;font-weight:700;color:#64748b;text-align:left;">위치</th>
+                                <th style="padding:6px 8px;font-size:9px;font-weight:700;color:#64748b;text-align:left;">면적</th>
+                            </tr>
+                        </thead>
+                        <tbody>${detRows}</tbody>
+                    </table>
+                </div>` : '<div style="color:#94a3b8;font-size:11px;text-align:center;padding:10px;">탐지된 객체 없음</div>'}
+            </div>
+
+            <!-- Stage 2 Results -->
+            <div style="padding:14px;background:linear-gradient(135deg,rgba(59,130,246,0.04),rgba(59,130,246,0.01));border:1px solid rgba(59,130,246,0.15);border-radius:10px;">
+                <div style="display:flex;align-items:center;gap:6px;margin-bottom:10px;">
+                    <span style="padding:3px 8px;background:#3b82f6;color:#fff;border-radius:6px;font-size:9px;font-weight:700;">STAGE 2</span>
+                    <span style="font-size:11px;font-weight:700;color:#1e293b;">Gemma 4 텍스트 해석</span>
+                    <span style="margin-left:auto;font-size:9px;color:#94a3b8;">${s2.llm_used || '?'} · ${s2.duration_ms}ms</span>
+                </div>
+                <div style="font-size:12px;line-height:1.7;color:#1e293b;">
+                    ${interp}
+                </div>
+            </div>
+
+            <!-- Summary Bar -->
+            <div style="margin-top:12px;padding:10px 14px;background:#f8fafc;border-radius:8px;display:flex;justify-content:space-between;align-items:center;">
+                <span style="font-size:10px;color:#64748b;">
+                    파이프라인 ID: <code style="font-size:9px;background:#e2e8f0;padding:2px 4px;border-radius:3px;">${data.pipeline_id}</code>
+                </span>
+                <span style="font-size:10px;color:#64748b;">
+                    총 소요시간: <strong>${data.total_duration_ms}ms</strong> · 모드: ${data.mode === 'gpu' ? '🟢 GPU' : '🔵 시뮬레이션'}
+                </span>
+            </div>
+        `;
+    }
+
+    /* ═══════════════════════════════════════
+       FINE-TUNING (30 Improvements)
+    ═══════════════════════════════════════ */
+    let _ftMethod = "lora";
+    let _ftActiveRunId = null;
+    let _ftPollInterval = null;
+    let _ftLossHistory = [];
+
+    function selectFTMethod(el) {
+        document.querySelectorAll('.ft-method-btn').forEach(b => {
+            b.style.border = '1.5px solid #e2e8f0'; b.style.background = '#f8fafc'; b.style.color = '#64748b';
+            b.classList.remove('active');
+        });
+        el.style.border = '1.5px solid #6366f1'; el.style.background = 'rgba(99,102,241,0.05)'; el.style.color = '#6366f1';
+        el.classList.add('active');
+        _ftMethod = el.dataset.method;
+    }
+
+    async function autoSelectMethod() {
+        const dsId = document.getElementById("ft-dataset-select").value;
+        const reasonEl = document.getElementById("ft-auto-reason");
+        reasonEl.textContent = '분석 중...';
+        try {
+            const resp = await fetch(`/api/finetune/auto-method?dataset_id=${dsId}`);
+            const data = await resp.json();
+            if (data.status === 'ok') {
+                const btn = document.querySelector(`.ft-method-btn[data-method="${data.method}"]`);
+                if (btn) selectFTMethod(btn);
+                reasonEl.textContent = `✅ ${data.reason}`;
+                reasonEl.style.color = '#16a34a';
+            }
+        } catch(e) { reasonEl.textContent = '⚠️ 자동 선택 실패'; reasonEl.style.color = '#dc2626'; }
+    }
+
+    // Presets (#27)
+    async function loadPresets() {
+        try {
+            const resp = await fetch("/api/finetune/presets");
+            const data = await resp.json();
+            const presets = data.presets || {};
+            const container = document.getElementById("ft-presets-container");
+            let html = '';
+            Object.entries(presets).forEach(([key, p]) => {
+                html += `
+                    <button onclick="applyPreset('${key}')" style="padding:12px 8px;border:1.5px solid #e2e8f0;border-radius:10px;background:#f8fafc;cursor:pointer;text-align:center;transition:all 0.15s;font-size:10px;font-weight:700;color:#475569;"
+                            onmouseover="this.style.borderColor='#a855f7';this.style.background='rgba(168,85,247,0.03)'"
+                            onmouseout="this.style.borderColor='#e2e8f0';this.style.background='#f8fafc'">
+                        <div style="font-size:18px;margin-bottom:4px;">${p.name.split(' ')[0]}</div>
+                        <div>${p.name.split(' ').slice(1).join(' ')}</div>
+                        <div style="font-size:8px;font-weight:400;color:#94a3b8;margin-top:3px;">${p.description.substring(0,25)}...</div>
+                    </button>`;
+            });
+            container.innerHTML = html;
+        } catch(e) {}
+    }
+
+    async function applyPreset(key) {
+        try {
+            const resp = await fetch("/api/finetune/presets");
+            const data = await resp.json();
+            const preset = data.presets[key];
+            if (!preset) return;
+            const cfg = preset.config;
+            if (cfg.epochs) document.getElementById("ft-epochs").value = cfg.epochs;
+            if (cfg.batch_size) document.getElementById("ft-batch").value = cfg.batch_size;
+            if (cfg.learning_rate) document.getElementById("ft-lr").value = cfg.learning_rate;
+            if (cfg.lora_r) document.getElementById("ft-lora-r").value = cfg.lora_r;
+            if (cfg.lr_scheduler_type) document.getElementById("ft-lr-scheduler").value = cfg.lr_scheduler_type;
+            if (cfg.gradient_checkpointing) document.getElementById("ft-grad-checkpoint").checked = cfg.gradient_checkpointing;
+            alert(`✅ '${preset.name}' 프리셋이 적용되었습니다.`);
+        } catch(e) {}
+    }
+
+    // GPU Info
+    async function loadFTGPUInfo() {
+        try {
+            const resp = await fetch("/api/finetune/gpu");
+            const data = await resp.json();
+            const badge = document.getElementById("ft-gpu-badge");
+            const info = document.getElementById("ft-gpu-info");
+            const gpu = data.gpu || {};
+            if (gpu.available) {
+                badge.textContent = `🟢 ${gpu.type.toUpperCase()}`;
+                badge.style.background = "rgba(22,163,74,0.1)"; badge.style.color = "#16a34a";
+            } else {
+                badge.textContent = "🔵 시뮬레이션 모드";
+                badge.style.background = "rgba(59,130,246,0.1)"; badge.style.color = "#3b82f6";
+            }
+            info.innerHTML = `
+                <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;">
+                    <div><span style="font-size:9px;color:#94a3b8;font-weight:700;">GPU</span><br>
+                        <span style="font-size:11px;font-weight:600;color:#1e293b;">${gpu.name || 'N/A'}</span></div>
+                    <div><span style="font-size:9px;color:#94a3b8;font-weight:700;">타입</span><br>
+                        <span style="font-size:11px;font-weight:600;color:#1e293b;">${gpu.type || 'cpu'}</span></div>
+                    <div><span style="font-size:9px;color:#94a3b8;font-weight:700;">라이브러리</span><br>
+                        <span style="font-size:11px;font-weight:600;color:${data.libraries_available ? '#16a34a' : '#f59e0b'};">
+                            ${data.libraries_available ? '✅ 사용 가능' : '⚠️ 시뮬레이션'}
+                        </span></div>
+                </div>`;
+        } catch(e) { document.getElementById("ft-gpu-badge").textContent = "❌ 오류"; }
+    }
+
+    // HF Search (Enhanced with preview + favorites)
+    async function searchHFDatasets() {
+        const q = document.getElementById("ft-hf-search").value.trim();
+        if (!q) return;
+        const container = document.getElementById("ft-hf-results");
+        container.style.display = "block";
+        container.innerHTML = '<div style="padding:10px;text-align:center;font-size:11px;color:#94a3b8;"><i class="fa-solid fa-spinner fa-spin"></i> 검색 중...</div>';
+        try {
+            const resp = await fetch(`/api/finetune/datasets/search?q=${encodeURIComponent(q)}&limit=10`);
+            const data = await resp.json();
+            if (!data.results || data.results.length === 0) {
+                container.innerHTML = '<div style="padding:10px;font-size:11px;color:#94a3b8;text-align:center;">검색 결과가 없습니다.</div>';
+                return;
+            }
+            let html = '';
+            data.results.forEach(ds => {
+                html += `
+                    <div style="padding:10px 12px;border:1px solid #f1f5f9;border-radius:8px;margin-bottom:6px;display:flex;align-items:center;gap:10px;">
+                        <div style="flex:1;min-width:0;">
+                            <div style="font-size:11px;font-weight:700;color:#1e293b;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${ds.id}</div>
+                            <div style="font-size:9px;color:#94a3b8;margin-top:2px;">⬇ ${(ds.downloads||0).toLocaleString()} · ❤️ ${ds.likes||0}</div>
+                        </div>
+                        <button onclick="previewHFDataset('${ds.id}')" style="padding:6px 10px;border:1px solid #e2e8f0;border-radius:6px;background:#fff;color:#64748b;font-size:9px;font-weight:700;cursor:pointer;">👁 미리보기</button>
+                        <button onclick="downloadHFDataset('${ds.id}')" style="padding:6px 12px;border:none;border-radius:6px;background:#f59e0b;color:#fff;font-size:10px;font-weight:700;cursor:pointer;">📥 다운로드</button>
+                    </div>`;
+            });
+            container.innerHTML = html;
+        } catch(e) { container.innerHTML = `<div style="padding:10px;font-size:11px;color:#dc2626;">⚠️ ${e.message}</div>`; }
+    }
+
+    // Preview HF Dataset (#5)
+    async function previewHFDataset(hfId) {
+        const container = document.getElementById("ft-hf-results");
+        container.innerHTML = `<div style="padding:10px;text-align:center;font-size:11px;color:#94a3b8;"><i class="fa-solid fa-spinner fa-spin"></i> "${hfId}" 미리보기 로딩...</div>`;
+        try {
+            const resp = await fetch(`/api/finetune/datasets/preview?hf_id=${encodeURIComponent(hfId)}&count=3`);
+            const data = await resp.json();
+            if (data.status !== 'ok') { container.innerHTML = `<div style="color:#dc2626;font-size:11px;padding:10px;">⚠️ ${data.message}</div>`; return; }
+            let html = `<div style="padding:10px;border:1px solid #bae6fd;border-radius:8px;background:#f0f9ff;margin-bottom:8px;">
+                <div style="font-size:11px;font-weight:700;color:#0369a1;margin-bottom:6px;">👁 ${hfId} — ${(data.total_rows||0).toLocaleString()}행</div>
+                <div style="font-size:9px;color:#64748b;margin-bottom:8px;">필드: ${(data.features||[]).join(', ')}</div>`;
+            (data.samples||[]).forEach((s,i) => {
+                const n = s.normalized;
+                html += `<div style="padding:6px 8px;background:#fff;border:1px solid #e2e8f0;border-radius:6px;margin-bottom:4px;font-size:9px;">
+                    <div style="color:#64748b;"><strong>Q:</strong> ${(n?.instruction||'—').substring(0,120)}...</div>
+                    <div style="color:#475569;margin-top:2px;"><strong>A:</strong> ${(n?.output||'—').substring(0,120)}...</div>
+                </div>`;
+            });
+            html += `<button onclick="downloadHFDataset('${hfId}')" style="margin-top:6px;padding:8px 16px;border:none;border-radius:6px;background:#f59e0b;color:#fff;font-size:10px;font-weight:700;cursor:pointer;width:100%;">📥 이 데이터셋 다운로드</button></div>`;
+            container.innerHTML = html;
+        } catch(e) { container.innerHTML = `<div style="color:#dc2626;font-size:11px;padding:10px;">⚠️ ${e.message}</div>`; }
+    }
+
+    async function downloadHFDataset(hfId) {
+        const container = document.getElementById("ft-hf-results");
+        container.innerHTML = `<div style="padding:20px;text-align:center;">
+            <div style="font-size:11px;color:#6366f1;font-weight:700;margin-bottom:8px;"><i class="fa-solid fa-spinner fa-spin"></i> "${hfId}" 다운로드 중...</div>
+            <div style="font-size:9px;color:#94a3b8;">HuggingFace에서 데이터를 가져오고 있습니다. 잠시 기다려 주세요...</div>
+            <div style="width:100%;height:4px;background:#e2e8f0;border-radius:2px;margin-top:10px;overflow:hidden;">
+                <div style="width:30%;height:100%;background:linear-gradient(90deg,#f59e0b,#6366f1);border-radius:2px;animation:ftPulse 1.5s ease-in-out infinite;"></div>
+            </div>
+        </div>`;
+        try {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 120000);
+            const resp = await fetch("/api/finetune/datasets/download", {
+                method: "POST", headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({hf_id: hfId, max_samples: 1000}),
+                signal: controller.signal
+            });
+            clearTimeout(timeoutId);
+            const data = await resp.json();
+            if (data.status === "ok") {
+                container.innerHTML = `<div style="padding:14px;background:rgba(22,163,74,0.05);border:1px solid rgba(22,163,74,0.2);border-radius:8px;font-size:11px;color:#16a34a;">
+                    ✅ 다운로드 완료! ${data.sample_count}개 샘플 저장됨<br>
+                    <span style="font-size:9px;color:#64748b;">ID: ${data.dataset_id} · 경로: ${data.file_path || ''}</span></div>`;
+                loadFTDatasets();
+            } else {
+                const reason = data.reason || '';
+                const icon = reason === 'binary_only' ? '🚫' : '⚠️';
+                const bgColor = reason === 'binary_only' ? '#fff7ed' : '#fef2f2';
+                const borderColor = reason === 'binary_only' ? '#fed7aa' : '#fecaca';
+                const textColor = reason === 'binary_only' ? '#c2410c' : '#dc2626';
+                let retryBtn = '';
+                if (reason !== 'binary_only') {
+                    retryBtn = `<br><button onclick="downloadHFDataset('${hfId}')" style="margin-top:6px;padding:6px 12px;border:none;border-radius:6px;background:#f59e0b;color:#fff;font-size:10px;font-weight:700;cursor:pointer;">🔄 재시도</button>`;
+                }
+                container.innerHTML = `<div style="padding:14px;background:${bgColor};border:1px solid ${borderColor};border-radius:8px;font-size:11px;color:${textColor};">${icon} ${data.message}${retryBtn}</div>`;
+            }
+        } catch(e) {
+            const msg = e.name === 'AbortError' ? '요청 시간 초과 (120초). 네트워크를 확인하세요.' : e.message;
+            container.innerHTML = `<div style="padding:14px;background:#fef2f2;border:1px solid #fecaca;border-radius:8px;font-size:11px;color:#dc2626;">⚠️ 다운로드 오류: ${msg}<br><button onclick="downloadHFDataset('${hfId}')" style="margin-top:6px;padding:6px 12px;border:none;border-radius:6px;background:#f59e0b;color:#fff;font-size:10px;font-weight:700;cursor:pointer;">🔄 재시도</button></div>`;
+        }
+    }
+
+    // File Upload (#6)
+    // Custom prompt modal (window.prompt fails during drag-and-drop in some browsers)
+    function showNamePrompt(defaultValue) {
+        return new Promise((resolve) => {
+            const overlay = document.createElement('div');
+            overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:99999;display:flex;align-items:center;justify-content:center;';
+            overlay.innerHTML = `
+                <div style="background:#fff;border-radius:14px;padding:24px;max-width:400px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,0.2);">
+                    <div style="font-size:14px;font-weight:700;color:#1e293b;margin-bottom:12px;">📊 데이터셋 이름</div>
+                    <input id="_ft_name_input" type="text" value="${defaultValue}" 
+                           style="width:100%;padding:10px 12px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:13px;font-family:inherit;outline:none;box-sizing:border-box;"
+                           autofocus />
+                    <div style="display:flex;gap:8px;margin-top:16px;justify-content:flex-end;">
+                        <button id="_ft_name_cancel" style="padding:8px 16px;border:1px solid #e2e8f0;border-radius:8px;background:#f8fafc;color:#64748b;font-size:12px;font-weight:600;cursor:pointer;">취소</button>
+                        <button id="_ft_name_ok" style="padding:8px 20px;border:none;border-radius:8px;background:#7c3aed;color:#fff;font-size:12px;font-weight:700;cursor:pointer;">확인</button>
+                    </div>
+                </div>`;
+            document.body.appendChild(overlay);
+            
+            const input = overlay.querySelector('#_ft_name_input');
+            input.focus();
+            input.select();
+            
+            const cleanup = (val) => { overlay.remove(); resolve(val); };
+            overlay.querySelector('#_ft_name_ok').onclick = () => cleanup(input.value || null);
+            overlay.querySelector('#_ft_name_cancel').onclick = () => cleanup(null);
+            input.onkeydown = (e) => { if (e.key === 'Enter') cleanup(input.value || null); if (e.key === 'Escape') cleanup(null); };
+            overlay.onclick = (e) => { if (e.target === overlay) cleanup(null); };
+        });
+    }
+
+    async function handleFileUpload(file) {
+        if (!file) { console.warn('[handleFileUpload] no file'); return; }
+        console.log(`[handleFileUpload] 파일 수신: ${file.name} (${(file.size/1024).toFixed(1)}KB, type=${file.type})`);
+        
+        const isPDF = file.name.toLowerCase().endsWith('.pdf');
+        const defaultName = file.name.replace(/\.[^.]+$/, '');
+        const name = await showNamePrompt(defaultName);
+        if (!name) { console.log('[handleFileUpload] 사용자가 취소함'); return; }
+        
+        const zone = document.getElementById("ft-upload-zone");
+
+        if (isPDF) {
+            // PDF: FormData로 바이너리 전송 (프로그레스 바 표시)
+            if (typeof cdUploadProgress !== 'undefined') {
+                cdUploadProgress.create(zone, file.name);
+            } else {
+                zone.innerHTML = `<div style="font-size:11px;color:#8b5cf6;"><i class="fa-solid fa-spinner fa-spin"></i> 📄 PDF 분석 중...</div>`;
+            }
+            try {
+                const formData = new FormData();
+                formData.append('file', file);
+                formData.append('name', name);
+                console.log(`[handleFileUpload] PDF 업로드 시작: ${name}`);
+                
+                // Use XHR for upload progress tracking
+                const data = await new Promise((resolve, reject) => {
+                    const xhr = new XMLHttpRequest();
+                    const startTime = Date.now();
+                    xhr.upload.addEventListener('progress', (e) => {
+                        if (e.lengthComputable && typeof cdUploadProgress !== 'undefined') {
+                            const pct = (e.loaded / e.total) * 90; // 90% for upload, 10% for server processing
+                            const elapsed = (Date.now() - startTime) / 1000;
+                            const speed = e.loaded / elapsed;
+                            const remaining = (e.total - e.loaded) / speed;
+                            const eta = remaining < 60 ? `약 ${Math.ceil(remaining)}초 남음` : `약 ${Math.ceil(remaining/60)}분 남음`;
+                            cdUploadProgress.update(zone, pct, pct >= 89 ? '서버 처리 중...' : eta);
+                        }
+                    });
+                    xhr.onload = () => {
+                        try { resolve(JSON.parse(xhr.responseText)); }
+                        catch(e) { reject(new Error('서버 응답 파싱 오류')); }
+                    };
+                    xhr.onerror = () => reject(new Error('네트워크 오류'));
+                    xhr.open('POST', '/api/finetune/datasets/upload');
+                    xhr.send(formData);
+                });
+                
+                if (typeof cdUploadProgress !== 'undefined') {
+                    cdUploadProgress.complete(zone);
+                }
+                console.log('[handleFileUpload] 서버 응답:', data);
+                if (data.status === "ok") {
+                    if (data.sample_count > 0) {
+                        zone.innerHTML = `<div style="font-size:11px;color:#16a34a;">✅ PDF에서 ${data.sample_count}개 학습 샘플 생성 완료!</div><div style="font-size:9px;color:#64748b;margin-top:4px;">📄 ${file.name} → 요약/Q&A 형태로 변환됨 (ID: ${data.dataset_id})</div>`;
+                        if (typeof cdCelebrate === 'function') cdCelebrate(); // #34 축하 애니메이션
+                    } else {
+                        zone.innerHTML = `<div style="font-size:11px;color:#d97706;">⚠️ PDF가 업로드되었지만 텍스트를 추출할 수 없습니다.</div><div style="font-size:9px;color:#94a3b8;margin-top:4px;">이미지 기반 PDF이거나 텍스트가 너무 짧습니다. 텍스트가 포함된 PDF를 사용해주세요.</div><div style="font-size:9px;color:#64748b;margin-top:2px;">데이터셋 ID: ${data.dataset_id} (빈 데이터셋으로 생성됨)</div>`;
+                    }
+                    loadFTDatasets();
+                } else {
+                    zone.innerHTML = `<div style="font-size:11px;color:#dc2626;">⚠️ ${data.message}</div>`;
+                }
+            } catch(e) {
+                console.error('[handleFileUpload] PDF 오류:', e);
+                zone.innerHTML = `<div style="font-size:11px;color:#dc2626;">⚠️ PDF 처리 오류: ${e.message}</div>`;
+            }
+        } else {
+            // Text files: JSONL/CSV
+            zone.innerHTML = `<div style="font-size:11px;color:#6366f1;"><i class="fa-solid fa-spinner fa-spin"></i> 업로드 중...</div>`;
+            try {
+                const content = await file.text();
+                const fileType = file.name.endsWith('.csv') ? 'csv' : 'jsonl';
+                console.log(`[handleFileUpload] 텍스트 파일 업로드: ${name} (${fileType})`);
+                const resp = await fetch("/api/finetune/datasets/upload", {
+                    method: "POST", headers: {"Content-Type": "application/json"},
+                    body: JSON.stringify({name, content, file_type: fileType})
+                });
+                const data = await resp.json();
+                console.log('[handleFileUpload] 서버 응답:', data);
+                if (data.status === "ok") {
+                    zone.innerHTML = `<div style="font-size:11px;color:#16a34a;">✅ ${data.sample_count}개 샘플 업로드 완료!</div>`;
+                    loadFTDatasets();
+                } else { zone.innerHTML = `<div style="font-size:11px;color:#dc2626;">⚠️ ${data.message}</div>`; }
+            } catch(e) { 
+                console.error('[handleFileUpload] 텍스트 파일 오류:', e);
+                zone.innerHTML = `<div style="font-size:11px;color:#dc2626;">⚠️ ${e.message}</div>`; 
+            }
+        }
+        setTimeout(() => {
+            zone.innerHTML = `<div style="font-size:24px;margin-bottom:6px;">📁</div><div style="font-size:11px;color:#64748b;">클릭 또는 드래그&드롭으로 파일 업로드</div><div style="font-size:9px;color:#94a3b8;margin-top:4px;">JSONL, CSV, PDF 형식 지원</div>`;
+        }, 6000);
+    }
+
+    // Dataset List (Enhanced with stats, filter, augment, favorite)
+    async function loadFTDatasets() {
+        try {
+            const resp = await fetch("/api/finetune/datasets");
+            const data = await resp.json();
+            const datasets = data.datasets || [];
+            const container = document.getElementById("ft-local-datasets");
+            const select = document.getElementById("ft-dataset-select");
+
+            // Guard: select가 아직 DOM에 없으면 에러 방지
+            if (select) {
+                // 모든 옵션을 한번에 빌드 후 세팅
+                let optHtml = '<option value="">데이터셋을 선택하세요</option>';
+                datasets.forEach(ds => {
+                    const icon = ds.format === 'pdf' ? '📄' : ds.source === 'huggingface' ? '🤗' : '📋';
+                    optHtml += `<option value="${ds.id}">${icon} ${ds.name} (${ds.sample_count}개) — ${ds.source}</option>`;
+                });
+                select.innerHTML = optHtml;
+                console.log(`[loadFTDatasets] ✅ select 옵션 세팅 완료: ${select.options.length}개 (datasets: ${datasets.length}개)`);
+            } else {
+                console.warn('[loadFTDatasets] ⚠️ ft-dataset-select element NOT FOUND');
+            }
+
+            // Guard: container가 DOM에 없으면 에러 방지
+            if (!container) {
+                console.warn('[loadFTDatasets] ft-local-datasets container not found');
+                return;
+            }
+
+            if (datasets.length === 0) {
+                container.innerHTML = '<div style="color:#94a3b8;font-size:11px;text-align:center;padding:10px;">아직 데이터셋이 없습니다.</div>';
+                const badge = document.getElementById("badge-finetune");
+                if (badge) badge.textContent = "0";
+                return;
+            }
+            const badge = document.getElementById("badge-finetune");
+            if (badge) badge.textContent = datasets.length;
+            let html = '';
+            datasets.forEach(ds => {
+                const favIcon = ds.is_favorite == 1 ? '⭐' : '☆';
+                // PDF 데이터셋 전용 아이콘 + 포맷 표시
+                const isPDF = ds.format === 'pdf';
+                const icon = isPDF ? '📄' : ds.source === 'huggingface' ? '🤗' : '📋';
+                const iconBg = isPDF ? 'rgba(139,92,246,0.1)' : ds.source === 'huggingface' ? 'rgba(245,158,11,0.1)' : 'rgba(99,102,241,0.1)';
+                const formatLabel = isPDF ? 'PDF' : ds.format;
+                // sample_count가 0이면 경고 스타일
+                const countStyle = ds.sample_count === 0 ? 'color:#dc2626;font-weight:700;' : '';
+                const countLabel = ds.sample_count === 0 ? '0개 (추출 실패 가능)' : `${ds.sample_count}개`;
+                html += `
+                    <div style="padding:10px 12px;border:1px solid ${ds.sample_count === 0 ? '#fecaca' : '#f1f5f9'};border-radius:8px;margin-bottom:6px;display:flex;align-items:center;gap:8px;${ds.sample_count === 0 ? 'background:#fef2f2;' : ''}">
+                        <div style="width:28px;height:28px;border-radius:6px;background:${iconBg};display:flex;align-items:center;justify-content:center;font-size:13px;">
+                            ${icon}
+                        </div>
+                        <div style="flex:1;min-width:0;">
+                            <div style="font-size:11px;font-weight:700;color:#1e293b;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${ds.name}</div>
+                            <div style="font-size:9px;color:#94a3b8;"><span style="${countStyle}">${countLabel}</span> · ${formatLabel} · ${ds.source}</div>
+                        </div>
+                        <button onclick="toggleFavorite('${ds.id}')" style="border:none;background:none;font-size:14px;cursor:pointer;" title="즐겨찾기">${favIcon}</button>
+                        <button onclick="showDatasetStats('${ds.id}')" style="padding:3px 6px;border:1px solid #bae6fd;border-radius:4px;background:#f0f9ff;color:#0369a1;font-size:8px;cursor:pointer;">📊</button>
+                        <button onclick="filterDataset('${ds.id}')" style="padding:3px 6px;border:1px solid #e2e8f0;border-radius:4px;background:#fff;color:#64748b;font-size:8px;cursor:pointer;">🧹</button>
+                        <button onclick="augmentDataset('${ds.id}')" style="padding:3px 6px;border:1px solid #d9f99d;border-radius:4px;background:#f7fee7;color:#65a30d;font-size:8px;cursor:pointer;">🔄+</button>
+                        <button onclick="deleteFTDataset('${ds.id}')" style="padding:3px 6px;border:1px solid #fecaca;border-radius:4px;background:#fff;color:#dc2626;font-size:8px;cursor:pointer;">🗑</button>
+                    </div>`;
+            });
+            container.innerHTML = html;
+        } catch(e) {
+            console.error('[loadFTDatasets] Error:', e);
+            const el = document.getElementById("ft-local-datasets");
+            if (el) el.innerHTML = `<div style="color:#dc2626;font-size:11px;">⚠️ 데이터셋 로드 실패: ${e.message}</div>`;
+        }
+    }
+
+    async function deleteFTDataset(dsId) {
+        try {
+            if (!window.confirm("이 데이터셋을 삭제하시겠습니까?")) return;
+            await fetch(`/api/finetune/datasets/${dsId}`, {method: "DELETE"});
+            loadFTDatasets();
+        } catch(e) { console.error('Delete error:', e); }
+    }
+
+    async function toggleFavorite(dsId) {
+        try { await fetch(`/api/finetune/datasets/${dsId}/favorite`, {method: "POST"}); loadFTDatasets(); } catch(e) {}
+    }
+
+    // Dataset Stats (#21)
+    async function showDatasetStats(dsId) {
+        const modal = document.getElementById("ft-stats-modal");
+        const content = document.getElementById("ft-stats-content");
+        modal.style.display = "flex";
+        content.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> 통계 로딩...';
+        try {
+            const resp = await fetch(`/api/finetune/datasets/${dsId}/stats`);
+            const data = await resp.json();
+            const s = data.stats || {};
+            content.innerHTML = `
+                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px;">
+                    <div style="text-align:center;padding:8px;background:#fff;border-radius:6px;">
+                        <div style="font-size:16px;font-weight:800;color:#6366f1;">${s.total||0}</div>
+                        <div style="font-size:8px;color:#94a3b8;">총 샘플</div>
+                    </div>
+                    <div style="text-align:center;padding:8px;background:#fff;border-radius:6px;">
+                        <div style="font-size:16px;font-weight:800;color:#f59e0b;">${(s.total_tokens||0).toLocaleString()}</div>
+                        <div style="font-size:8px;color:#94a3b8;">총 토큰</div>
+                    </div>
+                    <div style="text-align:center;padding:8px;background:#fff;border-radius:6px;">
+                        <div style="font-size:16px;font-weight:800;color:#16a34a;">${s.avg_tokens||0}</div>
+                        <div style="font-size:8px;color:#94a3b8;">평균 토큰</div>
+                    </div>
+                </div>
+                <div style="font-size:9px;color:#475569;line-height:1.8;">
+                    Instruction 길이: ${s.min_instruction_len||0} ~ ${s.max_instruction_len||0} (평균 ${s.avg_instruction_len||0})<br>
+                    Output 길이: ${s.min_output_len||0} ~ ${s.max_output_len||0} (평균 ${s.avg_output_len||0})<br>
+                    Input 포함: ${s.with_input_count||0}개<br>
+                    분포: 짧음(${s.length_distribution?.short||0}) · 중간(${s.length_distribution?.medium||0}) · 긴(${s.length_distribution?.long||0})
+                </div>`;
+        } catch(e) { content.innerHTML = `⚠️ ${e.message}`; }
+    }
+
+    // Filter Dataset (#23)
+    async function filterDataset(dsId) {
+        try {
+            if (!window.confirm("중복 제거 및 짧은 샘플을 필터링하시겠습니까?")) return;
+            const resp = await fetch(`/api/finetune/datasets/${dsId}/filter`, {
+                method: "POST", headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({min_length: 10, remove_duplicates: true})
+            });
+            const data = await resp.json();
+            alert(`✅ ${data.removed||0}개 제거, ${data.remaining||0}개 남음`);
+            loadFTDatasets();
+        } catch(e) { alert(`⚠️ 필터링 오류: ${e.message}`); }
+    }
+
+    // Augment Dataset (#22)
+    async function augmentDataset(dsId) {
+        try {
+            const count = window.prompt("증강할 샘플 수:", "50");
+            if (!count) return;
+            const resp = await fetch(`/api/finetune/datasets/${dsId}/augment`, {
+                method: "POST", headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({count: parseInt(count)})
+            });
+            const data = await resp.json();
+            if (data.status === 'ok') {
+                alert(`✅ ${data.augmented_count||0}개 샘플 증강됨`);
+                loadFTDatasets();
+            } else { alert(`⚠️ 증강 실패: ${data.message||'알 수 없는 오류'}`); }
+        } catch(e) { alert(`⚠️ 증강 오류: ${e.message}`); }
+    }
+
+    // Merge Datasets (#24)
+    async function showMergeDialog() {
+        try {
+            const resp = await fetch("/api/finetune/datasets");
+            const data = await resp.json();
+            const ds = data.datasets || [];
+            if (ds.length < 2) { alert("병합하려면 2개 이상의 데이터셋이 필요합니다."); return; }
+            const ids = ds.map(d => d.id);
+            const names = ds.map(d => `${d.name} (${d.sample_count}개)`);
+            const selected = window.prompt(`병합할 데이터셋 ID를 쉼표로 입력:\n${ids.map((id,i) => `${id}: ${names[i]}`).join('\n')}`);
+            if (!selected) return;
+            const sourceIds = selected.split(',').map(s => s.trim());
+            const targetName = window.prompt("병합된 데이터셋 이름:", "Merged Dataset");
+            if (!targetName) return;
+            const mergeResp = await fetch("/api/finetune/datasets/merge", {
+                method: "POST", headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({source_ids: sourceIds, target_name: targetName})
+            });
+            const mergeData = await mergeResp.json();
+            if (mergeData.status === "ok") { alert(`✅ 병합 완료! ${mergeData.sample_count}개 샘플`); loadFTDatasets(); }
+            else { alert(`⚠️ 병합 실패: ${mergeData.message}`); }
+        } catch(e) { alert(`⚠️ 병합 오류: ${e.message}`); }
+    }
+
+    // Training (Enhanced with new config fields)
+    async function createAndStartTraining() {
+        const dsId = document.getElementById("ft-dataset-select").value;
+        const model = document.getElementById("ft-model-select").value;
+        if (!dsId) { alert("데이터셋을 선택하세요."); return; }
+        const btn = document.getElementById("ft-start-btn");
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> 생성 중...';
+        const config = {
+            epochs: parseInt(document.getElementById("ft-epochs").value) || 3,
+            batch_size: parseInt(document.getElementById("ft-batch").value) || 4,
+            learning_rate: parseFloat(document.getElementById("ft-lr").value) || 0.0002,
+            lora_r: parseInt(document.getElementById("ft-lora-r").value) || 16,
+            lr_scheduler_type: document.getElementById("ft-lr-scheduler").value,
+            mixed_precision: document.getElementById("ft-mixed-precision").value,
+            gradient_checkpointing: document.getElementById("ft-grad-checkpoint").checked,
+        };
+        try {
+            const createResp = await fetch("/api/finetune/runs/create", {
+                method: "POST", headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({dataset_id: dsId, model_base: model, method: _ftMethod, config})
+            });
+            const createData = await createResp.json();
+            if (createData.status !== "ok") { alert(`생성 오류: ${createData.message}`); return; }
+            const startResp = await fetch(`/api/finetune/runs/${createData.run_id}/start`, {method: "POST"});
+            const startData = await startResp.json();
+            if (startData.status === "ok") {
+                _ftActiveRunId = createData.run_id;
+                _ftLossHistory = [];
+                startProgressPolling(createData.run_id);
+                loadFTRuns();
+            } else { alert(`시작 오류: ${startData.message}`); }
+        } catch(e) { alert(`오류: ${e.message}`); }
+        finally { btn.disabled = false; btn.innerHTML = '🚀 학습 시작'; }
+    }
+
+    function startProgressPolling(runId) {
+        if (_ftPollInterval) clearInterval(_ftPollInterval);
+        const area = document.getElementById("ft-progress-area");
+        const chartArea = document.getElementById("ft-chart-area");
+        const logArea = document.getElementById("ft-log-area");
+        area.style.display = "block";
+        chartArea.style.display = "block";
+        logArea.style.display = "block";
+
+        _ftPollInterval = setInterval(async () => {
+            try {
+                const resp = await fetch(`/api/finetune/runs/${runId}/status`);
+                const data = await resp.json();
+                const run = data.run || {};
+                const progress = run.progress || 0;
+                const loss = run.current_loss || 0;
+                const step = run.current_step || 0;
+                const total = run.total_steps || 1;
+                const eta = run.eta_seconds || 0;
+                const metrics = run.metrics || {};
+                const latest = metrics.latest || {};
+                const methodLabel = {lora:'LoRA',qlora:'QLoRA',sft:'SFT'}[run.method] || run.method;
+                const statusEmoji = {running:'🔄',completed:'✅',stopped:'⏹',failed:'❌',pending:'⏳'}[run.status] || '❓';
+
+                // Format ETA (#16)
+                const etaStr = eta > 0 ? `${Math.floor(eta/60)}분 ${eta%60}초` : '--';
+
+                area.innerHTML = `
+                    <div style="margin-bottom:14px;">
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                            <span style="font-size:12px;font-weight:700;color:#1e293b;">${statusEmoji} ${runId} — ${methodLabel}</span>
+                            <span style="font-size:10px;color:#64748b;">${progress.toFixed(1)}% · Step ${step}/${total} · ETA: ${etaStr}</span>
+                        </div>
+                        <div style="width:100%;height:10px;background:#f1f5f9;border-radius:5px;overflow:hidden;">
+                            <div style="width:${progress}%;height:100%;background:linear-gradient(90deg,#6366f1,#8b5cf6);border-radius:5px;transition:width 0.3s;"></div>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;margin-top:6px;">
+                            <span style="font-size:10px;color:#64748b;">Loss: <strong style="color:#dc2626;">${loss.toFixed(4)}</strong></span>
+                            <span style="font-size:10px;color:#64748b;">Eval: <strong style="color:#f59e0b;">${(latest.eval_loss||0).toFixed(4)}</strong></span>
+                            <span style="font-size:10px;color:#64748b;">LR: ${(latest.learning_rate||0).toFixed(6)}</span>
+                        </div>
+                        ${run.status === 'running' ? `
+                            <div style="display:flex;gap:6px;margin-top:8px;">
+                                <button onclick="stopTraining('${runId}')" style="padding:8px 16px;border:1px solid #fecaca;border-radius:6px;background:#fff;color:#dc2626;font-size:10px;font-weight:700;cursor:pointer;">⏹ 학습 중지</button>
+                                <button onclick="exportMetrics('${runId}')" style="padding:8px 16px;border:1px solid #e2e8f0;border-radius:6px;background:#fff;color:#64748b;font-size:10px;font-weight:700;cursor:pointer;">📊 메트릭 내보내기</button>
+                            </div>
+                        ` : ''}
+                        ${run.status === 'completed' ? `
+                            <div style="display:flex;gap:6px;margin-top:8px;">
+                                <button onclick="registerOllama('${runId}')" style="padding:8px 16px;border:none;border-radius:6px;background:#16a34a;color:#fff;font-size:10px;font-weight:700;cursor:pointer;">🔗 Ollama 등록</button>
+                                <button onclick="runBenchmark('${runId}')" style="padding:8px 16px;border:1px solid #e2e8f0;border-radius:6px;background:#fff;color:#64748b;font-size:10px;font-weight:700;cursor:pointer;">📈 벤치마크</button>
+                                <button onclick="showCheckpoints('${runId}')" style="padding:8px 16px;border:1px solid #e2e8f0;border-radius:6px;background:#fff;color:#64748b;font-size:10px;font-weight:700;cursor:pointer;">💾 체크포인트</button>
+                                <button onclick="exportMetrics('${runId}')" style="padding:8px 16px;border:1px solid #e2e8f0;border-radius:6px;background:#fff;color:#64748b;font-size:10px;font-weight:700;cursor:pointer;">📊 메트릭</button>
+                            </div>
+                        ` : ''}
+                    </div>`;
+
+                // Update Loss Chart (#2)
+                if (metrics.history && metrics.history.length > 0) {
+                    _ftLossHistory = metrics.history;
+                    drawLossChart();
+                }
+
+                // Update Logs (#11)
+                const logResp = await fetch(`/api/finetune/runs/${runId}/logs?last_n=30`);
+                const logData = await logResp.json();
+                const terminal = document.getElementById("ft-log-terminal");
+                terminal.textContent = (logData.logs || []).join('\n');
+                terminal.scrollTop = terminal.scrollHeight;
+
+                if (run.status === 'completed' || run.status === 'stopped' || run.status === 'failed') {
+                    clearInterval(_ftPollInterval);
+                    _ftPollInterval = null;
+                    loadFTRuns();
+                    if (run.status === 'completed' && Notification.permission === 'granted') {
+                        new Notification('ChatDev 학습 완료', {body: `${runId} 학습이 완료되었습니다! Loss: ${loss.toFixed(4)}`});
+                    }
+                }
+            } catch(e) {}
+        }, 1500);
+    }
+
+    // Loss Chart (Canvas) (#2)
+    function drawLossChart() {
+        const canvas = document.getElementById("ft-loss-chart");
+        if (!canvas) return;
+        const ctx = canvas.getContext("2d");
+        const W = canvas.width = canvas.offsetWidth * 2;
+        const H = canvas.height = 400;
+        ctx.clearRect(0, 0, W, H);
+
+        const history = _ftLossHistory;
+        if (history.length < 2) return;
+
+        const losses = history.map(h => h.loss);
+        const evalLosses = history.map(h => h.eval_loss || 0);
+        const maxLoss = Math.max(...losses, ...evalLosses.filter(v => v > 0)) * 1.1;
+        const minLoss = Math.min(...losses.filter(v => v > 0)) * 0.8;
+        const padding = {top: 20, right: 20, bottom: 30, left: 50};
+        const chartW = W - padding.left - padding.right;
+        const chartH = H - padding.top - padding.bottom;
+
+        // Grid
+        ctx.strokeStyle = '#e2e8f0'; ctx.lineWidth = 1;
+        for (let i = 0; i <= 5; i++) {
+            const y = padding.top + (chartH / 5) * i;
+            ctx.beginPath(); ctx.moveTo(padding.left, y); ctx.lineTo(W - padding.right, y); ctx.stroke();
+            const val = maxLoss - ((maxLoss - minLoss) / 5) * i;
+            ctx.fillStyle = '#94a3b8'; ctx.font = '18px sans-serif'; ctx.textAlign = 'right';
+            ctx.fillText(val.toFixed(3), padding.left - 6, y + 5);
+        }
+
+        // Loss line (blue-purple gradient)
+        ctx.beginPath(); ctx.strokeStyle = '#6366f1'; ctx.lineWidth = 3;
+        losses.forEach((v, i) => {
+            const x = padding.left + (chartW / (losses.length - 1)) * i;
+            const y = padding.top + chartH - ((v - minLoss) / (maxLoss - minLoss)) * chartH;
+            i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+        });
+        ctx.stroke();
+
+        // Eval loss line (orange)
+        if (evalLosses.some(v => v > 0)) {
+            ctx.beginPath(); ctx.strokeStyle = '#f59e0b'; ctx.lineWidth = 2; ctx.setLineDash([6, 4]);
+            evalLosses.forEach((v, i) => {
+                if (v <= 0) return;
+                const x = padding.left + (chartW / (evalLosses.length - 1)) * i;
+                const y = padding.top + chartH - ((v - minLoss) / (maxLoss - minLoss)) * chartH;
+                i === 0 || evalLosses[i-1] <= 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+            });
+            ctx.stroke(); ctx.setLineDash([]);
+        }
+
+        // Legend
+        ctx.fillStyle = '#6366f1'; ctx.fillRect(W - 200, 10, 12, 12);
+        ctx.fillStyle = '#475569'; ctx.font = '18px sans-serif'; ctx.textAlign = 'left';
+        ctx.fillText('Train Loss', W - 184, 22);
+        ctx.fillStyle = '#f59e0b'; ctx.fillRect(W - 200, 30, 12, 12);
+        ctx.fillStyle = '#475569'; ctx.fillText('Eval Loss', W - 184, 42);
+    }
+
+    async function stopTraining(runId) {
+        try {
+            const resp = await fetch(`/api/finetune/runs/${runId}/stop`, {method: "POST"});
+            const data = await resp.json();
+            if (_ftPollInterval) { clearInterval(_ftPollInterval); _ftPollInterval = null; }
+            loadFTRuns();
+            if (data.status !== 'ok') { alert(`⚠️ 중지 실패: ${data.message||'알 수 없는 오류'}`); }
+        } catch(e) { alert(`⚠️ 학습 중지 오류: ${e.message}`); }
+    }
+
+    async function startExistingRun(runId) {
+        try {
+            const resp = await fetch(`/api/finetune/runs/${runId}/start`, {method: "POST"});
+            const data = await resp.json();
+            if (data.status === "ok") { _ftActiveRunId = runId; _ftLossHistory = []; startProgressPolling(runId); } else { alert(data.message); }
+        } catch(e) { alert(e.message); }
+    }
+
+    // Export Metrics (#17)
+    async function exportMetrics(runId) {
+        try {
+            const resp = await fetch(`/api/finetune/runs/${runId}/export?format=csv`);
+            const text = await resp.text();
+            // Check if it's an error JSON response
+            try {
+                const errData = JSON.parse(text);
+                if (errData.status === 'error') { alert(`⚠️ 메트릭 내보내기 실패: ${errData.message}`); return; }
+            } catch(_) { /* Not JSON, it's actual CSV data */ }
+            const blob = new Blob([text], {type: 'text/csv;charset=utf-8'});
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob); a.download = `${runId}_metrics.csv`;
+            document.body.appendChild(a); a.click(); document.body.removeChild(a);
+            URL.revokeObjectURL(a.href);
+        } catch(e) { alert(`⚠️ 메트릭 내보내기 오류: ${e.message}`); }
+    }
+
+    // Ollama Registration (#3)
+    async function registerOllama(runId) {
+        try {
+            const name = window.prompt("Ollama 모델 이름:", `chatdev-ft-${runId.toLowerCase()}`);
+            if (!name) return;
+            const resp = await fetch(`/api/finetune/runs/${runId}/register-ollama`, {
+                method: "POST", headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({model_name: name})
+            });
+            const data = await resp.json();
+            alert(data.status === "ok" ? `✅ ${data.message}` : `⚠️ Ollama 등록 실패: ${data.message}`);
+        } catch(e) { alert(`⚠️ Ollama 등록 오류: ${e.message}`); }
+    }
+
+    // Benchmark (#28)
+    async function runBenchmark(runId) {
+        try {
+            alert("벤치마크 실행 중... 잠시 기다려주세요.");
+            const resp = await fetch(`/api/finetune/runs/${runId}/benchmark`, {
+                method: "POST", headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({})
+            });
+            const data = await resp.json();
+            if (data.status === "ok") {
+                let msg = `📈 벤치마크 결과 (평균 ${data.avg_tps} tokens/s)\n\n`;
+                (data.results||[]).forEach(r => { msg += `Q: ${r.prompt}\nA: ${(r.response||'').substring(0,100)}...\n⏱ ${r.elapsed_seconds}s\n\n`; });
+                alert(msg);
+            } else { alert(`⚠️ 벤치마크 실패: ${data.message}`); }
+        } catch(e) { alert(`⚠️ 벤치마크 오류: ${e.message}`); }
+    }
+
+    // Checkpoints (#15)
+    async function showCheckpoints(runId) {
+        try {
+            const resp = await fetch(`/api/finetune/runs/${runId}/checkpoints`);
+            const data = await resp.json();
+            if (data.status === 'error') { alert(`⚠️ 체크포인트 조회 실패: ${data.message}`); return; }
+            const cps = data.checkpoints || [];
+            if (cps.length === 0) { alert("체크포인트가 없습니다."); return; }
+            let msg = `💾 체크포인트 (${cps.length}개)\n\n`;
+            cps.forEach(cp => { msg += `${cp.name} — ${cp.size_mb||'?'} MB\n`; });
+            alert(msg);
+        } catch(e) { alert(`⚠️ ${e.message}`); }
+    }
+
+    // Runs List (Enhanced with delete, compare)
+    async function loadFTRuns() {
+        try {
+            const resp = await fetch("/api/finetune/runs");
+            const data = await resp.json();
+            const runs = data.runs || [];
+            const container = document.getElementById("ft-runs-list");
+            if (runs.length === 0) {
+                container.innerHTML = '<div style="color:#94a3b8;font-size:11px;text-align:center;padding:10px;">아직 학습 실행이 없습니다.</div>';
+                return;
+            }
+            let html = '';
+            runs.forEach(r => {
+                const sc = {completed:'#16a34a',running:'#3b82f6',stopped:'#f59e0b',failed:'#dc2626',pending:'#94a3b8'};
+                const se = {completed:'✅',running:'🔄',stopped:'⏹',failed:'❌',pending:'⏳'};
+                const ml = {lora:'LoRA',qlora:'QLoRA',sft:'SFT'};
+                const finalLoss = r.metrics?.final_loss || r.current_loss || 0;
+                html += `
+                    <div style="padding:10px 12px;border:1px solid #f1f5f9;border-radius:8px;margin-bottom:6px;">
+                        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                            <span style="padding:2px 8px;border-radius:4px;font-size:9px;font-weight:700;background:${sc[r.status]||'#94a3b8'}22;color:${sc[r.status]||'#94a3b8'};">
+                                ${se[r.status]||'?'} ${r.status}
+                            </span>
+                            <span style="font-size:11px;font-weight:700;color:#1e293b;">${r.id}</span>
+                            <span style="padding:2px 6px;border-radius:4px;font-size:9px;font-weight:700;background:rgba(99,102,241,0.1);color:#6366f1;">${ml[r.method]||r.method}</span>
+                            <span style="margin-left:auto;font-size:9px;color:#94a3b8;">${r.created_at || ''}</span>
+                        </div>
+                        <div style="font-size:10px;color:#64748b;margin-top:4px;">
+                            모델: ${r.model_base} · Loss: ${finalLoss.toFixed(4)} · 진행: ${(r.progress||0).toFixed(0)}%
+                        </div>
+                        <div style="display:flex;gap:4px;margin-top:6px;flex-wrap:wrap;">
+                            ${r.status === 'pending' ? `<button onclick="startExistingRun('${r.id}')" style="padding:5px 10px;border:none;border-radius:4px;background:#6366f1;color:#fff;font-size:9px;font-weight:700;cursor:pointer;">▶ 시작</button>` : ''}
+                            ${r.status === 'running' ? `<button onclick="stopTraining('${r.id}')" style="padding:5px 10px;border:1px solid #fecaca;border-radius:4px;background:#fff;color:#dc2626;font-size:9px;font-weight:700;cursor:pointer;">⏹ 중지</button>` : ''}
+                            ${r.status === 'completed' ? `
+                                <button onclick="registerOllama('${r.id}')" style="padding:5px 10px;border:none;border-radius:4px;background:#16a34a;color:#fff;font-size:9px;font-weight:700;cursor:pointer;">🔗 Ollama</button>
+                                <button onclick="runBenchmark('${r.id}')" style="padding:5px 10px;border:1px solid #e2e8f0;border-radius:4px;background:#fff;color:#64748b;font-size:9px;font-weight:700;cursor:pointer;">📈 벤치</button>
+                            ` : ''}
+                            <button onclick="deleteRun('${r.id}')" style="padding:5px 10px;border:1px solid #fecaca;border-radius:4px;background:#fff;color:#dc2626;font-size:9px;font-weight:700;cursor:pointer;">🗑</button>
+                        </div>
+                    </div>`;
+            });
+            container.innerHTML = html;
+        } catch(e) { document.getElementById("ft-runs-list").innerHTML = `<div style="color:#dc2626;font-size:11px;">⚠️ ${e.message}</div>`; }
+    }
+
+    async function deleteRun(runId) {
+        try {
+            if (!window.confirm(`"${runId}" 학습 기록을 삭제하시겠습니까?`)) return;
+            const resp = await fetch(`/api/finetune/runs/${runId}`, {method: "DELETE"});
+            const data = await resp.json();
+            if (data.status === 'ok') { loadFTRuns(); }
+            else { alert(`⚠️ 삭제 실패: ${data.message||'알 수 없는 오류'}`); }
+        } catch(e) { alert(`⚠️ 삭제 오류: ${e.message}`); }
+    }
+
+    // Queue (#26)
+    async function loadQueue() {
+        try {
+            const resp = await fetch("/api/finetune/queue");
+            const data = await resp.json();
+            const q = data.queue || [];
+            const container = document.getElementById("ft-queue-list");
+            if (q.length === 0) { container.innerHTML = '<div style="text-align:center;">큐가 비어있습니다.</div>'; return; }
+            container.innerHTML = q.map((id, i) => `<div style="padding:6px;border:1px solid #e2e8f0;border-radius:6px;margin-bottom:4px;font-size:10px;"><strong>${i+1}.</strong> ${id}</div>`).join('');
+        } catch(e) {}
+    }
+
+    // Request notification permission (#14)
+    if ("Notification" in window && Notification.permission === "default") {
+        Notification.requestPermission();
+    }
+
+    function loadFinetuneTab() {
+        loadFTGPUInfo();
+        loadFTDatasets();
+        loadFTRuns();
+        loadPresets();
+        loadQueue();
+    }
+
+
+    /* ═══ INIT ═══ */
+    loadTools();
+    loadIntegrations();
+    loadExtServices();
+    loadAIEngineConfig();
+    loadPipelineStatus();
+
+    // Handle hash navigation
+    if (location.hash === '#integrations') {
+        document.querySelector('[data-panel="panel-integrations"]').click();
+    }
+    if (location.hash === '#finetune') {
+        document.querySelector('[data-panel="panel-finetune"]').click();
+    }
+    // ═══ Upload Zone: Dedicated drag-and-drop (bypass global handler) ═══
+    (function() {
+        const zone = document.getElementById('ft-upload-zone');
+        if (!zone) return;
+
+        // Capture-phase handlers: fire BEFORE ux_foundation.js's bubble-phase document listener
+        zone.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            e.dataTransfer.dropEffect = 'copy';
+            this.style.borderColor = '#6366f1';
+            this.style.background = 'rgba(99,102,241,0.03)';
+        }, true);
+
+        zone.addEventListener('dragleave', function(e) {
+            e.stopPropagation();
+            this.style.borderColor = '#cbd5e1';
+            this.style.background = '#f8fafc';
+        }, true);
+
+        zone.addEventListener('drop', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            this.style.borderColor = '#cbd5e1';
+            this.style.background = '#f8fafc';
+            if (e.dataTransfer && e.dataTransfer.files.length > 0) {
+                console.log('[ft-upload-zone] 파일 드롭 감지:', e.dataTransfer.files[0].name);
+                handleFileUpload(e.dataTransfer.files[0]);
+            }
+        }, true);
+
+        console.log('[ft-upload-zone] ✅ 전용 드래그&드롭 핸들러 등록 완료');
+    })();
+
+    </script>
+</body>
+</html>
+

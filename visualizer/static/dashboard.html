@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChatDev Global Enterprise Control Center</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="/static/js/ux_foundation.js?v=20260628"></script>
+    <script src="/static/js/ux_enhancements.js?v=20260628"></script>
+    <script src="/static/js/ux_components.js?v=20260628"></script>
+    <script src="/static/js/ux_round2_core.js?v=20260628r2"></script>
+    <script src="/static/js/ux_round2_viz.js?v=20260628r2"></script>
+    <script src="/static/js/ux_round3_a11y.js?v=20260628r3"></script>
+    <script src="/static/js/ux_round3_data.js?v=20260628r3"></script>
+    <script src="/static/js/ux_round4_live.js?v=20260628r4"></script>
+    <script src="/static/js/ux_round4_polish.js?v=20260628r4"></script>
+    <script src="/static/js/ux_round5_polish.js?v=20260629r5"></script>
+    <script src="/static/js/ux_round6_polish.js?v=20260630r6"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/design_system.css?v=20260630r6">
+    
+    <style>
+        body {
+            background-color: #ffffff;
+            color: #1e293b;
+            font-family: 'Outfit', sans-serif;
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        .dashboard-container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
+            background: #ffffff;
+        }
+
+        .org-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+
+        .org-header h1 {
+            margin: 0;
+            font-size: 1.8rem;
+            color: #1e293b;
+            font-weight: 700;
+        }
+
+        .org-canvas-container {
+            flex-grow: 1;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 20px;
+            backdrop-filter: none;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: none;
+            background-image: radial-gradient(#e2e8f0 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+
+        /* D3 Node Styles */
+        .node circle {
+            fill: #ffffff;
+            stroke: #e2e8f0;
+            stroke-width: 1.5px;
+        }
+
+        .node text {
+            font-size: 12px;
+            fill: #1e293b;
+            font-weight: 500;
+            text-shadow: none;
+        }
+
+        .link {
+            fill: none;
+            stroke: #e2e8f0;
+            stroke-width: 1.5px;
+            stroke-dasharray: 2, 2;
+            transition: all 0.3s ease;
+        }
+
+        .global-overview-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            backdrop-filter: none;
+        }
+
+        .stat-card h3 {
+            margin: 0 0 8px 0;
+            font-size: 0.9rem;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stat-card p {
+            margin: 0;
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #0f172a;
+            text-shadow: none;
+        }
+
+        .d3-org-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 15px;
+            width: 220px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            border-left: 4px solid #64748b;
+            backdrop-filter: none;
+            transition: all 0.3s ease;
+        }
+
+        .d3-org-card:hover {
+            transform: translateY(-2px);
+            border-color: #cbd5e1;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        .d3-org-card.marketing { border-left-color: #64748b; }
+        .d3-org-card.dev { border-left-color: #94a3b8; }
+        .d3-org-card.design { border-left-color: #e2e8f0; }
+        .d3-org-card.logistics { border-left-color: #cbd5e1; }
+
+        .d3-org-card h4 {
+            margin: 0 0 5px 0;
+            font-size: 0.95rem;
+            color: #1e293b;
+            font-weight: 600;
+        }
+
+        .d3-org-card p {
+            margin: 0 0 10px 0;
+            font-size: 0.78rem;
+            color: #64748b;
+        }
+
+        .badge-container {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+
+        .badge-item {
+            background: transparent;
+            border: 1px solid #e2e8f0;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.68rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            color: #64748b;
+            gap: 4px;
+        }
+
+        .enter-squad-btn {
+            display: block;
+            text-align: center;
+            background: #1e293b;
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 0.78rem;
+            font-weight: 700;
+            padding: 8px;
+            border-radius: 6px;
+            transition: all 0.3s;
+        }
+
+        .enter-squad-btn:hover {
+            box-shadow: none;
+            background: #334155;
+            transform: translateY(-1px);
+        }
+
+        /* Glassmorphic Onboarding Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .onboarding-modal-content {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 24px;
+            width: 90%;
+            max-width: 800px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            text-align: center;
+            position: relative;
+        }
+
+        .close-modal-btn {
+            position: absolute;
+            top: 20px;
+            right: 25px;
+            background: none;
+            border: none;
+            color: #1e293b;
+            font-size: 1.8rem;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .close-modal-btn:hover {
+            color: #dc2626;
+        }
+
+        .onboarding-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 0 0 10px 0;
+            color: #1e293b;
+        }
+
+        .onboarding-subtitle {
+            color: #64748b;
+            font-size: 0.9rem;
+            margin: 0 0 25px 0;
+        }
+
+        .blueprint-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .blueprint-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+            position: relative;
+        }
+
+        .blueprint-card:hover {
+            background: #ffffff;
+            border-color: #94a3b8;
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        .blueprint-icon-box {
+            width: 45px;
+            height: 45px;
+            border-radius: 10px;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 12px;
+            font-size: 1.4rem;
+        }
+
+        .blueprint-card h3 {
+            margin: 0 0 5px 0;
+            font-size: 1.05rem;
+            color: #1e293b;
+            font-weight: 600;
+        }
+
+        .blueprint-card p {
+            margin: 0;
+            font-size: 0.78rem;
+            color: #64748b;
+            line-height: 1.4;
+        }
+
+        /* Toast Alert Custom Style */
+        .toast-alert {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-left: 4px solid #94a3b8;
+            border-radius: 8px;
+            padding: 15px 20px;
+            color: #1e293b;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            gap: 10px;
+            font-weight: 500;
+            font-size: 0.85rem;
+        }
+
+
+        /* Glowing order lines */
+        .link.glowing-order-line {
+            stroke: #000000 !important;
+            stroke-width: 2px !important;
+            filter: none;
+            stroke-dasharray: none !important;
+        }
+
+        /* Laser pulse animation along SVG path */
+        .laser-pulse {
+            fill: #000000;
+            filter: none;
+        }
+
+        /* Auto-sort toolbar */
+        .sort-toolbar {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+            align-items: center;
+        }
+        .sort-toolbar .sort-label {
+            font-size: 0.72rem;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-right: 4px;
+        }
+        .sort-toolbar button {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: #1e293b;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-family: inherit;
+        }
+        .sort-toolbar button:hover {
+            background: #1e293b;
+            color: #fff;
+            border-color: #1e293b;
+        }
+
+        /* Task Monitor Panel */
+        .task-monitor-sidebar {
+            width: 280px;
+            flex-shrink: 0;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            margin-left: 12px;
+        }
+        .task-monitor-title {
+            padding: 12px 16px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: #1e293b;
+            border-bottom: 1px solid #e2e8f0;
+            background: #f8fafc;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .task-monitor-title .live-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #22c55e;
+            animation: pulse-dot 2s infinite;
+        }
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+        #task-monitor-body {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 8px;
+        }
+        .task-monitor-team {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 10px 12px;
+            margin-bottom: 6px;
+            transition: all 0.2s;
+        }
+        .task-monitor-team:hover {
+            border-color: #94a3b8;
+        }
+        .task-monitor-header {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .task-monitor-status {
+            font-size: 0.85rem;
+        }
+        .task-monitor-name {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #1e293b;
+            flex-grow: 1;
+        }
+        .task-monitor-count {
+            font-size: 0.65rem;
+            color: #64748b;
+            font-weight: 600;
+            background: #e2e8f0;
+            padding: 2px 8px;
+            border-radius: 10px;
+        }
+        .task-monitor-cost {
+            font-size: 0.65rem;
+            color: #94a3b8;
+            margin-top: 4px;
+            padding-left: 20px;
+        }
+
+        /* Canvas + monitor flex row */
+        .org-main-row {
+            display: flex;
+            flex-grow: 1;
+            gap: 0;
+            min-height: 0;
+        }
+
+        /* Zoom Controls */
+        .org-zoom-bar {
+            position: absolute;
+            bottom: 14px;
+            right: 14px;
+            z-index: 20;
+            display: flex;
+            gap: 4px;
+            align-items: center;
+        }
+        .org-zoom-bar button {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            background: rgba(255,255,255,0.95);
+            color: #64748b;
+            font-size: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.15s;
+            padding: 0;
+            font-family: inherit;
+            backdrop-filter: blur(8px);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        .org-zoom-bar button:hover {
+            background: #1e293b;
+            color: #fff;
+            border-color: #1e293b;
+        }
+        .org-zoom-level {
+            font-size: 10px;
+            color: #94a3b8;
+            font-weight: 600;
+            padding: 4px 8px;
+            background: rgba(255,255,255,0.9);
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            backdrop-filter: blur(8px);
+            min-width: 40px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Header -->
+        <header class="org-header">
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <i class="fa-solid fa-network-wired" style="font-size: 2rem; color: #1e293b;"></i>
+                <div>
+                    <h1>ChatDev Global Workforce Control Center</h1>
+                    <span style="font-size: 0.8rem; color: #64748b;">Chameleon Autonomous Enterprise Empire (자율 진화형 가상 기업 제국)</span>
+                </div>
+            </div>
+            <div style="display: flex; gap: 15px; align-items: center;">
+                <button id="chameleon-onboarding-btn" style="background: transparent; color: #1e293b; border: 1px solid #e2e8f0; font-weight: 600; padding: 10px 18px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 8px; font-family: inherit; font-size: 0.8rem; transition: all 0.2s;">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> 🔧 카멜레온 온보딩 (Blueprint Setup)
+                </button>
+                <div class="header-status" style="margin: 0; color: #64748b; font-size: 0.8rem;">
+                    GLOBAL ENGINE: <span class="status-online" style="color: #64748b; font-weight: 600;"><i class="fa-solid fa-globe"></i> ONLINE ACTIVE</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Stats Grid -->
+        <section class="global-overview-grid">
+            <div class="stat-card">
+                <h3>Total Divisions</h3>
+                <p id="total-divisions" style="color: #0f172a; font-weight: 700; text-shadow: none;">- Divisions</p>
+            </div>
+            <div class="stat-card">
+                <h3>Global Active Tasks</h3>
+                <p id="active-tasks" style="color: #0f172a; font-weight: 700; text-shadow: none;">- Active</p>
+            </div>
+            <div class="stat-card">
+                <h3>Cumulative Empire Cost</h3>
+                <p id="empire-cost" style="color: #0f172a; font-weight: 700; text-shadow: none;">$0.0000</p>
+            </div>
+        </section>
+
+        <!-- Auto-Sort Toolbar -->
+        <div class="sort-toolbar">
+            <span class="sort-label"><i class="fa-solid fa-arrows-up-down-left-right"></i> 자동 정렬:</span>
+            <button id="btn-autosort-tree"><i class="fa-solid fa-sitemap"></i> 트리</button>
+            <button id="btn-autosort-vertical"><i class="fa-solid fa-arrows-down-to-line"></i> 세로</button>
+            <button id="btn-autosort-grid"><i class="fa-solid fa-border-all"></i> 그리드</button>
+            <button id="btn-reset-positions"><i class="fa-solid fa-rotate"></i> 초기화</button>
+        </div>
+
+        <!-- Org Canvas + Task Monitor Row -->
+        <div class="org-main-row">
+            <div class="org-canvas-container" id="org-canvas" style="flex-grow:1;">
+                <!-- D3 Visual Tree will be rendered here dynamically by org_map.js -->
+                <!-- Zoom Controls -->
+                <div class="org-zoom-bar" id="org-zoom-bar">
+                    <button id="btn-zoom-in" title="줌 인"><i class="fa-solid fa-plus"></i></button>
+                    <button id="btn-zoom-out" title="줌 아웃"><i class="fa-solid fa-minus"></i></button>
+                    <span class="org-zoom-level" id="org-zoom-level">100%</span>
+                    <button id="btn-zoom-fit" title="전체 보기"><i class="fa-solid fa-expand"></i></button>
+                </div>
+            </div>
+
+            <!-- Real-time Task Monitor Sidebar -->
+            <div class="task-monitor-sidebar">
+                <div class="task-monitor-title">
+                    <div class="live-dot"></div>
+                    <i class="fa-solid fa-list-check" style="color:#64748b;"></i>
+                    실시간 업무 모니터
+                </div>
+                <div id="task-monitor-body">
+                    <div style="color:#94a3b8;font-size:11px;padding:16px;text-align:center;">
+                        <i class="fa-solid fa-spinner fa-spin"></i> 로딩 중...
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chameleon Onboarding Modal Diallog -->
+    <div id="chameleon-modal" class="modal-overlay" style="display: none;">
+        <div class="onboarding-modal-content glass-panel">
+            <button class="close-modal-btn" id="close-chameleon-btn">&times;</button>
+            <div class="onboarding-title"><i class="fa-solid fa-wand-magic-sparkles"></i> 당신의 비즈니스는 무엇입니까?</div>
+            <div class="onboarding-subtitle">원하시는 비즈니스 유형을 선택하시면 카멜레온 엔진이 스쿼드, 온톨로지, 워크플로우, 지식 RAG를 즉시 세팅합니다.</div>
+            
+            <div class="blueprint-grid">
+                <!-- Blueprint 1: Software Company -->
+                <div class="blueprint-card" data-blueprint="software">
+                    <div class="blueprint-icon-box" style="color: #94a3b8; border-color: rgba(0,255,204,0.25);">
+                        <i class="fa-solid fa-laptop-code"></i>
+                    </div>
+                    <h3>소프트웨어 개발 회사 (Software Dev)</h3>
+                    <p>Scrum PM, Architect 및 Fullstack 개발자 7인 특화 스쿼드가 세팅됩니다. 명칭이 Issue/Commit/Sprint로 변환되며, 2026 아키텍처 RAG 지식이 주입됩니다.</p>
+                </div>
+                
+                <!-- Blueprint 2: YouTube Creator Crew -->
+                <div class="blueprint-card" data-blueprint="youtube">
+                    <div class="blueprint-icon-box" style="color: #64748b; border-color: rgba(171,71,188,0.25);">
+                        <i class="fa-brands fa-youtube"></i>
+                    </div>
+                    <h3>유튜브 크리에이터 팀 (YouTube Media)</h3>
+                    <p>Executive PD, 작가, 썸네일 디자이너, 알고리즘 분석가로 구성된 4인 크루가 자동 고용되며, 명칭이 Scene/Storyboard로 정교하게 매핑되고 알고리즘 RAG가 마운트됩니다.</p>
+                </div>
+                
+                <!-- Blueprint 3: Architecture Studio -->
+                <div class="blueprint-card" data-blueprint="construction">
+                    <div class="blueprint-icon-box" style="color: #ff9800; border-color: rgba(255,152,0,0.25);">
+                        <i class="fa-solid fa-compass-drafting"></i>
+                    </div>
+                    <h3>건축사무소 (Architecture & Design)</h3>
+                    <p>수석 설계사, 시공 견적 요원, 인테리어 렌더러, 법규 검토 요원이 투입됩니다. 명칭이 Blueprint/Milestone으로 변경되고, 최신 건축법규 RAG 지식이 동적 탑재됩니다.</p>
+                </div>
+                
+                <!-- Blueprint 4: Supply Chain Logistics -->
+                <div class="blueprint-card" data-blueprint="logistics">
+                    <div class="blueprint-icon-box" style="color: #4caf50; border-color: rgba(76,175,80,0.25);">
+                        <i class="fa-solid fa-truck-ramp-box"></i>
+                    </div>
+                    <h3>물류 및 유통 (Logistics & Supply Chain)</h3>
+                    <p>Supply Chain Director, Route Coordinator 및 재고 관리자 요원이 배치됩니다. Shipment/Waybill 용어로 온톨로지가 변환되며, 물류 최적화 RAG가 연결됩니다.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom D3 dynamic loader script -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <script src="/static/js/org_map.js?v=20260704"></script>
+</body>
+</html>

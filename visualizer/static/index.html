@@ -1,86 +1,1926 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    <title>ChatDev</title>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/marked@3.0.7/marked.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/prism.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-markup.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-javascript.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.8/clipboard.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.2.0/highlight.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.8/clipboard.min.js"></script>
-    <script src="static/js/main.js"></script>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/themes/prism-okaidia.min.css">
-    <link rel="stylesheet" href="static/css/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChatDev Enterprise - Real-time Data Center & Traffic Visualization</title>
+    
+    <!-- Premium Fonts & Icons — Obsidian Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Dependencies (jQuery, Marked, Lodash, HighlightJS) -->
+    <script defer src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/marked@3.0.7/marked.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.2.0/highlight.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.2.0/styles/monokai-sublime.min.css">
+    
+    <!-- SocketIO & D3.js CDNs -->
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <script defer src="https://d3js.org/d3.v7.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Suppress benign ResizeObserver loop warning (browser-level, not a real error) -->
+    <script>
+        /* Chrome reports this via window.onerror; Firefox/Safari via ErrorEvent */
+        var _roLoopRe = /ResizeObserver loop/;
+        window.onerror = function(msg) {
+            if (typeof msg === 'string' && _roLoopRe.test(msg)) return true;
+        };
+        window.addEventListener('error', function(e) {
+            if (e && e.message && _roLoopRe.test(e.message)) {
+                e.stopImmediatePropagation();
+                e.preventDefault();
+                return true;
+            }
+        });
+        window.addEventListener('unhandledrejection', function(e) {
+            if (e && e.reason && typeof e.reason.message === 'string' && _roLoopRe.test(e.reason.message)) {
+                e.preventDefault();
+            }
+        });
+    </script>
+
     <style>
-        .custom-text-block {
-            background-color: #f0f0f0;
-            padding: 10px;
-            border-radius: 5px;
-            margin: 20px 0;
-            text-align: center;
-            font-size: 16px;
-            color: #333;
+        .analytics-tab-btn {
+            color: #64748b !important;
+            transition: all 0.2s ease !important;
+            outline: none;
         }
-
-        .visualizer-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
+        .analytics-tab-btn:hover {
+            color: #38bdf8 !important;
+            background: rgba(56, 189, 248, 0.05) !important;
         }
-
-        .visualizer-box {
-            width: 30%;
-            text-align: center;
-        }
-
-        .visualizer-info {
-            text-align: center;
-            font-size: 14px;
-            color: #666;
+        .analytics-tab-btn.active {
+            background: #ffffff !important;
+            color: #0f172a !important;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1) !important;
         }
     </style>
+    
+    <!-- Project CSS -->
+    <link rel="stylesheet" href="/static/css/style.css?v=20260616g">
+    <link rel="stylesheet" href="/static/css/design_system.css?v=20260630r6">
+    
     <script>
         hljs.initHighlightingOnLoad();
     </script>
 </head>
 
 <body>
-    <div class="d-flex justify-content-center">
-        <img src="static/figures/title.png" alt="ChatDev Title" id="title-image" style="width: 100%; max-width: 300px;">
-    </div>
-    <div class="visualizer-container">
-        <div class="visualizer-box">
-            <br>
-            <a href="static/chain_visualizer.html">
-                <button>ChatChain Visualizer</button>
+    <!-- Top Enterprise Header Navigation -->
+    <header class="app-header">
+        <div class="header-logo" style="display: flex; align-items: center; gap: 10px;">
+            <a href="/" style="color: #1e293b; text-decoration: none; display: flex; align-items: center; gap: 8px;">
+                <span class="pulse-dot"></span>
+                <i class="fa-solid fa-network-wired" style="color: #64748b;"></i>
+                <span style="font-weight: 700; color: #1e293b;">ChatDev Portal</span>
             </a>
-            <p class="visualizer-info">Explore all the phases  and settings in ChatChain.</p>
+            <span style="color: #e2e8f0;">|</span>
+            <!-- GNB Quick Nav (#9 active 상태 / #49 CSS hover) -->
+            <nav style="display: flex; gap: 2px;">
+                <a href="/agents" style="padding: 5px 10px; font-size: 10px; font-weight: 600; color: #64748b; border-radius: 3px; text-decoration: none; transition: all 0.2s; letter-spacing: 0.3px; display: flex; align-items: center; gap: 4px;"><i class="fa-solid fa-users"></i> Agents</a>
+                <a href="/tools" style="padding: 5px 10px; font-size: 10px; font-weight: 600; color: #64748b; border-radius: 3px; text-decoration: none; transition: all 0.2s; letter-spacing: 0.3px; display: flex; align-items: center; gap: 4px;"><i class="fa-solid fa-toolbox"></i> Tools</a>
+                <a href="/tools#integrations" style="padding: 5px 10px; font-size: 10px; font-weight: 600; color: #64748b; border-radius: 3px; text-decoration: none; transition: all 0.2s; letter-spacing: 0.3px; display: flex; align-items: center; gap: 4px;"><i class="fa-solid fa-key"></i> Keys</a>
+            </nav>
+            <span style="color: #e2e8f0;">|</span>
+            <!-- #10 Workspace 스켈레톤 shimmer → 로드 후 교체 -->
+            <span id="squad-workspace-name" class="cd-skeleton" style="font-size: 0.95rem; font-weight: 600; color: #64748b;"></span>
         </div>
-        <div class="visualizer-box">
-            <br>
-            <a href="static/replay.html">
-                <button>Replay Visualizer</button>
-            </a>
-            <p class="visualizer-info">Replay the agents' dialog from other ChatDev-generated software.</p>
+        
+        <!-- Dual-Tab Workforce / Workflow Selector Switcher -->
+        <div class="work-tabs-bar" style="display: flex; gap: 6px; margin-left: 20px; background: #f8fafc; padding: 4px; border-radius: 8px; border: 1px solid #e2e8f0;">
+            <!-- #6 탭 이모지 제거 — FA 아이콘 단일 사용 -->
+            <button class="work-tab-btn active" id="tab-btn-launchpad" style="background: #ffffff; color: #1e293b; border: 1px solid #e2e8f0; padding: 7px 16px; border-radius: 6px; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: inherit; font-size: 0.8rem; box-shadow: 0 1px 2px rgba(0,0,0,0.04);" role="tab" aria-selected="true" aria-controls="view-launchpad">
+                <i class="fa-solid fa-rocket"></i> Launch Pad
+            </button>
+            <button class="work-tab-btn" id="tab-btn-workforce" style="background: transparent; color: #94a3b8; border: 1px solid transparent; padding: 7px 16px; border-radius: 6px; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: inherit; font-size: 0.8rem;" role="tab" aria-selected="false" aria-controls="view-workforce">
+                <i class="fa-solid fa-users"></i> <span class="term-fleet">Workforce</span>
+            </button>
+            <button class="work-tab-btn" id="tab-btn-workflow" style="background: transparent; color: #94a3b8; border: 1px solid transparent; padding: 7px 16px; border-radius: 6px; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: inherit; font-size: 0.8rem;" role="tab" aria-selected="false" aria-controls="view-workflow" title="고급 기능">
+                <i class="fa-solid fa-route"></i> <span class="term-workflow">Blueprint</span>
+            </button>
+            <button class="work-tab-btn" id="tab-btn-office" style="background: transparent; color: #94a3b8; border: 1px solid transparent; padding: 7px 16px; border-radius: 6px; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: inherit; font-size: 0.8rem;" role="tab" aria-selected="false" aria-controls="view-office">
+                <i class="fa-solid fa-building"></i> Virtual Office
+            </button>
+            <button class="work-tab-btn" id="tab-btn-crm" style="background: transparent; color: #94a3b8; border: 1px solid transparent; padding: 7px 16px; border-radius: 6px; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: inherit; font-size: 0.8rem;" role="tab" aria-selected="false" aria-controls="view-crm" title="Salesforce 연동">
+                <i class="fa-solid fa-address-book"></i> CRM
+                <span style="font-size:7px;background:#0176d3;color:white;padding:1px 4px;border-radius:3px;margin-left:2px;font-weight:700;vertical-align:middle;">SF</span>
+            </button>
+            <button class="work-tab-btn" id="tab-btn-brain" style="background: transparent; color: #94a3b8; border: 1px solid transparent; padding: 7px 16px; border-radius: 6px; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: inherit; font-size: 0.8rem;" role="tab" aria-selected="false" aria-controls="view-brain">
+                <i class="fa-solid fa-brain"></i> AI Brain
+            </button>
+        </div>
+
+        <!-- #8 헤더 버튼 그룹핑 — Primary + More 드롭다운 -->
+        <div style="display: flex; gap: 6px; align-items: center;">
+            <button id="central-data-hub-btn" class="save-btn hdr-action-btn" aria-label="Central Data Hub 열기"><i class="fa-solid fa-database"></i> Data Hub</button>
+            <button id="save-workflow-btn" class="save-btn hdr-action-btn" aria-label="워크플로 저장"><i class="fa-solid fa-cloud-arrow-up"></i> Save</button>
+            <!-- More 드롭다운 -->
+            <div style="position:relative;" id="hdr-more-wrap">
+                <button id="hdr-more-btn" class="save-btn hdr-action-btn" aria-label="더보기" aria-expanded="false" aria-haspopup="true"
+                    style="background:#f8fafc;color:#475569;border:1px solid #e2e8f0;"
+                    onclick="var m=document.getElementById('hdr-more-menu');var exp=m.style.display==='block';m.style.display=exp?'none':'block';this.setAttribute('aria-expanded',String(!exp));"
+                ><i class="fa-solid fa-ellipsis"></i></button>
+                <div id="hdr-more-menu" role="menu" style="display:none;position:absolute;right:0;top:calc(100% + 4px);background:#fff;border:1px solid #e2e8f0;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.1);min-width:160px;z-index:200;padding:4px;">
+                    <button id="save-workflow-as-btn" role="menuitem" style="width:100%;text-align:left;padding:8px 12px;border:none;background:none;font-size:12px;font-weight:600;color:#1e293b;border-radius:6px;cursor:pointer;display:flex;align-items:center;gap:8px;font-family:inherit;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='none'"><i class="fa-solid fa-floppy-disk" style="color:#64748b;"></i> Save As…</button>
+                    <button id="open-gallery-btn" role="menuitem" style="width:100%;text-align:left;padding:8px 12px;border:none;background:none;font-size:12px;font-weight:600;color:#1e293b;border-radius:6px;cursor:pointer;display:flex;align-items:center;gap:8px;font-family:inherit;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='none'"><i class="fa-solid fa-folder-tree" style="color:#64748b;"></i> My Workflows</button>
+                </div>
+            </div>
+            <!-- AI Engine 설정 (#49 CSS hover 적용) -->
+            <button id="ai-engine-settings-btn" class="hdr-action-btn" aria-label="AI 엔진 설정" style="display:flex;align-items:center;gap:5px;padding:6px 12px;font-size:10px;font-weight:700;background:#f8fafc;color:#475569;border:1px solid #e2e8f0;border-radius:6px;cursor:pointer;transition:all 0.2s;font-family:inherit;letter-spacing:0.2px;">
+                <i class="fa-solid fa-microchip"></i>
+                <span id="engine-status-badge" style="font-size:8px;font-weight:800;color:#64748b;">GPT-4o</span>
+            </button>
+            <div class="header-status">
+                ENGINE: <span class="status-online"><i class="fa-solid fa-circle-nodes"></i> ACTIVE</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Grid Dashboard Layout -->
+    <main class="dashboard-grid" style="display: flex; height: calc(100vh - 70px); padding: 15px; gap: 15px; box-sizing: border-box; overflow: hidden;">
+        
+        <!-- ==========================================
+             🚀 Tab 0: Launch Pad (Default Active)
+             ========================================== -->
+        <div id="view-launchpad" class="tab-view-container" style="display: flex; flex-direction: column; align-items: center; flex-grow: 1; height: 100%; min-width: 0; overflow-y: auto; padding: 0 24px 40px;">
+            <!-- Hero Section -->
+            <div class="lp-hero">
+                <h1 class="lp-hero-title">무엇을 만들고 싶으세요?</h1>
+                <p class="lp-hero-subtitle">자연어로 명령하거나, 아래 템플릿 중 하나를 선택하세요</p>
+                
+                <!-- Prompt Search Bar -->
+                <div class="lp-prompt-wrap">
+                    <input type="text" id="lp-prompt-input" class="lp-prompt-input" 
+                        placeholder="예: 다음 주 월요일에 보낼 신제품 출시 마케팅 이메일 초안 작성해 줘" 
+                        spellcheck="false" autocomplete="off" />
+                    <button id="lp-prompt-send" class="lp-prompt-send">
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+                
+                <!-- Quick Suggestions -->
+                <div class="lp-suggestions">
+                    <span class="lp-suggestion-chip">📝 블로그 포스트 작성</span>
+                    <span class="lp-suggestion-chip">📊 주간 실적 요약</span>
+                    <span class="lp-suggestion-chip">🔍 코드 리뷰 자동화</span>
+                    <span class="lp-suggestion-chip">✍️ 마케팅 카피 생성</span>
+                    <span class="lp-suggestion-chip">🌐 문서 번역</span>
+                </div>
+            </div>
+            
+            <!-- Playbook Marketplace -->
+            <div class="lp-section-header">
+                <div class="lp-section-title">
+                    <i class="fa-solid fa-store"></i> 플레이북 마켓플레이스
+                    <span class="lp-section-badge" id="lp-playbook-count">로딩중...</span>
+                </div>
+                <span style="font-size: 0.65rem; color: #94a3b8;"><i class="fa-solid fa-circle-info"></i> 카드를 클릭하면 바로 실행할 수 있습니다</span>
+            </div>
+            <div class="lp-playbook-grid" id="lp-playbook-grid">
+                <!-- Populated by launchpad.js -->
+                <div class="lp-playbook-card skeleton-loading" style="height: 140px;"></div>
+                <div class="lp-playbook-card skeleton-loading" style="height: 140px;"></div>
+                <div class="lp-playbook-card skeleton-loading" style="height: 140px;"></div>
+                <div class="lp-playbook-card skeleton-loading" style="height: 140px;"></div>
+            </div>
+            
+            <!-- Recent Execution History -->
+            <div class="lp-section-header">
+                <div class="lp-section-title">
+                    <i class="fa-solid fa-clock-rotate-left"></i> 최근 실행 기록
+                </div>
+                <button onclick="if(window.LaunchPad)LaunchPad.reload()" style="font-size:0.65rem;color:#64748b;background:none;border:1px solid #e2e8f0;padding:3px 8px;border-radius:5px;cursor:pointer;font-family:inherit;" title="새로고침">
+                    <i class="fa-solid fa-arrows-rotate"></i> 새로고침
+                </button>
+            </div>
+            <div class="lp-exec-tracker" id="lp-history-list">
+                <!-- Populated by launchpad.js -->
+                <div style="text-align: center; padding: 24px 0; color: #94a3b8; font-size: 0.75rem;">
+                    <i class="fa-solid fa-spinner fa-spin" style="font-size: 16px; margin-bottom: 6px; display: block;"></i>
+                    실행 기록을 불러오는 중...
+                </div>
+            </div>
+        </div>
+
+        <!-- ==========================================
+             👥 Tab 1: Workforce View Workspace
+             ========================================== -->
+        <div id="view-workforce" class="tab-view-container" style="display: none; gap: 15px; flex-grow: 1; height: 100%; min-width: 0;">
+            <!-- Left Sidebar: Recruitment Config Controls -->
+            <aside class="sidebar-card glass-panel" style="width: 320px; flex-shrink: 0; display: flex; flex-direction: column; height: 100%;">
+                <div class="card-header">
+                    <i class="fa-solid fa-users-gear" style="color: #64748b; margin-right: 8px;"></i>
+                    🏢 <span class="term-fleet">Fleet</span> Builder & Hiring
+                </div>
+                <div class="sidebar-body" style="padding: 15px; display: flex; flex-direction: column; gap: 12px; overflow-y: auto; flex-grow: 1; box-sizing: border-box;">
+                    <div class="builder-actions" style="display: flex; gap: 10px;">
+                        <button id="btn-new-squad" class="save-btn" style="flex: 1; font-size: 0.78rem; background: #ffffff; color: #1e293b; font-weight: 600; padding: 10px 4px; border: 1px solid #e2e8f0; border-radius: 6px;">
+                            <i class="fa-solid fa-folder-plus"></i> + 부서 신설
+                        </button>
+                        <button id="btn-hire-agent-btn" class="save-btn" style="flex: 1; font-size: 0.78rem; background: #ffffff; color: #1e293b; font-weight: 600; padding: 10px 4px; border: 1px solid #e2e8f0; border-radius: 6px;">
+                            <i class="fa-solid fa-user-plus"></i> + <span class="term-employee">Employee</span> 채용
+                        </button>
+                    </div>
+                    
+                    <div class="squad-validation-alert" id="squad-validation-msg" style="font-size: 0.75rem; color: #dc2626; display: none; background: #fef2f2; border: 1px solid #fecaca; padding: 8px; border-radius: 6px;">
+                        <i class="fa-solid fa-triangle-exclamation"></i> Size error: strictly 3 to 10 active <span class="term-employee">Employee</span>s!
+                    </div>
+
+                    <div style="font-size: 0.72rem; color: #64748b; line-height: 1.4; border: 1px solid #e2e8f0; padding: 10px; border-radius: 8px; background: #f8fafc; margin-bottom: 10px;">
+                        <i class="fa-solid fa-circle-info" style="color: #94a3b8;"></i> 우측의 <strong>D3.js 마이크로 조직도(Micro-Org Map)</strong>에서 개별 요원을 마우스로 클릭하면 상세 HR 패널이 슬라이드 아웃되어 세밀하게 편집할 수 있습니다.
+                    </div>
+
+                    <!-- Draggable Recruits Candidates Pool -->
+                    <div class="candidates-pool" style="border-top: 1px solid #e2e8f0; padding-top: 12px; margin-top: 5px; flex-grow: 1; display: flex; flex-direction: column; min-height: 0; gap: 8px;">
+                        <h4 style="font-size: 0.78rem; color: #64748b; text-transform: uppercase; margin: 0 0 5px 0; display: flex; align-items: center; gap: 6px;"><i class="fa-solid fa-people-carry-box"></i> 채용 대기 요원 풀 (Drag to Canvas)</h4>
+                        <div id="recruits-drag-pool" style="display: flex; gap: 6px; flex-wrap: wrap; overflow-y: auto; flex-grow: 1; align-content: flex-start; padding-bottom: 10px;">
+                            <div class="drag-candidate-badge" draggable="true" data-role="Programmer" style="padding: 6px 10px; background: transparent; border: 1px solid #e2e8f0; border-radius: 20px; font-size: 0.72rem; color: #1e293b; cursor: grab; font-weight: 500; display: flex; align-items: center; gap: 4px;"><i class="fa-solid fa-code" style="color: #64748b;"></i> Programmer</div>
+                            <div class="drag-candidate-badge" draggable="true" data-role="Code Reviewer" style="padding: 6px 10px; background: transparent; border: 1px solid #e2e8f0; border-radius: 20px; font-size: 0.72rem; color: #1e293b; cursor: grab; font-weight: 500; display: flex; align-items: center; gap: 4px;"><i class="fa-solid fa-magnifying-glass" style="color: #64748b;"></i> Reviewer</div>
+                            <div class="drag-candidate-badge" draggable="true" data-role="Software Test Engineer" style="padding: 6px 10px; background: transparent; border: 1px solid #e2e8f0; border-radius: 20px; font-size: 0.72rem; color: #1e293b; cursor: grab; font-weight: 500; display: flex; align-items: center; gap: 4px;"><i class="fa-solid fa-vial" style="color: #64748b;"></i> Tester</div>
+                            <div class="drag-candidate-badge" draggable="true" data-role="Counselor" style="padding: 6px 10px; background: transparent; border: 1px solid #e2e8f0; border-radius: 20px; font-size: 0.72rem; color: #1e293b; cursor: grab; font-weight: 500; display: flex; align-items: center; gap: 4px;"><i class="fa-solid fa-comments" style="color: #64748b;"></i> Counselor</div>
+                            <div class="drag-candidate-badge" draggable="true" data-role="Chief Product Officer" style="padding: 6px 10px; background: transparent; border: 1px solid #e2e8f0; border-radius: 20px; font-size: 0.72rem; color: #1e293b; cursor: grab; font-weight: 500; display: flex; align-items: center; gap: 4px;"><i class="fa-solid fa-brain" style="color: #64748b;"></i> CPO</div>
+                            <div class="drag-candidate-badge" draggable="true" data-role="Chief Technology Officer" style="padding: 6px 10px; background: transparent; border: 1px solid #e2e8f0; border-radius: 20px; font-size: 0.72rem; color: #1e293b; cursor: grab; font-weight: 500; display: flex; align-items: center; gap: 4px;"><i class="fa-solid fa-microchip" style="color: #64748b;"></i> CTO</div>
+                            <div class="drag-candidate-badge" draggable="true" data-role="Chief Creative Officer" style="padding: 6px 10px; background: transparent; border: 1px solid #e2e8f0; border-radius: 20px; font-size: 0.72rem; color: #1e293b; cursor: grab; font-weight: 500; display: flex; align-items: center; gap: 4px;"><i class="fa-solid fa-palette" style="color: #64748b;"></i> CCO</div>
+                            <div class="drag-candidate-badge" draggable="true" data-role="Security Auditor" style="padding: 6px 10px; background: transparent; border: 1px solid #e2e8f0; border-radius: 20px; font-size: 0.72rem; color: #1e293b; cursor: grab; font-weight: 500; display: flex; align-items: center; gap: 4px;"><i class="fa-solid fa-shield-halved" style="color: #64748b;"></i> Security Auditor</div>
+                            <div class="drag-candidate-badge" draggable="true" data-role="Technical Writer" style="padding: 6px 10px; background: transparent; border: 1px solid #e2e8f0; border-radius: 20px; font-size: 0.72rem; color: #1e293b; cursor: grab; font-weight: 500; display: flex; align-items: center; gap: 4px;"><i class="fa-solid fa-pen-nib" style="color: #64748b;"></i> Technical Writer</div>
+                            <div class="drag-candidate-badge" draggable="true" data-role="DevOps" style="padding: 6px 10px; background: transparent; border: 1px solid #e2e8f0; border-radius: 20px; font-size: 0.72rem; color: #1e293b; cursor: grab; font-weight: 500; display: flex; align-items: center; gap: 4px;"><i class="fa-solid fa-server" style="color: #64748b;"></i> DevOps</div>
+                            <div class="drag-candidate-badge" draggable="true" data-role="UX Specialist" style="padding: 6px 10px; background: transparent; border: 1px solid #e2e8f0; border-radius: 20px; font-size: 0.72rem; color: #1e293b; cursor: grab; font-weight: 500; display: flex; align-items: center; gap: 4px;"><i class="fa-solid fa-wand-magic-sparkles" style="color: #64748b;"></i> UX Specialist</div>
+                        </div>
+                    </div>
+                    
+                    <button id="btn-commit-squad" class="save-btn" style="width: 100%; font-weight: 600; border: 1px solid #e2e8f0; padding: 12px 0; border-radius: 8px; margin-top: 10px; cursor: pointer; flex-shrink: 0;">
+                        <i class="fa-solid fa-floppy-disk"></i> <span class="term-fleet">Fleet</span> 구성 저장 및 검증
+                    </button>
+                </div>
+            </aside>
+            
+            <!-- Center Grid: D3.js Micro-Org Mapping Canvas -->
+            <div class="glass-panel" style="flex-grow: 1; min-width: 0; display: flex; flex-direction: column; border-radius: 16px;">
+                <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <i class="fa-solid fa-address-book" style="color: #64748b; margin-right: 8px;"></i>
+                        👤 부서 내 구조 맵핑 (Micro-Org Map & Strategy Canvas)
+                    </div>
+                    <span style="font-size: 0.75rem; color: #94a3b8;"><i class="fa-solid fa-circle-question"></i> Click 요원 -> HR 편집 | Drag 대기요원 -> 배치 채용</span>
+                </div>
+
+
+
+                <div id="workforce-cards-container" style="flex-grow: 1; position: relative; overflow: hidden; background: #ffffff; background-image: radial-gradient(#e2e8f0 1px, transparent 1px); background-size: 24px 24px; border-radius: 8px; border: 1px solid #e2e8f0;">
+                    <!-- D3.js Micro-Org Map Canvas will render here dynamically -->
+                </div>
+            </div>
+        </div>
+
+        <!-- ==========================================
+             ⚡ Tab 2: Workflow View Workspace (Toggled Hidden)
+             ========================================== -->
+        <div id="view-workflow" class="tab-view-container" style="display: none; gap: 15px; flex-grow: 1; height: 100%; min-width: 0; padding-bottom: 52px;">
+            <!-- Left/Center Column: Force Graph Task Canvas -->
+            <section class="graph-card" style="flex-grow: 1; display: flex; flex-direction: column; min-width: 0; position: relative;">
+                <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
+                    <div style="display: flex; align-items: center;">
+                        <i class="fa-solid fa-circle-nodes" style="color: #64748b; margin-right: 8px;"></i>
+                        <span id="translated-graph-title">Real-Time Traffic Communication Network</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <button id="btn-open-pipeline-config" style="background: #f8fafc; color: #475569; font-weight: 600; border: 1px solid #e2e8f0; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.72rem; display: flex; align-items: center; gap: 5px; font-family: inherit; transition: all 0.2s;" onmouseover="this.style.background='#e2e8f0';this.style.color='#0f172a'" onmouseout="this.style.background='#f8fafc';this.style.color='#475569'">
+                            <i class="fa-solid fa-gear"></i> ⚙️ Pipeline Config
+                        </button>
+                        <button id="btn-auto-assign-dag" style="background: #1e293b; color: #ffffff; font-weight: 600; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.72rem; display: flex; align-items: center; gap: 5px; font-family: inherit;">
+                            <i class="fa-solid fa-robot"></i> <span class="term-task">Task</span>-to-<span class="term-employee">Employee</span> 동적 자동 할당 (Auto-Assign)
+                        </button>
+                    </div>
+                </div>
+                <div id="playbook-tab-bar" style="background: #fafbfc; border-bottom: 1px solid #e2e8f0; padding: 8px 15px; display: flex; gap: 8px; overflow-x: auto; white-space: nowrap; align-items: center; scrollbar-width: none;">
+                    <span style="font-size: 0.65rem; color: #64748b; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-right: 5px; display: flex; align-items: center; gap: 4px;"><i class="fa-solid fa-book-open"></i> PLAYBOOKS:</span>
+                </div>
+                <!-- ⚡ Workflow Engine Toolbar (30 Features) -->
+                <div id="wf-engine-toolbar" style="background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border-bottom: 1px solid #e2e8f0; padding: 5px 12px; display: flex; gap: 5px; align-items: center; flex-wrap: wrap; overflow-x: auto; scrollbar-width: none;">
+                    <span style="font-size: 9px; color: #94a3b8; font-weight: 700; letter-spacing: 0.5px; margin-right: 3px;">⚡ ENGINE:</span>
+                    <button onclick="_validateDAGBeforeExecution()" style="background:#eff6ff;color:#3b82f6;border:1px solid #bfdbfe;padding:3px 8px;border-radius:5px;font-size:9px;cursor:pointer;font-weight:600;white-space:nowrap;" title="DAG 의존성 검증">✅ Validate</button>
+                    <button onclick="_openTemplateMarket()" style="background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0;padding:3px 8px;border-radius:5px;font-size:9px;cursor:pointer;font-weight:600;white-space:nowrap;" title="템플릿 마켓">📦 Templates</button>
+                    <button onclick="_importWorkflow()" style="background:#fefce8;color:#ca8a04;border:1px solid #fef08a;padding:3px 8px;border-radius:5px;font-size:9px;cursor:pointer;font-weight:600;white-space:nowrap;" title="Workflow 가져오기">📥 Import</button>
+                    <button onclick="_exportWorkflow()" style="background:#fefce8;color:#ca8a04;border:1px solid #fef08a;padding:3px 8px;border-radius:5px;font-size:9px;cursor:pointer;font-weight:600;white-space:nowrap;" title="Workflow 내보내기">📤 Export</button>
+                    <span style="width:1px;height:16px;background:#e2e8f0;margin:0 2px;"></span>
+                    <button onclick="_saveWorkflowVersion(prompt('버전 메모를 입력하세요:',''))" style="background:#faf5ff;color:#7c3aed;border:1px solid #ddd6fe;padding:3px 8px;border-radius:5px;font-size:9px;cursor:pointer;font-weight:600;white-space:nowrap;" title="현재 상태 버전 저장">📌 Save Ver.</button>
+                    <button onclick="_showVersionHistory()" style="background:#faf5ff;color:#7c3aed;border:1px solid #ddd6fe;padding:3px 8px;border-radius:5px;font-size:9px;cursor:pointer;font-weight:600;white-space:nowrap;" title="버전 히스토리">📜 History</button>
+                    <span style="width:1px;height:16px;background:#e2e8f0;margin:0 2px;"></span>
+                    <button onclick="_showNotificationCenter()" style="background:#fff1f2;color:#e11d48;border:1px solid #fecdd3;padding:3px 8px;border-radius:5px;font-size:9px;cursor:pointer;font-weight:600;white-space:nowrap;" title="알림 센터">🔔 Alerts</button>
+                    <button onclick="_showExecutionTimeline()" style="background:#ecfdf5;color:#059669;border:1px solid #a7f3d0;padding:3px 8px;border-radius:5px;font-size:9px;cursor:pointer;font-weight:600;white-space:nowrap;" title="실행 타임라인 (Gantt)">📊 Timeline</button>
+                    <button onclick="_showConversationLogs()" style="background:#f0f9ff;color:#0284c7;border:1px solid #bae6fd;padding:3px 8px;border-radius:5px;font-size:9px;cursor:pointer;font-weight:600;white-space:nowrap;" title="Agent 대화 로그">💬 Logs</button>
+                    <button onclick="_showCrossSquadPanel()" style="background:#fff7ed;color:#ea580c;border:1px solid #fed7aa;padding:3px 8px;border-radius:5px;font-size:9px;cursor:pointer;font-weight:600;white-space:nowrap;" title="Cross-Squad 전송">🔗 X-Squad</button>
+                    <span style="width:1px;height:16px;background:#e2e8f0;margin:0 2px;"></span>
+                    <!-- #17 ↩️↪️ 이모지 → FA 아이콘 -->
+                    <button onclick="_performUndo()" style="background:#f1f5f9;color:#475569;border:1px solid #e2e8f0;padding:3px 8px;border-radius:5px;font-size:9px;cursor:pointer;font-weight:600;" title="Undo (Ctrl+Z)" aria-label="실행 취소"><i class="fa-solid fa-rotate-left"></i></button>
+                    <button onclick="_performRedo()" style="background:#f1f5f9;color:#475569;border:1px solid #e2e8f0;padding:3px 8px;border-radius:5px;font-size:9px;cursor:pointer;font-weight:600;" title="Redo (Ctrl+Y)" aria-label="다시 실행"><i class="fa-solid fa-rotate-right"></i></button>
+                </div>
+                <div id="graph-container" style="flex-grow: 1; min-height: 0;"></div>
+
+                <!-- ==========================================
+                     🖱️ BUILD MODE: Floating Inventory Drawer
+                     ========================================== -->
+                <div id="inventory-drawer" class="inventory-drawer">
+                    <div class="inventory-header">
+                        <div style="display: flex; align-items: center; gap: 6px;">
+                            <i class="fa-solid fa-shapes" style="color: #64748b; font-size: 10px;"></i>
+                            <span>Build Mode — 요원 팔레트 (Drag to Canvas)</span>
+                        </div>
+                        <button id="toggle-inventory-btn" class="inventory-toggle-btn" title="Toggle Drawer">
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </button>
+                    </div>
+                    <div id="inventory-cards" class="inventory-cards">
+                        <!-- Dynamically populated by JS -->
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Right Column: Unified Command Chat 🎯 -->
+            <section id="unified-chat-panel" style="width:360px; flex-shrink:0; display:flex; flex-direction:column; height:100%; background:#ffffff; border:1px solid #e2e8f0; border-radius:10px; overflow:hidden;">
+                <!-- Chat Panel Header -->
+                <div style="padding:10px 14px 8px; border-bottom:1px solid #f1f5f9; background:#ffffff; display:flex; justify-content:space-between; align-items:center; flex-shrink:0;">
+                    <div style="display:flex;align-items:center;gap:7px;">
+                        <div style="width:7px;height:7px;background:#22c55e;border-radius:50%;animation:pulseGreen 1.5s ease-in-out infinite;" role="status" aria-label="연결됨"></div>
+                        <span style="font-size:11px;font-weight:800;color:#1e293b;">Unified Command Chat</span>
+                    </div>
+                    <div style="display:flex;gap:6px;align-items:center;">
+                        <!-- #19 폰트 CSS 변수, #42 aria-label 적용 -->
+                        <button onclick="if(window._showUccHistoryModal) window._showUccHistoryModal(); else alert('개발 중입니다.');" title="작업 내역 보기" aria-label="작업 내역 보기" class="cd-icon-btn cd-icon-btn--sm" style="font-size:9px;padding:2px 6px;font-weight:bold;display:flex;align-items:center;gap:3px;border:1px solid #e2e8f0;background:#f1f5f9;color:#475569;border-radius:4px;"><i class="fa-solid fa-list-check"></i> 내역</button>
+                        <span id="ucc-engine-pill" style="font-size:8px;font-weight:700;color:#64748b;background:#f8fafc;border:1px solid #e2e8f0;padding:2px 7px;border-radius:4px;">GPT-4o</span>
+                        <button id="ucc-clear-btn" title="대화 초기화" aria-label="대화 초기화" class="cd-icon-btn cd-icon-btn--sm cd-icon-btn--danger"><i class="fa-solid fa-trash-can"></i></button>
+                    </div>
+                </div>
+                <!-- Chat Thread Feed -->
+                <div id="chat-box" class="chat-feed-box" style="flex-grow:1; overflow-y:auto; padding:12px 14px; display:flex; flex-direction:column; gap:10px; background:#fafbfc;">
+                    <!-- Seed welcome card -->
+                    <div class="ucc-system-card" style="background:#f1f5f9;border-radius:8px;padding:10px 12px;border-left:3px solid #cbd5e1;">
+                        <div style="font-size:9px;font-weight:800;color:#94a3b8;letter-spacing:0.4px;margin-bottom:4px;">SYSTEM</div>
+                        <div style="font-size:12px;color:#000000;font-weight:500;line-height:1.5;">🎯 <strong>단일 사령탑</strong> 가동 중. 프롬프트를 입력하면 요원 배치 → 자율 토론 → 최종 승인 순으로 이 창에 순차 스트림됩니다.</div>
+                    </div>
+                </div>
+                <!-- Sticky Input Bar -->
+                <div style="padding:10px 12px; border-top:1px solid #f1f5f9; background:#ffffff; flex-shrink:0;">
+                    <!-- Team Target Selector -->
+                    <div style="display:flex;gap:6px;align-items:center;margin-bottom:6px;">
+                        <div style="display:flex;align-items:center;gap:5px;flex:1;">
+                            <i class="fa-solid fa-bullseye" style="color:#94a3b8;font-size:9px;flex-shrink:0;"></i>
+                            <span style="font-size:9px;font-weight:700;color:#94a3b8;white-space:nowrap;">명령 대상:</span>
+                            <select id="ucc-team-target" style="flex:1;border:1px solid #e2e8f0;border-radius:5px;padding:3px 6px;font-size:10px;font-weight:600;color:#1e293b;background:#f8fafc;outline:none;cursor:pointer;font-family:inherit;max-width:200px;">
+                                <option value="__ALL__">🏢 전체 Division (일괄 명령)</option>
+                                <option value="__ACTIVE__">📌 현재 팀 (활성 탭)</option>
+                            </select>
+                        </div>
+                        <span id="ucc-team-target-badge" style="font-size:8px;font-weight:700;color:#fff;background:#1e293b;padding:2px 7px;border-radius:4px;white-space:nowrap;">전체</span>
+                    </div>
+                    <!-- Command Input -->
+                    <div style="display:flex;gap:6px;align-items:center;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:6px 10px;">
+                        <i class="fa-solid fa-terminal" style="color:#cbd5e1;font-size:11px;flex-shrink:0;"></i>
+                        <input id="ucc-input" type="text" placeholder="명령을 입력하세요... (Enter)" spellcheck="false"
+                            style="flex:1;border:none;outline:none;background:#ffffff;font-size:12px;font-weight:600;color:#000000;font-family:inherit;padding:4px 6px;border-radius:4px;"
+                        />
+                        <button id="ucc-send-btn" style="background:#1e293b;color:#fff;border:none;border-radius:5px;padding:5px 10px;font-size:10px;font-weight:700;cursor:pointer;flex-shrink:0;"><i class="fa-solid fa-paper-plane"></i></button>
+                    </div>
+                    <div style="display:flex;gap:6px;margin-top:6px;">
+                        <button class="ucc-quick-btn" data-cmd="💬 회의 소집" title="요원 간 토론 격발" style="flex:1;padding:4px;font-size:9px;font-weight:700;color:#64748b;background:#f8fafc;border:1px solid #e2e8f0;border-radius:5px;cursor:pointer;"><i class="fa-solid fa-comments"></i> 토론</button>
+                        <button class="ucc-quick-btn" data-cmd="📊 현재 상태 보고" title="현황 리포트" style="flex:1;padding:4px;font-size:9px;font-weight:700;color:#64748b;background:#f8fafc;border:1px solid #e2e8f0;border-radius:5px;cursor:pointer;"><i class="fa-solid fa-chart-bar"></i> 상태</button>
+                        <button class="ucc-quick-btn" data-cmd="⚡ 즉시 실행" title="승인 후 즉시 격발" style="flex:1;padding:4px;font-size:9px;font-weight:700;color:#64748b;background:#f8fafc;border:1px solid #e2e8f0;border-radius:5px;cursor:pointer;"><i class="fa-solid fa-rocket"></i> 실행</button>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- ==========================================
+             🏢 Tab 3: Virtual Office 2D Pixel Simulator
+             ========================================== -->
+        <div id="view-office" class="tab-view-container" style="display: none; flex-grow: 1; height: 100%; min-width: 0; position: relative;">
+            <div class="glass-panel" style="flex-grow: 1; display: flex; flex-direction: column; border-radius: 16px; overflow: hidden;">
+                <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; flex-shrink: 0;">
+                    <div>
+                        <i class="fa-solid fa-building" style="color: #64748b; margin-right: 8px;"></i>
+                        🏢 가상 사무실 (Virtual Office) — 14인 정예 부대 실시간 시뮬레이터
+                    </div>
+                    <span id="vo-status-badge" style="font-size: 9px; font-weight: 700; color: #16a34a; background: #f0fdf4; padding: 3px 10px; border-radius: 20px; border: 1px solid #bbf7d0;">● LIVE</span>
+                </div>
+                <div id="office-stage" style="flex-grow: 1; position: relative; overflow: hidden; background: #1a1510;">
+                    <!-- Office map & agent sprites render here dynamically -->
+                </div>
+                <!-- 🎵 Office Chatter Log — Toggle Panel (hidden by default, shown via FAB button) -->
+                <div id="office-chatter-panel" class="office-chatter-panel" style="display: none; position: absolute; bottom: 0; left: 0; right: 0; z-index: 50; border-radius: 16px 16px 0 0; box-shadow: 0 -4px 24px rgba(0,0,0,0.4);">
+                    <div class="chatter-header">
+                        <div class="chatter-header-left">
+                            <div class="chatter-live-dot"></div>
+                            <i class="fa-solid fa-comments" style="color:#64748b;font-size:10px;"></i>
+                            <span>Office Chatter — 실시간 잡담 텔레메트리</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <span class="chatter-count" id="chatter-msg-count">0 messages</span>
+                            <button id="chatter-close-btn" style="background: none; border: none; color: #94a3b8; cursor: pointer; font-size: 14px; padding: 2px 6px;" title="닫기"><i class="fa-solid fa-xmark"></i></button>
+                        </div>
+                    </div>
+                    <div id="office-chatter-log" class="office-chatter-log">
+                        <div class="chatter-boot-line">
+                            <span class="chatter-ts">00:00:00</span>
+                            <span class="chatter-sys">SYSTEM</span>
+                            <span class="chatter-text">☕ Office life engine standby — 자율 잡담 프로토콜 대기 중...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==========================================
+             💼 Tab 4: CRM — Customer Relationship Manager + Salesforce
+             ========================================== -->
+        <div id="view-crm" class="tab-view-container" style="display: none; flex-grow: 1; height: 100%; min-width: 0; gap: 12px;">
+            <!-- CRM Left Sidebar -->
+            <aside id="crm-sidebar" class="glass-panel" style="width:260px;flex-shrink:0;display:flex;flex-direction:column;height:100%;border-radius:12px;overflow:hidden;">
+                <div class="card-header" style="display:flex;justify-content:space-between;align-items:center;">
+                    <div><i class="fa-solid fa-address-book" style="color:#0176d3;margin-right:6px;"></i> 💼 CRM</div>
+                    <!-- #26 SF 뱃지 — 텍스트+색상+role=status -->
+                    <span id="crm-sf-badge" role="status" aria-label="Salesforce 미연결" style="font-size:9px;font-weight:700;padding:2px 8px;border-radius:4px;background:#f1f5f9;color:#94a3b8;cursor:pointer;border:1px solid #e2e8f0;" title="Salesforce 연결 설정 — 클릭하여 구성"><i class="fa-solid fa-circle" style="font-size:6px;"></i> SF 미연결</span>
+                </div>
+                <div style="padding:10px;display:flex;flex-direction:column;gap:8px;overflow-y:auto;flex-grow:1;">
+                    <!-- #27 CRM 검색 aria-label -->
+                    <label for="crm-search" class="cd-sr-only">고객 또는 딜 검색</label>
+                    <input id="crm-search" type="search" placeholder="고객/딜 검색..." aria-label="고객 또는 딜 검색" style="width:100%;padding:7px 10px;border:1px solid #e2e8f0;border-radius:8px;font-size:11px;font-family:Inter,sans-serif;outline:none;box-sizing:border-box;">
+                    <!-- View Toggle -->
+                    <div style="display:flex;gap:4px;">
+                        <button class="crm-view-btn active" data-view="kanban" style="flex:1;padding:5px;border:1px solid #e2e8f0;background:#eff6ff;color:#1d4ed8;border-radius:6px;font-size:9px;font-weight:700;cursor:pointer;font-family:inherit;">📋 Kanban</button>
+                        <button class="crm-view-btn" data-view="list" style="flex:1;padding:5px;border:1px solid #e2e8f0;background:white;color:#64748b;border-radius:6px;font-size:9px;font-weight:700;cursor:pointer;font-family:inherit;">📄 List</button>
+                        <button class="crm-view-btn" data-view="dashboard" style="flex:1;padding:5px;border:1px solid #e2e8f0;background:white;color:#64748b;border-radius:6px;font-size:9px;font-weight:700;cursor:pointer;font-family:inherit;">📊 분석</button>
+                    </div>
+                    <!-- Quick Stats -->
+                    <div id="crm-quick-stats" style="display:grid;grid-template-columns:1fr 1fr;gap:6px;"></div>
+                    <!-- Segments -->
+                    <div style="font-size:9px;font-weight:700;color:#94a3b8;letter-spacing:.5px;margin-top:4px;">세그먼트</div>
+                    <div id="crm-segments" style="display:flex;flex-direction:column;gap:3px;"></div>
+                    <!-- Actions #29 sticky 상단 배치 -->
+                    <div style="display:flex;flex-direction:column;gap:4px;">
+                        <button id="crm-add-contact-btn" style="width:100%;padding:8px;background:#3b82f6;color:white;border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;"><i class="fa-solid fa-user-plus"></i> 고객 추가</button>
+                        <button id="crm-add-deal-btn" style="width:100%;padding:8px;background:#10b981;color:white;border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;"><i class="fa-solid fa-handshake"></i> 딜 추가</button>
+                        <button id="crm-sf-sync-btn" style="width:100%;padding:8px;background:#0176d3;color:white;border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:4px;">
+                            <i class="fa-solid fa-cloud-arrow-down"></i> Salesforce 동기화
+                        </button>
+                        <button id="crm-ai-score-btn" style="width:100%;padding:8px;background:linear-gradient(135deg,#8b5cf6,#6366f1);color:white;border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;"><i class="fa-solid fa-robot"></i> AI 리드 스코어링</button>
+                    </div>
+                </div>
+            </aside>
+            <!-- CRM Main Content -->
+            <div id="crm-main" class="glass-panel" style="flex-grow:1;display:flex;flex-direction:column;height:100%;border-radius:12px;overflow:hidden;">
+                <div class="card-header" style="display:flex;justify-content:space-between;align-items:center;">
+                    <div id="crm-main-title"><i class="fa-solid fa-table-columns" style="color:#64748b;margin-right:6px;"></i> 딜 파이프라인</div>
+                    <div style="display:flex;gap:6px;align-items:center;">
+                        <span id="crm-pipeline-total" style="font-size:10px;font-weight:700;color:#10b981;"></span>
+                        <button id="crm-refresh-btn" style="background:none;border:1px solid #e2e8f0;border-radius:6px;padding:4px 8px;font-size:9px;cursor:pointer;color:#64748b;font-family:inherit;" title="새로고침"><i class="fa-solid fa-arrows-rotate"></i></button>
+                    </div>
+                </div>
+                <div id="crm-content" style="flex-grow:1;overflow:auto;padding:12px;"></div>
+            </div>
+        </div>
+
+        <!-- ==========================================
+             👔 Tab 5: CEO — Command Center
+             ========================================== -->
+
+
+        <!-- 🧠 AI Brain Tab (#30 fallback skeleton) -->
+        <div id="view-brain" class="tab-view-container" role="tabpanel" aria-labelledby="tab-btn-brain" style="display: none; flex-grow: 1; height: 100%; min-width: 0; padding: 0;">
+            <!-- Populated dynamically by ai_brain.js — fallback via ux_patch.js -->
+        </div>
+
+        <!-- ==========================================
+             📊 FIXED RIGHTMOST COLUMN: DATA ANALYTICS PANEL (Fixed across both tabs)
+             ========================================== -->
+        <!-- #16 Analytics 패널 힌트 뱃지 -->
+        <section id="analytics-dashboard-panel" class="analytics-card glass-panel" style="display: none; width: 340px; flex-shrink: 0; flex-direction: column; overflow: hidden; height: 100%; border-radius: 8px; transition: opacity 0.3s ease, width 0.3s ease;">
+            <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; padding: 10px 14px;">
+                <div>
+                    <i class="fa-solid fa-chart-line" style="color: #38bdf8; margin-right: 8px;"></i>
+                    📊 <span style="font-family:'Outfit',sans-serif;font-weight:700;">Data Telemetry Dashboard</span>
+                </div>
+            </div>
+            
+            <!-- Tab Selector -->
+            <div class="analytics-tabs" style="display: flex; background: #f1f5f9; border-bottom: 1px solid #e2e8f0; padding: 4px; gap: 4px;">
+                <button class="analytics-tab-btn active" data-tab="overview" style="flex: 1; padding: 6px 2px; font-size: 0.65rem; border: none; background: none; cursor: pointer; border-radius: 4px; font-weight: bold; text-align: center; font-family: 'Outfit', sans-serif;">📊 개요</button>
+                <button class="analytics-tab-btn" data-tab="throughput" style="flex: 1; padding: 6px 2px; font-size: 0.65rem; border: none; background: none; cursor: pointer; border-radius: 4px; font-weight: bold; text-align: center; font-family: 'Outfit', sans-serif;">📈 처리량</button>
+                <button class="analytics-tab-btn" data-tab="workload" style="flex: 1; padding: 6px 2px; font-size: 0.65rem; border: none; background: none; cursor: pointer; border-radius: 4px; font-weight: bold; text-align: center; font-family: 'Outfit', sans-serif;">👥 부하도</button>
+                <button class="analytics-tab-btn" data-tab="tokens" style="flex: 1; padding: 6px 2px; font-size: 0.65rem; border: none; background: none; cursor: pointer; border-radius: 4px; font-weight: bold; text-align: center; font-family: 'Outfit', sans-serif;">🧠 토큰</button>
+            </div>
+
+            <div class="analytics-body" style="padding: 15px; display: flex; flex-direction: column; gap: 15px; overflow-y: auto; flex-grow: 1; box-sizing: border-box; background: #ffffff;">
+                
+                <!-- 1. OVERVIEW TAB -->
+                <div id="tab-content-overview" class="tab-content-pane" style="display: flex; flex-direction: column; gap: 14px;">
+                    <!-- Telemetry metric widgets -->
+                    <div class="metric-meter-container" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
+                        <div class="meter-box" style="padding: 10px; text-align: center; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px;">
+                            <span class="meter-label" style="font-size: 0.65rem; color: #94a3b8; text-transform: uppercase;">Total Token Cost</span>
+                            <h2 id="ops-cost" style="margin: 5px 0 0 0; font-size: 1.05rem; color: #1e293b;">$0.0000</h2>
+                        </div>
+                        <div class="meter-box" style="padding: 10px; text-align: center; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px;">
+                            <span class="meter-label" style="font-size: 0.65rem; color: #94a3b8; text-transform: uppercase;">Total Calls</span>
+                            <h2 id="ops-calls" style="margin: 5px 0 0 0; font-size: 1.05rem; color: #1e293b;">0</h2>
+                        </div>
+                    </div>
+                    
+                    <div class="analytics-section-box" style="border: 1px solid #e2e8f0; background: #f8fafc; padding: 12px; border-radius: 8px;">
+                        <h4 style="margin: 0 0 10px 0; font-size: 0.78rem; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;"><i class="fa-solid fa-gauge-high"></i> 비용 효율 (Cost Efficiency)</h4>
+                        <div id="cost-efficiency-chart" style="padding: 8px; text-align: center;">
+                            <div style="font-size: 0.68rem; color: #94a3b8; margin-bottom: 5px;">건당 평균 API 사용 비용 (Avg Cost Per Done)</div>
+                            <div id="efficiency-rating" style="font-size: 1.3rem; font-weight: 700; color: #16a34a;">$0.0000</div>
+                        </div>
+                    </div>
+
+                    <!-- Token Breakdown Widget -->
+                    <div class="analytics-section-box" style="border: 1px solid #e2e8f0; background: #f8fafc; padding: 12px; border-radius: 8px; display: flex; flex-direction: column; gap: 8px;">
+                        <h4 style="margin: 0; font-size: 0.78rem; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;"><i class="fa-solid fa-brain"></i> 토큰 분할 (Token Split)</h4>
+                        
+                        <div style="display: flex; flex-direction: column; gap: 4px;">
+                            <div style="display: flex; justify-content: space-between; font-size: 0.65rem; color: #475569;">
+                                <span>Input (Prompt)</span>
+                                <span id="ops-prompt-percent" style="font-weight: 600;">0% (0 tokens)</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; font-size: 0.65rem; color: #475569;">
+                                <span>Output (Completion)</span>
+                                <span id="ops-completion-percent" style="font-weight: 600;">0% (0 tokens)</span>
+                            </div>
+                        </div>
+                        
+                        <div style="height: 10px; background: rgba(0,0,0,0.06); border-radius: 5px; overflow: hidden; display: flex; border: 1px solid rgba(0,0,0,0.02);">
+                            <div id="bar-prompt-tokens" style="width: 50%; height: 100%; background: #38bdf8; transition: width 0.3s ease;"></div>
+                            <div id="bar-completion-tokens" style="width: 50%; height: 100%; background: #f59e0b; transition: width 0.3s ease;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. THROUGHPUT TAB -->
+                <div id="tab-content-throughput" class="tab-content-pane" style="display: none; flex-direction: column; gap: 10px; height: 100%;">
+                    <div class="analytics-section-box" style="border: 1px solid #e2e8f0; background: #f8fafc; padding: 12px; border-radius: 8px; flex-grow: 1; min-height: 240px; display: flex; flex-direction: column;">
+                        <h4 style="margin: 0 0 10px 0; font-size: 0.78rem; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;"><i class="fa-solid fa-chart-area"></i> Task 처리량 (Throughput)</h4>
+                        <div style="position: relative; flex-grow: 1; width: 100%; height: 100%;">
+                            <canvas id="throughput-canvas"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. WORKLOAD TAB -->
+                <div id="tab-content-workload" class="tab-content-pane" style="display: none; flex-direction: column; gap: 10px; height: 100%;">
+                    <div class="analytics-section-box" style="border: 1px solid #e2e8f0; background: #f8fafc; padding: 12px; border-radius: 8px; flex-grow: 1; min-height: 240px; display: flex; flex-direction: column;">
+                        <h4 style="margin: 0 0 10px 0; font-size: 0.78rem; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;"><i class="fa-solid fa-chart-bar"></i> 요원별 부하도 (Workload)</h4>
+                        <div style="position: relative; flex-grow: 1; width: 100%; height: 100%;">
+                            <canvas id="workload-canvas"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4. TOKENS TAB -->
+                <div id="tab-content-tokens" class="tab-content-pane" style="display: none; flex-direction: column; gap: 10px; height: 100%;">
+                    <div class="analytics-section-box" style="border: 1px solid #e2e8f0; background: #f8fafc; padding: 12px; border-radius: 8px; flex-grow: 1; min-height: 240px; display: flex; flex-direction: column;">
+                        <h4 style="margin: 0 0 10px 0; font-size: 0.78rem; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;"><i class="fa-solid fa-chart-pie"></i> 토큰 사용 분석 (Token Usage)</h4>
+                        <div style="position: relative; flex-grow: 1; width: 100%; height: 100%;">
+                            <canvas id="tokens-canvas"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Central Data Hub (CIO) Glassmorphic Modal Dialog -->
+    <div id="data-hub-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-content glass-panel">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-database"></i> Central Data Hub (CIO)</h3>
+                <button class="close-modal-btn" id="close-data-hub-btn">&times;</button>
+            </div>
+            
+            <div class="modal-tabs">
+                <button class="modal-tab-btn active" data-tab="tab-documents"><i class="fa-solid fa-file-invoice"></i> Documents (RAG)</button>
+                <button class="modal-tab-btn" data-tab="tab-gdrive"><i class="fa-brands fa-google-drive"></i> Google Drive</button>
+                <button class="modal-tab-btn" data-tab="tab-connectors"><i class="fa-solid fa-plug"></i> Data Connectors</button>
+            </div>
+            
+            <div class="modal-body-container">
+                <!-- Tab 1: Document Management -->
+                <div id="tab-documents" class="modal-tab-content active">
+                    <!-- Knowledge Pipeline Sub-tabs -->
+                    <!-- #33 → 화살표 → SVG Chevron -->
+                    <div class="kp-subtab-bar" role="tablist" aria-label="Knowledge Pipeline 단계">
+                        <button class="kp-subtab active" data-kptab="kp-upload" role="tab" aria-selected="true">
+                            <i class="fa-solid fa-cloud-arrow-up"></i> 업로드
+                            <span class="kp-badge" id="kp-badge-upload" style="display:none;">0</span>
+                        </button>
+                        <span class="kp-arrow" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M4 2l4 4-4 4" stroke="#94a3b8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                        <button class="kp-subtab" data-kptab="kp-processing" role="tab" aria-selected="false">
+                            <i class="fa-solid fa-spinner"></i> 학습 중
+                            <span class="kp-badge kp-badge-active" id="kp-badge-processing" style="display:none;">0</span>
+                        </button>
+                        <span class="kp-arrow" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M4 2l4 4-4 4" stroke="#94a3b8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                        <button class="kp-subtab" data-kptab="kp-history" role="tab" aria-selected="false">
+                            <i class="fa-solid fa-clock-rotate-left"></i> 학습 완료
+                            <span class="kp-badge kp-badge-done" id="kp-badge-history" style="display:none;">0</span>
+                        </button>
+                        <span class="kp-arrow" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M4 2l4 4-4 4" stroke="#94a3b8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                        <button class="kp-subtab" data-kptab="kp-manage" role="tab" aria-selected="false">
+                            <i class="fa-solid fa-sliders"></i> 지식 관리
+                        </button>
+                    </div>
+
+                    <!-- ① Upload Panel -->
+                    <div id="kp-upload" class="kp-panel active">
+                        <div id="drag-drop-zone" class="dropzone-box" style="height:120px;margin-bottom:12px;">
+                            <i class="fa-solid fa-cloud-arrow-up cloud-icon"></i>
+                            <p>파일을 여기에 드래그하거나 클릭하여 업로드</p>
+                            <span>PDF, TXT, CSV, JSON, PY 지원 · 각 파일 최대 300MB · 여러 파일 동시 업로드 가능</span>
+                            <input type="file" id="file-uploader" style="display: none;" multiple accept=".pdf,.txt,.csv,.json,.py,.md,.html,.xml,.yaml,.yml">
+                        </div>
+                        <div class="kp-section-header">
+                            <span><i class="fa-solid fa-file-import"></i> 대기 중인 파일</span>
+                            <span class="kp-section-count" id="kp-waiting-count">0개</span>
+                        </div>
+                        <div id="kp-upload-list" class="kp-file-list">
+                            <div class="kp-empty-state">
+                                <i class="fa-solid fa-inbox" style="font-size:28px;opacity:0.15;margin-bottom:6px;"></i>
+                                <div>업로드된 파일이 없습니다</div>
+                                <div style="font-size:9px;color:#94a3b8;">위 영역에 파일을 드래그하여 추가하세요</div>
+                            </div>
+                        </div>
+                        <button id="kp-start-learn-btn" class="kp-action-btn kp-learn-btn" style="display:none;">
+                            <i class="fa-solid fa-graduation-cap"></i> 선택한 파일 학습 시작
+                        </button>
+                        <button id="kp-start-learn-all-btn" class="kp-action-btn kp-learn-all-btn" style="display:none;">
+                            <i class="fa-solid fa-bolt"></i> 전체 학습 시작
+                        </button>
+
+                        <!-- Auto/Advanced Mode Toggle -->
+                        <div id="kp-mode-toggle" style="display:none; margin-top:8px; padding:10px 12px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px;">
+                            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+                                <span style="font-size:10px; font-weight:700; color:#475569;"><i class="fa-solid fa-gear"></i> 학습 모드</span>
+                                <div style="display:flex; background:#e2e8f0; border-radius:6px; overflow:hidden;">
+                                    <button id="kp-mode-auto" class="kp-mode-btn active" onclick="window._kpSetMode('auto')" style="padding:4px 12px; font-size:9px; font-weight:700; border:none; cursor:pointer; font-family:inherit; transition:all .2s; background:#3b82f6; color:#fff;">
+                                        <i class="fa-solid fa-wand-magic-sparkles"></i> Auto
+                                    </button>
+                                    <button id="kp-mode-advanced" class="kp-mode-btn" onclick="window._kpSetMode('advanced')" style="padding:4px 12px; font-size:9px; font-weight:700; border:none; cursor:pointer; font-family:inherit; transition:all .2s; background:transparent; color:#64748b;">
+                                        <i class="fa-solid fa-sliders"></i> Advanced
+                                    </button>
+                                </div>
+                            </div>
+                            <!-- Auto Mode Description -->
+                            <div id="kp-auto-desc" style="font-size:9px; color:#64748b; line-height:1.5; padding:4px 0;">
+                                <i class="fa-solid fa-circle-info" style="color:#3b82f6;"></i>
+                                파일 유형에 따라 최적의 Epoch와 청크 크기가 <strong>자동 설정</strong>됩니다.
+                                <span style="display:block;margin-top:3px;color:#94a3b8;">PDF: 5 Epoch · TXT/MD/JSON/PY: 4 Epoch · CSV: 3 Epoch</span>
+                            </div>
+                            <!-- Advanced Mode Controls (hidden by default) -->
+                            <div id="kp-advanced-controls" style="display:none;">
+                                <div style="margin-bottom:8px;">
+                                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                                        <label style="font-size:9px; font-weight:700; color:#475569;">Epoch 횟수</label>
+                                        <span id="kp-adv-epoch-val" style="font-size:10px; font-weight:800; color:#7c3aed;">5</span>
+                                    </div>
+                                    <input type="range" id="kp-adv-epoch" min="1" max="8" value="5" style="width:100%; accent-color:#7c3aed; height:4px;"
+                                        oninput="document.getElementById('kp-adv-epoch-val').textContent=this.value; window._kpCustomEpochs=parseInt(this.value);">
+                                    <div style="display:flex; justify-content:space-between; font-size:8px; color:#94a3b8;">
+                                        <span>1 (빠름)</span><span>5 (기본)</span><span>8 (최대)</span>
+                                    </div>
+                                </div>
+                                <div style="margin-bottom:6px;">
+                                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                                        <label style="font-size:9px; font-weight:700; color:#475569;">최소 청크 크기</label>
+                                        <span id="kp-adv-chunk-val" style="font-size:10px; font-weight:800; color:#7c3aed;">150자</span>
+                                    </div>
+                                    <input type="range" id="kp-adv-chunk" min="50" max="500" value="150" step="50" style="width:100%; accent-color:#7c3aed; height:4px;"
+                                        oninput="document.getElementById('kp-adv-chunk-val').textContent=this.value+'자'; window._kpCustomChunk=parseInt(this.value);">
+                                    <div style="display:flex; justify-content:space-between; font-size:8px; color:#94a3b8;">
+                                        <span>50자 (정밀)</span><span>250자</span><span>500자 (빠름)</span>
+                                    </div>
+                                </div>
+                                <div style="font-size:8px; color:#94a3b8; line-height:1.4; padding:4px 6px; background:#faf5ff; border:1px solid #e9d5ff; border-radius:6px;">
+                                    <i class="fa-solid fa-flask" style="color:#7c3aed;"></i>
+                                    높은 Epoch + 작은 청크 = 정밀한 검색이 가능하지만 인덱싱 시간이 증가합니다.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ② Processing Panel -->
+                    <div id="kp-processing" class="kp-panel">
+                        <div class="kp-section-header">
+                            <span><i class="fa-solid fa-microchip"></i> 학습 진행 중</span>
+                            <span class="kp-section-count" id="kp-proc-count">0개</span>
+                        </div>
+                        <div id="kp-processing-list" class="kp-file-list">
+                            <div class="kp-empty-state">
+                                <i class="fa-solid fa-check-circle" style="font-size:28px;opacity:0.15;margin-bottom:6px;color:#16a34a;"></i>
+                                <div>현재 학습 중인 파일이 없습니다</div>
+                                <div style="font-size:9px;color:#94a3b8;">"업로드" 탭에서 학습을 시작하세요</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ③ History Panel -->
+                    <div id="kp-history" class="kp-panel">
+                        <div class="kp-section-header">
+                            <span><i class="fa-solid fa-book-open"></i> 학습 완료 히스토리</span>
+                            <span class="kp-section-count" id="kp-history-count">0개</span>
+                        </div>
+                        <div id="kp-history-list" class="kp-file-list">
+                            <div class="kp-empty-state">
+                                <i class="fa-solid fa-folder-open" style="font-size:28px;opacity:0.15;margin-bottom:6px;"></i>
+                                <div>학습 완료된 파일이 없습니다</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ④ Management Panel -->
+                    <div id="kp-manage" class="kp-panel">
+                        <!-- Stats Dashboard -->
+                        <div id="kp-stats-dashboard" class="kp-stats-row">
+                            <div class="kp-stat-card">
+                                <div class="kp-stat-value" id="kp-stat-files">0</div>
+                                <div class="kp-stat-label">인덱스 파일</div>
+                            </div>
+                            <div class="kp-stat-card">
+                                <div class="kp-stat-value" id="kp-stat-chunks" style="color:#8b5cf6;">0</div>
+                                <div class="kp-stat-label">총 청크</div>
+                            </div>
+                            <div class="kp-stat-card">
+                                <div class="kp-stat-value" id="kp-stat-active" style="color:#16a34a;">0</div>
+                                <div class="kp-stat-label">활성 주입</div>
+                            </div>
+                            <div class="kp-stat-card">
+                                <div class="kp-stat-value" id="kp-stat-quality" style="color:#f59e0b;">0</div>
+                                <div class="kp-stat-label">평균 품질</div>
+                            </div>
+                        </div>
+                        <div class="kp-section-header">
+                            <span><i class="fa-solid fa-brain"></i> 활성 지식 목록</span>
+                            <span class="kp-section-count" id="kp-manage-count">0개</span>
+                        </div>
+                        <div id="kp-manage-list" class="kp-file-list">
+                            <div class="kp-empty-state">
+                                <i class="fa-solid fa-cog" style="font-size:28px;opacity:0.15;margin-bottom:6px;"></i>
+                                <div>활성화된 지식이 없습니다</div>
+                                <div style="font-size:9px;color:#94a3b8;">"학습 완료" 탭에서 Squad에 주입하세요</div>
+                            </div>
+                        </div>
+
+                        <!-- Reindex Controls (collapsible) -->
+                        <div id="reindex-panel" style="display:none;margin-top:8px;padding:8px 12px;background:#faf5ff;border:1px solid #e9d5ff;border-radius:8px;">
+                            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+                                <span style="font-size:10px;font-weight:700;color:#7c3aed;"><i class="fa-solid fa-sliders"></i> Epoch 재인덱싱</span>
+                                <button id="close-reindex-btn" style="background:none;border:none;font-size:11px;color:#94a3b8;cursor:pointer;">✕</button>
+                            </div>
+                            <div style="font-size:9px;color:#64748b;margin-bottom:4px;">
+                                파일: <strong id="reindex-filename" style="color:#334155;"></strong>
+                                · 프로파일: <strong id="reindex-profile" style="color:#7c3aed;"></strong>
+                            </div>
+                            <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+                                <label style="font-size:9px;font-weight:600;color:#475569;white-space:nowrap;">Epochs:</label>
+                                <input type="range" id="epoch-slider" min="1" max="6" value="2" style="flex:1;accent-color:#7c3aed;height:4px;">
+                                <span id="epoch-value" style="font-size:12px;font-weight:800;color:#7c3aed;min-width:20px;text-align:center;">2</span>
+                            </div>
+                            <div style="font-size:8px;color:#94a3b8;margin-bottom:6px;">
+                                <span>1 = 빠른 인덱싱 (Coarse)</span> · <span>3 = 균형</span> · <span>6 = 최대 정밀도 (Overfitting)</span>
+                            </div>
+                            <button id="run-reindex-btn" style="width:100%;padding:6px;background:linear-gradient(135deg,#7c3aed,#6366f1);color:#fff;border:none;border-radius:6px;font-size:10px;font-weight:700;cursor:pointer;">
+                                <i class="fa-solid fa-rotate"></i> 재인덱싱 실행
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab: Google Drive & NotebookLM Sources -->
+                <div id="tab-gdrive" class="modal-tab-content">
+                    <div class="gdrive-panel">
+                        <!-- Drive Auth Section -->
+                        <div class="gdrive-auth-section">
+                            <div class="gdrive-auth-card">
+                                <div class="gdrive-icon-wrap">
+                                    <i class="fa-brands fa-google-drive" style="font-size: 28px; color: #64748b;"></i>
+                                </div>
+                                <div class="gdrive-auth-info">
+                                    <h4 style="margin: 0 0 4px 0; font-size: 13px; color: #1e293b;">Google Drive 연결</h4>
+                                    <p style="margin: 0; font-size: 10px; color: #94a3b8;" id="gdrive-status-text">Not Connected</p>
+                                </div>
+                                <button id="gdrive-connect-btn" class="gdrive-connect-btn">
+                                    <i class="fa-solid fa-link"></i> Connect
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Inline Credential Input Form -->
+                        <div class="gdrive-cred-form" id="gdrive-cred-form">
+                            <div class="gdrive-cred-header">
+                                <i class="fa-solid fa-key" style="color: #64748b;"></i>
+                                <span style="font-size: 11px; font-weight: 700; color: #1e293b;">Google API 키 직접 입력</span>
+                            </div>
+                            <div class="gdrive-cred-fields">
+                                <div class="gdrive-cred-field">
+                                    <label for="gdrive-client-id-input">Client ID</label>
+                                    <input type="text" id="gdrive-client-id-input" class="gdrive-cred-input"
+                                        placeholder="xxxxxxxxxxxx.apps.googleusercontent.com" spellcheck="false" autocomplete="off">
+                                </div>
+                                <div class="gdrive-cred-field">
+                                    <label for="gdrive-client-secret-input">Client Secret</label>
+                                    <input type="password" id="gdrive-client-secret-input" class="gdrive-cred-input"
+                                        placeholder="GOCSPX-xxxxxxxxxxxxxxxx" spellcheck="false" autocomplete="off">
+                                </div>
+                            </div>
+                            <div class="gdrive-cred-actions">
+                                <button id="gdrive-save-connect-btn" class="gdrive-save-connect-btn">
+                                    <i class="fa-solid fa-bolt"></i> 키 저장 및 연결 (Save & Connect)
+                                </button>
+                                <span id="gdrive-save-status" class="gdrive-save-status"></span>
+                            </div>
+                        </div>
+
+                        <!-- 3-Minute Setup Guide (collapsible) -->
+                        <div class="gdrive-setup-guide" id="gdrive-setup-guide">
+                            <div class="gdrive-guide-header" id="gdrive-guide-toggle">
+                                <span style="font-size: 11px; font-weight: 700; color: #1e293b;">
+                                    <i class="fa-solid fa-circle-info" style="color: #64748b;"></i>
+                                    3분 실전 연동 가이드
+                                </span>
+                                <i class="fa-solid fa-chevron-down gdrive-guide-chevron" style="font-size: 9px; color: #94a3b8;"></i>
+                            </div>
+                            <div class="gdrive-guide-body" id="gdrive-guide-body">
+                                <ol class="gdrive-guide-steps">
+                                    <li>
+                                        <a href="https://console.cloud.google.com/projectcreate" target="_blank" style="color: #3b82f6; text-decoration: none;">Google Cloud Console</a> 접속 → 새 프로젝트 생성
+                                    </li>
+                                    <li>
+                                        <a href="https://console.cloud.google.com/apis/library/drive.googleapis.com" target="_blank" style="color: #3b82f6; text-decoration: none;">Google Drive API</a> 활성화 → OAuth 동의 화면 설정 (외부/테스트 사용자)
+                                    </li>
+                                    <li>
+                                        <strong>사용자 인증 정보</strong> → OAuth 클라이언트 ID 만들기 (웹 애플리케이션)
+                                    </li>
+                                    <li>
+                                        <strong>승인된 리디렉션 URI</strong>에 아래 주소를 등록:
+                                        <div class="gdrive-uri-copy-row">
+                                            <code class="gdrive-uri-code">http://127.0.0.1:8000/api/gdrive/callback</code>
+                                            <button class="gdrive-copy-btn" id="gdrive-copy-uri-btn" title="클립보드에 복사">
+                                                <i class="fa-solid fa-copy"></i>
+                                            </button>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        발급된 <strong>Client ID</strong>와 <strong>Client Secret</strong>을 프로젝트 루트의 <code>.env</code> 파일에 저장:
+                                        <div class="gdrive-env-example">
+                                            <code>GOOGLE_CLIENT_ID=발급된_클라이언트_ID.apps.googleusercontent.com</code><br>
+                                            <code>GOOGLE_CLIENT_SECRET=발급된_시크릿_키</code><br>
+                                            <code>GOOGLE_REDIRECT_URI=http://127.0.0.1:8000/api/gdrive/callback</code>
+                                        </div>
+                                    </li>
+                                </ol>
+                                <p style="font-size: 9px; color: #94a3b8; margin: 8px 0 0 0;">
+                                    💡 .env 파일 저장 후 서버를 재시작하면 자동으로 인식됩니다. 키가 없으면 Sandbox 모드가 자동 활성화됩니다.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- File Picker & Upload -->
+                        <div class="gdrive-picker-section">
+                            <div style="display: flex; gap: 8px; margin-bottom: 12px;">
+                                <button id="gdrive-pick-files-btn" class="gdrive-action-btn" disabled>
+                                    <i class="fa-solid fa-folder-open"></i> Drive에서 선택
+                                </button>
+                                <button id="gdrive-url-import-btn" class="gdrive-action-btn">
+                                    <i class="fa-solid fa-link"></i> URL로 임포트
+                                </button>
+                            </div>
+                            <input type="text" id="gdrive-url-input" class="gdrive-url-input" placeholder="Google Docs/Sheets/Drive URL을 붙여넣으세요..." style="display: none;">
+                        </div>
+
+                        <!-- Ingested Sources List (NotebookLM-style) -->
+                        <div class="gdrive-sources-section">
+                            <div class="gdrive-sources-header">
+                                <h4 style="margin: 0; font-size: 12px; color: #1e293b; font-weight: 700;">
+                                    <i class="fa-solid fa-brain" style="color: #64748b;"></i> Knowledge Sources
+                                </h4>
+                                <span id="gdrive-source-count" style="font-size: 10px; color: #94a3b8;">0 sources</span>
+                            </div>
+                            <div id="gdrive-sources-list" class="gdrive-sources-list">
+                                <div class="empty-docs" style="font-size: 11px; color: #94a3b8; padding: 30px; text-align: center;">
+                                    <i class="fa-solid fa-cloud-arrow-up" style="font-size: 24px; display: block; margin-bottom: 8px; color: #cbd5e1;"></i>
+                                    Drive를 연결하거나 URL을 입력하여<br>지식 소스를 추가하세요
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Grounding Controls -->
+                        <div class="gdrive-grounding-section">
+                            <div class="gdrive-grounding-card">
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <i class="fa-solid fa-bolt" style="color: #64748b;"></i>
+                                    <span style="font-size: 11px; font-weight: 700; color: #1e293b;">Auto-Ground to All Agents</span>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="gdrive-auto-ground-toggle" checked>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                            <p style="font-size: 9px; color: #94a3b8; margin: 6px 0 0 0;">활성화 시, 등록된 모든 소스가 매트릭스 내 전 요원의 시스템 프롬프트에 자동 주입됩니다.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Tab 2: Data Connectors -->
+                <div id="tab-connectors" class="modal-tab-content">
+                    <div class="connectors-panel">
+                        <!-- Left Column: Navigation -->
+                        <div class="connectors-nav">
+                            <button class="connector-item active" data-connector="GitHub"><i class="fa-brands fa-github"></i> GitHub</button>
+                            <button class="connector-item" data-connector="GitLab"><i class="fa-brands fa-gitlab"></i> GitLab</button>
+                            <button class="connector-item" data-connector="GoogleDrive"><i class="fa-brands fa-google-drive"></i> Google Drive</button>
+                            <button class="connector-item" data-connector="YouTube"><i class="fa-brands fa-youtube"></i> YouTube</button>
+                            <button class="connector-item" data-connector="Slack"><i class="fa-brands fa-slack"></i> Slack</button>
+                            <button class="connector-item" data-connector="Notion"><i class="fa-solid fa-book-open"></i> Notion</button>
+                            <button class="connector-item" data-connector="Crawler"><i class="fa-solid fa-spider"></i> Web Crawler</button>
+                        </div>
+                        
+                        <!-- Right Column: Form Area -->
+                        <div class="connectors-form-container">
+                            <form id="connector-auth-form" class="connector-form">
+                                <!-- Dynamic form content will be injected here -->
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- Inserted text block -->
-    <div class="custom-text-block">
-        Log Visualizer <br> Visualize the log in real-time when generating software, in agent dialog-style. Execute "python3 run.py" to start.
+    <!-- C-Level Executive Board Governance HITL Veto/Approval Popup -->
+    <div id="executive-approval-overlay" class="modal-overlay" style="display: none;">
+        <div class="approval-modal glass-panel" style="max-width: 600px;">
+            <div class="approval-header">
+                <i class="fa-solid fa-user-tie pause-icon" style="color: #64748b;"></i>
+                <h3>👔 C-LEVEL EXECUTIVE GOVERNANCE BOARD</h3>
+            </div>
+            <div class="approval-body">
+                <p>The **CEO Orchestrator** has generated a new high-level Task Plan. Awaiting approval from the Board of Executives (**CTO, CMO, CPO**) & Founder...</p>
+                <div class="executive-officers-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 15px 0;">
+                    <div class="officer-badge" style="background: #f8fafc; padding: 10px; border-radius: 8px; border: 1px solid #e2e8f0; text-align: center;">
+                        <i class="fa-solid fa-code" style="color: #64748b; font-size: 1.2rem; margin-bottom: 5px;"></i>
+                        <div style="font-weight: 600; font-size: 0.85rem; color: #1e293b;">CTO</div>
+                        <div style="font-size: 0.7rem; color: #94a3b8;">Technical Guard</div>
+                    </div>
+                    <div class="officer-badge" style="background: #f8fafc; padding: 10px; border-radius: 8px; border: 1px solid #e2e8f0; text-align: center;">
+                        <i class="fa-solid fa-bullhorn" style="color: #64748b; font-size: 1.2rem; margin-bottom: 5px;"></i>
+                        <div style="font-weight: 600; font-size: 0.85rem; color: #1e293b;">CMO</div>
+                        <div style="font-size: 0.7rem; color: #94a3b8;">Slack & Channels</div>
+                    </div>
+                    <div class="officer-badge" style="background: #f8fafc; padding: 10px; border-radius: 8px; border: 1px solid #e2e8f0; text-align: center;">
+                        <i class="fa-solid fa-rocket" style="color: #64748b; font-size: 1.2rem; margin-bottom: 5px;"></i>
+                        <div style="font-weight: 600; font-size: 0.85rem; color: #1e293b;">CPO</div>
+                        <div style="font-size: 0.7rem; color: #94a3b8;">Roadmap & UX</div>
+                    </div>
+                </div>
+                <div class="plan-preview-box" style="background: #f8fafc; border-radius: 8px; padding: 12px; border: 1px solid #e2e8f0; max-height: 250px; overflow-y: auto;">
+                    <pre style="margin: 0;"><code id="executive-plan-json" style="font-size: 0.8rem; line-height: 1.3; color: #1e293b; font-family: monospace;">Fetching project distribution plan...</code></pre>
+                </div>
+            </div>
+            <div class="approval-actions" style="margin-top: 15px; display: flex; gap: 15px;">
+                <button id="btn-approve-executive" class="action-btn btn-approve" style="flex: 1; background: #1e293b; color: #ffffff; font-weight: 600; padding: 12px 0; border: none; border-radius: 8px;"><i class="fa-solid fa-circle-check"></i> 🟢 승인 및 하달</button>
+                <button id="btn-reject-executive" class="action-btn btn-reject" style="flex: 1; background: #ffffff; color: #dc2626; font-weight: 600; padding: 12px 0; border: 1px solid #fecaca; border-radius: 8px;"><i class="fa-solid fa-circle-xmark"></i> 🔴 기각 및 재기획</button>
+            </div>
+        </div>
     </div>
 
-    <div class="container d-flex flex-column" id="chat-box"></div>
-    <script src="static/js/main.js"></script>
+    <!-- Human-in-the-Loop (HITL) Pause & Approval Popup -->
+    <div id="approval-overlay" class="modal-overlay" style="display: none;">
+        <div class="approval-modal glass-panel">
+            <div class="approval-header">
+                <i class="fa-solid fa-hand pause-icon pulse-animation"></i>
+                <h3>EXECUTIVE APPROVAL PENDING</h3>
+            </div>
+            <div class="approval-body">
+                <p>The topological sort execution pipeline has encountered a <strong class="badge-trigger">Human Approval</strong> milestone node.</p>
+                <div class="approval-node-details">
+                    <span>Squad: <strong id="approval-squad-name">Squad_A</strong></span> | 
+                    <span>Node ID: <strong id="approval-node-id">Human Approval</strong></span>
+                </div>
+                <p>Please review and authorize the pipeline to resume subsequent automated nodes.</p>
+            </div>
+            <div class="approval-actions">
+                <button id="btn-approve-dag" class="action-btn btn-approve"><i class="fa-solid fa-circle-check"></i> Approve & Resume</button>
+                <button id="btn-reject-dag" class="action-btn btn-reject"><i class="fa-solid fa-circle-xmark"></i> Reject & Abort</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recruit Employee Glassmorphic Modal Dialog -->
+    <div id="recruitment-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-content glass-panel" style="max-width: 500px;">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-user-plus"></i> 💼 <span class="term-employee">Employee</span> 채용 (Recruit <span class="term-employee">Employee</span>)</h3>
+                <button class="close-modal-btn" id="close-recruitment-btn">&times;</button>
+            </div>
+            <div class="modal-body-container" style="padding: 20px; display: flex; flex-direction: column; gap: 15px;">
+                <div class="form-group" style="display: flex; flex-direction: column; gap: 5px;">
+                    <label style="font-size: 0.85rem; font-weight: 600; color: #1e293b;">선택 역할 (Base Role)</label>
+                    <select id="recruit-base-role" class="agent-mission-textarea" style="height: 35px; padding: 5px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; color: #1e293b; font-family: inherit;">
+                        <option value="Chief Executive Officer">Chief Executive Officer (CEO)</option>
+                        <option value="Chief Product Officer">Chief Product Officer (CPO)</option>
+                        <option value="Chief Technology Officer">Chief Technology Officer (CTO)</option>
+                        <option value="Programmer">Programmer (개발자)</option>
+                        <option value="Code Reviewer">Code Reviewer (코드 검토자)</option>
+                        <option value="Software Test Engineer">Software Test Engineer (테스터)</option>
+                        <option value="Counselor">Counselor (상담사)</option>
+                        <option value="Chief Creative Officer">Chief Creative Officer (CCO)</option>
+                        <option value="Chief Human Resource Officer">Chief Human Resource Officer (CHRO)</option>
+                        <option value="Security Auditor">Security Auditor (보안 감사자)</option>
+                        <option value="Technical Writer">Technical Writer (기술 문서 작성자)</option>
+                        <option value="DevOps">DevOps (배포 자동화 엔지니어)</option>
+                        <option value="UX Specialist">UX Specialist (사용자 경험 스펙터)</option>
+                    </select>
+                </div>
+                
+                <div class="form-group" style="display: flex; flex-direction: column; gap: 5px;">
+                    <label style="font-size: 0.85rem; font-weight: 600; color: #1e293b;">직책 (Title)</label>
+                    <input type="text" id="recruit-title" class="agent-mission-textarea" placeholder="예: Senior Backend Engineer, Lead Copywriter 등" style="height: 30px;">
+                </div>
+                
+                <div class="form-group" style="display: flex; flex-direction: column; gap: 5px;">
+                    <label style="font-size: 0.85rem; font-weight: 600; color: #1e293b;">페르소나 프롬프트 (Persona Prompt)</label>
+                    <textarea id="recruit-persona" class="agent-mission-textarea" rows="3" placeholder="직원의 성격, 말투, 일하는 스타일을 정의하세요..."></textarea>
+                </div>
+                
+                <div class="form-group" style="display: flex; flex-direction: column; gap: 5px;">
+                    <label style="font-size: 0.85rem; font-weight: 600; color: #1e293b;">📥 중앙 지식 수혈 (Bound Document)</label>
+                    <select id="recruit-knowledge" class="agent-mission-textarea" style="height: 35px; padding: 5px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; color: #1e293b; font-family: inherit;">
+                        <option value="">-- 없음 (No Document Bound) --</option>
+                    </select>
+                </div>
+
+                <div class="scope-settings-section" style="border: 1px solid #e2e8f0; padding: 12px; border-radius: 8px; background: #f8fafc; display: flex; flex-direction: column; gap: 10px;">
+                    <h4 style="margin: 0; font-size: 0.85rem; color: #1e293b; border-bottom: 1px solid #e2e8f0; padding-bottom: 5px;"><i class="fa-solid fa-sliders"></i> 범위 설정 (Scope Settings)</h4>
+                    
+                    <div class="form-group" style="display: flex; flex-direction: column; gap: 5px;">
+                        <label style="font-size: 0.75rem; color: #64748b;">지식 범위 (Knowledge Scope)</label>
+                        <select id="recruit-knowledge-scope" class="agent-mission-textarea" style="height: 30px; padding: 3px; font-size: 0.75rem; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 6px; color: #1e293b; font-family: inherit;">
+                            <option value="전사 공통">🌐 전사 공통 (Company Common)</option>
+                            <option value="부서 한정">🏢 부서 한정 (Squad Limited)</option>
+                            <option value="개인 기밀">🔒 개인 기밀 (Personal Confidential)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" style="display: flex; flex-direction: column; gap: 5px;">
+                        <label style="font-size: 0.75rem; color: #ccc;">권한 범위 (Permission Scope)</label>
+                        <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                            <label class="capability-label" style="font-size: 0.75rem;"><input type="checkbox" class="perm-cb" value="읽기 전용" checked> 읽기 전용</label>
+                            <label class="capability-label" style="font-size: 0.75rem;"><input type="checkbox" class="perm-cb" value="내부 협업" checked> 내부 협업</label>
+                            <label class="capability-label" style="font-size: 0.75rem;"><input type="checkbox" class="perm-cb" value="외부 실행"> 외부 실행</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="display: flex; flex-direction: column; gap: 5px;">
+                        <label style="font-size: 0.75rem; color: #94a3b8; display: flex; justify-content: space-between;">
+                            <span>비용 범위 (Cost Limit)</span>
+                            <span style="color: #1e293b; font-weight: bold;"><span id="recruit-token-val">5000</span> Tokens</span>
+                        </label>
+                        <input type="range" id="recruit-token-limit" min="1000" max="20000" step="500" value="5000" style="accent-color: #64748b; width: 100%;">
+                    </div>
+                </div>
+                
+                <button id="btn-submit-recruitment" class="save-btn" style="width: 100%; font-weight: 600; background: #1e293b; color: #ffffff; padding: 12px 0; border: none; border-radius: 8px; cursor: pointer;">
+                    <i class="fa-solid fa-user-plus"></i> <span class="term-employee">Employee</span> 채용 승인 (Authorize Recruitment)
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Sliding Interactive HR Sidebar Panel Drawer -->
+    <div id="hr-sidebar" class="hr-sidebar-drawer" style="position: fixed; right: -420px; top: 0; height: 100vh; width: 400px; z-index: 2000; background: #ffffff; border-left: 1px solid #e2e8f0; box-shadow: -4px 0 16px rgba(0,0,0,0.06); display: flex; flex-direction: column; box-sizing: border-box; transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);">
+        <div class="modal-header" style="padding: 20px; border-bottom: 1px solid #e2e8f0; flex-shrink: 0; display: flex; justify-content: space-between; align-items: center;">
+            <h3 style="margin: 0; font-size: 1.05rem; display: flex; align-items: center; gap: 8px; color: #1e293b;"><i class="fa-solid fa-user-gear"></i> 요원 HR 전술 관리 패널</h3>
+            <button class="close-modal-btn" id="close-hr-sidebar" style="background: none; border: none; color: #94a3b8; font-size: 1.5rem; cursor: pointer;">&times;</button>
+        </div>
+        
+        <div class="hr-sidebar-body" style="padding: 20px; overflow-y: auto; flex-grow: 1; display: flex; flex-direction: column; gap: 15px; box-sizing: border-box;">
+            <!-- Selected Agent Indicator -->
+            <div class="hr-selected-agent-header" style="display: flex; align-items: center; gap: 15px; background: #f8fafc; border: 1px solid #e2e8f0; padding: 15px; border-radius: 8px;">
+                <div class="agent-avatar-circle" id="sidebar-agent-avatar" style="width: 50px; height: 50px; border-radius: 50%; background: #f1f5f9; display: flex; justify-content: center; align-items: center; font-size: 1.4rem; color: #64748b; border: 1px solid #e2e8f0;">
+                    <i class="fa-solid fa-user-tie"></i>
+                </div>
+                <div class="agent-avatar-details" style="display: flex; flex-direction: column; gap: 3px; overflow: hidden;">
+                    <h4 id="sidebar-agent-base-role" style="margin: 0; font-size: 1rem; color: #1e293b; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Programmer</h4>
+                    <span id="sidebar-agent-squad-badge" class="badge" style="font-size: 0.65rem; color: #64748b; background: #f1f5f9; border: 1px solid #e2e8f0; padding: 2px 6px; border-radius: 4px; align-self: flex-start; font-weight: 600;">ACTIVE IN SQUAD</span>
+                </div>
+            </div>
+            
+            <!-- Details Edit Form -->
+            <div class="form-group" style="display: flex; flex-direction: column; gap: 5px;">
+                <label style="font-size: 0.8rem; font-weight: 600; color: #1e293b;"><i class="fa-solid fa-id-badge"></i> 직책 (Custom Title)</label>
+                <input type="text" id="hr-agent-title" class="agent-mission-textarea" style="height: 35px; padding: 5px; box-sizing: border-box;" placeholder="Enter Job Title...">
+            </div>
+            
+            <div class="form-group" style="display: flex; flex-direction: column; gap: 5px;">
+                <label style="font-size: 0.8rem; font-weight: 600; color: #1e293b;"><i class="fa-solid fa-comment-dots"></i> 페르소나 프롬프트 (Persona Prompt)</label>
+                <textarea id="hr-agent-persona" class="agent-mission-textarea" rows="4" style="padding: 8px; box-sizing: border-box;" placeholder="Enter Persona details..."></textarea>
+            </div>
+            
+            <div class="form-group" style="display: flex; flex-direction: column; gap: 5px;">
+                <label style="font-size: 0.8rem; font-weight: 600; color: #1e293b;"><i class="fa-solid fa-file-invoice"></i> 중앙 지식 수혈 (Bound Document)</label>
+                <select id="hr-agent-knowledge" class="agent-mission-textarea" style="height: 35px; padding: 5px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; color: #1e293b; font-family: inherit; box-sizing: border-box;">
+                    <option value="">-- 없음 (No Document Bound) --</option>
+                </select>
+            </div>
+            
+            <div class="form-group" style="display: flex; flex-direction: column; gap: 5px;">
+                <label style="font-size: 0.8rem; font-weight: 600; color: #1e293b;"><i class="fa-solid fa-eye-slash"></i> 지식 범위 (Knowledge Scope)</label>
+                <select id="hr-agent-knowledge-scope" class="agent-mission-textarea" style="height: 35px; padding: 5px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; color: #1e293b; font-family: inherit; box-sizing: border-box;">
+                    <option value="전사 공통">🌐 전사 공통 (Company Common)</option>
+                    <option value="부서 한정">🏢 부서 한정 (Squad Limited)</option>
+                    <option value="개인 기밀">🔒 개인 기밀 (Personal Confidential)</option>
+                </select>
+            </div>
+
+            <div class="form-group" style="display: flex; flex-direction: column; gap: 5px;">
+                <label style="font-size: 0.8rem; font-weight: 600; color: #1e293b; display: flex; justify-content: space-between;">
+                    <span><i class="fa-solid fa-coins"></i> 비용 범위 (Cost Limit)</span>
+                    <span style="color: #1e293b; font-weight: bold;"><span id="hr-agent-token-val">5000</span> Tokens</span>
+                </label>
+                <input type="range" id="hr-agent-token-limit" min="1000" max="20000" step="500" value="5000" style="accent-color: #64748b; width: 100%;">
+            </div>
+            
+            <div class="form-group" style="display: flex; flex-direction: column; gap: 8px; border: 1px solid #e2e8f0; padding: 12px; border-radius: 8px; background: #f8fafc;">
+                <label style="font-size: 0.8rem; font-weight: 600; color: #1e293b;"><i class="fa-solid fa-sliders"></i> 능력치 및 권한 (Capabilities)</label>
+                <div class="sidebar-capabilities-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 0.75rem;">
+                    <label class="capability-label" style="display: flex; align-items: center; gap: 4px; color: #64748b; cursor: pointer;"><input type="checkbox" class="hr-perm-cb" value="웹크롤링"> 웹크롤링</label>
+                    <label class="capability-label" style="display: flex; align-items: center; gap: 4px; color: #64748b; cursor: pointer;"><input type="checkbox" class="hr-perm-cb" value="컴파일러" checked> 컴파일러</label>
+                    <label class="capability-label" style="display: flex; align-items: center; gap: 4px; color: #64748b; cursor: pointer;"><input type="checkbox" class="hr-perm-cb" value="슬랙 발송"> 슬랙 발송</label>
+                    <label class="capability-label" style="display: flex; align-items: center; gap: 4px; color: #64748b; cursor: pointer;"><input type="checkbox" class="hr-perm-cb" value="트위리오 음성"> 트위리오</label>
+                </div>
+            </div>
+        </div>
+        
+        <div class="hr-sidebar-footer" style="padding: 20px; border-top: 1px solid #e2e8f0; flex-shrink: 0; display: flex; flex-direction: column; gap: 10px; box-sizing: border-box;">
+            <button id="btn-save-sidebar-agent" class="save-btn" style="width: 100%; font-weight: 600; background: #1e293b; color: #ffffff; padding: 12px 0; border: none; border-radius: 8px; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 6px;">
+                <i class="fa-solid fa-circle-check"></i> 수정 사항 적용 (Apply)
+            </button>
+            <button id="btn-fire-sidebar-agent" class="save-btn" style="width: 100%; font-weight: 600; background: #ffffff; color: #dc2626; padding: 10px 0; border: 1px solid #fecaca; border-radius: 8px; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 6px;">
+                <i class="fa-solid fa-user-minus"></i> 요원 해고 (Fire Agent)
+            </button>
+        </div>
+    </div>
+
+    <!-- 📁 Workflow Gallery — Right Slide Panel -->
+    <div id="workflow-gallery-panel" style="
+        position: fixed;
+        top: 0;
+        right: -380px;
+        width: 370px;
+        height: 100vh;
+        z-index: 800;
+        background: #ffffff;
+        border-left: 1px solid #e2e8f0;
+        box-shadow: -4px 0 16px rgba(0,0,0,0.05);
+        transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        display: flex;
+        flex-direction: column;
+    ">
+        <div style="
+            height: 52px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 18px;
+            border-bottom: 1px solid #e2e8f0;
+            flex-shrink: 0;
+        ">
+            <span style="font-size: 12px; font-weight: 700; color: #1e293b; letter-spacing: 0.2px;">
+                <i class="fa-solid fa-folder-tree" style="color: #64748b; margin-right: 6px;"></i>
+                Saved Workflows
+            </span>
+            <button id="close-gallery-btn" style="background: none; border: 1px solid #e2e8f0; color: #94a3b8; cursor: pointer; font-size: 14px; width: 28px; height: 28px; border-radius: 4px; display: flex; align-items: center; justify-content: center; transition: all 0.2s;">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+        <div id="gallery-list" style="
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        ">
+            <div style="text-align: center; color: #94a3b8; font-size: 11px; padding: 40px 0;">
+                <i class="fa-solid fa-spinner fa-spin"></i> Loading…
+            </div>
+        </div>
+    </div>
+    <!-- ⚙️ AI Engine Settings Modal -->
+    <div id="ai-engine-modal" style="
+        display:none; position:fixed; inset:0; z-index:10000;
+        background:rgba(15,23,42,0.35); backdrop-filter:blur(4px);
+        justify-content:center; align-items:center;
+    ">
+        <div style="
+            width:min(500px,94vw); background:#ffffff; border-radius:14px;
+            border:1px solid #e2e8f0; box-shadow:0 20px 40px rgba(0,0,0,0.10);
+            overflow:hidden; animation:modalSlideIn 0.22s ease-out;
+        ">
+            <!-- Header -->
+            <div style="padding:16px 20px 12px;border-bottom:1px solid #f1f5f9;display:flex;justify-content:space-between;align-items:center;">
+                <div>
+                    <div style="font-size:13px;font-weight:800;color:#1e293b;display:flex;align-items:center;gap:7px;">
+                        <i class="fa-solid fa-microchip" style="color:#64748b;"></i> AI Engine Control Tower
+                    </div>
+                    <div style="font-size:9px;color:#94a3b8;margin-top:2px;">토론 엔진 멀티 스위칭 패널</div>
+                </div>
+                <button id="ai-engine-modal-close" style="background:none;border:none;cursor:pointer;font-size:14px;color:#94a3b8;">✕</button>
+            </div>
+            <!-- Body -->
+            <div style="padding:18px 20px;">
+                <!-- Provider Selector -->
+                <div style="margin-bottom:14px;">
+                    <label style="font-size:9px;font-weight:700;color:#94a3b8;letter-spacing:0.4px;display:block;margin-bottom:6px;">AI PROVIDER</label>
+                    <div id="ai-provider-grid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;">
+                        <button class="ai-provider-btn" data-provider="openai" style="padding:10px 6px;border:1.5px solid #1e293b;background:#1e293b;color:#fff;border-radius:8px;font-size:10px;font-weight:700;cursor:pointer;transition:all 0.15s;">
+                            <div style="font-size:16px;margin-bottom:3px;">🤖</div>OpenAI
+                        </button>
+                        <button class="ai-provider-btn" data-provider="anthropic" style="padding:10px 6px;border:1.5px solid #e2e8f0;background:#f8fafc;color:#64748b;border-radius:8px;font-size:10px;font-weight:700;cursor:pointer;transition:all 0.15s;">
+                            <div style="font-size:16px;margin-bottom:3px;">🧡</div>Anthropic
+                        </button>
+                        <button class="ai-provider-btn" data-provider="google" style="padding:10px 6px;border:1.5px solid #e2e8f0;background:#f8fafc;color:#64748b;border-radius:8px;font-size:10px;font-weight:700;cursor:pointer;transition:all 0.15s;">
+                            <div style="font-size:16px;margin-bottom:3px;">🔵</div>Google
+                        </button>
+                        <button class="ai-provider-btn" data-provider="local" style="padding:10px 6px;border:1.5px solid #e2e8f0;background:#f8fafc;color:#64748b;border-radius:8px;font-size:10px;font-weight:700;cursor:pointer;transition:all 0.15s;">
+                            <div style="font-size:16px;margin-bottom:3px;">🖥️</div>Local
+                        </button>
+                    </div>
+                </div>
+                <!-- Model Selector -->
+                <div style="margin-bottom:14px;">
+                    <label style="font-size:9px;font-weight:700;color:#94a3b8;letter-spacing:0.4px;display:block;margin-bottom:6px;">MODEL</label>
+                    <select id="ai-model-select" style="width:100%;padding:8px 10px;font-size:11px;font-weight:600;color:#1e293b;border:1px solid #e2e8f0;border-radius:7px;background:#f8fafc;font-family:inherit;outline:none;cursor:pointer;">
+                    </select>
+                </div>
+                <!-- API Key Input -->
+                <div style="margin-bottom:14px;" id="ai-key-section">
+                    <label style="font-size:9px;font-weight:700;color:#94a3b8;letter-spacing:0.4px;display:block;margin-bottom:6px;">API KEY</label>
+                    <div style="display:flex;gap:6px;">
+                        <input id="ai-api-key-input" type="password" placeholder="sk-... / sk-ant-... / AIza..."
+                            style="flex:1;padding:8px 10px;font-size:11px;border:1px solid #e2e8f0;border-radius:7px;background:#fff;font-family:monospace;outline:none;"
+                        />
+                        <button id="ai-key-visibility-btn" style="padding:8px;border:1px solid #e2e8f0;border-radius:7px;background:#f8fafc;cursor:pointer;font-size:12px;">👁</button>
+                    </div>
+                    <!-- Local endpoint (shown only for local provider) -->
+                    <div id="local-endpoint-row" style="display:none;margin-top:8px;">
+                        <input id="ai-local-endpoint" type="text" placeholder="http://localhost:11434"
+                            style="width:100%;box-sizing:border-box;padding:8px 10px;font-size:11px;border:1px solid #e2e8f0;border-radius:7px;background:#fff;font-family:monospace;outline:none;"
+                        />
+                    </div>
+                </div>
+                <!-- Status line -->
+                <div id="ai-engine-status-line" style="font-size:9px;color:#94a3b8;min-height:16px;margin-bottom:10px;"></div>
+                <!-- Actions -->
+                <div style="display:flex;gap:8px;">
+                    <button id="ai-engine-test-btn" style="flex:1;padding:9px;font-size:10px;font-weight:700;border:1px solid #e2e8f0;border-radius:7px;background:#f8fafc;color:#64748b;cursor:pointer;transition:all 0.2s;">🔌 연결 테스트</button>
+                    <button id="ai-engine-save-btn" style="flex:2;padding:9px;font-size:10px;font-weight:700;border:none;border-radius:7px;background:#1e293b;color:#fff;cursor:pointer;transition:all 0.2s;">⚡ 엔진 스위칭 저장</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ghost Deliberation IDs — minimal shims for JS backward compat (aria-hidden) -->
+    <div id="deliberation-modal" aria-hidden="true" role="presentation" style="display:none !important;"></div>
+    <div id="deliberation-box" aria-hidden="true" role="presentation" style="display:none !important;"></div>
+    <div id="delib-transcript" aria-hidden="true" role="presentation" style="display:none !important;"></div>
+    <span id="delib-subtitle" aria-hidden="true" style="display:none;"></span>
+    <span id="delib-phase-badge" aria-hidden="true" style="display:none;"></span>
+    <span id="delib-agent-count" aria-hidden="true" style="display:none;">0</span>
+    <span id="delib-round" aria-hidden="true" style="display:none;">0</span>
+    <span id="delib-conflicts" aria-hidden="true" style="display:none;">0</span>
+    <span id="delib-status" aria-hidden="true" style="display:none;"></span>
+    <span id="delib-footer" aria-hidden="true" style="display:none;"></span>
+    <button id="delib-close-btn" aria-hidden="true" style="display:none;"></button>
+    <button id="delib-execute-btn" aria-hidden="true" style="display:none;"></button>
+
+    <!-- ⚡ Live Runtime Log Panel -->
+    <div id="live-log-panel" class="live-log-panel" style="display: none;">
+        <div class="live-log-header" id="live-log-header">
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <i class="fa-solid fa-terminal" style="color: #94a3b8; font-size: 11px;"></i>
+                <span style="font-weight: 700; font-size: 11px; color: #1e293b;">⚡ 실시간 실행 로그</span>
+                <span id="live-log-mode-badge" class="live-log-badge">THREAD</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <span id="live-billing-mini" style="font-size: 10px; color: #64748b; font-weight: 600;">$0.0000</span>
+                <button id="live-log-close" style="background: none; border: none; color: #94a3b8; cursor: pointer; font-size: 12px;"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+        </div>
+        <div id="live-log-body" class="live-log-body"></div>
+        <div class="live-log-footer">
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <span style="font-size: 9px; color: #94a3b8;"><i class="fa-solid fa-coins"></i> 누적 비용:</span>
+                <span id="live-billing-total" style="font-size: 10px; font-weight: 700; color: #1e293b;">$0.0000</span>
+                <span style="font-size: 9px; color: #cbd5e1;">|</span>
+                <span style="font-size: 9px; color: #94a3b8;"><i class="fa-solid fa-bolt"></i> 액션:</span>
+                <span id="live-billing-actions" style="font-size: 10px; font-weight: 600; color: #64748b;">0</span>
+                <span style="font-size: 9px; color: #cbd5e1;">|</span>
+                <span style="font-size: 9px; color: #94a3b8;"><i class="fa-solid fa-microchip"></i> 토큰:</span>
+                <span id="live-billing-tokens" style="font-size: 10px; font-weight: 600; color: #64748b;">0</span>
+            </div>
+            <div style="display: flex; gap: 6px;">
+                <button id="live-log-execute-btn" class="live-log-action-btn"><i class="fa-solid fa-play"></i> 백그라운드 실행</button>
+                <button id="live-exec-inline-btn" class="live-log-action-btn" style="color: #16a34a;"><i class="fa-solid fa-bolt"></i> 즉시 실행</button>
+                <button id="live-history-btn" class="live-log-action-btn" style="color: #64748b;"><i class="fa-solid fa-clock-rotate-left"></i> 히스토리</button>
+                <button id="live-log-clear-btn" class="live-log-action-btn" style="color: #94a3b8;"><i class="fa-solid fa-eraser"></i> 초기화</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Execution Result Modal -->
+    <div id="exec-result-modal" style="
+        display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4);
+        z-index: 10000; justify-content: center; align-items: center;
+    ">
+        <div style="
+            width: 700px; max-height: 80vh; background: #fff; border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15); overflow: hidden;
+            display: flex; flex-direction: column;
+        ">
+            <div style="
+                display: flex; align-items: center; justify-content: space-between;
+                padding: 16px 20px; border-bottom: 1px solid #e2e8f0;
+            ">
+                <div>
+                    <div style="font-weight: 700; font-size: 14px; color: #1e293b;">📊 실행 결과</div>
+                    <div id="exec-result-meta" style="font-size: 10px; color: #94a3b8; margin-top: 2px;"></div>
+                </div>
+                <button id="exec-result-close" style="
+                    border: none; background: #f1f5f9; width: 28px; height: 28px;
+                    border-radius: 6px; cursor: pointer; color: #64748b; font-size: 12px;
+                "><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div id="exec-result-body" style="
+                flex: 1; overflow-y: auto; padding: 16px 20px;
+            "></div>
+        </div>
+    </div>
+
+    <!-- Live Log Toggle FAB (bottom-left) -->
+    <button id="live-log-toggle-fab" title="실시간 실행 로그" style="
+        position: fixed;
+        bottom: 20px;
+        left: 20px;
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        color: #64748b;
+        font-size: 14px;
+        cursor: pointer;
+        z-index: 998;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        transition: all 0.2s;
+    ">
+        <i class="fa-solid fa-terminal"></i>
+    </button>
+
+    <!-- Chatter Log Toggle FAB (bottom-left, second button) -->
+    <button id="chatter-toggle-fab" title="잡담 텔레메트리 로그" style="
+        position: fixed;
+        bottom: 20px;
+        left: 68px;
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        color: #64748b;
+        font-size: 14px;
+        cursor: pointer;
+        z-index: 998;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        transition: all 0.2s;
+    ">
+        <i class="fa-solid fa-comments"></i>
+    </button>
+
+    <!-- Custom Javascript Modules -->
+    <script src="/static/js/ux_foundation.js?v=20260628"></script>
+    <script src="/static/js/ux_enhancements.js?v=20260628"></script>
+    <script src="/static/js/ux_components.js?v=20260628"></script>
+    <script src="/static/js/ux_round2_core.js?v=20260628r2"></script>
+    <script src="/static/js/ux_round2_viz.js?v=20260628r2"></script>
+    <script src="/static/js/ux_round3_a11y.js?v=20260628r3"></script>
+    <script src="/static/js/ux_round3_data.js?v=20260628r3"></script>
+    <script src="/static/js/ux_round4_live.js?v=20260628r4"></script>
+    <script src="/static/js/ux_round4_polish.js?v=20260628r4"></script>
+    <script src="/static/js/ux_round5_polish.js?v=20260629r5"></script>
+    <script src="/static/js/ux_round6_polish.js?v=20260630r6"></script>
+    <script defer src="/static/js/main.js"></script>
+    <script defer src="/static/js/node_components.js"></script>
+    <script defer src="/static/js/workflow_tab.js"></script>
+    <script defer src="/static/js/workflow_enhancements.js"></script>
+    <script defer src="/static/js/ux_workflow_nodes.js?v=20260628n"></script>
+    <script defer src="/static/js/ux_workflow_readability.js?v=20260628r"></script>
+    <script defer src="/static/js/ux_global_polish.js?v=20260628g"></script>
+
+    <!-- ═══ Trigger Config Modal ═══ -->
+    <div id="trigger-config-modal" class="tcm-overlay" style="display:none;">
+        <div class="tcm-box" style="max-width:560px;">
+            <div class="tcm-header">
+                <span class="tcm-title">⚡ Trigger 설정 — 실행 격발 조건</span>
+                <button id="tcm-close-btn" class="tcm-close">&times;</button>
+            </div>
+            <!-- Trigger Type Selector Cards -->
+            <div style="padding:14px 18px 10px; background:#fafbfc; border-bottom:1px solid #f1f5f9;">
+                <div style="font-size:9px; font-weight:700; color:#64748b; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:8px;">트리거 종류 선택</div>
+                <div id="tcm-type-cards" style="display:grid; grid-template-columns:repeat(3,1fr); gap:6px;">
+                    <div class="tcm-type-card is-selected" data-tcm-type="manual" style="border:2px solid #e2e8f0; border-radius:10px; padding:10px 8px; text-align:center; cursor:pointer; transition:all .2s; background:white;">
+                        <div style="font-size:22px; margin-bottom:4px;">📝</div>
+                        <div style="font-size:10px; font-weight:700; color:#1e293b;">수동 입력</div>
+                        <div style="font-size:8px; color:#94a3b8; margin-top:2px;">UCC 채팅으로 직접 격발</div>
+                    </div>
+                    <div class="tcm-type-card" data-tcm-type="webhook" style="border:2px solid #e2e8f0; border-radius:10px; padding:10px 8px; text-align:center; cursor:pointer; transition:all .2s; background:white;">
+                        <div style="font-size:22px; margin-bottom:4px;">🔗</div>
+                        <div style="font-size:10px; font-weight:700; color:#1e293b;">Webhook</div>
+                        <div style="font-size:8px; color:#94a3b8; margin-top:2px;">외부 서비스 HTTP POST</div>
+                    </div>
+                    <div class="tcm-type-card" data-tcm-type="cron" style="border:2px solid #e2e8f0; border-radius:10px; padding:10px 8px; text-align:center; cursor:pointer; transition:all .2s; background:white;">
+                        <div style="font-size:22px; margin-bottom:4px;">⏰</div>
+                        <div style="font-size:10px; font-weight:700; color:#1e293b;">스케줄러</div>
+                        <div style="font-size:8px; color:#94a3b8; margin-top:2px;">Cron 정기 자동 실행</div>
+                    </div>
+                    <div class="tcm-type-card" data-tcm-type="event" style="border:2px solid #e2e8f0; border-radius:10px; padding:10px 8px; text-align:center; cursor:pointer; transition:all .2s; background:white;">
+                        <div style="font-size:22px; margin-bottom:4px;">⚡</div>
+                        <div style="font-size:10px; font-weight:700; color:#1e293b;">이벤트</div>
+                        <div style="font-size:8px; color:#94a3b8; margin-top:2px;">내부 이벤트 리스너</div>
+                    </div>
+                    <div class="tcm-type-card" data-tcm-type="github" style="border:2px solid #e2e8f0; border-radius:10px; padding:10px 8px; text-align:center; cursor:pointer; transition:all .2s; background:white;">
+                        <div style="font-size:22px; margin-bottom:4px;">🐙</div>
+                        <div style="font-size:10px; font-weight:700; color:#1e293b;">GitHub</div>
+                        <div style="font-size:8px; color:#94a3b8; margin-top:2px;">Push/PR/Issue 감지</div>
+                    </div>
+                    <div class="tcm-type-card" data-tcm-type="slack" style="border:2px solid #e2e8f0; border-radius:10px; padding:10px 8px; text-align:center; cursor:pointer; transition:all .2s; background:white;">
+                        <div style="font-size:22px; margin-bottom:4px;">💬</div>
+                        <div style="font-size:10px; font-weight:700; color:#1e293b;">Slack</div>
+                        <div style="font-size:8px; color:#94a3b8; margin-top:2px;">슬래시 커맨드/멘션</div>
+                    </div>
+                </div>
+            </div>
+            <div class="tcm-body" style="max-height:280px; overflow-y:auto;">
+                <!-- Manual Pane -->
+                <div class="tcm-pane is-active" data-tcm-pane="manual">
+                    <div class="tcm-field-label">기본 프롬프트 (UCC에서 직접 입력)</div>
+                    <textarea id="tcm-manual-prompt" class="tcm-textarea" rows="3" placeholder="유저가 우측 채팅창에서 직접 텍스트를 입력하면 격발됩니다."></textarea>
+                    <div class="tcm-hint">현재 방식 그대로 — UCC 프롬프트 입력 시 Swarm Meeting 자동 개시</div>
+                </div>
+                <!-- Webhook Pane -->
+                <div class="tcm-pane" data-tcm-pane="webhook">
+                    <div class="tcm-field-label">Webhook 수신 URL</div>
+                    <div class="tcm-url-box">
+                        <span class="tcm-url-prefix">POST</span>
+                        <input id="tcm-webhook-url" class="tcm-input" type="text" readonly value="" placeholder="저장 후 자동 생성됩니다" />
+                        <button id="tcm-copy-url" class="tcm-copy-btn"><i class="fa-solid fa-copy"></i></button>
+                    </div>
+                    <div class="tcm-field-label" style="margin-top:10px;">시크릿 키 (인증)</div>
+                    <input id="tcm-webhook-secret" class="tcm-input" type="text" placeholder="Bearer token or secret key" />
+                    <div class="tcm-field-label" style="margin-top:10px;">Payload 필터 (선택)</div>
+                    <input id="tcm-webhook-filter" class="tcm-input" type="text" placeholder='예: $.action == "opened"' />
+                    <div class="tcm-hint">외부 서비스(Slack, GitHub, Zapier 등)에서 이 URL로 POST 시 자동 격발</div>
+                </div>
+                <!-- Cron Pane -->
+                <div class="tcm-pane" data-tcm-pane="cron">
+                    <div class="tcm-field-label">Cron Expression</div>
+                    <input id="tcm-cron-expr" class="tcm-input" type="text" placeholder="*/30 * * * *" value="" />
+                    <div class="tcm-cron-preview" id="tcm-cron-preview">매 30분마다 자동 실행</div>
+                    <div style="display:flex; gap:4px; margin:8px 0; flex-wrap:wrap;">
+                        <button class="tcm-cron-preset" data-cron="*/5 * * * *" style="padding:3px 8px;border:1px solid #e2e8f0;border-radius:5px;font-size:9px;cursor:pointer;background:white;">5분마다</button>
+                        <button class="tcm-cron-preset" data-cron="*/30 * * * *" style="padding:3px 8px;border:1px solid #e2e8f0;border-radius:5px;font-size:9px;cursor:pointer;background:white;">30분마다</button>
+                        <button class="tcm-cron-preset" data-cron="0 */1 * * *" style="padding:3px 8px;border:1px solid #e2e8f0;border-radius:5px;font-size:9px;cursor:pointer;background:white;">매시간</button>
+                        <button class="tcm-cron-preset" data-cron="0 9 * * *" style="padding:3px 8px;border:1px solid #e2e8f0;border-radius:5px;font-size:9px;cursor:pointer;background:white;">매일 9시</button>
+                        <button class="tcm-cron-preset" data-cron="0 9 * * 1" style="padding:3px 8px;border:1px solid #e2e8f0;border-radius:5px;font-size:9px;cursor:pointer;background:white;">매주 월 9시</button>
+                    </div>
+                    <div class="tcm-field-label" style="margin-top:6px;">타임존</div>
+                    <select id="tcm-cron-tz" class="tcm-input">
+                        <option value="Asia/Seoul">Asia/Seoul (KST)</option>
+                        <option value="UTC">UTC</option>
+                        <option value="America/New_York">America/New_York (EST)</option>
+                        <option value="America/Los_Angeles">America/Los_Angeles (PST)</option>
+                    </select>
+                    <div class="tcm-hint">설정된 스케줄에 따라 플레이북이 자동 격발됩니다</div>
+                </div>
+                <!-- Event Pane -->
+                <div class="tcm-pane" data-tcm-pane="event">
+                    <div class="tcm-field-label">감지할 내부 이벤트</div>
+                    <select id="tcm-event-name" class="tcm-input">
+                        <option value="execution_complete">실행 완료 (execution_complete)</option>
+                        <option value="test_failed">테스트 실패 (test_failed)</option>
+                        <option value="budget_exceeded">예산 초과 (budget_exceeded)</option>
+                        <option value="file_changed">파일 변경 (file_changed)</option>
+                        <option value="squad_output">Squad 산출물 생성 (squad_output)</option>
+                        <option value="error_detected">에러 감지 (error_detected)</option>
+                    </select>
+                    <div class="tcm-field-label" style="margin-top:10px;">조건 필터 (선택)</div>
+                    <input id="tcm-event-filter" class="tcm-input" type="text" placeholder='예: severity >= "high"' />
+                    <div class="tcm-hint">다른 워크플로우 완료, 테스트 실패 등 내부 이벤트 발생 시 자동 격발</div>
+                </div>
+                <!-- GitHub Pane -->
+                <div class="tcm-pane" data-tcm-pane="github">
+                    <div class="tcm-field-label">GitHub Repository</div>
+                    <input id="tcm-github-repo" class="tcm-input" type="text" placeholder="owner/repo-name" />
+                    <div class="tcm-field-label" style="margin-top:10px;">감지할 이벤트</div>
+                    <select id="tcm-github-event" class="tcm-input">
+                        <option value="push">Push (코드 푸시)</option>
+                        <option value="pull_request">Pull Request (PR 생성/업데이트)</option>
+                        <option value="issues">Issue (이슈 생성)</option>
+                        <option value="release">Release (릴리스 생성)</option>
+                        <option value="workflow_run">Workflow Run (CI/CD 완료)</option>
+                    </select>
+                    <div class="tcm-field-label" style="margin-top:10px;">Branch 필터</div>
+                    <input id="tcm-github-branch" class="tcm-input" type="text" placeholder="main (비워두면 전체 브랜치)" />
+                    <div class="tcm-hint">GitHub Webhook이 이 URL로 연결되어야 합니다</div>
+                </div>
+                <!-- Slack Pane -->
+                <div class="tcm-pane" data-tcm-pane="slack">
+                    <div class="tcm-field-label">Slack 채널</div>
+                    <input id="tcm-slack-channel" class="tcm-input" type="text" placeholder="#ops-center" />
+                    <div class="tcm-field-label" style="margin-top:10px;">격발 키워드</div>
+                    <input id="tcm-slack-keyword" class="tcm-input" type="text" placeholder="/deploy, /run-pipeline, @bot" />
+                    <div class="tcm-field-label" style="margin-top:10px;">Bot Token</div>
+                    <input id="tcm-slack-token" class="tcm-input" type="password" placeholder="xoxb-..." />
+                    <div class="tcm-hint">Slack 슬래시 커맨드, 멘션, 또는 특정 키워드 감지 시 격발</div>
+                </div>
+            </div>
+            <div class="tcm-footer">
+                <button id="tcm-save-btn" class="tcm-save-btn"><i class="fa-solid fa-check"></i> 저장</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══ Pipeline Config Modal (30 Settings) ═══ -->
+    <div id="pcm-overlay" class="tcm-overlay" style="display:none;">
+        <div class="pcm-box">
+            <!-- Left Sidebar Tabs -->
+            <div class="pcm-sidebar">
+                <div style="padding: 0 18px 14px; border-bottom: 1px solid rgba(255,255,255,0.06); margin-bottom: 8px;">
+                    <div style="font-size: 10px; font-weight: 800; color: #38bdf8; letter-spacing: 0.5px; text-transform: uppercase;">Pipeline</div>
+                    <div style="font-size: 13px; font-weight: 700; color: #ffffff; margin-top: 2px;">통합 설정</div>
+                </div>
+                <button class="pcm-tab is-active" data-pcm-tab="role">👥 조직도 & 페르소나</button>
+                <button class="pcm-tab" data-pcm-tab="phase">💬 공정 & 회의 규칙</button>
+                <button class="pcm-tab" data-pcm-tab="chain">🚀 파이프라인 사슬</button>
+                <button class="pcm-tab" data-pcm-tab="infra">💰 AI 인프라 & 금융</button>
+                <button class="pcm-tab" data-pcm-tab="rag">📝 지식 & 배포</button>
+            </div>
+            <!-- Right Content Area -->
+            <div class="pcm-content">
+                <div class="pcm-header">
+                    <span class="pcm-title" id="pcm-title-text">⚙️ 파이프라인 통합 설정</span>
+                    <button id="pcm-close-btn" class="tcm-close">&times;</button>
+                </div>
+                <div class="pcm-body">
+                    <!-- ═══ TAB 1: Role Config (1-6) ═══ -->
+                    <div class="pcm-pane is-active" data-pcm-pane="role">
+                        <div class="pcm-section-title">👤 요원 기본 프로필</div>
+                        <div class="pcm-field">
+                            <div class="pcm-field-label"><i class="fa-solid fa-id-badge"></i> 1. 요원 식별 명칭 (role_name)</div>
+                            <input type="text" id="pcm-role-name" class="pcm-input" placeholder="예: CPO, CMO, QA_Critic">
+                            <div class="pcm-field-hint">가상 오피스 내에서 사용할 요원의 정식 직책</div>
+                        </div>
+                        <div class="pcm-field">
+                            <div class="pcm-field-label"><i class="fa-solid fa-brain"></i> 2. 가스라이팅 지침 (system_prompt)</div>
+                            <textarea id="pcm-system-prompt" class="pcm-textarea" rows="4" placeholder="너는 보안 전문가이며 모든 코드의 SQL 인젝션을 검사해야 한다"></textarea>
+                            <div class="pcm-field-hint">요원의 뇌에 심을 절대적인 페르소나와 직무 명령서</div>
+                        </div>
+                        <div class="pcm-field">
+                            <div class="pcm-field-label"><i class="fa-solid fa-microchip"></i> 3. 직무별 전담 AI 모델 (model_assignment)</div>
+                            <select id="pcm-model-assignment" class="pcm-select">
+                                <option value="gemini-2.5-pro">Gemini 2.5 Pro</option>
+                                <option value="gemini-2.5-flash">Gemini 2.5 Flash</option>
+                                <option value="gpt-4o">GPT-4o</option>
+                                <option value="gpt-4o-mini">GPT-4o Mini</option>
+                                <option value="claude-sonnet-4">Claude Sonnet 4</option>
+                                <option value="gemma2">Gemma 2 (Local)</option>
+                                <option value="llama3">LLaMA 3 (Local)</option>
+                            </select>
+                            <div class="pcm-field-hint">요원 개인별로 사용할 두뇌를 지정</div>
+                        </div>
+                        <div class="pcm-field-grid">
+                            <div class="pcm-field">
+                                <div class="pcm-field-label"><i class="fa-solid fa-language"></i> 4. 언어 & 문체 (speech_style)</div>
+                                <select id="pcm-speech-style" class="pcm-select">
+                                    <option value="Korean_Professional">🇰🇷 한국어 (비즈니스)</option>
+                                    <option value="Korean_Casual">🇰🇷 한국어 (캐주얼)</option>
+                                    <option value="English_Technical">🇺🇸 English (Technical)</option>
+                                    <option value="English_Casual">🇺🇸 English (Casual)</option>
+                                    <option value="Japanese_Business">🇯🇵 日本語 (ビジネス)</option>
+                                    <option value="Chinese_Standard">🇨🇳 中文 (标准)</option>
+                                </select>
+                            </div>
+                            <div class="pcm-field">
+                                <div class="pcm-field-label"><i class="fa-solid fa-code"></i> 5. 코드 스타일 (code_style_rule)</div>
+                                <select id="pcm-code-style" class="pcm-select">
+                                    <option value="PEP8">PEP8 (Python)</option>
+                                    <option value="Google_Style">Google Style</option>
+                                    <option value="Airbnb_JS">Airbnb (JavaScript)</option>
+                                    <option value="Standard_JS">Standard (JavaScript)</option>
+                                    <option value="PSR12">PSR-12 (PHP)</option>
+                                    <option value="None">제한 없음</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="pcm-field">
+                            <div class="pcm-field-label"><i class="fa-solid fa-map-pin"></i> 6. 가상 오피스 출근 좌표 (visualizer_coordinate)</div>
+                            <div class="pcm-field-grid">
+                                <input type="number" id="pcm-coord-x" class="pcm-input" placeholder="X (0~1920)" min="0" max="1920" value="400">
+                                <input type="number" id="pcm-coord-y" class="pcm-input" placeholder="Y (0~1080)" min="0" max="1080" value="300">
+                            </div>
+                            <div class="pcm-field-hint">16:9 가상 오피스 화면에서 요원의 초기 책상 위치</div>
+                        </div>
+                    </div>
+
+                    <!-- ═══ TAB 2: Phase Config (7-12) ═══ -->
+                    <div class="pcm-pane" data-pcm-pane="phase">
+                        <div class="pcm-section-title">⏱️ 토론 턴 제어</div>
+                        <div class="pcm-field-grid">
+                            <div class="pcm-field">
+                                <div class="pcm-field-label"><i class="fa-solid fa-arrow-up-9-1"></i> 7. 대화 턴 수 한계선</div>
+                                <div class="pcm-range-row">
+                                    <input type="range" id="pcm-max-turn" min="1" max="30" value="10">
+                                    <span class="pcm-range-val" id="pcm-max-turn-val">10턴</span>
+                                </div>
+                                <div class="pcm-field-hint">최대 토론 횟수 (토큰 낭비 방지)</div>
+                            </div>
+                            <div class="pcm-field">
+                                <div class="pcm-field-label"><i class="fa-solid fa-arrow-down-1-9"></i> 8. 최소 토론 보장선</div>
+                                <div class="pcm-range-row">
+                                    <input type="range" id="pcm-min-turn" min="1" max="15" value="2">
+                                    <span class="pcm-range-val" id="pcm-min-turn-val">2턴</span>
+                                </div>
+                                <div class="pcm-field-hint">최소 대화 하한선 (정크 코드 방지)</div>
+                            </div>
+                        </div>
+                        <div class="pcm-section-title">👥 회의 참석자</div>
+                        <div class="pcm-field">
+                            <div class="pcm-field-label"><i class="fa-solid fa-users"></i> 9. 회의 참여 요원 맵핑</div>
+                            <div id="pcm-phase-participants" class="pcm-chip-list">
+                                <span style="font-size:10px;color:#94a3b8;">노드를 선택하면 자동 설정됩니다</span>
+                            </div>
+                            <select id="pcm-add-participant" class="pcm-select" style="margin-top:6px;">
+                                <option value="">+ 참석자 추가...</option>
+                            </select>
+                        </div>
+                        <div class="pcm-field">
+                            <div class="pcm-field-label"><i class="fa-solid fa-gavel"></i> 10. 회의 주도권 요원 지정</div>
+                            <select id="pcm-phase-moderator" class="pcm-select">
+                                <option value="">-- 방장 선택 --</option>
+                            </select>
+                            <div class="pcm-field-hint">대화방의 중재자 · 최종 결론 도출 요원</div>
+                        </div>
+                        <div class="pcm-section-title">🛡️ 게이트 & 타임아웃</div>
+                        <div class="pcm-field-grid">
+                            <div class="pcm-field">
+                                <div class="pcm-field-label"><i class="fa-solid fa-star-half-stroke"></i> 11. 게이트 통과 기준점</div>
+                                <div class="pcm-range-row">
+                                    <input type="range" id="pcm-gate-score" min="50" max="100" value="90" step="5">
+                                    <span class="pcm-range-val" id="pcm-gate-score-val">90점</span>
+                                </div>
+                                <div class="pcm-field-hint">QA_Critic 최소 통과 점수</div>
+                            </div>
+                            <div class="pcm-field">
+                                <div class="pcm-field-label"><i class="fa-solid fa-hourglass-half"></i> 12. 타임아웃 제한</div>
+                                <div class="pcm-range-row">
+                                    <input type="range" id="pcm-phase-timeout" min="10" max="300" value="60" step="10">
+                                    <span class="pcm-range-val" id="pcm-phase-timeout-val">60초</span>
+                                </div>
+                                <div class="pcm-field-hint">무한 루프 강제 탈출 타이머</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ═══ TAB 3: ChatChain Config (13-18) ═══ -->
+                    <div class="pcm-pane" data-pcm-pane="chain">
+                        <div class="pcm-section-title">🔗 공정 순서</div>
+                        <div class="pcm-field">
+                            <div class="pcm-field-label"><i class="fa-solid fa-list-ol"></i> 13. 공정 파이프라인 시퀀스</div>
+                            <textarea id="pcm-chain-order" class="pcm-textarea" rows="3" placeholder="기획 → 코딩 → 디자인 → 마케팅 → 동기화"></textarea>
+                            <div class="pcm-field-hint">전체 일 처리 프로세스 순서 (현재 Workflow 캔버스 연결선 기준 자동 반영)</div>
+                        </div>
+                        <div class="pcm-section-title">🔧 개발 모드 스위치</div>
+                        <div class="pcm-field">
+                            <div class="pcm-toggle-row">
+                                <span class="pcm-toggle-label"><i class="fa-solid fa-rotate"></i> 14. 증분 개발 모드 (Incremental)</span>
+                                <label class="pcm-toggle-switch">
+                                    <input type="checkbox" id="pcm-incremental-toggle">
+                                    <span class="pcm-toggle-slider"></span>
+                                </label>
+                            </div>
+                            <div class="pcm-field-hint">ON = 기존 코드에 살 붙이기 | OFF = 백지상태 신규 개발</div>
+                        </div>
+                        <div class="pcm-field">
+                            <div class="pcm-field-label"><i class="fa-solid fa-arrow-rotate-left"></i> 15. 에러 회항 경로 (error_fallback_phase)</div>
+                            <select id="pcm-error-fallback" class="pcm-select">
+                                <option value="Coding">Coding (코딩 단계로 리턴)</option>
+                                <option value="DemandAnalysis">DemandAnalysis (기획 단계로 리턴)</option>
+                                <option value="CodeReviewComment">CodeReviewComment (리뷰로 리턴)</option>
+                                <option value="TestErrorSummary">TestErrorSummary (테스트 요약)</option>
+                            </select>
+                            <div class="pcm-field-hint">치명적 버그 발생 시 백트래킹 목적지</div>
+                        </div>
+                        <div class="pcm-field-grid">
+                            <div class="pcm-field">
+                                <div class="pcm-field-label"><i class="fa-solid fa-recycle"></i> 16. 자율 진화 최대 사이클</div>
+                                <div class="pcm-range-row">
+                                    <input type="range" id="pcm-max-evolution" min="1" max="20" value="5">
+                                    <span class="pcm-range-val" id="pcm-max-evolution-val">5회</span>
+                                </div>
+                            </div>
+                            <div class="pcm-field">
+                                <div class="pcm-field-label"><i class="fa-solid fa-floppy-disk"></i> 17. 스냅샷 저장 주기</div>
+                                <div class="pcm-range-row">
+                                    <input type="range" id="pcm-checkpoint-interval" min="1" max="10" value="3">
+                                    <span class="pcm-range-val" id="pcm-checkpoint-val">3단계</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pcm-field">
+                            <div class="pcm-field-label"><i class="fa-solid fa-terminal"></i> 18. 자율 테스트 실행 스크립트</div>
+                            <input type="text" id="pcm-test-command" class="pcm-input" placeholder="python3 main.py" style="font-family:'JetBrains Mono',monospace;">
+                            <div class="pcm-field-hint">TestEngineer가 가상 샌드박스에서 격발할 터미널 명령어</div>
+                        </div>
+                    </div>
+
+                    <!-- ═══ TAB 4: Infra & Billing (19-24) ═══ -->
+                    <div class="pcm-pane" data-pcm-pane="infra">
+                        <div class="pcm-section-title">🌐 엔드포인트 설정</div>
+                        <div class="pcm-field">
+                            <div class="pcm-field-label"><i class="fa-solid fa-cloud"></i> 19. 클라우드 기지 주소 (cloud_base_url)</div>
+                            <input type="text" id="pcm-cloud-url" class="pcm-input" placeholder="https://generativelanguage.googleapis.com/v1beta" style="font-family:'JetBrains Mono',monospace;font-size:11px;">
+                        </div>
+                        <div class="pcm-field">
+                            <div class="pcm-field-label"><i class="fa-solid fa-server"></i> 20. 로컬 인프라 주소 (local_base_url)</div>
+                            <input type="text" id="pcm-local-url" class="pcm-input" placeholder="http://localhost:11434" style="font-family:'JetBrains Mono',monospace;font-size:11px;">
+                        </div>
+                        <div class="pcm-section-title">🔀 라우팅 & 예산</div>
+                        <div class="pcm-field">
+                            <div class="pcm-field-label"><i class="fa-solid fa-route"></i> 21. 부서별 라우팅 매트릭스</div>
+                            <select id="pcm-routing-default" class="pcm-select">
+                                <option value="cloud">☁️ CLOUD (클라우드 우선)</option>
+                                <option value="local">🖥️ LOCAL (로컬 우선)</option>
+                                <option value="hybrid">🔀 HYBRID (단계별 분기)</option>
+                            </select>
+                            <div class="pcm-field-hint">단계별/요원별 로컬 vs 클라우드 분기 카드</div>
+                        </div>
+                        <div class="pcm-field">
+                            <div class="pcm-field-label"><i class="fa-solid fa-wallet"></i> 22. 일일 하드 예산 한도</div>
+                            <div class="pcm-range-row">
+                                <input type="range" id="pcm-daily-budget" min="1" max="100" value="15" step="1">
+                                <span class="pcm-range-val" id="pcm-daily-budget-val">$15.00</span>
+                            </div>
+                            <div class="pcm-field-hint">가상 회사 전체 하루 최대 API 비용 한도</div>
+                        </div>
+                        <div class="pcm-field">
+                            <div class="pcm-field-label"><i class="fa-solid fa-shield-halved"></i> 23. 금융 셧다운 강제 전환 룰</div>
+                            <select id="pcm-budget-overflow" class="pcm-select">
+                                <option value="shutdown">🛑 프로세스 강제 중단 (Shutdown)</option>
+                                <option value="downgrade">⬇️ 전원 로컬 모드 강등 (Gemma 무상 노동)</option>
+                                <option value="warn_only">⚠️ 경고만 표시 (계속 실행)</option>
+                            </select>
+                        </div>
+                        <div class="pcm-field">
+                            <div class="pcm-field-label"><i class="fa-solid fa-list-check"></i> 24. 피닉스 폴백 모델 시퀀스</div>
+                            <textarea id="pcm-fallback-models" class="pcm-textarea" rows="2" placeholder="gemini-2.5-pro → gemini-2.5-flash → gemma2" style="font-family:'JetBrains Mono',monospace;font-size:11px;"></textarea>
+                            <div class="pcm-field-hint">메인 모델 에러 시 차례대로 대피할 백업 모델 계급도 (→ 로 구분)</div>
+                        </div>
+                    </div>
+
+                    <!-- ═══ TAB 5: RAG & CD (25-30) ═══ -->
+                    <div class="pcm-pane" data-pcm-pane="rag">
+                        <div class="pcm-section-title">📚 지식 베이스</div>
+                        <div class="pcm-field">
+                            <div class="pcm-field-label"><i class="fa-solid fa-folder-tree"></i> 25. 부서별 전용 RAG 폴더 경로</div>
+                            <textarea id="pcm-rag-dirs" class="pcm-textarea" rows="3" placeholder="마케팅팀 → ./KnowledgeBase/Marketing/&#10;개발팀 → ./KnowledgeBase/Engineering/" style="font-family:'JetBrains Mono',monospace;font-size:11px;"></textarea>
+                            <div class="pcm-field-hint">요원들이 참고할 내부 기밀 문서 폴더 매칭</div>
+                        </div>
+                        <div class="pcm-field">
+                            <div class="pcm-field-label"><i class="fa-solid fa-bullseye"></i> 26. RAG 임베딩 유사도 임계치</div>
+                            <div class="pcm-range-row">
+                                <input type="range" id="pcm-embedding-threshold" min="50" max="99" value="75">
+                                <span class="pcm-range-val" id="pcm-embedding-val">75%</span>
+                            </div>
+                            <div class="pcm-field-hint">질문-문서 일치도가 이 값 이상일 때 컨텍스트 주입</div>
+                        </div>
+                        <div class="pcm-section-title">📤 동기화 & 배포</div>
+                        <div class="pcm-field">
+                            <div class="pcm-toggle-row">
+                                <span class="pcm-toggle-label"><i class="fa-solid fa-sync"></i> 27. 상황판 마스터 동기화</span>
+                                <label class="pcm-toggle-switch">
+                                    <input type="checkbox" id="pcm-manual-sync" checked>
+                                    <span class="pcm-toggle-slider"></span>
+                                </label>
+                            </div>
+                            <div class="pcm-field-hint">ManualSyncEngine 가동 → manual.md 통합 상황판 실시간 인쇄</div>
+                        </div>
+                        <div class="pcm-field">
+                            <div class="pcm-field-label"><i class="fa-solid fa-text-width"></i> 28. 마케팅 카피 글자 수 한계</div>
+                            <div class="pcm-range-row">
+                                <input type="range" id="pcm-marketing-limit" min="100" max="5000" value="2200" step="100">
+                                <span class="pcm-range-val" id="pcm-marketing-val">2,200자</span>
+                            </div>
+                        </div>
+                        <div class="pcm-field">
+                            <div class="pcm-field-label"><i class="fa-solid fa-rocket"></i> 29. 산출물 원클릭 배포 타겟</div>
+                            <select id="pcm-cd-target" class="pcm-select">
+                                <option value="local">📁 Local Directory (로컬 저장)</option>
+                                <option value="github">🐙 GitHub Repository</option>
+                                <option value="firebase">🔥 Firebase Hosting</option>
+                                <option value="pyinstaller">📦 PyInstaller (EXE 빌드)</option>
+                                <option value="docker">🐳 Docker Image</option>
+                            </select>
+                            <div class="pcm-field-hint">최종 완공 시 코드를 어디로 보낼지 지정</div>
+                        </div>
+                        <div class="pcm-field">
+                            <div class="pcm-field-label"><i class="fa-solid fa-plug"></i> 30. 플러그인 동적 로딩 경로</div>
+                            <input type="text" id="pcm-plugin-path" class="pcm-input" placeholder="./plugins/" style="font-family:'JetBrains Mono',monospace;">
+                            <div class="pcm-field-hint">외부 커스텀 부서/도구를 드롭인(Drop-in)할 플러그인 폴더 좌표</div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Footer -->
+                <div class="pcm-footer">
+                    <button id="pcm-cancel-btn" class="pcm-cancel-btn">취소</button>
+                    <button id="pcm-save-btn" class="pcm-save-btn"><i class="fa-solid fa-check"></i> 설정 저장</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══ Custom Playbook Save Modal ═══ -->
+    <div id="playbook-save-modal" class="tcm-overlay" style="display:none;">
+        <div class="tcm-box" style="max-width:400px;">
+            <div class="tcm-header">
+                <span class="tcm-title">💾 커스텀 플레이북 저장</span>
+                <button id="pb-save-close-btn" class="tcm-close">&times;</button>
+            </div>
+            <div class="tcm-body" style="padding:16px;">
+                <div class="tcm-field-label">플레이북 이름</div>
+                <input id="pb-save-name" class="tcm-input" type="text" placeholder="예: 마케팅 캠페인 워크플로우" />
+                <div class="tcm-field-label" style="margin-top:10px;">설명 (선택)</div>
+                <textarea id="pb-save-desc" class="tcm-textarea" rows="2" placeholder="이 플레이북의 목적과 용도를 간략히 설명하세요"></textarea>
+                <div class="tcm-field-label" style="margin-top:10px;">현재 토폴로지</div>
+                <div id="pb-save-preview" style="font-size:9px;color:#64748b;background:#f8fafc;padding:8px;border-radius:6px;border:1px solid #e2e8f0;"></div>
+            </div>
+            <div class="tcm-footer">
+                <button id="pb-save-confirm-btn" class="tcm-save-btn"><i class="fa-solid fa-floppy-disk"></i> 플레이북 저장</button>
+            </div>
+        </div>
+    </div>
+
+    <script defer src="/static/js/obsidian_graph.js"></script>
+    <script defer src="/static/js/crm_engine.js"></script>
+    <script defer src="/static/js/crm_advanced.js"></script>
+    <script defer src="/static/js/fleet_enhancements.js"></script>
+    <script defer src="/static/js/fleet_ux_phase1.js?v=20260702"></script>
+    <script defer src="/static/js/fleet_ux_phase2.js?v=20260704"></script>
+    <script defer src="/static/js/shell_fixes.js?v=20260616d"></script>
+    <script defer src="/static/js/ceo_command.js?v=20260630f"></script>
+
+    <script defer src="/static/js/system_monitor.js?v=20260611a"></script>
+    <script defer src="/static/js/brain_graph.js?v=20260611a"></script>
+    <script defer src="/static/js/ceo_enhancements.js?v=20260610c"></script>
+    <script defer src="/static/js/iso_office_renderer.js"></script>
+    <script defer src="/static/js/virtual_office.js"></script>
+    <script defer src="/static/js/chat_panel.js"></script>
+    <script defer src="/static/js/ai_brain.js?v=20260610"></script>
+    <script defer src="/static/js/brain_explorer.js?v=20260610"></script>
+    <script defer src="/static/js/launchpad.js?v=20260619a"></script>
+    <script defer src="/static/js/quality_tools.js?v=20260628"></script>
+    <!-- UCC History Modal -->
+    <div id="ucc-history-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(15,23,42,0.4); z-index:9999; backdrop-filter:blur(3px); align-items:center; justify-content:center;">
+        <div style="background:#ffffff; width:650px; max-height:80vh; border-radius:12px; box-shadow:0 10px 25px rgba(0,0,0,0.15); display:flex; flex-direction:column; overflow:hidden; border:1px solid #e2e8f0;">
+            <div style="padding:15px 20px; border-bottom:1px solid #e2e8f0; display:flex; justify-content:space-between; align-items:center; background:#f8fafc;">
+                <h3 style="margin:0; font-size:14px; color:#1e293b;"><i class="fa-solid fa-clock-rotate-left" style="color:#64748b;margin-right:6px;"></i> 작업 지시 내역 (Task History)</h3>
+                <button onclick="document.getElementById('ucc-history-modal').style.display='none'" style="background:none;border:none;font-size:16px;color:#94a3b8;cursor:pointer;padding:4px;" onmouseover="this.style.color='#1e293b'" onmouseout="this.style.color='#94a3b8'"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div id="ucc-history-list" style="padding:0; overflow-y:auto; flex-grow:1; background:#f8fafc;">
+                <!-- Content loaded dynamically -->
+                <div style="padding:30px; text-align:center; color:#94a3b8; font-size:12px;"><i class="fa-solid fa-spinner fa-spin"></i> 불러오는 중...</div>
+            </div>
+        </div>
+    </div>
+
 </body>
-
 </html>

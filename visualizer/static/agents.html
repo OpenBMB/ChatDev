@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agent Directory — ChatDev Enterprise</title>
+    <meta name="description" content="전 부서 에이전트 명부 — 중앙 집중형 요원 관리 허브">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="/static/css/design_system.css?v=20260630r6">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Outfit', sans-serif; background: #ffffff; color: #1e293b; min-height: 100vh; overflow-y: auto; }
+
+        .gnb-header {
+            height: 56px; display: flex; align-items: center; justify-content: space-between;
+            padding: 0 24px; border-bottom: 1px solid #e2e8f0;
+            background: rgba(255,255,255,0.97); backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 100;
+        }
+        .gnb-left { display: flex; align-items: center; gap: 20px; }
+        .gnb-logo { font-weight: 700; font-size: 14px; color: #1e293b; text-decoration: none; display: flex; align-items: center; gap: 8px; }
+        .gnb-logo i { color: #16a34a; }
+        .gnb-nav { display: flex; gap: 2px; }
+        .gnb-tab {
+            padding: 8px 16px; font-size: 12px; font-weight: 600; color: #94a3b8; border-radius: 4px;
+            text-decoration: none; transition: all 0.2s; letter-spacing: 0.3px; display: flex; align-items: center; gap: 6px;
+        }
+        .gnb-tab:hover { color: #64748b; background: rgba(0,0,0,0.02); }
+        .gnb-tab.active { color: #16a34a; background: rgba(22,163,74,0.06); border: 1px solid rgba(22,163,74,0.1); }
+
+        /* === Page Container === */
+        .page-container { max-width: 1200px; margin: 0 auto; padding: 32px 24px; }
+        .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+        .page-title { font-size: 20px; font-weight: 700; display: flex; align-items: center; gap: 10px; }
+        .page-title i { color: #16a34a; }
+        .page-count { font-size: 12px; color: #64748b; font-weight: 500; margin-left: 8px; }
+
+        /* === View Switcher === */
+        .view-switcher { display: flex; gap: 2px; background: rgba(0,0,0,0.02); border: 1px solid #e2e8f0; border-radius: 4px; padding: 2px; }
+        .view-btn {
+            padding: 6px 12px; font-size: 11px; border: none; background: none; color: #94a3b8;
+            cursor: pointer; border-radius: 3px; transition: all 0.2s; font-family: inherit;
+        }
+        .view-btn.active { background: rgba(22,163,74,0.08); color: #16a34a; }
+
+        /* === Search & Filters === */
+        .toolbar { display: flex; gap: 10px; margin-bottom: 20px; }
+        .search-box {
+            flex-grow: 1; padding: 10px 14px; background: #fff; border: 1px solid #e2e8f0;
+            border-radius: 4px; color: #1e293b; font-size: 12px; outline: none; font-family: inherit; transition: border-color 0.2s;
+        }
+        .search-box:focus { border-color: rgba(22,163,74,0.3); }
+        .filter-select {
+            padding: 10px 14px; background: #fff; border: 1px solid #e2e8f0;
+            border-radius: 4px; color: #64748b; font-size: 12px; font-family: inherit; cursor: pointer;
+        }
+
+        /* === List View (Table) === */
+        .agent-table { width: 100%; border-collapse: separate; border-spacing: 0; }
+        .agent-table thead th {
+            text-align: left; padding: 10px 14px; font-size: 10px; font-weight: 600; color: #64748b;
+            text-transform: uppercase; letter-spacing: 0.8px; border-bottom: 1px solid #e2e8f0;
+        }
+        .agent-table tbody tr {
+            transition: background 0.2s; cursor: pointer;
+        }
+        .agent-table tbody tr:hover { background: rgba(22,163,74,0.02); }
+        .agent-table td {
+            padding: 12px 14px; font-size: 12px; border-bottom: 1px solid #f1f5f9;
+            vertical-align: middle;
+        }
+        .agent-name { font-weight: 600; color: #1e293b; display: flex; align-items: center; gap: 8px; }
+        .agent-avatar {
+            width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-size: 10px; font-weight: 700; flex-shrink: 0;
+        }
+        .team-badge {
+            padding: 2px 8px; border-radius: 3px; font-size: 9px; font-weight: 600; letter-spacing: 0.3px;
+            background: rgba(22,163,74,0.05); color: #16a34a; border: 1px solid rgba(22,163,74,0.1);
+        }
+        .status-dot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; margin-right: 5px; }
+        .status-dot.active { background: #16a34a; box-shadow: 0 0 6px rgba(22,163,74,0.5); }
+        .status-dot.standby { background: #cbd5e1; }
+        .tool-badge-mini {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 22px; height: 22px; border-radius: 3px; font-size: 9px;
+            background: rgba(255,255,255,1); border: 1px solid #e2e8f0;
+            transition: all 0.2s;
+        }
+        .tool-badge-mini:hover { border-color: rgba(22,163,74,0.2); transform: scale(1.1); }
+
+        /* === Grid View === */
+        .agent-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; }
+        .agent-card {
+            background: #ffffff; border: 1px solid #e2e8f0; border-radius: 6px;
+            padding: 16px; transition: all 0.25s; cursor: pointer; position: relative;
+        }
+        .agent-card:hover { border-color: rgba(22,163,74,0.15); background: rgba(22,163,74,0.01); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .agent-card .card-top { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+        .agent-card .card-name { font-weight: 600; font-size: 13px; }
+        .agent-card .card-desc { font-size: 11px; color: #64748b; line-height: 1.5; margin-bottom: 10px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .agent-card .card-footer { display: flex; justify-content: space-between; align-items: center; }
+        .agent-card .card-tools { display: flex; gap: 4px; }
+        .agent-card .card-team { font-size: 9px; color: #94a3b8; }
+
+        /* === Empty State === */
+        .empty-state { text-align: center; padding: 60px 20px; color: #64748b; }
+        .empty-state i { font-size: 40px; margin-bottom: 16px; color: #cbd5e1; }
+    </style>
+</head>
+<body>
+
+    <!-- GNB Header -->
+    <header class="gnb-header">
+        <div class="gnb-left">
+            <a href="/" class="gnb-logo"><i class="fa-solid fa-network-wired"></i> ChatDev</a>
+            <nav class="gnb-nav">
+                <a href="/" class="gnb-tab"><i class="fa-solid fa-map"></i> Dashboard</a>
+                <a href="/agents" class="gnb-tab active"><i class="fa-solid fa-users"></i> Agents</a>
+                <a href="/tools" class="gnb-tab"><i class="fa-solid fa-toolbox"></i> Tools</a>
+                <a href="/integrations" class="gnb-tab"><i class="fa-solid fa-key"></i> Integrations</a>
+            </nav>
+        </div>
+        <div class="view-switcher">
+            <button class="view-btn active" id="btn-list-view"><i class="fa-solid fa-list"></i> List</button>
+            <button class="view-btn" id="btn-grid-view"><i class="fa-solid fa-grid-2"></i> Grid</button>
+        </div>
+    </header>
+
+    <!-- Page Content -->
+    <div class="page-container">
+        <div class="page-header">
+            <div class="page-title">
+                <i class="fa-solid fa-users"></i> Agent Directory
+                <span class="page-count" id="agent-count">로딩 중...</span>
+            </div>
+        </div>
+
+        <!-- Search & Filter Bar -->
+        <div class="toolbar">
+            <input type="text" class="search-box" id="agent-search" placeholder="요원 이름, 역할, 팀으로 검색...">
+            <select class="filter-select" id="filter-team">
+                <option value="">전체 팀</option>
+            </select>
+            <select class="filter-select" id="filter-status">
+                <option value="">전체 상태</option>
+                <option value="active">Active</option>
+                <option value="standby">Standby</option>
+            </select>
+        </div>
+
+        <!-- List View -->
+        <div id="view-list">
+            <table class="agent-table">
+                <thead>
+                    <tr>
+                        <th>요원</th>
+                        <th>소속 팀</th>
+                        <th>역할 설명</th>
+                        <th>장착 무기</th>
+                        <th>상태</th>
+                        <th>수정일</th>
+                    </tr>
+                </thead>
+                <tbody id="agent-tbody"></tbody>
+            </table>
+        </div>
+
+        <!-- Grid View (hidden by default) -->
+        <div id="view-grid" class="agent-grid" style="display: none;"></div>
+
+        <!-- Empty State -->
+        <div id="empty-state" class="empty-state" style="display: none;">
+            <i class="fa-solid fa-user-slash"></i>
+            <div style="font-size: 14px; margin-bottom: 8px;">등록된 요원이 없습니다</div>
+            <div style="font-size: 11px; color: #333;">부서 페이지에서 요원을 채용하세요</div>
+        </div>
+    </div>
+
+    <script src="/static/js/ux_foundation.js?v=20260628"></script>
+    <script src="/static/js/ux_enhancements.js?v=20260628"></script>
+    <script src="/static/js/ux_components.js?v=20260628"></script>
+    <script src="/static/js/ux_round2_core.js?v=20260628r2"></script>
+    <script src="/static/js/ux_round2_viz.js?v=20260628r2"></script>
+    <script src="/static/js/ux_round3_a11y.js?v=20260628r3"></script>
+    <script src="/static/js/ux_round3_data.js?v=20260628r3"></script>
+    <script src="/static/js/ux_round4_live.js?v=20260628r4"></script>
+    <script src="/static/js/ux_round4_polish.js?v=20260628r4"></script>
+    <script src="/static/js/ux_round5_polish.js?v=20260629r5"></script>
+    <script src="/static/js/ux_round6_polish.js?v=20260630r6"></script>
+    <script>
+    const TEAM_COLORS = {
+        "Squad_A": "#deff9a", "Squad_B": "#a882ff",
+        "Development_Team": "#00b4d8", "Marketing_Team": "#ff6b6b"
+    };
+
+    let allAgents = [];
+    let currentView = "list";
+
+    async function loadAgents() {
+        try {
+            const res = await fetch("/api/agents");
+            const data = await res.json();
+            if (data.status === "success") {
+                allAgents = data.agents;
+                document.getElementById("agent-count").textContent = `${data.total}명 등록`;
+                populateTeamFilter();
+                renderAgents();
+            }
+        } catch(e) { console.error("Failed to load agents:", e); }
+    }
+
+    function populateTeamFilter() {
+        const teams = [...new Set(allAgents.map(a => a.team))];
+        const select = document.getElementById("filter-team");
+        teams.forEach(t => {
+            const opt = document.createElement("option");
+            opt.value = t; opt.textContent = t;
+            select.appendChild(opt);
+        });
+    }
+
+    function getFilteredAgents() {
+        const q = document.getElementById("agent-search").value.toLowerCase();
+        const team = document.getElementById("filter-team").value;
+        const status = document.getElementById("filter-status").value;
+        return allAgents.filter(a => {
+            if (q && !a.name.toLowerCase().includes(q) && !a.role_description.toLowerCase().includes(q) && !a.team.toLowerCase().includes(q)) return false;
+            if (team && a.team !== team) return false;
+            if (status && a.status !== status) return false;
+            return true;
+        });
+    }
+
+    function renderToolBadges(agent) {
+        const tools = agent.equipped_tools.length > 0 ? agent.equipped_tools : [];
+        const autoTools = agent.auto_tools || [];
+        let html = '';
+        tools.forEach(t => {
+            html += `<span class="tool-badge-mini" title="${t.name}" style="color: ${t.color}"><i class="${t.icon}"></i></span>`;
+        });
+        if (tools.length === 0 && autoTools.length > 0) {
+            autoTools.forEach(t => {
+                html += `<span class="tool-badge-mini" title="${t}" style="color: #444"><i class="fa-solid fa-puzzle-piece"></i></span>`;
+            });
+        }
+        return html || '<span style="font-size: 10px; color: #94a3b8;">—</span>';
+    }
+
+    function getAvatarColor(name) {
+        let hash = 0;
+        for (let i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
+        const hue = Math.abs(hash % 360);
+        return `hsl(${hue}, 45%, 50%)`;
+    }
+
+    function renderAgents() {
+        const agents = getFilteredAgents();
+        if (agents.length === 0) {
+            document.getElementById("empty-state").style.display = "block";
+            document.getElementById("view-list").style.display = "none";
+            document.getElementById("view-grid").style.display = "none";
+            return;
+        }
+        document.getElementById("empty-state").style.display = "none";
+
+        if (currentView === "list") {
+            document.getElementById("view-list").style.display = "block";
+            document.getElementById("view-grid").style.display = "none";
+            const tbody = document.getElementById("agent-tbody");
+            tbody.innerHTML = agents.map(a => {
+                const clr = TEAM_COLORS[a.team] || "#666";
+                const initials = a.name.substring(0, 2).toUpperCase();
+                const updated = a.updated_at ? new Date(a.updated_at * 1000).toLocaleDateString('ko-KR') : '—';
+                return `<tr onclick="window.location='/squad/${a.team}'">
+                    <td><div class="agent-name">
+                        <div class="agent-avatar" style="background: ${getAvatarColor(a.name)}; color: #eee;">${initials}</div>
+                        ${a.name}
+                    </div></td>
+                    <td><span class="team-badge" style="color: ${clr}; border-color: ${clr}33; background: ${clr}0d;">${a.team}</span></td>
+                    <td style="color: #555; max-width: 280px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${a.role_description}</td>
+                    <td><div style="display: flex; gap: 3px;">${renderToolBadges(a)}</div></td>
+                    <td><span class="status-dot ${a.status}"></span>${a.status === 'active' ? 'Active' : 'Standby'}</td>
+                    <td style="color: #444; font-size: 11px;">${updated}</td>
+                </tr>`;
+            }).join('');
+        } else {
+            document.getElementById("view-list").style.display = "none";
+            document.getElementById("view-grid").style.display = "grid";
+            const grid = document.getElementById("view-grid");
+            grid.innerHTML = agents.map(a => {
+                const clr = TEAM_COLORS[a.team] || "#666";
+                const initials = a.name.substring(0, 2).toUpperCase();
+                return `<div class="agent-card" onclick="window.location='/squad/${a.team}'">
+                    <div class="card-top">
+                        <div class="agent-avatar" style="background: ${getAvatarColor(a.name)}; color: #eee; width: 32px; height: 32px; font-size: 11px;">${initials}</div>
+                        <div>
+                            <div class="card-name">${a.name}</div>
+                            <span class="team-badge" style="color: ${clr}; border-color: ${clr}33; background: ${clr}0d; font-size: 8px;">${a.team}</span>
+                        </div>
+                        <div style="margin-left: auto;"><span class="status-dot ${a.status}"></span></div>
+                    </div>
+                    <div class="card-desc">${a.role_description}</div>
+                    <div class="card-footer">
+                        <div class="card-tools">${renderToolBadges(a)}</div>
+                        <div class="card-team" style="color: #333;">${a.phase || '—'}</div>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+    }
+
+    // View switcher
+    document.getElementById("btn-list-view").addEventListener("click", function() {
+        currentView = "list";
+        this.classList.add("active");
+        document.getElementById("btn-grid-view").classList.remove("active");
+        renderAgents();
+    });
+    document.getElementById("btn-grid-view").addEventListener("click", function() {
+        currentView = "grid";
+        this.classList.add("active");
+        document.getElementById("btn-list-view").classList.remove("active");
+        renderAgents();
+    });
+
+    // Search & filter
+    document.getElementById("agent-search").addEventListener("input", renderAgents);
+    document.getElementById("filter-team").addEventListener("change", renderAgents);
+    document.getElementById("filter-status").addEventListener("change", renderAgents);
+
+    // Load on page ready
+    loadAgents();
+    </script>
+</body>
+</html>
