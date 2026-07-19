@@ -67,7 +67,7 @@ class OpenAIProvider(ModelProvider):
         
         if is_chat:
             request_payload = self._build_chat_payload(conversation, tool_specs, kwargs)
-            response = client.chat.completions.create(**request_payload)
+            response = self._chat_completion(client, request_payload)
             self._track_token_usage(response)
             self._append_chat_response_output(timeline, response)
             message = self._deserialize_chat_response(response)
@@ -83,11 +83,88 @@ class OpenAIProvider(ModelProvider):
             return ModelResponse(message=message, raw_response=response)
         except Exception as e:
             new_request_payload = self._build_chat_payload(conversation, tool_specs, kwargs)
-            response = client.chat.completions.create(**new_request_payload)
+            response = self._chat_completion(client, new_request_payload)
             self._track_token_usage(response)
             self._append_chat_response_output(timeline, response)
             message = self._deserialize_chat_response(response)
             return ModelResponse(message=message, raw_response=response)
+
+    def _chat_completion(
+        self,
+        client: openai.Client,
+        payload: Dict[str, Any],
+    ) -> Any:
+        """Return a full ChatCompletion, preferring streaming transport."""
+        stream_payload = dict(payload)
+        use_stream = stream_payload.pop("stream", True)
+        if not isinstance(use_stream, bool):
+            raise ValueError("stream must be a boolean")
+
+        if not use_stream:
+            # stream_options is invalid for a non-streaming request.
+            stream_payload.pop("stream_options", None)
+            return client.chat.completions.create(**stream_payload)
+
+        stream_options = stream_payload.get("stream_options")
+        if stream_options is None:
+            stream_payload["stream_options"] = {"include_usage": True}
+        elif isinstance(stream_options, dict):
+            stream_options = dict(stream_options)
+            stream_options.setdefault("include_usage", True)
+            stream_payload["stream_options"] = stream_options
+        else:
+            raise ValueError("stream_options must be a dictionary")
+
+        def run_stream(request_payload: Dict[str, Any]) -> Any:
+            with client.chat.completions.stream(**request_payload) as stream:
+                return stream.get_final_completion()
+
+        can_retry_without_usage = True
+        while True:
+            try:
+                return run_stream(stream_payload)
+            except openai.APIStatusError as exc:
+                error_text = str(exc).lower()
+                status_code = getattr(exc, "status_code", None)
+                unsupported_usage_option = (
+                    can_retry_without_usage
+                    and status_code in (400, 422)
+                    and (
+                        "stream_options" in error_text
+                        or "include_usage" in error_text
+                    )
+                )
+                if unsupported_usage_option:
+                    can_retry_without_usage = False
+                    stream_payload.pop("stream_options", None)
+                    continue
+
+                stream_error_text = error_text.replace("stream_options", "")
+                unsupported_streaming = (
+                    status_code in (400, 422)
+                    and (
+                        "streaming is not supported" in stream_error_text
+                        or "stream is not supported" in stream_error_text
+                        or "does not support streaming" in stream_error_text
+                        or "streaming unsupported" in stream_error_text
+                        or "stream must be false" in stream_error_text
+                        or "streaming must be disabled" in stream_error_text
+                        or "only non-streaming" in stream_error_text
+                        or (
+                            "stream" in stream_error_text
+                            and (
+                                "unsupported parameter" in stream_error_text
+                                or "unknown parameter" in stream_error_text
+                                or "unrecognized request argument" in stream_error_text
+                            )
+                        )
+                    )
+                )
+                if not unsupported_streaming:
+                    raise
+
+                stream_payload.pop("stream_options", None)
+                return client.chat.completions.create(**stream_payload)
 
     def _is_chat_completions_mode(self, client: Any) -> bool:
         """Determine if we should use standard chat completions instead of responses API."""
@@ -173,6 +250,10 @@ class OpenAIProvider(ModelProvider):
     ) -> Dict[str, Any]:
         """Construct the Responses API payload from event timeline."""
         params = dict(raw_params)
+
+        params.pop("protocol", None)
+        params.pop("stream", None)
+        params.pop("stream_options", None)
         max_tokens = params.pop("max_tokens", None)
         max_output_tokens = params.pop("max_output_tokens", None)
         if max_output_tokens is None and max_tokens is not None:
@@ -234,6 +315,8 @@ class OpenAIProvider(ModelProvider):
     ) -> Dict[str, Any]:
         """Construct standard Chat Completions API payload."""
         params = dict(raw_params)
+
+        params.pop("protocol", None)
         max_output_tokens = params.pop("max_output_tokens", None)
         max_tokens = params.pop("max_tokens", None)
         if max_tokens is None and max_output_tokens is not None:
