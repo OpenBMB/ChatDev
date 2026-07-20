@@ -6,6 +6,7 @@ import re
 
 import binascii
 import os
+from types import SimpleNamespace
 from typing import Any, Dict, List, Optional, Union
 from urllib.parse import unquote_to_bytes
 
@@ -67,7 +68,7 @@ class OpenAIProvider(ModelProvider):
         
         if is_chat:
             request_payload = self._build_chat_payload(conversation, tool_specs, kwargs)
-            response = client.chat.completions.create(**request_payload)
+            response = self._chat_completion(client, request_payload)
             self._track_token_usage(response)
             self._append_chat_response_output(timeline, response)
             message = self._deserialize_chat_response(response)
@@ -83,7 +84,7 @@ class OpenAIProvider(ModelProvider):
             return ModelResponse(message=message, raw_response=response)
         except Exception as e:
             new_request_payload = self._build_chat_payload(conversation, tool_specs, kwargs)
-            response = client.chat.completions.create(**new_request_payload)
+            response = self._chat_completion(client, new_request_payload)
             self._track_token_usage(response)
             self._append_chat_response_output(timeline, response)
             message = self._deserialize_chat_response(response)
