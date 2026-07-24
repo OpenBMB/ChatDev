@@ -1,7 +1,8 @@
 import os
+from typing import Collection, Optional
 
 
-def count_lines(root: str, extensions=None) -> int:
+def count_lines(root: str, extensions: Optional[Collection[str]] = None) -> int:
     """
     Count total number of lines in files under `root` whose extension is in `extensions`.
 
@@ -36,7 +37,7 @@ def count_lines(root: str, extensions=None) -> int:
     return total_lines
 
 
-def main():
+def main() -> None:
     root = "."
     total = count_lines(root)
     print(f"Total lines of code under '{os.path.abspath(root)}': {total}")
