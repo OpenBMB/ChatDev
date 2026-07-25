@@ -104,12 +104,17 @@ class WorkflowLogger:
 
         # Log to console if enabled
         if self.log_to_console:
-            print(f"[{timestamp}] [{level.value}] "
-                  f"{f'Node {node_id} - ' if node_id else ''}"
-                  f"{f'Event {event_type} - ' if event_type else ''}"
-                  f"{message} "
-                  f"{f'Details: {details} ' if details else ''}"
-                  f"{f'Duration: {duration}' if duration else ''}")
+            try:
+                print(f"[{timestamp}] [{level.value}] "
+                      f"{f'Node {node_id} - ' if node_id else ''}"
+                      f"{f'Event {event_type} - ' if event_type else ''}"
+                      f"{message} "
+                      f"{f'Details: {details} ' if details else ''}"
+                      f"{f'Duration: {duration}' if duration else ''}")
+            except UnicodeEncodeError:
+                # Fallback for Windows console with GBK encoding
+                fallback_msg = f"[{timestamp}] [{level.value}] {message}"
+                print(fallback_msg.encode('utf-8', errors='replace').decode('utf-8', errors='replace'))
         
         # Log using structured logger if enabled
         if self.use_structured_logging and self.structured_logger:
