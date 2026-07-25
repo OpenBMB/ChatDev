@@ -1,0 +1,75 @@
+version: 0.4.0
+vars:
+  REPORT_MODEL: gpt-4o-mini
+  CREATIVE_MODEL: gpt-4o
+graph:
+  id: study_report_innovation
+  description: Generate a daily study review report with practical and innovative follow-up actions.
+  is_majority_voting: false
+  log_level: INFO
+  start:
+    - Planner
+  end:
+    - Innovator
+  nodes:
+    - id: Planner
+      type: agent
+      config:
+        provider: openai
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        name: ${REPORT_MODEL}
+        role: |
+          You are a learning-data analyst.
+          Convert the user's raw study notes into a structured daily report with these sections:
+          1) Study Inputs (topics, duration, resources),
+          2) Outputs (tasks finished, artifacts created),
+          3) Bottlenecks (top 3 blockers),
+          4) Metrics (focus score estimate 1-10, completion rate estimate in percent).
+          Use concise bullet points and keep assumptions explicit.
+        params:
+          temperature: 0.2
+          max_tokens: 1000
+    - id: Reviewer
+      type: agent
+      config:
+        provider: openai
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        name: ${REPORT_MODEL}
+        role: |
+          You are a study coach.
+          Based on the upstream analysis, produce an actionable review summary with:
+          - Root-cause diagnosis for each blocker,
+          - A prioritized next-day plan (top 5 actions),
+          - Time-boxed schedule suggestions.
+          Keep the response practical and measurable.
+        params:
+          temperature: 0.3
+          max_tokens: 1000
+    - id: Innovator
+      type: agent
+      config:
+        provider: openai
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        name: ${CREATIVE_MODEL}
+        role: |
+          You are an innovation mentor for self-learning.
+          Extend the review with creative experiments that can improve learning quality.
+          Output exactly these sections:
+          1) Weekly Report (short recap),
+          2) Innovation Ideas (at least 5),
+          3) 48-hour Experiment Plan,
+          4) Risk and Fallback.
+          Ensure each idea is specific, low-cost, and testable.
+        params:
+          temperature: 0.7
+          max_tokens: 1200
+  edges:
+    - from: Planner
+      to: Reviewer
+    - from: Reviewer
+      to: Innovator
+    - from: Planner
+      to: Innovator
