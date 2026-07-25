@@ -18,6 +18,7 @@ from entity.messages import Message
 from runtime.bootstrap.schema import ensure_schema_registry_populated
 from runtime.sdk import OUTPUT_ROOT, run_workflow
 from server.models import WorkflowRunRequest
+from utils.visibility_bridge import VisibilityLogger, _reset_sync, _post, _slug, _infer_role
 from server.settings import YAML_DIR
 from utils.attachments import AttachmentStore
 from utils.exceptions import ValidationError, WorkflowExecutionError
@@ -107,7 +108,7 @@ def _run_workflow_with_logger(
     graph_context = GraphContext(config=graph_config)
     task_input = _build_task_input(graph_context, task_prompt, attachments)
 
-    class _StreamingWorkflowLogger(WorkflowLogger):
+    class _StreamingWorkflowLogger(VisibilityLogger):
         def add_log(self, *args, **kwargs):
             entry = super().add_log(*args, **kwargs)
             if entry:
@@ -124,6 +125,7 @@ def _run_workflow_with_logger(
                 level,
                 use_structured_logging=True,
                 log_to_console=False,
+                task_prompt=task_prompt,
             )
 
     executor = _StreamingExecutor(graph_context, session_id=normalized_session)
@@ -251,3 +253,70 @@ async def run_workflow_sync(request: WorkflowRunRequest, http_request: Request):
                     break
 
     return StreamingResponse(stream(), media_type=_SSE_CONTENT_TYPE)
+
+
+@router.get("/api/workflow/preview/{yaml_file:path}")
+async def preview_workflow(yaml_file: str):
+    """
+    Load a workflow's graph definition and send it to the visibility dashboard
+    so the user sees the agent graph before launching the workflow.
+    """
+    try:
+        yaml_path = _resolve_yaml_path(yaml_file)
+        if not yaml_path.exists():
+            raise HTTPException(status_code=404, detail=f"Workflow not found: {yaml_file}")
+
+        design = load_config(yaml_path)
+        graph_config = GraphConfig.from_definition(
+            design.graph,
+            name=yaml_path.stem,
+            output_root=OUTPUT_ROOT,
+            source_path=str(yaml_path),
+            vars=design.vars,
+        )
+
+        def _send():
+            _reset_sync()
+
+            nodes = graph_config.get_node_definitions()
+            edges = graph_config.get_edge_definitions()
+
+            for node in nodes:
+                agent_id = _slug(node.id)
+                role = _infer_role(node.id, getattr(node, "type", "agent"))
+                _post("register_agent", {"id": agent_id, "label": node.id, "role": role})
+                _post("set_agent_state", {"agent_id": agent_id, "status": "idle"})
+
+            for edge in edges:
+                source = getattr(edge, "source", None)
+                target = getattr(edge, "target", None)
+                if source and target:
+                    _post("trace_step", {
+                        "from_agent": _slug(source),
+                        "to_agent": _slug(target),
+                        "arrow_type": "msg",
+                    })
+
+            node_index = {node.id: i for i, node in enumerate(nodes)}
+            plan_tasks = []
+            for i, node in enumerate(nodes):
+                incoming = [
+                    node_index[e.source]
+                    for e in edges
+                    if getattr(e, "target", None) == node.id and e.source in node_index
+                ]
+                plan_tasks.append({
+                    "agent": _slug(node.id),
+                    "task": node.id,
+                    "depends_on": incoming,
+                })
+            _post("set_plan", {"tasks": plan_tasks})
+            _post("set_goal", {"goal": f"Preview: {yaml_path.stem}"})
+
+        await run_in_threadpool(_send)
+        return {"status": "ok"}
+
+    except HTTPException:
+        raise
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=str(exc))

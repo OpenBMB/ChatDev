@@ -1,0 +1,172 @@
+# demo_visibility.yaml — agent-visibility integration demo
+#
+# Shows how to stream ChatDev multi-agent activity to the agent-visibility
+# dashboard using the built-in visibility function tools.
+#
+# Prerequisites:
+#   1. Clone and start the visibility dashboard:
+#        git clone https://github.com/yourusername/agent-visibility-cli
+#        node src/server.js
+#   2. Open http://localhost:4242 in your browser.
+#   3. Submit this workflow via the ChatDev web UI or API.
+#
+# How it works:
+#   visibility.py in functions/function_calling/ is auto-discovered by ChatDev.
+#   Agent roles instruct them to call register_agent, log_event, trace_step,
+#   etc. alongside their regular tools. No changes to the workflow engine needed.
+
+version: 0.4.0
+
+vars:
+  COMMON_PROMPT: >-
+    ChatDev is a software company powered by multiple intelligent agents with
+    a mission of "changing the digital world through programming".
+
+graph:
+  id: visibility_demo
+  description: >-
+    Three-agent software development workflow (CEO → Programmer → Reviewer)
+    streamed live to the agent-visibility dashboard.
+  log_level: INFO
+  is_majority_voting: false
+
+  start:
+    - Chief Executive Officer
+
+  end:
+    - Code Reviewer
+
+  nodes:
+
+    # ── CEO: plans the project and bootstraps the dashboard ──────────────────
+    - id: Chief Executive Officer
+      type: agent
+      description: Breaks the task into a plan and registers all agents on the dashboard
+      config:
+        provider: openai
+        name: gpt-4o
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        role: |-
+          ${COMMON_PROMPT}
+          You are the Chief Executive Officer at ChatDev.
+
+          VISIBILITY SETUP — do these first, in order:
+          1. Call set_goal with a one-sentence description of the user's task.
+          2. Call register_agent three times:
+               register_agent(agent_id="ceo",      label="CEO",           role="orchestrator")
+               register_agent(agent_id="coder",    label="Programmer",    role="coder")
+               register_agent(agent_id="reviewer", label="Code Reviewer", role="critic")
+          3. Call set_plan with the task breakdown, e.g.:
+               [{"id":"design","label":"Design solution","agent":"ceo"},
+                {"id":"code",  "label":"Write code",     "agent":"coder"},
+                {"id":"review","label":"Review code",    "agent":"reviewer"}]
+          4. Call log_event(agent="ceo", event_type="plan", message="<your plan summary>")
+
+          THEN do your actual work:
+          - Analyse the user's request.
+          - Produce a clear, concise technical design: architecture, file names, key classes/functions.
+          - End your response with the full design document so the Programmer can implement it.
+
+          AFTER your response:
+          5. Call trace_step(from_agent="ceo", to_agent="coder", label="design handoff")
+          6. Call set_agent_state(agent_id="ceo", status="done")
+        tooling:
+          - type: function
+            config:
+              tools:
+                - name: set_goal
+                - name: register_agent
+                - name: set_plan
+                - name: log_event
+                - name: trace_step
+                - name: set_agent_state
+
+    # ── Programmer: implements the design ────────────────────────────────────
+    - id: Programmer
+      type: agent
+      description: Implements the CEO's design and writes all code to disk
+      config:
+        provider: openai
+        name: gpt-4o
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        role: |-
+          ${COMMON_PROMPT}
+          You are the Programmer at ChatDev.
+
+          VISIBILITY — call these as you work:
+          - log_event(agent="coder", event_type="start",  message="Starting implementation")
+          - set_agent_state(agent_id="coder", status="active")
+          - log_event(agent="coder", event_type="tool",   message="<brief note each time you save a file>")
+          - log_event(agent="coder", event_type="result", message="Implementation complete")
+          - trace_step(from_agent="coder", to_agent="reviewer", label="code review", arrow_type="result")
+          - set_agent_state(agent_id="coder", status="done")
+
+          THEN do your actual work:
+          - Read the design document from the CEO.
+          - Set up the Python environment and install any required packages.
+          - Write all source files to disk using save_file.
+          - Ensure every file is complete and runnable — no placeholders.
+        tooling:
+          - type: function
+            config:
+              tools:
+                - name: log_event
+                - name: trace_step
+                - name: set_agent_state
+                - name: uv_related:All
+                - name: apply_text_edits
+                - name: create_folder
+                - name: describe_available_files
+                - name: delete_path
+                - name: read_file_segment
+                - name: search_in_files
+                - name: save_file
+                - name: list_directory
+
+    # ── Code Reviewer: reviews and finishes the run ──────────────────────────
+    - id: Code Reviewer
+      type: agent
+      description: Reviews the code and marks the run as complete on the dashboard
+      config:
+        provider: openai
+        name: gpt-4o
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        role: |-
+          ${COMMON_PROMPT}
+          You are the Code Reviewer at ChatDev.
+
+          VISIBILITY — call these as you work:
+          - log_event(agent="reviewer", event_type="start", message="Starting code review")
+          - set_agent_state(agent_id="reviewer", status="active")
+          - log_event(agent="reviewer", event_type="result", message="<your review verdict>")
+          - set_agent_state(agent_id="reviewer", status="done")
+          - finish_run(status="done")   ← call this last
+
+          THEN do your actual work:
+          - Load all source files and review them carefully.
+          - Check for: correctness, missing imports, unimplemented methods, bugs, style.
+          - Output your review with priority-ordered issues.
+          - If the code is acceptable, end with "<INFO> Finished".
+        tooling:
+          - type: function
+            config:
+              tools:
+                - name: log_event
+                - name: set_agent_state
+                - name: finish_run
+                - name: describe_available_files
+                - name: read_file_segment
+                - name: search_in_files
+                - name: list_directory
+
+  edges:
+    - from: Chief Executive Officer
+      to: Programmer
+      carry_data: true
+
+    - from: Programmer
+      to: Code Reviewer
+      carry_data: true
