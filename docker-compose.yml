@@ -1,0 +1,28 @@
+version: '3.8'
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "6400:6400"
+    environment:
+      - BACKEND_BIND=0.0.0.0
+    volumes:
+      - ./:/app:cached
+    depends_on:
+      - frontend
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app:cached
+    environment:
+      - NODE_ENV=development
+
+# Usage:
+# docker compose up --build
