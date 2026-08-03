@@ -10,6 +10,8 @@ The Agent node is the most fundamental node type in the DevAll platform, used to
 | `name` | string | Yes | - | Model name, e.g., `gpt-4o`, `gemini-2.0-flash-001` |
 | `role` | text | No | - | System prompt |
 | `base_url` | string | No | Provider default | API endpoint URL, supports `${VAR}` placeholders |
+
+> **Tip:** Set `provider: openai` with `base_url: https://api.daoxe.com/v1` (or any other OpenAI-compatible multi-model gateway) to route the Agent node through a gateway. Example: [DaoXE](https://daoxe.com/?utm_source=github&utm_medium=organic&utm_campaign=chatdev&utm_content=agent).
 | `api_key` | string | No | - | API key, recommend using environment variable `${API_KEY}` |
 | `params` | dict | No | `{}` | Model call parameters (temperature, top_p, etc.) |
 | `tooling` | object | No | - | Tool calling configuration, see [Tooling Module](../modules/tooling/README.md) |
