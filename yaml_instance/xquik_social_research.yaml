@@ -1,0 +1,73 @@
+version: 0.4.0
+vars:
+  MODEL_NAME: gpt-4o
+graph:
+  id: xquik_social_research
+  description: Research current X conversations with Xquik, then produce a source-linked brief.
+  is_majority_voting: false
+  start:
+    - Query Planner
+  end:
+    - Research Analyst
+  nodes:
+    - id: Query Planner
+      type: agent
+      config:
+        provider: openai
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        name: ${MODEL_NAME}
+        role: |-
+          Turn the user's research question into 1 to 3 precise X search queries.
+          Use handles, hashtags, phrases, and operators only when they improve recall.
+          Keep the scope narrow enough for 10 results per query.
+          Return the queries and explain what evidence each query should find.
+        params:
+          temperature: 0.1
+          max_tokens: 600
+    - id: X Researcher
+      type: agent
+      config:
+        provider: openai
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        name: ${MODEL_NAME}
+        role: |-
+          Research the planned queries with search_x_tweets.
+          Call the tool once per query with a limit of 10.
+          Use Latest for time-sensitive questions and Top for engagement analysis.
+          Report only facts present in the returned posts and metadata.
+          Preserve each post ID, author username, creation time, and engagement counts.
+          Build each source URL as https://x.com/{username}/status/{id}.
+          State when a query returns no evidence. Do not invent missing context.
+        tooling:
+          - type: function
+            config:
+              tools:
+                - name: search_x_tweets
+              timeout: 40
+        params:
+          temperature: 0.1
+          max_tokens: 1600
+    - id: Research Analyst
+      type: agent
+      config:
+        provider: openai
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        name: ${MODEL_NAME}
+        role: |-
+          Produce a concise research brief from the X Researcher's evidence.
+          Separate observed facts from interpretation.
+          Cite claims with the source URLs supplied by the researcher.
+          Compare recency and engagement without treating either as truth.
+          Note sampling limits, missing context, and conflicting posts.
+          Do not add claims that the evidence does not support.
+        params:
+          temperature: 0.1
+          max_tokens: 1800
+  edges:
+    - from: Query Planner
+      to: X Researcher
+    - from: X Researcher
+      to: Research Analyst

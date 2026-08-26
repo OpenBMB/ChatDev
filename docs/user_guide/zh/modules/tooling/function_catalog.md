@@ -104,6 +104,20 @@ tooling:
 
 ---
 
+## X 调研 (xquik.py)
+
+通过 Xquik 在 ChatDev 工作流中搜索最新公开 X 帖子。该工具只调用只读的帖子搜索端点，无法发布帖子或修改 X 账号。
+
+| 函数 | 说明 |
+|------|------|
+| `search_x_tweets` | 按关键词、话题标签、账号或 X 搜索运算符搜索。支持按时间或互动量排序，以及游标分页。 |
+
+运行工作流前，请在 `.env` 中设置 `XQUIK_API_KEY`。不要把密钥写入 YAML 文件或提交到版本库。每个返回的帖子都会消耗 Xquik 点数，因此单次调用最多返回 100 条帖子。
+
+**示例 YAML**：[xquik_social_research.yaml](../../../../../yaml_instance/xquik_social_research.yaml)
+
+---
+
 ## 视频工具 (video.py)
 
 Manim 动画渲染与视频处理。

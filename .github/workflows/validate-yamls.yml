@@ -7,6 +7,8 @@ on:
       - '.github/workflows/**/*.yml'
       - 'tools/validate_all_yamls.py'
       - 'check/**/*.py'
+      - 'functions/function_calling/xquik.py'
+      - 'tests/test_xquik.py'
   
   push:
     branches:
@@ -16,6 +18,8 @@ on:
       - '.github/workflows/**/*.yml'
       - 'tools/validate_all_yamls.py'
       - 'check/**/*.py'
+      - 'functions/function_calling/xquik.py'
+      - 'tests/test_xquik.py'
   
   workflow_dispatch:
 
@@ -58,6 +62,9 @@ jobs:
       
       - name: Run YAML validation
         run: uv run python tools/validate_all_yamls.py
+
+      - name: Test Xquik function tool
+        run: uv run pytest tests/test_xquik.py
       
       - name: Report validation results
         if: always()

@@ -293,6 +293,7 @@ if result.final_message:
 | **🛠️ 3D 场景生成**<br>*(需要 [Blender](https://www.blender.org/) 和 [blender-mcp](https://github.com/ahujasid/blender-mcp))* | `blender_3d_builder_simple.yaml`<br>`blender_3d_builder_hub.yaml`<br>`blender_scientific_illustration.yaml` | <img src="assets/cases/3d_generation/3d.gif" width="100%"><br>提示词：*"Please build a Christmas tree."* |
 | **🎮 游戏开发** | `GameDev_v1.yaml`<br>`ChatDev_v1.yaml`                                                                      | <img src="assets/cases/game_development/game.gif" width="100%"><br>提示词：*"Please help me design and develop a Tank Battle game."* |
 | **📚 深度研究** | `deep_research_v1.yaml`                                                                                     | <img src="assets/cases/deep_research/deep_research.gif" width="85%"><br>提示词：*"Research about recent advances in the field of LLM-based agent RL"* |
+| **🔎 X 调研** | `xquik_social_research.yaml`（需要设置 `XQUIK_API_KEY`）                                                     | 提示词：*"对比 X 上关于本地与托管 AI 智能体的最新讨论。"* |
 | **🎓 教学视频** | `teach_video.yaml` (请在运行此工作流之前运行 `uv add manim` 命令)                                                         | <img src="assets/cases/video_generation/video.gif" width="140%"><br>提示词：*"讲一下什么是凸优化"* |
 
 ------
