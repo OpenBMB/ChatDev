@@ -104,6 +104,20 @@ Web search and webpage content retrieval.
 
 ---
 
+## X research (xquik.py)
+
+Use Xquik to search current public X posts from a ChatDev workflow. The tool calls only the read-only tweet search endpoint. It cannot publish posts or change an X account.
+
+| Function | Description |
+|----------|-------------|
+| `search_x_tweets` | Search by keyword, hashtag, handle, or X search operator. Supports recency, engagement ranking, and cursor pagination. |
+
+Set `XQUIK_API_KEY` in `.env` before running the workflow. Keep the key out of YAML files and source control. Each returned post consumes Xquik credits, so the tool limits one call to 100 posts.
+
+**Example YAML**: [xquik_social_research.yaml](../../../../../yaml_instance/xquik_social_research.yaml)
+
+---
+
 ## Video Tools (video.py)
 
 Manim animation rendering and video processing.
