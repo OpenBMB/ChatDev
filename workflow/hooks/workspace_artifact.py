@@ -204,7 +204,7 @@ class WorkspaceArtifactHook:
                 entries[str(rel_path)] = _FileSignature(sha256=sha256, size=stat.st_size)
                 if file_count >= self.max_files_scanned or total_bytes >= self.max_bytes_scanned:
                     self.logger.warning(
-                        "Workspace scan truncated (files=%s total_bytes=%s) for session %s",
+                        "Workspace scan truncated (files=%s total_bytes=%s)",
                         file_count,
                         total_bytes,
                     )
