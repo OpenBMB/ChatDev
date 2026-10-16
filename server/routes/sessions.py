@@ -44,7 +44,9 @@ async def download_session(session_id: str):
             raise SecurityError("Session downloads must not follow symbolic links")
         entries = [session_path]
         for path in session_path.rglob("*"):
-            if path.is_symlink() or not path.resolve().is_relative_to(session_path):
+            if path.is_symlink():
+                continue
+            if not path.resolve().is_relative_to(session_path):
                 raise SecurityError("Session downloads must not follow symbolic links")
             if path.is_file() or path.is_dir():
                 entries.append(path)

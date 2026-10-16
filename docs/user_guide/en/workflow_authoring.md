@@ -232,7 +232,9 @@ for prefixed IDs must be uploaded again under the correct session.
 
 Agent-generated attachment names and node IDs used for storage must be single
 path components. Local attachment sources must stay within the code workspace;
-generated destination paths and session downloads cannot follow symbolic links.
+generated destination paths cannot follow symbolic links. Session downloads skip
+symbolic links inside the session (including virtual environment interpreter links)
+and still reject a symbolic link used as the session root.
 
 ## 10. Debugging Tips
 - Use the Web UI context snapshots or `WareHouse/<session>/context.json` to inspect node I/O. Note that all node outputs are now standardized as `List[Message]`.

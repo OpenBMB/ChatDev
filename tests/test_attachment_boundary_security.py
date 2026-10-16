@@ -2,6 +2,7 @@
 
 import base64
 import io
+import sys
 import zipfile
 from pathlib import Path
 from unittest.mock import Mock
@@ -149,22 +150,49 @@ def test_prefixed_sessions_have_separate_uploads_execution_and_downloads(api, tm
     assert not manager.attachment_service.build_attachment_blocks("foo", [second_id])
 
 
-@pytest.mark.parametrize("kind", ["file", "directory", "session"])
-def test_download_does_not_follow_links(api, tmp_path, kind):
+@pytest.mark.parametrize("kind", ["file", "directory", "dangling", "loop"])
+def test_download_skips_links_and_preserves_regular_files(api, tmp_path, kind):
     client, _ = api
     secret_dir = tmp_path / "outside"
     secret_dir.mkdir()
     (secret_dir / "secret.txt").write_text("secret")
     session = tmp_path / "WareHouse/session_download"
-    if kind == "session":
-        session.symlink_to(secret_dir, target_is_directory=True)
-    else:
-        session.mkdir()
-        (session / "link").symlink_to(secret_dir if kind == "directory" else secret_dir / "secret.txt",
-                                     target_is_directory=kind == "directory")
+    session.mkdir()
+    (session / "run.log").write_bytes(b"workflow log")
+    target = {"file": secret_dir / "secret.txt", "directory": secret_dir,
+              "dangling": secret_dir / "missing", "loop": session / "link"}[kind]
+    (session / "link").symlink_to(target, target_is_directory=kind == "directory")
+    contents = archive_contents(client, "download")
+    assert contents["session_download/run.log"] == b"workflow log"
+    assert not any("link" in Path(name).parts for name in contents)
+    assert b"secret" not in contents.values()
+
+
+def test_download_still_rejects_linked_session_root(api, tmp_path):
+    client, _ = api
+    secret_dir = tmp_path / "outside"
+    secret_dir.mkdir()
+    (secret_dir / "secret.txt").write_text("secret")
+    (tmp_path / "WareHouse/session_download").symlink_to(secret_dir, target_is_directory=True)
     response = client.get("/api/sessions/download/download")
     assert response.status_code in (400, 403)
     assert "application/zip" not in response.headers.get("content-type", "")
+
+
+def test_download_with_venv_interpreter_links(api, tmp_path):
+    client, _ = api
+    session = tmp_path / "WareHouse/session_venv"
+    venv = session / "code_workspace/.venv"
+    (venv / "bin").mkdir(parents=True)
+    (venv / "bin/python").symlink_to(sys.executable)
+    (venv / "bin/python3").symlink_to("python")
+    (venv / "pyvenv.cfg").write_bytes(b"include-system-site-packages = false\n")
+    (session / "run.log").write_bytes(b"workflow completed")
+    contents = archive_contents(client, "venv")
+    assert contents["session_venv/run.log"] == b"workflow completed"
+    assert contents["session_venv/code_workspace/.venv/pyvenv.cfg"] == (venv / "pyvenv.cfg").read_bytes()
+    assert "session_venv/code_workspace/.venv/bin/python" not in contents
+    assert "session_venv/code_workspace/.venv/bin/python3" not in contents
 
 
 @pytest.fixture
