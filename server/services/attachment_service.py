@@ -12,6 +12,7 @@ from fastapi import UploadFile
 
 from entity.messages import MessageBlock, MessageBlockType
 from utils.attachments import AttachmentStore, AttachmentRecord
+from utils.workspace_paths import resolve_workspace_path, validate_path_component
 
 
 class AttachmentService:
@@ -60,6 +61,7 @@ class AttachmentService:
         return candidate
 
     async def save_upload_file(self, session_id: str, upload: UploadFile) -> AttachmentRecord:
+        self._session_attachments_path(session_id, create=False)
         filename = self._safe_upload_filename(upload.filename)
         temp_dir = Path(tempfile.mkdtemp(prefix="mac_upload_"))
         temp_path = temp_dir / filename
@@ -123,8 +125,11 @@ class AttachmentService:
         return store.export_manifest()
 
     def _session_attachments_path(self, session_id: str, *, create: bool = True) -> Optional[Path]:
+        validate_path_component(session_id, field="session_id")
         session_dir_name = session_id if session_id.startswith("session_") else f"session_{session_id}"
-        path = self.attachments_root / session_dir_name / "code_workspace" / "attachments"
+        path = resolve_workspace_path(
+            self.attachments_root, session_dir_name, "code_workspace", "attachments"
+        )
         if create:
             path.mkdir(parents=True, exist_ok=True)
             return path

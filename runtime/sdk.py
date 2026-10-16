@@ -14,6 +14,7 @@ from utils.attachments import AttachmentStore
 from utils.exceptions import ValidationError
 from server.settings import YAML_DIR
 from utils.task_input import TaskInputBuilder
+from utils.workspace_paths import resolve_workspace_path, validate_path_component
 from workflow.graph import GraphExecutor
 from workflow.graph_context import GraphContext
 
@@ -39,7 +40,7 @@ class WorkflowRunResult:
 
 def _normalize_session_name(yaml_path: Path, session_name: Optional[str]) -> str:
     if session_name and session_name.strip():
-        return session_name.strip()
+        return validate_path_component(session_name.strip(), field="session_name")
     timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
     return f"sdk_{yaml_path.stem}_{timestamp}"
 
@@ -52,7 +53,7 @@ def _build_task_input(
     if not attachments:
         return prompt
 
-    attachments_dir = graph_context.directory / "code_workspace" / "attachments"
+    attachments_dir = resolve_workspace_path(graph_context.directory, "code_workspace", "attachments")
     attachments_dir.mkdir(parents=True, exist_ok=True)
     store = AttachmentStore(attachments_dir)
     builder = TaskInputBuilder(store)
@@ -95,8 +96,8 @@ def run_workflow(
             details={"task_prompt_provided": bool(task_prompt)},
         )
 
-    design = load_config(yaml_path, fn_module=fn_module, vars_override=variables)
     normalized_session = _normalize_session_name(yaml_path, session_name)
+    design = load_config(yaml_path, fn_module=fn_module, vars_override=variables)
 
     graph_config = GraphConfig.from_definition(
         design.graph,

@@ -22,6 +22,7 @@ from entity.configs.node.tooling import FunctionToolConfig, McpLocalConfig, McpR
 from entity.messages import MessageBlock, MessageBlockType
 from entity.tool_spec import ToolSpec
 from utils.attachments import AttachmentStore
+from utils.code_execution import require_unsafe_code_execution
 from utils.function_manager import FUNCTION_CALLING_DIR, FunctionManager
 
 logger = logging.getLogger(__name__)
@@ -497,6 +498,7 @@ class ToolManager:
         return MessageBlockType.FILE
 
     def _get_stdio_client(self, config: McpLocalConfig, launch_key: str) -> "_StdioClientWrapper":
+        require_unsafe_code_execution("Local MCP server")
         client = self._mcp_stdio_clients.get(launch_key)
         if client is None:
             client = _StdioClientWrapper(config)

@@ -9,6 +9,7 @@ from utils.function_manager import EDGE_FUNCTION_DIR, EDGE_PROCESSOR_FUNCTION_DI
 from utils.log_manager import LogManager
 from utils.logger import WorkflowLogger
 from utils.token_tracker import TokenTracker
+from utils.workspace_paths import resolve_workspace_path
 from workflow.graph_context import GraphContext
 
 from .runtime_context import RuntimeContext
@@ -28,9 +29,9 @@ class RuntimeBuilder:
         log_manager = LogManager(logger)
         token_tracker = TokenTracker(workflow_id=self.graph.name)
 
-        code_workspace = (self.graph.directory / "code_workspace").resolve()
+        code_workspace = resolve_workspace_path(self.graph.directory, "code_workspace")
+        attachments_dir = resolve_workspace_path(self.graph.directory, "code_workspace", "attachments")
         code_workspace.mkdir(parents=True, exist_ok=True)
-        attachments_dir = code_workspace / "attachments"
         attachments_dir.mkdir(parents=True, exist_ok=True)
         attachment_store = AttachmentStore(attachments_dir)
 
