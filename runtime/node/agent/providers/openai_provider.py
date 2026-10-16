@@ -6,6 +6,7 @@ import re
 
 import binascii
 import os
+from types import SimpleNamespace
 from typing import Any, Dict, List, Optional, Union
 from urllib.parse import unquote_to_bytes
 
@@ -67,7 +68,7 @@ class OpenAIProvider(ModelProvider):
         
         if is_chat:
             request_payload = self._build_chat_payload(conversation, tool_specs, kwargs)
-            response = client.chat.completions.create(**request_payload)
+            response = self._create_chat_completion(client, request_payload)
             self._track_token_usage(response)
             self._append_chat_response_output(timeline, response)
             message = self._deserialize_chat_response(response)
@@ -83,7 +84,7 @@ class OpenAIProvider(ModelProvider):
             return ModelResponse(message=message, raw_response=response)
         except Exception as e:
             new_request_payload = self._build_chat_payload(conversation, tool_specs, kwargs)
-            response = client.chat.completions.create(**new_request_payload)
+            response = self._create_chat_completion(client, new_request_payload)
             self._track_token_usage(response)
             self._append_chat_response_output(timeline, response)
             message = self._deserialize_chat_response(response)
@@ -98,6 +99,100 @@ class OpenAIProvider(ModelProvider):
             return False
         # Default to Responses API only if it exists on the client
         return not hasattr(client, "responses")
+
+    def _create_chat_completion(self, client: Any, payload: Dict[str, Any]) -> Any:
+        """Dispatch a Chat Completions request, streaming when configured.
+
+        Non-streaming calls are rejected by some OpenAI-compatible upstreams on
+        long turns (e.g. Anthropic caps non-streaming operations at 10 minutes),
+        so ``params.stream: true`` on the model node switches to streaming and
+        reassembles the chunks into the classic response shape.
+        """
+        stream = payload.pop("stream", self.params.get("stream", False))
+        if not stream:
+            return client.chat.completions.create(**payload)
+
+        stream_payload = dict(payload)
+        stream_payload["stream"] = True
+        stream_payload.setdefault("stream_options", {"include_usage": True})
+        try:
+            chunks = client.chat.completions.create(**stream_payload)
+        except openai.BadRequestError:
+            # Some gateways reject stream_options; retry without usage reporting.
+            stream_payload.pop("stream_options", None)
+            chunks = client.chat.completions.create(**stream_payload)
+        return self._assemble_chat_completion(chunks)
+
+    def _assemble_chat_completion(self, chunks: Any) -> Any:
+        """Fold streamed chat chunks back into a chat.completion-shaped object."""
+        content_parts: List[str] = []
+        role = "assistant"
+        finish_reason: Optional[str] = None
+        usage: Any = None
+        response_id: Optional[str] = None
+        model_name: Optional[str] = None
+        created: Optional[int] = None
+        tool_calls: Dict[int, Dict[str, Any]] = {}
+
+        for chunk in chunks:
+            if getattr(chunk, "usage", None):
+                usage = chunk.usage
+            response_id = response_id or getattr(chunk, "id", None)
+            model_name = model_name or getattr(chunk, "model", None)
+            created = created or getattr(chunk, "created", None)
+            choices = getattr(chunk, "choices", None) or []
+            if not choices:
+                continue
+            choice = choices[0]
+            finish_reason = getattr(choice, "finish_reason", None) or finish_reason
+            delta = getattr(choice, "delta", None)
+            if delta is None:
+                continue
+            if getattr(delta, "role", None):
+                role = delta.role
+            if getattr(delta, "content", None):
+                content_parts.append(delta.content)
+            for tc in getattr(delta, "tool_calls", None) or []:
+                index = getattr(tc, "index", 0) or 0
+                entry = tool_calls.setdefault(
+                    index, {"id": None, "name": "", "arguments": ""}
+                )
+                if getattr(tc, "id", None):
+                    entry["id"] = tc.id
+                function = getattr(tc, "function", None)
+                if function is not None:
+                    if getattr(function, "name", None):
+                        entry["name"] = function.name
+                    if getattr(function, "arguments", None):
+                        entry["arguments"] += function.arguments
+
+        assembled_calls = [
+            SimpleNamespace(
+                id=entry["id"],
+                type="function",
+                function=SimpleNamespace(
+                    name=entry["name"], arguments=entry["arguments"]
+                ),
+            )
+            for _, entry in sorted(tool_calls.items())
+        ] or None
+
+        message = SimpleNamespace(
+            role=role,
+            content="".join(content_parts),
+            tool_calls=assembled_calls,
+        )
+        choice = SimpleNamespace(
+            index=0, message=message, finish_reason=finish_reason or "stop"
+        )
+        return SimpleNamespace(
+            id=response_id,
+            model=model_name,
+            created=created,
+            object="chat.completion",
+            choices=[choice],
+            usage=usage,
+        )
 
     def extract_token_usage(self, response: Any) -> TokenUsage:
         """
