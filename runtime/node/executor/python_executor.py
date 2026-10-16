@@ -12,6 +12,7 @@ from entity.configs import Node
 from entity.configs.node.python_runner import PythonRunnerConfig
 from entity.messages import Message, MessageRole
 from runtime.node.executor.base import NodeExecutor
+from utils.code_execution import require_unsafe_code_execution
 
 
 _CODE_BLOCK_RE = re.compile(r"```(?P<lang>[a-zA-Z0-9_+-]*)?\s*\n(?P<code>.*?)```", re.DOTALL)
@@ -36,6 +37,7 @@ class PythonNodeExecutor(NodeExecutor):
         if node.node_type != "python":
             raise ValueError(f"Node {node.id} is not a python node")
 
+        require_unsafe_code_execution("Python node")
         workspace = self._ensure_workspace_root()
         last_message = inputs[-1] if inputs else None
         code_payload = self._extract_code(last_message)

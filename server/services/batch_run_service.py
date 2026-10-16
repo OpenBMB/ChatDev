@@ -15,6 +15,7 @@ from entity.enums import LogLevel
 from entity.graph_config import GraphConfig
 from utils.exceptions import ValidationError
 from utils.task_input import TaskInputBuilder
+from utils.workspace_paths import resolve_workspace_path, session_directory_name
 from workflow.graph import GraphExecutor
 from workflow.graph_context import GraphContext
 
@@ -160,7 +161,7 @@ class BatchRunService:
         )
 
     def _write_batch_outputs(self, session_id: str, result_rows: List[Dict[str, Any]]) -> None:
-        output_root = WARE_HOUSE_DIR / f"session_{session_id}"
+        output_root = resolve_workspace_path(WARE_HOUSE_DIR, session_directory_name(session_id))
         output_root.mkdir(parents=True, exist_ok=True)
 
         csv_path = output_root / "batch_results.csv"
@@ -205,7 +206,7 @@ class BatchRunService:
                 details={"yaml_file": yaml_file},
             )
 
-        output_root = WARE_HOUSE_DIR / f"session_{session_id}"
+        output_root = resolve_workspace_path(WARE_HOUSE_DIR, session_directory_name(session_id))
         graph_config = GraphConfig.from_definition(
             design.graph,
             name=task_dir,

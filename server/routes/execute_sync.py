@@ -19,11 +19,13 @@ from runtime.bootstrap.schema import ensure_schema_registry_populated
 from runtime.sdk import OUTPUT_ROOT, run_workflow
 from server.models import WorkflowRunRequest
 from server.settings import YAML_DIR
+from server.state import get_websocket_manager
 from utils.attachments import AttachmentStore
-from utils.exceptions import ValidationError, WorkflowExecutionError
+from utils.exceptions import ValidationError, WorkflowExecutionError, SecurityError
 from utils.logger import WorkflowLogger
 from utils.structured_logger import get_server_logger, LogType
 from utils.task_input import TaskInputBuilder
+from utils.workspace_paths import resolve_workspace_path, validate_path_component
 from workflow.graph import GraphExecutor
 from workflow.graph_context import GraphContext
 
@@ -34,7 +36,7 @@ _SSE_CONTENT_TYPE = "text/event-stream"
 
 def _normalize_session_name(yaml_path: Path, session_name: Optional[str]) -> str:
     if session_name and session_name.strip():
-        return session_name.strip()
+        return validate_path_component(session_name.strip(), field="session_name")
     timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
     return f"sdk_{yaml_path.stem}_{timestamp}"
 
@@ -58,7 +60,7 @@ def _build_task_input(
     if not attachments:
         return prompt
 
-    attachments_dir = graph_context.directory / "code_workspace" / "attachments"
+    attachments_dir = resolve_workspace_path(graph_context.directory, "code_workspace", "attachments")
     attachments_dir.mkdir(parents=True, exist_ok=True)
     store = AttachmentStore(attachments_dir)
     builder = TaskInputBuilder(store)
@@ -89,8 +91,8 @@ def _run_workflow_with_logger(
             details={"task_prompt_provided": bool(task_prompt)},
         )
 
-    design = load_config(yaml_path, vars_override=variables)
     normalized_session = _normalize_session_name(yaml_path, session_name)
+    design = load_config(yaml_path, vars_override=variables)
 
     graph_config = GraphConfig.from_definition(
         design.graph,
@@ -152,9 +154,13 @@ def _sse_event(event_type: str, data: Any) -> str:
 @router.post("/api/workflow/run")
 async def run_workflow_sync(request: WorkflowRunRequest, http_request: Request):
     try:
+        if request.session_name and request.session_name.strip():
+            validate_path_component(request.session_name.strip(), field="session_name")
         resolved_log_level: Optional[LogLevel] = None
         if request.log_level:
             resolved_log_level = LogLevel(request.log_level)
+    except ValidationError as exc:
+        raise HTTPException(status_code=400, detail=str(exc))
     except ValueError:
         raise HTTPException(
             status_code=400,
@@ -162,13 +168,26 @@ async def run_workflow_sync(request: WorkflowRunRequest, http_request: Request):
         )
 
     accepts_stream = _SSE_CONTENT_TYPE in (http_request.headers.get("accept") or "")
+    try:
+        attachments = []
+        if request.attachments:
+            if not request.attachment_session_id:
+                raise SecurityError("attachments require attachment_session_id from the upload session")
+            attachments = get_websocket_manager().attachment_service.resolve_uploaded_paths(
+                request.attachment_session_id, request.attachments,
+            )
+    except ValidationError as exc:
+        raise HTTPException(status_code=400, detail=str(exc))
+    except SecurityError as exc:
+        raise HTTPException(status_code=403, detail=str(exc))
+
     if not accepts_stream:
         try:
             result = await run_in_threadpool(
                 run_workflow,
                 request.yaml_file,
                 task_prompt=request.task_prompt,
-                attachments=request.attachments,
+                attachments=attachments,
                 session_name=request.session_name,
                 variables=request.variables,
                 log_level=resolved_log_level,
@@ -177,6 +196,8 @@ async def run_workflow_sync(request: WorkflowRunRequest, http_request: Request):
             raise HTTPException(status_code=404, detail=str(exc))
         except ValidationError as exc:
             raise HTTPException(status_code=400, detail=str(exc))
+        except SecurityError as exc:
+            raise HTTPException(status_code=403, detail=str(exc))
         except Exception as exc:
             logger = get_server_logger()
             logger.log_exception(exc, "Failed to run workflow via sync API")
@@ -215,7 +236,7 @@ async def run_workflow_sync(request: WorkflowRunRequest, http_request: Request):
             final_message, meta = _run_workflow_with_logger(
                 yaml_file=request.yaml_file,
                 task_prompt=request.task_prompt,
-                attachments=request.attachments,
+                attachments=attachments,
                 session_name=request.session_name,
                 variables=request.variables,
                 log_level=resolved_log_level,
@@ -230,7 +251,7 @@ async def run_workflow_sync(request: WorkflowRunRequest, http_request: Request):
                     "output_dir": str(meta["output_dir"].resolve()),
                 },
             )
-        except (FileNotFoundError, ValidationError) as exc:
+        except (FileNotFoundError, ValidationError, SecurityError) as exc:
             enqueue("error", {"message": str(exc)})
         except Exception as exc:
             logger = get_server_logger()

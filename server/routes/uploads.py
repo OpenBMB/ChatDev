@@ -14,8 +14,8 @@ async def upload_attachment(session_id: str, file: UploadFile = File(...)):
         raise HTTPException(status_code=400, detail=str(exc))
     try:
         record = await manager.attachment_service.save_upload_file(session_id, file)
-    except ValidationError:
-        raise HTTPException(status_code=400, detail="Session not connected")
+    except ValidationError as exc:
+        raise HTTPException(status_code=400, detail=str(exc))
     except Exception as exc:
         logger = get_server_logger()
         logger.error(
@@ -39,7 +39,7 @@ async def upload_attachment(session_id: str, file: UploadFile = File(...)):
 async def list_attachments(session_id: str):
     try:
         manager = ensure_known_session(session_id, require_connection=False)
+        manifest = manager.attachment_service.list_attachment_manifests(session_id)
     except ValidationError as exc:
         raise HTTPException(status_code=400, detail=str(exc))
-    manifest = manager.attachment_service.list_attachment_manifests(session_id)
     return {"attachments": manifest}

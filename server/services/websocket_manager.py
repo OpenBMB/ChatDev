@@ -8,13 +8,15 @@ import traceback
 import uuid
 from typing import Any, Dict, Optional
 
-from fastapi import WebSocket
+from fastapi import WebSocket, WebSocketException
 
 from server.services.message_handler import MessageHandler
 from server.services.attachment_service import AttachmentService
 from server.services.session_execution import SessionExecutionController
 from server.services.session_store import WorkflowSessionStore, SessionStatus
 from server.services.workflow_run_service import WorkflowRunService
+from utils.exceptions import ValidationError
+from utils.workspace_paths import validate_path_component
 
 
 def _json_default(value):
@@ -68,6 +70,11 @@ class WebSocketManager:
         )
 
     async def connect(self, websocket: WebSocket, session_id: Optional[str] = None) -> str:
+        if session_id:
+            try:
+                validate_path_component(session_id, field="session_id")
+            except ValidationError as exc:
+                raise WebSocketException(code=1008, reason=str(exc)) from exc
         await websocket.accept()
         # Capture the event loop that owns the WebSocket connections so that
         # worker threads can safely schedule sends via run_coroutine_threadsafe.

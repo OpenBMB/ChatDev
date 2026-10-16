@@ -218,6 +218,24 @@ python -m tools.export_design_template \
 - **HTTP**: `POST /api/workflow/execute` with `session_name`, `graph_path` or `graph_content`, `task_prompt`, optional `attachments`, and `log_level` (defaults to `INFO`, supports `INFO` or `DEBUG`).
 - **CLI**: `python run.py --path yaml_instance/demo.yaml --name test_run`. Provide `TASK_PROMPT` via env var or respond to the CLI prompt.
 
+For `POST /api/workflow/run` (JSON or SSE), upload attachments through
+`/api/uploads/{session_id}` first, then pass that exact ID as `attachment_session_id`
+and the returned attachment IDs in `attachments`. Existing paths are accepted only
+when they match registered uploads in that session. Arbitrary server file paths are
+rejected. `session_name` still names the output run; it is independent of the upload
+session. Local SDK and CLI file inputs are unchanged.
+
+Upload, WebSocket execution, and download routes map each raw session ID to
+`WareHouse/session_<session_id>`. For example, `foo` and `session_foo` use
+`session_foo` and `session_session_foo`, respectively. Previously shared uploads
+for prefixed IDs must be uploaded again under the correct session.
+
+Agent-generated attachment names and node IDs used for storage must be single
+path components. Local attachment sources must stay within the code workspace;
+generated destination paths cannot follow symbolic links. Session downloads skip
+symbolic links inside the session (including virtual environment interpreter links)
+and still reject a symbolic link used as the session root.
+
 ## 10. Debugging Tips
 - Use the Web UI context snapshots or `WareHouse/<session>/context.json` to inspect node I/O. Note that all node outputs are now standardized as `List[Message]`.
 - Leverage the Schema API breadcrumbs ([config_schema_contract.md](config_schema_contract.md)) or run `python run.py --inspect-schema` to view field specs quickly.

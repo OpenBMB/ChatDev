@@ -241,6 +241,19 @@ python -m tools.export_design_template \
 - **HTTP**：`POST /api/workflow/execute`，payload 包含 `session_name`, `graph_path` 或 `graph_content`, `task_prompt`、可选的 `attachments`，以及 `log_level`（默认 `INFO`，支持 `INFO` 或 `DEBUG`）。
 - **CLI**：`python run.py --path yaml_instance/demo.yaml --name test_run`（执行前可设置 `TASK_PROMPT` 环境变量或在 CLI 提示中输入）。
 
+调用 `POST /api/workflow/run`（JSON 或 SSE）时，先通过 `/api/uploads/{session_id}`
+上传附件，再把同一个原始会话 ID 填入 `attachment_session_id`，将上传返回的附件 ID
+放入 `attachments`。兼容该会话中已登记的上传文件路径，但拒绝任意服务器文件路径。
+`session_name` 仍用于指定运行输出名称，与上传会话独立。本地 SDK 和 CLI 的文件输入不变。
+
+上传、WebSocket 运行和下载统一映射到 `WareHouse/session_<session_id>`：
+`foo` 对应 `session_foo`，`session_foo` 对应 `session_session_foo`。
+旧版本中因前缀合并而共用的附件，需要在正确的会话下重新上传。
+
+agent 生成附件时，文件名和用于落盘的节点 ID 必须是单个路径分量；本地附件来源必须
+位于代码工作区内。生成附件的目标路径不跟随符号链接。会话下载跳过会话内的符号链接
+（包括虚拟环境的解释器链接），但仍拒绝以符号链接作为会话根目录。
+
 ## 10. 调试建议
 - 使用 Web UI 的上下文快照或 WareHouse 中的 `context.json` 检查节点输入输出。注意所有节点输出现已统一为 `List[Message]` 结构。
 - 结合 [config_schema_contract.md](config_schema_contract.md) 的 breadcrumbs 功能，用 CLI `python run.py --inspect-schema` 快速查看字段定义。

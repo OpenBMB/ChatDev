@@ -11,6 +11,7 @@ from entity.messages import Message
 from utils.attachments import AttachmentStore
 from utils.schema_exporter import build_schema_response, SchemaResolutionError
 from utils.task_input import TaskInputBuilder
+from utils.workspace_paths import resolve_workspace_path
 from workflow.graph_context import GraphContext
 from workflow.graph import GraphExecutor
 
@@ -28,8 +29,7 @@ def build_task_input_payload(
     if not attachment_paths:
         return prompt
 
-    code_workspace = graph_context.directory / "code_workspace"
-    attachments_dir = code_workspace / "attachments"
+    attachments_dir = resolve_workspace_path(graph_context.directory, "code_workspace", "attachments")
     attachments_dir.mkdir(parents=True, exist_ok=True)
     store = AttachmentStore(attachments_dir)
     builder = TaskInputBuilder(store)

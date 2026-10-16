@@ -48,8 +48,11 @@ from server.services.websocket_manager import WebSocketManager  # noqa: E402
 
 def _make_manager() -> WebSocketManager:
     """Create a WebSocketManager with minimal mocks."""
+    session_store = MagicMock()
+    session_store.has_session.return_value = False
+    session_store.get_session.return_value = None
     return WebSocketManager(
-        session_store=MagicMock(),
+        session_store=session_store,
         session_controller=MagicMock(),
         attachment_service=MagicMock(),
         workflow_run_service=MagicMock(),

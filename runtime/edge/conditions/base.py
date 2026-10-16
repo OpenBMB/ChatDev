@@ -8,6 +8,7 @@ from entity.messages import Message, MessageRole
 from runtime.node.executor import ExecutionContext
 from utils.log_manager import LogManager
 from utils.structured_logger import get_server_logger
+from utils.exceptions import SecurityError
 from entity.configs.node.node import EdgeLink, Node
 from entity.configs.edge.edge_condition import EdgeConditionTypeConfig
 from utils.function_manager import FunctionManager
@@ -64,6 +65,8 @@ class EdgeConditionManager(Generic[TConfig], ABC):
                 log_manager=log_manager,
                 context=self.execution_context,
             )
+        except SecurityError:
+            raise
         except Exception as exc:  # pragma: no cover
             error_msg = (
                 f"Edge payload processor failed for {from_node.id}->{edge_link.target.id}: {exc}"
