@@ -32,3 +32,8 @@ def resolve_workspace_path(root: Path | str, *parts: str) -> Path:
     if candidate == resolved_root or not candidate.is_relative_to(resolved_root):
         raise ValidationError("Workspace path escapes its root directory", field="workspace")
     return candidate
+
+
+def session_directory_name(session_id: str) -> str:
+    """Map a raw transport session ID to one distinct directory name."""
+    return f"session_{validate_path_component(session_id, field='session_id')}"

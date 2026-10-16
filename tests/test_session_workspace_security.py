@@ -234,6 +234,7 @@ def test_upload_then_workflow_round_trip_and_traversal_block(api, tmp_path, acce
         "yaml_file": str(DEMO_YAML),
         "task_prompt": "test",
         "attachments": [str(sources[0])],
+        "attachment_session_id": "upload_test",
         "session_name": TRAVERSAL,
     }
     response = client.post("/api/workflow/run", headers={"Accept": accept}, json=payload)

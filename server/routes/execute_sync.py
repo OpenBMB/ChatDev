@@ -19,6 +19,7 @@ from runtime.bootstrap.schema import ensure_schema_registry_populated
 from runtime.sdk import OUTPUT_ROOT, run_workflow
 from server.models import WorkflowRunRequest
 from server.settings import YAML_DIR
+from server.state import get_websocket_manager
 from utils.attachments import AttachmentStore
 from utils.exceptions import ValidationError, WorkflowExecutionError, SecurityError
 from utils.logger import WorkflowLogger
@@ -167,13 +168,26 @@ async def run_workflow_sync(request: WorkflowRunRequest, http_request: Request):
         )
 
     accepts_stream = _SSE_CONTENT_TYPE in (http_request.headers.get("accept") or "")
+    try:
+        attachments = []
+        if request.attachments:
+            if not request.attachment_session_id:
+                raise SecurityError("attachments require attachment_session_id from the upload session")
+            attachments = get_websocket_manager().attachment_service.resolve_uploaded_paths(
+                request.attachment_session_id, request.attachments,
+            )
+    except ValidationError as exc:
+        raise HTTPException(status_code=400, detail=str(exc))
+    except SecurityError as exc:
+        raise HTTPException(status_code=403, detail=str(exc))
+
     if not accepts_stream:
         try:
             result = await run_in_threadpool(
                 run_workflow,
                 request.yaml_file,
                 task_prompt=request.task_prompt,
-                attachments=request.attachments,
+                attachments=attachments,
                 session_name=request.session_name,
                 variables=request.variables,
                 log_level=resolved_log_level,
@@ -222,7 +236,7 @@ async def run_workflow_sync(request: WorkflowRunRequest, http_request: Request):
             final_message, meta = _run_workflow_with_logger(
                 yaml_file=request.yaml_file,
                 task_prompt=request.task_prompt,
-                attachments=request.attachments,
+                attachments=attachments,
                 session_name=request.session_name,
                 variables=request.variables,
                 log_level=resolved_log_level,

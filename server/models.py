@@ -17,6 +17,7 @@ class WorkflowRunRequest(BaseModel):
     yaml_file: str
     task_prompt: str
     attachments: Optional[List[str]] = None
+    attachment_session_id: Optional[str] = None
     session_name: Optional[str] = None
     variables: Optional[Dict[str, Any]] = None
     log_level: Optional[Literal["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]] = None
