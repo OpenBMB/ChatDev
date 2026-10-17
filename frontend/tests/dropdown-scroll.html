@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>DynamicFormField dropdown regression</title>
+    <style>
+      body { margin: 24px; font-family: sans-serif; }
+      #scroller { height: 240px; overflow: auto; width: 320px; }
+      #fixture { padding: 12px; background: #202020; }
+      #spacer { height: 400px; }
+    </style>
+  </head>
+  <body>
+    <h1>DynamicFormField dropdown regression</h1>
+    <p>Run <code>npm run dev</code> and open <code>/tests/dropdown-scroll.html</code>.</p>
+    <pre id="results">Running…</pre>
+    <button id="outside">Outside the dropdown</button>
+    <div id="scroller">
+      <div id="fixture"></div>
+      <div id="spacer"></div>
+    </div>
+    <script type="module" src="./dropdown-scroll.js"></script>
+  </body>
+</html>
