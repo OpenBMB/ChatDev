@@ -52,6 +52,9 @@ ENV PATH="/opt/venv/bin:${PATH}" \
     PYTHONUNBUFFERED=1 \
     BACKEND_BIND=${BACKEND_BIND}
 
+# Keep the initializer outside /app so the source bind mount cannot hide it.
+COPY tools/init_runtime_dirs.py /usr/local/bin/init-runtime-dirs.py
+
 # Drop privileges
 RUN useradd -m appuser && chown -R appuser:appuser /app
 USER appuser

@@ -1,10 +1,23 @@
 services:
-  backend:
-    build:
+  # Bind mounts hide the image's /app ownership. Prepare only runtime storage
+  # before starting the non-root backend, including on root-owned checkouts.
+  backend-init:
+    build: &backend-build
       context: .
       dockerfile: Dockerfile
       target: runtime
+    user: "0:0"
+    entrypoint: ["python", "/usr/local/bin/init-runtime-dirs.py"]
+    volumes:
+      - .:/app
+    restart: "no"
+
+  backend:
+    build: *backend-build
     container_name: chatdev_backend
+    depends_on:
+      backend-init:
+        condition: service_completed_successfully
     volumes:
       - .:/app
     ports:
