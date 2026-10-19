@@ -1,0 +1,47 @@
+version: 0.4.0
+vars: {}
+graph:
+  id: ''
+  description: Memory-backed conversation using Valkey as the vector store.
+  is_majority_voting: false
+  nodes:
+    - id: assistant
+      type: agent
+      config:
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        provider: openai
+        name: gpt-4o
+        role: |
+          You are a helpful assistant with long-term memory backed by Valkey.
+          If memory sections are provided (wrapped by ===== Begin of memory results =====
+          and ===== End of memory results =====), use that context to give more relevant
+          and personalized responses.
+        params:
+          temperature: 0.7
+          max_tokens: 2000
+        memories:
+          - name: chatdev_memory
+            top_k: 3
+            retrieve_stage:
+              - gen
+            read: true
+            write: true
+  edges: []
+  memory:
+    - name: chatdev_memory
+      type: valkey
+      config:
+        host: localhost
+        port: 6379
+        index_name: "chatdev_memory"
+        ttl_seconds: 86400
+        embedding:
+          provider: openai
+          model: text-embedding-3-small
+          api_key: ${API_KEY}
+          base_url: ${BASE_URL}
+  start:
+    - assistant
+  end: []
+  initial_instruction: ''
