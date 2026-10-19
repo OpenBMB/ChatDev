@@ -1,0 +1,221 @@
+graph:
+  id: demo_MathHelper
+  description: 'A math assistant workflow. Able to answer college-level math questions and provide similar questions.'
+  log_level: DEBUG
+  is_majority_voting: false
+  nodes:
+    - id: Read
+      type: agent
+      config:
+        name: gpt-4o
+        provider: openai
+        role: |-
+          你是一名数学高手，擅长解决大学数学问题。
+          你的任务是：接受用户给出的数学问题，分析题意，拆解已知条件和所求，分条陈述给下一个节点。
+          注意：只需分析题意和所求，不要给出解题步骤和解题方法。
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params: {}
+        tooling: []
+        thinking: null
+        memories: []
+        retry: null
+      description: ''
+      context_window: 3
+      log_output: true
+    - id: Solve
+      type: agent
+      config:
+        name: gpt-4o
+        provider: openai 
+        role: |-
+          你是一个数学高手，擅长解决大学数学问题。
+          你的任务是：根据提供的拆解后的已知条件和所求，深入分析，得出一个相对快捷的解法，并将解题步骤陈述给下一个节点。
+          注意：不要给出完整的解法，只需给出思路和解题步骤
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params: {}
+        tooling: []
+        thinking: null
+        memories: []
+        retry: null
+      description: ''
+      context_window: 3
+      log_output: true
+    - id: Check
+      type: agent
+      config:
+        name: gpt-4o
+        provider: openai 
+        role: |
+          你是一个数学高手，擅长解决大学数学问题。
+          你的任务是：检查给出的解法是否能真正解决该问题，如果解法正确，不用做任何操作，如果解法有错误，直接给出修改后的解法。
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params: {}
+        tooling: []
+        thinking: null
+        memories: []
+        retry: null
+      description: ''
+      context_window: 3
+      log_output: true
+    - id: Print
+      type: agent
+      config:
+        name: gpt-4o
+        provider: openai 
+        role: |
+          你是一个数学高手，擅长解决大学数学问题。
+          你的任务是：根据陈述的数学题解法，用严谨的格式给出一个简洁的完整的回答，并打印到对话框中，作为对该数学题的最终答案。
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params: {}
+        tooling: []
+        thinking: null
+        memories: []
+        retry: null
+      description: ''
+      context_window: 3
+      log_output: true
+    - id: Rethink
+      type: agent
+      config:
+        name: gpt-4o
+        provider: openai
+        role: |
+          你是一个数学高手，擅长解决大学数学问题。
+          你的任务是：根据题目分析和解法步骤，给出一道运用了相同或相似知识点解决的数学题，并直接给出解题步骤，并阐述相似点在何处
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params: {}
+        tooling: []
+        thinking: null
+        memories: []
+        retry: null
+      description: ''
+      context_window: 3
+      log_output: true
+    - id: Human View
+      type: human
+      config:
+        description: |-
+          如果你想再看一道相似题目，请输入one more。
+          如果不想，请输入stop。
+      description: ''
+      context_window: 0
+      log_output: true
+  edges:
+    - from: Read
+      to: Solve
+      trigger: true
+      condition:
+        type: function
+        config:
+          name: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: Solve
+      to: Check
+      trigger: true
+      condition:
+        type: function
+        config:
+          name: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: Check
+      to: Print
+      trigger: true
+      condition:
+        type: function
+        config:
+          name: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: Print
+      to: Rethink
+      trigger: true
+      condition:
+        type: function
+        config:
+          name: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: Rethink
+      to: Human View
+      trigger: true
+      condition:
+        type: function
+        config:
+          name: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: Human View
+      to: Rethink
+      trigger: true
+      condition:
+        type: keyword
+        config:
+          any:
+            - one more
+          none: []
+          regex: []
+          case_sensitive: true
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: Read
+      to: Rethink
+      trigger: false
+      condition:
+        type: function
+        config:
+          name: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+    - from: Read
+      to: Check
+      trigger: false
+      condition:
+        type: function
+        config:
+          name: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      process: null
+      dynamic: null
+  memory: []
+  initial_instruction: ''
+  start:
+    - Read
+  end: []
