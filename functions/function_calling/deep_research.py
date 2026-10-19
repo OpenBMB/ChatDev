@@ -271,7 +271,7 @@ def report_read_chapter(
             
         # Return content (excluding header)
         # start is the header line, so start+1
-        return "\\n".join(lines[start+1:end])
+        return "\n".join(lines[start+1:end])
 
 
 def report_outline(
