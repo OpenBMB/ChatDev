@@ -314,6 +314,20 @@ class TestMem0MemoryUpdate:
 
         client.add.assert_not_called()
 
+    def test_update_header_only_input_is_noop(self):
+        """Input containing only a pipeline header is cleaned to empty and skipped."""
+        memory, client = _make_mem0_memory(agent_id="a1")
+
+        payload = MemoryWritePayload(
+            agent_role="writer",
+            inputs_text="=== INPUT FROM TASK (user) ===",
+            input_snapshot=None,
+            output_snapshot=None,
+        )
+        memory.update(payload)
+
+        client.add.assert_not_called()
+
     def test_update_api_error_does_not_raise(self):
         """API errors are logged but do not propagate."""
         memory, client = _make_mem0_memory(agent_id="a1")
