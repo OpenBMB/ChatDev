@@ -1,0 +1,142 @@
+graph:
+  id: template_node_demo
+  description: Template node demonstration with practical formatting examples
+  log_level: INFO
+  is_majority_voting: false
+  nodes:
+    - id: PatientDataGenerator
+      type: agent
+      config:
+        name: ${MODEL_NAME}
+        provider: openai
+        role: |
+          Generate a JSON object with patient discharge data. Output ONLY valid JSON:
+          {
+            "patient_name": "Jane Doe",
+            "age": 72,
+            "admission_date": "2024-01-10",
+            "discharge_date": "2024-01-15",
+            "diagnosis": "Pneumonia",
+            "treatment": "Antibiotics and oxygen therapy",
+            "medications": ["Amoxicillin 500mg", "Ibuprofen 400mg"],
+            "follow_up": "Visit primary care physician in 2 weeks"
+          }
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        params: {}
+        tooling: null
+        thinking: null
+        memories: []
+        retry: null
+      description: Generates patient discharge data
+      context_window: 0
+      log_output: true
+      name: Patient Data Generator
+    - id: DischargeSummaryFormatter
+      type: template
+      config:
+        template: |
+          {% set patient = input | fromjson %}
+
+          Patient Information:
+          - Name: {{ patient.patient_name }}
+          - Age: {{ patient.age }} years
+
+          Admission & Discharge:
+          - Admitted: {{ patient.admission_date }}
+          - Discharged: {{ patient.discharge_date }}
+
+          Medical Details:
+          - Diagnosis: {{ patient.diagnosis }}
+          - Treatment: {{ patient.treatment }}
+
+          Medications Prescribed:
+          {% for med in patient.medications %}
+          {{ loop.index }}. {{ med }}
+          {% endfor %}
+
+          Follow-up Care:
+          {{ patient.follow_up }}
+
+          {% if patient.age > 65 %}
+          Special Note: Elderly patient - ensure caregiver support.
+          {% endif %}
+      description: Formats patient discharge summary
+      context_window: 0
+      log_output: true
+      name: Discharge Summary Formatter
+    - id: SimpleTextGenerator
+      type: literal
+      config:
+        content: Hospital operations are running smoothly today.
+        role: user
+      description: Generates simple status text
+      context_window: 0
+      log_output: true
+      name: Simple Text Generator
+    - id: StatusBanner
+      type: template
+      config:
+        template: |
+          {{ input | upper | center(38) }}  
+
+          Status at: {{ environment.run_id | default('N/A') }}
+      description: Creates formatted status banner
+      context_window: 0
+      log_output: true
+      name: Status Banner Formatter
+    - id: ReportAggregator
+      type: passthrough
+      config:
+        only_last_message: false
+      description: Collects all formatted reports
+      context_window: 0
+      log_output: true
+      name: Report Aggregator
+  edges:
+    - from: PatientDataGenerator
+      to: DischargeSummaryFormatter
+      trigger: true
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      processor: null
+    - from: SimpleTextGenerator
+      to: StatusBanner
+      trigger: true
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      processor: null
+    - from: DischargeSummaryFormatter
+      to: ReportAggregator
+      trigger: true
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      processor: null
+    - from: StatusBanner
+      to: ReportAggregator
+      trigger: true
+      condition: 'true'
+      carry_data: true
+      keep_message: false
+      clear_context: false
+      clear_kept_context: false
+      processor: null
+  memory: []
+  initial_instruction: ''
+  start:
+    - PatientDataGenerator
+    - SimpleTextGenerator
+  end:
+    - ReportAggregator
+version: 0.0.0
+vars:
+  MODEL_NAME: qwen/qwen3-8b
