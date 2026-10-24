@@ -1,4 +1,4 @@
-﻿"""Graph orchestration adapted to ChatDev design_0.4.0 workflows."""
+"""Graph orchestration adapted to ChatDev design_0.4.0 workflows."""
 
 import threading
 from typing import Any, Callable, Dict, List, Optional
