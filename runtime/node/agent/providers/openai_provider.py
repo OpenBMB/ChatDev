@@ -41,14 +41,17 @@ class OpenAIProvider(ModelProvider):
         Returns:
             OpenAI client instance with token tracking if available
         """
+        timeout = self.params.get("timeout", 300)
         if self.base_url:
             return OpenAI(
                 api_key=self.api_key,
                 base_url=self.base_url,
+                timeout=timeout,
             )
         else:
             return OpenAI(
                 api_key=self.api_key,
+                timeout=timeout,
             )
 
     def call_model(
@@ -173,6 +176,7 @@ class OpenAIProvider(ModelProvider):
     ) -> Dict[str, Any]:
         """Construct the Responses API payload from event timeline."""
         params = dict(raw_params)
+        params.pop("protocol", None)
         max_tokens = params.pop("max_tokens", None)
         max_output_tokens = params.pop("max_output_tokens", None)
         if max_output_tokens is None and max_tokens is not None:
@@ -234,6 +238,7 @@ class OpenAIProvider(ModelProvider):
     ) -> Dict[str, Any]:
         """Construct standard Chat Completions API payload."""
         params = dict(raw_params)
+        params.pop("protocol", None)
         max_output_tokens = params.pop("max_output_tokens", None)
         max_tokens = params.pop("max_tokens", None)
         if max_tokens is None and max_output_tokens is not None:
@@ -252,6 +257,7 @@ class OpenAIProvider(ModelProvider):
             "model": self.model_name,
             "messages": messages,
             "temperature": params.pop("temperature", 0.7),
+            "timeout": params.pop("timeout", 300),  # 5 min
         }
         if max_tokens is not None:
             payload["max_tokens"] = max_tokens
