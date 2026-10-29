@@ -254,8 +254,8 @@ class DynamicEdgeExecutor:
         layer = 0
         is_first_layer = True
         
-        # Reduction loop
-        while len(current_messages) > 1:
+        # Execute the first layer even when there is only one split message.
+        while is_first_layer or len(current_messages) > 1:
             layer += 1
             
             # Group messages
