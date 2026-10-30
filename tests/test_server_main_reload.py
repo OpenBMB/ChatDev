@@ -115,6 +115,9 @@ class TestBuildReloadKwargs:
 
 
 class TestParserFlags:
+    def test_default_host_is_loopback(self, server_main):
+        assert server_main.build_parser().parse_args([]).host == "127.0.0.1"
+
     def test_reload_dir_is_repeatable(self, server_main):
         parser = server_main.build_parser()
         args = parser.parse_args(["--reload", "--reload-dir", "a", "--reload-dir", "b"])
