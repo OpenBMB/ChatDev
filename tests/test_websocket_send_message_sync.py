@@ -3,18 +3,20 @@
 Verifies that send_message_sync correctly delivers messages when called
 from worker threads (the common case during workflow execution).
 
-The test avoids importing the full server stack (which has circular import
-issues) by patching only the WebSocketManager class directly.
+Load the manager in isolation without leaving dependency stubs in sys.modules.
 """
 
 import asyncio
 import concurrent.futures
+import importlib.util
 import json
 import sys
 import threading
 import time
+from pathlib import Path
+from types import ModuleType
 from typing import List
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
 
 import pytest
 
@@ -23,40 +25,32 @@ import pytest
 # Isolate WebSocketManager from the circular-import chain
 # ---------------------------------------------------------------------------
 
-# Stub out heavy modules so we can import websocket_manager in isolation
-_stubs = {}
-for mod_name in (
-    "check", "check.check",
-    "runtime", "runtime.sdk", "runtime.bootstrap", "runtime.bootstrap.schema",
-    "server.services.workflow_run_service",
-    "server.services.message_handler",
-    "server.services.attachment_service",
-    "server.services.session_execution",
-    "server.services.session_store",
-    "server.services.artifact_events",
-):
-    if mod_name not in sys.modules:
-        _stubs[mod_name] = MagicMock()
-        sys.modules[mod_name] = _stubs[mod_name]
 
-from server.services.websocket_manager import WebSocketManager  # noqa: E402
-
-
-# ---------------------------------------------------------------------------
-# Helpers
-# ---------------------------------------------------------------------------
-
-def _make_manager() -> WebSocketManager:
-    """Create a WebSocketManager with minimal mocks."""
-    session_store = MagicMock()
-    session_store.has_session.return_value = False
-    session_store.get_session.return_value = None
-    return WebSocketManager(
-        session_store=session_store,
-        session_controller=MagicMock(),
-        attachment_service=MagicMock(),
-        workflow_run_service=MagicMock(),
+@pytest.fixture
+def make_manager(monkeypatch):
+    service_name = "server.services.workflow_run_service"
+    service_stub = ModuleType(service_name)
+    service_stub.WorkflowRunService = MagicMock()
+    spec = importlib.util.spec_from_file_location(
+        "websocket_manager_under_test",
+        Path(__file__).resolve().parents[1] / "server/services/websocket_manager.py",
     )
+    module = importlib.util.module_from_spec(spec)
+    # Only the workflow runner needs isolation. In particular, keep the real
+    # in-memory session store so snapshots and reconnect behavior are realistic.
+    with monkeypatch.context() as isolated:
+        isolated.setitem(sys.modules, service_name, service_stub)
+        spec.loader.exec_module(module)
+
+    def create_manager():
+        return module.WebSocketManager(
+            session_store=module.WorkflowSessionStore(),
+            session_controller=MagicMock(),
+            attachment_service=MagicMock(),
+            workflow_run_service=MagicMock(),
+        )
+
+    return create_manager
 
 
 class FakeWebSocket:
@@ -73,6 +67,9 @@ class FakeWebSocket:
         self.sent.append(data)
         self.send_threads.append(threading.get_ident())
 
+    async def close(self, **kwargs) -> None:
+        pass
+
 
 # ---------------------------------------------------------------------------
 # Tests
@@ -81,9 +78,9 @@ class FakeWebSocket:
 class TestSendMessageSync:
     """send_message_sync must deliver messages regardless of calling thread."""
 
-    def test_send_from_main_thread(self):
+    def test_send_from_main_thread(self, make_manager):
         """Message sent from the main (event-loop) thread is delivered."""
-        manager = _make_manager()
+        manager = make_manager()
         ws = FakeWebSocket()
         delivered = []
 
@@ -97,13 +94,17 @@ class TestSendMessageSync:
             await asyncio.sleep(0.05)
             delivered.extend(ws.sent)
 
-        asyncio.run(run())
+        # Waiting on a thread-safe Future from its own loop would deadlock.
+        # Fail immediately if that path is used, rather than waiting 10 seconds.
+        with patch.object(concurrent.futures.Future, "result") as blocking_wait:
+            asyncio.run(run())
+        blocking_wait.assert_not_called()
         assert len(delivered) == 1
         assert '"test"' in delivered[0]
 
-    def test_send_from_worker_thread(self):
+    def test_send_from_worker_thread(self, make_manager):
         """Message sent from a background (worker) thread is delivered on the owner loop."""
-        manager = _make_manager()
+        manager = make_manager()
         ws = FakeWebSocket()
         worker_errors: List[Exception] = []
 
@@ -136,14 +137,14 @@ class TestSendMessageSync:
         asyncio.run(run())
         assert not worker_errors, f"Worker thread raised: {worker_errors}"
 
-    def test_concurrent_workers_no_lost_messages(self):
+    def test_concurrent_workers_no_lost_messages(self, make_manager):
         """Multiple concurrent workers should each have their message delivered.
 
         In production, the event loop is free while workers run (the main coroutine
         awaits ``run_in_executor``).  We replicate that by polling workers via
         ``asyncio.sleep`` so the loop can process the scheduled sends.
         """
-        manager = _make_manager()
+        manager = make_manager()
         ws = FakeWebSocket()
         num_workers = 8
 
@@ -152,7 +153,6 @@ class TestSendMessageSync:
             ws.sent.clear()
 
             barrier = threading.Barrier(num_workers)
-            done_count = threading.atomic(0) if hasattr(threading, "atomic") else None
             done_flags = [False] * num_workers
 
             def worker(idx: int):
@@ -179,12 +179,35 @@ class TestSendMessageSync:
             assert len(ws.sent) == num_workers, (
                 f"Expected {num_workers} messages, got {len(ws.sent)}"
             )
+            assert sorted(json.loads(message)["idx"] for message in ws.sent) == list(range(num_workers))
 
         asyncio.run(run())
 
-    def test_send_after_disconnect_does_not_crash(self):
+
+class TestSessionReconnect:
+    def test_reconnect_replays_messages_and_serializes_snapshot(self, make_manager):
+        manager = make_manager()
+        session = manager.session_store.create_session(
+            session_id="reconnect", yaml_file="test.yaml", task_prompt="test",
+        )
+        buffered = {"type": "test", "data": "buffered"}
+        session.append_message(buffered)
+        ws = FakeWebSocket()
+
+        async def run():
+            assert await manager.connect(ws, session_id=session.session_id) == session.session_id
+
+        asyncio.run(run())
+        messages = [json.loads(message) for message in ws.sent]
+        assert [message["type"] for message in messages] == ["connection", "test", "session_resumed"]
+        assert messages[1] == buffered
+        assert messages[2]["data"]["session_id"] == session.session_id
+        assert messages[2]["data"]["status"] == "idle"
+        assert messages[2]["data"]["message_count"] == 1
+
+    def test_send_after_disconnect_does_not_crash(self, make_manager):
         """Sending after disconnection should not raise."""
-        manager = _make_manager()
+        manager = make_manager()
         ws = FakeWebSocket()
 
         async def run():
@@ -197,9 +220,9 @@ class TestSendMessageSync:
 
         asyncio.run(run())  # no exception == pass
 
-    def test_send_before_any_connection_no_crash(self):
+    def test_send_before_any_connection_no_crash(self, make_manager):
         """Calling send_message_sync before any connect() should not crash."""
-        manager = _make_manager()
+        manager = make_manager()
         # _owner_loop is None
         manager.send_message_sync("nonexistent", {"type": "orphan"})
         # Should log a warning, not crash
@@ -208,8 +231,8 @@ class TestSendMessageSync:
 class TestOwnerLoopCapture:
     """The manager must capture the event loop on first connect."""
 
-    def test_owner_loop_captured_on_connect(self):
-        manager = _make_manager()
+    def test_owner_loop_captured_on_connect(self, make_manager):
+        manager = make_manager()
         ws = FakeWebSocket()
 
         async def run():
@@ -219,9 +242,9 @@ class TestOwnerLoopCapture:
 
         asyncio.run(run())
 
-    def test_owner_loop_stable_across_connections(self):
+    def test_owner_loop_stable_across_connections(self, make_manager):
         """Subsequent connects should not reset the owner loop."""
-        manager = _make_manager()
+        manager = make_manager()
         ws1 = FakeWebSocket()
         ws2 = FakeWebSocket()
 
