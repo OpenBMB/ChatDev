@@ -7,10 +7,10 @@ from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 import time
 import re
-import os
 
 from utils.structured_logger import get_server_logger, LogType
 from utils.exceptions import SecurityError
+from server.local_security import allowed_browser_origins
 
 
 async def correlation_id_middleware(request: Request, call_next: Callable):
@@ -89,24 +89,9 @@ async def rate_limit_middleware(request: Request, call_next: Callable):
 
 def add_cors_middleware(app: FastAPI) -> None:
     """Configure and attach CORS middleware."""
-    # Dev defaults; override via CORS_ALLOW_ORIGINS (comma-separated)
-    default_origins = [
-        "http://localhost:5173",
-        "http://127.0.0.1:5173",
-    ]
-    env_origins = os.getenv("CORS_ALLOW_ORIGINS")
-    if env_origins:
-        origins = [o.strip() for o in env_origins.split(",") if o.strip()]
-        origin_regex = None
-    else:
-        origins = default_origins
-        # Helpful in dev: allow localhost/127.0.0.1 on any port
-        origin_regex = r"^https?://(localhost|127\.0\.0\.1)(:\d+)?$"
-
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=origins,
-        allow_origin_regex=origin_regex,
+        allow_origins=allowed_browser_origins(),
         allow_credentials=True,
         allow_methods=["*"],
         allow_headers=["*"],

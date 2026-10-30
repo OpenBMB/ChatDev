@@ -1,9 +1,10 @@
 import re
 from pathlib import Path
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request, Response
 from pydantic import BaseModel, constr
 
+from server.local_security import local_tool_session, require_local_tool_token
 from utils.function_catalog import get_function_catalog
 from utils.function_manager import FUNCTION_CALLING_DIR
 
@@ -40,7 +41,13 @@ def list_local_tools():
     }
 
 
-@router.post("/api/tools/local")
+@router.get("/api/tools/local/session")
+def get_local_tool_session(request: Request, response: Response):
+    response.headers["Cache-Control"] = "no-store"
+    return local_tool_session(request)
+
+
+@router.post("/api/tools/local", dependencies=[Depends(require_local_tool_token)])
 def create_local_tool(payload: LocalToolCreateRequest):
     raw_name = payload.filename.strip()
     if not raw_name:
