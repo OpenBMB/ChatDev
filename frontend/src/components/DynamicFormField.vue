@@ -253,6 +253,7 @@
           <Teleport to="body">
             <div
               v-if="showDropdown && !isReadOnly"
+              ref="selectDropdown"
               class="custom-select-dropdown"
               data-local-scroll
               :style="dropdownStyle"
@@ -646,6 +647,7 @@ const internalFormData = computed(() => props.formData)
 const showDropdown = ref(false)
 const filterText = ref('')
 const selectWrapper = ref(null)
+const selectDropdown = ref(null)
 const dropdownRect = reactive({
   top: 0,
   left: 0,
@@ -688,12 +690,15 @@ const closeDropdown = () => {
   window.removeEventListener('mousedown', handleOutsideClick)
 }
 
-const closeOnScroll = () => {
+const closeOnScroll = (e) => {
+  if (e.target instanceof Node && selectDropdown.value?.contains(e.target)) return
   if (showDropdown.value) closeDropdown()
 }
 
 const handleOutsideClick = (e) => {
-  if (selectWrapper.value && !selectWrapper.value.contains(e.target)) {
+  if (selectWrapper.value && !(e.target instanceof Node && (
+    selectWrapper.value.contains(e.target) || selectDropdown.value?.contains(e.target)
+  ))) {
     closeDropdown()
   }
 }
