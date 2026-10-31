@@ -252,6 +252,7 @@ class OpenAIProvider(ModelProvider):
             "model": self.model_name,
             "messages": messages,
             "temperature": params.pop("temperature", 0.7),
+            "timeout": params.pop("timeout", 300),
         }
         if max_tokens is not None:
             payload["max_tokens"] = max_tokens
