@@ -6,15 +6,15 @@ import httpx
 import openai
 import pytest
 
-from runtime.node.agent.memory.embedding import OpenAIEmbedding
 from entity.configs import EmbeddingConfig
+from runtime.node.agent.memory.embedding import OpenAIEmbedding
 
 
 @pytest.fixture
 def embedding_factory():
     clients = []
 
-    def create(max_length=64, strategy="average"):
+    def create(max_length=64, strategy="average", vectors=None):
         requests = []
 
         def respond(request):
@@ -33,7 +33,11 @@ def embedding_factory():
                         {
                             "object": "embedding",
                             "index": 0,
-                            "embedding": [0.125, 0.25, 0.5],
+                            "embedding": (
+                                vectors[payload["input"]]
+                                if vectors is not None
+                                else [0.125, 0.25, 0.5]
+                            ),
                         }
                     ],
                     "usage": {"prompt_tokens": 1, "total_tokens": 1},
@@ -117,3 +121,31 @@ def test_chunk_size_must_be_positive(embedding_factory, limit):
 
     with pytest.raises(ValueError, match="max_length"):
         embedding._chunk_text("abc", limit)
+
+
+@pytest.mark.parametrize(
+    ("strategy", "expected"),
+    [
+        ("average", [2.0, 2.0]),
+        ("weighted", [1.44, 1.16]),
+        ("first", [1.0, 0.0]),
+    ],
+)
+def test_chunk_vectors_are_combined_by_the_selected_strategy(
+    embedding_factory, strategy, expected
+):
+    embedding, requests = embedding_factory(
+        4,
+        strategy,
+        vectors={
+            "ab": [1.0, 0.0],
+            "cd": [0.0, 1.0],
+            "ef": [3.0, 2.0],
+            "gh": [4.0, 5.0],
+        },
+    )
+
+    result = embedding.get_embedding("abcdefgh")
+
+    assert [payload["input"] for payload in requests] == ["ab", "cd", "ef", "gh"]
+    assert result == pytest.approx(expected)
