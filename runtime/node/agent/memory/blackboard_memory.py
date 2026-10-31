@@ -52,7 +52,7 @@ class BlackboardMemory(MemoryBase):
         if not self.memory_path:
             return
 
-        os.makedirs(os.path.dirname(self.memory_path), exist_ok=True)
+        os.makedirs(os.path.dirname(self.memory_path) or ".", exist_ok=True)
         payload = [item.to_dict() for item in self.contents[-self.max_items :]]
         with open(self.memory_path, "w", encoding="utf-8") as file:
             json.dump(payload, file, ensure_ascii=False, indent=2)
