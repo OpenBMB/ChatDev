@@ -74,7 +74,9 @@ class SubgraphNodeExecutor(NodeExecutor):
         # Execute the subgraph (requires importing ``GraphExecutor``)
         from workflow.graph import GraphExecutor
         
-        executor = GraphExecutor.execute_graph(subgraph, task_prompt=task_payload)
+        executor = GraphExecutor.execute_graph(
+            subgraph, task_prompt=task_payload, cancel_event=self.context.cancel_event
+        )
         result_messages = executor.get_final_output_messages()
         
         final_results = []
