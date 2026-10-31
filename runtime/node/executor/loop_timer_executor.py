@@ -103,7 +103,7 @@ class LoopTimerNodeExecutor(NodeExecutor):
             )
             return []
 
-        if config.reset_on_emit and not timer_state["emitted"]:
+        if config.reset_on_emit:
             timer_state["start_time"] = current_time
 
         timer_state["emitted"] = True
