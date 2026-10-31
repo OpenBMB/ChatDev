@@ -52,6 +52,24 @@ memory:
 
 All stores register through `register_memory_store()` so summaries show up in UI via `MemoryStoreConfig.field_specs()`.
 
+### Third-Party Stores
+`register_memory_store()` is a public seam: pip-installable packages can register additional store types without modifying DevAll. Once installed, third-party types work in workflow YAML and appear in the web console dropdown exactly like built-ins. Example available today:
+
+| Type | Package | Highlights | Best for |
+| --- | --- | --- | --- |
+| `memorysync` | [`chatdev-memorysync`](https://pypi.org/project/chatdev-memorysync/) (PyPI) | Cloud-managed by [MemorySync](https://memorysync.io); server-side semantic retrieval under a fail-open latency budget; per-end-user scoping (`user_id` is required); honest `created_at` timestamps for the time-decay scorer; idempotent writes so re-runs converge. | Per-user production memory shared across frameworks and platforms. |
+
+```yaml
+memory:
+  - name: user_memory
+    type: memorysync
+    config:
+      api_key: ${MEMORYSYNC_API_KEY}
+      user_id: customer-42
+```
+
+Install with `pip install chatdev-memorysync` inside the DevAll environment — a `.pth` hook registers the store automatically whenever DevAll's modules are importable, and no-ops in unrelated environments.
+
 ## 4. MemoryAttachmentConfig Fields
 | Field | Description |
 | --- | --- |
