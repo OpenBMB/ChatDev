@@ -215,6 +215,19 @@ OpenClaw 可以与 ChatDev 集成，通过 **调用已有的 agent 团队**，�
     *   **后端**：`http://localhost:6400`
     *   **前端**：`http://localhost:5173`
 
+`backend-init` 服务会在后端启动前以 root 身份运行一次，创建挂载目录中的
+`WareHouse/`、`logs/` 和 `data/`，并将这些目录及其内容的所有权赋予容器中的
+`appuser`。已有数据会保留，源代码文件的所有权不会改变，后端仍以非 root 用户运行。
+这也支持 Linux 上由 root 拥有的项目目录，无需手动执行 `chown`。
+自定义存储路径（例如 `VUEGRAPHS_DB_PATH`）需要单独设置写入权限。
+为避免修改无关文件，不支持将这些存储根目录设置为符号链接。
+
+使用 Docker 时，可通过以下命令同步修改后的工作流：
+
+```bash
+docker compose exec backend python tools/sync_vuegraphs.py
+```
+
 > 服务在异常退出后会自动重启，本地文件的修改会同步映射到容器中，便于实时开发。
 
 ### 🔑 配置

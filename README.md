@@ -222,6 +222,20 @@ Alternatively, you can run the entire application using Docker Compose. This met
     *   **Backend**: `http://localhost:6400`
     *   **Frontend**: `http://localhost:5173`
 
+The `backend-init` service runs once as root before the backend starts. It creates
+`WareHouse/`, `logs/`, and `data/` in the mounted checkout and assigns their
+contents to the container's `appuser`. Existing data is retained; source-file
+ownership is unchanged. The backend itself continues to run as non-root. This
+also supports root-owned Linux checkouts without manual `chown` commands.
+Custom storage paths (for example, `VUEGRAPHS_DB_PATH`) must be made writable
+separately. Symlinked storage roots are rejected to avoid changing unrelated files.
+
+To sync edited workflows while using Docker:
+
+```bash
+docker compose exec backend python tools/sync_vuegraphs.py
+```
+
 > The services will automatically restart if they crash, and local file changes will be reflected inside the containers for live development.
 
 ---
