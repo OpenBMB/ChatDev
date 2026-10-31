@@ -466,8 +466,17 @@ class GraphExecutor:
         if len(found_configs) == 1:
             return found_configs[0][1]
         
+        def split_settings(config: DynamicEdgeConfig) -> dict[str, Any]:
+            # Compare parsed settings without their diagnostic configuration paths.
+            settings = config.split.to_external_value()
+            if settings["type"] == "regex":
+                # An omitted group and group 0 both select the entire match.
+                settings["config"]["group"] = settings["config"]["group"] or 0
+            return settings
+
         # Multiple dynamic configs found - verify they are consistent
         first_source, first_config = found_configs[0]
+        first_split_settings = split_settings(first_config)
         for source_id, config in found_configs[1:]:
             # Check type consistency
             if config.type != first_config.type:
@@ -478,9 +487,7 @@ class GraphExecutor:
                     f"All dynamic edges to the same node must use the same configuration."
                 )
             # Check split config consistency
-            if (config.split.type != first_config.split.type or
-                config.split.pattern != first_config.split.pattern or
-                config.split.json_path != first_config.split.json_path):
+            if split_settings(config) != first_split_settings:
                 raise WorkflowExecutionError(
                     f"Node '{node.id}' has inconsistent split configurations on incoming edges: "
                     f"edges from '{first_source}' and '{source_id}' have different split settings. "
