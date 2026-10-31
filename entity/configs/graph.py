@@ -243,6 +243,13 @@ class GraphDefinition(BaseConfig):
                     f"start node '{start_node}' not defined in nodes",
                     extend_path(self.path, "start"),
                 )
+        if not self.is_majority_voting:
+            for end_node in self.end_nodes or []:
+                if end_node not in node_set:
+                    raise ConfigError(
+                        f"end node '{end_node}' not defined in nodes",
+                        extend_path(self.path, "end"),
+                    )
         for edge in self.edges:
             if edge.source not in node_set:
                 raise ConfigError(
