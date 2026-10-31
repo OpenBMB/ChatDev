@@ -31,6 +31,7 @@ class MessageBlockType(str, Enum):
         """Guess block type from MIME type."""
         if not mime_type:
             return MessageBlockType.FILE
+        mime_type = mime_type.strip().lower()
         if mime_type.startswith("image/"):
             return MessageBlockType.IMAGE
         if mime_type.startswith("audio/"):
