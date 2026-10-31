@@ -173,6 +173,7 @@ class OpenAIProvider(ModelProvider):
     ) -> Dict[str, Any]:
         """Construct the Responses API payload from event timeline."""
         params = dict(raw_params)
+        params.pop("protocol", None)
         max_tokens = params.pop("max_tokens", None)
         max_output_tokens = params.pop("max_output_tokens", None)
         if max_output_tokens is None and max_tokens is not None:
@@ -234,6 +235,7 @@ class OpenAIProvider(ModelProvider):
     ) -> Dict[str, Any]:
         """Construct standard Chat Completions API payload."""
         params = dict(raw_params)
+        params.pop("protocol", None)
         max_output_tokens = params.pop("max_output_tokens", None)
         max_tokens = params.pop("max_tokens", None)
         if max_tokens is None and max_output_tokens is not None:
