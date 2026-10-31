@@ -40,30 +40,29 @@ class EmbeddingBase(ABC):
         return text
 
     def _chunk_text(self, text: str, max_length: int = 500) -> List[str]:
-        """Split long text into chunks to improve embedding quality."""
+        """Split text into bounded character windows, retaining sentence endings."""
+        if max_length < 1:
+            raise ValueError("max_length must be positive")
         if len(text) <= max_length:
             return [text]
-        
-        # Split by sentence boundaries
-        sentences = re.split(r'[\u3002\uff01\uff1f\uff1b\n]', text)
+
+        # Keep delimiters and split oversized sentences too: preprocessing may
+        # remove every sentence boundary before this helper is called.
+        sentences = re.split(r'(?<=[\u3002\uff01\uff1f\uff1b\n])', text)
         chunks = []
         current_chunk = ""
-        
+
         for sentence in sentences:
-            sentence = sentence.strip()
-            if not sentence:
-                continue
-                
-            if len(current_chunk + sentence) <= max_length:
-                current_chunk += sentence + "\u3002"
-            else:
-                if current_chunk:
-                    chunks.append(current_chunk.strip())
-                current_chunk = sentence + "\u3002"
-        
+            for start in range(0, len(sentence), max_length):
+                fragment = sentence[start:start + max_length]
+                if len(current_chunk) + len(fragment) > max_length:
+                    chunks.append(current_chunk)
+                    current_chunk = ""
+                current_chunk += fragment
+
         if current_chunk:
-            chunks.append(current_chunk.strip())
-        
+            chunks.append(current_chunk)
+
         return chunks
 
 class EmbeddingFactory:
@@ -124,7 +123,7 @@ class OpenAIEmbedding(EmbeddingBase):
 
     def _get_chunked_embedding(self, text: str) -> List[float]:
         """Chunk long text, embed each chunk, then aggregate."""
-        chunks = self._chunk_text(text, self.max_length // 2)  # Halve the chunk length
+        chunks = self._chunk_text(text, max(1, self.max_length // 2))
         
         if not chunks:
             return [0.0] * self._fallback_dim
