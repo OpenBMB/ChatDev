@@ -76,7 +76,7 @@ class FileMemory(MemoryBase):
             return
 
         # Ensure directory exists
-        os.makedirs(os.path.dirname(self.index_path), exist_ok=True)
+        os.makedirs(os.path.dirname(self.index_path) or ".", exist_ok=True)
 
         # Prepare data for serialization
         data = {

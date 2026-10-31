@@ -86,7 +86,7 @@ class SimpleMemory(MemoryBase):
 
     def save(self) -> None:
         if self.memory_path and self.memory_path.endswith(".json"):
-            os.makedirs(os.path.dirname(self.memory_path), exist_ok=True)
+            os.makedirs(os.path.dirname(self.memory_path) or ".", exist_ok=True)
             with open(self.memory_path, "w") as file:
                 json.dump([item.to_dict() for item in self.contents], file, indent=2, ensure_ascii=False)
 
