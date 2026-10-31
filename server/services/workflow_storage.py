@@ -18,10 +18,18 @@ from utils.structured_logger import get_server_logger, LogType
 
 
 def _update_workflow_id(content: str, workflow_id: str) -> str:
-    pattern = re.compile(r"^(id:\\s*).*$", re.MULTILINE)
-    match = pattern.search(content)
-    if match:
-        return pattern.sub(rf"\\1{workflow_id}", content, count=1)
+    """Point the workflow's graph identifier at its new file name."""
+    graph_id_pattern = re.compile(
+        r"(^graph:[ \t]*\r?\n(?:[ \t]+[^\r\n]*\r?\n)*?[ \t]+id:[ \t]*)[^\r\n]*",
+        re.MULTILINE,
+    )
+    if graph_id_pattern.search(content):
+        return graph_id_pattern.sub(rf"\g<1>{workflow_id}", content, count=1)
+
+    # Legacy layouts kept the identifier at the document root.
+    root_id_pattern = re.compile(r"^(id:[ \t]*)[^\r\n]*", re.MULTILINE)
+    if root_id_pattern.search(content):
+        return root_id_pattern.sub(rf"\g<1>{workflow_id}", content, count=1)
 
     lines = content.splitlines()
     insert_index = 0
