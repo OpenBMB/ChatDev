@@ -40,9 +40,10 @@ class StructuredLogger:
             # Ensure log directory exists
             log_path = Path(log_file)
             log_path.parent.mkdir(parents=True, exist_ok=True)
-            handler = logging.FileHandler(log_file)
+            handler = logging.FileHandler(log_file, encoding='utf-8')
         else:
             handler = logging.StreamHandler(sys.stdout)
+            handler.terminator = ''  # Prevent newline issues
         
         handler.setFormatter(formatter)
         self.logger.addHandler(handler)

@@ -1,6 +1,14 @@
 import argparse
 import logging
+import os
+import sys
 from pathlib import Path
+
+# Fix Windows stdout encoding before any logging
+if sys.platform == 'win32':
+    import io
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
+    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8', errors='replace')
 
 from runtime.bootstrap.schema import ensure_schema_registry_populated
 from server.app import app
@@ -136,7 +144,7 @@ def main():
         level=getattr(logging, args.log_level.upper()),
         format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
         handlers=[
-            logging.FileHandler(log_dir / "server.log"),
+            logging.FileHandler(log_dir / "server.log", encoding='utf-8'),
             logging.StreamHandler()
         ]
     )
