@@ -145,7 +145,7 @@ class GraphTopologyBuilder:
                     })
                 elif super_node.startswith("node_"):
                     # Regular node
-                    node_id = super_node.replace("node_", "")
+                    node_id = super_node.removeprefix("node_")
                     layer_items.append({
                         "type": "node",
                         "node_id": node_id
