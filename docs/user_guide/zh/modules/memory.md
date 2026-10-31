@@ -42,6 +42,22 @@ memory:
       agent_id: my-agent
 ```
 
+### Valkey Memory 配置
+```yaml
+memory:
+  - name: chatdev_memory
+    type: valkey
+    config:
+      host: localhost
+      port: 6379
+      index_name: chatdev_memory
+      ttl_seconds: 86400
+      embedding:
+        provider: openai
+        model: text-embedding-3-small
+        api_key: ${API_KEY}
+```
+
 ## 3. 内置 Memory Store 对比
 | 类型 | 路径 | 特点 | 适用场景 |
 | --- | --- | --- | --- |
@@ -49,6 +65,7 @@ memory:
 | `file` | `node/agent/memory/file_memory.py` | 将指定文件/目录切片为向量索引，只读；自动检测文件变更并更新索引 | 知识库、文档问答 |
 | `blackboard` | `node/agent/memory/blackboard_memory.py` | 轻量附加日志，按时间/条数裁剪；不依赖向量检索 | 简易广播板、流水线调试 |
 | `mem0` | `node/agent/memory/mem0_memory.py` | 由 Mem0 云端托管；支持语义搜索 + 图关系；无需本地 embedding 或持久化。需安装 `mem0ai` 包。 | 生产级记忆、跨会话持久化、多 Agent 记忆共享 |
+| `valkey` | `node/agent/memory/valkey_memory.py` | 使用 Valkey Search 的 HNSW 向量索引；服务端持久化、跨进程共享、支持 TTL 自动过期。需安装 `valkey-glide-sync` 包。 | 自托管持久记忆、多进程部署、隐私敏感环境 |
 
 > 所有内置 store 都会在 `register_memory_store()` 中注册，摘要可通过 `MemoryStoreConfig.field_specs()` 在 UI 中展示。
 
@@ -118,6 +135,42 @@ nodes:
 - **写入**：`update()` 仅将用户输入（`role: "user"` 消息）发送至 Mem0。不包含 Agent 输出，以避免 LLM 响应中的内容被提取为噪声记忆。
 - **持久化**：完全由云端托管。`load()` 和 `save()` 为空操作（no-op）。记忆在不同运行和会话间自动持久化。
 - **依赖**：需安装 `mem0ai` 包（`pip install mem0ai`）。
+
+### 5.5 ValkeyMemory
+- **配置**：通过 `ValkeyMemoryConfig` 指定连接参数和索引设置。
+  ```yaml
+  memory:
+    - name: chatdev_memory
+      type: valkey
+      config:
+        host: localhost
+        port: 6379
+        index_name: chatdev_memory
+        ttl_seconds: 86400
+        embedding:
+          provider: openai
+          model: text-embedding-3-small
+          api_key: ${API_KEY}
+  ```
+  | 字段 | 说明 | 默认值 |
+  | --- | --- | --- |
+  | `host` | Valkey 服务器地址 | `localhost` |
+  | `port` | 端口（1-65535） | `6379` |
+  | `username` | ACL 用户名 | `None` |
+  | `password` | 认证密码 | `None` |
+  | `db` | 数据库索引（0-15） | `0` |
+  | `use_tls` | 启用 TLS 加密连接 | `false` |
+  | `index_name` | FT 索引名称 | `memory_index` |
+  | `key_prefix` | Hash key 前缀 | `memory:` |
+  | `ttl_seconds` | 记忆过期时间（秒），`None` 表示永不过期 | `None` |
+  | `embedding` | `EmbeddingConfig` 嵌套配置（必须提供） | — |
+- **索引创建**：首次实例化时自动调用 `FT.CREATE` 创建 HNSW 向量索引（COSINE 距离），包含 `content_summary`（TEXT）、`agent_role`（TAG）、`timestamp`（NUMERIC）、`embedding`（VECTOR）字段。若索引已存在则静默跳过。
+- **检索**：使用 `FT.SEARCH` 执行 KNN 查询，返回 top-k 结果并按余弦相似度排序。通过 `similarity_threshold` 过滤低相关结果。
+- **写入**：`update()` 将输入文本编码为 float32 向量，存储为 Valkey Hash（`HSET`）。若配置了 `ttl_seconds`，同时调用 `EXPIRE` 设置过期时间。
+- **持久化**：由 Valkey 服务端管理。`load()` 和 `save()` 为空操作（no-op）。数据在进程重启后自动保留，多进程可并发读写同一索引。
+- **错误处理**：若 Valkey 未加载 Search 模块，初始化时抛出 `RuntimeError` 并给出安装提示。
+- **依赖**：需安装 `valkey-glide-sync` 包（`pip install 'chatdev[valkey]'`）。
+- **适用场景**：需要持久化、跨进程共享、自动过期的自托管部署；隐私敏感环境中 Mem0 云服务不可用时的替代方案。
 
 ## 6. EmbeddingConfig 提示
 - 字段：`provider`, `model`, `api_key`, `base_url`, `params`。

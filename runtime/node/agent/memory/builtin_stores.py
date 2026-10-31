@@ -5,6 +5,7 @@ from entity.configs.node.memory import (
     FileMemoryConfig,
     Mem0MemoryConfig,
     SimpleMemoryConfig,
+    ValkeyMemoryConfig,
     MemoryStoreConfig,
 )
 from runtime.node.agent.memory.blackboard_memory import BlackboardMemory
@@ -45,6 +46,19 @@ register_memory_store(
     config_cls=Mem0MemoryConfig,
     factory=_create_mem0_memory,
     summary="Mem0 managed memory with semantic search and graph relationships",
+)
+
+
+def _create_valkey_memory(store):
+    from runtime.node.agent.memory.valkey_memory import ValkeyMemory
+    return ValkeyMemory(store)
+
+
+register_memory_store(
+    "valkey",
+    config_cls=ValkeyMemoryConfig,
+    factory=_create_valkey_memory,
+    summary="Valkey-backed memory store with vector similarity search",
 )
 
 

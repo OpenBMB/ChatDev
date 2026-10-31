@@ -42,6 +42,22 @@ memory:
       agent_id: my-agent
 ```
 
+### Valkey Memory Config
+```yaml
+memory:
+  - name: chatdev_memory
+    type: valkey
+    config:
+      host: localhost
+      port: 6379
+      index_name: chatdev_memory
+      ttl_seconds: 86400
+      embedding:
+        provider: openai
+        model: text-embedding-3-small
+        api_key: ${API_KEY}
+```
+
 ## 3. Built-in Store Comparison
 | Type | Path | Highlights | Best for |
 | --- | --- | --- | --- |
@@ -49,6 +65,7 @@ memory:
 | `file` | `node/agent/memory/file_memory.py` | Chunks files/dirs into a vector index, read-only, auto rebuilds when files change. | Knowledge bases, doc QA. |
 | `blackboard` | `node/agent/memory/blackboard_memory.py` | Lightweight append-only log trimmed by time/count; no vector search. | Broadcast boards, pipeline debugging. |
 | `mem0` | `node/agent/memory/mem0_memory.py` | Cloud-managed by Mem0; semantic search + graph relationships; no local embeddings or persistence needed. Requires `mem0ai` package. | Production memory, cross-session persistence, multi-agent memory sharing. |
+| `valkey` | `node/agent/memory/valkey_memory.py` | HNSW vector index via Valkey Search; server-side persistence, cross-process sharing, TTL auto-expiry. Requires `valkey-glide-sync` package. | Self-hosted persistent memory, multi-process deployments, privacy-sensitive environments. |
 
 All stores register through `register_memory_store()` so summaries show up in UI via `MemoryStoreConfig.field_specs()`.
 
@@ -116,6 +133,42 @@ This schema lets multimodal outputs flow into Memory/Thinking modules without ex
 - **Write** – `update()` sends only user input to Mem0 via the SDK (as `role: "user"` messages). Assistant output is excluded to prevent noise memories from the LLM's responses being extracted as facts.
 - **Persistence** – Fully cloud-managed. `load()` and `save()` are no-ops. Memories persist across runs and sessions automatically.
 - **Dependencies** – Requires `mem0ai` package (`pip install mem0ai`).
+
+### 5.5 ValkeyMemory
+- **Config** – Specify connection parameters and index settings via `ValkeyMemoryConfig`.
+  ```yaml
+  memory:
+    - name: chatdev_memory
+      type: valkey
+      config:
+        host: localhost
+        port: 6379
+        index_name: chatdev_memory
+        ttl_seconds: 86400
+        embedding:
+          provider: openai
+          model: text-embedding-3-small
+          api_key: ${API_KEY}
+  ```
+  | Field | Description | Default |
+  | --- | --- | --- |
+  | `host` | Valkey server address | `localhost` |
+  | `port` | Port (1-65535) | `6379` |
+  | `username` | ACL username | `None` |
+  | `password` | Auth password | `None` |
+  | `db` | Database index (0-15) | `0` |
+  | `use_tls` | Enable TLS encryption for the connection | `false` |
+  | `index_name` | FT index name | `memory_index` |
+  | `key_prefix` | Hash key prefix | `memory:` |
+  | `ttl_seconds` | Memory expiry in seconds; `None` means never expire | `None` |
+  | `embedding` | Nested `EmbeddingConfig` (required) | — |
+- **Index creation** – On first instantiation, automatically calls `FT.CREATE` to build an HNSW vector index (COSINE distance) with `content_summary` (TEXT), `agent_role` (TAG), `timestamp` (NUMERIC), and `embedding` (VECTOR) fields. Silently skips if the index already exists.
+- **Retrieval** – Executes a KNN query via `FT.SEARCH`, returns top-k results sorted by cosine similarity. Low-relevance results are filtered by `similarity_threshold`.
+- **Write** – `update()` encodes input text into a float32 vector and stores it as a Valkey Hash (`HSET`). When `ttl_seconds` is configured, `EXPIRE` is called to set the TTL.
+- **Persistence** – Managed by the Valkey server. `load()` and `save()` are no-ops. Data survives process restarts, and multiple processes can concurrently read/write the same index.
+- **Error handling** – If Valkey does not have the Search module loaded, initialization raises a `RuntimeError` with installation guidance.
+- **Dependencies** – Requires `valkey-glide-sync` package (`pip install 'chatdev[valkey]'`).
+- **Best for** – Self-hosted deployments needing persistence, cross-process sharing, and automatic expiry; a drop-in alternative to Mem0 when cloud services are not acceptable for privacy reasons.
 
 ## 6. EmbeddingConfig Notes
 - Fields: `provider`, `model`, `api_key`, `base_url`, `params`.

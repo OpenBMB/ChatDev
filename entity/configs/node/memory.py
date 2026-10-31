@@ -190,6 +190,155 @@ class SimpleMemoryConfig(BaseConfig):
 
 
 @dataclass
+class ValkeyMemoryConfig(BaseConfig):
+    """Configuration for Valkey-backed memory store."""
+
+    host: str = "localhost"
+    port: int = 6379
+    username: str | None = None
+    password: str | None = None
+    db: int = 0
+    use_tls: bool = False
+    index_name: str = "memory_index"
+    key_prefix: str = "memory:"
+    ttl_seconds: int | None = None
+    embedding: EmbeddingConfig | None = None
+
+    @classmethod
+    def from_dict(cls, data: Mapping[str, Any], *, path: str) -> "ValkeyMemoryConfig":
+        mapping = require_mapping(data, path)
+        host = optional_str(mapping, "host", path) or "localhost"
+
+        port_value = mapping.get("port", 6379)
+        if not isinstance(port_value, int) or port_value < 1 or port_value > 65535:
+            raise ConfigError("port must be a valid port number (1-65535)", extend_path(path, "port"))
+
+        username = optional_str(mapping, "username", path)
+        password = optional_str(mapping, "password", path)
+
+        db_value = mapping.get("db", 0)
+        if not isinstance(db_value, int) or db_value < 0 or db_value > 15:
+            raise ConfigError("db must be a valid database index (0-15)", extend_path(path, "db"))
+
+        use_tls = bool(mapping.get("use_tls", False))
+
+        index_name = optional_str(mapping, "index_name", path) or "memory_index"
+
+        key_prefix = optional_str(mapping, "key_prefix", path) or "memory:"
+
+        ttl_seconds: int | None = None
+        ttl_raw = mapping.get("ttl_seconds")
+        if ttl_raw is not None:
+            if not isinstance(ttl_raw, int) or ttl_raw <= 0:
+                raise ConfigError("ttl_seconds must be a positive integer", extend_path(path, "ttl_seconds"))
+            ttl_seconds = ttl_raw
+
+        embedding_cfg = None
+        if "embedding" in mapping and mapping["embedding"] is not None:
+            embedding_cfg = EmbeddingConfig.from_dict(mapping["embedding"], path=extend_path(path, "embedding"))
+
+        return cls(
+            host=host,
+            port=port_value,
+            username=username,
+            password=password,
+            db=db_value,
+            use_tls=use_tls,
+            index_name=index_name,
+            key_prefix=key_prefix,
+            ttl_seconds=ttl_seconds,
+            embedding=embedding_cfg,
+            path=path,
+        )
+
+    FIELD_SPECS = {
+        "host": ConfigFieldSpec(
+            name="host",
+            display_name="Host",
+            type_hint="str",
+            required=False,
+            default="localhost",
+            description="Valkey server hostname or IP address",
+        ),
+        "port": ConfigFieldSpec(
+            name="port",
+            display_name="Port",
+            type_hint="int",
+            required=False,
+            default=6379,
+            description="Valkey server port",
+        ),
+        "username": ConfigFieldSpec(
+            name="username",
+            display_name="Username",
+            type_hint="str",
+            required=False,
+            description="Valkey ACL username (required for ACL-based auth)",
+            advance=True,
+        ),
+        "password": ConfigFieldSpec(
+            name="password",
+            display_name="Password",
+            type_hint="str",
+            required=False,
+            description="Valkey server password",
+            default="${VALKEY_PASSWORD}",
+            advance=True,
+        ),
+        "db": ConfigFieldSpec(
+            name="db",
+            display_name="Database Index",
+            type_hint="int",
+            required=False,
+            default=0,
+            description="Valkey database index",
+            advance=True,
+        ),
+        "use_tls": ConfigFieldSpec(
+            name="use_tls",
+            display_name="Use TLS",
+            type_hint="bool",
+            required=False,
+            default=False,
+            description="Enable TLS encryption for the Valkey connection",
+            advance=True,
+        ),
+        "index_name": ConfigFieldSpec(
+            name="index_name",
+            display_name="Index Name",
+            type_hint="str",
+            required=False,
+            default="memory_index",
+            description="Name of the Valkey Search index for vector similarity queries",
+        ),
+        "key_prefix": ConfigFieldSpec(
+            name="key_prefix",
+            display_name="Key Prefix",
+            type_hint="str",
+            required=False,
+            default="memory:",
+            description="Prefix for all keys stored in Valkey",
+            advance=True,
+        ),
+        "ttl_seconds": ConfigFieldSpec(
+            name="ttl_seconds",
+            display_name="TTL (seconds)",
+            type_hint="int",
+            required=False,
+            description="Time-to-live for memory entries in seconds (no expiry if omitted)",
+        ),
+        "embedding": ConfigFieldSpec(
+            name="embedding",
+            display_name="Embedding Configuration",
+            type_hint="EmbeddingConfig",
+            required=False,
+            description="Optional embedding configuration for vector similarity search",
+            child=EmbeddingConfig,
+        ),
+    }
+
+
+@dataclass
 class FileMemoryConfig(BaseConfig):
     index_path: str | None = None
     file_sources: List[FileSourceConfig] = field(default_factory=list)
