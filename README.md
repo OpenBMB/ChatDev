@@ -130,6 +130,7 @@ See our paper in [Multi-Agent Collaboration via Evolving Orchestration](https://
 *   **YAML placeholders**: Use `${VAR}`（e.g., `${API_KEY}`）in configuration files to reference these variables.
 
 ### ⚡️ Run the Application
+**Important:** For native windows (not WSL), use `./make.ps1` instead of `make` for all commands.  IE: `./make.ps1 dev`
 
 #### Using Makefile (Recommended)
 
