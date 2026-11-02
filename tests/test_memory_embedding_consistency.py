@@ -100,6 +100,39 @@ class TestSimpleMemoryRetrieveMixedDimensions:
         )
         assert results == []
 
+    def test_retrieve_with_empty_query_text_does_not_crash(self):
+        """Retrieve with empty query text MUST not raise ZeroDivisionError."""
+        store = _make_store()
+        memory = SimpleMemory(store)
+        memory.retrieve_prompt = "{input}"
+        memory.embedding = _make_embedding(dim=768)
+        memory.contents = [_make_memory_item("ok_1", 768)]
+
+        query = MemoryContentSnapshot(text="")
+        results = memory.retrieve(
+            agent_role="tester",
+            query=query,
+            top_k=1,
+            similarity_threshold=-1.0,
+        )
+        assert len(results) == 1
+
+    def test_calculate_length_factor_handles_empty_inputs(self):
+        """_calculate_length_factor returns 0.0 when query or content is empty."""
+        store = _make_store()
+        memory = SimpleMemory(store)
+
+        assert memory._calculate_length_factor("", "some content") == 0.0
+        assert memory._calculate_length_factor("some query", "") == 0.0
+        assert memory._calculate_length_factor("", "") == 0.0
+
+    def test_calculate_semantic_similarity_handles_empty_query(self):
+        """_calculate_semantic_similarity returns 0.0 when query is empty."""
+        store = _make_store()
+        memory = SimpleMemory(store)
+
+        assert memory._calculate_semantic_similarity("", "some content") == 0.0
+
 
 class TestOpenAIEmbeddingDynamicFallback:
 

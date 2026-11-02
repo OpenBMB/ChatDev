@@ -224,7 +224,7 @@ class SimpleMemory(MemoryBase):
         query_len = len(query)
         content_len = len(content)
         
-        if content_len == 0:
+        if content_len == 0 or query_len == 0:
             return 0.0
         
         # Ideal length ratio range
