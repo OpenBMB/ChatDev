@@ -168,10 +168,10 @@ class JsonPathSplitter(Splitter):
                 items = self._extract_array(data)
                 
                 for item in items:
-                    if isinstance(item, (dict, list)):
-                        content = json.dumps(item, ensure_ascii=False)
+                    if isinstance(item, str):
+                        content = item
                     else:
-                        content = str(item)
+                        content = json.dumps(item, ensure_ascii=False)
                     
                     unit_msg = Message(
                         role=msg.role,
