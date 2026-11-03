@@ -106,3 +106,42 @@ def test_design_resolution_remains_in_place():
         "output": {"message": "resolved"},
     }
     assert returned_vars == data["vars"]
+
+
+@pytest.mark.parametrize("mapping_kind", ["proxy", "user_dict", "custom"])
+def test_mapping_inputs_preserve_nested_values(mapping_kind):
+    from collections import UserDict
+    from collections.abc import Mapping
+    from types import MappingProxyType
+
+    class ReadOnlyMapping(Mapping):
+        def __init__(self, values):
+            self.values = values
+
+        def __getitem__(self, key):
+            return self.values[key]
+
+        def __iter__(self):
+            return iter(self.values)
+
+        def __len__(self):
+            return len(self.values)
+
+        def __deepcopy__(self, memo):
+            raise TypeError("The mapping wrapper itself cannot be copied")
+
+    values = {"shared": {"message": "${VALUE}"}}
+    constructors = {
+        "proxy": MappingProxyType,
+        "user_dict": UserDict,
+        "custom": ReadOnlyMapping,
+    }
+    variables = constructors[mapping_kind](values)
+    original = deepcopy(values)
+    for value in ("first", "second"):
+        data = {"output": "${shared}"}
+        resolve_mapping_with_vars(data, env_lookup={"VALUE": value}, vars_map=variables)
+        assert data == {"output": {"message": value}}
+        assert dict(variables) == original
+        data["output"]["message"] = "changed"
+        assert dict(variables) == original
