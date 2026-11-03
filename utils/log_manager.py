@@ -71,6 +71,7 @@ class LogManager:
     @contextmanager
     def operation_timer(self, operation_name: str):
         """Context manager that times custom operations."""
+        self.logger.__init_timers__()
         start_time = time.time()
         try:
             yield
