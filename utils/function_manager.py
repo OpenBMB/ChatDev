@@ -2,6 +2,7 @@
 import importlib.util
 import inspect
 import os
+import sys
 from pathlib import Path
 from typing import Any, Callable, Dict, Optional
 
@@ -61,7 +62,23 @@ class FunctionManager:
                     continue
                     
                 module = importlib.util.module_from_spec(spec)
-                spec.loader.exec_module(module)
+                # Register the module before executing it so module-level
+                # machinery that resolves the defining module through
+                # sys.modules (e.g. dataclasses with postponed annotations)
+                # works as under a regular import.
+                previous = sys.modules.get(module_name)
+                sys.modules[module_name] = module
+                try:
+                    spec.loader.exec_module(module)
+                except BaseException:
+                    # Restore the previous registration (a reload reuses the
+                    # same module name) or drop the partially initialized
+                    # entry so failed imports do not leak into sys.modules.
+                    if previous is None:
+                        sys.modules.pop(module_name, None)
+                    else:
+                        sys.modules[module_name] = previous
+                    raise
 
                 current_file = file.resolve()
                 # Get all functions defined in the module
