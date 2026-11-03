@@ -142,6 +142,7 @@ class PythonNodeExecutor(NodeExecutor):
                 capture_output=True,
                 check=False,
                 timeout=config.timeout_seconds,
+                env=env,
             )
         except subprocess.TimeoutExpired as exc:
             return _ExecutionResult(
