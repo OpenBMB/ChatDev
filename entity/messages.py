@@ -307,16 +307,7 @@ class Message:
 
     def clone(self) -> "Message":
         """Deep copy of the message, preserving content blocks."""
-        return Message(
-            role=self.role,
-            content=_copy_content(self.content),
-            name=self.name,
-            tool_call_id=self.tool_call_id,
-            metadata=dict(self.metadata),
-            tool_calls=list(self.tool_calls),
-            keep=self.keep,
-            preserve_role=self.preserve_role,
-        )
+        return copy.deepcopy(self)
 
     def to_dict(self, include_data: bool = True) -> Dict[str, Any]:
         """Return a JSON-serializable representation."""
@@ -409,17 +400,3 @@ def deserialize_messages(payload: str) -> List[Message]:
     if not isinstance(raw, list):
         raise ValueError("message payload must be a list")
     return [Message.from_dict(item) for item in raw if isinstance(item, dict)]
-
-
-def _copy_content(content: MessageContent) -> MessageContent:
-    if content is None:
-        return None
-    if isinstance(content, str):
-        return content
-    copied: List[Any] = []
-    for block in content:
-        if isinstance(block, MessageBlock):
-            copied.append(block.copy())
-        else:
-            copied.append(copy.deepcopy(block))
-    return copied
