@@ -90,5 +90,5 @@ def resolve_mapping_with_vars(
     path: str = "root",
 ) -> MutableMapping[str, Any]:
     """Resolve placeholders using an explicit vars map without mutating it."""
-    resolver = PlaceholderResolver(env_lookup, deepcopy(vars_map))
+    resolver = PlaceholderResolver(env_lookup, deepcopy(dict(vars_map)))
     return resolver.resolve(data, path=path)
