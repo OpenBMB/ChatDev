@@ -1,4 +1,7 @@
+from types import MappingProxyType, SimpleNamespace
+
 from entity.messages import AttachmentRef, Message, MessageBlock, MessageBlockType, MessageRole, ToolCallPayload
+from runtime.node.executor.agent_executor import AgentNodeExecutor
 
 
 def test_clone_isolates_nested_message_metadata():
@@ -36,3 +39,17 @@ def test_clone_isolates_tool_call_objects_and_their_metadata():
     cloned.tool_calls[0].metadata["tags"].append("clone")
     assert original.tool_calls[0].arguments == '{"query": "original"}'
     assert original.tool_calls[0].metadata == {"tags": ["original"]}
+
+
+def test_timeline_clones_read_only_tool_metadata():
+    signature = {"parts": ["original"]}
+    metadata = {"provider": [MappingProxyType(signature)]}
+    source = Message(
+        MessageRole.ASSISTANT, "", tool_calls=[ToolCallPayload("call", "tool", "{}", metadata=metadata)],
+    )
+    executor = AgentNodeExecutor(SimpleNamespace())
+    cloned = executor._build_initial_timeline([source])[0]
+    provider = cloned.tool_calls[0].metadata["provider"][0]
+    assert isinstance(provider, MappingProxyType)
+    provider["parts"].append("clone")
+    assert signature["parts"] == ["original"]
