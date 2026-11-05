@@ -1,0 +1,167 @@
+{
+  "manifest_version": "1.0",
+  "resource_id": "tool.python_static_analyzer.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Run Pyflakes on one local Python path and return diagnostic lines",
+    "description": "Executes `[sys.executable, -m, pyflakes, target]`, concatenates stdout then stderr, splits non-empty lines into issues, and reports their count and Pyflakes exit code without executing or modifying analyzed source.",
+    "core_primitives": [
+      "invoke_pyflakes_analysis",
+      "collect_pyflakes_diagnostic_lines",
+      "count_pyflakes_issues"
+    ],
+    "problem_space": "Narrow Pyflakes diagnostics for Python syntax/name/unused-import style issues; not comprehensive static analysis, formatting, type checking, security scanning, dead-code proof, runtime testing, or code repair.",
+    "domain_tags": [
+      "python",
+      "static_analysis",
+      "software_engineering"
+    ]
+  },
+  "constraint": {
+    "env_requirements": [
+      "Python >= 3.6",
+      "pyflakes importable by the current Python interpreter"
+    ],
+    "io_signature": "Input: required file_path string naming an existing Python file or path accepted by Pyflakes. Executes current Python `-m pyflakes <target>`. Output: JSON envelope with exit_code, issue_count, and combined stdout/stderr diagnostic lines.",
+    "accepted_inputs": [
+      "an existing Python source file intended for Pyflakes analysis",
+      "an existing path that the installed Pyflakes version accepts as a target"
+    ],
+    "output_shape": "After Pyflakes returns: {status: \"success\", tool: \"pyflakes\", target: string, exit_code: integer, issue_count: integer, issues: [string]}, wrapper exit 0 regardless of Pyflakes exit. Missing target: {status: \"error\", message: string}, exit 2. Missing argument prints usage to stderr and exits 1 without JSON. A 120-second timeout or subprocess launch failure is uncaught and may traceback.",
+    "limitations": [
+      "Pyflakes provides a focused diagnostic set and does not enforce formatting/style rules broadly, infer types, identify security vulnerabilities, or perform Vulture-style dead-code analysis",
+      "combines stdout and stderr into one unstructured list and counts lines rather than parsed diagnostics; tool/module failures can appear as issues",
+      "does not execute or modify analyzed code, apply fixes, accept custom flags, or truncate output",
+      "uses a fixed 120-second timeout that is not converted into a JSON error envelope"
+    ],
+    "artifact_input": [
+      "file_path"
+    ],
+    "artifact_output": [
+      "json"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "file_path",
+        "kind": "string",
+        "required": true,
+        "cli_position": 1
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "JSON envelope containing Pyflakes exit code and combined diagnostic lines with a line count; analyzed code is unchanged.",
+      "json_schema": {
+        "description": "Native JSON representation only; no field or task-delivery guarantee.",
+        "type": [
+          "object",
+          "array",
+          "string",
+          "number",
+          "boolean",
+          "null"
+        ]
+      },
+      "native_json_contract_scope": "value_only"
+    }
+  },
+  "routing": {
+    "family": "python-pyflakes-diagnostic-scan",
+    "intent_tags": [
+      "run Pyflakes on a Python source path",
+      "find undefined names and unused imports with Pyflakes"
+    ],
+    "negative_intents": [
+      "perform comprehensive Python static analysis or type checking",
+      "scan Python code for security vulnerabilities or dead code",
+      "format fix or execute Python source"
+    ],
+    "dependency_slots": []
+  },
+  "execution": {
+    "runtime": "python_script",
+    "uri": "file://Pool/resources/tools/script/python_static_analyzer.py",
+    "execution_status": "active"
+  },
+  "utility": {
+    "latency_ms": 100,
+    "token_cost_factor": 0.01,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://github.com/PyCQA/pyflakes",
+    "license": "MIT",
+    "backed_by": "Pyflakes static analyzer",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:8fa2246657e9b9f111b9eb9971b5b2ab382b2a5a75942bdaf9d233c4609fef76",
+    "local_implementation_uri": "file://Pool/resources/tools/script/python_static_analyzer.py",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/script/_sgar_cli.py": "sha256:42368f8d49cb6364ad3aeaac6d0f9602adc12cb29fea49322fd488400698b6b9"
+    }
+  },
+  "type_specific": {
+    "tool": {
+      "tool_kind": "local_script",
+      "language": "python",
+      "deterministic": true
+    }
+  },
+  "memory": {
+    "success_trajectories": [],
+    "failure_reflections": []
+  },
+  "type": {
+    "resource_type": "Tool",
+    "resource_tag": [
+      "python",
+      "static_analysis",
+      "software_engineering"
+    ]
+  },
+  "input_contract": [
+    {
+      "name": "file_path",
+      "kind": "string",
+      "required": true,
+      "cli_position": 1
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "json",
+    "description": "JSON envelope containing Pyflakes exit code and combined diagnostic lines with a line count; analyzed code is unchanged.",
+    "json_schema": {
+      "description": "Native JSON representation only; no field or task-delivery guarantee.",
+      "type": [
+        "object",
+        "array",
+        "string",
+        "number",
+        "boolean",
+        "null"
+      ]
+    },
+    "native_json_contract_scope": "value_only"
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [],
+    "node_packages": [],
+    "system_packages": [],
+    "commands": [
+      "pylint"
+    ],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "python_compatibility": ">=3.11,<4"
+  }
+}

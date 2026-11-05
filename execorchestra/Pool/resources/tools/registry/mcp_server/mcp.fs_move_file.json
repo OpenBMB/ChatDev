@@ -1,0 +1,281 @@
+{
+  "manifest_version": "v2",
+  "resource_id": "tool.mcp.fs_move_file.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "execution_semantics": {
+      "side_effects": "declared",
+      "effect_targets": [
+        "task_workspace"
+      ],
+      "determinism": "deterministic"
+    },
+    "summary": "Move or rename one local file from an explicit source path to an explicit destination path.",
+    "description": "Use when an existing file must be relocated or renamed while preserving its contents. It performs a path-level move; it does not copy content, edit text in place, inspect a directory, or create a file from supplied text.",
+    "domain_tags": [
+      "filesystem",
+      "file-relocation",
+      "path-mutation"
+    ],
+    "core_primitives": [
+      "move_file",
+      "rename_file",
+      "relocate_path"
+    ],
+    "problem_space": "Relocate or rename a known existing local file using a source and destination path. This is path mutation, distinct from editing file content, writing a new file, listing directories, and searching for unknown files."
+  },
+  "constraint": {
+    "io_signature": "Input: existing source file path and destination path. Output: JSON mutation invocation receipt.",
+    "accepted_inputs": [
+      "an existing source file path",
+      "a destination path within allowed filesystem roots"
+    ],
+    "output_shape": "JSON invocation receipt with status, operation, and completed; a failed operation includes error_code. Verify the requested workspace state separately.",
+    "limitations": [
+      "does not edit the file's contents",
+      "does not copy a file or create a file from supplied text"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "source",
+        "kind": "string",
+        "required": true,
+        "cli_position": 1
+      },
+      {
+        "name": "destination",
+        "kind": "string",
+        "required": true,
+        "cli_position": 2
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "MCP-confirmed mutation invocation receipt; the requested final state must be checked separately.",
+      "schema": {
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "operation": {
+                "type": "string"
+              },
+              "status": {
+                "const": "success"
+              },
+              "completed": {
+                "const": true
+              }
+            },
+            "required": [
+              "status",
+              "operation",
+              "completed"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "operation": {
+                "type": "string"
+              },
+              "status": {
+                "const": "error"
+              },
+              "completed": {
+                "const": false
+              },
+              "error_code": {
+                "enum": [
+                  "mcp_operation_failed",
+                  "mcp_transport_failure"
+                ]
+              },
+              "error_type": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "status",
+              "operation",
+              "completed",
+              "error_code"
+            ],
+            "additionalProperties": false
+          }
+        ]
+      },
+      "result_status": {
+        "payload_path": "status",
+        "success_values": [
+          "success"
+        ],
+        "failure_values": [
+          "error"
+        ]
+      }
+    }
+  },
+  "routing": {
+    "family": "filesystem-mutation",
+    "intent_tags": [
+      "move a local file",
+      "rename a file",
+      "relocate a file to another path"
+    ],
+    "negative_intents": [
+      "edit text inside a file",
+      "write a new file",
+      "list directory entries"
+    ]
+  },
+  "execution": {
+    "runtime": "mcp_server",
+    "uri": "file://Pool/resources/tools/mcp/mcp.fs_move_file.py",
+    "execution_status": "active"
+  },
+  "utility": {
+    "latency_ms": 300.0,
+    "token_cost_factor": 0.02,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://github.com/modelcontextprotocol/servers/tree/main/src/filesystem",
+    "license": "MIT",
+    "backed_by": "MCP move_file",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:5320f229f08fe73e20097613b475bd7392add519eb60f2de1c9eae236e35bc15",
+    "local_implementation_uri": "file://Pool/resources/tools/mcp/mcp.fs_move_file.py",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/mcp/_mcplib.py": "sha256:8c39f008bd1fc31f0457e6e08cb42da72eeeebba3dd1bcb51c277a33b35287f3",
+      "file://Pool/resources/tools/mcp/_mcp_mutation.py": "sha256:52c9a7780710e30ad44233af885b4ea4145a04d8b9efa40c25916c7b96a939d5"
+    }
+  },
+  "type_specific": {},
+  "type": {
+    "resource_type": "Tool"
+  },
+  "input_contract": [
+    {
+      "name": "source",
+      "kind": "string",
+      "required": true,
+      "cli_position": 1
+    },
+    {
+      "name": "destination",
+      "kind": "string",
+      "required": true,
+      "cli_position": 2
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "json",
+    "description": "MCP-confirmed mutation invocation receipt; the requested final state must be checked separately.",
+    "schema": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "operation": {
+              "type": "string"
+            },
+            "status": {
+              "const": "success"
+            },
+            "completed": {
+              "const": true
+            }
+          },
+          "required": [
+            "status",
+            "operation",
+            "completed"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "operation": {
+              "type": "string"
+            },
+            "status": {
+              "const": "error"
+            },
+            "completed": {
+              "const": false
+            },
+            "error_code": {
+              "enum": [
+                "mcp_operation_failed",
+                "mcp_transport_failure"
+              ]
+            },
+            "error_type": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "status",
+            "operation",
+            "completed",
+            "error_code"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "result_status": {
+      "payload_path": "status",
+      "success_values": [
+        "success"
+      ],
+      "failure_values": [
+        "error"
+      ]
+    }
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [
+      {
+        "name": "mcp",
+        "version": "==1.28.1",
+        "required": true
+      }
+    ],
+    "node_packages": [
+      {
+        "name": "@modelcontextprotocol/server-filesystem",
+        "version": "==2026.7.10",
+        "required": true
+      }
+    ],
+    "system_packages": [],
+    "commands": [
+      "mcp-server-filesystem"
+    ],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "mcp": {
+      "server_command": "mcp-server-filesystem",
+      "working_directory": "/app",
+      "allowed_roots": [
+        "/app"
+      ]
+    },
+    "python_compatibility": ">=3.11,<4"
+  }
+}

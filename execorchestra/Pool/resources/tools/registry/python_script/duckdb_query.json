@@ -1,0 +1,140 @@
+{
+  "manifest_version": "v2",
+  "resource_id": "tool.duckdb_query.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Run bounded read-only analytical SQL with DuckDB 1.5.5",
+    "description": "Thin SGAR adapter over upstream DuckDB using an in-memory database, fixed memory/thread bounds and a deny policy for mutation, extension installation and remote access.",
+    "domain_tags": [
+      "data",
+      "sql",
+      "analytics"
+    ],
+    "core_primitives": [
+      "execute_analytical_sql",
+      "query_local_tabular_data",
+      "return_bounded_rows"
+    ],
+    "problem_space": "Read-only analytical SQL and local tabular inspection; not database mutation, persistent database management, extension loading, remote SQL, or arbitrary filesystem access."
+  },
+  "constraint": {
+    "io_signature": "Input SQL, explicit local input_refs and max_rows; output columns, bounded rows, count and truncation flag.",
+    "accepted_inputs": [
+      "read-only analytical SQL",
+      "explicit existing local input files"
+    ],
+    "output_shape": "JSON columns and rows or explicit policy/query error.",
+    "limitations": [
+      "denies DDL, DML, ATTACH, COPY, INSTALL, LOAD, PRAGMA, SET and remote URLs",
+      "in-memory database only",
+      "256 MB memory and two threads",
+      "maximum 10000 returned rows"
+    ],
+    "operation_kinds": [
+      "local_read",
+      "analytical_query"
+    ],
+    "artifact_input": [
+      "file_path"
+    ],
+    "artifact_output": [
+      "json"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "sql",
+        "kind": "string",
+        "required": true,
+        "cli_position": 1
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "Bounded read-only DuckDB query result.",
+      "json_schema": {
+        "description": "Native JSON representation only; no field or task-delivery guarantee.",
+        "type": [
+          "object",
+          "array",
+          "string",
+          "number",
+          "boolean",
+          "null"
+        ]
+      },
+      "native_json_contract_scope": "value_only"
+    }
+  },
+  "routing": {
+    "family": "read-only-analytical-sql",
+    "intent_tags": [
+      "analyze tabular data with SQL",
+      "query CSV JSON or Parquet locally"
+    ],
+    "negative_intents": [
+      "modify a database",
+      "install DuckDB extensions",
+      "query remote URLs"
+    ],
+    "dependency_slots": []
+  },
+  "execution": {
+    "runtime": "python_script",
+    "uri": "file://Pool/resources/tools/script/duckdb_query.py",
+    "execution_status": "active"
+  },
+  "utility": {
+    "latency_ms": 100,
+    "token_cost_factor": 0.01,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://github.com/duckdb/duckdb/tree/v1.5.5",
+    "version": "1.5.5",
+    "license": "MIT",
+    "license_url": "https://github.com/duckdb/duckdb/blob/v1.5.5/LICENSE",
+    "license_sha256": "7e17fd31249fa875cb3b1c5e05c6c3e99b75509f6a2804ca176c217834de1dcb",
+    "upstream_release": "https://github.com/duckdb/duckdb/releases/tag/v1.5.5",
+    "backed_by": "DuckDB",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:0ee7601668b01c626386ffe984b4d273a7ea0fa52e4de28bf6751b4341d7fd5e",
+    "local_implementation_uri": "file://Pool/resources/tools/script/duckdb_query.py"
+  },
+  "type_specific": {
+    "tool": {
+      "tool_kind": "local_script",
+      "language": "python",
+      "deterministic": true
+    }
+  },
+  "memory": {
+    "success_trajectories": [],
+    "failure_reflections": []
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [
+      {
+        "name": "duckdb",
+        "version": "==1.5.5",
+        "required": true
+      }
+    ],
+    "node_packages": [],
+    "system_packages": [],
+    "commands": [],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "python_compatibility": ">=3.11,<4"
+  }
+}

@@ -1,0 +1,187 @@
+{
+  "manifest_version": "1.0",
+  "resource_id": "tool.git_log_pretty_format.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Return a fixed tab-separated recent Git log format inside a JSON process envelope",
+    "description": "Runs Git log for one required repository with a fixed short-hash, author, ISO date, and subject format. The optional digit-string max count defaults to 50; output remains unparsed text in stdout rather than structured log objects.",
+    "core_primitives": [
+      "render_fixed_pretty_git_log",
+      "limit_recent_commit_lines",
+      "capture_tab_separated_log_text"
+    ],
+    "problem_space": "Read-only human-readable recent Git log text in one fixed tab-separated layout; not structured JSON records, arbitrary pretty-format execution, revision-range search, patch output, or history mutation.",
+    "domain_tags": [
+      "version-control",
+      "software-engineering",
+      "tools"
+    ]
+  },
+  "constraint": {
+    "env_requirements": [
+      "Python >= 3.6",
+      "git executable"
+    ],
+    "io_signature": "Input: required existing repo_path and optional digit-string max_count defaulting/falling back to `50`; output: JSON envelope whose stdout contains fixed tab-separated Git log lines.",
+    "accepted_inputs": [
+      "an existing local Git repository directory path",
+      "an optional non-negative digit string for the maximum commit count; non-digit text silently uses 50"
+    ],
+    "output_shape": "Success: {status: \"success\", tool: \"git\", target: string, exit_code: 0, result: null, stdout: string, stderr: string|null}; each stdout line uses `<short hash>\\t<author>\\t<ISO date>\\t<subject>`. Nonzero Git result uses the same keys with status=\"tool_error\" and propagates Git's exit code. Non-existing repo, missing Git, or 120-second timeout: {status: \"error\", tool: \"git\", message: string}, exiting 2/3/4. Missing repo argument prints usage to stderr and exits 1 without JSON.",
+    "limitations": [
+      "the pretty format is fixed to short hash, author display name, ISO date, and subject; callers cannot provide arbitrary Git format placeholders",
+      "returns unparsed tab-separated stdout with result=null rather than structured commit objects; use git_log_json for parsed fields",
+      "uses current default history traversal with no revision, branch, path, author, date-range, graph, body, stat, or patch options",
+      "non-digit max_count silently becomes 50; the wrapper uses a fixed 120-second timeout and no output truncation beyond the Git count"
+    ],
+    "artifact_input": [
+      "repo_path"
+    ],
+    "artifact_output": [
+      "json"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "repo_path",
+        "kind": "string",
+        "required": true,
+        "cli_position": 1
+      },
+      {
+        "name": "max_count",
+        "kind": "string",
+        "required": false,
+        "default": "50",
+        "cli_position": 2
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "JSON execution envelope whose stdout contains fixed tab-separated recent Git log lines; no structured log array is produced.",
+      "json_schema": {
+        "description": "Native JSON representation only; no field or task-delivery guarantee.",
+        "type": [
+          "object",
+          "array",
+          "string",
+          "number",
+          "boolean",
+          "null"
+        ]
+      },
+      "native_json_contract_scope": "value_only"
+    }
+  },
+  "routing": {
+    "family": "git-read-only-fixed-pretty-log-text",
+    "intent_tags": [
+      "display recent Git commits in a fixed tab-separated format",
+      "get short hash author ISO date and subject log lines"
+    ],
+    "negative_intents": [
+      "return parsed JSON commit objects",
+      "use a caller-defined Git pretty format or revision range",
+      "inspect patches or modify Git history"
+    ],
+    "dependency_slots": []
+  },
+  "utility": {
+    "latency_ms": 100,
+    "token_cost_factor": 0.01,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://git-scm.com",
+    "license": "GPLv2",
+    "backed_by": "",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:e9648a42681c6c5c08cc987db3b5764c45c65277e9966b8802c9503e6ae768b2",
+    "local_implementation_uri": "file://Pool/resources/tools/script/git_log_pretty_format.py",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/script/_sgar_cli.py": "sha256:42368f8d49cb6364ad3aeaac6d0f9602adc12cb29fea49322fd488400698b6b9"
+    }
+  },
+  "type_specific": {
+    "tool": {
+      "tool_kind": "local_script",
+      "language": "python",
+      "deterministic": true
+    }
+  },
+  "memory": {
+    "success_trajectories": [],
+    "failure_reflections": []
+  },
+  "execution": {
+    "runtime": "python_script",
+    "uri": "file://Pool/resources/tools/script/git_log_pretty_format.py",
+    "execution_status": "active"
+  },
+  "type": {
+    "resource_type": "Tool",
+    "resource_tag": [
+      "version-control",
+      "software-engineering",
+      "tools"
+    ]
+  },
+  "input_contract": [
+    {
+      "name": "repo_path",
+      "kind": "string",
+      "required": true,
+      "cli_position": 1
+    },
+    {
+      "name": "max_count",
+      "kind": "string",
+      "required": false,
+      "default": "50",
+      "cli_position": 2
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "json",
+    "description": "JSON execution envelope whose stdout contains fixed tab-separated recent Git log lines; no structured log array is produced.",
+    "json_schema": {
+      "description": "Native JSON representation only; no field or task-delivery guarantee.",
+      "type": [
+        "object",
+        "array",
+        "string",
+        "number",
+        "boolean",
+        "null"
+      ]
+    },
+    "native_json_contract_scope": "value_only"
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [],
+    "node_packages": [],
+    "system_packages": [
+      {
+        "name": "git",
+        "version": "image-locked",
+        "required": true
+      }
+    ],
+    "commands": [
+      "git"
+    ],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "python_compatibility": ">=3.11,<4"
+  }
+}

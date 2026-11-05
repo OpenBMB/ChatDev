@@ -1,0 +1,139 @@
+{
+  "manifest_version": "v2",
+  "resource_id": "tool.api.nationalize.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Estimate nationality probabilities for a name",
+    "description": "Queries Nationalize.io with one required name parameter. The response is a probabilistic demographic estimate, not a verified identity attribute. HTTP 2xx/3xx responses produce a success envelope; HTTP 4xx/5xx responses produce an error envelope and a non-zero exit; request exceptions also produce an error envelope and a non-zero exit.",
+    "domain_tags": [
+      "name-demographics",
+      "identity-estimation"
+    ],
+    "core_primitives": [
+      "estimate_name_nationality",
+      "return_country_probabilities"
+    ],
+    "problem_space": "Aggregate name-to-nationality probability estimation; not identity verification, ethnicity classification, or person profiling."
+  },
+  "constraint": {
+    "io_signature": "Input: name at CLI position 1. Output: shared JSON envelope with url, http_status, and Nationalize result. HTTP 2xx/3xx responses produce a success envelope; HTTP 4xx/5xx responses produce an error envelope and a non-zero exit; request exceptions also produce an error envelope and a non-zero exit.",
+    "accepted_inputs": [
+      "one personal name string"
+    ],
+    "output_shape": "HTTP 2xx/3xx: {status: \"success\", tool: string, url: string, http_status: integer, result: object|string}. HTTP 4xx/5xx: {status: \"error\", tool: string, url: string, http_status: integer, result: object|string}, exit 1. Request exception: {status: \"error\", tool: string, message: string}, exit 1.",
+    "limitations": [
+      "fixed GET https://api.nationalize.io/ with name=<input>",
+      "probabilities are model estimates from aggregate data and do not establish a person's nationality",
+      "no age, gender, identity, confidence threshold, pagination, or batch input",
+      "wrapper does not locally truncate or interpret the country probability list; no auth, cache, or retry"
+    ],
+    "artifact_output": [
+      "json"
+    ],
+    "execution_risk": "medium",
+    "http_status_semantics": {
+      "success": "HTTP 200-399",
+      "failure": "HTTP 400-599 or request exception",
+      "failure_exit_code": 1
+    }
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "name",
+        "kind": "string",
+        "required": true,
+        "cli_position": 1
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "Shared JSON envelope containing Nationalize name count and country probability estimates, URL, and HTTP status."
+    }
+  },
+  "routing": {
+    "family": "name-nationality-estimation",
+    "intent_tags": [
+      "estimate nationality probabilities from a name",
+      "retrieve Nationalize country predictions"
+    ],
+    "negative_intents": [
+      "verify a person's nationality",
+      "infer sensitive identity attributes about an individual"
+    ]
+  },
+  "execution": {
+    "runtime": "rest_api",
+    "uri": "file://Pool/resources/tools/api/api.nationalize.py",
+    "execution_status": "active",
+    "execution_risk": "medium"
+  },
+  "utility": {
+    "latency_ms": 200.0,
+    "token_cost_factor": 0.02,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://nationalize.io/",
+    "license": "free",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:02fa74dde03e3a2f3784950ec9394f8bf2129ec5975d8dc1650a32979519829f",
+    "local_implementation_uri": "file://Pool/resources/tools/api/api.nationalize.py",
+    "auth_required": false,
+    "auth_evidence": "wrapper_and_shared_adapter_read_no_credentials",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/api/_apilib.py": "sha256:e60bba3d1f3dcd9fcd408042ad7951e52d6ecd66d57cb9a58c249d521c8811a7"
+    }
+  },
+  "type_specific": {
+    "tool": {
+      "tool_kind": "rest_api",
+      "deterministic": false
+    }
+  },
+  "type": {
+    "resource_type": "Tool"
+  },
+  "input_contract": [
+    {
+      "name": "name",
+      "kind": "string",
+      "required": true,
+      "cli_position": 1
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "json",
+    "description": "Shared JSON envelope containing Nationalize name count and country probability estimates, URL, and HTTP status."
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [
+      {
+        "name": "requests",
+        "version": "==2.32.3",
+        "required": true
+      }
+    ],
+    "node_packages": [],
+    "system_packages": [],
+    "commands": [],
+    "env_vars": [],
+    "network_required": true,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "rest": {
+      "endpoint": "https://api.nationalize.io/",
+      "auth_required": false,
+      "auth_evidence": "wrapper_and_shared_adapter_read_no_credentials",
+      "timeout_seconds": 25,
+      "success_http_status": "200-399"
+    }
+  }
+}

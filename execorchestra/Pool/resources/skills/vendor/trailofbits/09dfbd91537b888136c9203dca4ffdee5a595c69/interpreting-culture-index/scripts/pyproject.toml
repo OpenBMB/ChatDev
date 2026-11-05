@@ -1,0 +1,18 @@
+[project]
+name = "culture-index-scripts"
+version = "1.0.0"
+description = "Dependencies for Culture Index PDF extraction scripts"
+requires-python = ">=3.11"
+dependencies = [
+    "opencv-python-headless>=4.10.0,<6.0",
+    "numpy>=2.0.0,<3.0",
+    "pdf2image>=1.17.0,<2.0",
+    "pytesseract>=0.3.10,<1.0",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]

@@ -1,0 +1,131 @@
+{
+  "manifest_version": "v2",
+  "resource_id": "tool.lib.pillow_transform.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Inspect an image's format, dimensions, and color mode",
+    "description": "Opens one image with Pillow and returns its detected format, pixel dimensions, and mode; the operation argument is only echoed and no image transformation is performed.",
+    "domain_tags": [
+      "image",
+      "media"
+    ],
+    "core_primitives": [
+      "open_image_header",
+      "inspect_image_format",
+      "report_dimensions_and_mode"
+    ],
+    "problem_space": "Lightweight metadata inspection for a single Pillow-readable image file."
+  },
+  "constraint": {
+    "io_signature": "Inputs: image path and operation string; output: JSON echoing operation with image format, two-element size, and mode metadata.",
+    "accepted_inputs": [
+      "a readable image file format recognized by the installed Pillow plugins",
+      "any operation string, which is echoed but does not alter behavior"
+    ],
+    "output_shape": "Success is an object with status=\"success\", tool=\"lib.pillow_transform\", operation as the echoed string, format as Pillow's detected format string or null, size as the serialized [width, height] pair, and mode as the image mode string. A caught file-open or image-identification exception produces an object with status=\"error\", tool=\"lib.pillow_transform\", and message as the exception string, then exits with code 1.",
+    "limitations": [
+      "does not resize, crop, filter, convert, save, or otherwise transform the image despite the wrapper name and original label",
+      "the operation argument is ignored for processing and only echoed; a missing value defaults to info",
+      "returns metadata in JSON rather than an image artifact even though the manifest artifact_type remains structurally unchanged",
+      "does not explicitly call load or verify, so inspection may not detect every corruption located beyond the image header",
+      "missing, unreadable, and unrecognized image files use the wrapper's error envelope"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "image_path",
+        "kind": "string",
+        "required": true,
+        "cli_position": 1
+      },
+      {
+        "name": "operation",
+        "kind": "string",
+        "required": true,
+        "cli_position": 2
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "JSON-wrapped image metadata: echoed operation, detected format, pixel size, and color mode; no transformed image is produced."
+    }
+  },
+  "routing": {
+    "family": "image-header-metadata-inspection",
+    "intent_tags": [
+      "inspect image dimensions and mode",
+      "identify an image format with Pillow"
+    ],
+    "negative_intents": [
+      "resize crop or filter an image",
+      "convert or save an image in another format",
+      "validate every pixel or fully decode image content"
+    ]
+  },
+  "execution": {
+    "runtime": "python_library",
+    "uri": "file://Pool/resources/tools/lib/lib.pillow_transform.py",
+    "execution_status": "active"
+  },
+  "utility": {
+    "latency_ms": 200.0,
+    "token_cost_factor": 0.02,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://python-pillow.org/",
+    "license": "HPND",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:fd4f84719edf3ff37950b82db819a0a000dce082dba898b90efa184327e475e0",
+    "local_implementation_uri": "file://Pool/resources/tools/lib/lib.pillow_transform.py",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/lib/_liblib.py": "sha256:dcd68e7904232764172e5f646ff97b854f68f7f916180ae32f838a0acf9ccc77"
+    }
+  },
+  "type_specific": {},
+  "type": {
+    "resource_type": "Tool"
+  },
+  "input_contract": [
+    {
+      "name": "image_path",
+      "kind": "string",
+      "required": true,
+      "cli_position": 1
+    },
+    {
+      "name": "operation",
+      "kind": "string",
+      "required": true,
+      "cli_position": 2
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "json",
+    "description": "JSON-wrapped image metadata: echoed operation, detected format, pixel size, and color mode; no transformed image is produced."
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [
+      {
+        "name": "Pillow",
+        "version": "==11.0.0",
+        "required": true
+      }
+    ],
+    "node_packages": [],
+    "system_packages": [],
+    "commands": [],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1"
+  }
+}

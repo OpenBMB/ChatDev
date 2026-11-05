@@ -1,0 +1,147 @@
+{
+  "resource_id": "deepseek-v4-pro",
+  "type": {
+    "resource_type": "Model",
+    "resource_tag": [
+      "1M Context",
+      "1.32",
+      "3.96",
+      ".044"
+    ]
+  },
+  "capability": {
+    "summary": "Text reasoning model from the larger sparse-expert architecture tier.",
+    "core_primitives": [
+      "mathematical reasoning",
+      "code generation",
+      "document analysis",
+      "tool-assisted problem solving"
+    ],
+    "problem_space": "Text model for analytical and programming tasks. Applicable tasks include mathematical reasoning, code generation, document analysis, tool-assisted problem solving. Accepts text input and produces text output. External tools are required to execute programs, browse sources, or modify files; generated instructions alone do not perform those actions. Published distinction: The published family architecture has 1.6 trillion total and 49 billion active parameters. The configured dated supplier route corresponds by name to the August agent-focused update; greater model size is not a measured quality guarantee.",
+    "domain_tags": [
+      "Language",
+      "Software Engineering"
+    ]
+  },
+  "constraint": {
+    "env_requirements": [
+      "DeepSeek-Compatible API Endpoint",
+      "Valid API Key (Cloud)",
+      "Stable Network Connection"
+    ],
+    "io_signature": "Input modalities: text | Output modalities: text. Gateway transport support requires verification."
+  },
+  "utility": {
+    "latency_ms": 0,
+    "token_cost_factor": 0,
+    "expected_success_rate": 0
+  },
+  "execution": {
+    "uri": "${base_url}/v1/chat/completions",
+    "model_id": "deepseek-v4-pro-0813"
+  },
+  "memory": {
+    "success_trajectories": [],
+    "failure_reflections": []
+  },
+  "provenance": {
+    "pricing_status": "official_public_price_snapshot",
+    "pricing_note": "Official reference rates and backend billing rules from the same dated pricebook; capability and gateway evidence unchanged.",
+    "supplier_model_mapping_status": "configured_from_user_screenshot_not_live_verified",
+    "semantic_review": {
+      "reviewed_at": "2026-09-09",
+      "policy": "model-capabilities-v1",
+      "source_urls": [
+        "https://api-docs.deepseek.com/quick_start/pricing/",
+        "https://api-docs.deepseek.com/guides/thinking_mode/"
+      ],
+      "evidence_status": "provider_documented_not_gateway_verified",
+      "source_document_sha256": {
+        "https://api-docs.deepseek.com/quick_start/pricing/": "cf2c6fb2dd8a32a538f12a8176175b8809a3516326a5cb30dfe52d63c490a968",
+        "https://api-docs.deepseek.com/guides/thinking_mode/": "f28c43248d26db1f27af0cb082abb00326c957d560d33a21839736edd1d10724"
+      },
+      "task_profile_basis": "Task categories derived from documented operations; no empirical quality ranking or fixed framework role.",
+      "context_policy": "Legacy configured limit is preserved separately from documented native context; neither proves the supplier limit."
+    },
+    "model_distinction_review": {
+      "evidence_kind": "provider_documented_design",
+      "source_urls": [
+        "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro/raw/main/README.md",
+        "https://api-docs.deepseek.com/updates"
+      ],
+      "source_document_sha256": {
+        "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro/raw/main/README.md": "c4d714818a4d3333542edc7d38ea065825a0cf7aa8fea3605bbd1d1c18e4a610",
+        "https://api-docs.deepseek.com/updates": "05b8f4da6a0b410ba575e543e5d0be9fbed07e9b5ea8d5555ece5455ec7627e9"
+      },
+      "interpretation_limit": "Published task emphasis is non-exclusive. Architecture and product positioning do not establish supplier latency, measured quality, or a fixed framework role.",
+      "policy": "model-distinctions-v1",
+      "reviewed_at": "2026-09-09",
+      "evidence_status": "provider_documented_not_gateway_verified",
+      "scope": "Non-exclusive published task emphasis and architecture; no empirical cross-model quality ordering."
+    },
+    "runtime_reliability_evidence": {
+      "protocol": "sgar-model-runtime-reliability-v1",
+      "endpoint_scope": "configured_openai_compatible_gateway",
+      "reviewed_at": "2026-10-02",
+      "short_bounded_response": {
+        "status": "observed_success",
+        "successful_call_count": 3,
+        "maximum_observed_output_tokens": 93,
+        "request_sha256s": [
+          "8556f131e1fa48b58c74c7b9d6454a4aeff8c399349b56709e93c259e68db167",
+          "c5e5fbecd64f015acebaf525479355b2e96d6837463b99fcc7731c6054bad84c",
+          "3f1724e496d0e841459de3ff09f8411034e65d904c71988ca612a1cf5528454c"
+        ]
+      },
+      "long_form_artifact_generation": {
+        "status": "not_qualified",
+        "no_response_timeout_count": 2,
+        "attempt_timeout_seconds": 1200,
+        "request_sha256s": [
+          "fc6e7e2535f9cdd537dab1870a445fe3fefabd497d4a7100fafd602c32e18c8f",
+          "70d1594f5771bb4536b2d228a4694f464d35e3b42c7eeeafeb257ecaae77320e"
+        ],
+        "billing_status": "provider_usage_unknown"
+      }
+    },
+    "official_pricing": {
+      "snapshot_date": "2026-10-09",
+      "source": "https://api-docs.deepseek.com/quick_start/pricing/",
+      "pricebook_sha256": "9e9a8248e54f1934d08d5efe68a3998ebce6faa09106f3f2a7ac119bf89a182c"
+    }
+  },
+  "type_specific": {
+    "model": {
+      "profile_version": "model-capabilities-v1",
+      "input_modalities": [
+        "text"
+      ],
+      "output_modalities": [
+        "text"
+      ],
+      "supports": {
+        "tool_calling": true,
+        "json_mode": true,
+        "vision": false,
+        "reasoning": true,
+        "coding": true
+      },
+      "thinking_mode": "hybrid",
+      "native_protocol": "openai_compatible_chat",
+      "documented_context_tokens": 1048576,
+      "evidence_status": "provider_documented_not_gateway_verified",
+      "gateway_verification_status": "not_run",
+      "limitations": [
+        "The current gateway is qualified for short bounded responses only. Two independent long-form artifact-generation requests reached the 1200-second deadline without a response. Do not select this route for long-form code or large artifact generation; select another ready model."
+      ],
+      "pricing_rules": {
+        "input_per_m": "1.32",
+        "cache_per_m": ".044",
+        "output_per_m": "3.96",
+        "source": "https://api-docs.deepseek.com/quick_start/pricing/",
+        "cache_mode": "implicit",
+        "input_tiers": []
+      }
+    }
+  }
+}

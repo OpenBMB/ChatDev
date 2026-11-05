@@ -1,0 +1,179 @@
+{
+  "manifest_version": "1.0",
+  "resource_id": "tool.cargo_test_runner.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Run the Rust project's default `cargo test` command from a supplied project path",
+    "description": "Validates one path, chooses it as the working directory when it is a directory or uses its parent when it is a file, then executes `cargo test` with no additional arguments. The wrapper returns captured Cargo output and treats only exit code 0 as success.",
+    "core_primitives": [
+      "run_cargo_test",
+      "select_rust_project_working_directory",
+      "capture_cargo_test_process_output"
+    ],
+    "problem_space": "Default Rust test-suite execution through Cargo for one local project path; not language-agnostic testing, test discovery without execution, coverage reporting, or arbitrary Cargo command execution.",
+    "domain_tags": [
+      "Rust",
+      "testing",
+      "automation"
+    ]
+  },
+  "constraint": {
+    "env_requirements": [
+      "Python >= 3.6",
+      "cargo executable and a compatible Rust toolchain"
+    ],
+    "io_signature": "Input: one required existing Rust project directory or a path inside its root; output: a JSON process envelope with Cargo's exit code and full stdout/stderr.",
+    "accepted_inputs": [
+      "an existing Rust project directory containing the Cargo project to test",
+      "an existing file path whose parent directory is the Cargo project working directory"
+    ],
+    "output_shape": "Passing run: {status: \"success\", tool: \"cargo\", target: string, exit_code: 0, result: null, stdout: string, stderr: string|null}, then process exit 0. Failed tests, compilation failures, or other nonzero Cargo results use the same keys with status=\"tool_error\" and propagate Cargo's exit code. Missing path/executable/300-second timeout: {status: \"error\", tool: \"cargo\", message: string}, exiting 2/3/4. Missing argument prints usage to stderr and exits 1 without JSON.",
+    "limitations": [
+      "always runs the default `cargo test` with no package, workspace, feature, target, filter, release, or passthrough test arguments",
+      "uses a fixed 300-second timeout and captures stdout/stderr without parsing or truncation",
+      "Cargo may compile code, create or update build artifacts such as `target/`, resolve dependencies, and otherwise produce normal Cargo project side effects",
+      "a supplied file is not tested individually; only its parent directory is used as the Cargo working directory"
+    ],
+    "artifact_input": [
+      "proj_dir"
+    ],
+    "artifact_output": [
+      "json"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "proj_dir",
+        "kind": "string",
+        "required": true,
+        "cli_position": 1
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "JSON process envelope containing the default `cargo test` status, actual exit code, target, and full captured stdout/stderr.",
+      "json_schema": {
+        "description": "Native JSON representation only; no field or task-delivery guarantee.",
+        "type": [
+          "object",
+          "array",
+          "string",
+          "number",
+          "boolean",
+          "null"
+        ]
+      },
+      "native_json_contract_scope": "value_only"
+    }
+  },
+  "routing": {
+    "family": "rust-cargo-default-test-runner",
+    "intent_tags": [
+      "run the default Rust test suite with cargo test",
+      "execute Cargo tests for a local Rust project"
+    ],
+    "negative_intents": [
+      "run Python, JavaScript, Go, or language-agnostic tests",
+      "generate Rust test coverage or parse structured test results",
+      "run arbitrary Cargo subcommands or pass custom cargo test flags"
+    ],
+    "dependency_slots": []
+  },
+  "utility": {
+    "latency_ms": 100,
+    "token_cost_factor": 0.01,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://doc.rust-lang.org/cargo",
+    "license": "MIT/Apache-2.0",
+    "backed_by": "cargo test",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:38cba70891e0e5d0339a5213b60ec6e6b4cee747771035697c1cb9e52a113243",
+    "local_implementation_uri": "file://Pool/resources/tools/script/cargo_test_runner.py",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/script/_sgar_cli.py": "sha256:42368f8d49cb6364ad3aeaac6d0f9602adc12cb29fea49322fd488400698b6b9"
+    }
+  },
+  "type_specific": {
+    "tool": {
+      "tool_kind": "local_script",
+      "language": "python",
+      "deterministic": true
+    }
+  },
+  "memory": {
+    "success_trajectories": [],
+    "failure_reflections": []
+  },
+  "execution": {
+    "runtime": "python_script",
+    "uri": "file://Pool/resources/tools/script/cargo_test_runner.py",
+    "execution_status": "active"
+  },
+  "type": {
+    "resource_type": "Tool",
+    "resource_tag": [
+      "Rust",
+      "testing",
+      "automation"
+    ]
+  },
+  "input_contract": [
+    {
+      "name": "proj_dir",
+      "kind": "string",
+      "required": true,
+      "cli_position": 1
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "json",
+    "description": "JSON process envelope containing the default `cargo test` status, actual exit code, target, and full captured stdout/stderr.",
+    "json_schema": {
+      "description": "Native JSON representation only; no field or task-delivery guarantee.",
+      "type": [
+        "object",
+        "array",
+        "string",
+        "number",
+        "boolean",
+        "null"
+      ]
+    },
+    "native_json_contract_scope": "value_only"
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [],
+    "node_packages": [],
+    "system_packages": [
+      {
+        "name": "build-essential",
+        "version": "image-locked",
+        "required": true
+      },
+      {
+        "name": "rust-1.79.0",
+        "version": "image-locked",
+        "required": true
+      }
+    ],
+    "commands": [
+      "cargo",
+      "cc"
+    ],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "python_compatibility": ">=3.11,<4"
+  }
+}

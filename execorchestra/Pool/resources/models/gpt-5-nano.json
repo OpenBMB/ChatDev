@@ -1,0 +1,104 @@
+{
+  "resource_id": "gpt-5-nano",
+  "type": {
+    "resource_type": "Model",
+    "resource_tag": [
+      "400K Context",
+      ".05",
+      ".4",
+      ".005"
+    ]
+  },
+  "capability": {
+    "summary": "Language model for bounded, high-volume text and visual tasks.",
+    "core_primitives": [
+      "classification",
+      "information extraction",
+      "summarization",
+      "instruction following"
+    ],
+    "problem_space": "Language model for bounded, high-volume text and visual tasks. Applicable tasks include classification, information extraction, summarization, instruction following. Accepts text, image input and produces text output. External tools are required to execute programs, browse sources, or modify files; generated instructions alone do not perform those actions.",
+    "domain_tags": [
+      "Language",
+      "Software Engineering",
+      "Visual Understanding"
+    ]
+  },
+  "constraint": {
+    "env_requirements": [
+      "OpenAI-Compatible API Endpoint",
+      "Valid API Key",
+      "Stable Network Connection"
+    ],
+    "io_signature": "Input modalities: text, image | Output modalities: text. Gateway transport support requires verification."
+  },
+  "utility": {
+    "latency_ms": 0,
+    "token_cost_factor": 0,
+    "expected_success_rate": 0
+  },
+  "execution": {
+    "uri": "${base_url}/v1/chat/completions"
+  },
+  "memory": {
+    "success_trajectories": [],
+    "failure_reflections": []
+  },
+  "type_specific": {
+    "model": {
+      "profile_version": "model-capabilities-v1",
+      "input_modalities": [
+        "text",
+        "image"
+      ],
+      "output_modalities": [
+        "text"
+      ],
+      "supports": {
+        "tool_calling": true,
+        "json_mode": true,
+        "vision": true,
+        "reasoning": true,
+        "coding": true,
+        "structured_outputs": true
+      },
+      "thinking_mode": "reasoning",
+      "native_protocol": "chat_completions_and_responses",
+      "documented_context_tokens": 400000,
+      "evidence_status": "provider_documented_not_gateway_verified",
+      "gateway_verification_status": "not_run",
+      "limitations": [],
+      "max_output_tokens": 128000,
+      "pricing_rules": {
+        "input_per_m": ".05",
+        "cache_per_m": ".005",
+        "output_per_m": ".4",
+        "source": "https://developers.openai.com/api/docs/pricing",
+        "cache_mode": "implicit",
+        "input_tiers": []
+      }
+    }
+  },
+  "provenance": {
+    "semantic_review": {
+      "reviewed_at": "2026-09-09",
+      "policy": "model-capabilities-v1",
+      "source_urls": [
+        "https://developers.openai.com/api/docs/models/gpt-5-nano.md"
+      ],
+      "evidence_status": "provider_documented_not_gateway_verified",
+      "source_document_sha256": {
+        "https://developers.openai.com/api/docs/models/gpt-5-nano.md": "301799754c7b0a9583d7faa412dadd61a7136a30e5c7f6ab05c01f89005b8483"
+      },
+      "task_profile_basis": "Task categories derived from documented operations; no empirical quality ranking or fixed framework role.",
+      "context_policy": "Legacy configured limit is preserved separately from documented native context; neither proves the supplier limit."
+    },
+    "pricing_status": "official_public_price_snapshot",
+    "pricing_note": "Official reference rates and backend billing rules from the same dated pricebook; capability and gateway evidence unchanged.",
+    "official_pricing": {
+      "snapshot_date": "2026-10-09",
+      "source": "https://developers.openai.com/api/docs/pricing",
+      "pricebook_sha256": "9e9a8248e54f1934d08d5efe68a3998ebce6faa09106f3f2a7ac119bf89a182c"
+    }
+  }
+}

@@ -1,0 +1,164 @@
+{
+  "manifest_version": "v2",
+  "resource_id": "tool.mcp.git_branch_list.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "List local branch names in a specified Git repository.",
+    "description": "Use to inspect which local branches exist before selecting or creating one. It is branch inventory only; it does not switch branches, create branches, show commits, stage files, or mutate repository state.",
+    "domain_tags": [
+      "git",
+      "branch-inspection",
+      "version-control"
+    ],
+    "core_primitives": [
+      "list_local_branches",
+      "inspect_branch_names",
+      "identify_branch_context"
+    ],
+    "problem_space": "Inspect local branch names in a known Git repository. This is branch discovery, distinct from branch creation, commit-history inspection, worktree status, staging, and repository mutation."
+  },
+  "constraint": {
+    "io_signature": "Input: local Git repository path. Output: JSON list of local branch names.",
+    "accepted_inputs": [
+      "a local directory containing a Git repository"
+    ],
+    "output_shape": "JSON collection of local branch records or names.",
+    "limitations": [
+      "does not create, delete, switch, or merge branches",
+      "does not show commit history or working-tree changes"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "repo_path",
+        "kind": "string",
+        "required": true,
+        "cli_position": 1
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "List branches via MCP git server",
+      "json_schema": {
+        "description": "Native JSON representation only; no field or task-delivery guarantee.",
+        "type": [
+          "object",
+          "array",
+          "string",
+          "number",
+          "boolean",
+          "null"
+        ]
+      },
+      "native_json_contract_scope": "value_only"
+    }
+  },
+  "routing": {
+    "family": "git-branch-inspection",
+    "intent_tags": [
+      "list local Git branches",
+      "inspect branch names",
+      "see available branches"
+    ],
+    "negative_intents": [
+      "create a new branch",
+      "switch branches",
+      "show commit log"
+    ]
+  },
+  "execution": {
+    "runtime": "mcp_server",
+    "uri": "file://Pool/resources/tools/mcp/mcp.git_branch_list.py",
+    "execution_status": "active"
+  },
+  "utility": {
+    "latency_ms": 300.0,
+    "token_cost_factor": 0.02,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://github.com/modelcontextprotocol/servers/tree/main/src/git",
+    "license": "MIT",
+    "backed_by": "MCP git_branch",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:3ff5ccc631df3de2e66c397e4c0dd2a1f8fdc2d3dd13816a4ce295f09b5736c7",
+    "local_implementation_uri": "file://Pool/resources/tools/mcp/mcp.git_branch_list.py",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/mcp/_mcplib.py": "sha256:8c39f008bd1fc31f0457e6e08cb42da72eeeebba3dd1bcb51c277a33b35287f3"
+    }
+  },
+  "type_specific": {},
+  "type": {
+    "resource_type": "Tool"
+  },
+  "input_contract": [
+    {
+      "name": "repo_path",
+      "kind": "string",
+      "required": true,
+      "cli_position": 1
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "json",
+    "description": "List branches via MCP git server",
+    "json_schema": {
+      "description": "Native JSON representation only; no field or task-delivery guarantee.",
+      "type": [
+        "object",
+        "array",
+        "string",
+        "number",
+        "boolean",
+        "null"
+      ]
+    },
+    "native_json_contract_scope": "value_only"
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [
+      {
+        "name": "mcp",
+        "version": "==1.28.1",
+        "required": true
+      },
+      {
+        "name": "mcp-server-git",
+        "version": "==2026.7.10",
+        "required": true
+      }
+    ],
+    "node_packages": [],
+    "system_packages": [
+      {
+        "name": "git",
+        "version": "image-locked",
+        "required": true
+      }
+    ],
+    "commands": [
+      "git",
+      "python"
+    ],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "mcp": {
+      "server_command": "git",
+      "working_directory": "/app",
+      "allowed_roots": [
+        "/app"
+      ]
+    },
+    "python_compatibility": ">=3.11,<4"
+  }
+}

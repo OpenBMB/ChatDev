@@ -1,0 +1,170 @@
+{
+  "manifest_version": "1.0",
+  "resource_id": "tool.npm_test_runner.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Run npm test in a local project and capture its process output",
+    "description": "Runs exactly `[npm, test]` with cwd set from the explicitly supplied project_dir directory string. The script reads CLI position 1, while the contract intentionally avoids a *_path name so orchestrator file-artifact binding does not misclassify the directory input.",
+    "core_primitives": [
+      "resolve_npm_test_working_directory",
+      "execute_npm_test_script",
+      "capture_test_process_streams_and_exit"
+    ],
+    "problem_space": "Execution of a project's package.json test lifecycle script through npm; not Jest-specific structured reporting, test discovery, dependency installation, advisory auditing, or safe static inspection.",
+    "domain_tags": [
+      "JavaScript",
+      "testing",
+      "automation"
+    ]
+  },
+  "constraint": {
+    "env_requirements": [
+      "Python >= 3.6",
+      "npm executable on PATH",
+      "a local npm project whose package.json defines a usable test script and whose dependencies are available"
+    ],
+    "io_signature": "Input: required project_dir string at CLI position 1, explicitly supplied as an existing npm project directory. Because project_dir is kind=string and does not end in *_path, automatic file-artifact binding does not infer this directory. Executes `npm test`. Output: JSON envelope with exit_code and raw streams; no clean field is emitted.",
+    "accepted_inputs": [
+      "an explicitly bound string naming an existing npm project directory whose package.json defines the test lifecycle"
+    ],
+    "output_shape": "npm exit 0 or 1: {status: \"success\", tool: \"npm\", target: string, exit_code: 0|1, result: null, stdout: string, stderr: string|null}, wrapper exit 0. Exit 1 may mean test failures or some npm lifecycle/operation errors but still has outer status=success; no clean key exists, so consumers must inspect exit_code and streams. Other npm exits use status=\"tool_error\" and propagate the exit code. Missing target, executable, or 300-second timeout: {status: \"error\", tool: \"npm\", message: string}, exiting 2/3/4. Missing argument prints usage to stderr and exits 1 without JSON.",
+    "limitations": [
+      "executes arbitrary commands configured by the project's npm test lifecycle with inherited permissions and environment; tests may modify files, spawn processes, or access networks",
+      "does not install dependencies, select a test framework, add npm flags, or parse framework-specific test cases",
+      "wraps exit 1 with outer status=success even though it can represent test failures or npm operation errors; because no clean field is emitted, inspect exit_code and stdout/stderr",
+      "project_dir is deliberately a plain string contract and does not trigger the orchestrator's *_path file-only heuristic; callers must bind the directory explicitly and automatic artifact binding does not guarantee directory inference",
+      "uses a fixed 300-second timeout, captures untruncated stdout/stderr in memory, and is nondeterministic"
+    ],
+    "artifact_input": [
+      "file_path"
+    ],
+    "artifact_output": [
+      "json"
+    ],
+    "execution_risk": "high"
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "project_dir",
+        "kind": "string",
+        "required": true,
+        "cli_position": 1
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "JSON npm-test envelope with exit code and raw streams; exit 1 still has outer status=success and no clean field, and project scripts may have side effects.",
+      "json_schema": {
+        "description": "Native JSON representation only; no field or task-delivery guarantee.",
+        "type": [
+          "object",
+          "array",
+          "string",
+          "number",
+          "boolean",
+          "null"
+        ]
+      },
+      "native_json_contract_scope": "value_only"
+    }
+  },
+  "routing": {
+    "family": "npm-project-test-execution",
+    "intent_tags": [
+      "run the package json npm test script",
+      "execute npm tests and capture console output"
+    ],
+    "negative_intents": [
+      "run Jest with structured Jest JSON results",
+      "audit npm dependencies for vulnerabilities",
+      "install npm dependencies or safely inspect tests without execution"
+    ],
+    "dependency_slots": []
+  },
+  "execution": {
+    "runtime": "python_script",
+    "uri": "file://Pool/resources/tools/script/npm_test_runner.py",
+    "execution_status": "active",
+    "execution_risk": "high"
+  },
+  "utility": {
+    "latency_ms": 100,
+    "token_cost_factor": 0.01,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://docs.npmjs.com",
+    "license": "Artistic-2.0",
+    "backed_by": "npm test",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:bae57ccc3e7efba1a9c385ed5b123f4646be045ed51e0d4d54cf18540777d171",
+    "local_implementation_uri": "file://Pool/resources/tools/script/npm_test_runner.py",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/script/_sgar_cli.py": "sha256:42368f8d49cb6364ad3aeaac6d0f9602adc12cb29fea49322fd488400698b6b9"
+    }
+  },
+  "type_specific": {
+    "tool": {
+      "tool_kind": "local_script",
+      "language": "python",
+      "deterministic": false
+    }
+  },
+  "memory": {
+    "success_trajectories": [],
+    "failure_reflections": []
+  },
+  "type": {
+    "resource_type": "Tool",
+    "resource_tag": [
+      "JavaScript",
+      "testing",
+      "automation"
+    ]
+  },
+  "input_contract": [
+    {
+      "name": "project_dir",
+      "kind": "string",
+      "required": true,
+      "cli_position": 1
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "json",
+    "description": "JSON npm-test envelope with exit code and raw streams; exit 1 still has outer status=success and no clean field, and project scripts may have side effects.",
+    "json_schema": {
+      "description": "Native JSON representation only; no field or task-delivery guarantee.",
+      "type": [
+        "object",
+        "array",
+        "string",
+        "number",
+        "boolean",
+        "null"
+      ]
+    },
+    "native_json_contract_scope": "value_only"
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [],
+    "node_packages": [],
+    "system_packages": [],
+    "commands": [
+      "npm"
+    ],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "python_compatibility": ">=3.11,<4"
+  }
+}

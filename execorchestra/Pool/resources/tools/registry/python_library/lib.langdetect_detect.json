@@ -1,0 +1,142 @@
+{
+  "manifest_version": "v2",
+  "resource_id": "tool.lib.langdetect_detect.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Rank probable languages for one text string",
+    "description": "Runs langdetect.detect_langs on the complete input text, returns its ranked language-probability candidates as strings, and echoes only the first 60 characters of the input.",
+    "domain_tags": [
+      "nlp"
+    ],
+    "core_primitives": [
+      "detect_language_candidates",
+      "rank_language_probabilities",
+      "truncate_text_preview"
+    ],
+    "problem_space": "Probabilistic language identification for a single piece of plain text."
+  },
+  "constraint": {
+    "io_signature": "Input: one text string; output: JSON with a 60-character text preview and ranked language candidates serialized as strings.",
+    "accepted_inputs": [
+      "plain text containing enough linguistic signal for langdetect to classify"
+    ],
+    "output_shape": "Success is an object with status=\"success\", tool=\"lib.langdetect_detect\", text as the first at most 60 characters of the input, and languages as an ordered array of stringified language-code:probability candidates. A caught language-detection exception produces an object with status=\"error\", tool=\"lib.langdetect_detect\", and message as the exception string, then exits with code 1.",
+    "limitations": [
+      "returns stringified candidates rather than structured language and probability fields",
+      "echoes only the first 60 characters even though detection uses the full input",
+      "does not set DetectorFactory.seed, so results for short or ambiguous text may vary between runs",
+      "empty or insufficient text and library detection failures are returned through the wrapper's error envelope",
+      "identifies languages only; it does not translate, segment, or classify topic or sentiment"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "text",
+        "kind": "string",
+        "required": true,
+        "cli_position": 1
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "Truncated input preview plus ranked langdetect language-probability strings.",
+      "json_schema": {
+        "description": "Native JSON representation only; no field or task-delivery guarantee.",
+        "type": [
+          "object",
+          "array",
+          "string",
+          "number",
+          "boolean",
+          "null"
+        ]
+      },
+      "native_json_contract_scope": "value_only"
+    }
+  },
+  "routing": {
+    "family": "probabilistic-text-language-detection",
+    "intent_tags": [
+      "detect the language of text",
+      "rank likely languages for a text string"
+    ],
+    "negative_intents": [
+      "translate text between languages",
+      "return a deterministic single language code",
+      "detect programming languages or file types"
+    ]
+  },
+  "execution": {
+    "runtime": "python_library",
+    "uri": "file://Pool/resources/tools/lib/lib.langdetect_detect.py",
+    "execution_status": "active"
+  },
+  "utility": {
+    "latency_ms": 200.0,
+    "token_cost_factor": 0.02,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://github.com/Mimino666/langdetect",
+    "license": "Apache-2.0",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:7a095576d5420e21840c8b0748be558714d44a4f06f8229cbbccc4622f498d82",
+    "local_implementation_uri": "file://Pool/resources/tools/lib/lib.langdetect_detect.py",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/lib/_liblib.py": "sha256:dcd68e7904232764172e5f646ff97b854f68f7f916180ae32f838a0acf9ccc77"
+    }
+  },
+  "type_specific": {},
+  "type": {
+    "resource_type": "Tool"
+  },
+  "input_contract": [
+    {
+      "name": "text",
+      "kind": "string",
+      "required": true,
+      "cli_position": 1
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "json",
+    "description": "Truncated input preview plus ranked langdetect language-probability strings.",
+    "json_schema": {
+      "description": "Native JSON representation only; no field or task-delivery guarantee.",
+      "type": [
+        "object",
+        "array",
+        "string",
+        "number",
+        "boolean",
+        "null"
+      ]
+    },
+    "native_json_contract_scope": "value_only"
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [
+      {
+        "name": "langdetect",
+        "version": "==1.0.9",
+        "required": true
+      }
+    ],
+    "node_packages": [],
+    "system_packages": [],
+    "commands": [],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "python_compatibility": ">=3.11,<4"
+  }
+}

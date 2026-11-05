@@ -1,0 +1,132 @@
+{
+  "manifest_version": "v2",
+  "resource_id": "tool.lib.jinja2_render.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Render one in-memory Jinja2 template with JSON context",
+    "description": "Constructs a Jinja2 Template directly from the supplied template string and renders it with a JSON object expanded as keyword context, returning the rendered string.",
+    "domain_tags": [
+      "docs",
+      "templating"
+    ],
+    "core_primitives": [
+      "parse_json_context",
+      "compile_inline_template",
+      "render_template_variables"
+    ],
+    "problem_space": "One-shot text interpolation and Jinja2 expression rendering from an inline template and JSON object context."
+  },
+  "constraint": {
+    "io_signature": "Inputs: inline template string and JSON object string; output: success payload containing the rendered text under rendered.",
+    "accepted_inputs": [
+      "a Jinja2 template supplied directly as text",
+      "a JSON-encoded object whose top-level members become template variables"
+    ],
+    "output_shape": "Success is an object with status=\"success\", tool=\"lib.jinja2_render\", and rendered as the Jinja2-rendered string, despite the declared text artifact type. A caught JSON-context, template-compilation, or rendering exception produces an object with status=\"error\", tool=\"lib.jinja2_render\", and message as the exception string, then exits with code 1.",
+    "limitations": [
+      "creates an in-memory Template with no configured template loader, so it is not a file-based template rendering pipeline",
+      "uses Jinja2 defaults, including no automatic HTML escaping and permissive undefined-variable rendering",
+      "the context must decode to a JSON object because it is expanded with keyword arguments",
+      "the wrapper supplies an empty-object default if the second CLI argument is absent even though the manifest declares that input required",
+      "template syntax errors, invalid JSON, and rendering exceptions are returned through the wrapper's error envelope"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "template",
+        "kind": "string",
+        "required": true,
+        "cli_position": 1
+      },
+      {
+        "name": "context_json",
+        "kind": "string",
+        "required": true,
+        "cli_position": 2
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "text",
+      "description": "Rendered template string returned in the rendered field of the wrapper response."
+    }
+  },
+  "routing": {
+    "family": "inline-template-rendering",
+    "intent_tags": [
+      "render an inline Jinja2 template",
+      "interpolate JSON object values into text"
+    ],
+    "negative_intents": [
+      "render a template file using a template directory",
+      "produce automatically HTML-escaped output",
+      "validate a template without rendering it"
+    ]
+  },
+  "execution": {
+    "runtime": "python_library",
+    "uri": "file://Pool/resources/tools/lib/lib.jinja2_render.py",
+    "execution_status": "active"
+  },
+  "utility": {
+    "latency_ms": 200.0,
+    "token_cost_factor": 0.02,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://jinja.palletsprojects.com/",
+    "license": "BSD-3",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:ccfb6008b92ec59402a2d403c77477cabeca262627feff81de2e71f992649c3d",
+    "local_implementation_uri": "file://Pool/resources/tools/lib/lib.jinja2_render.py",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/lib/_liblib.py": "sha256:dcd68e7904232764172e5f646ff97b854f68f7f916180ae32f838a0acf9ccc77"
+    }
+  },
+  "type_specific": {},
+  "type": {
+    "resource_type": "Tool"
+  },
+  "input_contract": [
+    {
+      "name": "template",
+      "kind": "string",
+      "required": true,
+      "cli_position": 1
+    },
+    {
+      "name": "context_json",
+      "kind": "string",
+      "required": true,
+      "cli_position": 2
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "text",
+    "description": "Rendered template string returned in the rendered field of the wrapper response."
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [
+      {
+        "name": "jinja2",
+        "version": "image-locked",
+        "required": true
+      }
+    ],
+    "node_packages": [],
+    "system_packages": [],
+    "commands": [],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "python_compatibility": ">=3.11,<4"
+  }
+}

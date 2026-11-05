@@ -1,0 +1,278 @@
+{
+  "manifest_version": "1.0",
+  "resource_id": "tool.xlsx2csv.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Extract every worksheet from one XLSX workbook as in-memory CSV text",
+    "description": "Opens one existing workbook with openpyxl in read-only, data-only mode, serializes every worksheet to CSV text, and returns a sheet-name-to-CSV mapping inside a JSON envelope. It does not create `.csv` files or evaluate formulas.",
+    "core_primitives": [
+      "load_xlsx_read_only",
+      "iterate_all_worksheets",
+      "serialize_rows_to_csv_text"
+    ],
+    "problem_space": "Read-only extraction of all XLSX worksheets into CSV strings for downstream processing. It is not a filesystem CSV exporter, worksheet selector, workbook editor, formula calculator, spreadsheet renderer, or converter for legacy `.xls` files.",
+    "domain_tags": [
+      "data_processing",
+      "file_conversion",
+      "Excel"
+    ]
+  },
+  "constraint": {
+    "env_requirements": [
+      "Python >= 3.6",
+      "openpyxl installed"
+    ],
+    "io_signature": "Input: required file_path string at CLI position 1 naming an existing openpyxl-readable XLSX workbook. Output: JSON envelope whose sheets_csv object contains CSV text for every worksheet; no output file is written.",
+    "accepted_inputs": [
+      "an existing `.xlsx` workbook readable by the installed openpyxl version"
+    ],
+    "output_shape": "Success: {status: \"success\", tool: \"openpyxl\", target: string, sheet_names: [string, ...], sheets_csv: {<sheet name>: string, ...}}, exit 0. Non-existing path: {status: \"error\", message: string}, exit 2. Workbook/openpyxl/serialization exception: {status: \"error\", tool: \"openpyxl\", message: \"<ExceptionType>: <message>\"}, exit 1. Missing argument prints usage to stderr and exits 1 without JSON.",
+    "limitations": [
+      "returns CSV strings inside JSON and never creates per-sheet `.csv` files",
+      "reads every worksheet and retains all generated CSV strings in the JSON result; workbook size and result size are unbounded, with memory amplification from workbook cells to CSV strings and the outer JSON envelope",
+      "has no output truncation and no timeout; large or pathological workbooks can consume substantial memory or run without a time limit",
+      "always processes every worksheet and offers no sheet, range, delimiter, quoting, encoding, or output-path controls",
+      "loads with data_only=true, so formulas yield cached workbook values rather than formulas and are not recalculated; absent cached values become empty CSV fields",
+      "cell types and formatting are flattened through Python/csv string conversion; styles, merged-cell semantics, charts, macros, and workbook structure are not preserved"
+    ],
+    "artifact_input": [
+      "file_path"
+    ],
+    "artifact_output": [
+      "json"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "file_path",
+        "kind": "string",
+        "artifact_types": [
+          "xlsx"
+        ],
+        "extensions": [
+          ".xlsx"
+        ],
+        "required": true,
+        "cli_position": 1
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "JSON envelope listing worksheet names and mapping each sheet name to its in-memory CSV text; no CSV file artifact is written.",
+      "json_schema": {
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "status": {
+                "const": "success"
+              },
+              "tool": {
+                "const": "openpyxl"
+              },
+              "target": {
+                "type": "string",
+                "minLength": 1
+              },
+              "sheet_names": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "sheets_csv": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "string"
+                }
+              }
+            },
+            "required": [
+              "status",
+              "tool",
+              "target",
+              "sheet_names",
+              "sheets_csv"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "status": {
+                "const": "error"
+              },
+              "tool": {
+                "const": "openpyxl"
+              },
+              "message": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "status",
+              "message"
+            ],
+            "additionalProperties": false
+          }
+        ]
+      }
+    }
+  },
+  "routing": {
+    "family": "xlsx-all-sheets-to-csv-text",
+    "intent_tags": [
+      "extract all XLSX sheets as CSV text",
+      "read workbook rows into per-sheet CSV strings"
+    ],
+    "negative_intents": [
+      "write CSV files to disk",
+      "convert legacy XLS workbooks",
+      "evaluate formulas or preserve spreadsheet formatting"
+    ],
+    "dependency_slots": []
+  },
+  "utility": {
+    "latency_ms": 100,
+    "token_cost_factor": 0.01,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://openpyxl.readthedocs.io",
+    "license": "MIT",
+    "backed_by": "openpyxl",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:b31adbc376b919b071913015c1b6a085aabc88d7b6b99009dbdb13a865658e1e",
+    "local_implementation_uri": "file://Pool/resources/tools/script/xlsx2csv.py",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/script/_sgar_cli.py": "sha256:42368f8d49cb6364ad3aeaac6d0f9602adc12cb29fea49322fd488400698b6b9"
+    }
+  },
+  "type_specific": {
+    "tool": {
+      "tool_kind": "local_script",
+      "language": "python",
+      "deterministic": true
+    }
+  },
+  "memory": {
+    "success_trajectories": [],
+    "failure_reflections": []
+  },
+  "execution": {
+    "runtime": "python_script",
+    "uri": "file://Pool/resources/tools/script/xlsx2csv.py",
+    "execution_status": "active"
+  },
+  "type": {
+    "resource_type": "Tool",
+    "resource_tag": [
+      "data_processing",
+      "file_conversion",
+      "Excel"
+    ]
+  },
+  "input_contract": [
+    {
+      "name": "file_path",
+      "kind": "string",
+      "artifact_types": [
+        "xlsx"
+      ],
+      "extensions": [
+        ".xlsx"
+      ],
+      "required": true,
+      "cli_position": 1
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "json",
+    "description": "JSON envelope listing worksheet names and mapping each sheet name to its in-memory CSV text; no CSV file artifact is written.",
+    "json_schema": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "status": {
+              "const": "success"
+            },
+            "tool": {
+              "const": "openpyxl"
+            },
+            "target": {
+              "type": "string",
+              "minLength": 1
+            },
+            "sheet_names": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "sheets_csv": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "status",
+            "tool",
+            "target",
+            "sheet_names",
+            "sheets_csv"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "status": {
+              "const": "error"
+            },
+            "tool": {
+              "const": "openpyxl"
+            },
+            "message": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "status",
+            "message"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    }
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [
+      {
+        "name": "openpyxl",
+        "version": "==3.1.5",
+        "required": true
+      }
+    ],
+    "node_packages": [],
+    "system_packages": [],
+    "commands": [],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "python_compatibility": ">=3.11,<4"
+  }
+}

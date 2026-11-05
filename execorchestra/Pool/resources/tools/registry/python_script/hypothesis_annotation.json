@@ -1,0 +1,148 @@
+{
+  "manifest_version": "v2",
+  "resource_id": "tool.hypothesis_annotation.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Create a source-linked Hypothesis annotation with quote and position selectors",
+    "description": "SGAR adapter over upstream Hypothesis annotation API. It preserves source URI and TextQuoteSelector fields; no quote extraction or annotation semantics are implemented by SGAR.",
+    "domain_tags": [
+      "research",
+      "evidence",
+      "provenance"
+    ],
+    "core_primitives": [
+      "bind_annotation_to_source_uri",
+      "record_text_quote_selector",
+      "return_annotation_metadata"
+    ],
+    "problem_space": "Evidence-fragment location and annotation metadata for a source URI; not web search, webpage capture, citation normalization, or cryptographic snapshotting."
+  },
+  "constraint": {
+    "io_signature": "Input source URI, exact quote and optional prefix/suffix; output upstream annotation JSON.",
+    "accepted_inputs": [
+      "source URI and evidence quote"
+    ],
+    "output_shape": "JSON annotation receipt with target selectors and upstream identifiers.",
+    "limitations": [
+      "requires a reachable Hypothesis-compatible service",
+      "hosted Hypothesis writes may require an API token",
+      "local/self-hosted read-only or anonymous policy is deployment-specific",
+      "does not itself hash or archive source content"
+    ],
+    "operation_kinds": [
+      "network_annotation_write"
+    ],
+    "artifact_output": [
+      "json"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "uri",
+        "kind": "string",
+        "required": true,
+        "cli_position": 1
+      },
+      {
+        "name": "quote",
+        "kind": "string",
+        "required": false
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "Source-linked annotation and selector receipt.",
+      "json_schema": {
+        "description": "Native JSON representation only; no field or task-delivery guarantee.",
+        "type": [
+          "object",
+          "array",
+          "string",
+          "number",
+          "boolean",
+          "null"
+        ]
+      },
+      "native_json_contract_scope": "value_only"
+    }
+  },
+  "routing": {
+    "family": "evidence-quote-location",
+    "intent_tags": [
+      "locate an evidence quote in a source",
+      "create source-linked annotation",
+      "record TextQuoteSelector"
+    ],
+    "negative_intents": [
+      "fetch and archive a page",
+      "search the web",
+      "normalize citation metadata"
+    ]
+  },
+  "execution": {
+    "runtime": "python_script",
+    "uri": "file://Pool/resources/tools/script/hypothesis_annotation.py",
+    "execution_status": "active"
+  },
+  "utility": {
+    "latency_ms": 500,
+    "token_cost_factor": 0.01,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://github.com/hypothesis/h/tree/v0.39.0",
+    "version": "v0.39.0",
+    "license": "BSD-3-Clause",
+    "license_url": "https://github.com/hypothesis/h/blob/v0.39.0/LICENSE",
+    "license_sha256": "34dacbf7c2ae9fd5e8387ecc39b3c273b89600ec467ad4b90fc3850d18162d0e",
+    "backed_by": "Hypothesis h",
+    "recognized_public_tool": true,
+    "native_network_access": true,
+    "credential_class": "REQUIRED_LOCAL",
+    "credential_env_names": [
+      "HYPOTHESIS_API_TOKEN"
+    ],
+    "third_party_account_required": false,
+    "paid_service_required": false,
+    "source_hash": "sha256:089e1116150f295feadd93004f43d6729d96ea3f6bd443251699a3ebbc099466",
+    "local_implementation_uri": "file://Pool/resources/tools/script/hypothesis_annotation.py"
+  },
+  "type_specific": {
+    "tool": {
+      "tool_kind": "rest_api",
+      "deterministic": false
+    }
+  },
+  "memory": {
+    "success_trajectories": [],
+    "failure_reflections": []
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [
+      {
+        "name": "httpx",
+        "version": "==0.28.1",
+        "required": true
+      }
+    ],
+    "node_packages": [],
+    "system_packages": [],
+    "commands": [],
+    "network_required": true,
+    "env_vars": [
+      "HYPOTHESIS_API_TOKEN",
+      "HYPOTHESIS_API_URL"
+    ],
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "python_compatibility": ">=3.11,<4"
+  }
+}

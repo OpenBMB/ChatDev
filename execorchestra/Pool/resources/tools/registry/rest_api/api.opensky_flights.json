@@ -1,0 +1,125 @@
+{
+  "manifest_version": "v2",
+  "resource_id": "tool.api.opensky_flights.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Fetch live OpenSky aircraft state vectors",
+    "description": "Calls the OpenSky states/all endpoint with no query parameters and returns the live aircraft state response. The existing bbox input is ignored because the wrapper reads no CLI arguments. HTTP 2xx/3xx responses produce a success envelope; HTTP 4xx/5xx responses produce an error envelope and a non-zero exit; request exceptions also produce an error envelope and a non-zero exit.",
+    "domain_tags": [
+      "aviation",
+      "flight-tracking"
+    ],
+    "core_primitives": [
+      "retrieve_aircraft_states",
+      "monitor_live_flights"
+    ],
+    "problem_space": "Live aircraft state-vector retrieval; not route planning, flight-status lookup, or historical/paginated flight search."
+  },
+  "constraint": {
+    "io_signature": "Input: no user-bindable CLI parameters. Output: shared JSON envelope with url, http_status, and OpenSky result. HTTP 2xx/3xx responses produce a success envelope; HTTP 4xx/5xx responses produce an error envelope and a non-zero exit; request exceptions also produce an error envelope and a non-zero exit.",
+    "accepted_inputs": [
+      "no input; endpoint and query parameters are fixed by wrapper"
+    ],
+    "output_shape": "HTTP 2xx/3xx: {status: \"success\", tool: string, url: string, http_status: integer, result: object|string}. HTTP 4xx/5xx: {status: \"error\", tool: string, url: string, http_status: integer, result: object|string}, exit 1. Request exception: {status: \"error\", tool: string, message: string}, exit 1.",
+    "limitations": [
+      "fixed GET https://opensky-network.org/api/states/all with no params",
+      "bbox is ignored/not exposed; no geographic filter, time, pagination, or sorting",
+      "wrapper does not locally truncate or parse the state-vector array",
+      "live availability, rate limits, and authentication policy are external and may vary"
+    ],
+    "artifact_output": [
+      "json"
+    ],
+    "execution_risk": "medium",
+    "http_status_semantics": {
+      "success": "HTTP 200-399",
+      "failure": "HTTP 400-599 or request exception",
+      "failure_exit_code": 1
+    }
+  },
+  "io": {
+    "input_contract": [],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "Shared JSON envelope containing live OpenSky state vectors, URL, and HTTP status."
+    }
+  },
+  "routing": {
+    "family": "live-aircraft-state-vectors",
+    "intent_tags": [
+      "see live aircraft positions",
+      "retrieve OpenSky flight state vectors"
+    ],
+    "negative_intents": [
+      "search flights by route or booking status",
+      "retrieve historical aircraft tracks or paginated results"
+    ]
+  },
+  "execution": {
+    "runtime": "rest_api",
+    "uri": "file://Pool/resources/tools/api/api.opensky_flights.py",
+    "execution_status": "active",
+    "execution_risk": "medium"
+  },
+  "utility": {
+    "latency_ms": 200.0,
+    "token_cost_factor": 0.02,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://openskynetwork.github.io/opensky-api/",
+    "license": "non-commercial",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:16cf5d8d4f870ef878c5593f94369d5b9c7da9e43bb5f870e4538906471601b6",
+    "local_implementation_uri": "file://Pool/resources/tools/api/api.opensky_flights.py",
+    "auth_required": false,
+    "auth_evidence": "wrapper_and_shared_adapter_read_no_credentials",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/api/_apilib.py": "sha256:e60bba3d1f3dcd9fcd408042ad7951e52d6ecd66d57cb9a58c249d521c8811a7"
+    }
+  },
+  "type_specific": {
+    "tool": {
+      "tool_kind": "rest_api",
+      "deterministic": false
+    }
+  },
+  "type": {
+    "resource_type": "Tool"
+  },
+  "input_contract": [],
+  "output_contract": {
+    "artifact_type": "json",
+    "description": "Shared JSON envelope containing live OpenSky state vectors, URL, and HTTP status."
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [
+      {
+        "name": "requests",
+        "version": "==2.32.3",
+        "required": true
+      }
+    ],
+    "node_packages": [],
+    "system_packages": [],
+    "commands": [],
+    "env_vars": [],
+    "network_required": true,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "rest": {
+      "endpoint": "https://opensky-network.org/api/states/all",
+      "auth_required": false,
+      "auth_evidence": "wrapper_and_shared_adapter_read_no_credentials",
+      "timeout_seconds": 25,
+      "success_http_status": "200-399"
+    }
+  }
+}

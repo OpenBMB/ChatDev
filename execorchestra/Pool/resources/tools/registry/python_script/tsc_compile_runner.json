@@ -1,0 +1,176 @@
+{
+  "manifest_version": "1.0",
+  "resource_id": "tool.tsc_compile_runner.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Run TypeScript tsc --noEmit in one local project directory",
+    "description": "Runs exactly `tsc --noEmit` with cwd set to the supplied directory or an existing file's absolute parent. It performs configured TypeScript compilation/type checking without JavaScript/declaration emit, and returns raw compiler streams in a JSON envelope.",
+    "core_primitives": [
+      "resolve_typescript_project_cwd",
+      "invoke_tsc_no_emit",
+      "capture_typescript_compiler_diagnostics"
+    ],
+    "problem_space": "Project-level TypeScript compiler/type-check validation under discovered tsconfig settings with fixed --noEmit; not JavaScript bundling, artifact emission, test execution, ESLint, formatting, package installation, or caller-configurable tsc commands.",
+    "domain_tags": [
+      "typescript",
+      "compiler",
+      "developer-tools"
+    ]
+  },
+  "constraint": {
+    "env_requirements": [
+      "Python >= 3.6",
+      "Node.js >= 12",
+      "tsc executable on PATH",
+      "a usable tsconfig.json and referenced TypeScript dependencies/types discoverable from the resolved cwd"
+    ],
+    "io_signature": "Input: required project_dir string at CLI position 1; a directory becomes cwd and an existing file selects its absolute parent. Executes `tsc --noEmit`. Output: JSON envelope with compiler exit_code and raw stdout/stderr.",
+    "accepted_inputs": [
+      "an existing TypeScript project directory containing or inheriting a tsconfig.json",
+      "an existing file whose parent directory is intentionally used as the TypeScript project cwd"
+    ],
+    "output_shape": "tsc exit 0: {status: \"success\", tool: \"tsc\", target: string, exit_code: 0, result: null, stdout: string, stderr: string|null}, wrapper exit 0. Any nonzero tsc exit: same keys with status=\"tool_error\" and the compiler exit code is propagated. Missing target, executable, or 120-second timeout: {status: \"error\", tool: \"tsc\", message: string}, exiting 2/3/4. Missing argument prints usage to stderr and exits 1 without JSON.",
+    "limitations": [
+      "fixed `--noEmit` prevents normal JavaScript/declaration output, but project incremental/composite configuration and TypeScript version may still affect cache or build-info behavior; it is not an absolute filesystem-write sandbox",
+      "the plain string project_dir contract accepts either an existing directory or an existing file; automatic file-artifact binding does not infer a directory, and a file is converted to its absolute parent cwd",
+      "uses cwd/tsconfig discovery and exposes no project path flag, target, module, strictness, pretty, incremental, build-mode, or file-selection controls",
+      "does not bundle code, run tests, lint with ESLint, install dependencies, or return parsed diagnostics",
+      "uses a fixed 120-second timeout and captures untruncated compiler output in memory"
+    ],
+    "artifact_input": [
+      "file_path"
+    ],
+    "artifact_output": [
+      "json"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "project_dir",
+        "kind": "string",
+        "required": true,
+        "cli_position": 1
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "JSON execution envelope containing `tsc --noEmit` exit code and raw compiler stdout/stderr; no compiled JavaScript artifact is returned.",
+      "json_schema": {
+        "description": "Native JSON representation only; no field or task-delivery guarantee.",
+        "type": [
+          "object",
+          "array",
+          "string",
+          "number",
+          "boolean",
+          "null"
+        ]
+      },
+      "native_json_contract_scope": "value_only"
+    }
+  },
+  "routing": {
+    "family": "typescript-tsc-no-emit-project-check",
+    "intent_tags": [
+      "type check a TypeScript project with tsc",
+      "run tsc noEmit and capture compiler errors"
+    ],
+    "negative_intents": [
+      "emit bundle or transpile JavaScript artifacts",
+      "run TypeScript tests or ESLint",
+      "pass arbitrary tsc compiler flags"
+    ],
+    "dependency_slots": []
+  },
+  "execution": {
+    "runtime": "python_script",
+    "uri": "file://Pool/resources/tools/script/tsc_compile_runner.py",
+    "execution_status": "active"
+  },
+  "utility": {
+    "latency_ms": 100,
+    "token_cost_factor": 0.01,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://www.typescriptlang.org",
+    "license": "Apache-2.0",
+    "backed_by": "TypeScript compiler CLI (`tsc`)",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:370b429774156316f664ea922f66715cae86cd7815ec818d6a52a83c2d516346",
+    "local_implementation_uri": "file://Pool/resources/tools/script/tsc_compile_runner.py",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/script/_sgar_cli.py": "sha256:42368f8d49cb6364ad3aeaac6d0f9602adc12cb29fea49322fd488400698b6b9"
+    }
+  },
+  "type_specific": {
+    "tool": {
+      "tool_kind": "local_script",
+      "language": "python",
+      "deterministic": true
+    }
+  },
+  "memory": {
+    "success_trajectories": [],
+    "failure_reflections": []
+  },
+  "type": {
+    "resource_type": "Tool",
+    "resource_tag": [
+      "typescript",
+      "compiler",
+      "developer-tools"
+    ]
+  },
+  "input_contract": [
+    {
+      "name": "project_dir",
+      "kind": "string",
+      "required": true,
+      "cli_position": 1
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "json",
+    "description": "JSON execution envelope containing `tsc --noEmit` exit code and raw compiler stdout/stderr; no compiled JavaScript artifact is returned.",
+    "json_schema": {
+      "description": "Native JSON representation only; no field or task-delivery guarantee.",
+      "type": [
+        "object",
+        "array",
+        "string",
+        "number",
+        "boolean",
+        "null"
+      ]
+    },
+    "native_json_contract_scope": "value_only"
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [],
+    "node_packages": [
+      {
+        "name": "typescript",
+        "version": "==7.0.2",
+        "required": true
+      }
+    ],
+    "system_packages": [],
+    "commands": [
+      "tsc"
+    ],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "python_compatibility": ">=3.11,<4"
+  }
+}

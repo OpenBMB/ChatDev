@@ -1,0 +1,149 @@
+{
+  "manifest_version": "v2",
+  "resource_id": "tool.check_jsonschema_validate.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Validate local JSON or YAML with check-jsonschema 0.38.0",
+    "description": "Thin SGAR adapter that invokes the upstream check-jsonschema CLI against one local schema and one or more local instances without selecting remote builtin schemas.",
+    "domain_tags": [
+      "data",
+      "validation",
+      "schema"
+    ],
+    "core_primitives": [
+      "validate_json_schema_instances",
+      "validate_yaml_schema_instances",
+      "return_validation_diagnostics"
+    ],
+    "problem_space": "Offline contract validation of file-backed JSON/YAML instances; not schema inference, remote schema retrieval, data repair, or general linting."
+  },
+  "constraint": {
+    "io_signature": "Input local schema path and local instance paths; output validity, diagnostics and upstream exit code.",
+    "accepted_inputs": [
+      "local JSON Schema",
+      "local JSON or YAML instances"
+    ],
+    "output_shape": "JSON validity envelope with textual diagnostics.",
+    "limitations": [
+      "local schema and instance paths only",
+      "does not fetch remote schemas",
+      "60-second timeout",
+      "diagnostics follow upstream CLI formatting"
+    ],
+    "operation_kinds": [
+      "local_read",
+      "schema_validation"
+    ],
+    "artifact_input": [
+      "file_path"
+    ],
+    "artifact_output": [
+      "json"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "schema_path",
+        "kind": "string",
+        "required": true,
+        "cli_position": 1
+      },
+      {
+        "name": "instance_path",
+        "kind": "list",
+        "required": true,
+        "cli_position": 2
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "check-jsonschema validity and diagnostics.",
+      "json_schema": {
+        "description": "Native JSON representation only; no field or task-delivery guarantee.",
+        "type": [
+          "object",
+          "array",
+          "string",
+          "number",
+          "boolean",
+          "null"
+        ]
+      },
+      "native_json_contract_scope": "value_only"
+    }
+  },
+  "routing": {
+    "family": "json-yaml-schema-validation",
+    "intent_tags": [
+      "validate JSON against JSON Schema",
+      "validate YAML files against a local schema"
+    ],
+    "negative_intents": [
+      "infer a schema",
+      "download a remote schema",
+      "repair invalid data"
+    ],
+    "dependency_slots": []
+  },
+  "execution": {
+    "runtime": "python_script",
+    "uri": "file://Pool/resources/tools/script/check_jsonschema_validate.py",
+    "execution_status": "active"
+  },
+  "utility": {
+    "latency_ms": 100,
+    "token_cost_factor": 0.01,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://github.com/python-jsonschema/check-jsonschema/tree/0.38.0",
+    "version": "0.38.0",
+    "license": "Apache-2.0",
+    "license_url": "https://github.com/python-jsonschema/check-jsonschema/blob/0.38.0/LICENSE",
+    "license_sha256": "3e5df383ac91e92a04b63aa16bad328c8a9e39eafb7d5d24e258831f844d39cc",
+    "upstream_artifact": "https://files.pythonhosted.org/packages/source/c/check-jsonschema/check_jsonschema-0.38.0.tar.gz",
+    "upstream_artifact_sha256": "bb6899cc24ab0ced664e4646423d35b72db245cea75109c0b9e64d13087d1b8c",
+    "backed_by": "check-jsonschema",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:3f097f1a511d67ffb2576f808c32fceaa1c83947908fe470cbca16739a9cd819",
+    "local_implementation_uri": "file://Pool/resources/tools/script/check_jsonschema_validate.py"
+  },
+  "type_specific": {
+    "tool": {
+      "tool_kind": "local_script",
+      "language": "python",
+      "deterministic": true
+    }
+  },
+  "memory": {
+    "success_trajectories": [],
+    "failure_reflections": []
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [
+      {
+        "name": "check-jsonschema",
+        "version": "==0.38.0",
+        "required": true
+      }
+    ],
+    "node_packages": [],
+    "system_packages": [],
+    "commands": [
+      "check-jsonschema"
+    ],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "python_compatibility": ">=3.11,<4"
+  }
+}

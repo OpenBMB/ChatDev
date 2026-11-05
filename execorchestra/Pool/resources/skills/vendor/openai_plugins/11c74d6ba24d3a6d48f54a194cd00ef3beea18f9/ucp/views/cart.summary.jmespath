@@ -1,0 +1,14 @@
+{
+  ucp: {version: ucp.version, status: ucp.status},
+  result: {
+    id: result.id,
+    items: length(result.line_items),
+    currency: result.currency,
+    subtotal: result.totals[?type=='subtotal'] | [0].amount,
+    fulfillment: result.totals[?type=='fulfillment'] | [0].amount,
+    shipping: result.totals[?type=='shipping'] | [0].amount,
+    total: result.totals[?type=='total'] | [0].amount,
+    continue_url: result.continue_url,
+    expires_at: result.expires_at
+  }
+}

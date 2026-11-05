@@ -1,0 +1,36 @@
+# Dependabot configuration for Python projects
+# Copy to .github/dependabot.yml
+#
+# See references/dependabot.md for advanced configuration.
+
+version: 2
+updates:
+  # Python dependencies (pyproject.toml, requirements.txt)
+  - package-ecosystem: pip
+    directory: /
+    schedule:
+      interval: weekly
+    # 7-day cooldown: don't update packages published < 7 days ago
+    # Mitigates supply chain attacks via malicious updates
+    cooldown:
+      default-days: 7
+    # Group minor/patch updates to reduce PR noise
+    groups:
+      dev-dependencies:
+        dependency-type: development
+        update-types: [minor, patch]
+      production-dependencies:
+        dependency-type: production
+        update-types: [patch]
+
+  # GitHub Actions
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    cooldown:
+      default-days: 7
+    groups:
+      actions:
+        patterns: ["*"]
+        update-types: [minor, patch]

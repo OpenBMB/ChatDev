@@ -1,0 +1,268 @@
+{
+  "schema_version": "sgar-official-prices-v1",
+  "snapshot_date": "2026-10-09",
+  "currency": "USD",
+  "unit": "USD_per_million_tokens",
+  "policy": "Standard synchronous public official rates; DeepSeek peak; Alibaba International Singapore; public temporary rates frozen on snapshot date. No relay, account, volume or batch discounts.",
+  "models": {
+    "claude-fable-5-1": {
+      "input_per_m": "10",
+      "cache_per_m": ".25",
+      "output_per_m": "50",
+      "source": "https://platform.claude.com/docs/en/about-claude/pricing",
+      "cache_mode": "explicit",
+      "input_tiers": [],
+      "cache_write_per_m": "12.5",
+      "cache_write_1h_per_m": "20"
+    },
+    "claude-opus-5": {
+      "input_per_m": "5",
+      "cache_per_m": ".5",
+      "output_per_m": "25",
+      "source": "https://platform.claude.com/docs/en/about-claude/pricing",
+      "cache_mode": "explicit",
+      "input_tiers": [],
+      "cache_write_per_m": "6.25",
+      "cache_write_1h_per_m": "10"
+    },
+    "claude-sonnet-5": {
+      "input_per_m": "2",
+      "cache_per_m": ".2",
+      "output_per_m": "10",
+      "source": "https://platform.claude.com/docs/en/about-claude/pricing",
+      "cache_mode": "explicit",
+      "input_tiers": [],
+      "cache_write_per_m": "2.5",
+      "cache_write_1h_per_m": "4"
+    },
+    "deepseek-v4-pro-0813": {
+      "input_per_m": "1.32",
+      "cache_per_m": ".044",
+      "output_per_m": "3.96",
+      "source": "https://api-docs.deepseek.com/quick_start/pricing/",
+      "cache_mode": "implicit",
+      "input_tiers": []
+    },
+    "deepseek-v4.1-flash": {
+      "input_per_m": ".3",
+      "cache_per_m": ".006",
+      "output_per_m": "1.2",
+      "source": "https://api-docs.deepseek.com/quick_start/pricing/",
+      "cache_mode": "implicit",
+      "input_tiers": []
+    },
+    "gemini-3.8-flash": {
+      "input_per_m": ".75",
+      "cache_per_m": ".075",
+      "output_per_m": "3.75",
+      "source": "https://ai.google.dev/gemini-api/docs/pricing",
+      "cache_mode": "implicit",
+      "input_tiers": []
+    },
+    "glm-5.3": {
+      "input_per_m": "1.4",
+      "cache_per_m": ".26",
+      "output_per_m": "4.4",
+      "source": "https://docs.z.ai/guides/overview/pricing",
+      "cache_mode": "implicit",
+      "input_tiers": []
+    },
+    "gpt-5-nano": {
+      "input_per_m": ".05",
+      "cache_per_m": ".005",
+      "output_per_m": ".4",
+      "source": "https://developers.openai.com/api/docs/pricing",
+      "cache_mode": "implicit",
+      "input_tiers": []
+    },
+    "gpt-5.3-codex": {
+      "input_per_m": "1.75",
+      "cache_per_m": ".175",
+      "output_per_m": "14",
+      "source": "https://developers.openai.com/api/docs/pricing",
+      "cache_mode": "implicit",
+      "input_tiers": []
+    },
+    "gpt-5.6-luna": {
+      "input_per_m": ".2",
+      "cache_per_m": ".02",
+      "output_per_m": "1.2",
+      "source": "https://developers.openai.com/api/docs/pricing",
+      "cache_mode": "implicit",
+      "input_tiers": [
+        {
+          "above_input_tokens": 272000,
+          "input_per_m": "0.4",
+          "cache_per_m": "0.04",
+          "output_per_m": "1.80",
+          "cache_write_per_m": "0.50"
+        }
+      ],
+      "cache_write_per_m": "0.250"
+    },
+    "gpt-5.6-sol": {
+      "input_per_m": "4",
+      "cache_per_m": ".4",
+      "output_per_m": "20",
+      "source": "https://developers.openai.com/api/docs/models/gpt-5.6-sol",
+      "cache_mode": "implicit",
+      "input_tiers": [
+        {
+          "above_input_tokens": 272000,
+          "input_per_m": "8",
+          "cache_per_m": "0.8",
+          "output_per_m": "30.0",
+          "cache_write_per_m": "10.0"
+        }
+      ],
+      "cache_write_per_m": "5.00"
+    },
+    "gpt-5.6-terra": {
+      "input_per_m": "2",
+      "cache_per_m": ".2",
+      "output_per_m": "12",
+      "source": "https://developers.openai.com/api/docs/pricing",
+      "cache_mode": "implicit",
+      "input_tiers": [
+        {
+          "above_input_tokens": 272000,
+          "input_per_m": "4",
+          "cache_per_m": "0.4",
+          "output_per_m": "18.0",
+          "cache_write_per_m": "5.0"
+        }
+      ],
+      "cache_write_per_m": "2.50"
+    },
+    "gpt-6-astra": {
+      "input_per_m": "10",
+      "cache_per_m": "1",
+      "output_per_m": "50",
+      "source": "https://developers.openai.com/api/docs/pricing",
+      "cache_mode": "implicit",
+      "input_tiers": [
+        {
+          "above_input_tokens": 272000,
+          "input_per_m": "20",
+          "cache_per_m": "2",
+          "output_per_m": "75.0",
+          "cache_write_per_m": "25.0"
+        }
+      ],
+      "cache_write_per_m": "12.50"
+    },
+    "kimi-k2.7-code": {
+      "input_per_m": ".95",
+      "cache_per_m": ".19",
+      "output_per_m": "4",
+      "source": "https://platform.kimi.ai/docs/pricing/chat",
+      "cache_mode": "implicit",
+      "input_tiers": []
+    },
+    "kimi-k3": {
+      "input_per_m": "3",
+      "cache_per_m": ".3",
+      "output_per_m": "15",
+      "source": "https://platform.kimi.ai/docs/pricing/chat",
+      "cache_mode": "implicit",
+      "input_tiers": [],
+      "cache_write_per_m": "3",
+      "cache_write_1h_per_m": "6"
+    },
+    "qwen3-coder-next": {
+      "input_per_m": ".3",
+      "cache_per_m": null,
+      "output_per_m": "1.5",
+      "source": "https://www.alibabacloud.com/help/en/model-studio/qwen3-coder-next",
+      "cache_mode": "implicit",
+      "input_tiers": [
+        {
+          "above_input_tokens": 32768,
+          "input_per_m": ".5",
+          "output_per_m": "2.5"
+        },
+        {
+          "above_input_tokens": 131072,
+          "input_per_m": ".8",
+          "output_per_m": "4"
+        }
+      ],
+      "region": "International Singapore",
+      "cache_supported": false
+    },
+    "qwen3-vl-235b-a22b-instruct": {
+      "input_per_m": ".4",
+      "cache_per_m": null,
+      "output_per_m": "1.6",
+      "source": "https://www.alibabacloud.com/help/en/model-studio/model-pricing",
+      "cache_mode": "implicit",
+      "input_tiers": [],
+      "region": "International Singapore",
+      "cache_supported": false
+    },
+    "qwen3.5-35b-a3b": {
+      "input_per_m": ".25",
+      "cache_per_m": null,
+      "output_per_m": "2",
+      "source": "https://www.alibabacloud.com/help/en/model-studio/model-pricing",
+      "cache_mode": "implicit",
+      "input_tiers": [],
+      "region": "International Singapore",
+      "cache_supported": false
+    },
+    "qwen3.8-flash": {
+      "input_per_m": ".15",
+      "cache_per_m": ".016",
+      "output_per_m": ".47",
+      "source": "https://www.alibabacloud.com/help/en/model-studio/qwen3-8-flash",
+      "cache_mode": "implicit",
+      "input_tiers": [],
+      "region": "International Singapore",
+      "explicit_cache_per_m": ".016",
+      "cache_write_per_m": ".2"
+    },
+    "qwen3.8-max": {
+      "input_per_m": "2",
+      "cache_per_m": ".25",
+      "output_per_m": "6",
+      "source": "https://www.alibabacloud.com/help/en/model-studio/qwen3-8-max",
+      "cache_mode": "implicit",
+      "input_tiers": [],
+      "region": "International Singapore",
+      "explicit_cache_per_m": ".17",
+      "cache_write_per_m": "2.5"
+    },
+    "gpt-4o": {
+      "input_per_m": "2.5",
+      "cache_per_m": "1.25",
+      "output_per_m": "10",
+      "source": "https://developers.openai.com/api/docs/models/gpt-4o"
+    },
+    "gemini-3-flash-preview": {
+      "input_per_m": ".5",
+      "cache_per_m": ".05",
+      "output_per_m": "3",
+      "audio_input_per_m": "1",
+      "audio_cache_per_m": ".1",
+      "source": "https://ai.google.dev/gemini-api/docs/pricing"
+    },
+    "gpt-4o-audio-preview": {
+      "input_per_m": null,
+      "cache_per_m": null,
+      "output_per_m": null,
+      "text_input_per_m": "2.5",
+      "text_output_per_m": "10",
+      "audio_input_per_m": "40",
+      "audio_output_per_m": "80",
+      "source": "https://developers.openai.com/api/docs/models/gpt-4o-audio-preview",
+      "issue": "Modality token split is required; do not price audio as text."
+    },
+    "deepseek-reasoner": {
+      "input_per_m": null,
+      "cache_per_m": null,
+      "output_per_m": null,
+      "source": "https://api-docs.deepseek.com/quick_start/pricing/",
+      "issue": "Historical relay alias: underlying model version unverified."
+    }
+  }
+}

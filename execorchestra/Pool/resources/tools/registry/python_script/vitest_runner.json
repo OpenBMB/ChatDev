@@ -1,0 +1,177 @@
+{
+  "manifest_version": "1.0",
+  "resource_id": "tool.vitest_runner.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Run a local Vitest suite once with its JSON reporter",
+    "description": "Runs exactly `vitest run --reporter=json` from the supplied directory, or from the absolute parent of a supplied file, with a 180-second timeout. Vitest executes project configuration, setup files, and tests; the wrapper reports the process result in a JSON envelope and treats exit codes 0 and 1 as completed runs.",
+    "core_primitives": [
+      "resolve_vitest_project_cwd",
+      "execute_vitest_run_mode",
+      "capture_vitest_json_report"
+    ],
+    "problem_space": "One-shot execution of an existing Vitest test suite with the built-in JSON reporter. It is not Jest or npm-script execution, watch mode, test authoring, coverage generation, dependency installation, linting, or a sandbox for untrusted tests.",
+    "domain_tags": [
+      "testing-tools",
+      "developer-tools",
+      "automation-testing"
+    ]
+  },
+  "constraint": {
+    "env_requirements": [
+      "Python >= 3.6",
+      "vitest executable on PATH",
+      "project Vitest configuration and runtime dependencies discoverable from the resolved cwd"
+    ],
+    "io_signature": "Input: required proj_dir string at CLI position 1; an existing directory is cwd, while an existing file selects its absolute parent. Executes `vitest run --reporter=json`. Output: one JSON execution envelope containing the parsed reporter payload when either captured stream is valid JSON, otherwise raw streams.",
+    "accepted_inputs": [
+      "an existing directory for a configured local Vitest project",
+      "an existing file whose parent directory should be used as the Vitest project cwd"
+    ],
+    "output_shape": "Vitest exit 0 or 1: {status: \"success\", tool: \"vitest\", target: string, exit_code: 0|1, result: any JSON value|null, stdout: string|null, stderr: string|null}, wrapper exit 0. The helper attempts JSON parsing of nonempty stdout first and then stderr; when parsing succeeds result holds that value and stdout is null. Other Vitest exits use the same keys with status=\"tool_error\" and propagate that exit code. Missing target/executable or timeout emits {status: \"error\", tool: \"vitest\", message: string} and exits 2/3/4. Missing argument writes usage to stderr and exits 1 without JSON.",
+    "limitations": [
+      "executes arbitrary project configuration, setup files, transforms, and test code with the wrapper process permissions; tests may write files, spawn processes, or access the network",
+      "the plain string proj_dir contract accepts either an existing directory or an existing file; automatic file-artifact binding does not infer a directory, and a file is converted to its absolute parent cwd",
+      "fixed run mode and JSON reporter expose no test-name, file-pattern, coverage, pool, watch, update-snapshot, or passthrough CLI controls",
+      "exit code 1, normally test failures, is wrapped as status=success; callers must inspect exit_code and the reporter result",
+      "uses a fixed 180-second timeout and captures untruncated stdout/stderr in memory; JSON parsing accepts either stdout or stderr"
+    ],
+    "artifact_input": [
+      "file_path"
+    ],
+    "artifact_output": [
+      "json"
+    ],
+    "execution_risk": "high"
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "proj_dir",
+        "kind": "string",
+        "required": true,
+        "cli_position": 1
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "JSON execution envelope for `vitest run --reporter=json`, containing exit code, parsed reporter payload when available, and otherwise raw stdout/stderr.",
+      "json_schema": {
+        "description": "Native JSON representation only; no field or task-delivery guarantee.",
+        "type": [
+          "object",
+          "array",
+          "string",
+          "number",
+          "boolean",
+          "null"
+        ]
+      },
+      "native_json_contract_scope": "value_only"
+    }
+  },
+  "routing": {
+    "family": "vitest-one-shot-test-runner",
+    "intent_tags": [
+      "run a Vitest test suite once",
+      "capture Vitest JSON test results"
+    ],
+    "negative_intents": [
+      "run Jest or an npm test script",
+      "watch tests or generate coverage",
+      "safely execute untrusted test code"
+    ],
+    "dependency_slots": []
+  },
+  "utility": {
+    "latency_ms": 200,
+    "token_cost_factor": 0.01,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://vitest.dev",
+    "license": "MIT",
+    "backed_by": "Vitest",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:59a9a1637405fa5c1d32283764510e50fbbd6559b36b239570b7a1fba0eb88ca",
+    "local_implementation_uri": "file://Pool/resources/tools/script/vitest_runner.py",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/script/_sgar_cli.py": "sha256:42368f8d49cb6364ad3aeaac6d0f9602adc12cb29fea49322fd488400698b6b9"
+    }
+  },
+  "type_specific": {
+    "tool": {
+      "tool_kind": "local_script",
+      "language": "python",
+      "deterministic": false
+    }
+  },
+  "memory": {
+    "success_trajectories": [],
+    "failure_reflections": []
+  },
+  "execution": {
+    "runtime": "python_script",
+    "uri": "file://Pool/resources/tools/script/vitest_runner.py",
+    "execution_status": "active",
+    "execution_risk": "high"
+  },
+  "type": {
+    "resource_type": "Tool",
+    "resource_tag": [
+      "testing-tools",
+      "developer-tools",
+      "automation-testing"
+    ]
+  },
+  "input_contract": [
+    {
+      "name": "proj_dir",
+      "kind": "string",
+      "required": true,
+      "cli_position": 1
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "json",
+    "description": "JSON execution envelope for `vitest run --reporter=json`, containing exit code, parsed reporter payload when available, and otherwise raw stdout/stderr.",
+    "json_schema": {
+      "description": "Native JSON representation only; no field or task-delivery guarantee.",
+      "type": [
+        "object",
+        "array",
+        "string",
+        "number",
+        "boolean",
+        "null"
+      ]
+    },
+    "native_json_contract_scope": "value_only"
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [],
+    "node_packages": [
+      {
+        "name": "vitest",
+        "version": "==4.1.10",
+        "required": true
+      }
+    ],
+    "system_packages": [],
+    "commands": [
+      "vitest"
+    ],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "python_compatibility": ">=3.11,<4"
+  }
+}

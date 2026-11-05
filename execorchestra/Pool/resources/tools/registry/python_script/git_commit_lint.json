@@ -1,0 +1,179 @@
+{
+  "manifest_version": "1.0",
+  "resource_id": "tool.git_commit_lint.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Lint one existing commit-message file with gitlint and return textual violation lines",
+    "description": "Runs `gitlint --msg-filename <file>`, records every nonblank stdout line as a violation, and reports whether gitlint returned zero. It is read-only and does not normalize, rewrite, commit, or otherwise modify Git state.",
+    "core_primitives": [
+      "lint_commit_message_file_with_gitlint",
+      "collect_gitlint_stdout_violations",
+      "report_gitlint_clean_boolean"
+    ],
+    "problem_space": "Read-only gitlint validation of one commit-message file; not message formatting, commit creation, repository history analysis, hook installation, or commit amendment.",
+    "domain_tags": [
+      "git",
+      "development-tools",
+      "code-quality"
+    ]
+  },
+  "constraint": {
+    "env_requirements": [
+      "Python >= 3.6",
+      "gitlint executable"
+    ],
+    "io_signature": "Input: one required existing commit-message file path; output: JSON with gitlint's actual exit code, clean boolean, nonblank stdout violation lines, and stderr.",
+    "accepted_inputs": [
+      "an existing text file containing a Git commit message accepted by gitlint's --msg-filename option"
+    ],
+    "output_shape": "After any completed gitlint process: {status: \"success\", tool: \"gitlint\", target: string, exit_code: integer, clean: boolean, violations: string[], stderr: string|null}; clean is true only for exit_code 0, violations contains nonblank stdout lines, and the wrapper itself exits 0 even when gitlint returns nonzero. Non-existing file: {status: \"error\", message: string} and exit 2. Missing argument prints usage to stderr and exits 1 without JSON. Missing executable, 60-second timeout, and other subprocess exceptions are uncaught and may produce a traceback instead of JSON.",
+    "limitations": [
+      "does not modify or normalize the commit message, create a commit, amend history, or install Git hooks",
+      "always reports status=success after a completed subprocess and does not propagate gitlint's nonzero exit code; consumers must inspect clean and exit_code",
+      "returns unparsed nonblank stdout lines rather than structured rule identifiers and may be affected by gitlint's normal configuration discovery",
+      "uses a fixed 60-second timeout, applies no output truncation, and does not catch timeout or executable-not-found errors"
+    ],
+    "artifact_input": [
+      "file_path"
+    ],
+    "artifact_output": [
+      "json"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "commit_msg_file",
+        "kind": "string",
+        "required": true,
+        "cli_position": 1
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "JSON gitlint report containing target, actual gitlint exit code, clean flag, textual violation lines, and stderr; the message file is unchanged.",
+      "json_schema": {
+        "description": "Native JSON representation only; no field or task-delivery guarantee.",
+        "type": [
+          "object",
+          "array",
+          "string",
+          "number",
+          "boolean",
+          "null"
+        ]
+      },
+      "native_json_contract_scope": "value_only"
+    }
+  },
+  "routing": {
+    "family": "git-commit-message-gitlint-check-only",
+    "intent_tags": [
+      "lint a Git commit message file with gitlint",
+      "check whether a commit message satisfies gitlint rules"
+    ],
+    "negative_intents": [
+      "format or rewrite a Git commit message",
+      "create, amend, inspect, or publish Git commits",
+      "analyze Git diffs, logs, branches, tags, or blame history"
+    ],
+    "dependency_slots": []
+  },
+  "execution": {
+    "runtime": "python_script",
+    "uri": "file://Pool/resources/tools/script/git_commit_lint.py",
+    "execution_status": "active"
+  },
+  "utility": {
+    "latency_ms": 100,
+    "token_cost_factor": 0.01,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://jorisroovers.com/gitlint",
+    "license": "MIT",
+    "backed_by": "gitlint",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:942e46bb203db12bb286f4a6b3983584d5d9c0c813e5b956f6ae6e2cec3d6fab",
+    "local_implementation_uri": "file://Pool/resources/tools/script/git_commit_lint.py",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/script/_sgar_cli.py": "sha256:42368f8d49cb6364ad3aeaac6d0f9602adc12cb29fea49322fd488400698b6b9"
+    }
+  },
+  "type_specific": {
+    "tool": {
+      "tool_kind": "local_script",
+      "language": "python",
+      "deterministic": true
+    }
+  },
+  "memory": {
+    "success_trajectories": [],
+    "failure_reflections": []
+  },
+  "type": {
+    "resource_type": "Tool",
+    "resource_tag": [
+      "git",
+      "development-tools",
+      "code-quality"
+    ]
+  },
+  "input_contract": [
+    {
+      "name": "commit_msg_file",
+      "kind": "string",
+      "required": true,
+      "cli_position": 1
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "json",
+    "description": "JSON gitlint report containing target, actual gitlint exit code, clean flag, textual violation lines, and stderr; the message file is unchanged.",
+    "json_schema": {
+      "description": "Native JSON representation only; no field or task-delivery guarantee.",
+      "type": [
+        "object",
+        "array",
+        "string",
+        "number",
+        "boolean",
+        "null"
+      ]
+    },
+    "native_json_contract_scope": "value_only"
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [
+      {
+        "name": "gitlint-core",
+        "version": "==0.19.1",
+        "required": true
+      }
+    ],
+    "node_packages": [],
+    "system_packages": [
+      {
+        "name": "git",
+        "version": "image-locked",
+        "required": true
+      }
+    ],
+    "commands": [
+      "git",
+      "gitlint"
+    ],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "python_compatibility": ">=3.11,<4"
+  }
+}

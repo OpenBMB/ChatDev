@@ -1,0 +1,156 @@
+{
+  "manifest_version": "v2",
+  "resource_id": "tool.lib.pdfplumber_extract.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Extract an 800-character text preview from a PDF",
+    "description": "Opens one PDF with pdfplumber, extracts text from every page, joins page results with newlines, and returns the document page count plus only the first 800 characters of combined text.",
+    "domain_tags": [
+      "docs",
+      "pdf"
+    ],
+    "core_primitives": [
+      "open_pdf_document",
+      "extract_page_text",
+      "join_and_truncate_text"
+    ],
+    "problem_space": "Short text previews and page-count inspection for text-bearing PDF files."
+  },
+  "constraint": {
+    "io_signature": "Input: one PDF file path; output: JSON with total pages and at most 800 characters of newline-joined extracted text.",
+    "accepted_inputs": [
+      "a readable PDF file that pdfplumber can open and parse"
+    ],
+    "output_shape": "Success is an object with status=\"success\", tool=\"lib.pdfplumber_extract\", pages as the PDF's integer page count, and text as the first at most 800 characters of newline-joined page text. A caught file-open, PDF-parse, page-access, or text-extraction exception produces an object with status=\"error\", tool=\"lib.pdfplumber_extract\", and message as the exception string, then exits with code 1.",
+    "limitations": [
+      "extracts text only and does not extract tables despite the original broad label",
+      "returns only the first 800 characters of the combined document text and provides no per-page boundaries or coordinates",
+      "does not perform OCR, so image-only or scanned pages generally yield empty text",
+      "uses pdfplumber's default text extraction with no layout or cropping options",
+      "encrypted, missing, malformed, or unsupported PDFs use the wrapper's error envelope"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "pdf_path",
+        "kind": "file_path",
+        "artifact_types": [
+          "pdf"
+        ],
+        "extensions": [
+          ".pdf"
+        ],
+        "required": true,
+        "cli_position": 1
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "PDF page count and an at-most-800-character preview of newline-joined extracted text.",
+      "json_schema": {
+        "description": "Native JSON representation only; no field or task-delivery guarantee.",
+        "type": [
+          "object",
+          "array",
+          "string",
+          "number",
+          "boolean",
+          "null"
+        ]
+      },
+      "native_json_contract_scope": "value_only"
+    }
+  },
+  "routing": {
+    "family": "pdf-text-preview-extraction",
+    "intent_tags": [
+      "preview text from a PDF",
+      "count PDF pages and extract a short text sample"
+    ],
+    "negative_intents": [
+      "extract tables or cell structures from a PDF",
+      "OCR a scanned image-only PDF",
+      "return complete PDF text or page coordinates"
+    ]
+  },
+  "execution": {
+    "runtime": "python_library",
+    "uri": "file://Pool/resources/tools/lib/lib.pdfplumber_extract.py",
+    "execution_status": "active"
+  },
+  "utility": {
+    "latency_ms": 200.0,
+    "token_cost_factor": 0.02,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://github.com/jsvine/pdfplumber",
+    "license": "MIT",
+    "backed_by": "pdfplumber_extract",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:f0552226b97edc62ee1135d07b32ecf1e4e83cade21e97011f9c4fb2491e5bc5",
+    "local_implementation_uri": "file://Pool/resources/tools/lib/lib.pdfplumber_extract.py",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/lib/_liblib.py": "sha256:dcd68e7904232764172e5f646ff97b854f68f7f916180ae32f838a0acf9ccc77"
+    }
+  },
+  "type_specific": {},
+  "type": {
+    "resource_type": "Tool"
+  },
+  "input_contract": [
+    {
+      "name": "pdf_path",
+      "kind": "file_path",
+      "artifact_types": [
+        "pdf"
+      ],
+      "extensions": [
+        ".pdf"
+      ],
+      "required": true,
+      "cli_position": 1
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "json",
+    "description": "PDF page count and an at-most-800-character preview of newline-joined extracted text.",
+    "json_schema": {
+      "description": "Native JSON representation only; no field or task-delivery guarantee.",
+      "type": [
+        "object",
+        "array",
+        "string",
+        "number",
+        "boolean",
+        "null"
+      ]
+    },
+    "native_json_contract_scope": "value_only"
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [
+      {
+        "name": "pdfplumber",
+        "version": "==0.11.4",
+        "required": true
+      }
+    ],
+    "node_packages": [],
+    "system_packages": [],
+    "commands": [],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "python_compatibility": ">=3.11,<4"
+  }
+}

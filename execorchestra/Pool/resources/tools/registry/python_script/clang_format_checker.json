@@ -1,0 +1,172 @@
+{
+  "manifest_version": "1.0",
+  "resource_id": "tool.clang_format_checker.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Check one source file with clang-format dry-run mode without rewriting it",
+    "description": "Runs `clang-format --dry-run --Werror <file>` for one existing source file. It reports formatting violations through clang-format's exit code and captured diagnostics while leaving the file unchanged.",
+    "core_primitives": [
+      "check_clang_format_compliance",
+      "run_clang_format_dry_run",
+      "capture_format_diagnostics_without_writes"
+    ],
+    "problem_space": "Read-only clang-format compliance for a single supported source file; not source formatting, compiler diagnostics, semantic C/C++ linting, or multi-file project traversal.",
+    "domain_tags": [
+      "code-quality",
+      "automation-tools",
+      "software-engineering"
+    ]
+  },
+  "constraint": {
+    "env_requirements": [
+      "Python >= 3.6",
+      "clang-format executable"
+    ],
+    "io_signature": "Input: one required existing source file path accepted by clang-format; output: a JSON process envelope with exit code and full stdout/stderr diagnostics.",
+    "accepted_inputs": [
+      "an existing C, C++, Objective-C, Java, JavaScript, or other source file supported by the installed clang-format"
+    ],
+    "output_shape": "Completed check (clang-format exit 0 or 1): {status: \"success\", tool: \"clang-format\", target: string, exit_code: 0|1, result: null, stdout: string, stderr: string|null}; exit 0 indicates no `--Werror` formatting violation and exit 1 commonly reports a formatting violation. Other exits use the same keys with status=\"tool_error\" and propagate the actual exit code. Missing path/executable/120-second timeout: {status: \"error\", tool: \"clang-format\", message: string}, exiting 2/3/4. Missing argument prints usage to stderr and exits 1 without JSON.",
+    "limitations": [
+      "fixed `--dry-run --Werror` flags make this check-only; it never applies clang-format changes",
+      "checks one supplied file and does not recursively discover project files",
+      "does not expose style or fallback-style arguments; clang-format may discover configuration according to its normal rules",
+      "requires `clang-format` on PATH, uses a 120-second timeout, and captures output without parsing or truncation"
+    ],
+    "artifact_input": [
+      "file_path"
+    ],
+    "artifact_output": [
+      "json"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "file_path",
+        "kind": "string",
+        "required": true,
+        "cli_position": 1
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "JSON envelope with clang-format dry-run status, actual exit code, target, and full stdout/stderr; the source file is not modified.",
+      "json_schema": {
+        "description": "Native JSON representation only; no field or task-delivery guarantee.",
+        "type": [
+          "object",
+          "array",
+          "string",
+          "number",
+          "boolean",
+          "null"
+        ]
+      },
+      "native_json_contract_scope": "value_only"
+    }
+  },
+  "routing": {
+    "family": "clang-format-check-only",
+    "intent_tags": [
+      "check a source file for clang-format compliance",
+      "run clang-format dry-run with formatting violations as errors"
+    ],
+    "negative_intents": [
+      "rewrite or automatically format source files",
+      "lint C or C++ semantics or compile source code",
+      "check an entire directory recursively"
+    ],
+    "dependency_slots": []
+  },
+  "execution": {
+    "runtime": "python_script",
+    "uri": "file://Pool/resources/tools/script/clang_format_checker.py",
+    "execution_status": "active"
+  },
+  "utility": {
+    "latency_ms": 100,
+    "token_cost_factor": 0.01,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://clang.llvm.org/docs/ClangFormat.html",
+    "license": "Apache-2.0",
+    "backed_by": "clang-format",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:e8e800ab90a456e311728ec5a31da584b435ab7394fba300fc71fc3085fa03e9",
+    "local_implementation_uri": "file://Pool/resources/tools/script/clang_format_checker.py",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/script/_sgar_cli.py": "sha256:42368f8d49cb6364ad3aeaac6d0f9602adc12cb29fea49322fd488400698b6b9"
+    }
+  },
+  "type_specific": {
+    "tool": {
+      "tool_kind": "local_script",
+      "language": "python",
+      "deterministic": true
+    }
+  },
+  "memory": {
+    "success_trajectories": [],
+    "failure_reflections": []
+  },
+  "type": {
+    "resource_type": "Tool",
+    "resource_tag": [
+      "code-quality",
+      "automation-tools",
+      "software-engineering"
+    ]
+  },
+  "input_contract": [
+    {
+      "name": "file_path",
+      "kind": "string",
+      "required": true,
+      "cli_position": 1
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "json",
+    "description": "JSON envelope with clang-format dry-run status, actual exit code, target, and full stdout/stderr; the source file is not modified.",
+    "json_schema": {
+      "description": "Native JSON representation only; no field or task-delivery guarantee.",
+      "type": [
+        "object",
+        "array",
+        "string",
+        "number",
+        "boolean",
+        "null"
+      ]
+    },
+    "native_json_contract_scope": "value_only"
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [],
+    "node_packages": [],
+    "system_packages": [
+      {
+        "name": "clang-format",
+        "version": "image-locked",
+        "required": true
+      }
+    ],
+    "commands": [
+      "clang-format"
+    ],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "python_compatibility": ">=3.11,<4"
+  }
+}

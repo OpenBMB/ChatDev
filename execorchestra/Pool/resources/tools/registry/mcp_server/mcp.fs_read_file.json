@@ -1,0 +1,143 @@
+{
+  "manifest_version": "v2",
+  "resource_id": "tool.mcp.fs_read_file.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Read the complete textual contents of one known local file without modifying it.",
+    "description": "Use when a workflow already knows the path of one text file and needs its contents for analysis or a later operation. It reads one file only; it does not search for files, enumerate directories, parse binary documents, or write changes.",
+    "domain_tags": [
+      "filesystem",
+      "text-file-reading",
+      "source-inspection"
+    ],
+    "core_primitives": [
+      "read_text_file",
+      "load_file_contents",
+      "inspect_known_file"
+    ],
+    "problem_space": "Load the text contents of one explicit local file. This is single-file content access, distinct from finding files by a pattern, reading multiple files, listing folders, editing content, and extracting specialized document formats.",
+    "execution_semantics": {
+      "determinism": "deterministic",
+      "side_effects": "none",
+      "effect_targets": [],
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  "constraint": {
+    "io_signature": "Input: one local text-file path. Output: text contents of that file.",
+    "accepted_inputs": [
+      "an existing readable local text-file path within allowed roots"
+    ],
+    "output_shape": "plain text file content.",
+    "limitations": [
+      "does not discover unknown files or search file contents",
+      "does not modify files or parse binary document formats"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "path",
+        "kind": "file_path",
+        "required": true,
+        "cli_position": 1,
+        "content_encoding": "utf-8"
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "text",
+      "description": "Read a text file's contents via MCP filesystem server"
+    }
+  },
+  "routing": {
+    "family": "filesystem-content-read",
+    "intent_tags": [
+      "read a known text file",
+      "inspect source file contents",
+      "load one file's text"
+    ],
+    "negative_intents": [
+      "search across files",
+      "read multiple named files",
+      "edit or overwrite a file"
+    ]
+  },
+  "execution": {
+    "runtime": "mcp_server",
+    "uri": "file://Pool/resources/tools/mcp/mcp.fs_read_file.py",
+    "execution_status": "active"
+  },
+  "utility": {
+    "latency_ms": 300.0,
+    "token_cost_factor": 0.02,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://github.com/modelcontextprotocol/servers/tree/main/src/filesystem",
+    "license": "MIT",
+    "backed_by": "MCP read_text_file",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:325286e0fd4e47c5638ffe35de97779e69d73a958bd18955443bbbb490f240cf",
+    "local_implementation_uri": "file://Pool/resources/tools/mcp/mcp.fs_read_file.py",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/mcp/_mcplib.py": "sha256:8c39f008bd1fc31f0457e6e08cb42da72eeeebba3dd1bcb51c277a33b35287f3"
+    }
+  },
+  "type_specific": {},
+  "type": {
+    "resource_type": "Tool"
+  },
+  "input_contract": [
+    {
+      "name": "path",
+      "kind": "file_path",
+      "required": true,
+      "cli_position": 1,
+      "content_encoding": "utf-8"
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "text",
+    "description": "Read a text file's contents via MCP filesystem server"
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [
+      {
+        "name": "mcp",
+        "version": "==1.28.1",
+        "required": true
+      }
+    ],
+    "node_packages": [
+      {
+        "name": "@modelcontextprotocol/server-filesystem",
+        "version": "==2026.7.10",
+        "required": true
+      }
+    ],
+    "system_packages": [],
+    "commands": [
+      "mcp-server-filesystem"
+    ],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "mcp": {
+      "server_command": "mcp-server-filesystem",
+      "working_directory": "/app",
+      "allowed_roots": [
+        "/app"
+      ]
+    }
+  }
+}

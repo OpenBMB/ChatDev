@@ -1,0 +1,184 @@
+{
+  "manifest_version": "1.0",
+  "resource_id": "tool.dns_query_latency_checker.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Resolve one DNS name once with dnspython and report elapsed resolution time plus returned records",
+    "description": "Calls the default dnspython resolver for one hostname and optional record type, which defaults to A, measures that single resolve call with a monotonic performance timer, and returns textual resource records and elapsed milliseconds.",
+    "core_primitives": [
+      "resolve_dns_record_with_default_resolver",
+      "measure_single_dns_resolution_duration",
+      "serialize_dns_answers_as_text"
+    ],
+    "problem_space": "One-shot DNS resolution timing and answer inspection through the environment's default resolver; not statistical benchmarking, authoritative DNS tracing, configurable nameserver probing, or general network latency testing.",
+    "domain_tags": [
+      "networking",
+      "performance-optimization",
+      "tools"
+    ]
+  },
+  "constraint": {
+    "env_requirements": [
+      "Python >= 3.6",
+      "dnspython",
+      "working DNS resolver configuration and network access as required"
+    ],
+    "io_signature": "Input: required hostname and optional DNS record_type string defaulting to A; output: JSON with one measured resolution duration and textual answers or a DNS error.",
+    "accepted_inputs": [
+      "a hostname or DNS name resolvable by dnspython's default resolver",
+      "an optional record type supported by the installed dnspython, such as A, AAAA, MX, TXT, or CNAME"
+    ],
+    "output_shape": "Success: {status: \"success\", tool: \"dnspython\", hostname: string, record_type: string, latency_ms: number rounded to two decimals, records: string[]}. Caught dns.exception.DNSException: {status: \"error\", tool: \"dnspython\", hostname: string, message: string} and exit 1. Missing hostname prints usage to stderr and exits 1 without JSON. Non-DNS exceptions are not caught and may produce a traceback rather than JSON.",
+    "limitations": [
+      "performs exactly one resolution, so latency_ms is not an average, percentile, or stable DNS benchmark and may reflect caching",
+      "uses dnspython's default resolver, nameservers, search behavior, retries, and timeout/lifetime settings with no caller overrides",
+      "measures the complete resolve call rather than isolated wire latency and does not trace delegation or query authoritative servers",
+      "does not impose wrapper-level timeout or output truncation; only dnspython DNSException errors receive structured JSON"
+    ],
+    "artifact_input": [
+      "hostname"
+    ],
+    "artifact_output": [
+      "json"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "hostname",
+        "kind": "string",
+        "required": true,
+        "cli_position": 1
+      },
+      {
+        "name": "record_type",
+        "kind": "string",
+        "required": false,
+        "cli_position": 2
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "JSON result for one default-resolver DNS lookup, including hostname, record type, elapsed milliseconds and textual records, or a DNS exception.",
+      "json_schema": {
+        "description": "Native JSON representation only; no field or task-delivery guarantee.",
+        "type": [
+          "object",
+          "array",
+          "string",
+          "number",
+          "boolean",
+          "null"
+        ]
+      },
+      "native_json_contract_scope": "value_only"
+    }
+  },
+  "routing": {
+    "family": "dns-single-query-resolution-timing",
+    "intent_tags": [
+      "measure one DNS resolution and inspect returned records",
+      "resolve a hostname with an optional DNS record type"
+    ],
+    "negative_intents": [
+      "benchmark DNS latency with repeated samples or percentiles",
+      "query a caller-selected DNS server or trace authoritative delegation",
+      "measure HTTP, ICMP, TCP, or general network latency"
+    ],
+    "dependency_slots": []
+  },
+  "execution": {
+    "runtime": "python_script",
+    "uri": "file://Pool/resources/tools/script/dns_query_latency_checker.py",
+    "execution_status": "active"
+  },
+  "utility": {
+    "latency_ms": 50,
+    "token_cost_factor": 0.01,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://www.dnspython.org",
+    "license": "ISC",
+    "backed_by": "DNS resolution + latency via dnspython",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:6d93b51f9277bebb25ba6412a024c54ac19611197a035f5e009f5e54a1da850c",
+    "local_implementation_uri": "file://Pool/resources/tools/script/dns_query_latency_checker.py",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/script/_sgar_cli.py": "sha256:42368f8d49cb6364ad3aeaac6d0f9602adc12cb29fea49322fd488400698b6b9"
+    }
+  },
+  "type_specific": {
+    "tool": {
+      "tool_kind": "local_script",
+      "language": "python",
+      "deterministic": false
+    }
+  },
+  "memory": {
+    "success_trajectories": [],
+    "failure_reflections": []
+  },
+  "type": {
+    "resource_type": "Tool",
+    "resource_tag": [
+      "networking",
+      "performance-optimization",
+      "tools"
+    ]
+  },
+  "input_contract": [
+    {
+      "name": "hostname",
+      "kind": "string",
+      "required": true,
+      "cli_position": 1
+    },
+    {
+      "name": "record_type",
+      "kind": "string",
+      "required": false,
+      "cli_position": 2
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "json",
+    "description": "JSON result for one default-resolver DNS lookup, including hostname, record type, elapsed milliseconds and textual records, or a DNS exception.",
+    "json_schema": {
+      "description": "Native JSON representation only; no field or task-delivery guarantee.",
+      "type": [
+        "object",
+        "array",
+        "string",
+        "number",
+        "boolean",
+        "null"
+      ]
+    },
+    "native_json_contract_scope": "value_only"
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [
+      {
+        "name": "dnspython",
+        "version": "==2.7.0",
+        "required": true
+      }
+    ],
+    "node_packages": [],
+    "system_packages": [],
+    "commands": [],
+    "env_vars": [],
+    "network_required": true,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "python_compatibility": ">=3.11,<4"
+  }
+}

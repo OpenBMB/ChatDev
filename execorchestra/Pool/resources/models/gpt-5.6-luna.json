@@ -1,0 +1,127 @@
+{
+  "resource_id": "gpt-5.6-luna",
+  "type": {
+    "resource_type": "Model",
+    "resource_tag": [
+      "1M Context",
+      ".2",
+      "1.2",
+      ".02"
+    ]
+  },
+  "capability": {
+    "summary": "Cost-oriented reasoning tier for high-volume workloads.",
+    "core_primitives": [
+      "classification",
+      "information extraction",
+      "summarization",
+      "instruction following"
+    ],
+    "problem_space": "Language model for bounded, high-volume text and visual tasks. Applicable tasks include classification, information extraction, summarization, instruction following. Accepts text, image input and produces text output. External tools are required to execute programs, browse sources, or modify files; generated instructions alone do not perform those actions. Published distinction: The provider positions this in the tier corresponding to earlier nano variants. Native reasoning extends through max with a 1,050,000-token context; neither model age nor tier establishes a supplier performance ranking.",
+    "domain_tags": [
+      "Language",
+      "Software Engineering",
+      "Visual Understanding"
+    ]
+  },
+  "constraint": {
+    "env_requirements": [
+      "OpenAI-Compatible API Endpoint",
+      "Valid API Key (Cloud)",
+      "Stable Network Connection"
+    ],
+    "io_signature": "Input modalities: text, image | Output modalities: text. Gateway transport support requires verification."
+  },
+  "utility": {
+    "latency_ms": 0,
+    "token_cost_factor": 0,
+    "expected_success_rate": 0
+  },
+  "execution": {
+    "uri": "${base_url}/v1/chat/completions"
+  },
+  "memory": {
+    "success_trajectories": [],
+    "failure_reflections": []
+  },
+  "type_specific": {
+    "model": {
+      "profile_version": "model-capabilities-v1",
+      "input_modalities": [
+        "text",
+        "image"
+      ],
+      "output_modalities": [
+        "text"
+      ],
+      "supports": {
+        "tool_calling": true,
+        "json_mode": true,
+        "vision": true,
+        "reasoning": true,
+        "coding": true,
+        "structured_outputs": true
+      },
+      "thinking_mode": "configurable",
+      "native_protocol": "chat_completions_and_responses",
+      "documented_context_tokens": 1050000,
+      "evidence_status": "provider_documented_not_gateway_verified",
+      "gateway_verification_status": "not_run",
+      "limitations": [],
+      "max_output_tokens": 128000,
+      "pricing_rules": {
+        "input_per_m": ".2",
+        "cache_per_m": ".02",
+        "output_per_m": "1.2",
+        "source": "https://developers.openai.com/api/docs/pricing",
+        "cache_mode": "implicit",
+        "input_tiers": [
+          {
+            "above_input_tokens": 272000,
+            "input_per_m": "0.4",
+            "cache_per_m": "0.04",
+            "output_per_m": "1.80",
+            "cache_write_per_m": "0.50"
+          }
+        ],
+        "cache_write_per_m": "0.250"
+      }
+    }
+  },
+  "provenance": {
+    "semantic_review": {
+      "reviewed_at": "2026-09-09",
+      "policy": "model-capabilities-v1",
+      "source_urls": [
+        "https://developers.openai.com/api/docs/models/gpt-5.6-luna.md"
+      ],
+      "evidence_status": "provider_documented_not_gateway_verified",
+      "source_document_sha256": {
+        "https://developers.openai.com/api/docs/models/gpt-5.6-luna.md": "d71a4bb908d62590c6546f3dc39201ed39f1bb96b175b3578cb873abaa7c4d2e"
+      },
+      "task_profile_basis": "Task categories derived from documented operations; no empirical quality ranking or fixed framework role.",
+      "context_policy": "Legacy configured limit is preserved separately from documented native context; neither proves the supplier limit."
+    },
+    "model_distinction_review": {
+      "evidence_kind": "provider_documented_design",
+      "source_urls": [
+        "https://developers.openai.com/api/docs/models/gpt-5.6-luna.md"
+      ],
+      "source_document_sha256": {
+        "https://developers.openai.com/api/docs/models/gpt-5.6-luna.md": "38dc4b34889304d87ee975b58e156f5f57305e8d1d343e7be9d01c676c7fcc2f"
+      },
+      "interpretation_limit": "Published task emphasis is non-exclusive. Architecture and product positioning do not establish supplier latency, measured quality, or a fixed framework role.",
+      "policy": "model-distinctions-v1",
+      "reviewed_at": "2026-09-09",
+      "evidence_status": "provider_documented_not_gateway_verified",
+      "scope": "Non-exclusive published task emphasis and architecture; no empirical cross-model quality ordering."
+    },
+    "pricing_status": "official_public_price_snapshot",
+    "pricing_note": "Official reference rates and backend billing rules from the same dated pricebook; capability and gateway evidence unchanged.",
+    "official_pricing": {
+      "snapshot_date": "2026-10-09",
+      "source": "https://developers.openai.com/api/docs/pricing",
+      "pricebook_sha256": "9e9a8248e54f1934d08d5efe68a3998ebce6faa09106f3f2a7ac119bf89a182c"
+    }
+  }
+}

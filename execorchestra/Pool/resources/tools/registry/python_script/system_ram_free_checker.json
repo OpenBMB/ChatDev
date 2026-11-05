@@ -1,0 +1,154 @@
+{
+  "manifest_version": "1.0",
+  "resource_id": "tool.system_ram_free_checker.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Return one instantaneous virtual-memory and swap snapshot",
+    "description": "Calls psutil.virtual_memory() and psutil.swap_memory() once and emits current host/container memory counters in a JSON envelope. It accepts no arguments and does not monitor over time.",
+    "core_primitives": [
+      "read_virtual_memory_snapshot",
+      "read_swap_memory_snapshot",
+      "report_memory_counters"
+    ],
+    "problem_space": "Point-in-time operating-system memory telemetry for the runtime environment; not continuous monitoring, process profiling, leak detection, capacity forecasting, alerting, cleanup, or memory reservation.",
+    "domain_tags": [
+      "system_monitoring",
+      "resource_management",
+      "performance_optimization"
+    ]
+  },
+  "constraint": {
+    "env_requirements": [
+      "Python >= 3.6",
+      "psutil Python package with access to runtime memory statistics"
+    ],
+    "io_signature": "Input: none; command-line arguments are ignored. Output: one JSON envelope containing virtual_memory and swap byte counters plus percent-used values at the instant sampled.",
+    "accepted_inputs": [
+      "no input arguments"
+    ],
+    "output_shape": "Success: {status: \"success\", tool: \"psutil\", virtual_memory: {total_bytes: integer, available_bytes: integer, used_bytes: integer, free_bytes: integer, percent_used: number}, swap: {total_bytes: integer, used_bytes: integer, percent_used: number}}, exit 0. psutil or platform-access failures are uncaught and may traceback without JSON.",
+    "limitations": [
+      "values are nondeterministic point-in-time host or container measurements and can change immediately after sampling",
+      "takes no path or directory input; filesystem file/directory boundaries are not applicable to this snapshot tool",
+      "does not sample repeatedly, set thresholds, emit alerts, identify processes, free RAM, modify swap, or predict capacity",
+      "platform accounting semantics for available, used, free, and swap vary; no timeout or fallback is implemented"
+    ],
+    "artifact_input": [],
+    "artifact_output": [
+      "json"
+    ]
+  },
+  "io": {
+    "input_contract": [],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "JSON envelope containing one instantaneous virtual-memory and swap snapshot from psutil.",
+      "json_schema": {
+        "description": "Native JSON representation only; no field or task-delivery guarantee.",
+        "type": [
+          "object",
+          "array",
+          "string",
+          "number",
+          "boolean",
+          "null"
+        ]
+      },
+      "native_json_contract_scope": "value_only"
+    }
+  },
+  "routing": {
+    "family": "system-memory-point-in-time-snapshot",
+    "intent_tags": [
+      "check currently available system memory",
+      "get a virtual memory and swap snapshot"
+    ],
+    "negative_intents": [
+      "continuously monitor memory or emit alerts",
+      "profile a process or detect memory leaks",
+      "free allocate or reserve system memory"
+    ],
+    "dependency_slots": []
+  },
+  "execution": {
+    "runtime": "python_script",
+    "uri": "file://Pool/resources/tools/script/system_ram_free_checker.py",
+    "execution_status": "active"
+  },
+  "utility": {
+    "latency_ms": 50,
+    "token_cost_factor": 0.01,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://github.com/giampaolo/psutil",
+    "license": "BSD",
+    "backed_by": "system memory snapshot via psutil",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:0c1f29bf9988d470bf9ef9ec444702760f25879881bcef24918e2508de39e2b7",
+    "local_implementation_uri": "file://Pool/resources/tools/script/system_ram_free_checker.py",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/script/_sgar_cli.py": "sha256:42368f8d49cb6364ad3aeaac6d0f9602adc12cb29fea49322fd488400698b6b9"
+    }
+  },
+  "type_specific": {
+    "tool": {
+      "tool_kind": "local_script",
+      "language": "python",
+      "deterministic": false
+    }
+  },
+  "memory": {
+    "success_trajectories": [],
+    "failure_reflections": []
+  },
+  "type": {
+    "resource_type": "Tool",
+    "resource_tag": [
+      "system_monitoring",
+      "resource_management",
+      "performance_optimization"
+    ]
+  },
+  "input_contract": [],
+  "output_contract": {
+    "artifact_type": "json",
+    "description": "JSON envelope containing one instantaneous virtual-memory and swap snapshot from psutil.",
+    "json_schema": {
+      "description": "Native JSON representation only; no field or task-delivery guarantee.",
+      "type": [
+        "object",
+        "array",
+        "string",
+        "number",
+        "boolean",
+        "null"
+      ]
+    },
+    "native_json_contract_scope": "value_only"
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [
+      {
+        "name": "psutil",
+        "version": "==6.1.1",
+        "required": true
+      }
+    ],
+    "node_packages": [],
+    "system_packages": [],
+    "commands": [],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "python_compatibility": ">=3.11,<4"
+  }
+}

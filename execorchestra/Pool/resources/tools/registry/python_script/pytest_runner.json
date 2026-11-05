@@ -1,0 +1,165 @@
+{
+  "manifest_version": "1.0",
+  "resource_id": "tool.pytest_runner.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Run pytest verbosely on one local target and return raw output plus a heuristic summary",
+    "description": "Executes `[sys.executable, -m, pytest, target_path, -tb, short, -v]` in the inherited working directory. It returns raw streams and heuristically parsed counts. A normal timed `no tests ran` summary usually matches the regex first and, with pytest exit 5, is labeled failed rather than no_tests.",
+    "core_primitives": [
+      "execute_pytest_target",
+      "capture_pytest_console_streams",
+      "heuristically_parse_pytest_summary_counts"
+    ],
+    "problem_space": "Direct pytest execution for a single path with verbose console capture and lightweight summary extraction; not safe test inspection, pytest-json-report output, coverage measurement, test generation, or arbitrary pytest option forwarding.",
+    "domain_tags": [
+      "testing-tools",
+      "Python",
+      "automation"
+    ]
+  },
+  "constraint": {
+    "env_requirements": [
+      "Python >= 3.6",
+      "pytest importable by the current Python interpreter",
+      "the target's test dependencies and plugins available in the inherited environment"
+    ],
+    "io_signature": "Input: required target_path string naming an existing file or directory. Executes current Python `-m pytest <target> -tb short -v` with inherited cwd. Output: JSON object with status, pytest exit_code, heuristic summary, raw stdout/stderr, or status=error with message.",
+    "accepted_inputs": [
+      "an existing Python test file, test directory, or other pytest-collectable local path intentionally authorized for execution"
+    ],
+    "output_shape": "Completed subprocess: {status: \"passed\"|\"failed\"|\"no_tests\", exit_code: integer, summary: {text: string, passed: integer, failed: integer, errors: integer, skipped: integer}, stdout: string, stderr: string}, wrapper exit 0 regardless of pytest exit. `no_tests` occurs only when the timing-summary regex finds no match and lowercase stdout still contains `no tests ran`; ordinary timed no-test output usually matches first and becomes status=\"failed\" because pytest exits nonzero. Non-existing target or caught launch/parsing exception: {status: \"error\", message: string}, wrapper exit 0. Missing argument prints usage to stderr and exits 1 without JSON.",
+    "limitations": [
+      "pytest collection and tests execute arbitrary Python code, plugins, and conftest hooks with inherited permissions/environment and may modify files, spawn processes, or access networks",
+      "does not set cwd to the target, forward user pytest options, impose a timeout, truncate output, or terminate hanging tests",
+      "summary parsing requires a specific `=== ... in <decimal>s ===` stdout form and uses substring checks, so counts can be missing or inaccurate across pytest versions and outcomes",
+      "the no_tests branch is reached only when that regex completely misses and stdout contains `no tests ran`; conventional timed no-test summaries generally match the regex and are reported as failed, not no_tests",
+      "the wrapper itself exits 0 for missing targets, test failures, collection errors, and caught exceptions; consumers must inspect JSON status and exit_code"
+    ],
+    "artifact_input": [
+      "file_path"
+    ],
+    "artifact_output": [
+      "json"
+    ],
+    "execution_risk": "high"
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "target_path",
+        "kind": "string",
+        "required": true,
+        "cli_position": 1
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "JSON pytest result with raw streams and heuristic counts; conventional timed no-test runs are generally labeled failed rather than no_tests.",
+      "json_schema": {
+        "description": "Native JSON representation only; no field or task-delivery guarantee.",
+        "type": [
+          "object",
+          "array",
+          "string",
+          "number",
+          "boolean",
+          "null"
+        ]
+      },
+      "native_json_contract_scope": "value_only"
+    }
+  },
+  "routing": {
+    "family": "pytest-target-test-execution",
+    "intent_tags": [
+      "run pytest on a local test target",
+      "capture verbose pytest output and basic result counts"
+    ],
+    "negative_intents": [
+      "inspect Python tests safely without executing them",
+      "produce pytest native JSON or coverage reports",
+      "forward arbitrary pytest options or run npm Jest Go or Rust tests"
+    ],
+    "dependency_slots": []
+  },
+  "utility": {
+    "latency_ms": 200,
+    "token_cost_factor": 0.01,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://docs.pytest.org/",
+    "license": "MIT",
+    "backed_by": "wraps pytest",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:88e3d27395bd30f0c6d90d5e3c662eaccdba3ec7174b05eace9831ae841f895c",
+    "local_implementation_uri": "file://Pool/resources/tools/script/pytest_runner.py"
+  },
+  "type_specific": {
+    "tool": {
+      "tool_kind": "local_script",
+      "language": "python",
+      "deterministic": false
+    }
+  },
+  "memory": {
+    "success_trajectories": [],
+    "failure_reflections": []
+  },
+  "execution": {
+    "runtime": "python_script",
+    "uri": "file://Pool/resources/tools/script/pytest_runner.py",
+    "execution_status": "active",
+    "execution_risk": "high"
+  },
+  "type": {
+    "resource_type": "Tool",
+    "resource_tag": [
+      "testing-tools",
+      "Python",
+      "automation"
+    ]
+  },
+  "input_contract": [
+    {
+      "name": "target_path",
+      "kind": "string",
+      "required": true,
+      "cli_position": 1
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "json",
+    "description": "JSON pytest result with raw streams and heuristic counts; conventional timed no-test runs are generally labeled failed rather than no_tests.",
+    "json_schema": {
+      "description": "Native JSON representation only; no field or task-delivery guarantee.",
+      "type": [
+        "object",
+        "array",
+        "string",
+        "number",
+        "boolean",
+        "null"
+      ]
+    },
+    "native_json_contract_scope": "value_only"
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [],
+    "node_packages": [],
+    "system_packages": [],
+    "commands": [],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "python_compatibility": ">=3.11,<4"
+  }
+}

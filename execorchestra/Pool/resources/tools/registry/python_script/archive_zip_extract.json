@@ -1,0 +1,304 @@
+{
+  "manifest_version": "v2",
+  "resource_id": "tool.archive_zip_extract.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Safely extract every regular file from one ZIP archive into an explicit task-workspace directory.",
+    "description": "Uses Python zipfile to validate all archive members before extraction, rejects traversal and symbolic links, and returns relative extracted-file names plus aggregate size facts.",
+    "domain_tags": [
+      "archive",
+      "zip",
+      "file-extraction"
+    ],
+    "core_primitives": [
+      "extract_zip_archive"
+    ],
+    "operation_kinds": [
+      "extract_zip_archive"
+    ],
+    "problem_space": "Deterministic unpacking of ZIP attachments so downstream tools or agents can inspect their contained files.",
+    "execution_semantics": {
+      "determinism": "deterministic",
+      "side_effects": "declared",
+      "effect_targets": [
+        "task_workspace"
+      ],
+      "modalities": [
+        "archive",
+        "file"
+      ]
+    }
+  },
+  "constraint": {
+    "io_signature": "Input: ZIP file path and destination directory inside the task workspace. Output: typed JSON receipt listing extracted relative file names and aggregate byte count.",
+    "accepted_inputs": [
+      "a readable, non-encrypted ZIP archive",
+      "an output directory within SGAR_WORKSPACE_ROOT"
+    ],
+    "artifact_input": [
+      "zip",
+      "archive",
+      "file"
+    ],
+    "artifact_output": [
+      "json"
+    ],
+    "output_shape": "Success contains status, tool, extracted_files, extracted_file_count, and total_uncompressed_bytes. Unsafe, malformed, oversized, or unreadable archives return a typed error envelope and non-zero exit.",
+    "limitations": [
+      "supports ZIP archives only",
+      "rejects symbolic links, path traversal, more than 10000 members, or more than 1 GiB declared uncompressed content",
+      "does not decrypt password-protected members",
+      "returns a receipt; downstream inspection uses the declared output directory"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "archive_path",
+        "kind": "file_path",
+        "artifact_types": [
+          "zip",
+          "archive"
+        ],
+        "extensions": [
+          ".zip"
+        ],
+        "required": true,
+        "cli_position": 1
+      },
+      {
+        "name": "output_directory",
+        "kind": "directory_path",
+        "required": true,
+        "cli_position": 2
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "Typed ZIP extraction receipt.",
+      "json_schema": {
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "status": {
+                "const": "success"
+              },
+              "tool": {
+                "const": "python-zipfile"
+              },
+              "extracted_files": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "extracted_file_count": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "total_uncompressed_bytes": {
+                "type": "integer",
+                "minimum": 0
+              }
+            },
+            "required": [
+              "status",
+              "tool",
+              "extracted_files",
+              "extracted_file_count",
+              "total_uncompressed_bytes"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "status": {
+                "const": "error"
+              },
+              "tool": {
+                "const": "python-zipfile"
+              },
+              "message": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "status",
+              "tool",
+              "message"
+            ],
+            "additionalProperties": false
+          }
+        ]
+      },
+      "result_status": {
+        "payload_path": "status",
+        "success_values": [
+          "success"
+        ],
+        "failure_values": [
+          "error"
+        ]
+      }
+    }
+  },
+  "routing": {
+    "family": "zip-archive-extraction",
+    "intent_tags": [
+      "extract files from a ZIP attachment",
+      "unpack an archive for downstream inspection"
+    ],
+    "negative_intents": [
+      "extract tar or rar archives",
+      "inspect archive contents without creating files",
+      "decrypt an archive"
+    ],
+    "dependency_slots": []
+  },
+  "execution": {
+    "runtime": "python_script",
+    "uri": "file://Pool/resources/tools/script/archive_zip_extract.py",
+    "execution_status": "active"
+  },
+  "utility": {
+    "latency_ms": 100,
+    "token_cost_factor": 0.01,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://docs.python.org/3/library/zipfile.html",
+    "license": "PSF-2.0",
+    "backed_by": "Python standard-library zipfile",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:1ec6a6042d6ece481a6a1d897fad4ce55142d55fcdcfd0ad82cd0c907492bc89",
+    "local_implementation_uri": "file://Pool/resources/tools/script/archive_zip_extract.py"
+  },
+  "type_specific": {
+    "tool": {
+      "tool_kind": "local_script",
+      "language": "python",
+      "deterministic": true
+    }
+  },
+  "type": {
+    "resource_type": "Tool",
+    "resource_tag": [
+      "archive",
+      "zip",
+      "file-extraction"
+    ]
+  },
+  "input_contract": [
+    {
+      "name": "archive_path",
+      "kind": "file_path",
+      "artifact_types": [
+        "zip",
+        "archive"
+      ],
+      "extensions": [
+        ".zip"
+      ],
+      "required": true,
+      "cli_position": 1
+    },
+    {
+      "name": "output_directory",
+      "kind": "directory_path",
+      "required": true,
+      "cli_position": 2
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "json",
+    "description": "Typed ZIP extraction receipt.",
+    "json_schema": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "status": {
+              "const": "success"
+            },
+            "tool": {
+              "const": "python-zipfile"
+            },
+            "extracted_files": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "extracted_file_count": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "total_uncompressed_bytes": {
+              "type": "integer",
+              "minimum": 0
+            }
+          },
+          "required": [
+            "status",
+            "tool",
+            "extracted_files",
+            "extracted_file_count",
+            "total_uncompressed_bytes"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "status": {
+              "const": "error"
+            },
+            "tool": {
+              "const": "python-zipfile"
+            },
+            "message": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "status",
+            "tool",
+            "message"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "result_status": {
+      "payload_path": "status",
+      "success_values": [
+        "success"
+      ],
+      "failure_values": [
+        "error"
+      ]
+    }
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [],
+    "node_packages": [],
+    "system_packages": [],
+    "commands": [],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "python_compatibility": ">=3.11,<4"
+  }
+}

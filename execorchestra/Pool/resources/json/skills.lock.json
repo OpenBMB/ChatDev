@@ -1,0 +1,1436 @@
+{
+  "schema_version": "1.0",
+  "source_config": "Pool/resources/produce/skill_sources.json",
+  "sources": [
+    {
+      "namespace": "anthropic",
+      "repository": "https://github.com/anthropics/skills.git",
+      "commit": "b29e7cf65e5cb78a5ac33d582270551bc74a14eb",
+      "license_policy": "per_skill"
+    },
+    {
+      "namespace": "superpowers",
+      "repository": "https://github.com/obra/superpowers.git",
+      "commit": "44c9b2d6e889982ac18c27d05a19fefe335194e1",
+      "license_policy": "repository"
+    },
+    {
+      "namespace": "claudekit",
+      "repository": "https://github.com/mrgoonie/claudekit-skills.git",
+      "commit": "80113d86bc4407f105af40a2c4ea58194f7c370a",
+      "license_policy": "per_skill"
+    },
+    {
+      "namespace": "neolabhq",
+      "repository": "https://github.com/NeoLabHQ/context-engineering-kit.git",
+      "commit": "555b95263ecf13d2ad9be14df676a1263d5a62b2",
+      "license_policy": "repository"
+    },
+    {
+      "namespace": "n8n",
+      "repository": "https://github.com/czlonkowski/n8n-skills.git",
+      "commit": "408670d181587b5227bd98153bf56e5a0038d6d2",
+      "license_policy": "repository"
+    },
+    {
+      "namespace": "trailofbits",
+      "repository": "https://github.com/trailofbits/skills.git",
+      "commit": "09dfbd91537b888136c9203dca4ffdee5a595c69",
+      "license_policy": "repository"
+    },
+    {
+      "namespace": "openai_plugins",
+      "repository": "https://github.com/openai/plugins.git",
+      "commit": "11c74d6ba24d3a6d48f54a194cd00ef3beea18f9",
+      "license_policy": "per_skill"
+    }
+  ],
+  "packages": [
+    {
+      "resource_id": "skill.anthropic.algorithmic-art.v1",
+      "namespace": "anthropic",
+      "source_path": "skills/algorithmic-art/SKILL.md",
+      "content_hash": "sha256:6688fc81bb2051d3f234385b50ce160834eb0b0510ed8a5816cc412c1d28c352",
+      "package_hash": "sha256:3c0f40edf700ffc9047eae66f6476956a2399e4bceda8d860a9655b84330aecf",
+      "license": "Apache-2.0",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.anthropic.brand-guidelines.v1",
+      "namespace": "anthropic",
+      "source_path": "skills/brand-guidelines/SKILL.md",
+      "content_hash": "sha256:a0aa0a21ebf9e8511a045cc234bc839adc2b6706db727add14e9855f242e11a7",
+      "package_hash": "sha256:93889071ae19a1954dd26428aa0ce08b46fb339847a2fc492885058519c75738",
+      "license": "Apache-2.0",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.anthropic.canvas-design.v1",
+      "namespace": "anthropic",
+      "source_path": "skills/canvas-design/SKILL.md",
+      "content_hash": "sha256:7bebc4a2cf108c55c1e52bb96b1050dc1ab2f9492e9c2d43f1fe57f826728f4d",
+      "package_hash": "sha256:2f31ec5ecefd896a46144f5b776ccb73d5c9a0c973551d574c95df8a77a98085",
+      "license": "Apache-2.0",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.anthropic.frontend-design.v1",
+      "namespace": "anthropic",
+      "source_path": "skills/frontend-design/SKILL.md",
+      "content_hash": "sha256:35c43b9d10c2388dbb228047ad028c989a14033750812125f351c85aa42c7a4a",
+      "package_hash": "sha256:e5d3bb114b5bb3aec3b33b7ac3d46e9bc79fad72a9252ee9ded45a94039dbead",
+      "license": "Apache-2.0",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.anthropic.internal-comms.v1",
+      "namespace": "anthropic",
+      "source_path": "skills/internal-comms/SKILL.md",
+      "content_hash": "sha256:c5c061ab25b33fab2358a9be53a5cc0d528ec7c3e8a29285a041ffc95d0d8947",
+      "package_hash": "sha256:c3f1fb1267a4db29469dd0a15338b887ac27598e7742af3ccb016c1102b70be7",
+      "license": "Apache-2.0",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.anthropic.mcp-builder.v1",
+      "namespace": "anthropic",
+      "source_path": "skills/mcp-builder/SKILL.md",
+      "content_hash": "sha256:57231330040e18e033dad8b2fdc0340a6185034c32b42b7d3448f444a6af6cf2",
+      "package_hash": "sha256:7110a9996be6de8dbc678e80930d1de0d390980c4f1b4d07c61fd4107b61ec9c",
+      "license": "Apache-2.0",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.anthropic.skill-creator.v1",
+      "namespace": "anthropic",
+      "source_path": "skills/skill-creator/SKILL.md",
+      "content_hash": "sha256:e030e7685e26283b4a76f5202aa3ae8516fb41dde799be5ae8ea6393ec009fe9",
+      "package_hash": "sha256:e540ebe0e12d530900be71650bb138766907b4916236c2d37b8c4701662abc5a",
+      "license": "Apache-2.0",
+      "lifecycle": "active_conditional"
+    },
+    {
+      "resource_id": "skill.anthropic.slack-gif-creator.v1",
+      "namespace": "anthropic",
+      "source_path": "skills/slack-gif-creator/SKILL.md",
+      "content_hash": "sha256:561c85ffeab639a1e84bb51cfc49f66e868a2a4c4b8945bf77b7bdaeca145a7d",
+      "package_hash": "sha256:b0cd736f30e2a0617b849efac992304ea5a071fe5b1c378c745dd1385d573daa",
+      "license": "Apache-2.0",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.anthropic.theme-factory.v1",
+      "namespace": "anthropic",
+      "source_path": "skills/theme-factory/SKILL.md",
+      "content_hash": "sha256:7c765e6626bf61eca30224ceeb0da51ac003c7c2f1c1743ace9b3baa305ea632",
+      "package_hash": "sha256:735f87e88cc20f60bf784d4689dca2999f0e21fcdb222bbe24c82d584b5e6e4b",
+      "license": "Apache-2.0",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.anthropic.webapp-testing.v1",
+      "namespace": "anthropic",
+      "source_path": "skills/webapp-testing/SKILL.md",
+      "content_hash": "sha256:8bc27790f6e6dfc2bfa6692326d4518baacf6a31dcc646d963c729adad2f7e34",
+      "package_hash": "sha256:61eaf36bfb6f5f85959f39c9e4bab8597728f8395b052b20c0bb841dd9c9c858",
+      "license": "Apache-2.0",
+      "lifecycle": "active_conditional"
+    },
+    {
+      "resource_id": "skill.superpowers.brainstorming.v1",
+      "namespace": "superpowers",
+      "source_path": "skills/brainstorming/SKILL.md",
+      "content_hash": "sha256:4a54a4858b99807f3155ed1614b2f116e35ea5c1b788e793f565dd837fd3891f",
+      "package_hash": "sha256:21b4b1ed2f8950b8aa154a44c3df78a46d8887e73eb7d9f3bf95d5ddf6181d1b",
+      "license": "MIT",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.superpowers.dispatching-parallel-agents.v1",
+      "namespace": "superpowers",
+      "source_path": "skills/dispatching-parallel-agents/SKILL.md",
+      "content_hash": "sha256:1968923066f3b707eb01d1992cdf4c42284c3855f70253b9cd5000ff45fca13c",
+      "package_hash": "sha256:6683c2b2942084352b20d11e8d83868c9c8b475da5b0fa122047e0ecfe4f4384",
+      "license": "MIT",
+      "lifecycle": "active_conditional"
+    },
+    {
+      "resource_id": "skill.superpowers.executing-plans.v1",
+      "namespace": "superpowers",
+      "source_path": "skills/executing-plans/SKILL.md",
+      "content_hash": "sha256:c4c3d8b628c51114cd165fb8246fe02744cd8be180032328391252e653028d9b",
+      "package_hash": "sha256:74f1e11811c689c728ff58052097631736b7c00b7b59218f3e5fc9365a77706b",
+      "license": "MIT",
+      "lifecycle": "active_conditional"
+    },
+    {
+      "resource_id": "skill.superpowers.finishing-a-development-branch.v1",
+      "namespace": "superpowers",
+      "source_path": "skills/finishing-a-development-branch/SKILL.md",
+      "content_hash": "sha256:d0ac8360ed9d59121776ef95c84bcb38e9747de0d7ae7e227dca81e437593b9b",
+      "package_hash": "sha256:21fb98a5a692d05661ab2a6adeb3abc40de1a090bad2bb5f0c8f8f581b05b373",
+      "license": "MIT",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.superpowers.receiving-code-review.v1",
+      "namespace": "superpowers",
+      "source_path": "skills/receiving-code-review/SKILL.md",
+      "content_hash": "sha256:091df1629510af1b92fc4abd6f96732ebedb4cb2c0f3457e8f2740b0504a2438",
+      "package_hash": "sha256:be90e53112c4cf463aa717fbc206baa14394e1f9a8404db7edab06002d479b7a",
+      "license": "MIT",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.superpowers.requesting-code-review.v1",
+      "namespace": "superpowers",
+      "source_path": "skills/requesting-code-review/SKILL.md",
+      "content_hash": "sha256:d71cc01ba56d2325cf8af5f7c11837819b63ecd57de0bfdb812f7f3ff7751df8",
+      "package_hash": "sha256:933ec0fb0d479c42e38b8ef41077c7c9136a5ff85fea7769d47a57d73b374f41",
+      "license": "MIT",
+      "lifecycle": "active_conditional"
+    },
+    {
+      "resource_id": "skill.superpowers.systematic-debugging.v1",
+      "namespace": "superpowers",
+      "source_path": "skills/systematic-debugging/SKILL.md",
+      "content_hash": "sha256:808fc5717aa88ad65efff312b11c186294d3e6ee301afb584e2f86599b137787",
+      "package_hash": "sha256:363a11f15cc4802dde84790f0ac2fb25a413e147f022176561e78cfc3bde715d",
+      "license": "MIT",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.superpowers.test-driven-development.v1",
+      "namespace": "superpowers",
+      "source_path": "skills/test-driven-development/SKILL.md",
+      "content_hash": "sha256:bf1b8216e523851a411e91d429a7c1c2a173e79d88957bc78e348218d50edd54",
+      "package_hash": "sha256:42b35a79ebb6e8de58b5a229a46b9fb443176d15b556fcb49e51c15e3c6d2a29",
+      "license": "MIT",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.superpowers.using-git-worktrees.v1",
+      "namespace": "superpowers",
+      "source_path": "skills/using-git-worktrees/SKILL.md",
+      "content_hash": "sha256:8cfb86f121269e8f7f12361e6795c4f6738828340e28964c9229d365666c9edd",
+      "package_hash": "sha256:aad2e543e02921b488a6656efafb4e6c03e3d1f405e61e415c71b827e3417327",
+      "license": "MIT",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.superpowers.using-superpowers.v1",
+      "namespace": "superpowers",
+      "source_path": "skills/using-superpowers/SKILL.md",
+      "content_hash": "sha256:55379fe7c1c473a02c61961c822996bff30e1320d6921d9062509bc508482c05",
+      "package_hash": "sha256:3d20b9bfc846c9737e42d695e7e4533d220a804d3e2120cc5a7ee6910b3db22d",
+      "license": "MIT",
+      "lifecycle": "active_conditional"
+    },
+    {
+      "resource_id": "skill.superpowers.verification-before-completion.v1",
+      "namespace": "superpowers",
+      "source_path": "skills/verification-before-completion/SKILL.md",
+      "content_hash": "sha256:2befe7fc55bcadaa3d97dd9e8efeb633d2561c0ebe74c5a8b17c4d9e7e4520b3",
+      "package_hash": "sha256:a44da343ac540c5b8ee07bc4b46417c4e4be9a4f4b02eefe7888afbc80d086a8",
+      "license": "MIT",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.superpowers.writing-plans.v1",
+      "namespace": "superpowers",
+      "source_path": "skills/writing-plans/SKILL.md",
+      "content_hash": "sha256:72190c88b2b5a67a96b91d66aa72b9161913e10e8769da3f28a226f4cc7b99d0",
+      "package_hash": "sha256:ef74d2c5c4a4746dda40de8a3bc2c8d7ff6f813d1c407c95b18d72f12d33addf",
+      "license": "MIT",
+      "lifecycle": "active_conditional"
+    },
+    {
+      "resource_id": "skill.claudekit.mcp-builder.v1",
+      "namespace": "claudekit",
+      "source_path": ".claude/skills/mcp-builder/SKILL.md",
+      "content_hash": "sha256:37ae35d7bb94bafd7bda0044968c48206cfd2624e0ff41eb815e6a32591b2092",
+      "package_hash": "sha256:7b9c26aaf7720c67fa01f451549b94196ad1e770304d9967cca94037d87974cb",
+      "license": "Apache-2.0",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.claudekit.ui-styling.v1",
+      "namespace": "claudekit",
+      "source_path": ".claude/skills/ui-styling/SKILL.md",
+      "content_hash": "sha256:d802a4bbd6309b1da13de55a57dda5bd815e79e8752a92a7235f74ee82e3b6be",
+      "package_hash": "sha256:bd3363947aa48e84b95ac62496f71d204712ab3e517b6c9b92d4bd6f170e469e",
+      "license": "Apache-2.0",
+      "lifecycle": "active_conditional"
+    },
+    {
+      "resource_id": "skill.neolabhq.create-workflow-command.v1",
+      "namespace": "neolabhq",
+      "source_path": "plugins/customaize-agent/skills/create-workflow-command/SKILL.md",
+      "content_hash": "sha256:a0c909e9c7b270ad6e9102578d0ba7363026181dbb0216eda390b11eb346c57b",
+      "package_hash": "sha256:20fdf0c2823972405a6aabe1a7e178b1cbdd70e13f9979dc0733a90e57a892d8",
+      "license": "GPL-3.0",
+      "lifecycle": "active_conditional"
+    },
+    {
+      "resource_id": "skill.neolabhq.test-skill.v1",
+      "namespace": "neolabhq",
+      "source_path": "plugins/customaize-agent/skills/test-skill/SKILL.md",
+      "content_hash": "sha256:e8510b43505e426b053c17da6c0299761bbd1f7f0ec654cfea85f46afb0f66cb",
+      "package_hash": "sha256:5d8097f51f2e6ed459ca22de7565bb5de4b01ee1b31d75bcdd13a3cb9682318b",
+      "license": "GPL-3.0",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.neolabhq.thought-based-reasoning.v1",
+      "namespace": "neolabhq",
+      "source_path": "plugins/customaize-agent/skills/thought-based-reasoning/SKILL.md",
+      "content_hash": "sha256:b9a884ae774dce13eef41d3d039d709629984ff68093f1c88b3e11d4a642ec72",
+      "package_hash": "sha256:9e5d6de4dc1b9f7b3481929326bcccd97bc17e92eca7d0cbbeef4005a3835c90",
+      "license": "GPL-3.0",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.neolabhq.write-concisely.v1",
+      "namespace": "neolabhq",
+      "source_path": "plugins/docs/skills/write-concisely/SKILL.md",
+      "content_hash": "sha256:a91fbc317719fbcb4cddad91215164fa497fe7cd350920c2ec63cf1c33dd9414",
+      "package_hash": "sha256:c2208e8cd9b0ab1de97a82594de9dcefeced974ec10053ed1cf3f7488d5f8cd1",
+      "license": "GPL-3.0",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.neolabhq.actualize.v1",
+      "namespace": "neolabhq",
+      "source_path": "plugins/fpf/skills/actualize/SKILL.md",
+      "content_hash": "sha256:9af33797b8d82b96abbb995ac94cfd0c28e6510680c52626cc0dc06c2adc17c7",
+      "package_hash": "sha256:18808c55bf70503de4a5499acb77c1d4b3414917738fedfcc2feb3bf3d8030bc",
+      "license": "GPL-3.0",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.neolabhq.decay.v1",
+      "namespace": "neolabhq",
+      "source_path": "plugins/fpf/skills/decay/SKILL.md",
+      "content_hash": "sha256:4689a59d405f156e537ae708e914696c2e38b839f97648a08a208fc0be91c548",
+      "package_hash": "sha256:36d9937e964cc4fa5fa8678f09eafde3187dc44a610b2d02d0708f891d1c4cbf",
+      "license": "GPL-3.0",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.neolabhq.propose-hypotheses.v1",
+      "namespace": "neolabhq",
+      "source_path": "plugins/fpf/skills/propose-hypotheses/SKILL.md",
+      "content_hash": "sha256:079c7a0061b4bb30323550db2dc7c78d01f6f5d90a87f7c46db025bb64c852ef",
+      "package_hash": "sha256:fbde6231edd12bf56661e923ea5ef084ff38351447f89bb80e1ab152cca4d68c",
+      "license": "GPL-3.0",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.neolabhq.query.v1",
+      "namespace": "neolabhq",
+      "source_path": "plugins/fpf/skills/query/SKILL.md",
+      "content_hash": "sha256:6faf02f40e0649557d6ba98057218c79bb86f7efc99d5cb700373e05152f7930",
+      "package_hash": "sha256:ce42b7701fcb5d86203b3effb6962424dd4cfcd59ce5a4f05abbd4fb82a4ce6d",
+      "license": "GPL-3.0",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.neolabhq.reset.v1",
+      "namespace": "neolabhq",
+      "source_path": "plugins/fpf/skills/reset/SKILL.md",
+      "content_hash": "sha256:552006559d10ef3c2de49d2fa560736adec0a6838fb6a457771bd43737bad8f4",
+      "package_hash": "sha256:b76f27caecb18a3b0010bb7f235063515cde8a09822c9b134af1800f26d1e8dc",
+      "license": "GPL-3.0",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.neolabhq.status.v1",
+      "namespace": "neolabhq",
+      "source_path": "plugins/fpf/skills/status/SKILL.md",
+      "content_hash": "sha256:a4d22882be14e9b426e5be7ce5b16cb2e982be9cf63279aac3e97ea086fa1ed2",
+      "package_hash": "sha256:df83902e7cafece4acc85f916ca1426d7f9630d8b2c478247736690583c3e4e0",
+      "license": "GPL-3.0",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.neolabhq.commit.v1",
+      "namespace": "neolabhq",
+      "source_path": "plugins/git/skills/commit/SKILL.md",
+      "content_hash": "sha256:728c0f6cc7b389569e38f177a42694baf9047e326b94682c838443fa1929cf26",
+      "package_hash": "sha256:42717a048effe4b0a3c71ab03dcb36639d40e2e2290b5f2ef665ef7a830f6b1f",
+      "license": "GPL-3.0",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.neolabhq.git-notes.v1",
+      "namespace": "neolabhq",
+      "source_path": "plugins/git/skills/git-notes/SKILL.md",
+      "content_hash": "sha256:af1881c8a3d6a9f0e8704c4609abf31f088e0d9489d13d50eb51286546d43331",
+      "package_hash": "sha256:4b537aa3f11bb1e5f1109e057fc9be22e7c58882713f272a7bae80f7a361bc1a",
+      "license": "GPL-3.0",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.neolabhq.load-issues.v1",
+      "namespace": "neolabhq",
+      "source_path": "plugins/git/skills/load-issues/SKILL.md",
+      "content_hash": "sha256:f75224e8d6efa28eda29f9cf447de99230389b9e737fd2c12d52abc3ad2ab163",
+      "package_hash": "sha256:4fb1e3f09ab03318369d1a8cb3767ea66d06dcfcf258bea4d055972431c8bc13",
+      "license": "GPL-3.0",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.neolabhq.analyse-problem.v1",
+      "namespace": "neolabhq",
+      "source_path": "plugins/kaizen/skills/analyse-problem/SKILL.md",
+      "content_hash": "sha256:a5845a1afb5dfae543f163c850cd252ac79dbc06a57c9ba740c1022a024e4893",
+      "package_hash": "sha256:98b900d02a84da20faf28137a18b52f7fc2402974a565522df913aa744ba7ba3",
+      "license": "GPL-3.0",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.neolabhq.cause-and-effect.v1",
+      "namespace": "neolabhq",
+      "source_path": "plugins/kaizen/skills/cause-and-effect/SKILL.md",
+      "content_hash": "sha256:8933ecbfda4cdd6b61674891ea180d147cc1b3b1d459d242f56ad660a8a77de9",
+      "package_hash": "sha256:c53d184a153380dba6ea36b19194fb6575b09428f8ff555a98ca1b903fd5abd6",
+      "license": "GPL-3.0",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.neolabhq.plan-do-check-act.v1",
+      "namespace": "neolabhq",
+      "source_path": "plugins/kaizen/skills/plan-do-check-act/SKILL.md",
+      "content_hash": "sha256:5caffccd78bfba8d34395115901c228432d8b64f7a6af34fc38beacd922e4cec",
+      "package_hash": "sha256:f881357867bf89979dab64e84bec20499c8c8cbddc99695dda8bef9422b4f459",
+      "license": "GPL-3.0",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.neolabhq.why.v1",
+      "namespace": "neolabhq",
+      "source_path": "plugins/kaizen/skills/why/SKILL.md",
+      "content_hash": "sha256:c454c40cdb789c23a72b86ae0c692ae20a2552be2abc63994099ba348a3ff6d4",
+      "package_hash": "sha256:23ce701fa16bf5499beba5e8dadf7737cb5500ebb5bd20ba77cc5d46e4d3ce19",
+      "license": "GPL-3.0",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.neolabhq.memorize.v1",
+      "namespace": "neolabhq",
+      "source_path": "plugins/reflexion/skills/memorize/SKILL.md",
+      "content_hash": "sha256:3c0ace52d606a32e973ae2fe83c91c66b4dfcb0ece174e0a7d615cd4fc83a497",
+      "package_hash": "sha256:9af8741e29575110096325092d5996677b5d53e6eb151e10fbe9ab92f3782338",
+      "license": "GPL-3.0",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.neolabhq.reflect.v1",
+      "namespace": "neolabhq",
+      "source_path": "plugins/reflexion/skills/reflect/SKILL.md",
+      "content_hash": "sha256:c05e19c217a5ff67d12fa69d6e4e91f1e3a7b132e9280fb93e0950ae91438dd0",
+      "package_hash": "sha256:d86baaa46326547972a0b88dfb65e6c75ce3ffe49e7cf63ef78c742d67b5a096",
+      "license": "GPL-3.0",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.neolabhq.review-local-changes.v1",
+      "namespace": "neolabhq",
+      "source_path": "plugins/review/skills/review-local-changes/SKILL.md",
+      "content_hash": "sha256:3ef3c4e845d1c534b6bd0904f31f01f58b5ee6a5cdcf1ad345f1133e4a1f92a8",
+      "package_hash": "sha256:463fe6d536c064d74b5f5322910f45894f77de78ecd7182e136654fbe06242bc",
+      "license": "GPL-3.0",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.neolabhq.traiage-review.v1",
+      "namespace": "neolabhq",
+      "source_path": "plugins/review/skills/traiage-review/SKILL.md",
+      "content_hash": "sha256:cf6247951e1b0c23f5b94883e03fcdc379a6fd8b9462306abc71f667dcd17491",
+      "package_hash": "sha256:b1d34b4c49869e86c9fbd1e5801fd44affea83564cb47e50558918edb3512fbd",
+      "license": "GPL-3.0",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.neolabhq.brainstorm.v1",
+      "namespace": "neolabhq",
+      "source_path": "plugins/sdd/skills/brainstorm/SKILL.md",
+      "content_hash": "sha256:cfe03d9b1351658b667fb1d2b57da8e3faeecae8927fd332ec7ee1bf80a9ddc1",
+      "package_hash": "sha256:cedfbe2e8551c78ce656250d9977f0486894f2c3164a48eafb8d5ada33d22f34",
+      "license": "GPL-3.0",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.neolabhq.create-ideas.v1",
+      "namespace": "neolabhq",
+      "source_path": "plugins/sdd/skills/create-ideas/SKILL.md",
+      "content_hash": "sha256:3c06f89c20c73bd2a4ca4607a87fc2b23d8f78eae9eba562d0107d68026f6af6",
+      "package_hash": "sha256:47be27ea4f299b10045ddd0b4f6969c8c054e32f586bd8f913d36273fd535920",
+      "license": "GPL-3.0",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.neolabhq.design-testing-strategy.v1",
+      "namespace": "neolabhq",
+      "source_path": "plugins/tdd/skills/design-testing-strategy/SKILL.md",
+      "content_hash": "sha256:64e06c2e3cbc7b4c2aa4d03352056855b18fad54f138c8b94533260203a29fd0",
+      "package_hash": "sha256:e313c732dab54b204ba856fcd40faeb4560032a11613ce151a59a21e74fa4547",
+      "license": "GPL-3.0",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.neolabhq.fix-tests.v1",
+      "namespace": "neolabhq",
+      "source_path": "plugins/tdd/skills/fix-tests/SKILL.md",
+      "content_hash": "sha256:4fe9b16d513e2bb87d473c73b439de13176ff4d7760eebe0072a2071704221a9",
+      "package_hash": "sha256:f8ded0fdf04a359c6d1c0f7bb4b7891c430e0a8935bf27bd9d864a0077f5d400",
+      "license": "GPL-3.0",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.neolabhq.test-coverage.v1",
+      "namespace": "neolabhq",
+      "source_path": "plugins/tdd/skills/test-coverage/SKILL.md",
+      "content_hash": "sha256:1720e2493ee76119b066bdd4786302a32679e1d46aab91e5c78f08ee88d64a92",
+      "package_hash": "sha256:5f4753bf91f604da0be04dc4ce718dafbbd6c14cfcef2c59d73a3893d7161379",
+      "license": "GPL-3.0",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.neolabhq.test-driven-development.v1",
+      "namespace": "neolabhq",
+      "source_path": "plugins/tdd/skills/test-driven-development/SKILL.md",
+      "content_hash": "sha256:4139223ae241fcc41dec5dc796170dbc6c3213cb523e1f94c6587ec47aad8bbc",
+      "package_hash": "sha256:789ccd044a0f887c68954bd9050925552779e6bf6e5fea61070018deecbce05e",
+      "license": "GPL-3.0",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.trailofbits.ask-questions-if-underspecified.v1",
+      "namespace": "trailofbits",
+      "source_path": "plugins/ask-questions-if-underspecified/skills/ask-questions-if-underspecified/SKILL.md",
+      "content_hash": "sha256:55480342a3a15c8ff477bad4953658237f704991bca55b7b4e9d39fdcbaff7bc",
+      "package_hash": "sha256:e8a8d8cf667a8e1c3271f0bd21071a322c67d86f8b6affc3ad6892863441b414",
+      "license": "CC-BY-SA-4.0",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.trailofbits.audit-context-building.v1",
+      "namespace": "trailofbits",
+      "source_path": "plugins/audit-context-building/skills/audit-context-building/SKILL.md",
+      "content_hash": "sha256:7a020c97e04dbacb435b2aeebc181e62c988b3abe3b5159606d67ab128010a64",
+      "package_hash": "sha256:5a0a69d666c0af81017c52f28c9fddae3b96ec12f0ed14f9e56c02daffcf5407",
+      "license": "CC-BY-SA-4.0",
+      "lifecycle": "active_conditional"
+    },
+    {
+      "resource_id": "skill.trailofbits.algorand-vulnerability-scanner.v1",
+      "namespace": "trailofbits",
+      "source_path": "plugins/building-secure-contracts/skills/algorand-vulnerability-scanner/SKILL.md",
+      "content_hash": "sha256:9fee2d2138d260a780c9bc47731d8bc4376dba86676a14f8fa6f2fa006933600",
+      "package_hash": "sha256:89361e5e8872c4e84fc49181c5a40139f35c8b9fc2795a6497d3a201da8fec1b",
+      "license": "CC-BY-SA-4.0",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.trailofbits.audit-prep-assistant.v1",
+      "namespace": "trailofbits",
+      "source_path": "plugins/building-secure-contracts/skills/audit-prep-assistant/SKILL.md",
+      "content_hash": "sha256:301a5dcf3f709699834d99a8b3deb206883f07a8c8e5891e687e00d902ccdd37",
+      "package_hash": "sha256:01b6c182162f83b9e0dbcccb1970df1c0b3b732325b4768b597595643068535a",
+      "license": "CC-BY-SA-4.0",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.trailofbits.cairo-vulnerability-scanner.v1",
+      "namespace": "trailofbits",
+      "source_path": "plugins/building-secure-contracts/skills/cairo-vulnerability-scanner/SKILL.md",
+      "content_hash": "sha256:5d23cda47a7558a61bdf331ac13ee5ddcc416229714d04c700c9a7c5fc82e0c2",
+      "package_hash": "sha256:c06a16f2f2ad0c9e33f71e4f9e12a1b5c28fbe5992174187710c883db7368f14",
+      "license": "CC-BY-SA-4.0",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.trailofbits.code-maturity-assessor.v1",
+      "namespace": "trailofbits",
+      "source_path": "plugins/building-secure-contracts/skills/code-maturity-assessor/SKILL.md",
+      "content_hash": "sha256:61ae9e2f3328240c53bbb1a1cc85f4409a54c403ac7a5d392fe6f38c19ef6c4a",
+      "package_hash": "sha256:1a8b7244d8246328ad14680c7bdc8e0a7cd0aa6b814a54712b150e511e4c270a",
+      "license": "CC-BY-SA-4.0",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.trailofbits.cosmos-vulnerability-scanner.v1",
+      "namespace": "trailofbits",
+      "source_path": "plugins/building-secure-contracts/skills/cosmos-vulnerability-scanner/SKILL.md",
+      "content_hash": "sha256:2b8d2a5ae7e074568f9257521932fad7ae3a90e5be0b5d886c93b911ebf4ec93",
+      "package_hash": "sha256:86c498b731564b175b2ba470c78e9c2ed496d82f7deda6bf0ce62441a9bc0f3a",
+      "license": "CC-BY-SA-4.0",
+      "lifecycle": "active_conditional"
+    },
+    {
+      "resource_id": "skill.trailofbits.guidelines-advisor.v1",
+      "namespace": "trailofbits",
+      "source_path": "plugins/building-secure-contracts/skills/guidelines-advisor/SKILL.md",
+      "content_hash": "sha256:354aa4b2cb2f311a2659ba281c9cc2c33d3107a346062ee245f7f36e5554274b",
+      "package_hash": "sha256:3cee74f8a368773d79837e7864002a04fd376cbebd25fcf42ba17a84a05bcfe0",
+      "license": "CC-BY-SA-4.0",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.trailofbits.secure-workflow-guide.v1",
+      "namespace": "trailofbits",
+      "source_path": "plugins/building-secure-contracts/skills/secure-workflow-guide/SKILL.md",
+      "content_hash": "sha256:6671b8a1de078a1bf7e674d9dbb92656aad58e019e70d7dfea9cf21bd659a768",
+      "package_hash": "sha256:8e35099caed8679bd781c62b8818cc2dcb2f2d055e5e44d1e1542b0c8a9eca1b",
+      "license": "CC-BY-SA-4.0",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.trailofbits.solana-vulnerability-scanner.v1",
+      "namespace": "trailofbits",
+      "source_path": "plugins/building-secure-contracts/skills/solana-vulnerability-scanner/SKILL.md",
+      "content_hash": "sha256:ebcd13e77e3a2d477f150af17b2f74b7cc106675e79e5ab701ae8f65dbe3f2a4",
+      "package_hash": "sha256:5fcac301cddf24b6d7ab4a4f725f0feccf76497973ad47f3894ac02cf842f23e",
+      "license": "CC-BY-SA-4.0",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.trailofbits.substrate-vulnerability-scanner.v1",
+      "namespace": "trailofbits",
+      "source_path": "plugins/building-secure-contracts/skills/substrate-vulnerability-scanner/SKILL.md",
+      "content_hash": "sha256:1fa2dda089c0e1ebd7dd30c80bb8034750ccb2f0903c3db50a67a4eda9e5c952",
+      "package_hash": "sha256:84667371daf7e48b03b059ec38c60b9373f43f463ea22d411966b9094e06fd5e",
+      "license": "CC-BY-SA-4.0",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.trailofbits.token-integration-analyzer.v1",
+      "namespace": "trailofbits",
+      "source_path": "plugins/building-secure-contracts/skills/token-integration-analyzer/SKILL.md",
+      "content_hash": "sha256:6e756aafd23081844ba79d448c4c8127635ea658569be7cec4b35fb9bf809fc3",
+      "package_hash": "sha256:ffd7712cd5d4c55412726bab459b6f9c165d9f41ab0e75d295149224e253bc1d",
+      "license": "CC-BY-SA-4.0",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.trailofbits.ton-vulnerability-scanner.v1",
+      "namespace": "trailofbits",
+      "source_path": "plugins/building-secure-contracts/skills/ton-vulnerability-scanner/SKILL.md",
+      "content_hash": "sha256:2679e95f687d6506b366529afca0428fa78ad9b6a8afe570ad8bfb7b4d35487d",
+      "package_hash": "sha256:b16e7543d033aa42763c949bd77432ba112896588d1183a184ad3f53c5c4ef6e",
+      "license": "CC-BY-SA-4.0",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.trailofbits.constant-time-analysis.v1",
+      "namespace": "trailofbits",
+      "source_path": "plugins/constant-time-analysis/skills/constant-time-analysis/SKILL.md",
+      "content_hash": "sha256:9229dbfea28b7a0a836ab652fba6824862892e2a05acec7669c95e8b47b28b75",
+      "package_hash": "sha256:74cbeb132a25fa9a4daeb9f154b769ea7490f048a72531d0c01361f94ff16c40",
+      "license": "CC-BY-SA-4.0",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.trailofbits.interpreting-culture-index.v1",
+      "namespace": "trailofbits",
+      "source_path": "plugins/culture-index/skills/interpreting-culture-index/SKILL.md",
+      "content_hash": "sha256:aeaab499c213e0930cc0b4728ad117fc561d98a261a2d0ba2bb9677570a1e7e5",
+      "package_hash": "sha256:d70c64e5b9853f57c035f339f7467236dec1af4585eb2db36c8986ebd0fca2df",
+      "license": "CC-BY-SA-4.0",
+      "lifecycle": "active_conditional"
+    },
+    {
+      "resource_id": "skill.trailofbits.differential-review.v1",
+      "namespace": "trailofbits",
+      "source_path": "plugins/differential-review/skills/differential-review/SKILL.md",
+      "content_hash": "sha256:b1a8413c1501dbdbe719ced903fe8a341e6629223749b9ccbe1535e0ab9d268f",
+      "package_hash": "sha256:82ffb38798c3430e3999de7bb9df9a0627d824251d693d3b0c55ec766723d4e4",
+      "license": "CC-BY-SA-4.0",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.trailofbits.dimensional-analysis.v1",
+      "namespace": "trailofbits",
+      "source_path": "plugins/dimensional-analysis/skills/dimensional-analysis/SKILL.md",
+      "content_hash": "sha256:620506e512d32311c14ffaef1a102ed23aa7ff97773cb8ef2bfe09ffcb47114f",
+      "package_hash": "sha256:8a2e8ce3c8b1596390a83947cc23ee9fc7048515bb162503bb0d346a977714f4",
+      "license": "CC-BY-SA-4.0",
+      "lifecycle": "active_conditional"
+    },
+    {
+      "resource_id": "skill.trailofbits.entry-point-analyzer.v1",
+      "namespace": "trailofbits",
+      "source_path": "plugins/entry-point-analyzer/skills/entry-point-analyzer/SKILL.md",
+      "content_hash": "sha256:d89ed169fd552a4e626b7e4fd8d42aec715f7d499e5844eaa938fe5936023b76",
+      "package_hash": "sha256:1dc759a79fef9b5f506b4aabb8cacf8bae01b9660be521d8ba15a5860d527286",
+      "license": "CC-BY-SA-4.0",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.trailofbits.git-cleanup.v1",
+      "namespace": "trailofbits",
+      "source_path": "plugins/git-cleanup/skills/git-cleanup/SKILL.md",
+      "content_hash": "sha256:8261352ff3dc6b9e911a7ed508506a6e5ed5e3e39d7636a9fa4ca3a9f88e5051",
+      "package_hash": "sha256:05587cdb261019c6ff1245e3a29fd0cacf5fa52ef50f5f086292e36d986f4a7b",
+      "license": "CC-BY-SA-4.0",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.trailofbits.insecure-defaults.v1",
+      "namespace": "trailofbits",
+      "source_path": "plugins/insecure-defaults/skills/insecure-defaults/SKILL.md",
+      "content_hash": "sha256:4686f26c7ee6e9e7f1edf619a496e5e8c669b879147b51e313b378700e7674e0",
+      "package_hash": "sha256:e6a40a7d579ed8b4b9d60279dea474358bedc0260a06201040297bd03964bd95",
+      "license": "CC-BY-SA-4.0",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.trailofbits.let-fate-decide.v1",
+      "namespace": "trailofbits",
+      "source_path": "plugins/let-fate-decide/skills/let-fate-decide/SKILL.md",
+      "content_hash": "sha256:7031f7258abfba06ba52ae4bf2984224aa3be2d8491a8e9ccc38da1f57b6c94e",
+      "package_hash": "sha256:8bc0ba76fb0ffdcb5872a6c2e67d4ba6039c1795f0fc317ed866c162e4f88fae",
+      "license": "CC-BY-SA-4.0",
+      "lifecycle": "active_conditional"
+    },
+    {
+      "resource_id": "skill.trailofbits.modern-python.v1",
+      "namespace": "trailofbits",
+      "source_path": "plugins/modern-python/skills/modern-python/SKILL.md",
+      "content_hash": "sha256:7e41e5f434ce30f512b64fafb23b5bd04f0bc064868641e6fb3773732fdb65a5",
+      "package_hash": "sha256:b3eeefdbc73698231f2d868e4803c5c78c462540481a95df6a1200746c30a117",
+      "license": "CC-BY-SA-4.0",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.trailofbits.property-based-testing.v1",
+      "namespace": "trailofbits",
+      "source_path": "plugins/property-based-testing/skills/property-based-testing/SKILL.md",
+      "content_hash": "sha256:e8cd955e7a413f3c14632d166a9544a9c5de99cf6f690c692ac901ebbf336794",
+      "package_hash": "sha256:1f49152d15dcc9a8d32a98f11e75f6a205842cccc9189f5c8296e53b07e823a0",
+      "license": "CC-BY-SA-4.0",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.trailofbits.sharp-edges.v1",
+      "namespace": "trailofbits",
+      "source_path": "plugins/sharp-edges/skills/sharp-edges/SKILL.md",
+      "content_hash": "sha256:3e2d2c7137a4c2920b8c6ba966599cb023bd9cd2897f2444fe1027ef49f68fa4",
+      "package_hash": "sha256:5312b9f82c5f32be7eae6550dd9b26ef7c39f2497726e4d7edb3773b6d287a5f",
+      "license": "CC-BY-SA-4.0",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.trailofbits.skill-improver.v1",
+      "namespace": "trailofbits",
+      "source_path": "plugins/skill-improver/skills/skill-improver/SKILL.md",
+      "content_hash": "sha256:00cbd336df8827ce2832ba0d0df2f5def32a2edcbdb2d4b95c1dd285ee43741c",
+      "package_hash": "sha256:82001eebd32b68b5512e8a8817d94fea7c49c3de62230e1e9da1e110fd5f3611",
+      "license": "CC-BY-SA-4.0",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.trailofbits.spec-to-code-compliance.v1",
+      "namespace": "trailofbits",
+      "source_path": "plugins/spec-to-code-compliance/skills/spec-to-code-compliance/SKILL.md",
+      "content_hash": "sha256:e4855d473cb22aad61df3fe0d38b4cdf678bf534935d66e408ea6486e938b248",
+      "package_hash": "sha256:ae76c33200a20ff22aaa64982f889740de5f9069b308f26d5ced4793bbd89e6a",
+      "license": "CC-BY-SA-4.0",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.trailofbits.supply-chain-risk-auditor.v1",
+      "namespace": "trailofbits",
+      "source_path": "plugins/supply-chain-risk-auditor/skills/supply-chain-risk-auditor/SKILL.md",
+      "content_hash": "sha256:42ad5c2f0cb406be48453eee522863437a04a859ea5864899b96509e3f1bea2d",
+      "package_hash": "sha256:d541046a48a1a1048aade9e7819b2ea1bc2e31f6cf760fe1ec520fc7d328af97",
+      "license": "CC-BY-SA-4.0",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.trailofbits.fuzzing-dictionary.v1",
+      "namespace": "trailofbits",
+      "source_path": "plugins/testing-handbook-skills/skills/fuzzing-dictionary/SKILL.md",
+      "content_hash": "sha256:c3c1e302aebe608314aa900a456c732b48ca2138b66030f99b9da0dc42468492",
+      "package_hash": "sha256:d25aad653860dd78913ac9c5554c9455df84beb7f58d14ee9a23e63a4a43eb7b",
+      "license": "CC-BY-SA-4.0",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.trailofbits.fuzzing-obstacles.v1",
+      "namespace": "trailofbits",
+      "source_path": "plugins/testing-handbook-skills/skills/fuzzing-obstacles/SKILL.md",
+      "content_hash": "sha256:c0ac146ca2bc7705071661df901bbd797abe59e88c7da98c907e90e2843d1ade",
+      "package_hash": "sha256:1300b9ff76a6e8d1101116e75ac9df0dc02eaabcc2c39597ecc121fb55a67c83",
+      "license": "CC-BY-SA-4.0",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.trailofbits.harness-writing.v1",
+      "namespace": "trailofbits",
+      "source_path": "plugins/testing-handbook-skills/skills/harness-writing/SKILL.md",
+      "content_hash": "sha256:386669945e35946db50978ecc548e5398a2031248fd4d7d2bfba78f7e9c4029c",
+      "package_hash": "sha256:77a8151c1b60b8ccd76b4385939471f0680d03901914552de807628c7cd79c55",
+      "license": "CC-BY-SA-4.0",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.trailofbits.audit-augmentation.v1",
+      "namespace": "trailofbits",
+      "source_path": "plugins/trailmark/skills/audit-augmentation/SKILL.md",
+      "content_hash": "sha256:32ad6194f4786ea3ac94f6ac48b0bff03ed9409c0b536e32caa31da4f630d468",
+      "package_hash": "sha256:1730fe461b8241f519458cb07ce148b1b382ba1636b5feba779aea9a68a22e5e",
+      "license": "CC-BY-SA-4.0",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.trailofbits.crypto-protocol-diagram.v1",
+      "namespace": "trailofbits",
+      "source_path": "plugins/trailmark/skills/crypto-protocol-diagram/SKILL.md",
+      "content_hash": "sha256:30c22b527b70a1adb9f732e4eee557332aa18b7faabbdd7c985973d51327285f",
+      "package_hash": "sha256:607685f1e852ba6e1d8440a63ad70f119ec0b49844f485153c898178cdd3c3f4",
+      "license": "CC-BY-SA-4.0",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.trailofbits.diagramming-code.v1",
+      "namespace": "trailofbits",
+      "source_path": "plugins/trailmark/skills/diagramming-code/SKILL.md",
+      "content_hash": "sha256:e8cf4bd2a114d2aabc3274df73e0edff911076c6916da747499792fea66fabc3",
+      "package_hash": "sha256:f8c9c07bedf67d3592b525463f1ae0e5b1affe2c7a958c0f87a9b14ebbc3fcbc",
+      "license": "CC-BY-SA-4.0",
+      "lifecycle": "active_conditional"
+    },
+    {
+      "resource_id": "skill.trailofbits.graph-evolution.v1",
+      "namespace": "trailofbits",
+      "source_path": "plugins/trailmark/skills/graph-evolution/SKILL.md",
+      "content_hash": "sha256:e53d7b1a1f25add78d4fabe2816aaf9bfd840cbdcb5cf15e48f77c16d9be7f20",
+      "package_hash": "sha256:c708c626831c4ec1f395416a7d57aa52fc40c286833e7b85ec5fbba915b529b1",
+      "license": "CC-BY-SA-4.0",
+      "lifecycle": "active_conditional"
+    },
+    {
+      "resource_id": "skill.trailofbits.slicing-code-context.v1",
+      "namespace": "trailofbits",
+      "source_path": "plugins/trailmark/skills/slicing-code-context/SKILL.md",
+      "content_hash": "sha256:d2d88cc989c4f01d4ee67656934a04f606cd3476bc0ab04e6bcfc6b32c88b451",
+      "package_hash": "sha256:f5b0252f97d6547652a4d4a1c7a2dbc32d6916c6229f67a33af3975af8d972c2",
+      "license": "CC-BY-SA-4.0",
+      "lifecycle": "active_conditional"
+    },
+    {
+      "resource_id": "skill.trailofbits.variant-analysis.v1",
+      "namespace": "trailofbits",
+      "source_path": "plugins/variant-analysis/skills/variant-analysis/SKILL.md",
+      "content_hash": "sha256:803d49542eda645f6aaa8c52cda6e165b3611493e251f9c6b0272a3b40736a01",
+      "package_hash": "sha256:8fe9ae9d39289df792428bac0b94b9ffe15a229657d3988ca8c00723ea1dff18",
+      "license": "CC-BY-SA-4.0",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.trailofbits.vulnerability-triage-brocards.v1",
+      "namespace": "trailofbits",
+      "source_path": "plugins/vulnerability-triage-brocards/skills/vulnerability-triage-brocards/SKILL.md",
+      "content_hash": "sha256:034fea98efb7082c9a700ee1a8dff5aa1ea28320415bb3746e846a7f67fc034d",
+      "package_hash": "sha256:da3db6110777be56e82c11c8738c54e9ef0e4e2aa203e8c0626b9b8b9c29ef53",
+      "license": "CC-BY-SA-4.0",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.openai_plugins.agents-sdk.v1",
+      "namespace": "openai_plugins",
+      "source_path": "plugins/cloudflare/skills/agents-sdk/SKILL.md",
+      "content_hash": "sha256:d377772ee7d8a7261a1636634e876a496f885b16b5edcb95d13c2f13320a0192",
+      "package_hash": "sha256:69d8ecb90cef1d170d195c0b532e967e715796bae771130c26700b6399ed09a1",
+      "license": "Apache-2.0",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.openai_plugins.cloudflare.v1",
+      "namespace": "openai_plugins",
+      "source_path": "plugins/cloudflare/skills/cloudflare/SKILL.md",
+      "content_hash": "sha256:016391794a80d83788053b0aae03fad653d93ae04a4a9a24c6ab346148a245d3",
+      "package_hash": "sha256:70f3a0805df85f633fd8b024529f7c45ee92853e85acf7fba34e493eb5eed71b",
+      "license": "Apache-2.0",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.openai_plugins.building-native-ui.v1",
+      "namespace": "openai_plugins",
+      "source_path": "plugins/expo/skills/building-native-ui/SKILL.md",
+      "content_hash": "sha256:d7c3bd3f5709e3c5ee7cc9cda3889f069132469aa0a91d61d3bc5881c5827907",
+      "package_hash": "sha256:96ca502d2003e4f2b38e8975e653a4761aca87ab191fec71170668708acad416",
+      "license": "MIT",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.openai_plugins.expo-deployment.v1",
+      "namespace": "openai_plugins",
+      "source_path": "plugins/expo/skills/expo-deployment/SKILL.md",
+      "content_hash": "sha256:5da4127bd229d1742d498e22a3532a0003f306deca0005e77cb1d58e85a73853",
+      "package_hash": "sha256:5c9f7dcd77bcaa5c2369e0d6d1a1092f839f5a081f3c46c2dc44cc92d173e191",
+      "license": "MIT",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.openai_plugins.expo-dev-client.v1",
+      "namespace": "openai_plugins",
+      "source_path": "plugins/expo/skills/expo-dev-client/SKILL.md",
+      "content_hash": "sha256:92d37fc4a16f29d9dab38cb58bab0d344d7c288f589aec61f8e4860e30ad7ab2",
+      "package_hash": "sha256:5cceaf40987f943d171017c9cecdb9c298f897ff66d32ebb4e047b821fb1b8f6",
+      "license": "MIT",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.openai_plugins.expo-module.v1",
+      "namespace": "openai_plugins",
+      "source_path": "plugins/expo/skills/expo-module/SKILL.md",
+      "content_hash": "sha256:33d604ed32599117b906753c6a85014600bd15e6c11a0906eba9121bff967014",
+      "package_hash": "sha256:34c6da25a1c322673a9846ebef2c902a06cd6f972f8278887cd2d558bbc24282",
+      "license": "MIT",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.openai_plugins.expo-tailwind-setup.v1",
+      "namespace": "openai_plugins",
+      "source_path": "plugins/expo/skills/expo-tailwind-setup/SKILL.md",
+      "content_hash": "sha256:d8a29999edc9cf9f61c337d2c532807a75b3961b5cdf5bd38ddfb136c87842ce",
+      "package_hash": "sha256:91f09cc26755063f3f66ccd11af050f749d1289f6ec4a9b389c3922baf3f62ae",
+      "license": "MIT",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.openai_plugins.expo-ui-jetpack-compose.v1",
+      "namespace": "openai_plugins",
+      "source_path": "plugins/expo/skills/expo-ui-jetpack-compose/SKILL.md",
+      "content_hash": "sha256:f42be3925715a265deb1fe4c3b7cbe0c155e4f9b23ea3b218f69c6f4850c7387",
+      "package_hash": "sha256:4357fb29fa5c527de142cee3e24e58293e1d00c1d270d6cb6d2a438e347d4840",
+      "license": "MIT",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.openai_plugins.expo-ui-swift-ui.v1",
+      "namespace": "openai_plugins",
+      "source_path": "plugins/expo/skills/expo-ui-swift-ui/SKILL.md",
+      "content_hash": "sha256:b228280b7b201bee5a7a15167b28902f5171eb7ccc06ee85d6b6a7d4375c14e0",
+      "package_hash": "sha256:09ec30e83591453b25b5686cafd6b284409d69cda9a82a9e9be22c1985e5743c",
+      "license": "MIT",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.openai_plugins.upgrading-expo.v1",
+      "namespace": "openai_plugins",
+      "source_path": "plugins/expo/skills/upgrading-expo/SKILL.md",
+      "content_hash": "sha256:d895f12af18c73e0757923154b05d50d471bd6ee23f874ccf3a3d112a4063b93",
+      "package_hash": "sha256:7f767d616b6c8822da5927c6803c23d9ecc5b5454a01c93a3755ba254f4c16ed",
+      "license": "MIT",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.openai_plugins.use-dom.v1",
+      "namespace": "openai_plugins",
+      "source_path": "plugins/expo/skills/use-dom/SKILL.md",
+      "content_hash": "sha256:97d80e3ed323c837dfbbff07c4a15def65f0ad07e4700bebe603d6735924b148",
+      "package_hash": "sha256:77a3715323a3ea59150b679bfe60bf32728bd6f9a75ecfadffb4a5c42a2ce82f",
+      "license": "MIT",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.openai_plugins.dashboard-expert.v1",
+      "namespace": "openai_plugins",
+      "source_path": "plugins/mixpanel-headless/skills/dashboard-expert/SKILL.md",
+      "content_hash": "sha256:14fd87eebbbc01e6b1a280e9934fa9ae285b1e1a077987c06122e089977de9cf",
+      "package_hash": "sha256:96d90b44cdb80f0eb2d99ee7d74f4b15b92d044d555ee918ed117d03ec43b0aa",
+      "license": "MIT",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.openai_plugins.netlify-blobs.v1",
+      "namespace": "openai_plugins",
+      "source_path": "plugins/netlify/skills/netlify-blobs/SKILL.md",
+      "content_hash": "sha256:039e666e20f14ebdda27851b4062f816c24128c95162d2c4c401e870d605a5f9",
+      "package_hash": "sha256:7eba5f8c6e3b28ccc0815c00d8150038fe013d1f0d8bb3a56efac20f077f6943",
+      "license": "Apache-2.0",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.openai_plugins.netlify-caching.v1",
+      "namespace": "openai_plugins",
+      "source_path": "plugins/netlify/skills/netlify-caching/SKILL.md",
+      "content_hash": "sha256:4b85039f7ebc122155f872e085c170ed6b8f62dc8503d8af1ae69dcc936a67a3",
+      "package_hash": "sha256:06b52b84548da977eeaa8ec8c54337be7d1941dd8d05dbb036bcedbb6bf5320b",
+      "license": "Apache-2.0",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.openai_plugins.netlify-config.v1",
+      "namespace": "openai_plugins",
+      "source_path": "plugins/netlify/skills/netlify-config/SKILL.md",
+      "content_hash": "sha256:8bc8fd1cb5b52a5ee8f0d03166184a797e3135a0ba83b18040b04a25883e605b",
+      "package_hash": "sha256:30b41941a7583f0e6071fd801ac8614c5cfca59a0bcae8171b6b0bb70f590592",
+      "license": "Apache-2.0",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.openai_plugins.netlify-edge-functions.v1",
+      "namespace": "openai_plugins",
+      "source_path": "plugins/netlify/skills/netlify-edge-functions/SKILL.md",
+      "content_hash": "sha256:dabe192ce075bcf87b9b2a298a0acaeac2c4d7e8d65a465438cc0e8e1aad169c",
+      "package_hash": "sha256:7af25a422fc8310c590651dd85acbc464872245d62269cbe10eb82eefc0d9acf",
+      "license": "Apache-2.0",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.openai_plugins.netlify-frameworks.v1",
+      "namespace": "openai_plugins",
+      "source_path": "plugins/netlify/skills/netlify-frameworks/SKILL.md",
+      "content_hash": "sha256:814633d67e4628c9a8e68954502dc809bf8be101860db1e4d9c0d0cd7bc10fc5",
+      "package_hash": "sha256:f70a530461671cded267fab5caa62ec6e67145f4c1408bf54b50a9a7d6f6c3bf",
+      "license": "Apache-2.0",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.openai_plugins.netlify-image-cdn.v1",
+      "namespace": "openai_plugins",
+      "source_path": "plugins/netlify/skills/netlify-image-cdn/SKILL.md",
+      "content_hash": "sha256:e361434c6f7ede68d08ef1b06030a1ac7a4ddddfde89a6ae19dd25eeaa1107c5",
+      "package_hash": "sha256:87ea4a5886ea7ca7f33f3c4f12a895707dc730719d72903c10d39580e860a56f",
+      "license": "Apache-2.0",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.openai_plugins.chatgpt-app-submission.v1",
+      "namespace": "openai_plugins",
+      "source_path": "plugins/openai-developers/skills/chatgpt-app-submission/SKILL.md",
+      "content_hash": "sha256:5cc43b91564198dbfb3341bd5a96503a04f4691045b8d61db786e6a557828b65",
+      "package_hash": "sha256:2fec2fca4da49956d608e5f71e13111bb008dd770aa2f6ea3e4c83ebf643e78c",
+      "license": "Apache-2.0",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.openai_plugins.render-background-workers.v1",
+      "namespace": "openai_plugins",
+      "source_path": "plugins/render/skills/render-background-workers/SKILL.md",
+      "content_hash": "sha256:1d40fdf942ca83f0a648f20ababf140002cb9456229d0fbd84ce75291966d60c",
+      "package_hash": "sha256:1a418efd54a45cada7dbeb83e6a715f2bfc69e3fb184a49f3329e470ecaf3487",
+      "license": "MIT",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.openai_plugins.render-cron-jobs.v1",
+      "namespace": "openai_plugins",
+      "source_path": "plugins/render/skills/render-cron-jobs/SKILL.md",
+      "content_hash": "sha256:2d2f47347a2674b3aabf26d0de8194dbf663e0f50623e15ad0ace96f8c02d152",
+      "package_hash": "sha256:5acd1e19740568c56a9ed994a7d89572ffd103ccdab26fabeacb82fa09944eb8",
+      "license": "MIT",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.openai_plugins.render-docker.v1",
+      "namespace": "openai_plugins",
+      "source_path": "plugins/render/skills/render-docker/SKILL.md",
+      "content_hash": "sha256:e43f62930797810a20b7a086f2505a45f5983132b0a23a066ad7fae5309abbc9",
+      "package_hash": "sha256:e948f8fe6d7c14f3d3df5e4e209d8713a6fb6282f8a45c1ca20ceac4d22babda",
+      "license": "MIT",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.openai_plugins.render-domains.v1",
+      "namespace": "openai_plugins",
+      "source_path": "plugins/render/skills/render-domains/SKILL.md",
+      "content_hash": "sha256:4d506c74c97f50c81bbd6134ee74230e5c137f77bc9a96d6347e512125f635ed",
+      "package_hash": "sha256:1947eb5d96105de320373396b2b7a23d0dda219df7c725ab6ac8e0da742c3d0d",
+      "license": "MIT",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.openai_plugins.render-env-vars.v1",
+      "namespace": "openai_plugins",
+      "source_path": "plugins/render/skills/render-env-vars/SKILL.md",
+      "content_hash": "sha256:48ccac1b1f4ca36ae51f7695e84489b6ca0a4bfd70ab8944dc152609aeef7eb1",
+      "package_hash": "sha256:7aa709300621b693ecdae06a136b6a7a763a78b13825271813b0211e9b0583d1",
+      "license": "MIT",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.openai_plugins.render-keyvalue.v1",
+      "namespace": "openai_plugins",
+      "source_path": "plugins/render/skills/render-keyvalue/SKILL.md",
+      "content_hash": "sha256:29b04af561be209ce356de9858ac169b81cabad502ae5b51b1caae87056028c2",
+      "package_hash": "sha256:e48a0f7f1cfdf333f88ffe10cb9b61443ee76d147caff5db8909b0c44eb458a1",
+      "license": "MIT",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.openai_plugins.render-networking.v1",
+      "namespace": "openai_plugins",
+      "source_path": "plugins/render/skills/render-networking/SKILL.md",
+      "content_hash": "sha256:11e7b2a46a0943a6cef63ebd3111028868f33bcf10f54f6d4e6412d7fcaa156c",
+      "package_hash": "sha256:ed47ad088fcdad79ae888be11f07a028344f9773e681d04c4187fc4d092c36cd",
+      "license": "MIT",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.openai_plugins.render-postgres.v1",
+      "namespace": "openai_plugins",
+      "source_path": "plugins/render/skills/render-postgres/SKILL.md",
+      "content_hash": "sha256:9dc9b1d1872354a5fef95a2f1b6a9fa6be09297a62d83ab06d6693e5d0f7ca7f",
+      "package_hash": "sha256:bc39f319476be80311e21ea6d449a930fa630409ded3e0d3b971301f78f2d9a4",
+      "license": "MIT",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.openai_plugins.render-private-services.v1",
+      "namespace": "openai_plugins",
+      "source_path": "plugins/render/skills/render-private-services/SKILL.md",
+      "content_hash": "sha256:1a21680d8feee8d7c4a7dab3bf627669986c073fd12fb478c4c76e92e39712a8",
+      "package_hash": "sha256:15a074120c812dd519bc2a819c57e8284e05ca7248d6ce9d5926dba6ad4c7c70",
+      "license": "MIT",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.openai_plugins.render-scaling.v1",
+      "namespace": "openai_plugins",
+      "source_path": "plugins/render/skills/render-scaling/SKILL.md",
+      "content_hash": "sha256:6794913fc284a06f001e6e4f5b128863f915553b1204473eb1e09125f03bffbe",
+      "package_hash": "sha256:6dc7e54d2343f71370f0aa8bd178b736e135d0b3a8f36a70773b97f2b2120f5b",
+      "license": "MIT",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.openai_plugins.render-static-sites.v1",
+      "namespace": "openai_plugins",
+      "source_path": "plugins/render/skills/render-static-sites/SKILL.md",
+      "content_hash": "sha256:83da90a209d5de69cc54b67ce629d1a13974a2af26d6410028eeccde510c0f36",
+      "package_hash": "sha256:44be687bc5391bfe3b9e09772a360a783da4dd4eb89dc96abe0dcae6f8427d9e",
+      "license": "MIT",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.openai_plugins.render-web-services.v1",
+      "namespace": "openai_plugins",
+      "source_path": "plugins/render/skills/render-web-services/SKILL.md",
+      "content_hash": "sha256:973ee31bc842c328ccfdb8b10ae05ee8cf3feaacf09c045c82717d687e237a70",
+      "package_hash": "sha256:088a071cc5ed00d7c7ded7aa279688c144ee908967a705e06d4534990f25880b",
+      "license": "MIT",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.openai_plugins.shopify-app-store-review.v1",
+      "namespace": "openai_plugins",
+      "source_path": "plugins/shopify/skills/shopify-app-store-review/SKILL.md",
+      "content_hash": "sha256:6337479a7fc108fa7be57ec0314b8d8724f5333cb8cc4fca73aa3a3cfed430f8",
+      "package_hash": "sha256:9961f797f85e74525075d5d5fba9eeb0c91ffb8f3a58cc0fd1d9553322f73591",
+      "license": "MIT",
+      "lifecycle": "active_conditional"
+    },
+    {
+      "resource_id": "skill.openai_plugins.shopify-custom-data.v1",
+      "namespace": "openai_plugins",
+      "source_path": "plugins/shopify/skills/shopify-custom-data/SKILL.md",
+      "content_hash": "sha256:12d6c7cb2e1324a18d5d674e4b53d780363def46c05a18a4bd1496838aece35e",
+      "package_hash": "sha256:0983639bd1094e0e746ce012462bbf8fc1f64b7e80f2a87a614525adde3a7a12",
+      "license": "MIT",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.openai_plugins.shopify-onboarding-dev.v1",
+      "namespace": "openai_plugins",
+      "source_path": "plugins/shopify/skills/shopify-onboarding-dev/SKILL.md",
+      "content_hash": "sha256:3f18b00d47314f52cb6107e7fc30c650446bca4ba11f4d1e8157ca13d919dc2e",
+      "package_hash": "sha256:af7658e68590730a7e2b77b77446154db997346d16bd7d3753574b5373a0db7b",
+      "license": "MIT",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.openai_plugins.ucp.v1",
+      "namespace": "openai_plugins",
+      "source_path": "plugins/shopify/skills/ucp/SKILL.md",
+      "content_hash": "sha256:823698c95d40b53f2fce4bade4b79bbaa7070495eb0c4b9d67ea38507cd50743",
+      "package_hash": "sha256:a2cc09cb0cd21e2136371f4ed2a44964f70e3898be2f2867802cce70b5cc8581",
+      "license": "MIT",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.openai_plugins.supabase-postgres-best-practices-be9a8dce.v1",
+      "namespace": "openai_plugins",
+      "source_path": "plugins/supabase/skills/supabase-postgres-best-practices/SKILL.md",
+      "content_hash": "sha256:be9a8dcecb83376f38ef92aad6ae78f28a23865501aba941fdce213b58f00996",
+      "package_hash": "sha256:401fbebb92aae06bfdfe203c02c6d347fcf25e004ca0da0ad85d2ce198b9a27f",
+      "license": "MIT",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.openai_plugins.batch-draft-writer.v1",
+      "namespace": "openai_plugins",
+      "source_path": "plugins/superhuman/skills/batch-draft-writer/SKILL.md",
+      "content_hash": "sha256:72499e3a7063925422b289a100957ae3790d773023976fedf4bea297cc391e0b",
+      "package_hash": "sha256:ee8a8797761a88c8b35dc28b21be01cb5acd8ebe6e2cf7dea6bd20603b04191d",
+      "license": "MIT",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.openai_plugins.deal-tracker.v1",
+      "namespace": "openai_plugins",
+      "source_path": "plugins/superhuman/skills/deal-tracker/SKILL.md",
+      "content_hash": "sha256:59348b4af37198a1f25f74bb640d6225b148e75ce128a433411f09534419c6c2",
+      "package_hash": "sha256:0aa51325686a7982439a3b919e6bb7af9cfbae95995e62b68e36e3a384e133e9",
+      "license": "MIT",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.openai_plugins.eod-wrapup.v1",
+      "namespace": "openai_plugins",
+      "source_path": "plugins/superhuman/skills/eod-wrapup/SKILL.md",
+      "content_hash": "sha256:1bfbbab8ed74a751cbe60bc2818f7d0b48a8c8d7465621e0c33be689269fbd20",
+      "package_hash": "sha256:7d73849cf112c06ef9be786b23576a56d7bac9ee440ca4c88634a5b18aeff810",
+      "license": "MIT",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.openai_plugins.morning-briefing.v1",
+      "namespace": "openai_plugins",
+      "source_path": "plugins/superhuman/skills/morning-briefing/SKILL.md",
+      "content_hash": "sha256:0d6b0c09b369ea79cdfee17247a6d222afc506395000672d439e449a935d0b83",
+      "package_hash": "sha256:df571e3fcac9eb8c446aac94ee9842f8093000eda5ddd2f8dc193262ee6f29b0",
+      "license": "MIT",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.openai_plugins.superhuman-mail.v1",
+      "namespace": "openai_plugins",
+      "source_path": "plugins/superhuman/skills/superhuman-mail/SKILL.md",
+      "content_hash": "sha256:7c7dfd67fb276383875a42530fdd3ed277a33c9e03eb5bfcb629dd46df3d353c",
+      "package_hash": "sha256:a8c6d9534dd678d08a15385f68a35a1f2d23e7b918935774c884d3323351469e",
+      "license": "MIT",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.openai_plugins.brainstorming.v1",
+      "namespace": "openai_plugins",
+      "source_path": "plugins/superpowers/skills/brainstorming/SKILL.md",
+      "content_hash": "sha256:4625fbfaafb229d41364b77a3591f9559e0d9d73ab0ed3589bb8e3c63f0cb734",
+      "package_hash": "sha256:64c2cc7cfcac22885e1ebc638127db96a6e9e9203c4ad7651df4aaec8e764a52",
+      "license": "MIT",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.openai_plugins.executing-plans.v1",
+      "namespace": "openai_plugins",
+      "source_path": "plugins/superpowers/skills/executing-plans/SKILL.md",
+      "content_hash": "sha256:f24e0fdbcdb973b34f81ab481d10be0e494b5809d9e11f00fcf646a3e268c7a2",
+      "package_hash": "sha256:36088d5a20bb7b8fefbb7e7c74a67ba8705dfeb4c333755683fd32f530a2f3fc",
+      "license": "MIT",
+      "lifecycle": "active_conditional"
+    },
+    {
+      "resource_id": "skill.openai_plugins.finishing-a-development-branch.v1",
+      "namespace": "openai_plugins",
+      "source_path": "plugins/superpowers/skills/finishing-a-development-branch/SKILL.md",
+      "content_hash": "sha256:604aedd210874565f91207829226305819f3b6cadc323e3de813a2d9d20aeafe",
+      "package_hash": "sha256:2f01935ad45b77cfa516bf77eeccbcbb42e63a66d43a2113f850149d0881b0ff",
+      "license": "MIT",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.openai_plugins.receiving-code-review.v1",
+      "namespace": "openai_plugins",
+      "source_path": "plugins/superpowers/skills/receiving-code-review/SKILL.md",
+      "content_hash": "sha256:bda6f19ebd6d4ec043e448c8d233de8308f76b72230de2297b306bc49b8a6e93",
+      "package_hash": "sha256:3f986dd9fa8635223029ff0735b2c92e269642c1b65f1b36a3ae8d4bbd0d640d",
+      "license": "MIT",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.openai_plugins.requesting-code-review.v1",
+      "namespace": "openai_plugins",
+      "source_path": "plugins/superpowers/skills/requesting-code-review/SKILL.md",
+      "content_hash": "sha256:59f0c7d3180a47946734c03afa975b417428c49edaf7526d8e589ef40bb3aa7e",
+      "package_hash": "sha256:8310ad4eb448b7653b0b12f1ea90ae141d188ae8564ce45b3d58852b0fb18b19",
+      "license": "MIT",
+      "lifecycle": "active_conditional"
+    },
+    {
+      "resource_id": "skill.openai_plugins.systematic-debugging.v1",
+      "namespace": "openai_plugins",
+      "source_path": "plugins/superpowers/skills/systematic-debugging/SKILL.md",
+      "content_hash": "sha256:530855dfa2b10d5b9f92ac170fe41c5f8fbc4918957a564855b50a896ca625a2",
+      "package_hash": "sha256:ad54c6e8cca86ecbccca694de26304ef45d17c9d4fb9bc5e21d5d4c153d5ca44",
+      "license": "MIT",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.openai_plugins.test-driven-development.v1",
+      "namespace": "openai_plugins",
+      "source_path": "plugins/superpowers/skills/test-driven-development/SKILL.md",
+      "content_hash": "sha256:4f090e919b7310192864f1d046910c53fa7ca353f5cc2b8d07717c7a897f0183",
+      "package_hash": "sha256:58a1bf572c9e5dec88c4087a0316b7798d5d3b28ab7d17f895a3ccaa79864c95",
+      "license": "MIT",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.openai_plugins.using-git-worktrees.v1",
+      "namespace": "openai_plugins",
+      "source_path": "plugins/superpowers/skills/using-git-worktrees/SKILL.md",
+      "content_hash": "sha256:498ba68274da48e3b96473be8cbddcdc35399e0969d6933d6e7b8fe2d8e89c07",
+      "package_hash": "sha256:e43a308531cf5fd658c833034cb8f7eae77d1150bd9f21db8c0b33eb8a24c6c5",
+      "license": "MIT",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.openai_plugins.using-superpowers.v1",
+      "namespace": "openai_plugins",
+      "source_path": "plugins/superpowers/skills/using-superpowers/SKILL.md",
+      "content_hash": "sha256:8052a1248970aee7ddd272bf27e9873aec08177d5065b75ba8c53d9b68d89d5f",
+      "package_hash": "sha256:3e68b7c1027fea384d2ec48f08b4796de4d98e2a98a3fff12be58da8d8e3b905",
+      "license": "MIT",
+      "lifecycle": "active_conditional"
+    },
+    {
+      "resource_id": "skill.openai_plugins.verification-before-completion.v1",
+      "namespace": "openai_plugins",
+      "source_path": "plugins/superpowers/skills/verification-before-completion/SKILL.md",
+      "content_hash": "sha256:c35ac975d145f74d9f3668c1b035a3754d3c0f4edb491cc80a6a0265cfdf7749",
+      "package_hash": "sha256:8cd22a163b0bc44ae4a71c63e967f2a3ccfb15bace8447765aa1a4c1b21955b8",
+      "license": "MIT",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.openai_plugins.writing-plans.v1",
+      "namespace": "openai_plugins",
+      "source_path": "plugins/superpowers/skills/writing-plans/SKILL.md",
+      "content_hash": "sha256:cd8550405fc7fd224489f0b993fce822f69626fc0c612b3c9829d991cb4314c6",
+      "package_hash": "sha256:3b5e830fddb2c9059fafc85ca23295710c41ddfba1137b3575211e395b8f3ef3",
+      "license": "MIT",
+      "lifecycle": "active_conditional"
+    },
+    {
+      "resource_id": "skill.openai_plugins.writing-skills.v1",
+      "namespace": "openai_plugins",
+      "source_path": "plugins/superpowers/skills/writing-skills/SKILL.md",
+      "content_hash": "sha256:4d99cd4e235947d27d58241335dfd5ca89b4e873af5051b19ae32a3ac92851ea",
+      "package_hash": "sha256:70326347c67f0c9c82b50f4fd9cf91c638c3ff2a35cb63820fc6d236a77900af",
+      "license": "MIT",
+      "lifecycle": "active_conditional"
+    },
+    {
+      "resource_id": "skill.openai_plugins.temporal-developer.v1",
+      "namespace": "openai_plugins",
+      "source_path": "plugins/temporal/skills/temporal-developer/SKILL.md",
+      "content_hash": "sha256:0b27682dfcabdce57c866a6f35cf056020bd756b68d2b52866bbeb865dbc9861",
+      "package_hash": "sha256:432aa9b15d6f117b062bf5d9738c99bf2baad78f58dc163a174b05c33c6d8ad7",
+      "license": "MIT",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.openai_plugins.android-emulator-qa.v1",
+      "namespace": "openai_plugins",
+      "source_path": "plugins/test-android-apps/skills/android-emulator-qa/SKILL.md",
+      "content_hash": "sha256:df71c109a221524cdf0e9d703f38afa24cf914b7e488dee2dd3a817719c7466d",
+      "package_hash": "sha256:2097a71d9d4bd144aaa90c3b1e157f2b66479486c576b3d952b2692bff30d1b9",
+      "license": "Apache-2.0",
+      "lifecycle": "active_conditional"
+    },
+    {
+      "resource_id": "skill.openai_plugins.zoom-cobrowse-sdk.v1",
+      "namespace": "openai_plugins",
+      "source_path": "plugins/zoom/skills/cobrowse-sdk/SKILL.md",
+      "content_hash": "sha256:e20ef6dd04d7b9a83e6d02e88e1f69320f9ed7164b7ed4abcdf4f9ca8e16be33",
+      "package_hash": "sha256:d6da940905e5ea45c93d9a12e0c4c79efb8a8e0d0a1ff6eef40d3b21b1298814",
+      "license": "MIT",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.openai_plugins.build-zoom-contact-center-app.v1",
+      "namespace": "openai_plugins",
+      "source_path": "plugins/zoom/skills/contact-center/SKILL.md",
+      "content_hash": "sha256:e847106518fe6910d47cc363f064b6caacbd5d7fc9bba8585c478936450f5276",
+      "package_hash": "sha256:938c7c4ca60f9c1e3486c9b73531c56b656cfbeac7479f44a3fc012726b5ef81",
+      "license": "MIT",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.openai_plugins.build-zoom-meeting-sdk-app.v1",
+      "namespace": "openai_plugins",
+      "source_path": "plugins/zoom/skills/meeting-sdk/SKILL.md",
+      "content_hash": "sha256:d4ba0052b2684f6324ea9eafc748d9d14cbd8447794797017a2b67b86d17c778",
+      "package_hash": "sha256:87fc02454cae43cf9ac944683c844c9c50ccfff6422987ff34df9ea782b3daa8",
+      "license": "MIT",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.openai_plugins.probe-sdk.v1",
+      "namespace": "openai_plugins",
+      "source_path": "plugins/zoom/skills/probe-sdk/SKILL.md",
+      "content_hash": "sha256:e15813625ae5efd107c36bdd738b3133bebbfb50779e86d1c0029358360cf582",
+      "package_hash": "sha256:698de0195235c33ed95c97d6cc2615f9044e2db2e91442aaadc06230e7a4c762",
+      "license": "MIT",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.openai_plugins.zoom-rtms.v1",
+      "namespace": "openai_plugins",
+      "source_path": "plugins/zoom/skills/rtms/SKILL.md",
+      "content_hash": "sha256:e8b2c51d98999192e397eabe68b7fdcf37f2376d4180efa8d86d3c5c7c267f03",
+      "package_hash": "sha256:c045c748854b086aecf781d04cfd6185045d24c38e575cc6e4c926eadbf245cf",
+      "license": "MIT",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.openai_plugins.scribe.v1",
+      "namespace": "openai_plugins",
+      "source_path": "plugins/zoom/skills/scribe/SKILL.md",
+      "content_hash": "sha256:34021ec6571b57ef3b05ff61acef0f1961263e0c23d973d2b46abdf12d24d527",
+      "package_hash": "sha256:6d123cc13dcbdddf8f8f95a0cce77e661ae778165e6707769d17e2b9e6b0b60a",
+      "license": "MIT",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.openai_plugins.zoom-video-sdk-linux.v1",
+      "namespace": "openai_plugins",
+      "source_path": "plugins/zoom/skills/video-sdk/linux/SKILL.md",
+      "content_hash": "sha256:a087e762849e0350116d9e50d73ae93fe345d382977ddb13f3b36ab2461fb255",
+      "package_hash": "sha256:579f1f2b5296e62f78d1bdeaa59abd3df830b562977c55aca530abf7485ebe4c",
+      "license": "MIT",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.openai_plugins.zoom-video-sdk-windows.v1",
+      "namespace": "openai_plugins",
+      "source_path": "plugins/zoom/skills/video-sdk/windows/SKILL.md",
+      "content_hash": "sha256:deaeb17918ccf5534d56bacf379aeae2ae8c7f5645570c3924f41c633725766d",
+      "package_hash": "sha256:987fb8bab19224698015737c022b770d14fae44271a8a888f13df973725cc55f",
+      "license": "MIT",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.openai_plugins.build-zoom-virtual-agent.v1",
+      "namespace": "openai_plugins",
+      "source_path": "plugins/zoom/skills/virtual-agent/SKILL.md",
+      "content_hash": "sha256:2e406d15b333d40ce58a4d27ce971adb1e86407f4ac5748cc1032a326c6c93e5",
+      "package_hash": "sha256:07a4b522f5ca1c6db2fdda488ed846ac29f1de966edf203c6423fc9584e17200",
+      "license": "MIT",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.openai_plugins.setup-zoom-webhooks.v1",
+      "namespace": "openai_plugins",
+      "source_path": "plugins/zoom/skills/webhooks/SKILL.md",
+      "content_hash": "sha256:7420747e913675495ed2f8ee0a2d0ec5ba8b687370aa6e05b5c11cc1593f030d",
+      "package_hash": "sha256:075253e8f23ef1d071395d846d9ff79c9e97959934177fc7b236c0d0c37bbf02",
+      "license": "MIT",
+      "lifecycle": "active_core"
+    },
+    {
+      "resource_id": "skill.openai_plugins.setup-zoom-websockets.v1",
+      "namespace": "openai_plugins",
+      "source_path": "plugins/zoom/skills/websockets/SKILL.md",
+      "content_hash": "sha256:c623321a5395e128b8cea1ee7b31a7acc57d0e31384ebab92d5a06c8b195dd15",
+      "package_hash": "sha256:7f63f0f45f2676f9267673083094418c8e641edbe258706c8dc6b6773d759d57",
+      "license": "MIT",
+      "lifecycle": "active_core"
+    }
+  ]
+}

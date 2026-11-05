@@ -1,0 +1,168 @@
+{
+  "manifest_version": "v2",
+  "resource_id": "tool.lib.pint_convert.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Convert one floating-point magnitude between compatible Pint units",
+    "description": "Creates a default Pint UnitRegistry, multiplies a parsed float by the supplied source unit, converts it to the target unit, and returns the original numeric value, converted magnitude, and normalized target-unit string.",
+    "domain_tags": [
+      "science",
+      "units"
+    ],
+    "core_primitives": [
+      "parse_float_magnitude",
+      "construct_unit_quantity",
+      "convert_compatible_units"
+    ],
+    "problem_space": "Scalar physical-unit conversion using Pint's default unit definitions and dimensional compatibility rules."
+  },
+  "constraint": {
+    "io_signature": "Inputs: float-like value string, source-unit expression, and target-unit expression; output: JSON with original float, converted magnitude, and normalized unit text.",
+    "accepted_inputs": [
+      "a string accepted by Python float for the scalar magnitude",
+      "source and target unit expressions recognized by a default Pint UnitRegistry and dimensionally convertible"
+    ],
+    "output_shape": "Success is an object with status=\"success\", tool=\"lib.pint_convert\", value as the parsed input float, result as the converted scalar magnitude, and unit as Pint's normalized target-unit string. A caught float-parse, unit-definition, dimensionality, offset-unit, or conversion exception produces an object with status=\"error\", tool=\"lib.pint_convert\", and message as the exception string, then exits with code 1.",
+    "limitations": [
+      "accepts only a single Python float magnitude, not arrays, measurements with uncertainty, or a combined quantity expression",
+      "uses a fresh default UnitRegistry with no custom definitions, enabled contexts, or caller configuration",
+      "constructs quantities by multiplying magnitude and unit, which can reject offset units such as absolute temperatures under default Pint rules",
+      "does not preserve arbitrary decimal precision because the input is coerced to binary floating point",
+      "unknown units, incompatible dimensions, invalid floats, and conversion errors use the wrapper's error envelope"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "value",
+        "kind": "string",
+        "required": true,
+        "cli_position": 1
+      },
+      {
+        "name": "from_unit",
+        "kind": "string",
+        "required": true,
+        "cli_position": 2
+      },
+      {
+        "name": "to_unit",
+        "kind": "string",
+        "required": true,
+        "cli_position": 3
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "Original float plus the converted scalar magnitude and Pint-normalized target unit.",
+      "json_schema": {
+        "description": "Native JSON representation only; no field or task-delivery guarantee.",
+        "type": [
+          "object",
+          "array",
+          "string",
+          "number",
+          "boolean",
+          "null"
+        ]
+      },
+      "native_json_contract_scope": "value_only"
+    }
+  },
+  "routing": {
+    "family": "scalar-physical-unit-conversion",
+    "intent_tags": [
+      "convert a scalar between compatible units",
+      "normalize a Pint unit conversion result"
+    ],
+    "negative_intents": [
+      "convert currencies or exchange rates",
+      "convert arrays or uncertain measurements",
+      "use custom Pint unit definitions or contexts"
+    ]
+  },
+  "execution": {
+    "runtime": "python_library",
+    "uri": "file://Pool/resources/tools/lib/lib.pint_convert.py",
+    "execution_status": "active"
+  },
+  "utility": {
+    "latency_ms": 200.0,
+    "token_cost_factor": 0.02,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://pint.readthedocs.io/",
+    "license": "BSD-3",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:6e8544e7b7da1be6b877ab45d656e26269ff35b1a13c6d5ee89f40e2557aa255",
+    "local_implementation_uri": "file://Pool/resources/tools/lib/lib.pint_convert.py",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/lib/_liblib.py": "sha256:dcd68e7904232764172e5f646ff97b854f68f7f916180ae32f838a0acf9ccc77"
+    }
+  },
+  "type_specific": {},
+  "type": {
+    "resource_type": "Tool"
+  },
+  "input_contract": [
+    {
+      "name": "value",
+      "kind": "string",
+      "required": true,
+      "cli_position": 1
+    },
+    {
+      "name": "from_unit",
+      "kind": "string",
+      "required": true,
+      "cli_position": 2
+    },
+    {
+      "name": "to_unit",
+      "kind": "string",
+      "required": true,
+      "cli_position": 3
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "json",
+    "description": "Original float plus the converted scalar magnitude and Pint-normalized target unit.",
+    "json_schema": {
+      "description": "Native JSON representation only; no field or task-delivery guarantee.",
+      "type": [
+        "object",
+        "array",
+        "string",
+        "number",
+        "boolean",
+        "null"
+      ]
+    },
+    "native_json_contract_scope": "value_only"
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [
+      {
+        "name": "pint",
+        "version": "image-locked",
+        "required": true
+      }
+    ],
+    "node_packages": [],
+    "system_packages": [],
+    "commands": [],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "python_compatibility": ">=3.11,<4"
+  }
+}

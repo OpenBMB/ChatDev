@@ -1,0 +1,141 @@
+{
+  "manifest_version": "v2",
+  "resource_id": "tool.api.dog_ceo.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Fetch one random Dog CEO image URL for an optional breed",
+    "description": "Calls Dog CEO's random-image endpoint: with a breed it uses the breed path, and without one it uses the all-breeds random endpoint. The wrapper returns the API's JSON message/status object; it does not download or emit image bytes.",
+    "domain_tags": [
+      "dog-breed-media",
+      "random-image-url",
+      "animal-reference"
+    ],
+    "core_primitives": [
+      "select_random_dog_image",
+      "return_dog_ceo_json_envelope"
+    ],
+    "problem_space": "Random dog image URL retrieval by optional breed; not image downloading, breed classification, veterinary information, or image generation."
+  },
+  "constraint": {
+    "io_signature": "Input: optional breed at CLI position 1. Output: shared JSON envelope containing Dog CEO JSON result, URL, and HTTP status. HTTP 2xx/3xx responses produce a success envelope; HTTP 4xx/5xx responses produce an error envelope and a non-zero exit; request exceptions also produce an error envelope and a non-zero exit.",
+    "accepted_inputs": [
+      "optional Dog CEO breed path such as hound or retriever/golden"
+    ],
+    "output_shape": "HTTP 2xx/3xx: {status: \"success\", tool: string, url: string, http_status: integer, result: object|string}. HTTP 4xx/5xx: {status: \"error\", tool: string, url: string, http_status: integer, result: object|string}, exit 1. Request exception: {status: \"error\", tool: string, message: string}, exit 1.",
+    "limitations": [
+      "breed supplied: fixed GET https://dog.ceo/api/breed/<breed>/images/random; omitted breed: fixed GET https://dog.ceo/api/breeds/image/random",
+      "no image bytes, count, list, size, format, pagination, or batch input; all CLI arguments after position 1 are ignored",
+      "wrapper does not URL-encode, validate, download, parse, paginate, or truncate the provider JSON",
+      "random selection and provider availability are external and no auth/cache/retry is used",
+      "HTTP 2xx/3xx responses produce a success envelope; HTTP 4xx/5xx responses produce an error envelope and a non-zero exit; request exceptions also produce an error envelope and a non-zero exit."
+    ],
+    "artifact_output": [
+      "json"
+    ],
+    "execution_risk": "medium",
+    "http_status_semantics": {
+      "success": "HTTP 200-399",
+      "failure": "HTTP 400-599 or request exception",
+      "failure_exit_code": 1
+    }
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "breed",
+        "kind": "string",
+        "required": false,
+        "cli_position": 1
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "Shared JSON envelope containing the Dog CEO random image URL/message, URL, and HTTP status."
+    }
+  },
+  "routing": {
+    "family": "random-dog-image-url",
+    "intent_tags": [
+      "get a random dog image URL",
+      "retrieve a Dog CEO image by breed"
+    ],
+    "negative_intents": [
+      "download or edit image bytes",
+      "identify a dog breed from a photo"
+    ]
+  },
+  "execution": {
+    "runtime": "rest_api",
+    "uri": "file://Pool/resources/tools/api/api.dog_ceo.py",
+    "execution_status": "active",
+    "execution_risk": "medium"
+  },
+  "utility": {
+    "latency_ms": 200.0,
+    "token_cost_factor": 0.02,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://dog.ceo/dog-api/",
+    "license": "MIT",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:fc32ec46785580baacaa344d11d84d8be1fbeec142de6d1caa03a9b78d46f480",
+    "local_implementation_uri": "file://Pool/resources/tools/api/api.dog_ceo.py",
+    "auth_required": false,
+    "auth_evidence": "wrapper_and_shared_adapter_read_no_credentials",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/api/_apilib.py": "sha256:e60bba3d1f3dcd9fcd408042ad7951e52d6ecd66d57cb9a58c249d521c8811a7"
+    }
+  },
+  "type_specific": {
+    "tool": {
+      "tool_kind": "rest_api",
+      "deterministic": false
+    }
+  },
+  "type": {
+    "resource_type": "Tool"
+  },
+  "input_contract": [
+    {
+      "name": "breed",
+      "kind": "string",
+      "required": false,
+      "cli_position": 1
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "json",
+    "description": "Shared JSON envelope containing the Dog CEO random image URL/message, URL, and HTTP status."
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [
+      {
+        "name": "requests",
+        "version": "==2.32.3",
+        "required": true
+      }
+    ],
+    "node_packages": [],
+    "system_packages": [],
+    "commands": [],
+    "env_vars": [],
+    "network_required": true,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "rest": {
+      "endpoint": "https://dog.ceo/api/breed/{a(1)}/images/random",
+      "auth_required": false,
+      "auth_evidence": "wrapper_and_shared_adapter_read_no_credentials",
+      "timeout_seconds": 25,
+      "success_http_status": "200-399"
+    }
+  }
+}

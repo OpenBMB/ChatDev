@@ -1,0 +1,59 @@
+(* Simple challenge-response authentication protocol.
+   Alice authenticates to Bob using a shared symmetric key.
+
+   Protocol steps:
+   1. Alice sends her identity to Bob.
+   2. Bob generates a fresh nonce and sends it to Alice.
+   3. Alice computes mac = HMAC(k, nonce || identity) and sends it to Bob.
+   4. Bob verifies the MAC; if it matches, authentication succeeds.
+*)
+
+(* Declare a public channel *)
+free c: channel.
+
+(* Symmetric key shared between Alice and Bob — private (not known to attacker) *)
+free k: bitstring [private].
+
+(* Cryptographic functions *)
+fun hmac(bitstring, bitstring): bitstring.
+fun concat(bitstring, bitstring): bitstring.
+
+(* Destructors *)
+reduc forall m: bitstring, key: bitstring;
+    checkhmac(hmac(key, m), key, m) = true.
+
+(* Security property: the attacker should not learn the shared key *)
+query attacker(k).
+
+(* Alice process *)
+let AliceProc(identity: bitstring, key: bitstring) =
+    (* Step 1: Send identity to Bob *)
+    out(c, identity);
+    (* Step 2: Receive nonce from Bob *)
+    in(c, nonce: bitstring);
+    (* Step 3: Compute and send MAC *)
+    let mac = hmac(key, concat(nonce, identity)) in
+    out(c, mac).
+
+(* Bob process *)
+let BobProc(key: bitstring) =
+    (* Step 1: Receive Alice's identity *)
+    in(c, identity: bitstring);
+    (* Step 2: Generate fresh nonce and send to Alice *)
+    new nonce: bitstring;
+    out(c, nonce);
+    (* Step 3: Receive MAC from Alice *)
+    in(c, mac: bitstring);
+    (* Step 4: Verify MAC *)
+    if checkhmac(mac, key, concat(nonce, identity)) = true then
+        (* Authentication succeeded *)
+        out(c, true)
+    else
+        (* Authentication failed *)
+        0.
+
+(* Main process: one session each *)
+process
+    new alice_id: bitstring;
+    ( AliceProc(alice_id, k)
+    | BobProc(k) )

@@ -1,0 +1,186 @@
+{
+  "manifest_version": "1.0",
+  "resource_id": "tool.pptx2text.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Extract non-empty text-frame content from each slide in a PPTX file",
+    "description": "Opens one local presentation with python-pptx, walks slides and shapes in library order, joins non-empty shape text with newlines per slide, and returns slide records in a JSON envelope.",
+    "core_primitives": [
+      "open_local_pptx_presentation",
+      "extract_slide_shape_text_frames",
+      "group_text_by_slide"
+    ],
+    "problem_space": "Read-only plain-text extraction from text-frame-bearing shapes in PPTX slides; not presentation rendering, OCR, speaker-note extraction, layout preservation, table/media analysis, or PPT/PDF conversion.",
+    "domain_tags": [
+      "file-processing",
+      "text-extraction",
+      "automation"
+    ],
+    "execution_semantics": {
+      "determinism": "deterministic",
+      "side_effects": "none",
+      "effect_targets": []
+    }
+  },
+  "constraint": {
+    "env_requirements": [
+      "Python >= 3.6",
+      "python-pptx Python package"
+    ],
+    "io_signature": "Input: required file_path string naming an existing PPTX-compatible presentation. Output: JSON envelope with slide_count and ordered slides [{slide, text}], or a handled open/extraction error.",
+    "accepted_inputs": [
+      "an existing PowerPoint Open XML presentation readable by python-pptx"
+    ],
+    "output_shape": "Success: {status: \"success\", tool: \"python-pptx\", target: string, slide_count: integer, slides: [{slide: integer, text: string}]}, exit 0. Slides without non-empty text-frame shapes have text=\"\". Missing path: {status: \"error\", message: string}, exit 2. Any caught open or extraction exception: {status: \"error\", tool: \"python-pptx\", message: string}, exit 1. Missing argument prints usage to stderr and exits 1 without JSON.",
+    "limitations": [
+      "extracts only shapes for which python-pptx reports has_text_frame and does not guarantee table-cell text, chart labels, SmartArt, embedded objects, images/OCR, or speaker notes",
+      "flattens each slide to newline-joined plain text and does not preserve coordinates, styles, runs, reading order semantics, animations, or hyperlinks",
+      "has no timeout, slide/text cap, or output truncation and does not modify the presentation"
+    ],
+    "artifact_input": [
+      "file_path"
+    ],
+    "artifact_output": [
+      "json"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "file_path",
+        "kind": "string",
+        "required": true,
+        "cli_position": 1,
+        "artifact_types": [
+          "pptx"
+        ],
+        "extensions": [
+          ".pptx"
+        ]
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "JSON envelope containing slide count and per-slide newline-joined text-frame content, or a handled extraction error.",
+      "json_schema": {
+        "description": "Native JSON representation only; no field or task-delivery guarantee.",
+        "type": [
+          "object",
+          "array",
+          "string",
+          "number",
+          "boolean",
+          "null"
+        ]
+      },
+      "native_json_contract_scope": "value_only"
+    }
+  },
+  "routing": {
+    "family": "pptx-slide-text-frame-extraction",
+    "intent_tags": [
+      "extract text from PPTX slide shapes",
+      "summarize slide text by slide number"
+    ],
+    "negative_intents": [
+      "extract speaker notes tables charts or image OCR comprehensively",
+      "preserve PowerPoint layout formatting or reading order",
+      "edit render or convert a presentation"
+    ],
+    "dependency_slots": []
+  },
+  "execution": {
+    "runtime": "python_script",
+    "uri": "file://Pool/resources/tools/script/pptx2text.py",
+    "execution_status": "active"
+  },
+  "utility": {
+    "latency_ms": 200,
+    "token_cost_factor": 0.01,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://python-pptx.readthedocs.io",
+    "license": "MIT",
+    "backed_by": "PPTX text extraction via python-pptx",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:240aff7af95dfe8120562461a09e5b9e3e51c6c357fe3cfc4a7ec90e6db1618f",
+    "local_implementation_uri": "file://Pool/resources/tools/script/pptx2text.py",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/script/_sgar_cli.py": "sha256:42368f8d49cb6364ad3aeaac6d0f9602adc12cb29fea49322fd488400698b6b9"
+    }
+  },
+  "type_specific": {
+    "tool": {
+      "tool_kind": "local_script",
+      "language": "python",
+      "deterministic": true
+    }
+  },
+  "memory": {
+    "success_trajectories": [],
+    "failure_reflections": []
+  },
+  "type": {
+    "resource_type": "Tool",
+    "resource_tag": [
+      "file-processing",
+      "text-extraction",
+      "automation"
+    ]
+  },
+  "input_contract": [
+    {
+      "name": "file_path",
+      "kind": "string",
+      "required": true,
+      "cli_position": 1,
+      "artifact_types": [
+        "pptx"
+      ],
+      "extensions": [
+        ".pptx"
+      ]
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "json",
+    "description": "JSON envelope containing slide count and per-slide newline-joined text-frame content, or a handled extraction error.",
+    "json_schema": {
+      "description": "Native JSON representation only; no field or task-delivery guarantee.",
+      "type": [
+        "object",
+        "array",
+        "string",
+        "number",
+        "boolean",
+        "null"
+      ]
+    },
+    "native_json_contract_scope": "value_only"
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [
+      {
+        "name": "python-pptx",
+        "version": "==1.0.2",
+        "required": true
+      }
+    ],
+    "node_packages": [],
+    "system_packages": [],
+    "commands": [],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "python_compatibility": ">=3.11,<4"
+  }
+}

@@ -1,0 +1,171 @@
+{
+  "manifest_version": "1.0",
+  "resource_id": "tool.junit_xml_parser.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Summarize JUnit XML suites and testcase statuses",
+    "description": "Parses one local XML report with lxml and returns suite attributes plus testcase name, classname, time, and a status inferred from failure, error, or skipped child elements.",
+    "core_primitives": [
+      "parse_junit_xml_report",
+      "extract_testsuite_attributes",
+      "classify_testcase_status"
+    ],
+    "problem_space": "Read-only summarization of non-namespaced JUnit/xUnit-style testsuite/testcase tags; XML namespaces can make bare-tag searches return no suites, and recursively nested suites can cause testcase records to be attributed more than once. Not test execution, strict schema validation, or full report extraction.",
+    "domain_tags": [
+      "testing-tools",
+      "software-engineering",
+      "automated-testing"
+    ]
+  },
+  "constraint": {
+    "env_requirements": [
+      "Python >= 3.6",
+      "lxml Python package"
+    ],
+    "io_signature": "Input: required file_path string naming an existing XML report. Output: JSON envelope with a suites array of suite attributes and testcase summaries, or a handled missing-path/XML-syntax error.",
+    "accepted_inputs": [
+      "an existing XML file whose root is testsuite or that contains descendant testsuite elements in JUnit/xUnit style"
+    ],
+    "output_shape": "Success: {status: \"success\", tool: \"lxml\", target: string, suites: [{name: string|null, tests: string|null, failures: string|null, errors: string|null, skipped: string|null, time: string|null, cases: [{name: string|null, classname: string|null, time: string|null, status: \"passed\"|\"failed\"|\"error\"|\"skipped\"}]}]}, exit 0. Missing path: {status: \"error\", message: string}, exit 2. XML syntax failure: {status: \"error\", tool: \"lxml\", message: string}, exit 1. Missing argument prints usage to stderr and exits 1 without JSON; other parser/I/O errors may traceback.",
+    "limitations": [
+      "does not validate against a JUnit XML schema and accepts any XML containing testsuite/testcase element names",
+      "searches literal bare tags `testsuite` and `testcase`; namespace-qualified JUnit XML elements are not matched and can produce an empty suites array",
+      "uses recursive `s.iter(\"testcase\")` for every discovered suite, so testcases under nested suites can appear both under an ancestor suite and again under their nested suite",
+      "does not return failure text, error details, skipped reasons, system-out, system-err, properties, or aggregate computed counts",
+      "uses lxml default parser settings with no explicit DTD/entity hardening, timeout, size cap, or output truncation; it does not modify the report"
+    ],
+    "artifact_input": [
+      "file_path"
+    ],
+    "artifact_output": [
+      "json"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "file_path",
+        "kind": "string",
+        "required": true,
+        "cli_position": 1
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "JSON envelope containing JUnit suite attributes and per-testcase status summaries, or a handled parse error.",
+      "json_schema": {
+        "description": "Native JSON representation only; no field or task-delivery guarantee.",
+        "type": [
+          "object",
+          "array",
+          "string",
+          "number",
+          "boolean",
+          "null"
+        ]
+      },
+      "native_json_contract_scope": "value_only"
+    }
+  },
+  "routing": {
+    "family": "junit-xml-report-summary",
+    "intent_tags": [
+      "summarize a JUnit XML test report",
+      "extract testcase pass fail error and skipped statuses"
+    ],
+    "negative_intents": [
+      "run a test suite or rerun failed tests",
+      "validate JUnit XML against a schema",
+      "extract failure messages logs or full testcase output"
+    ],
+    "dependency_slots": []
+  },
+  "utility": {
+    "latency_ms": 100,
+    "token_cost_factor": 0.01,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://lxml.de",
+    "license": "BSD",
+    "backed_by": "JUnit XML report parser via lxml",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:a12e69854b590ff55d45bdaab4ad49b16a8617f5c93841eabbbafec9aec3ec5f",
+    "local_implementation_uri": "file://Pool/resources/tools/script/junit_xml_parser.py",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/script/_sgar_cli.py": "sha256:42368f8d49cb6364ad3aeaac6d0f9602adc12cb29fea49322fd488400698b6b9"
+    }
+  },
+  "type_specific": {
+    "tool": {
+      "tool_kind": "local_script",
+      "language": "python",
+      "deterministic": true
+    }
+  },
+  "memory": {
+    "success_trajectories": [],
+    "failure_reflections": []
+  },
+  "execution": {
+    "runtime": "python_script",
+    "uri": "file://Pool/resources/tools/script/junit_xml_parser.py",
+    "execution_status": "active"
+  },
+  "type": {
+    "resource_type": "Tool",
+    "resource_tag": [
+      "testing-tools",
+      "software-engineering",
+      "automated-testing"
+    ]
+  },
+  "input_contract": [
+    {
+      "name": "file_path",
+      "kind": "string",
+      "required": true,
+      "cli_position": 1
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "json",
+    "description": "JSON envelope containing JUnit suite attributes and per-testcase status summaries, or a handled parse error.",
+    "json_schema": {
+      "description": "Native JSON representation only; no field or task-delivery guarantee.",
+      "type": [
+        "object",
+        "array",
+        "string",
+        "number",
+        "boolean",
+        "null"
+      ]
+    },
+    "native_json_contract_scope": "value_only"
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [
+      {
+        "name": "lxml",
+        "version": "==5.3.0",
+        "required": true
+      }
+    ],
+    "node_packages": [],
+    "system_packages": [],
+    "commands": [],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "python_compatibility": ">=3.11,<4"
+  }
+}

@@ -1,0 +1,189 @@
+{
+  "manifest_version": "1.0",
+  "resource_id": "tool.git_log_json.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Return up to a requested number of current Git history entries as commit, author, ISO date, and subject objects",
+    "description": "Runs a fixed `git log` format in an optional repository defaulting to `.` and parses unit-separator-delimited lines into JSON objects. The count defaults to 20 and any non-digit count silently falls back to 20.",
+    "core_primitives": [
+      "read_current_git_history",
+      "parse_fixed_git_log_fields",
+      "return_commit_metadata_objects"
+    ],
+    "problem_space": "Structured summary of a bounded prefix of the current repository history; not arbitrary pretty formatting, patch or graph output, revision-range querying, branch mutation, or full commit-object inspection.",
+    "domain_tags": [
+      "version-control",
+      "software-development",
+      "data-processing"
+    ]
+  },
+  "constraint": {
+    "env_requirements": [
+      "Python >= 3.6",
+      "git"
+    ],
+    "io_signature": "Input: optional repo_path defaulting to `.` and optional digit-string count defaulting/falling back to `20`; output: JSON with parsed commit/author/date/subject log entries.",
+    "accepted_inputs": [
+      "an existing local Git repository directory path or omission for the current directory",
+      "an optional non-negative digit string passed to `git log -n`; non-digit text silently uses 20"
+    ],
+    "output_shape": "Success: {status: \"success\", tool: \"git\", repo: string, count: integer, logs: object[]}, where each log object is {commit: string, author: string, date: string, subject: string}; count is the number actually parsed, not the requested value. Non-existing repo: {status: \"error\", message: string} and exit 2. Nonzero Git result: {status: \"error\", tool: \"git\", message: string} and exit 1. Missing Git executable, 30-second timeout, or other subprocess exceptions are uncaught and may produce a traceback instead of JSON.",
+    "limitations": [
+      "uses the repository's default current-history traversal with no revision, branch, path, author, date-range, merge, graph, or ordering controls",
+      "returns only full commit hash, author display name, ISO date text, and subject; bodies, emails, parents, signatures, refs, stats, and patches are omitted",
+      "non-digit count values silently become 20, while digit strings including `0` are passed directly to Git",
+      "uses a fixed 30-second timeout, applies no additional output truncation beyond `-n count`, and does not catch timeout or executable-not-found exceptions"
+    ],
+    "artifact_input": [
+      "repo_path"
+    ],
+    "artifact_output": [
+      "json"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "repo_path",
+        "kind": "string",
+        "required": false,
+        "default": ".",
+        "cli_position": 1
+      },
+      {
+        "name": "count",
+        "kind": "string",
+        "required": false,
+        "default": "20",
+        "cli_position": 2
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "JSON report containing a bounded list of current-history entries with commit hash, author name, ISO date text, and subject.",
+      "json_schema": {
+        "description": "Native JSON representation only; no field or task-delivery guarantee.",
+        "type": [
+          "object",
+          "array",
+          "string",
+          "number",
+          "boolean",
+          "null"
+        ]
+      },
+      "native_json_contract_scope": "value_only"
+    }
+  },
+  "routing": {
+    "family": "git-read-only-structured-current-log",
+    "intent_tags": [
+      "get recent Git commits as structured JSON",
+      "inspect commit hashes authors dates and subjects"
+    ],
+    "negative_intents": [
+      "request a custom Git pretty format or raw text log",
+      "inspect commit patches, bodies, stats, graph, or signatures",
+      "create, amend, revert, reset, or otherwise mutate Git history"
+    ],
+    "dependency_slots": []
+  },
+  "utility": {
+    "latency_ms": 100,
+    "token_cost_factor": 0.01,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://git-scm.com/",
+    "license": "GPLv2",
+    "backed_by": "wraps git(1) CLI",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:6f6c69381607df81244f894f253d8a3cb2114744a2226a6f6aeffb0375a49c42",
+    "local_implementation_uri": "file://Pool/resources/tools/script/git_log_json.py",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/script/_sgar_cli.py": "sha256:42368f8d49cb6364ad3aeaac6d0f9602adc12cb29fea49322fd488400698b6b9"
+    }
+  },
+  "type_specific": {
+    "tool": {
+      "tool_kind": "local_script",
+      "language": "python",
+      "deterministic": true
+    }
+  },
+  "memory": {
+    "success_trajectories": [],
+    "failure_reflections": []
+  },
+  "execution": {
+    "runtime": "python_script",
+    "uri": "file://Pool/resources/tools/script/git_log_json.py",
+    "execution_status": "active"
+  },
+  "type": {
+    "resource_type": "Tool",
+    "resource_tag": [
+      "version-control",
+      "software-development",
+      "data-processing"
+    ]
+  },
+  "input_contract": [
+    {
+      "name": "repo_path",
+      "kind": "string",
+      "required": false,
+      "default": ".",
+      "cli_position": 1
+    },
+    {
+      "name": "count",
+      "kind": "string",
+      "required": false,
+      "default": "20",
+      "cli_position": 2
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "json",
+    "description": "JSON report containing a bounded list of current-history entries with commit hash, author name, ISO date text, and subject.",
+    "json_schema": {
+      "description": "Native JSON representation only; no field or task-delivery guarantee.",
+      "type": [
+        "object",
+        "array",
+        "string",
+        "number",
+        "boolean",
+        "null"
+      ]
+    },
+    "native_json_contract_scope": "value_only"
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [],
+    "node_packages": [],
+    "system_packages": [
+      {
+        "name": "git",
+        "version": "image-locked",
+        "required": true
+      }
+    ],
+    "commands": [
+      "git"
+    ],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "python_compatibility": ">=3.11,<4"
+  }
+}

@@ -1,0 +1,232 @@
+{
+  "manifest_version": "v2",
+  "resource_id": "tool.searxng_search.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Query a self-hosted SearXNG instance and return ranked source records",
+    "description": "SGAR adapter over upstream SearXNG HTTP JSON API. It performs no search ranking itself and requires a configured self-hosted SearXNG endpoint.",
+    "domain_tags": [
+      "web",
+      "search",
+      "research"
+    ],
+    "core_primitives": [
+      "submit_web_query",
+      "return_ranked_source_records",
+      "preserve_engine_metadata"
+    ],
+    "problem_space": "Internet metasearch through a self-hosted SearXNG instance; not browser automation, source capture, citation extraction, or an API-key search provider.",
+    "execution_semantics": {
+      "side_effects": "none",
+      "effect_targets": []
+    }
+  },
+  "constraint": {
+    "io_signature": "Input query and optional category/limit; output ordered records containing title, URL, snippet, engine and optional date/score.",
+    "accepted_inputs": [
+      "non-empty web query"
+    ],
+    "output_shape": "JSON ranked source-record envelope.",
+    "limitations": [
+      "requires reachable SearXNG service",
+      "engine availability and ranking depend on configured upstream engines",
+      "does not bypass CAPTCHA or rate limits",
+      "does not store evidence snapshots"
+    ],
+    "operation_kinds": [
+      "network_search"
+    ],
+    "artifact_output": [
+      "json"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "query",
+        "kind": "string",
+        "required": true,
+        "cli_position": 1
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "Ranked SearXNG source records.",
+      "json_schema": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "const": "success"
+          },
+          "tool": {
+            "const": "searxng"
+          },
+          "query": {
+            "type": "string",
+            "minLength": 1
+          },
+          "endpoint": {
+            "type": "string",
+            "minLength": 1
+          },
+          "records": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "rank": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "title": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "url": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "content": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "engine": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "category": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "publishedDate": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "score": {
+                  "type": [
+                    "number",
+                    "null"
+                  ]
+                }
+              },
+              "required": [
+                "rank",
+                "title",
+                "url",
+                "content",
+                "engine",
+                "category",
+                "publishedDate",
+                "score"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "result_count": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "raw_engine_count": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "required": [
+          "status",
+          "tool",
+          "query",
+          "endpoint",
+          "records",
+          "result_count",
+          "raw_engine_count"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "routing": {
+    "family": "self-hosted-web-search",
+    "intent_tags": [
+      "search the public web",
+      "find ranked web sources",
+      "query SearXNG"
+    ],
+    "negative_intents": [
+      "fetch a known URL only",
+      "capture a source snapshot",
+      "use a key-backed commercial search API"
+    ]
+  },
+  "execution": {
+    "runtime": "python_script",
+    "uri": "file://Pool/resources/tools/script/searxng_search.py",
+    "execution_status": "active"
+  },
+  "utility": {
+    "latency_ms": 1000,
+    "token_cost_factor": 0.02,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://github.com/searxng/searxng/tree/e75fd22d09c7fb8b340e9bbef726ea35f46b85e",
+    "version": "e75fd22d09c7fb8b340e9bbef726ea35f46b85e",
+    "license": "AGPL-3.0",
+    "license_url": "https://github.com/searxng/searxng/blob/master/LICENSE",
+    "license_sha256": "57c8ff33c9c0cfc3ef00e650a1cc910d7ee479a8bc509f6c9209a7c2a11399d6",
+    "backed_by": "SearXNG",
+    "recognized_public_tool": true,
+    "native_network_access": true,
+    "credential_class": "NONE",
+    "credential_env_names": [],
+    "third_party_account_required": false,
+    "paid_service_required": false,
+    "source_hash": "sha256:cb3d84665c497c8ef1fe97d3300f31ade2b01137863efc6de06d5ccc3df3d6d9",
+    "local_implementation_uri": "file://Pool/resources/tools/script/searxng_search.py"
+  },
+  "type_specific": {
+    "tool": {
+      "tool_kind": "rest_api",
+      "deterministic": false
+    }
+  },
+  "memory": {
+    "success_trajectories": [],
+    "failure_reflections": []
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [
+      {
+        "name": "httpx",
+        "version": "==0.28.1",
+        "required": true
+      }
+    ],
+    "node_packages": [],
+    "system_packages": [],
+    "commands": [],
+    "env_vars": [
+      "SEARXNG_BASE_URL"
+    ],
+    "network_required": true,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "python_compatibility": ">=3.11,<4"
+  }
+}

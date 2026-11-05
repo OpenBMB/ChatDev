@@ -1,0 +1,134 @@
+{
+  "manifest_version": "v2",
+  "resource_id": "tool.mcp.fs_list_directory.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "List the immediate files and folders directly contained in one local directory.",
+    "description": "Use to enumerate one directory's direct children when the root path is known. It is a one-level listing for quick inspection; it does not recursively build a tree, search by name or content, read a selected file, or mutate the filesystem.",
+    "domain_tags": [
+      "filesystem",
+      "directory-listing",
+      "workspace-inspection"
+    ],
+    "core_primitives": [
+      "list_immediate_directory_entries",
+      "enumerate_files_and_folders",
+      "inspect_directory_children"
+    ],
+    "problem_space": "Enumerate the immediate entries of a known local directory. This is shallow filesystem discovery, distinct from recursive hierarchy traversal, content or filename search, reading a known file, and all filesystem writes."
+  },
+  "constraint": {
+    "io_signature": "Input: one local directory path. Output: text listing of immediate file and folder entries.",
+    "accepted_inputs": [
+      "an existing local directory path within allowed roots"
+    ],
+    "output_shape": "text list of immediate child names and paths.",
+    "limitations": [
+      "does not recurse into descendant directories",
+      "does not search file names, inspect content, or modify paths"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "path",
+        "kind": "directory_path",
+        "required": true,
+        "cli_position": 1
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "text",
+      "description": "List a directory via MCP filesystem server"
+    }
+  },
+  "routing": {
+    "family": "filesystem-discovery",
+    "intent_tags": [
+      "list files in a directory",
+      "enumerate immediate folder contents",
+      "show direct child entries"
+    ],
+    "negative_intents": [
+      "show a recursive directory tree",
+      "find files by a pattern",
+      "read a file's text"
+    ]
+  },
+  "execution": {
+    "runtime": "mcp_server",
+    "uri": "file://Pool/resources/tools/mcp/mcp.fs_list_directory.py",
+    "execution_status": "active"
+  },
+  "utility": {
+    "latency_ms": 300.0,
+    "token_cost_factor": 0.02,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://github.com/modelcontextprotocol/servers/tree/main/src/filesystem",
+    "license": "MIT",
+    "backed_by": "MCP list_directory",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:130dcc4ba315181ba74e65e7a6135d9d1b169d8e4efde3b6b3cf893e7a5d9826",
+    "local_implementation_uri": "file://Pool/resources/tools/mcp/mcp.fs_list_directory.py",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/mcp/_mcplib.py": "sha256:8c39f008bd1fc31f0457e6e08cb42da72eeeebba3dd1bcb51c277a33b35287f3"
+    }
+  },
+  "type_specific": {},
+  "type": {
+    "resource_type": "Tool"
+  },
+  "input_contract": [
+    {
+      "name": "path",
+      "kind": "directory_path",
+      "required": true,
+      "cli_position": 1
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "text",
+    "description": "List a directory via MCP filesystem server"
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [
+      {
+        "name": "mcp",
+        "version": "==1.28.1",
+        "required": true
+      }
+    ],
+    "node_packages": [
+      {
+        "name": "@modelcontextprotocol/server-filesystem",
+        "version": "==2026.7.10",
+        "required": true
+      }
+    ],
+    "system_packages": [],
+    "commands": [
+      "mcp-server-filesystem"
+    ],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "mcp": {
+      "server_command": "mcp-server-filesystem",
+      "working_directory": "/app",
+      "allowed_roots": [
+        "/app"
+      ]
+    },
+    "python_compatibility": ">=3.11,<4"
+  }
+}

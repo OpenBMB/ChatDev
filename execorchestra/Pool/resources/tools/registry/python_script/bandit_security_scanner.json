@@ -1,0 +1,178 @@
+{
+  "manifest_version": "1.0",
+  "resource_id": "tool.bandit_security_scanner.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Run Bandit recursively against one Python file or directory and return its native JSON findings in a wrapper envelope",
+    "description": "Validates that the target exists, invokes `bandit -r <target> -f json`, and reports Bandit's structured Python security findings without changing source files. Bandit exit codes 0 and 1 both represent a completed scan.",
+    "core_primitives": [
+      "scan_python_security_issues_with_bandit",
+      "recursively_analyze_python_path",
+      "return_bandit_native_json"
+    ],
+    "problem_space": "Bandit-specific static security inspection of Python source trees; not general style linting, formatting, dependency CVE lookup, or code remediation.",
+    "domain_tags": [
+      "security",
+      "code-audit",
+      "Python"
+    ]
+  },
+  "constraint": {
+    "env_requirements": [
+      "Python >= 3.6",
+      "bandit"
+    ],
+    "io_signature": "Input: one required existing Python file or directory path; output: one JSON wrapper containing Bandit's parsed JSON report or explicit execution-error fields.",
+    "accepted_inputs": [
+      "an existing Python source file path",
+      "an existing directory path to scan recursively with Bandit"
+    ],
+    "output_shape": "Completed scan (Bandit exit 0 or 1): {status: \"success\", tool: \"bandit\", target: string, exit_code: 0|1, result: object|array|null, stdout: string|null, stderr: string|null}; parsed Bandit JSON is placed in result and stdout becomes null. Hard Bandit failure: the same keys with status=\"tool_error\", the actual exit_code, result possibly null, stdout containing unparsed output when no JSON parsed, and stderr, followed by that exit code. Missing path or executable and timeout: {status: \"error\", tool: \"bandit\", message: string}, exiting 2, 3, or 4. Missing CLI argument prints usage to stderr and exits 1 without JSON.",
+    "limitations": [
+      "always uses recursive mode and Bandit's native JSON formatter with no caller-configurable Bandit flags, profile, severity threshold, confidence threshold, exclusions, or configuration file",
+      "requires the `bandit` executable on PATH and enforces the shared 120-second timeout",
+      "does not modify, format, or automatically remediate Python files; Bandit findings use exit code 1 but are treated as a successful scan"
+    ],
+    "artifact_input": [
+      "file_path"
+    ],
+    "artifact_output": [
+      "json"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "target_path",
+        "kind": "path",
+        "artifact_types": [
+          "code"
+        ],
+        "extensions": [
+          ".py"
+        ],
+        "required": true,
+        "cli_position": 1
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "JSON execution envelope containing Bandit's parsed native report, exit code, target, and stdout/stderr or an explicit wrapper error.",
+      "json_schema": {
+        "description": "Native JSON representation only; no field or task-delivery guarantee.",
+        "type": [
+          "object",
+          "array",
+          "string",
+          "number",
+          "boolean",
+          "null"
+        ]
+      },
+      "native_json_contract_scope": "value_only"
+    }
+  },
+  "routing": {
+    "family": "python-bandit-security-scan",
+    "intent_tags": [
+      "scan Python source for Bandit security findings",
+      "run a recursive Bandit JSON security audit"
+    ],
+    "negative_intents": [
+      "check Python style or formatting with Black, flake8, or Ruff",
+      "look up dependency CVEs or audit installed packages",
+      "rewrite or automatically fix insecure Python code"
+    ],
+    "dependency_slots": []
+  },
+  "utility": {
+    "latency_ms": 200,
+    "token_cost_factor": 0.01,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://bandit.readthedocs.io",
+    "license": "Apache-2.0",
+    "backed_by": "Bandit security scanner",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:9c8616766329a71a261be6a5d563eecd29d9acf619014c66607c2210a2ef1ad9",
+    "local_implementation_uri": "file://Pool/resources/tools/script/bandit_security_scanner.py",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/script/_sgar_cli.py": "sha256:42368f8d49cb6364ad3aeaac6d0f9602adc12cb29fea49322fd488400698b6b9"
+    }
+  },
+  "type_specific": {
+    "tool": {
+      "tool_kind": "local_script",
+      "language": "python",
+      "deterministic": true
+    }
+  },
+  "memory": {
+    "success_trajectories": [],
+    "failure_reflections": []
+  },
+  "execution": {
+    "runtime": "python_script",
+    "uri": "file://Pool/resources/tools/script/bandit_security_scanner.py",
+    "execution_status": "active"
+  },
+  "type": {
+    "resource_type": "Tool",
+    "resource_tag": [
+      "security",
+      "code-audit",
+      "Python"
+    ]
+  },
+  "input_contract": [
+    {
+      "name": "target_path",
+      "kind": "path",
+      "artifact_types": [
+        "code"
+      ],
+      "extensions": [
+        ".py"
+      ],
+      "required": true,
+      "cli_position": 1
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "json",
+    "description": "JSON execution envelope containing Bandit's parsed native report, exit code, target, and stdout/stderr or an explicit wrapper error.",
+    "json_schema": {
+      "description": "Native JSON representation only; no field or task-delivery guarantee.",
+      "type": [
+        "object",
+        "array",
+        "string",
+        "number",
+        "boolean",
+        "null"
+      ]
+    },
+    "native_json_contract_scope": "value_only"
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [],
+    "node_packages": [],
+    "system_packages": [],
+    "commands": [
+      "bandit"
+    ],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "python_compatibility": ">=3.11,<4"
+  }
+}

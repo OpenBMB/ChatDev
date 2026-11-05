@@ -1,0 +1,339 @@
+{
+  "manifest_version": "1.0",
+  "resource_id": "tool.python_script_runner.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Execute one workspace-local Python script and report output plus detected changed files",
+    "execution_semantics": {
+      "side_effects": "declared",
+      "effect_targets": [
+        "task_workspace"
+      ]
+    },
+    "description": "Validates that the `.py` script and optional run cwd are inside the configured workspace, snapshots the run tree, executes the script with the current interpreter and supplied arguments, then reports stdout, stderr, exit code, latency, and newly seen or mtime-increased files.",
+    "core_primitives": [
+      "python_execution",
+      "generated_code_execution",
+      "artifact_file_production",
+      "stdout_stderr_capture",
+      "json_output"
+    ],
+    "problem_space": "Authorized execution of arbitrary workspace-local Python code with coarse post-run changed-file detection; not sandboxed evaluation, static analysis, deterministic computation, rollback, comprehensive filesystem auditing, or process isolation.",
+    "domain_tags": [
+      "software_engineering",
+      "code_execution",
+      "python",
+      "benchmark_artifact"
+    ]
+  },
+  "constraint": {
+    "env_requirements": [
+      "python3",
+      "workspace_only",
+      "case_workspace_only",
+      "SGAR_WORKSPACE_ROOT optionally defines the workspace boundary; otherwise the wrapper current directory is used",
+      "SGAR_HOST_WORKSPACE_ROOT optionally maps host absolute paths into the workspace"
+    ],
+    "io_signature": "Input: required workspace-contained `.py` script_path, optional args list defaulting to [], and optional cwd string defaulting to `.`. The orchestrator's runner-specific serializer emits `--cwd` and encodes args through `--arg-json`. Output: JSON status envelope with streams/exit and changed-file paths; executed code may modify files.",
+    "accepted_inputs": [
+      "a `.py` file resolving inside SGAR_WORKSPACE_ROOT or the wrapper cwd when that variable is unset",
+      "an optional list of script arguments, including authorized workspace file paths, encoded as repeated CLI tokens, one JSON-array token, or `--arg-json` plus additional tokens",
+      "an optional workspace-contained directory bound as cwd; omission uses the workspace root represented by `.`"
+    ],
+    "output_shape": "Normal child completion: {status: \"ok\"|\"failed\", exit_code: integer, script_path: absolute string, cwd: absolute string, stdout: string, stderr: string, produced_files: [absolute string], latency_ms: integer}; wrapper propagates child exit and copies non-empty child stderr to wrapper stderr on failure. Missing/invalid/outside-workspace script or invalid cwd: {status: \"invalid\"|\"blocked\"|\"missing\", error: string}, exit 2.",
+    "limitations": [
+      "executes arbitrary Python code with inherited permissions and environment; workspace validation restricts only the selected script path and cwd, not the code's filesystem, subprocess, network, or other side effects",
+      "changed-file detection scans only run_cwd, skips __pycache__, .git, .venv, and node_modules, reports only new or mtime-increased files, and misses deletions, restored timestamps, and changes outside that tree",
+      "argument parsing accepts unknown wrapper options as child arguments and environment/path mapping is platform dependent; execution and produced_files are nondeterministic",
+      "the generic manifest contract has no supported flag field and cannot expose `--arg-json` as an independent option; project orchestration special-cases this resource, serializing declared cwd as `--cwd` and declared args as `--arg-json`"
+    ],
+    "artifact_input": [
+      "python_script",
+      "file"
+    ],
+    "artifact_output": [
+      "json"
+    ],
+    "execution_risk": "high"
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "script_path",
+        "kind": "file_path",
+        "required": true,
+        "extensions": [
+          ".py"
+        ],
+        "cli_position": 1
+      },
+      {
+        "name": "args",
+        "kind": "list",
+        "accepts_artifact_handle_item": true,
+        "required": false,
+        "default": [],
+        "cli_position": 2
+      },
+      {
+        "name": "cwd",
+        "kind": "string",
+        "required": false,
+        "default": ".",
+        "cli_position": 3
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "JSON execution report with streams, exit code, latency, and heuristically detected changed-file paths; produced files are side effects, not the outer artifact.",
+      "schema_hint": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "oneOf": [
+          {
+            "type": "object",
+            "required": [
+              "status",
+              "error"
+            ],
+            "properties": {
+              "status": {
+                "enum": [
+                  "invalid",
+                  "blocked",
+                  "missing",
+                  "timeout"
+                ]
+              },
+              "error": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "required": [
+              "status",
+              "exit_code",
+              "script_path",
+              "cwd",
+              "stdout",
+              "stderr",
+              "produced_files",
+              "latency_ms"
+            ],
+            "properties": {
+              "status": {
+                "enum": [
+                  "ok",
+                  "failed"
+                ]
+              },
+              "exit_code": {
+                "type": "integer"
+              },
+              "script_path": {
+                "type": "string"
+              },
+              "cwd": {
+                "type": "string"
+              },
+              "stdout": {
+                "type": "string"
+              },
+              "stderr": {
+                "type": "string"
+              },
+              "produced_files": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "latency_ms": {
+                "type": "integer",
+                "minimum": 0
+              }
+            },
+            "additionalProperties": false
+          }
+        ]
+      }
+    }
+  },
+  "routing": {
+    "family": "workspace-python-script-execution",
+    "intent_tags": [
+      "execute an authorized workspace Python script",
+      "run Python code and report stdout stderr exit and changed files",
+      "process an authorized workspace file with a generated Python script"
+    ],
+    "negative_intents": [
+      "statically analyze Python without executing it",
+      "run untrusted Python in a secure sandbox",
+      "guarantee rollback or comprehensive file change tracking",
+      "lint test format or scan Python source code"
+    ],
+    "dependency_slots": []
+  },
+  "execution": {
+    "runtime": "python_script",
+    "uri": "file://Pool/resources/tools/script/python_script_runner.py",
+    "execution_status": "active",
+    "execution_risk": "high"
+  },
+  "utility": {
+    "latency_ms": 500,
+    "token_cost_factor": 0.01,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://example.invalid/anonymous-framework",
+    "license": "internal",
+    "backed_by": "S-GAR code-execution primitive",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:5390bcdd5de3019b0a153affe9634c11f60b9316ab4d2017078d1dcd1f04aabe",
+    "local_implementation_uri": "file://Pool/resources/tools/script/python_script_runner.py"
+  },
+  "type_specific": {
+    "tool": {
+      "tool_kind": "local_script",
+      "language": "python",
+      "deterministic": false
+    }
+  },
+  "memory": {
+    "success_trajectories": [],
+    "failure_reflections": []
+  },
+  "type": {
+    "resource_type": "Tool",
+    "resource_tag": [
+      "software_engineering",
+      "code_execution",
+      "python",
+      "benchmark_artifact"
+    ]
+  },
+  "input_contract": [
+    {
+      "name": "script_path",
+      "kind": "file_path",
+      "required": true,
+      "extensions": [
+        ".py"
+      ],
+      "cli_position": 1
+    },
+    {
+      "name": "args",
+      "kind": "list",
+      "accepts_artifact_handle_item": true,
+      "required": false,
+      "default": [],
+      "cli_position": 2
+    },
+    {
+      "name": "cwd",
+      "kind": "string",
+      "required": false,
+      "default": ".",
+      "cli_position": 3
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "json",
+    "description": "JSON execution report with streams, exit code, latency, and heuristically detected changed-file paths; produced files are side effects, not the outer artifact.",
+    "schema_hint": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "oneOf": [
+        {
+          "type": "object",
+          "required": [
+            "status",
+            "error"
+          ],
+          "properties": {
+            "status": {
+              "enum": [
+                "invalid",
+                "blocked",
+                "missing",
+                "timeout"
+              ]
+            },
+            "error": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "status",
+            "exit_code",
+            "script_path",
+            "cwd",
+            "stdout",
+            "stderr",
+            "produced_files",
+            "latency_ms"
+          ],
+          "properties": {
+            "status": {
+              "enum": [
+                "ok",
+                "failed"
+              ]
+            },
+            "exit_code": {
+              "type": "integer"
+            },
+            "script_path": {
+              "type": "string"
+            },
+            "cwd": {
+              "type": "string"
+            },
+            "stdout": {
+              "type": "string"
+            },
+            "stderr": {
+              "type": "string"
+            },
+            "produced_files": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "latency_ms": {
+              "type": "integer",
+              "minimum": 0
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    }
+  },
+  "runtime_requirements": {
+    "runtime_profile": "host-python-stdlib",
+    "python": "",
+    "python_packages": [],
+    "node_packages": [],
+    "system_packages": [],
+    "commands": [
+      "python3"
+    ],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0
+  }
+}

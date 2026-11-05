@@ -1,0 +1,175 @@
+{
+  "manifest_version": "1.0",
+  "resource_id": "tool.rustfmt_checker.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Check rustfmt edition 2021 formatting from one Rust entry file without rewriting files",
+    "description": "Executes exactly `rustfmt --check --edition 2021 <entry-file>`. The CLI entry is one file, but rustfmt can discover and recursively check out-of-line modules unless configuration changes child handling; `--check` keeps all checked files unmodified.",
+    "core_primitives": [
+      "invoke_rustfmt_check_mode",
+      "capture_rustfmt_check_output",
+      "report_rustfmt_exit_status"
+    ],
+    "problem_space": "Read-only rustfmt conformance checking rooted at one Rust entry file under fixed edition 2021, potentially including discoverable out-of-line modules; not isolated-single-file assurance, source rewriting, Clippy, compilation, tests, or multi-edition selection.",
+    "domain_tags": [
+      "Rust",
+      "code-formatting",
+      "static-analysis"
+    ]
+  },
+  "constraint": {
+    "env_requirements": [
+      "Python >= 3.6",
+      "rustfmt executable on PATH",
+      "any intended rustfmt configuration must be discoverable by rustfmt"
+    ],
+    "io_signature": "Input: required file_path string naming an existing Rust source file. Executes `rustfmt --check --edition 2021 <file>` with inherited cwd. Output: JSON execution envelope with rustfmt exit_code and captured stdout/stderr; source is not intentionally rewritten.",
+    "accepted_inputs": [
+      "an existing Rust entry source file intended for edition 2021 rustfmt checking, with any recursively discovered out-of-line module files also authorized for read-only checking"
+    ],
+    "output_shape": "rustfmt exit 0 or 1: {status: \"success\", tool: \"rustfmt\", target: string, exit_code: 0|1, result: null, stdout: string, stderr: string|null}, wrapper exit 0. Other rustfmt exits: same keys with status=\"tool_error\" and the rustfmt exit code is propagated. Missing file, executable, or 120-second timeout: {status: \"error\", tool: \"rustfmt\", message: string}, exiting 2/3/4. Missing argument prints usage to stderr and exits 1 without JSON.",
+    "limitations": [
+      "check-only invocation: `--check` is fixed and the wrapper does not rewrite the source file or return formatted source as a structured field",
+      "although only one entry file is passed, rustfmt may recursively discover and check out-of-line modules; the wrapper does not pass `--skip-children` and cannot guarantee isolated single-file scope",
+      "forces `--edition 2021` and exposes no edition, config-path, style-edition, skip-children, or other rustfmt options",
+      "does not compile Rust, run Clippy, lint semantics, or run tests; rustfmt parse/config errors must be distinguished from formatting differences by exit code and streams",
+      "uses a fixed 120-second timeout, inherited cwd/config discovery, and no output truncation"
+    ],
+    "artifact_input": [
+      "file_path"
+    ],
+    "artifact_output": [
+      "json"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "file_path",
+        "kind": "string",
+        "required": true,
+        "cli_position": 1
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "JSON execution envelope containing rustfmt check exit code and raw stdout/stderr; the Rust source is not rewritten.",
+      "json_schema": {
+        "description": "Native JSON representation only; no field or task-delivery guarantee.",
+        "type": [
+          "object",
+          "array",
+          "string",
+          "number",
+          "boolean",
+          "null"
+        ]
+      },
+      "native_json_contract_scope": "value_only"
+    }
+  },
+  "routing": {
+    "family": "rust-rustfmt-entry-tree-check-only",
+    "intent_tags": [
+      "check Rust formatting from one entry file with rustfmt",
+      "verify an edition 2021 Rust module tree without rewriting files"
+    ],
+    "negative_intents": [
+      "format or rewrite Rust source files",
+      "guarantee checking only the entry file without following modules",
+      "run Clippy compile Rust or execute Cargo tests",
+      "check Rust editions other than fixed edition 2021"
+    ],
+    "dependency_slots": []
+  },
+  "execution": {
+    "runtime": "python_script",
+    "uri": "file://Pool/resources/tools/script/rustfmt_checker.py",
+    "execution_status": "active"
+  },
+  "utility": {
+    "latency_ms": 100,
+    "token_cost_factor": 0.01,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://github.com/rust-lang/rustfmt",
+    "license": "MIT/Apache-2.0",
+    "backed_by": "rustfmt",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:98f0b74a9e5f278481920ccaa3279c0b30f835f39bd0bac6940c94d8be91c550",
+    "local_implementation_uri": "file://Pool/resources/tools/script/rustfmt_checker.py",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/script/_sgar_cli.py": "sha256:42368f8d49cb6364ad3aeaac6d0f9602adc12cb29fea49322fd488400698b6b9"
+    }
+  },
+  "type_specific": {
+    "tool": {
+      "tool_kind": "local_script",
+      "language": "python",
+      "deterministic": true
+    }
+  },
+  "memory": {
+    "success_trajectories": [],
+    "failure_reflections": []
+  },
+  "type": {
+    "resource_type": "Tool",
+    "resource_tag": [
+      "Rust",
+      "code-formatting",
+      "static-analysis"
+    ]
+  },
+  "input_contract": [
+    {
+      "name": "file_path",
+      "kind": "string",
+      "required": true,
+      "cli_position": 1
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "json",
+    "description": "JSON execution envelope containing rustfmt check exit code and raw stdout/stderr; the Rust source is not rewritten.",
+    "json_schema": {
+      "description": "Native JSON representation only; no field or task-delivery guarantee.",
+      "type": [
+        "object",
+        "array",
+        "string",
+        "number",
+        "boolean",
+        "null"
+      ]
+    },
+    "native_json_contract_scope": "value_only"
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [],
+    "node_packages": [],
+    "system_packages": [
+      {
+        "name": "rust-1.79.0",
+        "version": "image-locked",
+        "required": true
+      }
+    ],
+    "commands": [
+      "rustfmt"
+    ],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "python_compatibility": ">=3.11,<4"
+  }
+}

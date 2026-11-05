@@ -1,0 +1,53 @@
+{
+  "protocol": "sgar-control-model-profile-v1",
+  "roles": [
+    {
+      "role": "profiler",
+      "resource_id": "model.gemini_3_8_flash.v1",
+      "api_model_id": "gemini-3.8-flash",
+      "reasoning_effort": "high",
+      "temperature": null,
+      "allow_model_failover": false,
+      "response_mode": "native_strict_schema"
+    },
+    {
+      "role": "planner",
+      "resource_id": "model.gpt_6_1_sol.v1",
+      "api_model_id": "gpt-6.1-sol",
+      "reasoning_effort": "high",
+      "temperature": null,
+      "allow_model_failover": false,
+      "response_mode": "native_strict_schema"
+    },
+    {
+      "role": "plan_compiler",
+      "resource_id": "model.gpt_6_luna.v1",
+      "api_model_id": "gpt-6-luna",
+      "reasoning_effort": "high",
+      "temperature": null,
+      "allow_model_failover": false,
+      "response_mode": "native_strict_schema"
+    },
+    {
+      "role": "plan_adaptation",
+      "resource_id": "model.gpt_6_luna.v1",
+      "api_model_id": "gpt-6-luna",
+      "reasoning_effort": "high",
+      "temperature": null,
+      "allow_model_failover": false,
+      "response_mode": "native_strict_schema"
+    },
+    {
+      "role": "evaluator",
+      "resource_id": "model.gpt_5_6_sol.v1",
+      "api_model_id": "gpt-5.6-sol",
+      "reasoning_effort": "high",
+      "temperature": null,
+      "allow_model_failover": false,
+      "response_mode": "native_strict_schema"
+    }
+  ],
+  "evaluation_mode": "off",
+  "embedding_model": "Qwen/Qwen3-Embedding-4B",
+  "embedding_candidate_id": "qwen3-embedding-4b-api-2560"
+}

@@ -1,0 +1,167 @@
+{
+  "manifest_version": "1.0",
+  "resource_id": "tool.markdown_to_html_converter.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Convert one local Markdown file to an HTML fragment",
+    "description": "Reads UTF-8 Markdown and renders an HTML fragment with Python-Markdown tables, fenced_code, and toc extensions, returning the fragment in a JSON envelope without writing a file or sanitizing HTML.",
+    "core_primitives": [
+      "read_local_markdown_file",
+      "render_markdown_extensions_to_html",
+      "return_html_fragment_in_json_envelope"
+    ],
+    "problem_space": "Read-only Markdown-to-HTML-fragment rendering for local content; not a full HTML document generator, sanitizer, browser renderer, template engine, or file exporter.",
+    "domain_tags": [
+      "web_development",
+      "content_management"
+    ]
+  },
+  "constraint": {
+    "env_requirements": [
+      "Python >= 3.6",
+      "Python-Markdown package"
+    ],
+    "io_signature": "Input: required file_path string naming an existing UTF-8 Markdown file. Output: JSON envelope {status, tool, target, html} whose html field is a rendered fragment; no HTML file is created.",
+    "accepted_inputs": [
+      "an existing UTF-8 Markdown text file compatible with Python-Markdown and its tables, fenced_code, and toc extensions"
+    ],
+    "output_shape": "Success: {status: \"success\", tool: \"python-markdown\", target: string, html: string}, exit 0. Missing path: {status: \"error\", message: string}, exit 2. Missing argument prints usage to stderr and exits 1 without JSON. File decoding, read, or rendering failures are uncaught and may traceback.",
+    "limitations": [
+      "returns an HTML fragment inside a JSON envelope and does not create a complete document or write an HTML file",
+      "does not sanitize raw HTML from Markdown, so output must not be treated as safe for untrusted content without separate sanitization",
+      "uses only tables, fenced_code, and toc extensions; it has no timeout or size/output truncation and does not execute rendered code blocks"
+    ],
+    "artifact_input": [
+      "file_path"
+    ],
+    "artifact_output": [
+      "json"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "file_path",
+        "kind": "string",
+        "required": true,
+        "cli_position": 1
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "Rendered HTML fragment carried in the `html` field of a JSON execution envelope; no file is written.",
+      "json_schema": {
+        "description": "Native JSON representation only; no field or task-delivery guarantee.",
+        "type": [
+          "object",
+          "array",
+          "string",
+          "number",
+          "boolean",
+          "null"
+        ]
+      },
+      "native_json_contract_scope": "value_only"
+    }
+  },
+  "routing": {
+    "family": "markdown-to-html-fragment-conversion",
+    "intent_tags": [
+      "convert a Markdown file to an HTML fragment",
+      "render Markdown tables fenced code and headings as HTML"
+    ],
+    "negative_intents": [
+      "sanitize untrusted HTML or Markdown",
+      "write a complete HTML document to disk",
+      "render HTML in a browser or execute code blocks"
+    ],
+    "dependency_slots": []
+  },
+  "execution": {
+    "runtime": "python_script",
+    "uri": "file://Pool/resources/tools/script/markdown_to_html_converter.py",
+    "execution_status": "active"
+  },
+  "utility": {
+    "latency_ms": 100,
+    "token_cost_factor": 0.01,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://python-markdown.github.io",
+    "license": "BSD",
+    "backed_by": "Python-Markdown",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:f53bcde23c1d91ece47d36f6daf0da710d1cf7ccdb6ffe293f9bc067bb8da4f4",
+    "local_implementation_uri": "file://Pool/resources/tools/script/markdown_to_html_converter.py",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/script/_sgar_cli.py": "sha256:42368f8d49cb6364ad3aeaac6d0f9602adc12cb29fea49322fd488400698b6b9"
+    }
+  },
+  "type_specific": {
+    "tool": {
+      "tool_kind": "local_script",
+      "language": "python",
+      "deterministic": true
+    }
+  },
+  "memory": {
+    "success_trajectories": [],
+    "failure_reflections": []
+  },
+  "type": {
+    "resource_type": "Tool",
+    "resource_tag": [
+      "web_development",
+      "content_management"
+    ]
+  },
+  "input_contract": [
+    {
+      "name": "file_path",
+      "kind": "string",
+      "required": true,
+      "cli_position": 1
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "json",
+    "description": "Rendered HTML fragment carried in the `html` field of a JSON execution envelope; no file is written.",
+    "json_schema": {
+      "description": "Native JSON representation only; no field or task-delivery guarantee.",
+      "type": [
+        "object",
+        "array",
+        "string",
+        "number",
+        "boolean",
+        "null"
+      ]
+    },
+    "native_json_contract_scope": "value_only"
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [
+      {
+        "name": "markdown",
+        "version": "==3.7",
+        "required": true
+      }
+    ],
+    "node_packages": [],
+    "system_packages": [],
+    "commands": [],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "python_compatibility": ">=3.11,<4"
+  }
+}

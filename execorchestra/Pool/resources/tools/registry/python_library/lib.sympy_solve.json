@@ -1,0 +1,144 @@
+{
+  "manifest_version": "v2",
+  "resource_id": "tool.lib.sympy_solve.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Simplify one SymPy expression or solve one lhs = rhs equation",
+    "description": "Parses a SymPy expression or a single lhs = rhs equation. Equations are normalized to lhs - rhs before simplification and sympy.solve; symbols are inferred by SymPy.",
+    "domain_tags": [
+      "math",
+      "science"
+    ],
+    "core_primitives": [
+      "sympify_expression",
+      "simplify_symbolically",
+      "solve_expression_for_inferred_symbols"
+    ],
+    "problem_space": "One-shot symbolic simplification and zero-finding for a SymPy-readable expression or equality."
+  },
+  "constraint": {
+    "io_signature": "Input: one SymPy expression or lhs = rhs equation string; output: JSON echoing input with simplified and solved values serialized as strings.",
+    "accepted_inputs": [
+      "an expression string accepted by sympy.sympify, or one lhs = rhs equation whose two sides are accepted by sympy.sympify"
+    ],
+    "output_shape": "Success is an object with status=\"success\", tool=\"lib.sympy_solve\", input as the original expression string, simplified as str(sympy.simplify(expression)), and solved as str(sympy.solve(expression)). A caught sympify, simplification, or solving exception produces an object with status=\"error\", tool=\"lib.sympy_solve\", and message as the exception string, then exits with code 1.",
+    "limitations": [
+      "does not integrate or differentiate despite the original broad label",
+      "calls solve(expression) with no explicit variable, equation right-hand side, domain, assumptions, or solver options",
+      "treats the parsed expression as equal to zero and lets SymPy infer which symbols to solve for",
+      "stringifies both mathematical outputs, losing SymPy object types and structured solution shape",
+      "sympy.sympify is not intended for unsanitized untrusted input because it evaluates parsed expressions",
+      "parsing and symbolic-computation failures use the wrapper's error envelope and no timeout is imposed"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "expression",
+        "kind": "string",
+        "required": true,
+        "cli_position": 1
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "Original expression plus stringified SymPy simplification and implicit-zero solve results.",
+      "json_schema": {
+        "description": "Native JSON representation only; no field or task-delivery guarantee.",
+        "type": [
+          "object",
+          "array",
+          "string",
+          "number",
+          "boolean",
+          "null"
+        ]
+      },
+      "native_json_contract_scope": "value_only"
+    }
+  },
+  "routing": {
+    "family": "single-expression-symbolic-solving",
+    "intent_tags": [
+      "simplify a SymPy expression",
+      "solve an expression for its inferred symbols"
+    ],
+    "negative_intents": [
+      "integrate or differentiate an expression",
+      "solve with explicit domains assumptions or variable selection",
+      "return structured symbolic objects or numeric approximations"
+    ]
+  },
+  "execution": {
+    "runtime": "python_library",
+    "uri": "file://Pool/resources/tools/lib/lib.sympy_solve.py",
+    "execution_status": "active"
+  },
+  "utility": {
+    "latency_ms": 200.0,
+    "token_cost_factor": 0.02,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://www.sympy.org/",
+    "license": "BSD-3",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:7d1f3de8143dcc571654bb6822d18cc5a4f8fec76b1706ae111829619fb14425",
+    "local_implementation_uri": "file://Pool/resources/tools/lib/lib.sympy_solve.py",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/lib/_liblib.py": "sha256:dcd68e7904232764172e5f646ff97b854f68f7f916180ae32f838a0acf9ccc77"
+    }
+  },
+  "type_specific": {},
+  "type": {
+    "resource_type": "Tool"
+  },
+  "input_contract": [
+    {
+      "name": "expression",
+      "kind": "string",
+      "required": true,
+      "cli_position": 1
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "json",
+    "description": "Original expression plus stringified SymPy simplification and implicit-zero solve results.",
+    "json_schema": {
+      "description": "Native JSON representation only; no field or task-delivery guarantee.",
+      "type": [
+        "object",
+        "array",
+        "string",
+        "number",
+        "boolean",
+        "null"
+      ]
+    },
+    "native_json_contract_scope": "value_only"
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [
+      {
+        "name": "sympy",
+        "version": "==1.13.3",
+        "required": true
+      }
+    ],
+    "node_packages": [],
+    "system_packages": [],
+    "commands": [],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "python_compatibility": ">=3.11,<4"
+  }
+}

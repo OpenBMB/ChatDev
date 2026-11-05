@@ -1,0 +1,188 @@
+{
+  "manifest_version": "1.0",
+  "resource_id": "tool.json_jq_query_executor.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Run one jq filter against a local JSON file and return parsed or raw output",
+    "description": "Directly invokes the argv vector `[\"jq\", jq_filter, file_path]` with the filter defaulting to `.`. There is no `--` option terminator, so a value beginning with `-` can be interpreted by jq as a command-line option rather than a filter. The wrapper parses stdout only when the entire stream is one non-null JSON document.",
+    "core_primitives": [
+      "execute_jq_filter_on_json_file",
+      "parse_single_json_stdout_document",
+      "preserve_multi_value_jq_output_as_text"
+    ],
+    "problem_space": "Direct jq argv execution for ordinary non-option filter strings over one local JSON file; not safe jq option isolation, filter sandboxing, JSON file mutation, guaranteed structured multi-result collection, schema validation, or generic shell execution.",
+    "domain_tags": [
+      "data_analysis",
+      "json",
+      "scripting"
+    ]
+  },
+  "constraint": {
+    "env_requirements": [
+      "Python >= 3.6",
+      "jq executable"
+    ],
+    "io_signature": "Input: required existing JSON file path and optional jq_filter string defaulting to `.`; output: one non-null JSON value is placed in structured result with stdout=null, while a single JSON null yields result=null with raw stdout retained, and empty or multi-document/multi-value output also retains raw stdout.",
+    "accepted_inputs": [
+      "an existing JSON file readable by jq",
+      "an optional ordinary jq program string that does not begin with `-`; omission uses `.`, while option-looking strings cannot be passed safely because the script provides no `--` separator"
+    ],
+    "output_shape": "Successful jq exit 0: {status: \"success\", tool: \"jq\", target: string, exit_code: 0, result: any JSON value|null, stdout: string|null, stderr: string|null}. If stdout is exactly one non-null JSON document, result contains that value and stdout=null. If the single JSON document is null, json.loads succeeds but the helper cannot distinguish it from its parsed=None sentinel, so result=null and the original stdout (normally `null\\n`) is retained. Empty, multi-value, or otherwise non-single-document stdout also yields result=null with raw stdout retained. Nonzero jq result uses the same keys with status=\"tool_error\" and propagates jq's exit code. Non-existing file, missing executable, or 120-second timeout: {status: \"error\", tool: \"jq\", message: string}, exiting 2/3/4. Missing file argument prints usage to stderr and exits 1 without JSON.",
+    "limitations": [
+      "passes `[jq, jq_filter, file_path]` directly with no `--` option terminator; a jq_filter beginning with `-` may be consumed as an option such as `--version`, so command-line options or option-looking filters cannot be passed safely",
+      "multiple jq output values are not collected into an array and remain raw stdout with result=null; a single JSON null is also returned as result=null with `null\\n` retained because the helper uses None as both the parsed value and no-parse sentinel",
+      "jq false or null results still use jq's default exit behavior because `-e` is absent; consumers must inspect result rather than assume truthiness from exit 0",
+      "jq programs can read changing process state through builtins such as `now`, `env`, and `$ENV`, so output is not deterministic; the wrapper does not sandbox filters, has a fixed 120-second timeout, applies no output-size truncation, and does not modify the source file"
+    ],
+    "artifact_input": [
+      "file_path"
+    ],
+    "artifact_output": [
+      "json"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "file_path",
+        "kind": "string",
+        "required": true,
+        "cli_position": 1
+      },
+      {
+        "name": "jq_filter",
+        "kind": "string",
+        "required": false,
+        "default": ".",
+        "cli_position": 2
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "JSON execution envelope containing a single parsed jq JSON value when possible, otherwise raw jq stdout, plus exit and stderr metadata.",
+      "json_schema": {
+        "description": "Native JSON representation only; no field or task-delivery guarantee.",
+        "type": [
+          "object",
+          "array",
+          "string",
+          "number",
+          "boolean",
+          "null"
+        ]
+      },
+      "native_json_contract_scope": "value_only"
+    }
+  },
+  "routing": {
+    "family": "json-file-jq-filter-execution",
+    "intent_tags": [
+      "query or transform a JSON file with jq",
+      "run a jq filter and capture its output"
+    ],
+    "negative_intents": [
+      "modify overwrite or persist changes to a JSON file",
+      "guarantee a structured array for multiple jq output values",
+      "pass jq command-line options safely",
+      "validate JSON against a schema or execute arbitrary shell commands"
+    ],
+    "dependency_slots": []
+  },
+  "utility": {
+    "latency_ms": 100,
+    "token_cost_factor": 0.01,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://jqlang.github.io/jq",
+    "license": "MIT",
+    "backed_by": "jq",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:ef630fe611fb198ecbf7c3ecfbfe7a9473c2dc66caea2b5ca7e60cc2b7bba22d",
+    "local_implementation_uri": "file://Pool/resources/tools/script/json_jq_query_executor.py",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/script/_sgar_cli.py": "sha256:42368f8d49cb6364ad3aeaac6d0f9602adc12cb29fea49322fd488400698b6b9"
+    }
+  },
+  "type_specific": {
+    "tool": {
+      "tool_kind": "local_script",
+      "language": "python",
+      "deterministic": false
+    }
+  },
+  "memory": {
+    "success_trajectories": [],
+    "failure_reflections": []
+  },
+  "execution": {
+    "runtime": "python_script",
+    "uri": "file://Pool/resources/tools/script/json_jq_query_executor.py",
+    "execution_status": "active"
+  },
+  "type": {
+    "resource_type": "Tool",
+    "resource_tag": [
+      "data_analysis",
+      "json",
+      "scripting"
+    ]
+  },
+  "input_contract": [
+    {
+      "name": "file_path",
+      "kind": "string",
+      "required": true,
+      "cli_position": 1
+    },
+    {
+      "name": "jq_filter",
+      "kind": "string",
+      "required": false,
+      "default": ".",
+      "cli_position": 2
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "json",
+    "description": "JSON execution envelope containing a single parsed jq JSON value when possible, otherwise raw jq stdout, plus exit and stderr metadata.",
+    "json_schema": {
+      "description": "Native JSON representation only; no field or task-delivery guarantee.",
+      "type": [
+        "object",
+        "array",
+        "string",
+        "number",
+        "boolean",
+        "null"
+      ]
+    },
+    "native_json_contract_scope": "value_only"
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [],
+    "node_packages": [],
+    "system_packages": [
+      {
+        "name": "jq",
+        "version": "image-locked",
+        "required": true
+      }
+    ],
+    "commands": [
+      "jq"
+    ],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "python_compatibility": ">=3.11,<4"
+  }
+}

@@ -1,0 +1,172 @@
+{
+  "manifest_version": "1.0",
+  "resource_id": "tool.yaml_to_json.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Parse one UTF-8 YAML document and return its JSON-compatible value",
+    "description": "Reads one local UTF-8 file, parses exactly one YAML document with PyYAML safe_load, and emits the resulting Python value under a `json` field in a JSON envelope. It does not write a converted file, and safe YAML values that are not JSON-serializable can still fail during envelope emission.",
+    "core_primitives": [
+      "read_utf8_yaml_file",
+      "parse_single_yaml_document_safely",
+      "emit_json_compatible_yaml_value"
+    ],
+    "problem_space": "Single-document YAML parsing for JSON-compatible configuration/data values. It is not multi-document streaming, schema validation, YAML linting, round-trip formatting, comment/style preservation, JSON-to-YAML conversion, or a filesystem JSON exporter.",
+    "domain_tags": [
+      "data_transformation",
+      "file_processing"
+    ]
+  },
+  "constraint": {
+    "env_requirements": [
+      "Python >= 3.6",
+      "PyYAML installed"
+    ],
+    "io_signature": "Input: required file_path string at CLI position 1 naming an existing UTF-8 YAML file containing one document. Output: JSON envelope with the safe_load value in `json`; no `.json` file is written.",
+    "accepted_inputs": [
+      "an existing UTF-8 YAML file containing exactly one PyYAML-safe document whose constructed value is JSON-serializable"
+    ],
+    "output_shape": "Success JSON envelope: {status: \"success\", tool: \"PyYAML\", target: string, json: any JSON-compatible value}, exit 0; an empty document or YAML null produces json=null. The outer envelope is emitted by json.dumps with default allow_nan=true, so a payload containing YAML NaN/Infinity may be non-strict RFC JSON; non-string YAML mapping keys are stringified and can collide. Non-existing path: {status: \"error\", message: string}, exit 2. PyYAML YAMLError, including malformed or multiple-document input rejected by safe_load: {status: \"error\", tool: \"PyYAML\", message: \"invalid YAML: <details>\"}, exit 1. Missing argument prints usage to stderr and exits 1 without JSON. File/UTF-8 errors and JSON serialization failures are uncaught and may traceback.",
+    "limitations": [
+      "safe_load reads and materializes the complete YAML document before json.dumps emits the envelope; input and result sizes are unbounded and nested data can amplify memory use",
+      "the wrapper's json.dumps uses the default allow_nan=true behavior, so YAML NaN/Infinity values may be emitted as NaN/Infinity rather than strict RFC JSON",
+      "JSON emission stringifies non-string mapping keys; distinct YAML keys can therefore collide after stringification and overwrite/lose information in the JSON representation",
+      "has no output truncation and no timeout; large documents can consume substantial memory or run without a time limit",
+      "safe_load accepts one document only and does not preserve comments, anchors, aliases, scalar styles, tags, key ordering guarantees across consumers, or original formatting",
+      "some safely constructed YAML values are not directly JSON-compatible, including timestamps/dates, binary values, sets, recursive aliases, or unsuitable mapping keys; emit then raises an uncaught serialization error",
+      "duplicate mapping keys are not explicitly rejected and may be overwritten according to PyYAML behavior",
+      "reads UTF-8 only, writes no JSON file, applies no application schema, and catches only yaml.YAMLError"
+    ],
+    "artifact_input": [
+      "file_path"
+    ],
+    "artifact_output": [
+      "json"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "file_path",
+        "kind": "string",
+        "required": true,
+        "cli_position": 1
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "JSON envelope containing the single PyYAML safe_load value when JSON-serializable; default json.dumps allow_nan=true can leave NaN/Infinity non-strict RFC JSON, and non-string YAML keys are stringified with possible collisions, or a handled YAML parse error.",
+      "json_schema": {
+        "description": "Native JSON representation only; no field or task-delivery guarantee.",
+        "type": [
+          "object",
+          "array",
+          "string",
+          "number",
+          "boolean",
+          "null"
+        ]
+      },
+      "native_json_contract_scope": "value_only"
+    }
+  },
+  "routing": {
+    "family": "yaml-single-document-to-json-value",
+    "intent_tags": [
+      "parse one YAML document into a JSON-compatible value",
+      "convert a local YAML configuration to JSON output"
+    ],
+    "negative_intents": [
+      "parse a multi-document YAML stream",
+      "preserve YAML comments formatting or anchors",
+      "write a JSON file or validate an application schema"
+    ],
+    "dependency_slots": []
+  },
+  "execution": {
+    "runtime": "python_script",
+    "uri": "file://Pool/resources/tools/script/yaml_to_json.py",
+    "execution_status": "active"
+  },
+  "utility": {
+    "latency_ms": 100,
+    "token_cost_factor": 0.01,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://pyyaml.org",
+    "license": "MIT",
+    "backed_by": "PyYAML",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:7b70695d55524478ca86d98c190cd23845e261b180c79d8a8a0689ca160b9314",
+    "local_implementation_uri": "file://Pool/resources/tools/script/yaml_to_json.py",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/script/_sgar_cli.py": "sha256:42368f8d49cb6364ad3aeaac6d0f9602adc12cb29fea49322fd488400698b6b9"
+    }
+  },
+  "type_specific": {
+    "tool": {
+      "tool_kind": "local_script",
+      "language": "python",
+      "deterministic": true
+    }
+  },
+  "memory": {
+    "success_trajectories": [],
+    "failure_reflections": []
+  },
+  "type": {
+    "resource_type": "Tool",
+    "resource_tag": [
+      "data_transformation",
+      "file_processing"
+    ]
+  },
+  "input_contract": [
+    {
+      "name": "file_path",
+      "kind": "string",
+      "required": true,
+      "cli_position": 1
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "json",
+    "description": "JSON envelope containing the single PyYAML safe_load value when JSON-serializable; default json.dumps allow_nan=true can leave NaN/Infinity non-strict RFC JSON, and non-string YAML keys are stringified with possible collisions, or a handled YAML parse error.",
+    "json_schema": {
+      "description": "Native JSON representation only; no field or task-delivery guarantee.",
+      "type": [
+        "object",
+        "array",
+        "string",
+        "number",
+        "boolean",
+        "null"
+      ]
+    },
+    "native_json_contract_scope": "value_only"
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [
+      {
+        "name": "PyYAML",
+        "version": "==6.0.2",
+        "required": true
+      }
+    ],
+    "node_packages": [],
+    "system_packages": [],
+    "commands": [],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "python_compatibility": ">=3.11,<4"
+  }
+}

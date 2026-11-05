@@ -1,0 +1,166 @@
+{
+  "resource_id": "gpt-6-astra",
+  "type": {
+    "resource_type": "Model",
+    "resource_tag": [
+      "1050000 Context",
+      "10",
+      "50",
+      "1"
+    ]
+  },
+  "capability": {
+    "summary": "Language model for multi-step analysis, coding, and document work.",
+    "core_primitives": [
+      "document synthesis",
+      "code generation",
+      "reasoning over supplied evidence",
+      "visual document interpretation"
+    ],
+    "problem_space": "Language model for multi-step analysis, coding, and document work. Applicable tasks include document synthesis, code generation, reasoning over supplied evidence, visual document interpretation. Accepts text, image input and produces text output. External tools are required to execute programs, browse sources, or modify files; generated instructions alone do not perform those actions.",
+    "domain_tags": [
+      "Language",
+      "Software Engineering",
+      "Visual Understanding"
+    ]
+  },
+  "constraint": {
+    "env_requirements": [
+      "Endpoint exposing the documented model through Chat Completions; gateway mapping unverified",
+      "Valid API key for the selected service or an explicitly configured self-hosted endpoint",
+      "Endpoint and transport support for every requested input and output modality",
+      "The documented context limit is not yet verified on the configured gateway.",
+      "Reasoning effort none is not supported. Do not copy old non-reasoning defaults."
+    ],
+    "io_signature": "Input modalities: text, image | Output modalities: text. Gateway transport support requires verification."
+  },
+  "utility": {
+    "latency_ms": 0,
+    "token_cost_factor": 0,
+    "expected_success_rate": 0
+  },
+  "execution": {
+    "uri": "${base_url}/v1/chat/completions",
+    "model_id": "gpt-6-astra"
+  },
+  "memory": {
+    "success_trajectories": [],
+    "failure_reflections": []
+  },
+  "provenance": {
+    "reviewed_at": "2026-09-09",
+    "evidence_status": "provider_documented_not_gateway_verified",
+    "integration_status": "source_registered_pending_canonical_review",
+    "source_urls": [
+      "https://developers.openai.com/api/docs/models/gpt-6-astra"
+    ],
+    "documented_input_modalities": [
+      "text",
+      "image"
+    ],
+    "documented_output_modalities": [
+      "text"
+    ],
+    "documented_interface_facts": {
+      "max_output_tokens": 128000,
+      "reasoning_effort_values": [
+        "low",
+        "medium",
+        "high",
+        "xhigh",
+        "max"
+      ],
+      "function_calling": true,
+      "structured_outputs": true,
+      "streaming": true
+    },
+    "task_profile_basis": "Neutral candidate task categories based on documented operations; not an empirical model ranking or fixed role assignment.",
+    "pricing_status": "official_public_price_snapshot",
+    "resource_tag_layout": [
+      "context_window",
+      "input_per_million_tokens",
+      "output_per_million_tokens",
+      "cache_read_per_million_tokens"
+    ],
+    "pricing_note": "Official reference rates and backend billing rules from the same dated pricebook; capability and gateway evidence unchanged.",
+    "utility_status": "unmeasured_legacy_zero_placeholders",
+    "gateway_verification_status": "not_run",
+    "configuration_note": "Source capability facts are preserved by the deterministic converter. Runtime and gateway readiness still require independent validation before activation.",
+    "supplier_model_mapping_status": "configured_from_user_screenshot_not_live_verified",
+    "semantic_review": {
+      "reviewed_at": "2026-09-09",
+      "policy": "model-capabilities-v1",
+      "source_urls": [
+        "https://developers.openai.com/api/docs/models/gpt-6-astra.md"
+      ],
+      "evidence_status": "provider_documented_not_gateway_verified",
+      "source_document_sha256": {
+        "https://developers.openai.com/api/docs/models/gpt-6-astra.md": "593f63fcc87cced8695f56b828fcb5fe5a77adb59ab51ac57a5639cd9abd826f"
+      },
+      "task_profile_basis": "Task categories derived from documented operations; no empirical quality ranking or fixed framework role.",
+      "context_policy": "Legacy configured limit is preserved separately from documented native context; neither proves the supplier limit."
+    },
+    "official_pricing": {
+      "snapshot_date": "2026-10-09",
+      "source": "https://developers.openai.com/api/docs/pricing",
+      "pricebook_sha256": "9e9a8248e54f1934d08d5efe68a3998ebce6faa09106f3f2a7ac119bf89a182c"
+    }
+  },
+  "type_specific": {
+    "model": {
+      "profile_version": "model-capabilities-v1",
+      "input_modalities": [
+        "text",
+        "image"
+      ],
+      "output_modalities": [
+        "text"
+      ],
+      "supports": {
+        "tool_calling": true,
+        "json_mode": true,
+        "vision": true,
+        "reasoning": true,
+        "coding": true,
+        "structured_outputs": true
+      },
+      "thinking_mode": "reasoning",
+      "native_protocol": "chat_completions_and_responses",
+      "documented_context_tokens": 1050000,
+      "evidence_status": "provider_documented_not_gateway_verified",
+      "gateway_verification_status": "not_run",
+      "limitations": [],
+      "max_output_tokens": 128000,
+      "documented_interface_facts": {
+        "max_output_tokens": 128000,
+        "reasoning_effort_values": [
+          "low",
+          "medium",
+          "high",
+          "xhigh",
+          "max"
+        ],
+        "function_calling": true,
+        "structured_outputs": true,
+        "streaming": true
+      },
+      "pricing_rules": {
+        "input_per_m": "10",
+        "cache_per_m": "1",
+        "output_per_m": "50",
+        "source": "https://developers.openai.com/api/docs/pricing",
+        "cache_mode": "implicit",
+        "input_tiers": [
+          {
+            "above_input_tokens": 272000,
+            "input_per_m": "20",
+            "cache_per_m": "2",
+            "output_per_m": "75.0",
+            "cache_write_per_m": "25.0"
+          }
+        ],
+        "cache_write_per_m": "12.50"
+      }
+    }
+  }
+}

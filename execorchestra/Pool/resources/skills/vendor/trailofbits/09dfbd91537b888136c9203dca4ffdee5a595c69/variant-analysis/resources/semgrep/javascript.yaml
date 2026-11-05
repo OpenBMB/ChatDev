@@ -1,0 +1,60 @@
+rules:
+  - id: variant-taint-js
+    message: "Potential variant: user input flows to dangerous sink"
+    severity: ERROR
+    languages: [javascript, typescript]
+    mode: taint
+
+    pattern-sources:
+      # Express
+      - pattern: req.query.$PARAM
+      - pattern: req.body.$PARAM
+      - pattern: req.params.$PARAM
+      - pattern: req.cookies.$PARAM
+      # URL/Location
+      - pattern: window.location.$PROP
+      - pattern: document.location.$PROP
+      - pattern: location.search
+      - pattern: location.hash
+
+    pattern-sinks:
+      # Command injection
+      - pattern: child_process.exec($SINK, ...)
+      - pattern: child_process.execSync($SINK, ...)
+      - pattern: child_process.spawn($SINK, ...)
+      # Code execution
+      - pattern: eval($SINK)
+      - pattern: Function($SINK)
+      - pattern: setTimeout($SINK, ...)
+      - pattern: setInterval($SINK, ...)
+      # SQL
+      - pattern: $DB.query($SINK, ...)
+      - pattern: $DB.raw($SINK)
+      # XSS
+      - pattern: $EL.innerHTML = $SINK
+      - pattern: document.write($SINK)
+
+    pattern-sanitizers:
+      - pattern: parseInt($X, ...)
+      - pattern: encodeURIComponent($X)
+      - pattern: escape($X)
+      - pattern: $DB.escape($X)
+
+    paths:
+      exclude:
+        - "**/*.test.js"
+        - "**/*.spec.js"
+        - "**/test/**"
+        - "**/node_modules/**"
+
+  - id: variant-pattern-js
+    message: "Suspicious pattern matching known vulnerability"
+    severity: WARNING
+    languages: [javascript, typescript]
+    patterns:
+      - pattern-either:
+          - pattern: eval(...)
+          - pattern: Function(...)
+          - pattern: child_process.exec(...)
+      - pattern-not: eval("...")
+      - pattern-not: Function("...")

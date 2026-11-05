@@ -1,0 +1,176 @@
+{
+  "manifest_version": "1.0",
+  "resource_id": "tool.stylelint_css_checker.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Check one CSS file with Stylelint JSON output and an explicit configuration",
+    "description": "Runs `stylelint -f json --config <cfg> --config-basedir <base> <file>`, using SGAR_STYLELINT_CONFIG or `/opt/stylelint.config.json` and NODE_PATH or `/usr/lib/node_modules`. It captures diagnostics and passes no `--fix` flag.",
+    "core_primitives": [
+      "invoke_stylelint_json_check",
+      "load_explicit_stylelint_configuration",
+      "capture_css_lint_diagnostics"
+    ],
+    "problem_space": "Configured Stylelint diagnostics for one existing CSS file; not CSS formatting or fixing, browser rendering validation, CSS parsing as data, accessibility testing, or JavaScript/HTML linting.",
+    "domain_tags": [
+      "CSS",
+      "frontend-development",
+      "code-quality"
+    ]
+  },
+  "constraint": {
+    "env_requirements": [
+      "Python >= 3.6",
+      "stylelint executable on PATH",
+      "SGAR_STYLELINT_CONFIG or /opt/stylelint.config.json must identify a usable Stylelint configuration",
+      "NODE_PATH or /usr/lib/node_modules must resolve configuration dependencies for --config-basedir"
+    ],
+    "io_signature": "Input: required file_path string naming an existing CSS file. Executes Stylelint with fixed JSON format, explicit config, and config-basedir flags. Output: JSON envelope with parsed Stylelint result, exit code, and streams; no fix flag is passed.",
+    "accepted_inputs": [
+      "an existing CSS file supported by the configured Stylelint rules and syntax"
+    ],
+    "output_shape": "Stylelint exit 0, 1, or 2: {status: \"success\", tool: \"stylelint\", target: string, exit_code: 0|1|2, result: JSON value|null, stdout: string|null, stderr: string|null}; native JSON normally appears in result. Other exits use status=\"tool_error\" and propagate the exit code. Missing file, executable, or 120-second timeout: {status: \"error\", tool: \"stylelint\", message: string}, exiting 2/3/4. Missing argument prints usage to stderr and exits 1 without JSON.",
+    "limitations": [
+      "passes no `--fix` flag and does not intentionally rewrite CSS; it reports configured Stylelint findings rather than formatting output",
+      "SGAR_STYLELINT_CONFIG can load configuration and plugin code; configuration dependencies and plugin behavior are execution-time inputs, so results are not deterministic",
+      "outer status=success covers exit codes 0, 1, and 2, so consumers must inspect exit_code and parsed diagnostics rather than outer status alone",
+      "uses a fixed 120-second timeout and no output truncation; missing or invalid configuration is surfaced through Stylelint's process result"
+    ],
+    "artifact_input": [
+      "file_path"
+    ],
+    "artifact_output": [
+      "json"
+    ],
+    "execution_risk": "high"
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "file_path",
+        "kind": "string",
+        "required": true,
+        "cli_position": 1
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "JSON execution envelope containing parsed Stylelint diagnostics, exit code, and streams; no CSS fix flag is used.",
+      "json_schema": {
+        "description": "Native JSON representation only; no field or task-delivery guarantee.",
+        "type": [
+          "object",
+          "array",
+          "string",
+          "number",
+          "boolean",
+          "null"
+        ]
+      },
+      "native_json_contract_scope": "value_only"
+    }
+  },
+  "routing": {
+    "family": "css-stylelint-configured-check",
+    "intent_tags": [
+      "lint a CSS file with Stylelint",
+      "get configured Stylelint JSON diagnostics"
+    ],
+    "negative_intents": [
+      "automatically fix or format CSS",
+      "validate CSS rendering in a browser",
+      "lint JavaScript HTML or shell code"
+    ],
+    "dependency_slots": []
+  },
+  "execution": {
+    "runtime": "python_script",
+    "uri": "file://Pool/resources/tools/script/stylelint_css_checker.py",
+    "execution_status": "active",
+    "execution_risk": "high"
+  },
+  "utility": {
+    "latency_ms": 100,
+    "token_cost_factor": 0.01,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://stylelint.io",
+    "license": "MIT",
+    "backed_by": "Stylelint + stylelint-config-standard",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:a2f3b48a9b37135d9f6399e6287fc3a9422c946fa4f2351a77f63c05c50bbd2d",
+    "local_implementation_uri": "file://Pool/resources/tools/script/stylelint_css_checker.py",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/script/_sgar_cli.py": "sha256:42368f8d49cb6364ad3aeaac6d0f9602adc12cb29fea49322fd488400698b6b9"
+    }
+  },
+  "type_specific": {
+    "tool": {
+      "tool_kind": "local_script",
+      "language": "python",
+      "deterministic": false
+    }
+  },
+  "memory": {
+    "success_trajectories": [],
+    "failure_reflections": []
+  },
+  "type": {
+    "resource_type": "Tool",
+    "resource_tag": [
+      "CSS",
+      "frontend-development",
+      "code-quality"
+    ]
+  },
+  "input_contract": [
+    {
+      "name": "file_path",
+      "kind": "string",
+      "required": true,
+      "cli_position": 1
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "json",
+    "description": "JSON execution envelope containing parsed Stylelint diagnostics, exit code, and streams; no CSS fix flag is used.",
+    "json_schema": {
+      "description": "Native JSON representation only; no field or task-delivery guarantee.",
+      "type": [
+        "object",
+        "array",
+        "string",
+        "number",
+        "boolean",
+        "null"
+      ]
+    },
+    "native_json_contract_scope": "value_only"
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [],
+    "node_packages": [
+      {
+        "name": "stylelint",
+        "version": "==17.14.1",
+        "required": true
+      }
+    ],
+    "system_packages": [],
+    "commands": [
+      "stylelint"
+    ],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "python_compatibility": ">=3.11,<4"
+  }
+}

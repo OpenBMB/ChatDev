@@ -1,0 +1,32 @@
+{
+  "protocol": "sgar-embedding-release-config-v1",
+  "runtime": {
+    "protocol": "sgar-embedding-runtime-config-v1",
+    "candidate_id": "qwen3-embedding-4b-api-2560",
+    "model_id": "Qwen/Qwen3-Embedding-4B",
+    "revision": "5cf2132abc99cad020ac570b19d031efec650f2b",
+    "family": "qwen3",
+    "release_eligibility": "feasibility_only",
+    "official_source": true,
+    "output_dimension": 2560,
+    "capability_query_instruction": "Given an S-GAR subtask, retrieve resources whose declared capabilities and problem space can perform it.",
+    "constraint_query_instruction": "Given an S-GAR subtask contract, retrieve resources whose declared input, output, interaction, and runtime constraints are compatible.",
+    "raw_query_instruction": "Given an S-GAR subtask, retrieve resources that can perform it.",
+    "document_instruction": "",
+    "pooling": "last_token",
+    "normalize": true,
+    "max_tokens": 32768,
+    "dtype": "bfloat16",
+    "quantization": "none",
+    "int8_threshold": 6.0,
+    "int8_fp32_cpu_offload": false,
+    "device_map": null,
+    "attention_implementation": "sdpa",
+    "local_files_only": true,
+    "backend": "openai_compatible",
+    "api_endpoint_url": "http://127.0.0.1:8001/v1/embeddings",
+    "api_model_id": "sgar-embedding-4b",
+    "api_key_environment_variable": "SGAR_EMBEDDING_API_KEY",
+    "tokenizer_path": ".cache/embedding-tokenizer"
+  }
+}

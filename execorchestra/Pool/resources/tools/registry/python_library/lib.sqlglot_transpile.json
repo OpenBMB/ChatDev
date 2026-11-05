@@ -1,0 +1,168 @@
+{
+  "manifest_version": "v2",
+  "resource_id": "tool.lib.sqlglot_transpile.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Transpile SQL text between two SQLGlot dialects",
+    "description": "Passes one SQL string to sqlglot.transpile with a source dialect defaulting to mysql and target dialect defaulting to postgres, returning the generated statement strings as a list.",
+    "domain_tags": [
+      "database"
+    ],
+    "core_primitives": [
+      "parse_source_sql_dialect",
+      "transform_sql_ast",
+      "generate_target_sql_dialect"
+    ],
+    "problem_space": "Syntactic SQL dialect translation for one input string using SQLGlot's parser and generator."
+  },
+  "constraint": {
+    "io_signature": "Inputs: SQL string, source dialect name, and target dialect name; output: JSON result array of transpiled SQL statement strings.",
+    "accepted_inputs": [
+      "SQL text parseable by the specified SQLGlot read dialect",
+      "read and write dialect identifiers recognized by the installed SQLGlot version"
+    ],
+    "output_shape": "Success is an object with status=\"success\", tool=\"lib.sqlglot_transpile\", and result as an array of SQL statement strings generated in the requested write dialect. A caught source-SQL parse, dialect-resolution, transpilation, or target-generation exception produces an object with status=\"error\", tool=\"lib.sqlglot_transpile\", and message as the exception string, then exits with code 1.",
+    "limitations": [
+      "performs syntax translation only and does not connect to a database, execute SQL, inspect schemas, or verify runtime equivalence",
+      "uses SQLGlot defaults with no caller control over pretty printing, identifier quoting, normalization, comments, or unsupported-feature policy",
+      "dialect translation can be lossy or approximate for constructs without direct target equivalents",
+      "the wrapper defaults missing read and write arguments to mysql and postgres even though the manifest declares them required",
+      "parse, dialect, and generation exceptions use the wrapper's error envelope"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "sql",
+        "kind": "string",
+        "required": true,
+        "cli_position": 1
+      },
+      {
+        "name": "read",
+        "kind": "string",
+        "required": true,
+        "cli_position": 2
+      },
+      {
+        "name": "write",
+        "kind": "string",
+        "required": true,
+        "cli_position": 3
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "Array of SQL statement strings generated in the requested target dialect.",
+      "json_schema": {
+        "description": "Native JSON representation only; no field or task-delivery guarantee.",
+        "type": [
+          "object",
+          "array",
+          "string",
+          "number",
+          "boolean",
+          "null"
+        ]
+      },
+      "native_json_contract_scope": "value_only"
+    }
+  },
+  "routing": {
+    "family": "sql-dialect-transpilation",
+    "intent_tags": [
+      "translate SQL between database dialects",
+      "rewrite SQL syntax with SQLGlot"
+    ],
+    "negative_intents": [
+      "execute SQL or validate it against a live database",
+      "guarantee semantic equivalence across database engines",
+      "format SQL without selecting source and target dialect behavior"
+    ]
+  },
+  "execution": {
+    "runtime": "python_library",
+    "uri": "file://Pool/resources/tools/lib/lib.sqlglot_transpile.py",
+    "execution_status": "active"
+  },
+  "utility": {
+    "latency_ms": 200.0,
+    "token_cost_factor": 0.02,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://github.com/tobymao/sqlglot",
+    "license": "MIT",
+    "backed_by": "sqlglot_transpile",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:86e6b08e88981a4158aaca88b0a676978204e290e1aa1fbadac2f197ec17ef7d",
+    "local_implementation_uri": "file://Pool/resources/tools/lib/lib.sqlglot_transpile.py",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/lib/_liblib.py": "sha256:dcd68e7904232764172e5f646ff97b854f68f7f916180ae32f838a0acf9ccc77"
+    }
+  },
+  "type_specific": {},
+  "type": {
+    "resource_type": "Tool"
+  },
+  "input_contract": [
+    {
+      "name": "sql",
+      "kind": "string",
+      "required": true,
+      "cli_position": 1
+    },
+    {
+      "name": "read",
+      "kind": "string",
+      "required": true,
+      "cli_position": 2
+    },
+    {
+      "name": "write",
+      "kind": "string",
+      "required": true,
+      "cli_position": 3
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "json",
+    "description": "Array of SQL statement strings generated in the requested target dialect.",
+    "json_schema": {
+      "description": "Native JSON representation only; no field or task-delivery guarantee.",
+      "type": [
+        "object",
+        "array",
+        "string",
+        "number",
+        "boolean",
+        "null"
+      ]
+    },
+    "native_json_contract_scope": "value_only"
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [
+      {
+        "name": "sqlglot",
+        "version": "==26.0.1",
+        "required": true
+      }
+    ],
+    "node_packages": [],
+    "system_packages": [],
+    "commands": [],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "python_compatibility": ">=3.11,<4"
+  }
+}

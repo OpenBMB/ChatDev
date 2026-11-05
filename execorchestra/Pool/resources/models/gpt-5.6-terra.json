@@ -1,0 +1,110 @@
+{
+  "resource_id": "gpt-5.6-terra",
+  "type": {
+    "resource_type": "Model",
+    "resource_tag": [
+      "1M Context",
+      "2",
+      "12",
+      ".2"
+    ]
+  },
+  "capability": {
+    "summary": "Balanced reasoning tier admitted for SGAR control-plane compilation.",
+    "core_primitives": [
+      "structured planning",
+      "reasoning over supplied evidence",
+      "code generation"
+    ],
+    "problem_space": "Language model used for SGAR Compiler and Plan Adaptation control decisions. It accepts text and produces text; exact structured-output behavior is governed by endpoint-bound control-role probes.",
+    "domain_tags": [
+      "Language",
+      "Software Engineering"
+    ]
+  },
+  "constraint": {
+    "env_requirements": [
+      "OpenAI-Compatible API Endpoint",
+      "Valid API Key (Cloud)",
+      "Stable Network Connection"
+    ],
+    "io_signature": "Input modalities: text | Output modalities: text. Gateway transport support requires verification."
+  },
+  "utility": {
+    "latency_ms": 0,
+    "token_cost_factor": 0,
+    "expected_success_rate": 0
+  },
+  "execution": {
+    "uri": "${base_url}/v1/chat/completions",
+    "model_id": "gpt-5.6-terra"
+  },
+  "memory": {
+    "success_trajectories": [],
+    "failure_reflections": []
+  },
+  "type_specific": {
+    "model": {
+      "profile_version": "model-capabilities-v1",
+      "input_modalities": [
+        "text"
+      ],
+      "output_modalities": [
+        "text"
+      ],
+      "supports": {
+        "tool_calling": true,
+        "json_mode": true,
+        "vision": false,
+        "reasoning": true,
+        "coding": true,
+        "structured_outputs": true
+      },
+      "thinking_mode": "configurable",
+      "native_protocol": "chat_completions_and_responses",
+      "documented_context_tokens": 1050000,
+      "evidence_status": "gateway_probe_verified",
+      "gateway_verification_status": "control-role-pilot-20260919",
+      "limitations": [],
+      "max_output_tokens": 128000,
+      "pricing_rules": {
+        "input_per_m": "2",
+        "cache_per_m": ".2",
+        "output_per_m": "12",
+        "source": "https://developers.openai.com/api/docs/pricing",
+        "cache_mode": "implicit",
+        "input_tiers": [
+          {
+            "above_input_tokens": 272000,
+            "input_per_m": "4",
+            "cache_per_m": "0.4",
+            "output_per_m": "18.0",
+            "cache_write_per_m": "5.0"
+          }
+        ],
+        "cache_write_per_m": "2.50"
+      }
+    }
+  },
+  "provenance": {
+    "semantic_review": {
+      "reviewed_at": "2026-09-20",
+      "policy": "model-capabilities-v1",
+      "source_urls": [],
+      "evidence_status": "gateway_probe_verified",
+      "task_profile_basis": "The bounded SGAR control-role pilot established exact strict-schema gateway compatibility for Compiler use; it does not establish execution-stage eligibility."
+    },
+    "pilot_evidence": {
+      "protocol": "sgar-control-role-pilot-probes-v1",
+      "artifact": "docs/experiments/control-role-pilot-20260919/protocol_probes.json",
+      "model_id": "gpt-5.6-terra"
+    },
+    "pricing_status": "official_public_price_snapshot",
+    "pricing_note": "Official reference rates and backend billing rules from the same dated pricebook; capability and gateway evidence unchanged.",
+    "official_pricing": {
+      "snapshot_date": "2026-10-09",
+      "source": "https://developers.openai.com/api/docs/pricing",
+      "pricebook_sha256": "9e9a8248e54f1934d08d5efe68a3998ebce6faa09106f3f2a7ac119bf89a182c"
+    }
+  }
+}

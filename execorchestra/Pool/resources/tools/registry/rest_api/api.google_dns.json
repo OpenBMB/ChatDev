@@ -1,0 +1,154 @@
+{
+  "manifest_version": "v2",
+  "resource_id": "tool.api.google_dns.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Resolve a DNS record through Google DoH",
+    "description": "Queries Google Public DNS-over-HTTPS for required name and optional record type, defaulting type to A. HTTP 2xx/3xx responses produce a success envelope; HTTP 4xx/5xx responses produce an error envelope and a non-zero exit; request exceptions also produce an error envelope and a non-zero exit.",
+    "domain_tags": [
+      "dns",
+      "network-resolution"
+    ],
+    "core_primitives": [
+      "resolve_dns",
+      "query_google_doh"
+    ],
+    "problem_space": "DNS record resolution; not domain ownership verification, website availability testing, or network intrusion."
+  },
+  "constraint": {
+    "io_signature": "Input: name at CLI position 1 and optional type at position 2. Output: shared JSON envelope with url, http_status, and Google DNS result. HTTP 2xx/3xx responses produce a success envelope; HTTP 4xx/5xx responses produce an error envelope and a non-zero exit; request exceptions also produce an error envelope and a non-zero exit.",
+    "accepted_inputs": [
+      "one DNS name",
+      "optional DNS record type string; default is A"
+    ],
+    "output_shape": "HTTP 2xx/3xx: {status: \"success\", tool: string, url: string, http_status: integer, result: object|string}. HTTP 4xx/5xx: {status: \"error\", tool: string, url: string, http_status: integer, result: object|string}, exit 1. Request exception: {status: \"error\", tool: string, message: string}, exit 1.",
+    "limitations": [
+      "fixed GET https://dns.google/resolve with name=<name> and type=<type or A>",
+      "no DNSSEC, CD, DO, ECS, padding, response-format, pagination, or resolver-selection input",
+      "wrapper does not locally truncate or interpret Answer/Status fields",
+      "DNS answers are time-sensitive and resolver-dependent; no auth, cache, or retry"
+    ],
+    "artifact_output": [
+      "json"
+    ],
+    "execution_risk": "medium",
+    "http_status_semantics": {
+      "success": "HTTP 200-399",
+      "failure": "HTTP 400-599 or request exception",
+      "failure_exit_code": 1
+    }
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "name",
+        "kind": "string",
+        "required": true,
+        "cli_position": 1
+      },
+      {
+        "name": "type",
+        "kind": "string",
+        "required": false,
+        "default": "A",
+        "cli_position": 2
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "Shared JSON envelope containing Google DNS status and answer records, URL, and HTTP status."
+    }
+  },
+  "routing": {
+    "family": "dns-record-resolution",
+    "intent_tags": [
+      "resolve a DNS record",
+      "query Google Public DNS over HTTPS"
+    ],
+    "negative_intents": [
+      "verify domain ownership",
+      "scan a host or diagnose a network intrusion"
+    ]
+  },
+  "execution": {
+    "runtime": "rest_api",
+    "uri": "file://Pool/resources/tools/api/api.google_dns.py",
+    "execution_status": "active",
+    "execution_risk": "medium"
+  },
+  "utility": {
+    "latency_ms": 200.0,
+    "token_cost_factor": 0.02,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://developers.google.com/speed/public-dns/docs/doh",
+    "license": "proprietary-free",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:a89761c6b84d690b92764512a0bd2fa09323e4edfd3ea23a9822f6b4d528050d",
+    "local_implementation_uri": "file://Pool/resources/tools/api/api.google_dns.py",
+    "auth_required": false,
+    "auth_evidence": "wrapper_and_shared_adapter_read_no_credentials",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/api/_apilib.py": "sha256:e60bba3d1f3dcd9fcd408042ad7951e52d6ecd66d57cb9a58c249d521c8811a7"
+    }
+  },
+  "type_specific": {
+    "tool": {
+      "tool_kind": "rest_api",
+      "deterministic": false
+    }
+  },
+  "type": {
+    "resource_type": "Tool"
+  },
+  "input_contract": [
+    {
+      "name": "name",
+      "kind": "string",
+      "required": true,
+      "cli_position": 1
+    },
+    {
+      "name": "type",
+      "kind": "string",
+      "required": false,
+      "default": "A",
+      "cli_position": 2
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "json",
+    "description": "Shared JSON envelope containing Google DNS status and answer records, URL, and HTTP status."
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [
+      {
+        "name": "requests",
+        "version": "==2.32.3",
+        "required": true
+      }
+    ],
+    "node_packages": [],
+    "system_packages": [],
+    "commands": [],
+    "env_vars": [],
+    "network_required": true,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "rest": {
+      "endpoint": "https://dns.google/resolve",
+      "auth_required": false,
+      "auth_evidence": "wrapper_and_shared_adapter_read_no_credentials",
+      "timeout_seconds": 25,
+      "success_http_status": "200-399"
+    }
+  }
+}

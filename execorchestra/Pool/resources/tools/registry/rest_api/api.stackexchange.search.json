@@ -1,0 +1,178 @@
+{
+  "manifest_version": "v2",
+  "resource_id": "tool.api.stackexchange.search.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Search Stack Exchange questions by title",
+    "description": "Queries Stack Exchange API v2.3's fixed search endpoint using an intitle term, a site (default stackoverflow), descending vote order, and vote sort. HTTP 2xx/3xx responses produce a success envelope; HTTP 4xx/5xx responses produce an error envelope and a non-zero exit; request exceptions also produce an error envelope and a non-zero exit.",
+    "domain_tags": [
+      "swe",
+      "knowledge"
+    ],
+    "core_primitives": [
+      "search_stackexchange_questions",
+      "rank_questions_by_votes"
+    ],
+    "problem_space": "Stack Exchange Q&A discovery by title term; not answer generation, full-network search, or live site moderation."
+  },
+  "constraint": {
+    "io_signature": "Input: title query and optional Stack Exchange site (default stackoverflow); output: JSON envelope containing http_status and the API question result or HTTP error body. HTTP 2xx/3xx responses produce a success envelope; HTTP 4xx/5xx responses produce an error envelope and a non-zero exit; request exceptions also produce an error envelope and a non-zero exit.",
+    "accepted_inputs": [
+      "one title search string",
+      "optional Stack Exchange API site name; wrapper default stackoverflow"
+    ],
+    "output_shape": "HTTP 2xx/3xx: {status: \"success\", tool: string, url: string, http_status: integer, result: object|string}. HTTP 4xx/5xx: {status: \"error\", tool: string, url: string, http_status: integer, result: object|string}, exit 1. Request exception: {status: \"error\", tool: string, message: string}, exit 1.",
+    "limitations": [
+      "fixed GET https://api.stackexchange.com/2.3/search with intitle=<q>, site=<site>, order=desc, sort=votes; no page, pagesize, tag, or body filter exposed",
+      "only requests.RequestException becomes status=error",
+      "HTTP 2xx/3xx responses produce a success envelope; HTTP 4xx/5xx responses produce an error envelope and a non-zero exit; request exceptions also produce an error envelope and a non-zero exit.",
+      "wrapper does not paginate, parse, or truncate the API response; API default page size and quota apply",
+      "no API key, cache, or retry; external question ordering and quota state are non-deterministic"
+    ],
+    "artifact_output": [
+      "json"
+    ],
+    "execution_risk": "medium",
+    "http_status_semantics": {
+      "success": "HTTP 200-399",
+      "failure": "HTTP 400-599 or request exception",
+      "failure_exit_code": 1
+    }
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "q",
+        "kind": "string",
+        "required": true,
+        "cli_position": 1
+      },
+      {
+        "name": "site",
+        "kind": "string",
+        "required": false,
+        "cli_position": 2
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "JSON envelope containing Stack Exchange question items and quota/pagination metadata, URL, and HTTP status.",
+      "json_schema": {
+        "description": "Native JSON representation only; no field or task-delivery guarantee.",
+        "type": [
+          "object",
+          "array",
+          "string",
+          "number",
+          "boolean",
+          "null"
+        ]
+      },
+      "native_json_contract_scope": "value_only"
+    }
+  },
+  "routing": {
+    "family": "stackexchange-question-title-search",
+    "intent_tags": [
+      "search Stack Overflow questions by title",
+      "find Stack Exchange Q&A ranked by votes"
+    ],
+    "negative_intents": [
+      "write or post an answer",
+      "search arXiv, Wikipedia, or arbitrary web pages"
+    ]
+  },
+  "execution": {
+    "runtime": "rest_api",
+    "uri": "file://Pool/resources/tools/api/api.stackexchange.search.py",
+    "execution_status": "active",
+    "execution_risk": "medium"
+  },
+  "utility": {
+    "latency_ms": 200.0,
+    "token_cost_factor": 0.02,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://api.stackexchange.com/docs",
+    "license": "CC-BY-SA",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:55fc37020c08c85746e0c6d995e8b9e8330b6cbeedd012f729a69418fde78ded",
+    "local_implementation_uri": "file://Pool/resources/tools/api/api.stackexchange.search.py",
+    "auth_required": false,
+    "auth_evidence": "wrapper_and_shared_adapter_read_no_credentials",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/api/_apilib.py": "sha256:e60bba3d1f3dcd9fcd408042ad7951e52d6ecd66d57cb9a58c249d521c8811a7"
+    }
+  },
+  "type_specific": {
+    "tool": {
+      "tool_kind": "rest_api",
+      "deterministic": false
+    }
+  },
+  "type": {
+    "resource_type": "Tool"
+  },
+  "input_contract": [
+    {
+      "name": "q",
+      "kind": "string",
+      "required": true,
+      "cli_position": 1
+    },
+    {
+      "name": "site",
+      "kind": "string",
+      "required": false,
+      "cli_position": 2
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "json",
+    "description": "JSON envelope containing Stack Exchange question items and quota/pagination metadata, URL, and HTTP status.",
+    "json_schema": {
+      "description": "Native JSON representation only; no field or task-delivery guarantee.",
+      "type": [
+        "object",
+        "array",
+        "string",
+        "number",
+        "boolean",
+        "null"
+      ]
+    },
+    "native_json_contract_scope": "value_only"
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [
+      {
+        "name": "requests",
+        "version": "==2.32.3",
+        "required": true
+      }
+    ],
+    "node_packages": [],
+    "system_packages": [],
+    "commands": [],
+    "env_vars": [],
+    "network_required": true,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "rest": {
+      "endpoint": "https://api.stackexchange.com/2.3/search",
+      "auth_required": false,
+      "auth_evidence": "wrapper_and_shared_adapter_read_no_credentials",
+      "timeout_seconds": 25,
+      "success_http_status": "200-399"
+    },
+    "python_compatibility": ">=3.11,<4"
+  }
+}

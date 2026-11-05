@@ -1,0 +1,175 @@
+{
+  "manifest_version": "1.0",
+  "resource_id": "tool.jest_test_runner.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Run the project's default Jest suite with `jest --json` from a supplied project path",
+    "description": "Uses a directory as the Jest working directory or an existing file's parent, then invokes the PATH-resolved Jest executable with only `--json`. It parses Jest's native JSON result and treats exit codes 0 and 1 as completed test runs.",
+    "core_primitives": [
+      "run_default_jest_suite",
+      "select_jest_project_working_directory",
+      "parse_jest_native_json_result"
+    ],
+    "problem_space": "Default JavaScript/TypeScript Jest suite execution with native JSON reporting; not arbitrary npm test execution, Vitest, test-file targeting, coverage collection, snapshot updating, or non-executing result parsing.",
+    "domain_tags": [
+      "JavaScript",
+      "testing",
+      "automation"
+    ]
+  },
+  "constraint": {
+    "env_requirements": [
+      "Python >= 3.6",
+      "node.js >= 12",
+      "jest executable available directly on PATH",
+      "project dependencies and Jest configuration required by the test suite"
+    ],
+    "io_signature": "Input: one required existing project directory or file whose parent becomes cwd; output: JSON execution envelope containing parsed Jest native JSON plus exit and stream metadata.",
+    "accepted_inputs": [
+      "an existing JavaScript or TypeScript project directory configured for direct `jest --json` execution",
+      "an existing file path whose parent directory should be used as cwd; the file itself is not passed as a Jest test filter"
+    ],
+    "output_shape": "Completed test run (Jest exit 0 or 1): {status: \"success\", tool: \"jest\", target: string, exit_code: 0|1, result: object|array|null, stdout: string|null, stderr: string|null}; parsed native JSON from the first valid stdout/stderr stream is stored in result and stdout becomes null. Other Jest exits use the same keys with status=\"tool_error\" and propagate the actual exit code. Non-existing input, missing Jest executable, or 180-second timeout: {status: \"error\", tool: \"jest\", message: string}, exiting 2/3/4. Missing argument prints usage to stderr and exits 1 without JSON.",
+    "limitations": [
+      "always runs direct `jest --json` with no test path/pattern, project, config, runInBand, coverage, watch, cache, environment, worker, or passthrough options",
+      "a supplied file only selects its parent cwd and is not targeted as the test file",
+      "requires a `jest` executable directly on PATH and does not invoke npm, yarn, pnpm, npx, or a package.json script",
+      "executes project test code and may use or write Jest caches or trigger test-defined side effects; it uses a fixed 180-second timeout and applies no wrapper truncation"
+    ],
+    "artifact_input": [
+      "proj_dir"
+    ],
+    "artifact_output": [
+      "json"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "proj_dir",
+        "kind": "string",
+        "required": true,
+        "cli_position": 1
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "JSON execution envelope containing parsed native `jest --json` results, target, actual exit code, and remaining stream metadata.",
+      "json_schema": {
+        "description": "Native JSON representation only; no field or task-delivery guarantee.",
+        "type": [
+          "object",
+          "array",
+          "string",
+          "number",
+          "boolean",
+          "null"
+        ]
+      },
+      "native_json_contract_scope": "value_only"
+    }
+  },
+  "routing": {
+    "family": "javascript-jest-default-json-test-runner",
+    "intent_tags": [
+      "run a project's default Jest test suite",
+      "execute Jest and obtain native JSON test results"
+    ],
+    "negative_intents": [
+      "run Vitest npm test or a generic package script",
+      "target one Jest test file or pass custom Jest flags",
+      "collect Jest coverage or update snapshots"
+    ],
+    "dependency_slots": []
+  },
+  "execution": {
+    "runtime": "python_script",
+    "uri": "file://Pool/resources/tools/script/jest_test_runner.py",
+    "execution_status": "active"
+  },
+  "utility": {
+    "latency_ms": 200,
+    "token_cost_factor": 0.01,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://jestjs.io",
+    "license": "MIT",
+    "backed_by": "Jest",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:dc1f5984900ac2ab4dea0d25a0fc25d6392f22b22053253ab90621381870385d",
+    "local_implementation_uri": "file://Pool/resources/tools/script/jest_test_runner.py",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/script/_sgar_cli.py": "sha256:42368f8d49cb6364ad3aeaac6d0f9602adc12cb29fea49322fd488400698b6b9"
+    }
+  },
+  "type_specific": {
+    "tool": {
+      "tool_kind": "local_script",
+      "language": "python",
+      "deterministic": false
+    }
+  },
+  "memory": {
+    "success_trajectories": [],
+    "failure_reflections": []
+  },
+  "type": {
+    "resource_type": "Tool",
+    "resource_tag": [
+      "JavaScript",
+      "testing",
+      "automation"
+    ]
+  },
+  "input_contract": [
+    {
+      "name": "proj_dir",
+      "kind": "string",
+      "required": true,
+      "cli_position": 1
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "json",
+    "description": "JSON execution envelope containing parsed native `jest --json` results, target, actual exit code, and remaining stream metadata.",
+    "json_schema": {
+      "description": "Native JSON representation only; no field or task-delivery guarantee.",
+      "type": [
+        "object",
+        "array",
+        "string",
+        "number",
+        "boolean",
+        "null"
+      ]
+    },
+    "native_json_contract_scope": "value_only"
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [],
+    "node_packages": [
+      {
+        "name": "jest",
+        "version": "==30.4.2",
+        "required": true
+      }
+    ],
+    "system_packages": [],
+    "commands": [
+      "jest"
+    ],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "python_compatibility": ">=3.11,<4"
+  }
+}

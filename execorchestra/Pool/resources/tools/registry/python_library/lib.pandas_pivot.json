@@ -1,0 +1,144 @@
+{
+  "manifest_version": "v2",
+  "resource_id": "tool.lib.pandas_pivot.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Average one CSV value column by one index column",
+    "description": "Reads a CSV with pandas defaults, builds a pivot table using one index column, one values column, and a fixed mean aggregation, then returns the reset-index table as CSV text.",
+    "domain_tags": [
+      "data"
+    ],
+    "core_primitives": [
+      "read_csv_table",
+      "group_values_by_index",
+      "calculate_group_means",
+      "serialize_pivot_csv"
+    ],
+    "problem_space": "Single-key mean aggregation of one value column from a file-backed CSV table."
+  },
+  "constraint": {
+    "io_signature": "Inputs: CSV path, one index-column name, and one value-column name; output: wrapper JSON containing the mean-aggregated table as CSV text under csv.",
+    "accepted_inputs": [
+      "a readable CSV parseable by pandas.read_csv defaults",
+      "existing column names identifying one grouping index and one mean-aggregated value column"
+    ],
+    "output_shape": "Success is an object with status=\"success\", tool=\"lib.pandas_pivot\", and csv as a header-bearing CSV string for the reset-index mean pivot table. A caught file-read, CSV-parse, missing-column, mean-aggregation, or serialization exception produces an object with status=\"error\", tool=\"lib.pandas_pivot\", and message as the exception string, then exits with code 1.",
+    "limitations": [
+      "uses a fixed mean aggregation and cannot select sum, count, median, multiple aggregations, or custom functions",
+      "accepts only one index column and one values column and does not expose pandas pivot_table's columns dimension",
+      "uses fixed pandas.read_csv defaults with no delimiter, encoding, dtype, or missing-value options",
+      "returns CSV content inside the wrapper response rather than writing a CSV file",
+      "missing columns, non-aggregatable values, read failures, and pandas errors use the wrapper's error envelope"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "csv_path",
+        "kind": "string",
+        "required": true,
+        "cli_position": 1
+      },
+      {
+        "name": "index",
+        "kind": "string",
+        "required": true,
+        "cli_position": 2
+      },
+      {
+        "name": "values",
+        "kind": "string",
+        "required": true,
+        "cli_position": 3
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "csv",
+      "description": "CSV text containing one grouping column and the mean of one selected value column."
+    }
+  },
+  "routing": {
+    "family": "single-key-csv-mean-aggregation",
+    "intent_tags": [
+      "average a CSV column by another column",
+      "create a one-index pandas mean pivot table"
+    ],
+    "negative_intents": [
+      "build a two-dimensional pivot with column categories",
+      "choose an aggregation other than mean",
+      "summarize every CSV column with descriptive statistics"
+    ]
+  },
+  "execution": {
+    "runtime": "python_library",
+    "uri": "file://Pool/resources/tools/lib/lib.pandas_pivot.py",
+    "execution_status": "active"
+  },
+  "utility": {
+    "latency_ms": 200.0,
+    "token_cost_factor": 0.02,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://pandas.pydata.org/",
+    "license": "BSD-3",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:92396ac03e4823b5e1de7c467fd814b9b9e4eb4acaaea909c7a7e2ecf1317c75",
+    "local_implementation_uri": "file://Pool/resources/tools/lib/lib.pandas_pivot.py",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/lib/_liblib.py": "sha256:dcd68e7904232764172e5f646ff97b854f68f7f916180ae32f838a0acf9ccc77"
+    }
+  },
+  "type_specific": {},
+  "type": {
+    "resource_type": "Tool"
+  },
+  "input_contract": [
+    {
+      "name": "csv_path",
+      "kind": "string",
+      "required": true,
+      "cli_position": 1
+    },
+    {
+      "name": "index",
+      "kind": "string",
+      "required": true,
+      "cli_position": 2
+    },
+    {
+      "name": "values",
+      "kind": "string",
+      "required": true,
+      "cli_position": 3
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "csv",
+    "description": "CSV text containing one grouping column and the mean of one selected value column."
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [
+      {
+        "name": "pandas",
+        "version": "==2.2.3",
+        "required": true
+      }
+    ],
+    "node_packages": [],
+    "system_packages": [],
+    "commands": [],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "python_compatibility": ">=3.11,<4"
+  }
+}

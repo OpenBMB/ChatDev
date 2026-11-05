@@ -1,0 +1,2937 @@
+[
+  {
+    "manifest_version": "1.0",
+    "resource_id": "agent.backend_architecture_expert.v1",
+    "resource_type": "Agent",
+    "status": "active",
+    "capability": {
+      "core_primitives": [
+        "Backend Architecture Design",
+        "API Contract Design",
+        "Data Flow Analysis",
+        "Migration Planning"
+      ],
+      "problem_space": "Analyze backend requirements and repository evidence to produce implementation-ready architecture specifications, with particular strength in Python services, asynchronous APIs, persistence boundaries, and compatibility-preserving migrations.",
+      "domain_tags": [
+        "Software Engineering",
+        "Backend",
+        "Architecture",
+        "Python"
+      ]
+    },
+    "constraint": {
+      "env_requirements": [
+        "OpenAI-compatible chat-completion endpoint",
+        "Valid API key",
+        "Repository evidence supplied for repository-specific claims"
+      ],
+      "io_signature": "Input: {requirements: text, repository_context?: repository_context} | Output: {architecture_spec: markdown}",
+      "artifact_input": [
+        "text",
+        "repository_context"
+      ],
+      "artifact_output": [
+        "markdown"
+      ],
+      "operation_kinds": [
+        "inspect_input",
+        "synthesize_final"
+      ]
+    },
+    "io": {
+      "input_contract": [
+        {
+          "name": "requirements",
+          "kind": "text",
+          "required": true,
+          "description": "Backend change request, user stories, constraints, and acceptance criteria."
+        },
+        {
+          "name": "repository_context",
+          "kind": "repository_context",
+          "required": false,
+          "description": "Relevant source, schemas, dependency metadata, and upstream analysis."
+        }
+      ],
+      "output_contract": {
+        "artifact_type": "markdown",
+        "description": "Implementation-ready backend architecture specification.",
+        "schema_hint": "Sections for current state, proposed design, interfaces, migration, risks, and verification."
+      }
+    },
+    "routing": {
+      "family_id": "agent.backend_architecture",
+      "dependency_slots": [
+        {
+          "slot_id": "repository_evidence",
+          "description": "Repository structure, source excerpts, schemas, or dependency analysis required to ground the architecture.",
+          "allowed_types": [
+            "Tool",
+            "Skill",
+            "Resource"
+          ],
+          "top_k_per_type": 3,
+          "required": false
+        }
+      ]
+    },
+    "execution": {
+      "runtime": "prompt_agent",
+      "uri": "file://Pool/resources/agents/backend_architecture_expert.md",
+      "execution_status": "active"
+    },
+    "utility": {
+      "latency_ms": 18000,
+      "token_cost_factor": 1.2,
+      "expected_success_rate": 0.75,
+      "successes": 0,
+      "attempts": 0
+    },
+    "provenance": {
+      "source_dataset": "local_agent_pool",
+      "source_item_id": "Pool/resources/agents/backend_architecture_expert.md",
+      "source_uri": "file://Pool/resources/agents/backend_architecture_expert.md",
+      "source_hash": "sha256:82e51837e19730e162a1eeddd73be5a58b0aac33f881d81d14e327fe071470d6",
+      "conversion_method": "manual_manifest_v1_normalization",
+      "confidence": 0.95,
+      "license": "project-local",
+      "utility_evidence_status": "unmeasured_declared_values_preserved"
+    },
+    "type_specific": {
+      "agent": {
+        "agent_kind": "prompt_agent",
+        "agent_card_uri": "file://Pool/resources/agents/backend_architecture_expert.md",
+        "agent_card_hash": "sha256:82e51837e19730e162a1eeddd73be5a58b0aac33f881d81d14e327fe071470d6",
+        "recommended_dependency_ids": [
+          "tool.mcp.fs_search_files.v1",
+          "tool.mcp.fs_read_file.v1",
+          "skill.superpowers.brainstorming.v1",
+          "skill.superpowers.writing-plans.v1",
+          "skill.trailofbits.spec-to-code-compliance.v1"
+        ]
+      }
+    },
+    "memory": {
+      "success_trajectories": [],
+      "failure_reflections": []
+    },
+    "type": {
+      "resource_type": "Agent",
+      "resource_tag": [
+        "Software Engineering",
+        "Backend",
+        "Architecture",
+        "Python"
+      ]
+    },
+    "input_contract": [
+      {
+        "name": "requirements",
+        "kind": "text",
+        "required": true,
+        "description": "Backend change request, user stories, constraints, and acceptance criteria."
+      },
+      {
+        "name": "repository_context",
+        "kind": "repository_context",
+        "required": false,
+        "description": "Relevant source, schemas, dependency metadata, and upstream analysis."
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "markdown",
+      "description": "Implementation-ready backend architecture specification.",
+      "schema_hint": "Sections for current state, proposed design, interfaces, migration, risks, and verification."
+    }
+  },
+  {
+    "manifest_version": "1.0",
+    "resource_id": "agent.test_driven_qa.v1",
+    "resource_type": "Agent",
+    "status": "active",
+    "capability": {
+      "core_primitives": [
+        "Risk-Based Test Planning",
+        "Boundary Case Design",
+        "Failure Reproduction",
+        "Coverage Gap Analysis"
+      ],
+      "problem_space": "Turn requirements, repository context, and test evidence into a prioritized QA report with test scenarios, fixtures, mocks, failure cases, and observable pass/fail criteria.",
+      "domain_tags": [
+        "Software Engineering",
+        "Quality Assurance",
+        "Testing",
+        "TDD"
+      ]
+    },
+    "constraint": {
+      "env_requirements": [
+        "OpenAI-compatible chat-completion endpoint",
+        "Valid API key",
+        "Test evidence required for claims about executed tests or coverage"
+      ],
+      "io_signature": "Input: {requirements: text, repository_context?: repository_context, test_evidence?: test_report} | Output: {qa_report: markdown}",
+      "artifact_input": [
+        "text",
+        "repository_context",
+        "test_report"
+      ],
+      "artifact_output": [
+        "markdown"
+      ],
+      "operation_kinds": [
+        "inspect_input",
+        "validate_artifact",
+        "synthesize_final"
+      ]
+    },
+    "io": {
+      "input_contract": [
+        {
+          "name": "requirements",
+          "kind": "text",
+          "required": true,
+          "description": "Feature behavior, acceptance criteria, or change under test."
+        },
+        {
+          "name": "repository_context",
+          "kind": "repository_context",
+          "required": false,
+          "description": "Relevant code, tests, configuration, and dependency information."
+        },
+        {
+          "name": "test_evidence",
+          "kind": "test_report",
+          "required": false,
+          "description": "Test output, coverage data, or failure traces."
+        }
+      ],
+      "output_contract": {
+        "artifact_type": "markdown",
+        "description": "Risk-based QA report and test plan.",
+        "schema_hint": "Sections for risk, scenarios, fixtures, coverage gaps, reproduction, and pass/fail criteria."
+      }
+    },
+    "routing": {
+      "family_id": "agent.quality_assurance",
+      "dependency_slots": [
+        {
+          "slot_id": "test_evidence",
+          "description": "Test execution, coverage, or browser evidence used to ground the QA assessment.",
+          "allowed_types": [
+            "Tool",
+            "Skill",
+            "Resource"
+          ],
+          "top_k_per_type": 3,
+          "required": false
+        }
+      ]
+    },
+    "execution": {
+      "runtime": "prompt_agent",
+      "uri": "file://Pool/resources/agents/test_driven_qa.md",
+      "execution_status": "active"
+    },
+    "utility": {
+      "latency_ms": 17000,
+      "token_cost_factor": 1.1,
+      "expected_success_rate": 0.75,
+      "successes": 0,
+      "attempts": 0
+    },
+    "provenance": {
+      "source_dataset": "local_agent_pool",
+      "source_item_id": "Pool/resources/agents/test_driven_qa.md",
+      "source_uri": "file://Pool/resources/agents/test_driven_qa.md",
+      "source_hash": "sha256:64f47502af6db7a0b5e7c5a3b8c2e8efe84e4ce8e57667e2b7904e3478384b8f",
+      "conversion_method": "manual_manifest_v1_normalization",
+      "confidence": 0.95,
+      "license": "project-local",
+      "utility_evidence_status": "unmeasured_declared_values_preserved"
+    },
+    "type_specific": {
+      "agent": {
+        "agent_kind": "prompt_agent",
+        "agent_card_uri": "file://Pool/resources/agents/test_driven_qa.md",
+        "agent_card_hash": "sha256:64f47502af6db7a0b5e7c5a3b8c2e8efe84e4ce8e57667e2b7904e3478384b8f",
+        "recommended_dependency_ids": [
+          "tool.pytest_runner.v1",
+          "skill.superpowers.test-driven-development.v1",
+          "skill.neolabhq.design-testing-strategy.v1",
+          "skill.neolabhq.fix-tests.v1",
+          "skill.anthropic.webapp-testing.v1"
+        ]
+      }
+    },
+    "memory": {
+      "success_trajectories": [],
+      "failure_reflections": []
+    },
+    "type": {
+      "resource_type": "Agent",
+      "resource_tag": [
+        "Software Engineering",
+        "Quality Assurance",
+        "Testing",
+        "TDD"
+      ]
+    },
+    "input_contract": [
+      {
+        "name": "requirements",
+        "kind": "text",
+        "required": true,
+        "description": "Feature behavior, acceptance criteria, or change under test."
+      },
+      {
+        "name": "repository_context",
+        "kind": "repository_context",
+        "required": false,
+        "description": "Relevant code, tests, configuration, and dependency information."
+      },
+      {
+        "name": "test_evidence",
+        "kind": "test_report",
+        "required": false,
+        "description": "Test output, coverage data, or failure traces."
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "markdown",
+      "description": "Risk-based QA report and test plan.",
+      "schema_hint": "Sections for risk, scenarios, fixtures, coverage gaps, reproduction, and pass/fail criteria."
+    }
+  },
+  {
+    "manifest_version": "1.0",
+    "resource_id": "agent.business_requirements_analyst.v1",
+    "resource_type": "Agent",
+    "status": "active",
+    "capability": {
+      "core_primitives": [
+        "Requirements Elicitation",
+        "Business Rule Analysis",
+        "Acceptance Criteria Design",
+        "Traceability Analysis"
+      ],
+      "problem_space": "Convert ambiguous stakeholder requests and supporting context into an implementation-neutral, testable requirements specification with explicit assumptions, business rules, and acceptance criteria.",
+      "domain_tags": [
+        "Business Analysis",
+        "Requirements",
+        "Product",
+        "Planning"
+      ]
+    },
+    "constraint": {
+      "env_requirements": [
+        "OpenAI-compatible chat-completion endpoint",
+        "Valid API key",
+        "Stakeholder request supplied as text"
+      ],
+      "io_signature": "Input: {stakeholder_request: text, supporting_context?: context_bundle} | Output: {requirements_spec: markdown}",
+      "artifact_input": [
+        "text",
+        "context_bundle"
+      ],
+      "artifact_output": [
+        "markdown"
+      ],
+      "operation_kinds": [
+        "inspect_input",
+        "produce_artifact"
+      ]
+    },
+    "io": {
+      "input_contract": [
+        {
+          "name": "stakeholder_request",
+          "kind": "text",
+          "required": true,
+          "description": "Problem statement, goals, constraints, and stakeholder notes."
+        },
+        {
+          "name": "supporting_context",
+          "kind": "context_bundle",
+          "required": false,
+          "description": "Process descriptions, documentation, research, or repository context."
+        }
+      ],
+      "output_contract": {
+        "artifact_type": "markdown",
+        "description": "Traceable requirements specification.",
+        "schema_hint": "Goals, non-goals, functional and non-functional requirements, business rules, assumptions, questions, and acceptance criteria."
+      }
+    },
+    "routing": {
+      "family_id": "agent.requirements_analysis",
+      "dependency_slots": [
+        {
+          "slot_id": "supporting_evidence",
+          "description": "Documents, repository facts, or structured evidence used to ground requirements.",
+          "allowed_types": [
+            "Tool",
+            "Skill",
+            "Resource"
+          ],
+          "top_k_per_type": 3,
+          "required": false
+        }
+      ]
+    },
+    "execution": {
+      "runtime": "prompt_agent",
+      "uri": "file://Pool/resources/agents/business_requirements_analyst.md",
+      "execution_status": "active"
+    },
+    "utility": {
+      "latency_ms": 14000,
+      "token_cost_factor": 1.0,
+      "expected_success_rate": 0.72,
+      "successes": 0,
+      "attempts": 0
+    },
+    "provenance": {
+      "source_dataset": "VoltAgent/awesome-claude-code-subagents",
+      "source_item_id": "categories/08-business-product/business-analyst.md",
+      "source_uri": "https://raw.githubusercontent.com/VoltAgent/awesome-claude-code-subagents/947b44ca0c58d606b084e9cb1a2389335b49278b/categories/08-business-product/business-analyst.md",
+      "source_hash": "sha256:3b1f23b02758a4796bf59f7c4a0b38884206101767f6fcd54f930f527f7c9020",
+      "conversion_method": "manual_sgar_adaptation",
+      "confidence": 0.9,
+      "license": "MIT",
+      "utility_evidence_status": "unmeasured_declared_values_preserved"
+    },
+    "type_specific": {
+      "agent": {
+        "agent_kind": "prompt_agent",
+        "agent_card_uri": "file://Pool/resources/agents/business_requirements_analyst.md",
+        "agent_card_hash": "sha256:3b1f23b02758a4796bf59f7c4a0b38884206101767f6fcd54f930f527f7c9020",
+        "recommended_dependency_ids": [
+          "tool.mcp.fs_read_file.v1",
+          "tool.mcp.fs_search_files.v1",
+          "tool.markdown_table_extractor.v1",
+          "skill.trailofbits.ask-questions-if-underspecified.v1",
+          "skill.superpowers.brainstorming.v1",
+          "skill.superpowers.writing-plans.v1"
+        ]
+      }
+    },
+    "memory": {
+      "success_trajectories": [],
+      "failure_reflections": []
+    },
+    "type": {
+      "resource_type": "Agent",
+      "resource_tag": [
+        "Business Analysis",
+        "Requirements",
+        "Product",
+        "Planning"
+      ]
+    },
+    "input_contract": [
+      {
+        "name": "stakeholder_request",
+        "kind": "text",
+        "required": true,
+        "description": "Problem statement, goals, constraints, and stakeholder notes."
+      },
+      {
+        "name": "supporting_context",
+        "kind": "context_bundle",
+        "required": false,
+        "description": "Process descriptions, documentation, research, or repository context."
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "markdown",
+      "description": "Traceable requirements specification.",
+      "schema_hint": "Goals, non-goals, functional and non-functional requirements, business rules, assumptions, questions, and acceptance criteria."
+    }
+  },
+  {
+    "manifest_version": "1.0",
+    "resource_id": "agent.code_reviewer.v1",
+    "resource_type": "Agent",
+    "status": "active",
+    "capability": {
+      "core_primitives": [
+        "Code Review",
+        "Defect Identification",
+        "Security Review",
+        "Test Adequacy Analysis"
+      ],
+      "problem_space": "Review supplied changes and repository evidence for correctness, security, performance, maintainability, and test adequacy, producing evidence-grounded and actionable findings.",
+      "domain_tags": [
+        "Software Engineering",
+        "Code Review",
+        "Quality",
+        "Security"
+      ]
+    },
+    "constraint": {
+      "env_requirements": [
+        "OpenAI-compatible chat-completion endpoint",
+        "Valid API key",
+        "Change set or code excerpt supplied"
+      ],
+      "io_signature": "Input: {change_set: code_diff, repository_context?: repository_context} | Output: {review_report: markdown}",
+      "artifact_input": [
+        "code_diff",
+        "repository_context"
+      ],
+      "artifact_output": [
+        "markdown"
+      ],
+      "operation_kinds": [
+        "inspect_input",
+        "validate_artifact",
+        "synthesize_final"
+      ]
+    },
+    "io": {
+      "input_contract": [
+        {
+          "name": "change_set",
+          "kind": "code_diff",
+          "required": true,
+          "description": "Patch, diff, changed files, or code excerpt."
+        },
+        {
+          "name": "repository_context",
+          "kind": "repository_context",
+          "required": false,
+          "description": "Surrounding code, requirements, conventions, and test evidence."
+        }
+      ],
+      "output_contract": {
+        "artifact_type": "markdown",
+        "description": "Prioritized evidence-grounded code review.",
+        "schema_hint": "Scope, overall assessment, severity-ordered findings, evidence, consequences, fixes, and verification."
+      }
+    },
+    "routing": {
+      "family_id": "agent.code_review",
+      "dependency_slots": [
+        {
+          "slot_id": "change_evidence",
+          "description": "Parsed diff, repository context, static-analysis output, or test evidence.",
+          "allowed_types": [
+            "Tool",
+            "Skill",
+            "Resource"
+          ],
+          "top_k_per_type": 3,
+          "required": false
+        }
+      ]
+    },
+    "execution": {
+      "runtime": "prompt_agent",
+      "uri": "file://Pool/resources/agents/code_reviewer.md",
+      "execution_status": "active"
+    },
+    "utility": {
+      "latency_ms": 17000,
+      "token_cost_factor": 1.1,
+      "expected_success_rate": 0.72,
+      "successes": 0,
+      "attempts": 0
+    },
+    "provenance": {
+      "source_dataset": "VoltAgent/awesome-claude-code-subagents",
+      "source_item_id": "categories/04-quality-security/code-reviewer.md",
+      "source_uri": "https://raw.githubusercontent.com/VoltAgent/awesome-claude-code-subagents/947b44ca0c58d606b084e9cb1a2389335b49278b/categories/04-quality-security/code-reviewer.md",
+      "source_hash": "sha256:55ed9bb464c5b95d4a122d4d3a4a34644d80f7a6f8b0932ae7144206f74e7a60",
+      "conversion_method": "manual_sgar_adaptation",
+      "confidence": 0.9,
+      "license": "MIT",
+      "utility_evidence_status": "unmeasured_declared_values_preserved"
+    },
+    "type_specific": {
+      "agent": {
+        "agent_kind": "prompt_agent",
+        "agent_card_uri": "file://Pool/resources/agents/code_reviewer.md",
+        "agent_card_hash": "sha256:55ed9bb464c5b95d4a122d4d3a4a34644d80f7a6f8b0932ae7144206f74e7a60",
+        "recommended_dependency_ids": [
+          "tool.mcp.git_diff_unstaged.v1",
+          "tool.mcp.fs_search_files.v1",
+          "tool.mcp.fs_read_file.v1",
+          "skill.superpowers.requesting-code-review.v1",
+          "skill.superpowers.receiving-code-review.v1",
+          "skill.trailofbits.differential-review.v1"
+        ]
+      }
+    },
+    "memory": {
+      "success_trajectories": [],
+      "failure_reflections": []
+    },
+    "type": {
+      "resource_type": "Agent",
+      "resource_tag": [
+        "Software Engineering",
+        "Code Review",
+        "Quality",
+        "Security"
+      ]
+    },
+    "input_contract": [
+      {
+        "name": "change_set",
+        "kind": "code_diff",
+        "required": true,
+        "description": "Patch, diff, changed files, or code excerpt."
+      },
+      {
+        "name": "repository_context",
+        "kind": "repository_context",
+        "required": false,
+        "description": "Surrounding code, requirements, conventions, and test evidence."
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "markdown",
+      "description": "Prioritized evidence-grounded code review.",
+      "schema_hint": "Scope, overall assessment, severity-ordered findings, evidence, consequences, fixes, and verification."
+    }
+  },
+  {
+    "manifest_version": "1.0",
+    "resource_id": "agent.root_cause_debugger.v1",
+    "resource_type": "Agent",
+    "status": "active",
+    "capability": {
+      "core_primitives": [
+        "Root-Cause Analysis",
+        "Failure Trace Analysis",
+        "Hypothesis Ranking",
+        "Regression Planning"
+      ],
+      "problem_space": "Diagnose software failures from logs, stack traces, failing assertions, and repository context by constructing a supported causal chain and a minimal repair and verification plan.",
+      "domain_tags": [
+        "Software Engineering",
+        "Debugging",
+        "Reliability",
+        "Root Cause Analysis"
+      ]
+    },
+    "constraint": {
+      "env_requirements": [
+        "OpenAI-compatible chat-completion endpoint",
+        "Valid API key",
+        "Observable failure evidence supplied"
+      ],
+      "io_signature": "Input: {failure_evidence: failure_trace, repository_context?: repository_context} | Output: {root_cause_report: markdown}",
+      "artifact_input": [
+        "failure_trace",
+        "repository_context"
+      ],
+      "artifact_output": [
+        "markdown"
+      ],
+      "operation_kinds": [
+        "inspect_input",
+        "synthesize_final"
+      ]
+    },
+    "io": {
+      "input_contract": [
+        {
+          "name": "failure_evidence",
+          "kind": "failure_trace",
+          "required": true,
+          "description": "Error messages, stack traces, logs, failing assertions, or observed behavior."
+        },
+        {
+          "name": "repository_context",
+          "kind": "repository_context",
+          "required": false,
+          "description": "Relevant implementation, configuration, environment, and dependency information."
+        }
+      ],
+      "output_contract": {
+        "artifact_type": "markdown",
+        "description": "Evidence-grounded root-cause diagnosis and repair plan.",
+        "schema_hint": "Symptoms, reproduction, ranked hypotheses, causal chain, minimal repair, and regression verification."
+      }
+    },
+    "routing": {
+      "family_id": "agent.debugging",
+      "dependency_slots": [
+        {
+          "slot_id": "diagnostic_evidence",
+          "description": "Logs, test output, source context, or static-analysis evidence needed to diagnose the failure.",
+          "allowed_types": [
+            "Tool",
+            "Skill",
+            "Resource"
+          ],
+          "top_k_per_type": 3,
+          "required": false
+        }
+      ]
+    },
+    "execution": {
+      "runtime": "prompt_agent",
+      "uri": "file://Pool/resources/agents/root_cause_debugger.md",
+      "execution_status": "active"
+    },
+    "utility": {
+      "latency_ms": 18000,
+      "token_cost_factor": 1.1,
+      "expected_success_rate": 0.7,
+      "successes": 0,
+      "attempts": 0
+    },
+    "provenance": {
+      "source_dataset": "VoltAgent/awesome-claude-code-subagents",
+      "source_item_id": "categories/04-quality-security/debugger.md",
+      "source_uri": "https://raw.githubusercontent.com/VoltAgent/awesome-claude-code-subagents/947b44ca0c58d606b084e9cb1a2389335b49278b/categories/04-quality-security/debugger.md",
+      "source_hash": "sha256:ebc367c23c0f5ae6ecfb62234c5730e4f0887f27b984c9d4f5ca5662a8415be1",
+      "conversion_method": "manual_sgar_adaptation",
+      "confidence": 0.9,
+      "license": "MIT",
+      "utility_evidence_status": "unmeasured_declared_values_preserved"
+    },
+    "type_specific": {
+      "agent": {
+        "agent_kind": "prompt_agent",
+        "agent_card_uri": "file://Pool/resources/agents/root_cause_debugger.md",
+        "agent_card_hash": "sha256:ebc367c23c0f5ae6ecfb62234c5730e4f0887f27b984c9d4f5ca5662a8415be1",
+        "recommended_dependency_ids": [
+          "tool.mcp.fs_read_file.v1",
+          "tool.mcp.fs_search_files.v1",
+          "tool.pytest_runner.v1",
+          "skill.superpowers.systematic-debugging.v1",
+          "skill.neolabhq.fix-tests.v1",
+          "skill.trailofbits.entry-point-analyzer.v1"
+        ]
+      }
+    },
+    "memory": {
+      "success_trajectories": [],
+      "failure_reflections": []
+    },
+    "type": {
+      "resource_type": "Agent",
+      "resource_tag": [
+        "Software Engineering",
+        "Debugging",
+        "Reliability",
+        "Root Cause Analysis"
+      ]
+    },
+    "input_contract": [
+      {
+        "name": "failure_evidence",
+        "kind": "failure_trace",
+        "required": true,
+        "description": "Error messages, stack traces, logs, failing assertions, or observed behavior."
+      },
+      {
+        "name": "repository_context",
+        "kind": "repository_context",
+        "required": false,
+        "description": "Relevant implementation, configuration, environment, and dependency information."
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "markdown",
+      "description": "Evidence-grounded root-cause diagnosis and repair plan.",
+      "schema_hint": "Symptoms, reproduction, ranked hypotheses, causal chain, minimal repair, and regression verification."
+    }
+  },
+  {
+    "manifest_version": "1.0",
+    "resource_id": "agent.security_auditor.v1",
+    "resource_type": "Agent",
+    "status": "active",
+    "capability": {
+      "core_primitives": [
+        "Threat Surface Analysis",
+        "Vulnerability Triage",
+        "Security Control Review",
+        "Risk Reporting"
+      ],
+      "problem_space": "Conduct defensive, evidence-based security review of supplied code, configuration, architecture, and scanner output, separating confirmed weaknesses from unverified scanner matches.",
+      "domain_tags": [
+        "Application Security",
+        "Security Audit",
+        "Risk",
+        "Compliance"
+      ]
+    },
+    "constraint": {
+      "env_requirements": [
+        "OpenAI-compatible chat-completion endpoint",
+        "Valid API key",
+        "Authorized defensive audit scope"
+      ],
+      "io_signature": "Input: {audit_scope: text, security_evidence?: security_evidence} | Output: {security_report: markdown}",
+      "artifact_input": [
+        "text",
+        "security_evidence"
+      ],
+      "artifact_output": [
+        "markdown"
+      ],
+      "operation_kinds": [
+        "inspect_input",
+        "validate_artifact",
+        "synthesize_final"
+      ]
+    },
+    "io": {
+      "input_contract": [
+        {
+          "name": "audit_scope",
+          "kind": "text",
+          "required": true,
+          "description": "Assets, trust boundaries, policies, and components in scope."
+        },
+        {
+          "name": "security_evidence",
+          "kind": "security_evidence",
+          "required": false,
+          "description": "Source excerpts, configuration, scanner output, dependency reports, or architecture context."
+        }
+      ],
+      "output_contract": {
+        "artifact_type": "markdown",
+        "description": "Evidence-based defensive security assessment.",
+        "schema_hint": "Scope, threat surface, severity-ordered findings, evidence, impact, confidence, remediation, verification, and residual risk."
+      }
+    },
+    "routing": {
+      "family_id": "agent.security_audit",
+      "dependency_slots": [
+        {
+          "slot_id": "security_evidence",
+          "description": "Scanner output, dependency reports, source context, or architecture evidence.",
+          "allowed_types": [
+            "Tool",
+            "Skill",
+            "Resource"
+          ],
+          "top_k_per_type": 3,
+          "required": false
+        }
+      ]
+    },
+    "execution": {
+      "runtime": "prompt_agent",
+      "uri": "file://Pool/resources/agents/security_auditor.md",
+      "execution_status": "active"
+    },
+    "utility": {
+      "latency_ms": 18000,
+      "token_cost_factor": 1.2,
+      "expected_success_rate": 0.68,
+      "successes": 0,
+      "attempts": 0
+    },
+    "provenance": {
+      "source_dataset": "VoltAgent/awesome-claude-code-subagents",
+      "source_item_id": "categories/04-quality-security/security-auditor.md",
+      "source_uri": "https://raw.githubusercontent.com/VoltAgent/awesome-claude-code-subagents/947b44ca0c58d606b084e9cb1a2389335b49278b/categories/04-quality-security/security-auditor.md",
+      "source_hash": "sha256:32a645c6ad5acc738549e0ae24762f6b00854915a6e6ba237247d738a93b6405",
+      "conversion_method": "manual_sgar_adaptation",
+      "confidence": 0.9,
+      "license": "MIT",
+      "utility_evidence_status": "unmeasured_declared_values_preserved"
+    },
+    "type_specific": {
+      "agent": {
+        "agent_kind": "prompt_agent",
+        "agent_card_uri": "file://Pool/resources/agents/security_auditor.md",
+        "agent_card_hash": "sha256:32a645c6ad5acc738549e0ae24762f6b00854915a6e6ba237247d738a93b6405",
+        "recommended_dependency_ids": [
+          "tool.lib.detect_secrets.v1",
+          "tool.bandit_security_scanner.v1",
+          "tool.dependency_cve_checker.v1",
+          "skill.trailofbits.insecure-defaults.v1",
+          "skill.trailofbits.property-based-testing.v1",
+          "skill.trailofbits.supply-chain-risk-auditor.v1",
+          "skill.trailofbits.secure-workflow-guide.v1"
+        ]
+      }
+    },
+    "memory": {
+      "success_trajectories": [],
+      "failure_reflections": []
+    },
+    "type": {
+      "resource_type": "Agent",
+      "resource_tag": [
+        "Application Security",
+        "Security Audit",
+        "Risk",
+        "Compliance"
+      ]
+    },
+    "input_contract": [
+      {
+        "name": "audit_scope",
+        "kind": "text",
+        "required": true,
+        "description": "Assets, trust boundaries, policies, and components in scope."
+      },
+      {
+        "name": "security_evidence",
+        "kind": "security_evidence",
+        "required": false,
+        "description": "Source excerpts, configuration, scanner output, dependency reports, or architecture context."
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "markdown",
+      "description": "Evidence-based defensive security assessment.",
+      "schema_hint": "Scope, threat surface, severity-ordered findings, evidence, impact, confidence, remediation, verification, and residual risk."
+    }
+  },
+  {
+    "manifest_version": "1.0",
+    "resource_id": "agent.documentation_engineer.v1",
+    "resource_type": "Agent",
+    "status": "active",
+    "capability": {
+      "core_primitives": [
+        "Technical Writing",
+        "API Documentation",
+        "Tutorial Design",
+        "Documentation Consistency Review"
+      ],
+      "problem_space": "Create accurate, audience-appropriate technical documentation from supplied source context while keeping verified behavior separate from examples, assumptions, and recommendations.",
+      "domain_tags": [
+        "Documentation",
+        "Developer Experience",
+        "Technical Writing",
+        "Software Engineering"
+      ]
+    },
+    "constraint": {
+      "env_requirements": [
+        "OpenAI-compatible chat-completion endpoint",
+        "Valid API key",
+        "Authoritative source context supplied for factual documentation"
+      ],
+      "io_signature": "Input: {documentation_request: text, source_context: context_bundle} | Output: {documentation: markdown}",
+      "artifact_input": [
+        "text",
+        "context_bundle"
+      ],
+      "artifact_output": [
+        "markdown"
+      ],
+      "operation_kinds": [
+        "inspect_input",
+        "produce_artifact"
+      ]
+    },
+    "io": {
+      "input_contract": [
+        {
+          "name": "documentation_request",
+          "kind": "text",
+          "required": true,
+          "description": "Audience, document purpose, scope, and desired format."
+        },
+        {
+          "name": "source_context",
+          "kind": "context_bundle",
+          "required": true,
+          "description": "APIs, code, schemas, existing documentation, examples, and constraints."
+        }
+      ],
+      "output_contract": {
+        "artifact_type": "markdown",
+        "description": "Complete task-oriented technical documentation.",
+        "schema_hint": "Title, audience, prerequisites, scope, concepts, procedures, examples, limitations, and verification."
+      }
+    },
+    "routing": {
+      "family_id": "agent.documentation",
+      "dependency_slots": [
+        {
+          "slot_id": "authoritative_context",
+          "description": "Source, API, schema, or existing-documentation evidence required for accurate writing.",
+          "allowed_types": [
+            "Tool",
+            "Skill",
+            "Resource"
+          ],
+          "top_k_per_type": 3,
+          "required": true
+        }
+      ]
+    },
+    "execution": {
+      "runtime": "prompt_agent",
+      "uri": "file://Pool/resources/agents/documentation_engineer.md",
+      "execution_status": "active"
+    },
+    "utility": {
+      "latency_ms": 15000,
+      "token_cost_factor": 1.0,
+      "expected_success_rate": 0.74,
+      "successes": 0,
+      "attempts": 0
+    },
+    "provenance": {
+      "source_dataset": "VoltAgent/awesome-claude-code-subagents",
+      "source_item_id": "categories/06-developer-experience/documentation-engineer.md",
+      "source_uri": "https://raw.githubusercontent.com/VoltAgent/awesome-claude-code-subagents/947b44ca0c58d606b084e9cb1a2389335b49278b/categories/06-developer-experience/documentation-engineer.md",
+      "source_hash": "sha256:3db9954a6324933aa983a8fdaa864bde6d08b7427c5944f14d1c647b43ad60c2",
+      "conversion_method": "manual_sgar_adaptation",
+      "confidence": 0.9,
+      "license": "MIT",
+      "utility_evidence_status": "unmeasured_declared_values_preserved"
+    },
+    "type_specific": {
+      "agent": {
+        "agent_kind": "prompt_agent",
+        "agent_card_uri": "file://Pool/resources/agents/documentation_engineer.md",
+        "agent_card_hash": "sha256:3db9954a6324933aa983a8fdaa864bde6d08b7427c5944f14d1c647b43ad60c2",
+        "recommended_dependency_ids": [
+          "tool.mcp.fs_read_file.v1",
+          "tool.mcp.fs_search_files.v1",
+          "skill.neolabhq.write-concisely.v1",
+          "skill.openai_plugins.writing-skills.v1",
+          "skill.anthropic.brand-guidelines.v1"
+        ]
+      }
+    },
+    "memory": {
+      "success_trajectories": [],
+      "failure_reflections": []
+    },
+    "type": {
+      "resource_type": "Agent",
+      "resource_tag": [
+        "Documentation",
+        "Developer Experience",
+        "Technical Writing",
+        "Software Engineering"
+      ]
+    },
+    "input_contract": [
+      {
+        "name": "documentation_request",
+        "kind": "text",
+        "required": true,
+        "description": "Audience, document purpose, scope, and desired format."
+      },
+      {
+        "name": "source_context",
+        "kind": "context_bundle",
+        "required": true,
+        "description": "APIs, code, schemas, existing documentation, examples, and constraints."
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "markdown",
+      "description": "Complete task-oriented technical documentation.",
+      "schema_hint": "Title, audience, prerequisites, scope, concepts, procedures, examples, limitations, and verification."
+    }
+  },
+  {
+    "manifest_version": "1.0",
+    "resource_id": "agent.data_analyst.v1",
+    "resource_type": "Agent",
+    "status": "active",
+    "capability": {
+      "core_primitives": [
+        "Exploratory Data Analysis",
+        "Metric Definition",
+        "Statistical Interpretation",
+        "Decision-Oriented Reporting"
+      ],
+      "problem_space": "Transform supplied structured data and query results into reproducible, decision-relevant findings while checking units, missing values, denominators, uncertainty, and causal overreach.",
+      "domain_tags": [
+        "Data Analysis",
+        "Business Intelligence",
+        "Statistics",
+        "Structured Data"
+      ]
+    },
+    "constraint": {
+      "env_requirements": [
+        "OpenAI-compatible chat-completion endpoint",
+        "Valid API key",
+        "Structured data or query results supplied in context"
+      ],
+      "io_signature": "Input: {analysis_question: text, data_context: structured_data} | Output: {analysis_result: json}",
+      "artifact_input": [
+        "text",
+        "structured_data"
+      ],
+      "artifact_output": [
+        "json"
+      ],
+      "operation_kinds": [
+        "inspect_input",
+        "synthesize_final"
+      ]
+    },
+    "io": {
+      "input_contract": [
+        {
+          "name": "analysis_question",
+          "kind": "text",
+          "required": true,
+          "description": "Decision or question the analysis must address."
+        },
+        {
+          "name": "data_context",
+          "kind": "structured_data",
+          "required": true,
+          "description": "Tables, CSV/JSON content, schema, query results, definitions, and collection limitations."
+        }
+      ],
+      "output_contract": {
+        "artifact_type": "json",
+        "description": "Structured evidence-based analysis result.",
+        "schema_hint": "summary: string; metrics: array; findings: array; limitations: array; recommended_next_steps: array"
+      }
+    },
+    "routing": {
+      "family_id": "agent.data_analysis",
+      "dependency_slots": [
+        {
+          "slot_id": "structured_data",
+          "description": "Parsed tables, query results, schema, or structured source data.",
+          "allowed_types": [
+            "Tool",
+            "Resource"
+          ],
+          "top_k_per_type": 3,
+          "required": true
+        }
+      ]
+    },
+    "execution": {
+      "runtime": "prompt_agent",
+      "uri": "file://Pool/resources/agents/data_analyst.md",
+      "execution_status": "active"
+    },
+    "utility": {
+      "latency_ms": 16000,
+      "token_cost_factor": 1.0,
+      "expected_success_rate": 0.7,
+      "successes": 0,
+      "attempts": 0
+    },
+    "provenance": {
+      "source_dataset": "VoltAgent/awesome-claude-code-subagents",
+      "source_item_id": "categories/05-data-ai/data-analyst.md",
+      "source_uri": "https://raw.githubusercontent.com/VoltAgent/awesome-claude-code-subagents/947b44ca0c58d606b084e9cb1a2389335b49278b/categories/05-data-ai/data-analyst.md",
+      "source_hash": "sha256:7d70772b457f57205a7a9194fc5af205c8777694d816ea3c46348f59065b802b",
+      "conversion_method": "manual_sgar_adaptation",
+      "confidence": 0.9,
+      "license": "MIT",
+      "utility_evidence_status": "unmeasured_declared_values_preserved"
+    },
+    "type_specific": {
+      "agent": {
+        "agent_kind": "prompt_agent",
+        "agent_card_uri": "file://Pool/resources/agents/data_analyst.md",
+        "agent_card_hash": "sha256:7d70772b457f57205a7a9194fc5af205c8777694d816ea3c46348f59065b802b",
+        "recommended_dependency_ids": [
+          "tool.lib.pandas_describe.v1",
+          "tool.lib.pandas_pivot.v1",
+          "tool.markdown_table_extractor.v1",
+          "skill.openai_plugins.dashboard-expert.v1",
+          "skill.trailofbits.dimensional-analysis.v1",
+          "skill.neolabhq.write-concisely.v1"
+        ]
+      }
+    },
+    "memory": {
+      "success_trajectories": [],
+      "failure_reflections": []
+    },
+    "type": {
+      "resource_type": "Agent",
+      "resource_tag": [
+        "Data Analysis",
+        "Business Intelligence",
+        "Statistics",
+        "Structured Data"
+      ]
+    },
+    "input_contract": [
+      {
+        "name": "analysis_question",
+        "kind": "text",
+        "required": true,
+        "description": "Decision or question the analysis must address."
+      },
+      {
+        "name": "data_context",
+        "kind": "structured_data",
+        "required": true,
+        "description": "Tables, CSV/JSON content, schema, query results, definitions, and collection limitations."
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "Structured evidence-based analysis result.",
+      "schema_hint": "summary: string; metrics: array; findings: array; limitations: array; recommended_next_steps: array"
+    }
+  },
+  {
+    "manifest_version": "1.0",
+    "resource_id": "agent.research_analyst.v1",
+    "resource_type": "Agent",
+    "status": "active",
+    "capability": {
+      "core_primitives": [
+        "Evidence Synthesis",
+        "Claim Comparison",
+        "Source Quality Assessment",
+        "Uncertainty Reporting"
+      ],
+      "problem_space": "Synthesize supplied pages, papers, reports, and notes into an evidence-traceable research report that distinguishes source claims, conflicting evidence, uncertainty, and analyst inference.",
+      "domain_tags": [
+        "Research",
+        "Evidence Synthesis",
+        "Literature Review",
+        "Analysis"
+      ]
+    },
+    "constraint": {
+      "env_requirements": [
+        "OpenAI-compatible chat-completion endpoint",
+        "Valid API key",
+        "Source material with stable identifiers supplied in context"
+      ],
+      "io_signature": "Input: {research_question: text, source_material: source_bundle} | Output: {research_report: markdown}",
+      "artifact_input": [
+        "text",
+        "source_bundle"
+      ],
+      "artifact_output": [
+        "markdown"
+      ],
+      "operation_kinds": [
+        "inspect_input",
+        "synthesize_final"
+      ]
+    },
+    "io": {
+      "input_contract": [
+        {
+          "name": "research_question",
+          "kind": "text",
+          "required": true,
+          "description": "Research scope, decision context, and desired depth."
+        },
+        {
+          "name": "source_material",
+          "kind": "source_bundle",
+          "required": true,
+          "description": "Retrieved pages, papers, reports, notes, or structured evidence with identifiers."
+        }
+      ],
+      "output_contract": {
+        "artifact_type": "markdown",
+        "description": "Evidence-traceable research synthesis.",
+        "schema_hint": "Question and scope, claim-organized findings, source attribution, disagreements, uncertainty, conclusions, and recommendations."
+      }
+    },
+    "routing": {
+      "family_id": "agent.research_synthesis",
+      "dependency_slots": [
+        {
+          "slot_id": "source_material",
+          "description": "Retrieved and parsed source material used as evidence.",
+          "allowed_types": [
+            "Tool",
+            "Resource"
+          ],
+          "top_k_per_type": 4,
+          "required": true
+        }
+      ]
+    },
+    "execution": {
+      "runtime": "prompt_agent",
+      "uri": "file://Pool/resources/agents/research_analyst.md",
+      "execution_status": "active"
+    },
+    "utility": {
+      "latency_ms": 18000,
+      "token_cost_factor": 1.1,
+      "expected_success_rate": 0.7,
+      "successes": 0,
+      "attempts": 0
+    },
+    "provenance": {
+      "source_dataset": "VoltAgent/awesome-claude-code-subagents",
+      "source_item_id": "categories/10-research-analysis/research-analyst.md",
+      "source_uri": "https://raw.githubusercontent.com/VoltAgent/awesome-claude-code-subagents/947b44ca0c58d606b084e9cb1a2389335b49278b/categories/10-research-analysis/research-analyst.md",
+      "source_hash": "sha256:b727c2c57a043f02f2b5d2c6092c05ca47370b941466b93dc961d444a4c28402",
+      "conversion_method": "manual_sgar_adaptation",
+      "confidence": 0.9,
+      "license": "MIT",
+      "utility_evidence_status": "unmeasured_declared_values_preserved"
+    },
+    "type_specific": {
+      "agent": {
+        "agent_kind": "prompt_agent",
+        "agent_card_uri": "file://Pool/resources/agents/research_analyst.md",
+        "agent_card_hash": "sha256:b727c2c57a043f02f2b5d2c6092c05ca47370b941466b93dc961d444a4c28402",
+        "recommended_dependency_ids": [
+          "tool.api.arxiv.search.v1",
+          "tool.api.crossref.works.v1",
+          "tool.api.wikipedia.summary.v1",
+          "tool.lib.pdfplumber_extract.v1",
+          "tool.markdown_table_extractor.v1",
+          "tool.mcp.fs_read_file.v1",
+          "skill.trailofbits.audit-context-building.v1",
+          "skill.trailofbits.ask-questions-if-underspecified.v1",
+          "skill.neolabhq.write-concisely.v1"
+        ]
+      }
+    },
+    "memory": {
+      "success_trajectories": [],
+      "failure_reflections": []
+    },
+    "type": {
+      "resource_type": "Agent",
+      "resource_tag": [
+        "Research",
+        "Evidence Synthesis",
+        "Literature Review",
+        "Analysis"
+      ]
+    },
+    "input_contract": [
+      {
+        "name": "research_question",
+        "kind": "text",
+        "required": true,
+        "description": "Research scope, decision context, and desired depth."
+      },
+      {
+        "name": "source_material",
+        "kind": "source_bundle",
+        "required": true,
+        "description": "Retrieved pages, papers, reports, notes, or structured evidence with identifiers."
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "markdown",
+      "description": "Evidence-traceable research synthesis.",
+      "schema_hint": "Question and scope, claim-organized findings, source attribution, disagreements, uncertainty, conclusions, and recommendations."
+    }
+  },
+  {
+    "manifest_version": "1.0",
+    "resource_id": "agent.search_specialist.v1",
+    "resource_type": "Agent",
+    "status": "active",
+    "capability": {
+      "core_primitives": [
+        "Query Formulation",
+        "Source Selection",
+        "Result Curation",
+        "Evidence Deduplication"
+      ],
+      "problem_space": "Translate an information need into targeted queries and curate supplied retrieval results into a compact, deduplicated evidence set without expanding into broad research synthesis.",
+      "domain_tags": [
+        "Information Retrieval",
+        "Search",
+        "Evidence Collection",
+        "Research"
+      ]
+    },
+    "constraint": {
+      "env_requirements": [
+        "OpenAI-compatible chat-completion endpoint",
+        "Valid API key",
+        "Retrieved content required for claims that a source was accessed"
+      ],
+      "io_signature": "Input: {search_objective: text, search_context?: context_bundle} | Output: {evidence_set: json}",
+      "artifact_input": [
+        "text",
+        "context_bundle"
+      ],
+      "artifact_output": [
+        "json"
+      ],
+      "operation_kinds": [
+        "inspect_input",
+        "produce_artifact"
+      ]
+    },
+    "io": {
+      "input_contract": [
+        {
+          "name": "search_objective",
+          "kind": "text",
+          "required": true,
+          "description": "Exact information need, scope, constraints, and freshness requirements."
+        },
+        {
+          "name": "search_context",
+          "kind": "context_bundle",
+          "required": false,
+          "description": "Existing keywords, known sources, prior results, and exclusions."
+        }
+      ],
+      "output_contract": {
+        "artifact_type": "json",
+        "description": "Curated and deduplicated evidence set.",
+        "schema_hint": "queries: array; results: array; coverage_gaps: array; deduplication_notes: array"
+      }
+    },
+    "routing": {
+      "family_id": "agent.information_retrieval",
+      "dependency_slots": [
+        {
+          "slot_id": "retrieved_content",
+          "description": "Search or fetch results that can be curated into an evidence set.",
+          "allowed_types": [
+            "Tool",
+            "Resource"
+          ],
+          "top_k_per_type": 4,
+          "required": false
+        }
+      ]
+    },
+    "execution": {
+      "runtime": "prompt_agent",
+      "uri": "file://Pool/resources/agents/search_specialist.md",
+      "execution_status": "active"
+    },
+    "utility": {
+      "latency_ms": 14000,
+      "token_cost_factor": 1.0,
+      "expected_success_rate": 0.72,
+      "successes": 0,
+      "attempts": 0
+    },
+    "provenance": {
+      "source_dataset": "VoltAgent/awesome-claude-code-subagents",
+      "source_item_id": "categories/10-research-analysis/search-specialist.md",
+      "source_uri": "https://raw.githubusercontent.com/VoltAgent/awesome-claude-code-subagents/947b44ca0c58d606b084e9cb1a2389335b49278b/categories/10-research-analysis/search-specialist.md",
+      "source_hash": "sha256:5e3727e2731d3147dcac2835836995622d7d8c1b559645dc129ec2c08f29e2d3",
+      "conversion_method": "manual_sgar_adaptation",
+      "confidence": 0.9,
+      "license": "MIT",
+      "utility_evidence_status": "unmeasured_declared_values_preserved"
+    },
+    "type_specific": {
+      "agent": {
+        "agent_kind": "prompt_agent",
+        "agent_card_uri": "file://Pool/resources/agents/search_specialist.md",
+        "agent_card_hash": "sha256:5e3727e2731d3147dcac2835836995622d7d8c1b559645dc129ec2c08f29e2d3",
+        "recommended_dependency_ids": [
+          "tool.api.arxiv.search.v1",
+          "tool.api.crossref.works.v1",
+          "tool.api.wikipedia.summary.v1",
+          "tool.mcp.fs_search_files.v1",
+          "tool.mcp.fs_read_file.v1",
+          "tool.lib.pdfplumber_extract.v1",
+          "skill.trailofbits.slicing-code-context.v1",
+          "skill.trailofbits.entry-point-analyzer.v1",
+          "skill.trailofbits.audit-context-building.v1"
+        ]
+      }
+    },
+    "memory": {
+      "success_trajectories": [],
+      "failure_reflections": []
+    },
+    "type": {
+      "resource_type": "Agent",
+      "resource_tag": [
+        "Information Retrieval",
+        "Search",
+        "Evidence Collection",
+        "Research"
+      ]
+    },
+    "input_contract": [
+      {
+        "name": "search_objective",
+        "kind": "text",
+        "required": true,
+        "description": "Exact information need, scope, constraints, and freshness requirements."
+      },
+      {
+        "name": "search_context",
+        "kind": "context_bundle",
+        "required": false,
+        "description": "Existing keywords, known sources, prior results, and exclusions."
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "Curated and deduplicated evidence set.",
+      "schema_hint": "queries: array; results: array; coverage_gaps: array; deduplication_notes: array"
+    }
+  },
+  {
+    "manifest_version": "1.0",
+    "resource_id": "agent.api_designer.v1",
+    "resource_type": "Agent",
+    "status": "active",
+    "capability": {
+      "core_primitives": [
+        "API Contract Design",
+        "REST and GraphQL Design",
+        "Compatibility Planning",
+        "API Governance"
+      ],
+      "problem_space": "Turn consumer needs, domain evidence, and compatibility constraints into implementation-ready REST or GraphQL contracts with explicit lifecycle and verification rules.",
+      "domain_tags": [
+        "Software Engineering",
+        "API",
+        "Architecture",
+        "Integration"
+      ]
+    },
+    "constraint": {
+      "env_requirements": [
+        "OpenAI-compatible chat-completion endpoint",
+        "Valid API key",
+        "Service or domain evidence supplied for system-specific claims"
+      ],
+      "io_signature": "Input: {api_requirements: text, service_context?: repository_context} | Output: {api_contract: markdown}",
+      "artifact_input": [
+        "text",
+        "repository_context"
+      ],
+      "artifact_output": [
+        "markdown"
+      ],
+      "operation_kinds": [
+        "inspect_input",
+        "synthesize_final"
+      ]
+    },
+    "io": {
+      "input_contract": [
+        {
+          "name": "api_requirements",
+          "kind": "text",
+          "required": true,
+          "description": "Use cases, consumers, data operations, constraints, and acceptance criteria."
+        },
+        {
+          "name": "service_context",
+          "kind": "repository_context",
+          "required": false,
+          "description": "Domain model, existing endpoints, schemas, and compatibility evidence."
+        }
+      ],
+      "output_contract": {
+        "artifact_type": "markdown",
+        "description": "Implementation-ready REST or GraphQL API contract.",
+        "schema_hint": "Scope, operations, request/response/error semantics, security, versioning, examples, and verification criteria."
+      }
+    },
+    "routing": {
+      "family_id": "agent.api_design",
+      "dependency_slots": [
+        {
+          "slot_id": "service_evidence",
+          "description": "Repository, schema, or existing API evidence used to ground the contract.",
+          "allowed_types": [
+            "Tool",
+            "Skill",
+            "Resource"
+          ],
+          "top_k_per_type": 3,
+          "required": false
+        }
+      ]
+    },
+    "execution": {
+      "runtime": "prompt_agent",
+      "uri": "file://Pool/resources/agents/api_designer.md",
+      "execution_status": "active"
+    },
+    "utility": {
+      "latency_ms": 16000,
+      "token_cost_factor": 1.1,
+      "expected_success_rate": 0.74,
+      "successes": 0,
+      "attempts": 0
+    },
+    "provenance": {
+      "source_dataset": "VoltAgent/awesome-claude-code-subagents",
+      "source_item_id": "categories/01-core-development/api-designer.md",
+      "source_uri": "https://raw.githubusercontent.com/VoltAgent/awesome-claude-code-subagents/947b44ca0c58d606b084e9cb1a2389335b49278b/categories/01-core-development/api-designer.md",
+      "source_hash": "sha256:628a21d852637c0a8138f8c6998fdccf9266a19ab4813ede5b264bdf661d9ecb",
+      "conversion_method": "manual_sgar_adaptation",
+      "confidence": 0.9,
+      "license": "MIT",
+      "utility_evidence_status": "unmeasured_declared_values_preserved"
+    },
+    "type_specific": {
+      "agent": {
+        "agent_kind": "prompt_agent",
+        "agent_card_uri": "file://Pool/resources/agents/api_designer.md",
+        "agent_card_hash": "sha256:628a21d852637c0a8138f8c6998fdccf9266a19ab4813ede5b264bdf661d9ecb",
+        "recommended_dependency_ids": [
+          "tool.mcp.fs_search_files.v1",
+          "tool.mcp.fs_read_file.v1",
+          "tool.lib.jsonschema_validate.v1",
+          "tool.lib.genson_schema.v1",
+          "skill.superpowers.brainstorming.v1",
+          "skill.superpowers.writing-plans.v1",
+          "skill.trailofbits.spec-to-code-compliance.v1"
+        ]
+      }
+    },
+    "memory": {
+      "success_trajectories": [],
+      "failure_reflections": []
+    },
+    "type": {
+      "resource_type": "Agent",
+      "resource_tag": [
+        "Software Engineering",
+        "API",
+        "Architecture",
+        "Integration"
+      ]
+    },
+    "input_contract": [
+      {
+        "name": "api_requirements",
+        "kind": "text",
+        "required": true,
+        "description": "Use cases, consumers, data operations, constraints, and acceptance criteria."
+      },
+      {
+        "name": "service_context",
+        "kind": "repository_context",
+        "required": false,
+        "description": "Domain model, existing endpoints, schemas, and compatibility evidence."
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "markdown",
+      "description": "Implementation-ready REST or GraphQL API contract.",
+      "schema_hint": "Scope, operations, request/response/error semantics, security, versioning, examples, and verification criteria."
+    }
+  },
+  {
+    "manifest_version": "1.0",
+    "resource_id": "agent.frontend_developer.v1",
+    "resource_type": "Agent",
+    "status": "active",
+    "capability": {
+      "core_primitives": [
+        "Frontend Component Design",
+        "State Integration",
+        "Responsive UI Planning",
+        "Accessibility-Aware Implementation"
+      ],
+      "problem_space": "Convert UI requirements, design evidence, and repository context into code-ready frontend changes for modern TypeScript-based web applications.",
+      "domain_tags": [
+        "Software Engineering",
+        "Frontend",
+        "Web",
+        "TypeScript"
+      ]
+    },
+    "constraint": {
+      "env_requirements": [
+        "OpenAI-compatible chat-completion endpoint",
+        "Valid API key",
+        "Framework and repository context supplied for code-specific guidance"
+      ],
+      "io_signature": "Input: {frontend_request: text, frontend_context?: repository_context} | Output: {frontend_implementation_package: markdown}",
+      "artifact_input": [
+        "text",
+        "repository_context"
+      ],
+      "artifact_output": [
+        "markdown"
+      ],
+      "operation_kinds": [
+        "inspect_input",
+        "transform_artifact",
+        "synthesize_final"
+      ]
+    },
+    "io": {
+      "input_contract": [
+        {
+          "name": "frontend_request",
+          "kind": "text",
+          "required": true,
+          "description": "Required UI behavior, target framework, constraints, and acceptance criteria."
+        },
+        {
+          "name": "frontend_context",
+          "kind": "repository_context",
+          "required": false,
+          "description": "Components, design tokens, state model, API contracts, tests, and build configuration."
+        }
+      ],
+      "output_contract": {
+        "artifact_type": "markdown",
+        "description": "Code-ready frontend implementation package.",
+        "schema_hint": "Current state, component and state boundaries, file-level changes, representative code, accessibility behavior, and tests."
+      }
+    },
+    "routing": {
+      "family_id": "agent.frontend_development",
+      "dependency_slots": [
+        {
+          "slot_id": "frontend_evidence",
+          "description": "Repository, UI, API, or test evidence used to ground implementation guidance.",
+          "allowed_types": [
+            "Tool",
+            "Skill",
+            "Resource"
+          ],
+          "top_k_per_type": 3,
+          "required": false
+        }
+      ]
+    },
+    "execution": {
+      "runtime": "prompt_agent",
+      "uri": "file://Pool/resources/agents/frontend_developer.md",
+      "execution_status": "active"
+    },
+    "utility": {
+      "latency_ms": 19000,
+      "token_cost_factor": 1.2,
+      "expected_success_rate": 0.72,
+      "successes": 0,
+      "attempts": 0
+    },
+    "provenance": {
+      "source_dataset": "VoltAgent/awesome-claude-code-subagents",
+      "source_item_id": "categories/01-core-development/frontend-developer.md",
+      "source_uri": "https://raw.githubusercontent.com/VoltAgent/awesome-claude-code-subagents/947b44ca0c58d606b084e9cb1a2389335b49278b/categories/01-core-development/frontend-developer.md",
+      "source_hash": "sha256:62babe0b5c4cea266437e83c1603c9a5fe3a6c9e6d59ac51b534212620697504",
+      "conversion_method": "manual_sgar_adaptation",
+      "confidence": 0.9,
+      "license": "MIT",
+      "utility_evidence_status": "unmeasured_declared_values_preserved"
+    },
+    "type_specific": {
+      "agent": {
+        "agent_kind": "prompt_agent",
+        "agent_card_uri": "file://Pool/resources/agents/frontend_developer.md",
+        "agent_card_hash": "sha256:62babe0b5c4cea266437e83c1603c9a5fe3a6c9e6d59ac51b534212620697504",
+        "recommended_dependency_ids": [
+          "tool.mcp.fs_search_files.v1",
+          "tool.mcp.fs_read_file.v1",
+          "skill.anthropic.frontend-design.v1",
+          "skill.anthropic.webapp-testing.v1",
+          "skill.superpowers.verification-before-completion.v1"
+        ]
+      }
+    },
+    "memory": {
+      "success_trajectories": [],
+      "failure_reflections": []
+    },
+    "type": {
+      "resource_type": "Agent",
+      "resource_tag": [
+        "Software Engineering",
+        "Frontend",
+        "Web",
+        "TypeScript"
+      ]
+    },
+    "input_contract": [
+      {
+        "name": "frontend_request",
+        "kind": "text",
+        "required": true,
+        "description": "Required UI behavior, target framework, constraints, and acceptance criteria."
+      },
+      {
+        "name": "frontend_context",
+        "kind": "repository_context",
+        "required": false,
+        "description": "Components, design tokens, state model, API contracts, tests, and build configuration."
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "markdown",
+      "description": "Code-ready frontend implementation package.",
+      "schema_hint": "Current state, component and state boundaries, file-level changes, representative code, accessibility behavior, and tests."
+    }
+  },
+  {
+    "manifest_version": "1.0",
+    "resource_id": "agent.fullstack_implementation_engineer.v1",
+    "resource_type": "Agent",
+    "status": "active",
+    "capability": {
+      "core_primitives": [
+        "Cross-Layer Implementation Planning",
+        "Code Patch Design",
+        "Migration Coordination",
+        "Acceptance-Test Traceability"
+      ],
+      "problem_space": "Turn an approved feature into a coherent data, API, backend, frontend, migration, and test implementation package grounded in repository evidence.",
+      "domain_tags": [
+        "Software Engineering",
+        "Fullstack",
+        "Implementation",
+        "Integration"
+      ]
+    },
+    "constraint": {
+      "env_requirements": [
+        "OpenAI-compatible chat-completion endpoint",
+        "Valid API key",
+        "Repository evidence required for file-specific implementation claims"
+      ],
+      "io_signature": "Input: {implementation_request: text, system_context?: repository_context} | Output: {implementation_package: markdown}",
+      "artifact_input": [
+        "text",
+        "repository_context"
+      ],
+      "artifact_output": [
+        "markdown"
+      ],
+      "operation_kinds": [
+        "inspect_input",
+        "transform_artifact",
+        "synthesize_final"
+      ]
+    },
+    "io": {
+      "input_contract": [
+        {
+          "name": "implementation_request",
+          "kind": "text",
+          "required": true,
+          "description": "Approved feature, constraints, acceptance criteria, and rollout expectations."
+        },
+        {
+          "name": "system_context",
+          "kind": "repository_context",
+          "required": false,
+          "description": "Repository tree, source excerpts, schemas, API contracts, tests, and architecture decisions."
+        }
+      ],
+      "output_contract": {
+        "artifact_type": "markdown",
+        "description": "Cross-layer implementation package with representative patches and verification.",
+        "schema_hint": "Assumptions, impacted layers, file-level changes, interfaces, migrations, rollback, and acceptance-test matrix."
+      }
+    },
+    "routing": {
+      "family_id": "agent.fullstack_implementation",
+      "dependency_slots": [
+        {
+          "slot_id": "implementation_evidence",
+          "description": "Repository and contract evidence required to produce grounded cross-layer changes.",
+          "allowed_types": [
+            "Tool",
+            "Skill",
+            "Resource"
+          ],
+          "top_k_per_type": 4,
+          "required": false
+        }
+      ]
+    },
+    "execution": {
+      "runtime": "prompt_agent",
+      "uri": "file://Pool/resources/agents/fullstack_implementation_engineer.md",
+      "execution_status": "active"
+    },
+    "utility": {
+      "latency_ms": 22000,
+      "token_cost_factor": 1.3,
+      "expected_success_rate": 0.68,
+      "successes": 0,
+      "attempts": 0
+    },
+    "provenance": {
+      "source_dataset": "VoltAgent/awesome-claude-code-subagents",
+      "source_item_id": "categories/01-core-development/fullstack-developer.md",
+      "source_uri": "https://raw.githubusercontent.com/VoltAgent/awesome-claude-code-subagents/947b44ca0c58d606b084e9cb1a2389335b49278b/categories/01-core-development/fullstack-developer.md",
+      "source_hash": "sha256:eea2a9d4b63832cd6b2881442e29c837484dbf89c25c910c317d5a0c7d61b7a0",
+      "conversion_method": "manual_sgar_adaptation",
+      "confidence": 0.9,
+      "license": "MIT",
+      "utility_evidence_status": "unmeasured_declared_values_preserved"
+    },
+    "type_specific": {
+      "agent": {
+        "agent_kind": "prompt_agent",
+        "agent_card_uri": "file://Pool/resources/agents/fullstack_implementation_engineer.md",
+        "agent_card_hash": "sha256:eea2a9d4b63832cd6b2881442e29c837484dbf89c25c910c317d5a0c7d61b7a0",
+        "recommended_dependency_ids": [
+          "tool.mcp.fs_search_files.v1",
+          "tool.mcp.fs_read_file.v1",
+          "tool.mcp.git_diff_unstaged.v1",
+          "skill.superpowers.executing-plans.v1",
+          "skill.superpowers.test-driven-development.v1",
+          "skill.superpowers.verification-before-completion.v1"
+        ]
+      }
+    },
+    "memory": {
+      "success_trajectories": [],
+      "failure_reflections": []
+    },
+    "type": {
+      "resource_type": "Agent",
+      "resource_tag": [
+        "Software Engineering",
+        "Fullstack",
+        "Implementation",
+        "Integration"
+      ]
+    },
+    "input_contract": [
+      {
+        "name": "implementation_request",
+        "kind": "text",
+        "required": true,
+        "description": "Approved feature, constraints, acceptance criteria, and rollout expectations."
+      },
+      {
+        "name": "system_context",
+        "kind": "repository_context",
+        "required": false,
+        "description": "Repository tree, source excerpts, schemas, API contracts, tests, and architecture decisions."
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "markdown",
+      "description": "Cross-layer implementation package with representative patches and verification.",
+      "schema_hint": "Assumptions, impacted layers, file-level changes, interfaces, migrations, rollback, and acceptance-test matrix."
+    }
+  },
+  {
+    "manifest_version": "1.0",
+    "resource_id": "agent.database_optimizer.v1",
+    "resource_type": "Agent",
+    "status": "active",
+    "capability": {
+      "core_primitives": [
+        "Query Optimization",
+        "Index Strategy",
+        "Schema Performance Review",
+        "Benchmark Planning"
+      ],
+      "problem_space": "Analyze database schemas, queries, execution evidence, and workload constraints to produce safe, measurable, and reversible optimization recommendations.",
+      "domain_tags": [
+        "Data Engineering",
+        "Database",
+        "SQL",
+        "Performance"
+      ]
+    },
+    "constraint": {
+      "env_requirements": [
+        "OpenAI-compatible chat-completion endpoint",
+        "Valid API key",
+        "Database evidence supplied for workload-specific claims"
+      ],
+      "io_signature": "Input: {optimization_goal: text, database_evidence?: evidence_bundle} | Output: {database_optimization_report: markdown}",
+      "artifact_input": [
+        "text",
+        "evidence_bundle"
+      ],
+      "artifact_output": [
+        "markdown"
+      ],
+      "operation_kinds": [
+        "inspect_input",
+        "synthesize_final"
+      ]
+    },
+    "io": {
+      "input_contract": [
+        {
+          "name": "optimization_goal",
+          "kind": "text",
+          "required": true,
+          "description": "Slow workload, latency target, database type, constraints, and change budget."
+        },
+        {
+          "name": "database_evidence",
+          "kind": "evidence_bundle",
+          "required": false,
+          "description": "Schemas, queries, plans, indexes, metrics, and health-check results."
+        }
+      ],
+      "output_contract": {
+        "artifact_type": "markdown",
+        "description": "Evidence-based database optimization report.",
+        "schema_hint": "Workload assumptions, bottlenecks, ranked query/index/schema recommendations, trade-offs, rollback, and benchmark plan."
+      }
+    },
+    "routing": {
+      "family_id": "agent.database_optimization",
+      "dependency_slots": [
+        {
+          "slot_id": "database_evidence",
+          "description": "Schema, query, health, or measurement evidence for database analysis.",
+          "allowed_types": [
+            "Tool",
+            "Resource"
+          ],
+          "top_k_per_type": 4,
+          "required": false
+        }
+      ]
+    },
+    "execution": {
+      "runtime": "prompt_agent",
+      "uri": "file://Pool/resources/agents/database_optimizer.md",
+      "execution_status": "active"
+    },
+    "utility": {
+      "latency_ms": 17000,
+      "token_cost_factor": 1.1,
+      "expected_success_rate": 0.72,
+      "successes": 0,
+      "attempts": 0
+    },
+    "provenance": {
+      "source_dataset": "VoltAgent/awesome-claude-code-subagents",
+      "source_item_id": "categories/05-data-ai/database-optimizer.md",
+      "source_uri": "https://raw.githubusercontent.com/VoltAgent/awesome-claude-code-subagents/947b44ca0c58d606b084e9cb1a2389335b49278b/categories/05-data-ai/database-optimizer.md",
+      "source_hash": "sha256:314ce6ae8d5eb1e2c1d68389ef92348d7453d9efcb55e9a1bee48c65b9c8496c",
+      "conversion_method": "manual_sgar_adaptation",
+      "confidence": 0.9,
+      "license": "MIT",
+      "utility_evidence_status": "unmeasured_declared_values_preserved"
+    },
+    "type_specific": {
+      "agent": {
+        "agent_kind": "prompt_agent",
+        "agent_card_uri": "file://Pool/resources/agents/database_optimizer.md",
+        "agent_card_hash": "sha256:314ce6ae8d5eb1e2c1d68389ef92348d7453d9efcb55e9a1bee48c65b9c8496c",
+        "recommended_dependency_ids": [
+          "tool.sql_ddl_to_json_schema.v1",
+          "tool.lib.sqlglot_transpile.v1",
+          "tool.mcp.fs_read_file.v1",
+          "skill.openai_plugins.supabase-postgres-best-practices-be9a8dce.v1",
+          "skill.trailofbits.dimensional-analysis.v1",
+          "skill.superpowers.systematic-debugging.v1"
+        ]
+      }
+    },
+    "memory": {
+      "success_trajectories": [],
+      "failure_reflections": []
+    },
+    "type": {
+      "resource_type": "Agent",
+      "resource_tag": [
+        "Data Engineering",
+        "Database",
+        "SQL",
+        "Performance"
+      ]
+    },
+    "input_contract": [
+      {
+        "name": "optimization_goal",
+        "kind": "text",
+        "required": true,
+        "description": "Slow workload, latency target, database type, constraints, and change budget."
+      },
+      {
+        "name": "database_evidence",
+        "kind": "evidence_bundle",
+        "required": false,
+        "description": "Schemas, queries, plans, indexes, metrics, and health-check results."
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "markdown",
+      "description": "Evidence-based database optimization report.",
+      "schema_hint": "Workload assumptions, bottlenecks, ranked query/index/schema recommendations, trade-offs, rollback, and benchmark plan."
+    }
+  },
+  {
+    "manifest_version": "1.0",
+    "resource_id": "agent.data_engineer.v1",
+    "resource_type": "Agent",
+    "status": "active",
+    "capability": {
+      "core_primitives": [
+        "Data Pipeline Design",
+        "Schema Evolution Planning",
+        "Data Quality Engineering",
+        "Backfill and Recovery Design"
+      ],
+      "problem_space": "Design reliable batch or streaming data pipelines with explicit contracts, transformations, quality controls, observability, lineage, and recovery behavior.",
+      "domain_tags": [
+        "Data Engineering",
+        "ETL",
+        "Data Quality",
+        "Pipelines"
+      ]
+    },
+    "constraint": {
+      "env_requirements": [
+        "OpenAI-compatible chat-completion endpoint",
+        "Valid API key",
+        "Source and consumer context supplied for system-specific pipeline design"
+      ],
+      "io_signature": "Input: {pipeline_requirements: text, data_context?: data_context} | Output: {data_pipeline_specification: markdown}",
+      "artifact_input": [
+        "text",
+        "data_context"
+      ],
+      "artifact_output": [
+        "markdown"
+      ],
+      "operation_kinds": [
+        "inspect_input",
+        "transform_artifact",
+        "synthesize_final"
+      ]
+    },
+    "io": {
+      "input_contract": [
+        {
+          "name": "pipeline_requirements",
+          "kind": "text",
+          "required": true,
+          "description": "Sources, consumers, transformations, freshness, scale, quality, and governance constraints."
+        },
+        {
+          "name": "data_context",
+          "kind": "data_context",
+          "required": false,
+          "description": "Samples, schemas, existing jobs, storage layout, metrics, and failure evidence."
+        }
+      ],
+      "output_contract": {
+        "artifact_type": "markdown",
+        "description": "Implementation-ready data-pipeline specification.",
+        "schema_hint": "Source-to-target flow, contracts, transformations, quality checks, scheduling, retries, lineage, privacy, and rollout."
+      }
+    },
+    "routing": {
+      "family_id": "agent.data_engineering",
+      "dependency_slots": [
+        {
+          "slot_id": "data_evidence",
+          "description": "Structured samples, schemas, or existing pipeline evidence used to ground the design.",
+          "allowed_types": [
+            "Tool",
+            "Skill",
+            "Resource"
+          ],
+          "top_k_per_type": 4,
+          "required": false
+        }
+      ]
+    },
+    "execution": {
+      "runtime": "prompt_agent",
+      "uri": "file://Pool/resources/agents/data_engineer.md",
+      "execution_status": "active"
+    },
+    "utility": {
+      "latency_ms": 18000,
+      "token_cost_factor": 1.1,
+      "expected_success_rate": 0.7,
+      "successes": 0,
+      "attempts": 0
+    },
+    "provenance": {
+      "source_dataset": "VoltAgent/awesome-claude-code-subagents",
+      "source_item_id": "categories/05-data-ai/data-engineer.md",
+      "source_uri": "https://raw.githubusercontent.com/VoltAgent/awesome-claude-code-subagents/947b44ca0c58d606b084e9cb1a2389335b49278b/categories/05-data-ai/data-engineer.md",
+      "source_hash": "sha256:ae54bc3eb8009d16daf8005678e436528f79e9d782bb11be6b549c2960ec7ab7",
+      "conversion_method": "manual_sgar_adaptation",
+      "confidence": 0.9,
+      "license": "MIT",
+      "utility_evidence_status": "unmeasured_declared_values_preserved"
+    },
+    "type_specific": {
+      "agent": {
+        "agent_kind": "prompt_agent",
+        "agent_card_uri": "file://Pool/resources/agents/data_engineer.md",
+        "agent_card_hash": "sha256:ae54bc3eb8009d16daf8005678e436528f79e9d782bb11be6b549c2960ec7ab7",
+        "recommended_dependency_ids": [
+          "tool.lib.genson_schema.v1",
+          "tool.sql_ddl_to_json_schema.v1",
+          "tool.mcp.fs_read_file.v1",
+          "skill.trailofbits.modern-python.v1",
+          "skill.openai_plugins.dashboard-expert.v1",
+          "skill.superpowers.writing-plans.v1"
+        ]
+      }
+    },
+    "memory": {
+      "success_trajectories": [],
+      "failure_reflections": []
+    },
+    "type": {
+      "resource_type": "Agent",
+      "resource_tag": [
+        "Data Engineering",
+        "ETL",
+        "Data Quality",
+        "Pipelines"
+      ]
+    },
+    "input_contract": [
+      {
+        "name": "pipeline_requirements",
+        "kind": "text",
+        "required": true,
+        "description": "Sources, consumers, transformations, freshness, scale, quality, and governance constraints."
+      },
+      {
+        "name": "data_context",
+        "kind": "data_context",
+        "required": false,
+        "description": "Samples, schemas, existing jobs, storage layout, metrics, and failure evidence."
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "markdown",
+      "description": "Implementation-ready data-pipeline specification.",
+      "schema_hint": "Source-to-target flow, contracts, transformations, quality checks, scheduling, retries, lineage, privacy, and rollout."
+    }
+  },
+  {
+    "manifest_version": "1.0",
+    "resource_id": "agent.performance_engineer.v1",
+    "resource_type": "Agent",
+    "status": "active",
+    "capability": {
+      "core_primitives": [
+        "Performance Diagnosis",
+        "Benchmark Design",
+        "Bottleneck Prioritization",
+        "Regression Budget Design"
+      ],
+      "problem_space": "Diagnose application, API, database, and infrastructure bottlenecks from reproducible measurements and produce a correctness-preserving optimization plan.",
+      "domain_tags": [
+        "Software Engineering",
+        "Performance",
+        "Benchmarking",
+        "Reliability"
+      ]
+    },
+    "constraint": {
+      "env_requirements": [
+        "OpenAI-compatible chat-completion endpoint",
+        "Valid API key",
+        "Measurement evidence required for claims about observed bottlenecks"
+      ],
+      "io_signature": "Input: {performance_goal: text, measurement_evidence?: evidence_bundle} | Output: {performance_report: markdown}",
+      "artifact_input": [
+        "text",
+        "evidence_bundle"
+      ],
+      "artifact_output": [
+        "markdown"
+      ],
+      "operation_kinds": [
+        "inspect_input",
+        "synthesize_final"
+      ]
+    },
+    "io": {
+      "input_contract": [
+        {
+          "name": "performance_goal",
+          "kind": "text",
+          "required": true,
+          "description": "Target workload, latency or throughput budget, environment, and constraints."
+        },
+        {
+          "name": "measurement_evidence",
+          "kind": "evidence_bundle",
+          "required": false,
+          "description": "Benchmark outputs, profiles, traces, resource metrics, and architecture context."
+        }
+      ],
+      "output_contract": {
+        "artifact_type": "markdown",
+        "description": "Evidence-based performance diagnosis and optimization plan.",
+        "schema_hint": "Baseline, evidence quality, bottleneck hypotheses, ranked experiments, resource trade-offs, regression tests, and rollback."
+      }
+    },
+    "routing": {
+      "family_id": "agent.performance_engineering",
+      "dependency_slots": [
+        {
+          "slot_id": "performance_evidence",
+          "description": "Benchmark, profile, or system measurement evidence used for diagnosis.",
+          "allowed_types": [
+            "Tool",
+            "Resource"
+          ],
+          "top_k_per_type": 4,
+          "required": false
+        }
+      ]
+    },
+    "execution": {
+      "runtime": "prompt_agent",
+      "uri": "file://Pool/resources/agents/performance_engineer.md",
+      "execution_status": "active"
+    },
+    "utility": {
+      "latency_ms": 17000,
+      "token_cost_factor": 1.1,
+      "expected_success_rate": 0.7,
+      "successes": 0,
+      "attempts": 0
+    },
+    "provenance": {
+      "source_dataset": "VoltAgent/awesome-claude-code-subagents",
+      "source_item_id": "categories/04-quality-security/performance-engineer.md",
+      "source_uri": "https://raw.githubusercontent.com/VoltAgent/awesome-claude-code-subagents/947b44ca0c58d606b084e9cb1a2389335b49278b/categories/04-quality-security/performance-engineer.md",
+      "source_hash": "sha256:9e00e108790a407ededac1d14bcfa896b460b8f17b0bbb11646b1363f89bbe68",
+      "conversion_method": "manual_sgar_adaptation",
+      "confidence": 0.9,
+      "license": "MIT",
+      "utility_evidence_status": "unmeasured_declared_values_preserved"
+    },
+    "type_specific": {
+      "agent": {
+        "agent_kind": "prompt_agent",
+        "agent_card_uri": "file://Pool/resources/agents/performance_engineer.md",
+        "agent_card_hash": "sha256:9e00e108790a407ededac1d14bcfa896b460b8f17b0bbb11646b1363f89bbe68",
+        "recommended_dependency_ids": [
+          "tool.dns_query_latency_checker.v1",
+          "tool.system_ram_free_checker.v1",
+          "skill.trailofbits.dimensional-analysis.v1",
+          "skill.trailofbits.code-maturity-assessor.v1",
+          "skill.trailofbits.modern-python.v1"
+        ]
+      }
+    },
+    "memory": {
+      "success_trajectories": [],
+      "failure_reflections": []
+    },
+    "type": {
+      "resource_type": "Agent",
+      "resource_tag": [
+        "Software Engineering",
+        "Performance",
+        "Benchmarking",
+        "Reliability"
+      ]
+    },
+    "input_contract": [
+      {
+        "name": "performance_goal",
+        "kind": "text",
+        "required": true,
+        "description": "Target workload, latency or throughput budget, environment, and constraints."
+      },
+      {
+        "name": "measurement_evidence",
+        "kind": "evidence_bundle",
+        "required": false,
+        "description": "Benchmark outputs, profiles, traces, resource metrics, and architecture context."
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "markdown",
+      "description": "Evidence-based performance diagnosis and optimization plan.",
+      "schema_hint": "Baseline, evidence quality, bottleneck hypotheses, ranked experiments, resource trade-offs, regression tests, and rollback."
+    }
+  },
+  {
+    "manifest_version": "1.0",
+    "resource_id": "agent.devops_incident_responder.v1",
+    "resource_type": "Agent",
+    "status": "active",
+    "capability": {
+      "core_primitives": [
+        "Incident Triage",
+        "Hypothesis-Driven Diagnosis",
+        "Containment Planning",
+        "Postmortem Analysis"
+      ],
+      "problem_space": "Turn alerts, telemetry, deployment history, and service context into a safe incident diagnosis, recovery plan, and evidence-qualified postmortem.",
+      "domain_tags": [
+        "Infrastructure",
+        "DevOps",
+        "Incident Response",
+        "Reliability"
+      ]
+    },
+    "constraint": {
+      "env_requirements": [
+        "OpenAI-compatible chat-completion endpoint",
+        "Valid API key",
+        "Telemetry or operator evidence required for incident-specific conclusions"
+      ],
+      "io_signature": "Input: {incident_description: text, telemetry_evidence?: evidence_bundle} | Output: {incident_report: markdown}",
+      "artifact_input": [
+        "text",
+        "evidence_bundle"
+      ],
+      "artifact_output": [
+        "markdown"
+      ],
+      "operation_kinds": [
+        "inspect_input",
+        "synthesize_final"
+      ]
+    },
+    "io": {
+      "input_contract": [
+        {
+          "name": "incident_description",
+          "kind": "text",
+          "required": true,
+          "description": "Symptoms, impact, timeline, affected services, and current response state."
+        },
+        {
+          "name": "telemetry_evidence",
+          "kind": "evidence_bundle",
+          "required": false,
+          "description": "Logs, metrics, health checks, deployment diffs, topology, and operator notes."
+        }
+      ],
+      "output_contract": {
+        "artifact_type": "markdown",
+        "description": "Incident triage, recovery, and postmortem report.",
+        "schema_hint": "Severity, timeline, facts, missing evidence, ranked hypotheses, containment, recovery, verification, root cause, and prevention."
+      }
+    },
+    "routing": {
+      "family_id": "agent.incident_response",
+      "dependency_slots": [
+        {
+          "slot_id": "telemetry",
+          "description": "Health, deployment, environment, or messaging-system evidence for incident diagnosis.",
+          "allowed_types": [
+            "Tool",
+            "Resource"
+          ],
+          "top_k_per_type": 5,
+          "required": false
+        }
+      ]
+    },
+    "execution": {
+      "runtime": "prompt_agent",
+      "uri": "file://Pool/resources/agents/devops_incident_responder.md",
+      "execution_status": "active"
+    },
+    "utility": {
+      "latency_ms": 15000,
+      "token_cost_factor": 1.2,
+      "expected_success_rate": 0.68,
+      "successes": 0,
+      "attempts": 0
+    },
+    "provenance": {
+      "source_dataset": "VoltAgent/awesome-claude-code-subagents",
+      "source_item_id": "categories/03-infrastructure/devops-incident-responder.md",
+      "source_uri": "https://raw.githubusercontent.com/VoltAgent/awesome-claude-code-subagents/947b44ca0c58d606b084e9cb1a2389335b49278b/categories/03-infrastructure/devops-incident-responder.md",
+      "source_hash": "sha256:f1a535816fd10b103d250b8e98ed860c2fc621aecde55362fe8f44ca38c34ff7",
+      "conversion_method": "manual_sgar_adaptation",
+      "confidence": 0.9,
+      "license": "MIT",
+      "utility_evidence_status": "unmeasured_declared_values_preserved"
+    },
+    "type_specific": {
+      "agent": {
+        "agent_kind": "prompt_agent",
+        "agent_card_uri": "file://Pool/resources/agents/devops_incident_responder.md",
+        "agent_card_hash": "sha256:f1a535816fd10b103d250b8e98ed860c2fc621aecde55362fe8f44ca38c34ff7",
+        "recommended_dependency_ids": [
+          "tool.http_headers_security_auditor.v1",
+          "tool.system_ram_free_checker.v1",
+          "tool.mcp.git_diff_unstaged.v1",
+          "tool.mcp.fs_read_file.v1",
+          "skill.superpowers.finishing-a-development-branch.v1",
+          "skill.superpowers.using-git-worktrees.v1",
+          "skill.trailofbits.secure-workflow-guide.v1"
+        ]
+      }
+    },
+    "memory": {
+      "success_trajectories": [],
+      "failure_reflections": []
+    },
+    "type": {
+      "resource_type": "Agent",
+      "resource_tag": [
+        "Infrastructure",
+        "DevOps",
+        "Incident Response",
+        "Reliability"
+      ]
+    },
+    "input_contract": [
+      {
+        "name": "incident_description",
+        "kind": "text",
+        "required": true,
+        "description": "Symptoms, impact, timeline, affected services, and current response state."
+      },
+      {
+        "name": "telemetry_evidence",
+        "kind": "evidence_bundle",
+        "required": false,
+        "description": "Logs, metrics, health checks, deployment diffs, topology, and operator notes."
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "markdown",
+      "description": "Incident triage, recovery, and postmortem report.",
+      "schema_hint": "Severity, timeline, facts, missing evidence, ranked hypotheses, containment, recovery, verification, root cause, and prevention."
+    }
+  },
+  {
+    "manifest_version": "1.0",
+    "resource_id": "agent.accessibility_tester.v1",
+    "resource_type": "Agent",
+    "status": "active",
+    "capability": {
+      "core_primitives": [
+        "Accessibility Audit",
+        "WCAG-Oriented Review",
+        "Keyboard and Focus Testing",
+        "Remediation Verification Design"
+      ],
+      "problem_space": "Evaluate supplied UI evidence for accessibility barriers and produce evidence-qualified findings, remediation guidance, and manual or automated verification steps.",
+      "domain_tags": [
+        "Quality Assurance",
+        "Accessibility",
+        "Web",
+        "WCAG"
+      ]
+    },
+    "constraint": {
+      "env_requirements": [
+        "OpenAI-compatible chat-completion endpoint",
+        "Valid API key",
+        "UI evidence required for page- or flow-specific findings"
+      ],
+      "io_signature": "Input: {audit_request: text, ui_evidence?: evidence_bundle} | Output: {accessibility_report: markdown}",
+      "artifact_input": [
+        "text",
+        "evidence_bundle"
+      ],
+      "artifact_output": [
+        "markdown"
+      ],
+      "operation_kinds": [
+        "inspect_input",
+        "synthesize_final"
+      ]
+    },
+    "io": {
+      "input_contract": [
+        {
+          "name": "audit_request",
+          "kind": "text",
+          "required": true,
+          "description": "Target pages or flows, conformance target, supported platforms, and scope."
+        },
+        {
+          "name": "ui_evidence",
+          "kind": "evidence_bundle",
+          "required": false,
+          "description": "Markup, components, screenshots, browser results, design tokens, and flow documentation."
+        }
+      ],
+      "output_contract": {
+        "artifact_type": "markdown",
+        "description": "Accessibility findings and verification report.",
+        "schema_hint": "Scope, evidence, untested areas, user impact, severity, relevant criteria, reproduction, remediation, and verification."
+      }
+    },
+    "routing": {
+      "family_id": "agent.accessibility_testing",
+      "dependency_slots": [
+        {
+          "slot_id": "ui_evidence",
+          "description": "Markup, browser, component, or test evidence used for the accessibility review.",
+          "allowed_types": [
+            "Tool",
+            "Skill",
+            "Resource"
+          ],
+          "top_k_per_type": 4,
+          "required": false
+        }
+      ]
+    },
+    "execution": {
+      "runtime": "prompt_agent",
+      "uri": "file://Pool/resources/agents/accessibility_tester.md",
+      "execution_status": "active"
+    },
+    "utility": {
+      "latency_ms": 15000,
+      "token_cost_factor": 1,
+      "expected_success_rate": 0.74,
+      "successes": 0,
+      "attempts": 0
+    },
+    "provenance": {
+      "source_dataset": "VoltAgent/awesome-claude-code-subagents",
+      "source_item_id": "categories/04-quality-security/accessibility-tester.md",
+      "source_uri": "https://raw.githubusercontent.com/VoltAgent/awesome-claude-code-subagents/947b44ca0c58d606b084e9cb1a2389335b49278b/categories/04-quality-security/accessibility-tester.md",
+      "source_hash": "sha256:841e82f8f5e682316eca6cb73d6eb3ff483f39dd79988735d2e77e58c54ba9f0",
+      "conversion_method": "manual_sgar_adaptation",
+      "confidence": 0.9,
+      "license": "MIT",
+      "utility_evidence_status": "unmeasured_declared_values_preserved"
+    },
+    "type_specific": {
+      "agent": {
+        "agent_kind": "prompt_agent",
+        "agent_card_uri": "file://Pool/resources/agents/accessibility_tester.md",
+        "agent_card_hash": "sha256:841e82f8f5e682316eca6cb73d6eb3ff483f39dd79988735d2e77e58c54ba9f0",
+        "recommended_dependency_ids": [
+          "tool.mcp.fs_read_file.v1",
+          "skill.anthropic.frontend-design.v1",
+          "skill.anthropic.webapp-testing.v1",
+          "skill.superpowers.verification-before-completion.v1"
+        ]
+      }
+    },
+    "memory": {
+      "success_trajectories": [],
+      "failure_reflections": []
+    },
+    "type": {
+      "resource_type": "Agent",
+      "resource_tag": [
+        "Quality Assurance",
+        "Accessibility",
+        "Web",
+        "WCAG"
+      ]
+    },
+    "input_contract": [
+      {
+        "name": "audit_request",
+        "kind": "text",
+        "required": true,
+        "description": "Target pages or flows, conformance target, supported platforms, and scope."
+      },
+      {
+        "name": "ui_evidence",
+        "kind": "evidence_bundle",
+        "required": false,
+        "description": "Markup, components, screenshots, browser results, design tokens, and flow documentation."
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "markdown",
+      "description": "Accessibility findings and verification report.",
+      "schema_hint": "Scope, evidence, untested areas, user impact, severity, relevant criteria, reproduction, remediation, and verification."
+    }
+  },
+  {
+    "manifest_version": "1.0",
+    "resource_id": "agent.refactoring_specialist.v1",
+    "resource_type": "Agent",
+    "status": "active",
+    "capability": {
+      "core_primitives": [
+        "Code-Smell Analysis",
+        "Behavior-Preserving Refactoring",
+        "Modularity Improvement",
+        "Regression Protection"
+      ],
+      "problem_space": "Transform complex, duplicated, or poorly structured code into a maintainable design while preserving observable behavior and public contracts.",
+      "domain_tags": [
+        "Software Engineering",
+        "Refactoring",
+        "Maintainability",
+        "Code Quality"
+      ]
+    },
+    "constraint": {
+      "env_requirements": [
+        "OpenAI-compatible chat-completion endpoint",
+        "Valid API key",
+        "Repository and test evidence required for code-specific refactoring claims"
+      ],
+      "io_signature": "Input: {refactoring_goal: text, code_context?: repository_context} | Output: {refactoring_package: markdown}",
+      "artifact_input": [
+        "text",
+        "repository_context"
+      ],
+      "artifact_output": [
+        "markdown"
+      ],
+      "operation_kinds": [
+        "inspect_input",
+        "transform_artifact",
+        "synthesize_final"
+      ]
+    },
+    "io": {
+      "input_contract": [
+        {
+          "name": "refactoring_goal",
+          "kind": "text",
+          "required": true,
+          "description": "Maintainability problem, scope, constraints, and behavior that must remain stable."
+        },
+        {
+          "name": "code_context",
+          "kind": "repository_context",
+          "required": false,
+          "description": "Source excerpts, dependency graphs, tests, static-analysis output, and change history."
+        }
+      ],
+      "output_contract": {
+        "artifact_type": "markdown",
+        "description": "Behavior-preserving refactoring package.",
+        "schema_hint": "Smell evidence, invariants, ordered transformations, file impact, representative patches, regression tests, and rollback."
+      }
+    },
+    "routing": {
+      "family_id": "agent.refactoring",
+      "dependency_slots": [
+        {
+          "slot_id": "code_evidence",
+          "description": "Source, dependency, or test evidence used to ground the refactoring proposal.",
+          "allowed_types": [
+            "Tool",
+            "Skill",
+            "Resource"
+          ],
+          "top_k_per_type": 4,
+          "required": false
+        }
+      ]
+    },
+    "execution": {
+      "runtime": "prompt_agent",
+      "uri": "file://Pool/resources/agents/refactoring_specialist.md",
+      "execution_status": "active"
+    },
+    "utility": {
+      "latency_ms": 19000,
+      "token_cost_factor": 1.2,
+      "expected_success_rate": 0.7,
+      "successes": 0,
+      "attempts": 0
+    },
+    "provenance": {
+      "source_dataset": "VoltAgent/awesome-claude-code-subagents",
+      "source_item_id": "categories/06-developer-experience/refactoring-specialist.md",
+      "source_uri": "https://raw.githubusercontent.com/VoltAgent/awesome-claude-code-subagents/947b44ca0c58d606b084e9cb1a2389335b49278b/categories/06-developer-experience/refactoring-specialist.md",
+      "source_hash": "sha256:2750f559a5c6b9fbeb82f18c078c126a6868b1920b37aba6561dda9fbfbea2bb",
+      "conversion_method": "manual_sgar_adaptation",
+      "confidence": 0.9,
+      "license": "MIT",
+      "utility_evidence_status": "unmeasured_declared_values_preserved"
+    },
+    "type_specific": {
+      "agent": {
+        "agent_kind": "prompt_agent",
+        "agent_card_uri": "file://Pool/resources/agents/refactoring_specialist.md",
+        "agent_card_hash": "sha256:2750f559a5c6b9fbeb82f18c078c126a6868b1920b37aba6561dda9fbfbea2bb",
+        "recommended_dependency_ids": [
+          "tool.mcp.fs_search_files.v1",
+          "tool.mcp.fs_read_file.v1",
+          "skill.trailofbits.differential-review.v1",
+          "skill.superpowers.test-driven-development.v1",
+          "skill.superpowers.verification-before-completion.v1"
+        ]
+      }
+    },
+    "memory": {
+      "success_trajectories": [],
+      "failure_reflections": []
+    },
+    "type": {
+      "resource_type": "Agent",
+      "resource_tag": [
+        "Software Engineering",
+        "Refactoring",
+        "Maintainability",
+        "Code Quality"
+      ]
+    },
+    "input_contract": [
+      {
+        "name": "refactoring_goal",
+        "kind": "text",
+        "required": true,
+        "description": "Maintainability problem, scope, constraints, and behavior that must remain stable."
+      },
+      {
+        "name": "code_context",
+        "kind": "repository_context",
+        "required": false,
+        "description": "Source excerpts, dependency graphs, tests, static-analysis output, and change history."
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "markdown",
+      "description": "Behavior-preserving refactoring package.",
+      "schema_hint": "Smell evidence, invariants, ordered transformations, file impact, representative patches, regression tests, and rollback."
+    }
+  },
+  {
+    "manifest_version": "1.0",
+    "resource_id": "agent.product_manager.v1",
+    "resource_type": "Agent",
+    "status": "active",
+    "capability": {
+      "core_primitives": [
+        "Product Strategy",
+        "Feature Prioritization",
+        "Roadmap Planning",
+        "Outcome Metric Design"
+      ],
+      "problem_space": "Convert user needs, evidence, business constraints, and delivery capacity into a focused product decision with explicit trade-offs and validation.",
+      "domain_tags": [
+        "Product",
+        "Strategy",
+        "Prioritization",
+        "Business"
+      ]
+    },
+    "constraint": {
+      "env_requirements": [
+        "OpenAI-compatible chat-completion endpoint",
+        "Valid API key",
+        "Product evidence required for factual market, user, or metric claims"
+      ],
+      "io_signature": "Input: {product_question: text, product_evidence?: evidence_bundle} | Output: {product_brief: markdown}",
+      "artifact_input": [
+        "text",
+        "evidence_bundle"
+      ],
+      "artifact_output": [
+        "markdown"
+      ],
+      "operation_kinds": [
+        "inspect_input",
+        "synthesize_final"
+      ]
+    },
+    "io": {
+      "input_contract": [
+        {
+          "name": "product_question",
+          "kind": "text",
+          "required": true,
+          "description": "Product problem, target users, business context, constraints, and decision required."
+        },
+        {
+          "name": "product_evidence",
+          "kind": "evidence_bundle",
+          "required": false,
+          "description": "Research, metrics, feedback, requirements, market evidence, and technical constraints."
+        }
+      ],
+      "output_contract": {
+        "artifact_type": "markdown",
+        "description": "Evidence-traceable product decision brief.",
+        "schema_hint": "User problem, evidence, assumptions, options, prioritization, scope, metrics, validation, dependencies, risks, and decision log."
+      }
+    },
+    "routing": {
+      "family_id": "agent.product_management",
+      "dependency_slots": [
+        {
+          "slot_id": "product_evidence",
+          "description": "Research, metric, customer, repository, or market evidence used for product decisions.",
+          "allowed_types": [
+            "Tool",
+            "Skill",
+            "Resource"
+          ],
+          "top_k_per_type": 4,
+          "required": false
+        }
+      ]
+    },
+    "execution": {
+      "runtime": "prompt_agent",
+      "uri": "file://Pool/resources/agents/product_manager.md",
+      "execution_status": "active"
+    },
+    "utility": {
+      "latency_ms": 15000,
+      "token_cost_factor": 1,
+      "expected_success_rate": 0.74,
+      "successes": 0,
+      "attempts": 0
+    },
+    "provenance": {
+      "source_dataset": "VoltAgent/awesome-claude-code-subagents",
+      "source_item_id": "categories/08-business-product/product-manager.md",
+      "source_uri": "https://raw.githubusercontent.com/VoltAgent/awesome-claude-code-subagents/947b44ca0c58d606b084e9cb1a2389335b49278b/categories/08-business-product/product-manager.md",
+      "source_hash": "sha256:dd3a7a79e80fd211df49a2935b7c658b8f90e824c494db1faccc5b4996e53117",
+      "conversion_method": "manual_sgar_adaptation",
+      "confidence": 0.9,
+      "license": "MIT",
+      "utility_evidence_status": "unmeasured_declared_values_preserved"
+    },
+    "type_specific": {
+      "agent": {
+        "agent_kind": "prompt_agent",
+        "agent_card_uri": "file://Pool/resources/agents/product_manager.md",
+        "agent_card_hash": "sha256:dd3a7a79e80fd211df49a2935b7c658b8f90e824c494db1faccc5b4996e53117",
+        "recommended_dependency_ids": [
+          "tool.mcp.fs_read_file.v1",
+          "tool.mcp.fs_search_files.v1",
+          "tool.markdown_table_extractor.v1",
+          "skill.trailofbits.ask-questions-if-underspecified.v1",
+          "skill.superpowers.brainstorming.v1",
+          "skill.superpowers.writing-plans.v1"
+        ]
+      }
+    },
+    "memory": {
+      "success_trajectories": [],
+      "failure_reflections": []
+    },
+    "type": {
+      "resource_type": "Agent",
+      "resource_tag": [
+        "Product",
+        "Strategy",
+        "Prioritization",
+        "Business"
+      ]
+    },
+    "input_contract": [
+      {
+        "name": "product_question",
+        "kind": "text",
+        "required": true,
+        "description": "Product problem, target users, business context, constraints, and decision required."
+      },
+      {
+        "name": "product_evidence",
+        "kind": "evidence_bundle",
+        "required": false,
+        "description": "Research, metrics, feedback, requirements, market evidence, and technical constraints."
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "markdown",
+      "description": "Evidence-traceable product decision brief.",
+      "schema_hint": "User problem, evidence, assumptions, options, prioritization, scope, metrics, validation, dependencies, risks, and decision log."
+    }
+  }
+]

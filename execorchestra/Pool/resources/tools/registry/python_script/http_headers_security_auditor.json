@@ -1,0 +1,172 @@
+{
+  "manifest_version": "1.0",
+  "resource_id": "tool.http_headers_security_auditor.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Fetch one URL and report presence of six fixed HTTP security response headers",
+    "description": "Prefixes scheme-less input with HTTPS, performs a redirect-following GET, and reports which of six recognized header names are present at the final response. The score is only a presence count and does not validate header values or security effectiveness.",
+    "core_primitives": [
+      "fetch_http_response_with_redirects",
+      "check_fixed_security_header_presence",
+      "count_present_security_headers"
+    ],
+    "problem_space": "Coarse single-response inventory of six HTTP security header names; not policy-value validation, vulnerability certification, TLS auditing, CORS analysis, browser behavior simulation, or comprehensive web security testing.",
+    "domain_tags": [
+      "network-security",
+      "web-development",
+      "security-audit"
+    ]
+  },
+  "constraint": {
+    "env_requirements": [
+      "Python >= 3.6",
+      "requests",
+      "network access to the target and redirect destinations"
+    ],
+    "io_signature": "Input: one required HTTP(S) URL or scheme-less host/path string; output: JSON with final URL, HTTP status, fixed present/missing header sets, and a presence-count score, or a request error.",
+    "accepted_inputs": [
+      "an absolute http:// or https:// URL",
+      "a scheme-less host or host/path string that should be fetched over https://"
+    ],
+    "output_shape": "Successful HTTP exchange, including 4xx/5xx: {status: \"success\", tool: \"requests\", url: string, status_code: integer, present_security_headers: object, missing_security_headers: string[], score: string}; url is the final response URL, present values are raw strings, and score is `<present count>/6`. Request failure: {status: \"error\", tool: \"requests\", url: string, message: string} and exit 1. Missing argument prints usage to stderr and exits 1 without JSON.",
+    "limitations": [
+      "checks presence only for Strict-Transport-Security, Content-Security-Policy, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, and Permissions-Policy; values are not parsed or judged",
+      "the score is a six-header presence ratio, not a security grade, vulnerability result, compliance decision, or proof of browser protection",
+      "performs a GET with redirects enabled and Requests' default full-response download behavior; there is no method, request-header, redirect-count, body-size, or target-network restriction",
+      "uses a 20-second Requests timeout rather than a guaranteed total deadline, treats HTTP error statuses as successful exchanges, and does not inspect CORS or TLS configuration"
+    ],
+    "artifact_input": [
+      "url"
+    ],
+    "artifact_output": [
+      "json"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "url",
+        "kind": "string",
+        "required": true,
+        "cli_position": 1
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "JSON presence inventory for six fixed security headers at the final GET response URL, with HTTP status and a non-semantic count score.",
+      "json_schema": {
+        "description": "Native JSON representation only; no field or task-delivery guarantee.",
+        "type": [
+          "object",
+          "array",
+          "string",
+          "number",
+          "boolean",
+          "null"
+        ]
+      },
+      "native_json_contract_scope": "value_only"
+    }
+  },
+  "routing": {
+    "family": "http-fixed-security-header-presence-audit",
+    "intent_tags": [
+      "check whether common HTTP security headers are present",
+      "inventory six fixed security headers from a URL response"
+    ],
+    "negative_intents": [
+      "prove header policies are valid secure or exploitable",
+      "inspect CORS headers or send a preflight OPTIONS request",
+      "audit TLS certificates ciphers application vulnerabilities or full web compliance"
+    ],
+    "dependency_slots": []
+  },
+  "execution": {
+    "runtime": "python_script",
+    "uri": "file://Pool/resources/tools/script/http_headers_security_auditor.py",
+    "execution_status": "active"
+  },
+  "utility": {
+    "latency_ms": 100,
+    "token_cost_factor": 0.01,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://requests.readthedocs.io",
+    "license": "Apache-2.0",
+    "backed_by": "HTTP security-header audit via requests",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:a9f202353f9aa3da7f24d69f32731054835218de453b2d6ffc7ea1de6c1056f7",
+    "local_implementation_uri": "file://Pool/resources/tools/script/http_headers_security_auditor.py",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/script/_sgar_cli.py": "sha256:42368f8d49cb6364ad3aeaac6d0f9602adc12cb29fea49322fd488400698b6b9"
+    }
+  },
+  "type_specific": {
+    "tool": {
+      "tool_kind": "local_script",
+      "language": "python",
+      "deterministic": false
+    }
+  },
+  "memory": {
+    "success_trajectories": [],
+    "failure_reflections": []
+  },
+  "type": {
+    "resource_type": "Tool",
+    "resource_tag": [
+      "network-security",
+      "web-development",
+      "security-audit"
+    ]
+  },
+  "input_contract": [
+    {
+      "name": "url",
+      "kind": "string",
+      "required": true,
+      "cli_position": 1
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "json",
+    "description": "JSON presence inventory for six fixed security headers at the final GET response URL, with HTTP status and a non-semantic count score.",
+    "json_schema": {
+      "description": "Native JSON representation only; no field or task-delivery guarantee.",
+      "type": [
+        "object",
+        "array",
+        "string",
+        "number",
+        "boolean",
+        "null"
+      ]
+    },
+    "native_json_contract_scope": "value_only"
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [
+      {
+        "name": "requests",
+        "version": "==2.32.3",
+        "required": true
+      }
+    ],
+    "node_packages": [],
+    "system_packages": [],
+    "commands": [],
+    "env_vars": [],
+    "network_required": true,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "python_compatibility": ">=3.11,<4"
+  }
+}

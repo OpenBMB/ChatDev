@@ -1,0 +1,197 @@
+{
+  "manifest_version": "v2",
+  "resource_id": "tool.portable_write_text.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Create or overwrite one local text file with supplied complete contents.",
+    "description": "Write supplied complete UTF-8 text to an explicit workspace file using only the task Python standard library.",
+    "domain_tags": [
+      "filesystem",
+      "file-writing",
+      "artifact-creation"
+    ],
+    "core_primitives": [
+      "write_complete_text_file",
+      "create_text_artifact",
+      "overwrite_file_contents"
+    ],
+    "operation_kinds": [
+      "write_complete_text_file"
+    ],
+    "problem_space": "Create or replace a complete local text artifact at a known path. This is whole-file content mutation, distinct from precise replacement inside an existing file, path relocation, and all read-only filesystem inspection.",
+    "execution_semantics": {
+      "determinism": "deterministic",
+      "side_effects": "declared",
+      "effect_targets": [
+        "task_workspace"
+      ],
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  "constraint": {
+    "io_signature": "Input: destination workspace file path and complete UTF-8 text content. Output: JSON success receipt.",
+    "accepted_inputs": [
+      "a writable local destination path within allowed roots",
+      "complete text content to persist"
+    ],
+    "output_shape": "JSON status and write acknowledgment without the file content or path.",
+    "limitations": [
+      "does not require or preserve an old-text match for targeted edits",
+      "does not read, search, move, or list files"
+    ],
+    "materialized_artifact_types": [
+      "plaintext",
+      "markdown",
+      "code",
+      "csv",
+      "json"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "path",
+        "kind": "string",
+        "required": true,
+        "cli_position": 1
+      },
+      {
+        "name": "content",
+        "kind": "string",
+        "required": true,
+        "cli_position": 2
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "Safe local text-file write receipt",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "const": "success"
+          },
+          "written": {
+            "type": "boolean",
+            "const": true
+          }
+        },
+        "required": [
+          "status",
+          "written"
+        ],
+        "additionalProperties": false
+      },
+      "result_status": {
+        "payload_path": "status",
+        "success_values": [
+          "success"
+        ],
+        "failure_values": [
+          "error"
+        ]
+      }
+    }
+  },
+  "routing": {
+    "family": "filesystem-mutation",
+    "intent_tags": [
+      "write a text file",
+      "create an output artifact",
+      "overwrite a file with content"
+    ],
+    "negative_intents": [
+      "replace exact text in an existing file",
+      "move or rename a file",
+      "read a file"
+    ]
+  },
+  "execution": {
+    "runtime": "python_script",
+    "uri": "file://Pool/resources/tools/script/portable_write_text.py",
+    "execution_status": "active"
+  },
+  "utility": {
+    "latency_ms": 300.0,
+    "token_cost_factor": 0.02,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "S-GAR portable tool implementation",
+    "license": "internal",
+    "backed_by": "Python standard library",
+    "recognized_public_tool": false,
+    "source_hash": "sha256:dd991bd14fe9738103519fd1c9875a3a3f62512d12ad4cc46918c63fc624bcb3",
+    "local_implementation_uri": "file://Pool/resources/tools/script/portable_write_text.py"
+  },
+  "type_specific": {},
+  "type": {
+    "resource_type": "Tool"
+  },
+  "input_contract": [
+    {
+      "name": "path",
+      "kind": "string",
+      "required": true,
+      "cli_position": 1
+    },
+    {
+      "name": "content",
+      "kind": "string",
+      "required": true,
+      "cli_position": 2
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "json",
+    "description": "Safe local text-file write receipt",
+    "schema": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "const": "success"
+        },
+        "written": {
+          "type": "boolean",
+          "const": true
+        }
+      },
+      "required": [
+        "status",
+        "written"
+      ],
+      "additionalProperties": false
+    },
+    "result_status": {
+      "payload_path": "status",
+      "success_values": [
+        "success"
+      ],
+      "failure_values": [
+        "error"
+      ]
+    }
+  },
+  "runtime_requirements": {
+    "runtime_profile": "host-python-stdlib",
+    "python": "",
+    "python_packages": [],
+    "node_packages": [],
+    "system_packages": [],
+    "commands": [
+      "python3"
+    ],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0
+  }
+}

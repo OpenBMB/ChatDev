@@ -1,0 +1,174 @@
+{
+  "manifest_version": "1.0",
+  "resource_id": "tool.go_test_coverage.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Run `go test -cover ./...` from a Go project path and return combined textual test and per-package coverage output",
+    "description": "Uses a supplied directory as the working directory or a supplied file's parent, then compiles and runs all recursively matched Go packages with basic coverage reporting. It returns nonblank stdout/stderr lines and a passed boolean, but no coverage profile or parsed metrics.",
+    "core_primitives": [
+      "run_recursive_go_tests_with_cover",
+      "capture_per_package_coverage_text",
+      "report_go_test_pass_boolean"
+    ],
+    "problem_space": "Execution of recursive Go package tests with basic `-cover` text; not static coverage analysis, coverprofile generation, line-level uncovered-code mapping, structured metric extraction, or a no-execution report reader.",
+    "domain_tags": [
+      "Go",
+      "testing",
+      "software-engineering"
+    ]
+  },
+  "constraint": {
+    "env_requirements": [
+      "Python >= 3.6",
+      "go executable and a compatible Go toolchain",
+      "project dependencies and any runtime services required by the tests"
+    ],
+    "io_signature": "Input: one required existing Go project directory or file whose parent becomes the working directory; output: JSON with Go's exit code, pass boolean, and combined nonblank stdout/stderr lines.",
+    "accepted_inputs": [
+      "an existing Go module or package directory from which `go test -cover ./...` can run",
+      "an existing file path whose parent directory should be used as the Go test working directory"
+    ],
+    "output_shape": "After any completed Go process: {status: \"success\", tool: \"go test\", target: string, exit_code: integer, passed: boolean, output: string[]}; output is nonblank lines from stdout followed by stderr, and passed is true only for exit_code 0. The wrapper itself exits 0 even for failed tests or Go command errors. Non-existing input: {status: \"error\", message: string} and exit 2. Missing argument prints usage to stderr and exits 1 without JSON. Missing Go executable, 300-second timeout, and other subprocess exceptions are uncaught and may produce a traceback.",
+    "limitations": [
+      "always runs `go test -cover ./...` with no package selection, test filter, count, race, tags, covermode, coverpkg, timeout, or passthrough flags",
+      "does not create a coverprofile or parse package percentages into structured coverage metrics or identify uncovered lines",
+      "always emits status=success after a completed subprocess and does not propagate nonzero Go exits; consumers must inspect passed and exit_code",
+      "executes project test code and compilation, may populate Go caches or trigger test-defined side effects, combines stdout before stderr, and has a fixed 300-second subprocess timeout"
+    ],
+    "artifact_input": [
+      "proj_dir"
+    ],
+    "artifact_output": [
+      "json"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "proj_dir",
+        "kind": "string",
+        "required": true,
+        "cli_position": 1
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "JSON run summary with working directory, Go exit code, pass flag, and combined textual `go test -cover ./...` output; no coverprofile is produced.",
+      "json_schema": {
+        "description": "Native JSON representation only; no field or task-delivery guarantee.",
+        "type": [
+          "object",
+          "array",
+          "string",
+          "number",
+          "boolean",
+          "null"
+        ]
+      },
+      "native_json_contract_scope": "value_only"
+    }
+  },
+  "routing": {
+    "family": "go-recursive-test-execution-with-basic-cover-text",
+    "intent_tags": [
+      "run recursive Go tests with basic package coverage",
+      "collect go test -cover output for all packages"
+    ],
+    "negative_intents": [
+      "generate or analyze a Go coverprofile",
+      "run Go tests without coverage or with custom test flags",
+      "statically inspect Go formatting source or uncovered lines without executing tests"
+    ],
+    "dependency_slots": []
+  },
+  "execution": {
+    "runtime": "python_script",
+    "uri": "file://Pool/resources/tools/script/go_test_coverage.py",
+    "execution_status": "active"
+  },
+  "utility": {
+    "latency_ms": 100,
+    "token_cost_factor": 0.01,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://go.dev",
+    "license": "BSD",
+    "backed_by": "go test coverage",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:5c8ca2be17ee6903fdd864b89fabbf48559ceb9c761702eaa3ac9d06c50645fe",
+    "local_implementation_uri": "file://Pool/resources/tools/script/go_test_coverage.py",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/script/_sgar_cli.py": "sha256:42368f8d49cb6364ad3aeaac6d0f9602adc12cb29fea49322fd488400698b6b9"
+    }
+  },
+  "type_specific": {
+    "tool": {
+      "tool_kind": "local_script",
+      "language": "python",
+      "deterministic": false
+    }
+  },
+  "memory": {
+    "success_trajectories": [],
+    "failure_reflections": []
+  },
+  "type": {
+    "resource_type": "Tool",
+    "resource_tag": [
+      "Go",
+      "testing",
+      "software-engineering"
+    ]
+  },
+  "input_contract": [
+    {
+      "name": "proj_dir",
+      "kind": "string",
+      "required": true,
+      "cli_position": 1
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "json",
+    "description": "JSON run summary with working directory, Go exit code, pass flag, and combined textual `go test -cover ./...` output; no coverprofile is produced.",
+    "json_schema": {
+      "description": "Native JSON representation only; no field or task-delivery guarantee.",
+      "type": [
+        "object",
+        "array",
+        "string",
+        "number",
+        "boolean",
+        "null"
+      ]
+    },
+    "native_json_contract_scope": "value_only"
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [],
+    "node_packages": [],
+    "system_packages": [
+      {
+        "name": "go1.22.5",
+        "version": "image-locked",
+        "required": true
+      }
+    ],
+    "commands": [
+      "go"
+    ],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "python_compatibility": ">=3.11,<4"
+  }
+}

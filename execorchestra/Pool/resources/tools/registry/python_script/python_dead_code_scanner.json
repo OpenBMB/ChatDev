@@ -1,0 +1,167 @@
+{
+  "manifest_version": "1.0",
+  "resource_id": "tool.python_dead_code_scanner.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Run Vulture on one Python file or directory and return candidate dead-code lines",
+    "description": "Executes exactly `[vulture, target]`, splits non-empty stdout lines into findings, and reports their count and Vulture exit code. It statically identifies candidates using Vulture defaults and does not execute or modify target code.",
+    "core_primitives": [
+      "invoke_vulture_static_scan",
+      "collect_vulture_stdout_findings",
+      "count_dead_code_candidates"
+    ],
+    "problem_space": "Read-only Vulture candidate discovery for unused Python definitions and unreachable code; not proof that code is safe to delete, general linting, type checking, security analysis, execution, or automated cleanup.",
+    "domain_tags": [
+      "Python",
+      "code-analysis",
+      "software-engineering"
+    ]
+  },
+  "constraint": {
+    "env_requirements": [
+      "Python >= 3.6",
+      "vulture executable on PATH"
+    ],
+    "io_signature": "Input: required file_path string naming an existing Python file or directory. Executes `vulture <target>` with inherited cwd and Vulture defaults. Output: JSON envelope containing exit_code, dead_code_count, findings lines, and stderr.",
+    "accepted_inputs": [
+      "an existing Python source file",
+      "an existing directory tree intended for Vulture static analysis"
+    ],
+    "output_shape": "After Vulture returns: {status: \"success\", tool: \"vulture\", target: string, exit_code: integer, dead_code_count: integer, findings: [string], stderr: string|null}; the wrapper exits 0 regardless of Vulture exit code. Missing target: {status: \"error\", message: string}, exit 2. Missing argument prints usage to stderr and exits 1 without JSON. Missing executable, 120-second timeout, or subprocess launch failure is uncaught and may traceback without JSON.",
+    "limitations": [
+      "Vulture reports heuristic candidates and can produce false positives for dynamic imports, reflection, framework callbacks, decorators, plugins, and externally referenced APIs",
+      "uses only Vulture defaults with no confidence, exclude, ignore-name, or sort options and returns raw finding lines rather than parsed symbols",
+      "does not execute or modify code, remove findings, run a linter/type checker, or prove that removal is behaviorally safe",
+      "uses a fixed 120-second subprocess timeout that is not caught into JSON and applies no finding or output truncation"
+    ],
+    "artifact_input": [
+      "file_path"
+    ],
+    "artifact_output": [
+      "json"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "file_path",
+        "kind": "string",
+        "required": true,
+        "cli_position": 1
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "JSON envelope containing Vulture's candidate finding lines, count, exit code, and stderr; no code is changed.",
+      "json_schema": {
+        "description": "Native JSON representation only; no field or task-delivery guarantee.",
+        "type": [
+          "object",
+          "array",
+          "string",
+          "number",
+          "boolean",
+          "null"
+        ]
+      },
+      "native_json_contract_scope": "value_only"
+    }
+  },
+  "routing": {
+    "family": "python-vulture-dead-code-candidate-scan",
+    "intent_tags": [
+      "find candidate unused Python code with Vulture",
+      "scan a Python file or directory for dead code candidates"
+    ],
+    "negative_intents": [
+      "delete or automatically clean dead Python code",
+      "prove code is unreachable or safe to remove",
+      "run Ruff Flake8 Bandit or execute Python code"
+    ],
+    "dependency_slots": []
+  },
+  "utility": {
+    "latency_ms": 100,
+    "token_cost_factor": 0.01,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://github.com/jendrikseipp/vulture",
+    "license": "MIT",
+    "backed_by": "Vulture dead-code finder",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:d785fdbd668baea0faf277b7979ac5ce20170f302bf9dd0338fc4b43ce736224",
+    "local_implementation_uri": "file://Pool/resources/tools/script/python_dead_code_scanner.py",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/script/_sgar_cli.py": "sha256:42368f8d49cb6364ad3aeaac6d0f9602adc12cb29fea49322fd488400698b6b9"
+    }
+  },
+  "type_specific": {
+    "tool": {
+      "tool_kind": "local_script",
+      "language": "python",
+      "deterministic": true
+    }
+  },
+  "memory": {
+    "success_trajectories": [],
+    "failure_reflections": []
+  },
+  "execution": {
+    "runtime": "python_script",
+    "uri": "file://Pool/resources/tools/script/python_dead_code_scanner.py",
+    "execution_status": "active"
+  },
+  "type": {
+    "resource_type": "Tool",
+    "resource_tag": [
+      "Python",
+      "code-analysis",
+      "software-engineering"
+    ]
+  },
+  "input_contract": [
+    {
+      "name": "file_path",
+      "kind": "string",
+      "required": true,
+      "cli_position": 1
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "json",
+    "description": "JSON envelope containing Vulture's candidate finding lines, count, exit code, and stderr; no code is changed.",
+    "json_schema": {
+      "description": "Native JSON representation only; no field or task-delivery guarantee.",
+      "type": [
+        "object",
+        "array",
+        "string",
+        "number",
+        "boolean",
+        "null"
+      ]
+    },
+    "native_json_contract_scope": "value_only"
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [],
+    "node_packages": [],
+    "system_packages": [],
+    "commands": [
+      "vulture"
+    ],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "python_compatibility": ">=3.11,<4"
+  }
+}

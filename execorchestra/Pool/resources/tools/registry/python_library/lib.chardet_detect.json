@@ -1,0 +1,143 @@
+{
+  "manifest_version": "v2",
+  "resource_id": "tool.lib.chardet_detect.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Detect the probable character encoding of one local file",
+    "description": "Reads one local file as raw bytes and passes the complete byte sequence to chardet.detect, returning probable encoding, confidence, and language metadata.",
+    "domain_tags": [
+      "nlp",
+      "data"
+    ],
+    "core_primitives": [
+      "read_file_bytes",
+      "infer_character_encoding",
+      "report_detection_confidence"
+    ],
+    "problem_space": "Encoding inference for one existing local file; identifies a likely codec but does not transcode or decode the file."
+  },
+  "constraint": {
+    "io_signature": "Input: one local file path; output: JSON object containing the path and chardet detection metadata under result.",
+    "accepted_inputs": [
+      "an existing readable local file path",
+      "binary or text files whose raw bytes can be sampled by chardet"
+    ],
+    "output_shape": "Success is an object with status=\"success\", tool=\"lib.chardet_detect\", file as the input path string, and result as chardet's detection object containing encoding, confidence, and language keys. A caught file-read or detection exception produces an object with status=\"error\", tool=\"lib.chardet_detect\", and message as the exception string, then exits with code 1.",
+    "limitations": [
+      "does not decode or rewrite file contents",
+      "reads the entire file into memory before detection",
+      "encoding detection is probabilistic and may be uncertain for short or mixed-encoding files"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "file_path",
+        "kind": "string",
+        "required": true,
+        "cli_position": 1
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "Probable encoding and confidence metadata for one local file.",
+      "json_schema": {
+        "description": "Native JSON representation only; no field or task-delivery guarantee.",
+        "type": [
+          "object",
+          "array",
+          "string",
+          "number",
+          "boolean",
+          "null"
+        ]
+      },
+      "native_json_contract_scope": "value_only"
+    }
+  },
+  "routing": {
+    "family": "file-encoding-inference",
+    "intent_tags": [
+      "detect the encoding of a local file",
+      "identify a probable charset from file bytes"
+    ],
+    "negative_intents": [
+      "convert a file from one encoding to another",
+      "decode file contents into text",
+      "detect language from text"
+    ]
+  },
+  "execution": {
+    "runtime": "python_library",
+    "uri": "file://Pool/resources/tools/lib/lib.chardet_detect.py",
+    "execution_status": "active"
+  },
+  "utility": {
+    "latency_ms": 200.0,
+    "token_cost_factor": 0.02,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://github.com/chardet/chardet",
+    "license": "LGPL-2.1",
+    "backed_by": "chardet_detect",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:d997b6dd14dfe52ff5a45da650144e79edc6994e26680dbc01d06cd136d0ffaf",
+    "local_implementation_uri": "file://Pool/resources/tools/lib/lib.chardet_detect.py",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/lib/_liblib.py": "sha256:dcd68e7904232764172e5f646ff97b854f68f7f916180ae32f838a0acf9ccc77"
+    }
+  },
+  "type_specific": {},
+  "type": {
+    "resource_type": "Tool"
+  },
+  "input_contract": [
+    {
+      "name": "file_path",
+      "kind": "string",
+      "required": true,
+      "cli_position": 1
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "json",
+    "description": "Probable encoding and confidence metadata for one local file.",
+    "json_schema": {
+      "description": "Native JSON representation only; no field or task-delivery guarantee.",
+      "type": [
+        "object",
+        "array",
+        "string",
+        "number",
+        "boolean",
+        "null"
+      ]
+    },
+    "native_json_contract_scope": "value_only"
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [
+      {
+        "name": "chardet",
+        "version": "==5.2.0",
+        "required": true
+      }
+    ],
+    "node_packages": [],
+    "system_packages": [],
+    "commands": [],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "python_compatibility": ">=3.11,<4"
+  }
+}

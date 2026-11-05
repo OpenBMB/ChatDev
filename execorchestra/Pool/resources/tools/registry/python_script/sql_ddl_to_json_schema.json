@@ -1,0 +1,184 @@
+{
+  "manifest_version": "1.0",
+  "resource_id": "tool.sql_ddl_to_json_schema.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Extract CREATE TABLE names, columns, types, and constraint-class names from SQL DDL",
+    "description": "Parses one UTF-8 SQL file with sqlglot's default dialect, keeps CREATE TABLE statements, and returns a custom tables/columns JSON summary. Despite its name, it does not emit a standards-compliant JSON Schema document.",
+    "core_primitives": [
+      "parse_sql_ddl_with_sqlglot",
+      "extract_create_table_columns",
+      "summarize_sql_types_and_constraint_classes"
+    ],
+    "problem_space": "Coarse structural extraction from CREATE TABLE DDL into a custom JSON table summary; not JSON Schema generation, SQL execution, database introspection, dialect-specific validation, constraint semantics, or round-trip DDL conversion.",
+    "domain_tags": [
+      "database",
+      "data-modeling",
+      "frontend-development"
+    ]
+  },
+  "constraint": {
+    "env_requirements": [
+      "Python >= 3.6",
+      "sqlglot Python package"
+    ],
+    "io_signature": "Input: required file_path string naming an existing UTF-8 SQL DDL file. Output: JSON envelope with tables [{table, columns:[{name,type,constraints}]}] or a handled sqlglot ParseError; no database is contacted.",
+    "accepted_inputs": [
+      "an existing UTF-8 SQL text file containing statements parseable by sqlglot's default dialect"
+    ],
+    "output_shape": "Success: {status: \"success\", tool: \"sqlglot\", target: string, tables: [{table: string|null, columns: [{name: string, type: string|null, constraints: [string]}]}]}, exit 0; valid SQL with no recognized CREATE TABLE yields tables=[]. Missing path: {status: \"error\", message: string}, exit 2. Caught ParseError: {status: \"error\", tool: \"sqlglot\", message: string}, exit 1. Missing argument prints usage to stderr and exits 1 without JSON; file I/O and non-ParseError failures may traceback.",
+    "limitations": [
+      "output is a custom table summary and is not JSON Schema: it has no `$schema`, object properties, required arrays, validation keywords, references, or SQL-to-JSON type mapping",
+      "accepts one existing UTF-8 SQL file; a directory or a multi-file DDL project target is outside this wrapper's input boundary",
+      "uses sqlglot's default dialect with no caller-selectable dialect and ignores non-CREATE-TABLE statements",
+      "constraint output contains sqlglot constraint class names rather than complete SQL expressions or semantics, and table-name extraction may not cover every CREATE form",
+      "reads the complete SQL input with no timeout or input-size limit; the generated custom tables/columns summary has no output truncation, so large inputs or large results can amplify memory use",
+      "does not execute SQL, contact a database, or modify the input"
+    ],
+    "artifact_input": [
+      "file_path"
+    ],
+    "artifact_output": [
+      "json"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "file_path",
+        "kind": "file_path",
+        "artifact_types": [
+          "sql"
+        ],
+        "extensions": [
+          ".sql"
+        ],
+        "required": true,
+        "cli_position": 1
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "JSON envelope containing a custom CREATE TABLE/column summary; it is not a standards-compliant JSON Schema.",
+      "json_schema": {
+        "description": "Native JSON representation only; no field or task-delivery guarantee.",
+        "type": [
+          "object",
+          "array",
+          "string",
+          "number",
+          "boolean",
+          "null"
+        ]
+      },
+      "native_json_contract_scope": "value_only"
+    }
+  },
+  "routing": {
+    "family": "sql-ddl-create-table-structural-summary",
+    "intent_tags": [
+      "extract table and column metadata from SQL DDL",
+      "summarize CREATE TABLE statements as custom JSON"
+    ],
+    "negative_intents": [
+      "generate standards compliant JSON Schema",
+      "execute SQL or inspect a live database",
+      "validate SQL for a selected database dialect"
+    ],
+    "dependency_slots": []
+  },
+  "utility": {
+    "latency_ms": 100,
+    "token_cost_factor": 0.01,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://github.com/tobymao/sqlglot",
+    "license": "MIT",
+    "backed_by": "sqlglot",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:a5fd3f3e3f1c8a43539ca6338e13557a770f0519319b20816d624e9d298862d2",
+    "local_implementation_uri": "file://Pool/resources/tools/script/sql_ddl_to_json_schema.py",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/script/_sgar_cli.py": "sha256:42368f8d49cb6364ad3aeaac6d0f9602adc12cb29fea49322fd488400698b6b9"
+    }
+  },
+  "type_specific": {
+    "tool": {
+      "tool_kind": "local_script",
+      "language": "python",
+      "deterministic": true
+    }
+  },
+  "memory": {
+    "success_trajectories": [],
+    "failure_reflections": []
+  },
+  "execution": {
+    "runtime": "python_script",
+    "uri": "file://Pool/resources/tools/script/sql_ddl_to_json_schema.py",
+    "execution_status": "active"
+  },
+  "type": {
+    "resource_type": "Tool",
+    "resource_tag": [
+      "database",
+      "data-modeling",
+      "frontend-development"
+    ]
+  },
+  "input_contract": [
+    {
+      "name": "file_path",
+      "kind": "file_path",
+      "artifact_types": [
+        "sql"
+      ],
+      "extensions": [
+        ".sql"
+      ],
+      "required": true,
+      "cli_position": 1
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "json",
+    "description": "JSON envelope containing a custom CREATE TABLE/column summary; it is not a standards-compliant JSON Schema.",
+    "json_schema": {
+      "description": "Native JSON representation only; no field or task-delivery guarantee.",
+      "type": [
+        "object",
+        "array",
+        "string",
+        "number",
+        "boolean",
+        "null"
+      ]
+    },
+    "native_json_contract_scope": "value_only"
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [
+      {
+        "name": "sqlglot",
+        "version": "==26.0.1",
+        "required": true
+      }
+    ],
+    "node_packages": [],
+    "system_packages": [],
+    "commands": [],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "python_compatibility": ">=3.11,<4"
+  }
+}

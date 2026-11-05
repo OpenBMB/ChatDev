@@ -1,0 +1,123 @@
+{
+  "resource_id": "qwen3-coder-next",
+  "type": {
+    "resource_type": "Model",
+    "resource_tag": [
+      "131K Context",
+      ".3",
+      "1.5",
+      "unknown"
+    ]
+  },
+  "capability": {
+    "summary": "Coding-agent model emphasizing recovery across extended tool interactions.",
+    "core_primitives": [
+      "repository code editing",
+      "debugging",
+      "refactoring",
+      "test implementation",
+      "tool-assisted programming"
+    ],
+    "problem_space": "Coding model for repository editing and development tools. Applicable tasks include repository code editing, debugging, refactoring, test implementation, tool-assisted programming. Accepts text input and produces text output. External tools are required to execute programs, browse sources, or modify files; generated instructions alone do not perform those actions. Published distinction: The documented architecture has 80 billion total and 3 billion active parameters with a hybrid attention layout. Training emphasizes extended tool interactions and recovery after execution failures; tools still execute outside the model.",
+    "domain_tags": [
+      "Language",
+      "Software Engineering"
+    ]
+  },
+  "constraint": {
+    "env_requirements": [
+      "OpenAI-Compatible API Endpoint",
+      "Valid API Key (Cloud) or High-Memory GPU"
+    ],
+    "io_signature": "Input modalities: text | Output modalities: text. Gateway transport support requires verification."
+  },
+  "utility": {
+    "latency_ms": 0,
+    "token_cost_factor": 0,
+    "expected_success_rate": 0
+  },
+  "execution": {
+    "uri": "${base_url}/v1/chat/completions",
+    "model_id": "qwen3-coder-next"
+  },
+  "memory": {
+    "success_trajectories": [],
+    "failure_reflections": []
+  },
+  "type_specific": {
+    "model": {
+      "profile_version": "model-capabilities-v1",
+      "input_modalities": [
+        "text"
+      ],
+      "output_modalities": [
+        "text"
+      ],
+      "supports": {
+        "tool_calling": true,
+        "json_mode": null,
+        "vision": false,
+        "reasoning": true,
+        "coding": true
+      },
+      "thinking_mode": "non_thinking",
+      "native_protocol": "openai_compatible_chat",
+      "documented_context_tokens": 262144,
+      "evidence_status": "provider_documented_not_gateway_verified",
+      "gateway_verification_status": "not_run",
+      "limitations": [],
+      "pricing_rules": {
+        "input_per_m": ".3",
+        "cache_per_m": null,
+        "output_per_m": "1.5",
+        "source": "https://www.alibabacloud.com/help/en/model-studio/qwen3-coder-next",
+        "cache_mode": "implicit",
+        "input_tiers": [
+          {
+            "above_input_tokens": 32768,
+            "input_per_m": ".5",
+            "output_per_m": "2.5"
+          },
+          {
+            "above_input_tokens": 131072,
+            "input_per_m": ".8",
+            "output_per_m": "4"
+          }
+        ],
+        "region": "International Singapore",
+        "cache_supported": false
+      }
+    }
+  },
+  "provenance": {
+    "semantic_review": {
+      "reviewed_at": "2026-09-15",
+      "policy": "model-capabilities-v1",
+      "source_urls": [
+        "https://huggingface.co/Qwen/Qwen3-Coder-Next"
+      ],
+      "evidence_status": "provider_documented_not_gateway_verified",
+      "task_profile_basis": "Task categories derive from documented operations; no empirical quality ranking or fixed framework role.",
+      "context_policy": "The configured context label is preserved separately from documented native context; neither proves the supplier limit."
+    },
+    "model_distinction_review": {
+      "evidence_kind": "provider_documented_design",
+      "source_urls": [
+        "https://huggingface.co/Qwen/Qwen3-Coder-Next"
+      ],
+      "interpretation_limit": "Published task emphasis is non-exclusive. Architecture and product positioning do not establish supplier latency, measured quality, or a fixed framework role.",
+      "policy": "model-distinctions-v1",
+      "reviewed_at": "2026-09-15",
+      "evidence_status": "provider_documented_not_gateway_verified",
+      "scope": "Non-exclusive published task emphasis and architecture; no empirical cross-model quality ordering."
+    },
+    "pricing_status": "official_public_price_snapshot",
+    "gateway_verification_status": "windows_historical_probe_only",
+    "pricing_note": "Official reference rates and backend billing rules from the same dated pricebook; capability and gateway evidence unchanged.",
+    "official_pricing": {
+      "snapshot_date": "2026-10-09",
+      "source": "https://www.alibabacloud.com/help/en/model-studio/qwen3-coder-next",
+      "pricebook_sha256": "9e9a8248e54f1934d08d5efe68a3998ebce6faa09106f3f2a7ac119bf89a182c"
+    }
+  }
+}

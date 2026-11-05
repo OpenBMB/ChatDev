@@ -1,0 +1,286 @@
+{
+  "manifest_version": "v2",
+  "resource_id": "tool.mcp.git_add.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "execution_semantics": {
+      "side_effects": "declared",
+      "effect_targets": [
+        "task_workspace"
+      ]
+    },
+    "summary": "Stage specified working-tree files in a local Git repository for a later commit.",
+    "description": "Use to add an explicit set of changed paths to the Git index. It prepares selected changes for review or commit; it does not create a commit, inspect repository status, create a branch, or show a diff.",
+    "domain_tags": [
+      "git",
+      "staging",
+      "version-control"
+    ],
+    "core_primitives": [
+      "stage_selected_paths",
+      "update_git_index",
+      "prepare_commit"
+    ],
+    "problem_space": "Add explicit local repository paths to the Git staging area. This is index management, distinct from recording a commit, listing branch names, inspecting diffs, or reporting worktree status."
+  },
+  "constraint": {
+    "io_signature": "Input: repository path and comma-separated file paths. Output: JSON mutation invocation receipt.",
+    "accepted_inputs": [
+      "a local Git repository path",
+      "one or more paths relative to that repository"
+    ],
+    "output_shape": "JSON invocation receipt with status, operation, and completed; a failed operation includes error_code. Verify the requested workspace state separately.",
+    "limitations": [
+      "does not create a commit",
+      "does not stage unspecified files or inspect a diff"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "repo_path",
+        "kind": "string",
+        "required": true,
+        "cli_position": 1
+      },
+      {
+        "name": "files",
+        "kind": "string",
+        "required": true,
+        "cli_position": 2
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "MCP-confirmed mutation invocation receipt; the requested final state must be checked separately.",
+      "schema": {
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "operation": {
+                "type": "string"
+              },
+              "status": {
+                "const": "success"
+              },
+              "completed": {
+                "const": true
+              }
+            },
+            "required": [
+              "status",
+              "operation",
+              "completed"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "operation": {
+                "type": "string"
+              },
+              "status": {
+                "const": "error"
+              },
+              "completed": {
+                "const": false
+              },
+              "error_code": {
+                "enum": [
+                  "mcp_operation_failed",
+                  "mcp_transport_failure"
+                ]
+              },
+              "error_type": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "status",
+              "operation",
+              "completed",
+              "error_code"
+            ],
+            "additionalProperties": false
+          }
+        ]
+      },
+      "result_status": {
+        "payload_path": "status",
+        "success_values": [
+          "success"
+        ],
+        "failure_values": [
+          "error"
+        ]
+      }
+    }
+  },
+  "routing": {
+    "family": "git-index-management",
+    "intent_tags": [
+      "stage selected changes",
+      "git add files",
+      "prepare files for a commit"
+    ],
+    "negative_intents": [
+      "create a commit",
+      "show git status",
+      "view a diff"
+    ]
+  },
+  "execution": {
+    "runtime": "mcp_server",
+    "uri": "file://Pool/resources/tools/mcp/mcp.git_add.py",
+    "execution_status": "active"
+  },
+  "utility": {
+    "latency_ms": 300.0,
+    "token_cost_factor": 0.02,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://github.com/modelcontextprotocol/servers/tree/main/src/git",
+    "license": "MIT",
+    "backed_by": "MCP git_add",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:8e44f7a6725b237c42f6a182e0cc6d4f748f64810789ba0486bed430738a30fc",
+    "local_implementation_uri": "file://Pool/resources/tools/mcp/mcp.git_add.py",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/mcp/_mcplib.py": "sha256:8c39f008bd1fc31f0457e6e08cb42da72eeeebba3dd1bcb51c277a33b35287f3",
+      "file://Pool/resources/tools/mcp/_mcp_mutation.py": "sha256:52c9a7780710e30ad44233af885b4ea4145a04d8b9efa40c25916c7b96a939d5"
+    }
+  },
+  "type_specific": {},
+  "type": {
+    "resource_type": "Tool"
+  },
+  "input_contract": [
+    {
+      "name": "repo_path",
+      "kind": "string",
+      "required": true,
+      "cli_position": 1
+    },
+    {
+      "name": "files",
+      "kind": "string",
+      "required": true,
+      "cli_position": 2
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "json",
+    "description": "MCP-confirmed mutation invocation receipt; the requested final state must be checked separately.",
+    "schema": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "operation": {
+              "type": "string"
+            },
+            "status": {
+              "const": "success"
+            },
+            "completed": {
+              "const": true
+            }
+          },
+          "required": [
+            "status",
+            "operation",
+            "completed"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "operation": {
+              "type": "string"
+            },
+            "status": {
+              "const": "error"
+            },
+            "completed": {
+              "const": false
+            },
+            "error_code": {
+              "enum": [
+                "mcp_operation_failed",
+                "mcp_transport_failure"
+              ]
+            },
+            "error_type": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "status",
+            "operation",
+            "completed",
+            "error_code"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "result_status": {
+      "payload_path": "status",
+      "success_values": [
+        "success"
+      ],
+      "failure_values": [
+        "error"
+      ]
+    }
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [
+      {
+        "name": "mcp",
+        "version": "==1.28.1",
+        "required": true
+      },
+      {
+        "name": "mcp-server-git",
+        "version": "==2026.7.10",
+        "required": true
+      }
+    ],
+    "node_packages": [],
+    "system_packages": [
+      {
+        "name": "git",
+        "version": "image-locked",
+        "required": true
+      }
+    ],
+    "commands": [
+      "git",
+      "python"
+    ],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "mcp": {
+      "server_command": "git",
+      "working_directory": "/app",
+      "allowed_roots": [
+        "/app"
+      ]
+    },
+    "python_compatibility": ">=3.11,<4"
+  }
+}

@@ -1,0 +1,142 @@
+{
+  "manifest_version": "v2",
+  "resource_id": "tool.browsertrix_crawl.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Capture a public webpage with Browsertrix Crawler into replayable web-archive artifacts",
+    "description": "SGAR task-container adapter invoking upstream Browsertrix Crawler. Browsertrix performs browser execution and capture; the adapter only bounds invocation and reports produced artifacts.",
+    "domain_tags": [
+      "research",
+      "web_archive",
+      "browser"
+    ],
+    "core_primitives": [
+      "crawl_public_url",
+      "capture_browser_network_activity",
+      "produce_warc_or_wacz_artifacts"
+    ],
+    "problem_space": "High-fidelity capture of a specified public URL for later evidence review; not web search, citation normalization, or arbitrary browser interaction.",
+    "operation_kinds": [
+      "browser_capture"
+    ]
+  },
+  "constraint": {
+    "io_signature": "Input public URL and task-container output directory; output produced WARC/WACZ and crawler logs.",
+    "accepted_inputs": [
+      "public HTTP(S) URL"
+    ],
+    "output_shape": "JSON artifact receipt with produced files and crawler streams.",
+    "limitations": [
+      "requires browsertrix-crawler in the supplied task image",
+      "browser execution can create substantial CPU/memory/disk/network load",
+      "site JavaScript, robots, CAPTCHA and authentication can prevent complete capture",
+      "proxy credentials are not configured by default"
+    ],
+    "artifact_output": [
+      "warc",
+      "wacz",
+      "json"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "url",
+        "kind": "string",
+        "required": true,
+        "cli_position": 1
+      },
+      {
+        "name": "output_dir",
+        "kind": "directory",
+        "required": true,
+        "cli_position": 2
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "Capture receipt referencing Browsertrix archive artifacts.",
+      "json_schema": {
+        "description": "Native JSON representation only; no field or task-delivery guarantee.",
+        "type": [
+          "object",
+          "array",
+          "string",
+          "number",
+          "boolean",
+          "null"
+        ]
+      },
+      "native_json_contract_scope": "value_only"
+    }
+  },
+  "routing": {
+    "family": "browser-web-evidence-capture",
+    "intent_tags": [
+      "capture a webpage for evidence",
+      "save browser crawl as WARC/WACZ",
+      "archive dynamic web content"
+    ],
+    "negative_intents": [
+      "search the public web",
+      "normalize DOI metadata",
+      "write arbitrary files outside output_dir"
+    ]
+  },
+  "execution": {
+    "runtime": "python_script",
+    "runtime_scope": "task_container",
+    "uri": "file://Pool/resources/tools/script/browsertrix_crawl.py",
+    "execution_status": "active",
+    "execution_risk": "high"
+  },
+  "utility": {
+    "latency_ms": 10000,
+    "token_cost_factor": 0.05,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://github.com/webrecorder/browsertrix-crawler/tree/v1.14.3",
+    "version": "1.14.3",
+    "license": "AGPL-3.0",
+    "license_url": "https://github.com/webrecorder/browsertrix-crawler/blob/v1.14.3/LICENSE",
+    "license_sha256": "8486a10c4393cee1c25392769ddd3b2d6c242d6ec7928e1414efff7dfb2f07ef",
+    "backed_by": "Browsertrix Crawler",
+    "recognized_public_tool": true,
+    "native_network_access": true,
+    "credential_class": "NONE",
+    "credential_env_names": [],
+    "third_party_account_required": false,
+    "paid_service_required": false,
+    "source_hash": "sha256:aa8b13ae025cb4fc66c75da765de33ea71f21b5da58bfef19831ef9470f8dc16",
+    "local_implementation_uri": "file://Pool/resources/tools/script/browsertrix_crawl.py"
+  },
+  "type_specific": {
+    "tool": {
+      "tool_kind": "task_container_cli",
+      "deterministic": false
+    }
+  },
+  "memory": {
+    "success_trajectories": [],
+    "failure_reflections": []
+  },
+  "runtime_requirements": {
+    "runtime_profile": "task-container",
+    "python": "==3.11.9",
+    "python_packages": [],
+    "node_packages": [],
+    "system_packages": [],
+    "commands": [],
+    "env_vars": [],
+    "network_required": true,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "task-image-provided",
+    "python_compatibility": ">=3.11,<4"
+  }
+}

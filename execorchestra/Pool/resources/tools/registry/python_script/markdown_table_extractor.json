@@ -1,0 +1,172 @@
+{
+  "manifest_version": "v2",
+  "resource_id": "tool.markdown_table_extractor.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Extract structured headers and rows from pipe tables in one local Markdown file",
+    "description": "Parses a UTF-8 Markdown file with markdown-it-py's CommonMark parser and table rule, returning each recognized pipe table as header and body-row arrays in a JSON envelope.",
+    "core_primitives": [
+      "parse_markdown_table_structure",
+      "extract_table_headers",
+      "extract_table_body_rows"
+    ],
+    "problem_space": "Deterministic structural extraction of GitHub-style pipe tables from a local Markdown file; not Markdown rendering, spreadsheet analysis, OCR, HTML-table scraping, or natural-language interpretation of cell values.",
+    "domain_tags": [
+      "markdown",
+      "table_extraction",
+      "document_processing"
+    ]
+  },
+  "constraint": {
+    "env_requirements": [
+      "Python >= 3.9",
+      "markdown-it-py"
+    ],
+    "io_signature": "Input: required file_path string naming an existing UTF-8 Markdown file. Output: JSON envelope {status, tool, target, table_count, tables}, where each table contains headers and rows arrays.",
+    "accepted_inputs": [
+      "an existing UTF-8 Markdown file containing zero or more pipe tables recognized by markdown-it-py's table rule"
+    ],
+    "output_shape": "Success: {status: \"success\", tool: \"markdown-it-py\", target: string, table_count: integer, tables: [{headers: string[][], rows: string[][]}]}. Missing file exits 2 with an error envelope; read, decoding, or parser failures exit 1 with an error envelope.",
+    "limitations": [
+      "extracts only Markdown pipe tables recognized by the enabled markdown-it-py table rule",
+      "does not execute Markdown, interpret cell semantics, infer data types, scrape HTML tables, or write output files",
+      "loads the complete input file and parsed result into memory"
+    ],
+    "artifact_input": [
+      "file_path"
+    ],
+    "artifact_output": [
+      "json"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "file_path",
+        "kind": "file_path",
+        "required": true,
+        "description": "Path to an existing UTF-8 Markdown file.",
+        "cli_position": 1
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "Structured Markdown tables containing header and body-row cell arrays.",
+      "json_schema": {
+        "description": "Native JSON representation only; no field or task-delivery guarantee.",
+        "type": [
+          "object",
+          "array",
+          "string",
+          "number",
+          "boolean",
+          "null"
+        ]
+      },
+      "native_json_contract_scope": "value_only"
+    }
+  },
+  "routing": {
+    "family": "markdown-table-structure-extraction",
+    "intent_tags": [
+      "extract tables from a Markdown file",
+      "parse Markdown pipe-table headers and rows",
+      "turn Markdown tables into structured JSON"
+    ],
+    "negative_intents": [
+      "render Markdown as HTML",
+      "extract tables from PDF images or web pages",
+      "analyze spreadsheet formulas or infer table semantics"
+    ],
+    "dependency_slots": []
+  },
+  "execution": {
+    "runtime": "python_script",
+    "uri": "file://Pool/resources/tools/script/markdown_table_extractor.py",
+    "execution_status": "active"
+  },
+  "utility": {
+    "latency_ms": 100,
+    "token_cost_factor": 0.01,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://github.com/executablebooks/markdown-it-py",
+    "license": "MIT",
+    "backed_by": "markdown-it-py",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:d323943603a4facdbe6d75c8d28f4667667626bcad0ae879406ff9aa4f452c6f",
+    "local_implementation_uri": "file://Pool/resources/tools/script/markdown_table_extractor.py",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/script/_sgar_cli.py": "sha256:42368f8d49cb6364ad3aeaac6d0f9602adc12cb29fea49322fd488400698b6b9"
+    }
+  },
+  "type_specific": {
+    "tool": {
+      "tool_kind": "local_script",
+      "language": "python",
+      "deterministic": true
+    }
+  },
+  "memory": {
+    "success_trajectories": [],
+    "failure_reflections": []
+  },
+  "type": {
+    "resource_type": "Tool",
+    "resource_tag": [
+      "markdown",
+      "table_extraction",
+      "document_processing"
+    ]
+  },
+  "input_contract": [
+    {
+      "name": "file_path",
+      "kind": "file_path",
+      "required": true,
+      "description": "Path to an existing UTF-8 Markdown file.",
+      "cli_position": 1
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "json",
+    "description": "Structured Markdown tables containing header and body-row cell arrays.",
+    "json_schema": {
+      "description": "Native JSON representation only; no field or task-delivery guarantee.",
+      "type": [
+        "object",
+        "array",
+        "string",
+        "number",
+        "boolean",
+        "null"
+      ]
+    },
+    "native_json_contract_scope": "value_only"
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [
+      {
+        "name": "markdown-it-py",
+        "version": "==3.0.0",
+        "required": true
+      }
+    ],
+    "node_packages": [],
+    "system_packages": [],
+    "commands": [],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "python_compatibility": ">=3.11,<4"
+  }
+}

@@ -1,0 +1,267 @@
+{
+  "manifest_version": "v2",
+  "resource_id": "tool.httpx_request.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Perform a bounded read-only HTTP request with HTTPX 0.28.1",
+    "description": "Thin SGAR adapter over upstream HTTPX for GET or HEAD requests with explicit timeout, redirect, public-host and response-size controls.",
+    "domain_tags": [
+      "web",
+      "http",
+      "retrieval"
+    ],
+    "core_primitives": [
+      "http_get_or_head",
+      "capture_http_response",
+      "bound_response_size"
+    ],
+    "problem_space": "Low-level retrieval of a caller-specified public HTTP(S) URL; not web search, browser automation, authentication workflows, uploads, or mutation."
+  },
+  "constraint": {
+    "io_signature": "Input method GET|HEAD, public http(s) URL and optional bounds; output JSON status, final URL, status code, headers, decoded body, and redirect chain.",
+    "accepted_inputs": [
+      "absolute public HTTP or HTTPS URL",
+      "GET or HEAD method"
+    ],
+    "output_shape": "JSON response envelope with bounded body text and redirect chain or explicit error.",
+    "limitations": [
+      "denies private, loopback, link-local, and reserved resolved addresses by default",
+      "allows only GET and HEAD",
+      "maximum response body is 10 MB",
+      "does not provide search, HTML extraction, browser execution, credentials, proxy controls, uploads, or arbitrary headers"
+    ],
+    "operation_kinds": [
+      "network_read"
+    ],
+    "artifact_output": [
+      "json"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "method",
+        "kind": "string",
+        "required": true,
+        "values": [
+          "GET",
+          "HEAD"
+        ],
+        "cli_position": 1
+      },
+      {
+        "name": "url",
+        "kind": "string",
+        "required": true,
+        "cli_position": 2,
+        "description": "Complete HTTP(S) URL as a plain string, without Markdown or surrounding quotes; obtain it from task input or observed discovery and preserve required source/date parameters."
+      },
+      {
+        "name": "timeout_ms",
+        "kind": "integer",
+        "required": false,
+        "cli_flag": "--timeout-ms",
+        "default": 15000,
+        "minimum": 1,
+        "maximum": 120000,
+        "description": "Request timeout in milliseconds."
+      },
+      {
+        "name": "max_bytes",
+        "kind": "integer",
+        "required": false,
+        "cli_flag": "--max-bytes",
+        "default": 1000000,
+        "minimum": 1,
+        "maximum": 10000000,
+        "description": "Maximum response body bytes; increase when response_too_large is observed."
+      },
+      {
+        "name": "follow_redirects",
+        "kind": "boolean",
+        "required": false,
+        "cli_flag": "--follow-redirects",
+        "cli_value_mode": "flag",
+        "default": false,
+        "description": "Follow HTTP redirects when true."
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "Returns HTTP status, headers and bounded UTF-8 body; this is response text, not a rendered page or parsed facts. Follow redirects only when requested. Failed responses are not source evidence.",
+      "json_schema": {
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "status": {
+                "const": "success"
+              },
+              "tool": {
+                "const": "httpx"
+              },
+              "url": {
+                "type": "string",
+                "minLength": 1
+              },
+              "http_status": {
+                "type": "integer",
+                "minimum": 100,
+                "maximum": 399
+              },
+              "headers": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "string"
+                }
+              },
+              "body": {
+                "type": "string"
+              },
+              "redirect_chain": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "required": [
+              "status",
+              "tool",
+              "url",
+              "http_status",
+              "headers",
+              "body",
+              "redirect_chain"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "status": {
+                "const": "error"
+              },
+              "tool": {
+                "const": "httpx"
+              },
+              "reason_code": {
+                "type": "string",
+                "minLength": 1
+              },
+              "url": {
+                "type": "string"
+              },
+              "http_status": {
+                "type": "integer",
+                "minimum": 400,
+                "maximum": 599
+              },
+              "headers": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "string"
+                }
+              },
+              "body": {
+                "type": "string"
+              },
+              "redirect_chain": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "required": [
+              "status",
+              "tool",
+              "reason_code"
+            ],
+            "additionalProperties": false
+          }
+        ]
+      },
+      "result_status": {
+        "payload_path": "status",
+        "success_values": [
+          "success"
+        ],
+        "failure_values": [
+          "error"
+        ]
+      }
+    }
+  },
+  "routing": {
+    "family": "bounded-http-client",
+    "intent_tags": [
+      "fetch a known public URL",
+      "inspect HTTP status and headers"
+    ],
+    "negative_intents": [
+      "search the web",
+      "interact with a browser",
+      "upload or mutate remote state"
+    ],
+    "dependency_slots": []
+  },
+  "execution": {
+    "runtime": "python_script",
+    "uri": "file://Pool/resources/tools/script/httpx_request.py",
+    "execution_status": "active"
+  },
+  "utility": {
+    "latency_ms": 250,
+    "token_cost_factor": 0.02,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://github.com/encode/httpx/tree/0.28.1",
+    "version": "0.28.1",
+    "license": "BSD-3-Clause",
+    "license_url": "https://github.com/encode/httpx/blob/0.28.1/LICENSE.md",
+    "license_sha256": "4ec59d544f12b5f539a3a716fd321ac58ccd8030b465221f2c880200cdf28d8d",
+    "upstream_artifact": "https://files.pythonhosted.org/packages/source/h/httpx/httpx-0.28.1.tar.gz",
+    "upstream_artifact_sha256": "75e98c5f16b0f35b567856f597f06ff2270a374470a5c2392242528e3e3e42fc",
+    "backed_by": "HTTPX",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:6e4bb27b3e6d8d8b381d9e50cfe57ad187c5d09652a09470941593242b998c1d",
+    "local_implementation_uri": "file://Pool/resources/tools/script/httpx_request.py"
+  },
+  "type_specific": {
+    "tool": {
+      "tool_kind": "local_script",
+      "language": "python",
+      "deterministic": false
+    }
+  },
+  "memory": {
+    "success_trajectories": [],
+    "failure_reflections": []
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [
+      {
+        "name": "httpx",
+        "version": "==0.28.1",
+        "required": true
+      }
+    ],
+    "node_packages": [],
+    "system_packages": [],
+    "commands": [],
+    "env_vars": [],
+    "network_required": true,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "python_compatibility": ">=3.11,<4"
+  }
+}

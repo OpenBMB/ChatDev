@@ -1,0 +1,139 @@
+{
+  "manifest_version": "v2",
+  "resource_id": "tool.api.thesportsdb.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Search TheSportsDB teams by name",
+    "description": "Calls TheSportsDB's fixed v1 free searchteams endpoint with one team-name query. HTTP 2xx/3xx responses produce a success envelope; HTTP 4xx/5xx responses produce an error envelope and a non-zero exit; request exceptions also produce an error envelope and a non-zero exit.",
+    "domain_tags": [
+      "sports"
+    ],
+    "core_primitives": [
+      "search_sports_teams",
+      "return_team_database_response"
+    ],
+    "problem_space": "Sports-team directory lookup; not live scores, fixtures, player search, or sports forecasting."
+  },
+  "constraint": {
+    "io_signature": "Input: one team query string; output: JSON envelope containing http_status and TheSportsDB team-search JSON or HTTP error body. HTTP 2xx/3xx responses produce a success envelope; HTTP 4xx/5xx responses produce an error envelope and a non-zero exit; request exceptions also produce an error envelope and a non-zero exit.",
+    "accepted_inputs": [
+      "one team-name search string"
+    ],
+    "output_shape": "HTTP 2xx/3xx: {status: \"success\", tool: string, url: string, http_status: integer, result: object|string}. HTTP 4xx/5xx: {status: \"error\", tool: string, url: string, http_status: integer, result: object|string}, exit 1. Request exception: {status: \"error\", tool: string, message: string}, exit 1.",
+    "limitations": [
+      "fixed GET https://www.thesportsdb.com/api/v1/json/3/searchteams.php with t=<query>; no event, player, league, or pagination parameter",
+      "only requests.RequestException becomes status=error",
+      "HTTP 2xx/3xx responses produce a success envelope; HTTP 4xx/5xx responses produce an error envelope and a non-zero exit; request exceptions also produce an error envelope and a non-zero exit.",
+      "wrapper does not normalize, paginate, or truncate the response",
+      "uses the public key 3 with no caller auth, cache, or retry; results depend on external database state"
+    ],
+    "artifact_output": [
+      "json"
+    ],
+    "execution_risk": "medium",
+    "http_status_semantics": {
+      "success": "HTTP 200-399",
+      "failure": "HTTP 400-599 or request exception",
+      "failure_exit_code": 1
+    }
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "query",
+        "kind": "string",
+        "required": true,
+        "cli_position": 1
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "JSON envelope containing TheSportsDB team-search result, URL, and HTTP status."
+    }
+  },
+  "routing": {
+    "family": "sports-team-directory-search",
+    "intent_tags": [
+      "search sports teams by name",
+      "look up a team in TheSportsDB"
+    ],
+    "negative_intents": [
+      "get live sports scores or fixtures",
+      "search cocktail, meal, or general entity databases"
+    ]
+  },
+  "execution": {
+    "runtime": "rest_api",
+    "uri": "file://Pool/resources/tools/api/api.thesportsdb.py",
+    "execution_status": "active",
+    "execution_risk": "medium"
+  },
+  "utility": {
+    "latency_ms": 200.0,
+    "token_cost_factor": 0.02,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://www.thesportsdb.com/api.php",
+    "license": "proprietary-free",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:5a90cd48401fc8e8333288420b4a55d828e4ceaee78a03674a42e14fdd6064df",
+    "local_implementation_uri": "file://Pool/resources/tools/api/api.thesportsdb.py",
+    "auth_required": false,
+    "auth_evidence": "wrapper_and_shared_adapter_read_no_credentials",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/api/_apilib.py": "sha256:e60bba3d1f3dcd9fcd408042ad7951e52d6ecd66d57cb9a58c249d521c8811a7"
+    }
+  },
+  "type_specific": {
+    "tool": {
+      "tool_kind": "rest_api",
+      "deterministic": false
+    }
+  },
+  "type": {
+    "resource_type": "Tool"
+  },
+  "input_contract": [
+    {
+      "name": "query",
+      "kind": "string",
+      "required": true,
+      "cli_position": 1
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "json",
+    "description": "JSON envelope containing TheSportsDB team-search result, URL, and HTTP status."
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [
+      {
+        "name": "requests",
+        "version": "==2.32.3",
+        "required": true
+      }
+    ],
+    "node_packages": [],
+    "system_packages": [],
+    "commands": [],
+    "env_vars": [],
+    "network_required": true,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "rest": {
+      "endpoint": "https://www.thesportsdb.com/api/v1/json/3/searchteams.php",
+      "auth_required": false,
+      "auth_evidence": "wrapper_and_shared_adapter_read_no_credentials",
+      "timeout_seconds": 25,
+      "success_http_status": "200-399"
+    }
+  }
+}

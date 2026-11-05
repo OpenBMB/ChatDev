@@ -1,0 +1,156 @@
+{
+  "resource_id": "qwen3.8-max-0902",
+  "type": {
+    "resource_type": "Model",
+    "resource_tag": [
+      "1M Context",
+      "2",
+      "6",
+      ".25"
+    ]
+  },
+  "capability": {
+    "summary": "Hosted vision-language model for coding and document analysis.",
+    "core_primitives": [
+      "code revision",
+      "document interpretation",
+      "visual reasoning",
+      "tool-assisted analysis"
+    ],
+    "problem_space": "Hosted vision-language model for coding and document analysis. Applicable tasks include code revision, document interpretation, visual reasoning, tool-assisted analysis. Accepts text, image input and produces text output. External tools are required to execute programs, browse sources, or modify files; generated instructions alone do not perform those actions.",
+    "domain_tags": [
+      "Language",
+      "Software Engineering",
+      "Visual Understanding"
+    ]
+  },
+  "constraint": {
+    "env_requirements": [
+      "Endpoint exposing the documented model through Chat Completions; gateway mapping unverified",
+      "Valid API key for the selected service or an explicitly configured self-hosted endpoint",
+      "Endpoint and transport support for every requested input and output modality",
+      "Use the supplier model ID qwen3.8-max exactly; the retained pool ID is not a guarantee of the supplier backend version.",
+      "Verify the served snapshot before treating results as a dated-model comparison."
+    ],
+    "io_signature": "Input modalities: text, image | Output modalities: text. Gateway transport support requires verification."
+  },
+  "utility": {
+    "latency_ms": 0,
+    "token_cost_factor": 0,
+    "expected_success_rate": 0
+  },
+  "execution": {
+    "uri": "${base_url}/v1/chat/completions",
+    "model_id": "qwen3.8-max"
+  },
+  "memory": {
+    "success_trajectories": [],
+    "failure_reflections": []
+  },
+  "provenance": {
+    "reviewed_at": "2026-09-09",
+    "evidence_status": "provider_documented_not_gateway_verified",
+    "integration_status": "source_registered_pending_canonical_review",
+    "source_urls": [
+      "https://help.aliyun.com/en/model-studio/newly-released-models",
+      "https://help.aliyun.com/en/model-studio/visual-reasoning",
+      "https://huggingface.co/Qwen/Qwen3.8-2.4T-A95B"
+    ],
+    "documented_input_modalities": [
+      "text",
+      "image"
+    ],
+    "documented_output_modalities": [
+      "text"
+    ],
+    "documented_interface_facts": {
+      "version_kind": "service_alias",
+      "alternate_provider_id": "qwen3.8-max-2026-09-02",
+      "family_service_alias": "qwen3.8-max",
+      "thinking_mode": "hybrid",
+      "snapshot_selection_status": "supplier_alias_backend_snapshot_unverified"
+    },
+    "task_profile_basis": "Neutral candidate task categories based on documented operations; not an empirical model ranking or fixed role assignment.",
+    "pricing_status": "official_public_price_snapshot",
+    "resource_tag_layout": [
+      "context_window",
+      "input_per_million_tokens",
+      "output_per_million_tokens",
+      "cache_read_per_million_tokens"
+    ],
+    "pricing_note": "Official reference rates and backend billing rules from the same dated pricebook; capability and gateway evidence unchanged.",
+    "utility_status": "unmeasured_legacy_zero_placeholders",
+    "gateway_verification_status": "not_run",
+    "configuration_note": "Source capability facts are preserved by the deterministic converter. Runtime and gateway readiness still require independent validation before activation.",
+    "supplier_model_mapping_status": "configured_from_user_screenshot_not_live_verified",
+    "supplier_snapshot_status": "alias_only_backend_snapshot_unverified",
+    "semantic_review": {
+      "reviewed_at": "2026-09-09",
+      "policy": "model-capabilities-v1",
+      "source_urls": [
+        "https://help.aliyun.com/en/model-studio/newly-released-models",
+        "https://help.aliyun.com/en/model-studio/visual-reasoning",
+        "https://huggingface.co/Qwen/Qwen3.8-2.4T-A95B"
+      ],
+      "evidence_status": "provider_documented_not_gateway_verified",
+      "source_document_sha256": {
+        "https://help.aliyun.com/en/model-studio/newly-released-models": "54b167876961c267e8f9c250e82db663feede5a7479322c8adeda7783aaf6481",
+        "https://help.aliyun.com/en/model-studio/visual-reasoning": "943410ca5edf380dd520d68a51dc954e1c1538145108b413c3e708b9affef512",
+        "https://huggingface.co/Qwen/Qwen3.8-2.4T-A95B": "f2ed3e6d91820da0e42c5fd200e58102268b520471a63e0312611ae13fb84fb4"
+      },
+      "task_profile_basis": "Task categories derived from documented operations; no empirical quality ranking or fixed framework role.",
+      "context_policy": "Legacy configured limit is preserved separately from documented native context; neither proves the supplier limit."
+    },
+    "official_pricing": {
+      "snapshot_date": "2026-10-09",
+      "source": "https://www.alibabacloud.com/help/en/model-studio/qwen3-8-max",
+      "pricebook_sha256": "9e9a8248e54f1934d08d5efe68a3998ebce6faa09106f3f2a7ac119bf89a182c"
+    }
+  },
+  "type_specific": {
+    "model": {
+      "profile_version": "model-capabilities-v1",
+      "input_modalities": [
+        "text",
+        "image"
+      ],
+      "output_modalities": [
+        "text"
+      ],
+      "supports": {
+        "tool_calling": true,
+        "json_mode": null,
+        "vision": true,
+        "reasoning": true,
+        "coding": true
+      },
+      "thinking_mode": "hybrid",
+      "native_protocol": "openai_compatible_chat",
+      "documented_context_tokens": null,
+      "evidence_status": "provider_documented_not_gateway_verified",
+      "gateway_verification_status": "not_run",
+      "limitations": [
+        "The configured supplier alias does not establish a pinned September 2 snapshot."
+      ],
+      "documented_interface_facts": {
+        "version_kind": "service_alias",
+        "alternate_provider_id": "qwen3.8-max-2026-09-02",
+        "family_service_alias": "qwen3.8-max",
+        "thinking_mode": "hybrid",
+        "snapshot_selection_status": "supplier_alias_backend_snapshot_unverified"
+      },
+      "max_output_tokens": null,
+      "pricing_rules": {
+        "input_per_m": "2",
+        "cache_per_m": ".25",
+        "output_per_m": "6",
+        "source": "https://www.alibabacloud.com/help/en/model-studio/qwen3-8-max",
+        "cache_mode": "implicit",
+        "input_tiers": [],
+        "region": "International Singapore",
+        "explicit_cache_per_m": ".17",
+        "cache_write_per_m": "2.5"
+      }
+    }
+  }
+}

@@ -1,0 +1,146 @@
+{
+  "manifest_version": "1.0",
+  "resource_id": "tool.ruff_lint_runner.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Run Ruff check in JSON mode using discovered project configuration",
+    "description": "Executes exactly `ruff check --output-format json <target>` and returns parsed diagnostics. The wrapper passes neither `--fix` nor `--no-fix`, so discovered configuration such as `fix=true` can modify source; it also passes no `--no-cache`, allowing Ruff's normal cache writes.",
+    "core_primitives": [
+      "invoke_configured_ruff_check",
+      "capture_native_ruff_json_diagnostics",
+      "report_ruff_exit_status"
+    ],
+    "problem_space": "Ruff lint checking for one Python file or directory using discovered configuration, with possible configuration-driven fixes and cache writes; not a guaranteed read-only audit, explicit Ruff format workflow, Bandit security scan, type check, or test run.",
+    "domain_tags": [
+      "python",
+      "linting",
+      "static_analysis"
+    ]
+  },
+  "constraint": {
+    "env_requirements": [
+      "Python >= 3.6",
+      "ruff executable on PATH",
+      "any intended Ruff configuration must be discoverable by Ruff from the target and inherited working directory"
+    ],
+    "io_signature": "Input: required target_path string naming an existing file or directory. Executes `ruff check --output-format json <target>` with inherited cwd/config discovery and without `--no-fix` or `--no-cache`; configuration may enable source fixes and Ruff may write cache state. Output: JSON envelope with parsed diagnostics when valid JSON is emitted.",
+    "accepted_inputs": [
+      "an existing Python source file intended for Ruff checking and authorized for possible configuration-driven modification",
+      "an existing directory tree intended for Ruff checking where normal Ruff cache writes are acceptable"
+    ],
+    "output_shape": "Ruff exit 0 or 1: {status: \"success\", tool: \"ruff\", target: string, exit_code: 0|1, result: array|object|scalar|null, stdout: string|null, stderr: string|null}; native JSON diagnostics normally appear as an array in result with stdout=null. Diagnostics and exit code may reflect configuration-driven fixes already applied to source, and cache writes are not reported. Other Ruff exits use status=\"tool_error\" and propagate the exit code. Missing target, executable, or 120-second timeout: {status: \"error\", tool: \"ruff\", message: string}, exiting 2/3/4. Missing argument prints usage to stderr and exits 1 without JSON.",
+    "limitations": [
+      "does not pass `--no-fix`; project configuration can set `fix=true`, so the wrapper cannot guarantee source files remain unchanged",
+      "does not pass `--no-cache`; Ruff may create or update its default `.ruff_cache` or configured cache directory",
+      "uses discovered Ruff rules/configuration without exposing select, ignore, config, target-version, preview, exclude, fix, or cache controls",
+      "Ruff rule coverage differs from Flake8, Pyflakes, Bandit, type checkers, and dead-code tools; diagnostics are not security or correctness proof",
+      "uses a fixed 120-second timeout, captures output without truncation, and may preserve raw stdout if Ruff output is not one valid JSON document"
+    ],
+    "artifact_input": [
+      "file_path"
+    ],
+    "artifact_output": [
+      "json"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "target_path",
+        "kind": "string",
+        "required": true,
+        "cli_position": 1
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "JSON execution envelope containing parsed Ruff check diagnostics, exit code, and raw streams; discovered configuration may enable source fixes and Ruff cache writes."
+    }
+  },
+  "routing": {
+    "family": "python-ruff-configured-check",
+    "intent_tags": [
+      "lint Python code with configured Ruff check",
+      "get native JSON Ruff diagnostics using project configuration"
+    ],
+    "negative_intents": [
+      "guarantee strictly read-only Ruff analysis",
+      "provide an explicit Ruff format workflow",
+      "select or disable fixes and cache behavior through manifest inputs",
+      "run Flake8 Pyflakes Bandit or a type checker",
+      "execute Python tests or prove code is secure"
+    ],
+    "dependency_slots": []
+  },
+  "utility": {
+    "latency_ms": 100,
+    "token_cost_factor": 0.01,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://docs.astral.sh/ruff",
+    "license": "MIT",
+    "backed_by": "Ruff linter",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:302cc97be966d04254aa1545b7f7d163e022a66e69f3eb13da6528a3e59cc5fb",
+    "local_implementation_uri": "file://Pool/resources/tools/script/ruff_lint_runner.py",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/script/_sgar_cli.py": "sha256:42368f8d49cb6364ad3aeaac6d0f9602adc12cb29fea49322fd488400698b6b9"
+    }
+  },
+  "type_specific": {
+    "tool": {
+      "tool_kind": "local_script",
+      "language": "python",
+      "deterministic": false
+    }
+  },
+  "memory": {
+    "success_trajectories": [],
+    "failure_reflections": []
+  },
+  "execution": {
+    "runtime": "python_script",
+    "uri": "file://Pool/resources/tools/script/ruff_lint_runner.py",
+    "execution_status": "active"
+  },
+  "type": {
+    "resource_type": "Tool",
+    "resource_tag": [
+      "python",
+      "linting",
+      "static_analysis"
+    ]
+  },
+  "input_contract": [
+    {
+      "name": "target_path",
+      "kind": "string",
+      "required": true,
+      "cli_position": 1
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "json",
+    "description": "JSON execution envelope containing parsed Ruff check diagnostics, exit code, and raw streams; discovered configuration may enable source fixes and Ruff cache writes."
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [],
+    "node_packages": [],
+    "system_packages": [],
+    "commands": [
+      "ruff"
+    ],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1"
+  }
+}

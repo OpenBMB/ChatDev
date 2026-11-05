@@ -1,0 +1,99 @@
+{
+  "resource_id": "qwen3-coder-30b-a3b-instruct",
+  "type": {
+    "resource_type": "Model",
+    "resource_tag": [
+      "131K Context",
+      "0.1310",
+      "0.5250",
+      "0.0000"
+    ]
+  },
+  "capability": {
+    "summary": "Non-thinking coding model with a smaller sparse-expert design.",
+    "core_primitives": [
+      "repository code editing",
+      "debugging",
+      "refactoring",
+      "test implementation",
+      "tool-assisted programming"
+    ],
+    "problem_space": "Coding model for repository editing and development tools. Applicable tasks include repository code editing, debugging, refactoring, test implementation, tool-assisted programming. Accepts text input and produces text output. External tools are required to execute programs, browse sources, or modify files; generated instructions alone do not perform those actions. Published distinction: The documented architecture has 30.5 billion total and 3.3 billion active parameters. It uses a coding-oriented function-call format; parser and gateway compatibility must be verified independently.",
+    "domain_tags": [
+      "Language",
+      "Software Engineering"
+    ]
+  },
+  "constraint": {
+    "env_requirements": [
+      "OpenAI-Compatible API Endpoint",
+      "GPU >= 24GB VRAM (Local Deployment) or API Key (Cloud)"
+    ],
+    "io_signature": "Input modalities: text | Output modalities: text. Gateway transport support requires verification."
+  },
+  "utility": {
+    "latency_ms": 0,
+    "token_cost_factor": 0,
+    "expected_success_rate": 0
+  },
+  "execution": {
+    "uri": "${base_url}/v1/chat/completions"
+  },
+  "memory": {
+    "success_trajectories": [],
+    "failure_reflections": []
+  },
+  "type_specific": {
+    "model": {
+      "profile_version": "model-capabilities-v1",
+      "input_modalities": [
+        "text"
+      ],
+      "output_modalities": [
+        "text"
+      ],
+      "supports": {
+        "tool_calling": true,
+        "json_mode": null,
+        "vision": false,
+        "reasoning": true,
+        "coding": true
+      },
+      "thinking_mode": "non_thinking",
+      "native_protocol": "openai_compatible_chat",
+      "documented_context_tokens": 262144,
+      "evidence_status": "provider_documented_not_gateway_verified",
+      "gateway_verification_status": "not_run",
+      "limitations": []
+    }
+  },
+  "provenance": {
+    "semantic_review": {
+      "reviewed_at": "2026-09-09",
+      "policy": "model-capabilities-v1",
+      "source_urls": [
+        "https://huggingface.co/Qwen/Qwen3-Coder-30B-A3B-Instruct/raw/main/README.md"
+      ],
+      "evidence_status": "provider_documented_not_gateway_verified",
+      "source_document_sha256": {
+        "https://huggingface.co/Qwen/Qwen3-Coder-30B-A3B-Instruct/raw/main/README.md": "98e8f0e00f2d6c7f1743fc4ef2b6297dcc57bec73d71f36588aed984370ac3f3"
+      },
+      "task_profile_basis": "Task categories derived from documented operations; no empirical quality ranking or fixed framework role.",
+      "context_policy": "Legacy configured limit is preserved separately from documented native context; neither proves the supplier limit."
+    },
+    "model_distinction_review": {
+      "evidence_kind": "documented_architecture",
+      "source_urls": [
+        "https://huggingface.co/Qwen/Qwen3-Coder-30B-A3B-Instruct/raw/main/README.md"
+      ],
+      "source_document_sha256": {
+        "https://huggingface.co/Qwen/Qwen3-Coder-30B-A3B-Instruct/raw/main/README.md": "8b1aa7e67131e92e91d2b617fbc4214bfe6389fa6d0d08f6b1a5868212be9fcc"
+      },
+      "interpretation_limit": "Published task emphasis is non-exclusive. Architecture and product positioning do not establish supplier latency, measured quality, or a fixed framework role.",
+      "policy": "model-distinctions-v1",
+      "reviewed_at": "2026-09-09",
+      "evidence_status": "provider_documented_not_gateway_verified",
+      "scope": "Non-exclusive published task emphasis and architecture; no empirical cross-model quality ordering."
+    }
+  }
+}

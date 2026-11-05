@@ -1,0 +1,140 @@
+{
+  "manifest_version": "v2",
+  "resource_id": "tool.mcp.git_status.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Report staged, unstaged, and untracked state for a local Git working tree.",
+    "description": "Use to obtain a concise repository status summary before deciding what to stage, review, or commit. It reports the current worktree and index state; it does not display patch content, stage paths, create commits, or change branches.",
+    "domain_tags": [
+      "git",
+      "worktree-status",
+      "repository-inspection"
+    ],
+    "core_primitives": [
+      "inspect_worktree_status",
+      "identify_staged_unstaged_untracked",
+      "summarize_repository_state"
+    ],
+    "problem_space": "Summarize the current state of a local Git repository, including staged, unstaged, and untracked paths. This is state inspection, distinct from patch-level diff review, staging, committing, or branch mutation."
+  },
+  "constraint": {
+    "io_signature": "Input: local Git repository path. Output: text or JSON summary of worktree and index status.",
+    "accepted_inputs": [
+      "a local directory containing a Git repository"
+    ],
+    "output_shape": "repository status entries grouped by staging state.",
+    "limitations": [
+      "does not display full file patches",
+      "does not stage, commit, switch branches, or alter files"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "repo_path",
+        "kind": "directory_path",
+        "required": true,
+        "cli_position": 1
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "text",
+      "description": "Working-tree status via MCP git server"
+    }
+  },
+  "routing": {
+    "family": "git-worktree-inspection",
+    "intent_tags": [
+      "show git status",
+      "inspect staged unstaged and untracked files",
+      "summarize repository state"
+    ],
+    "negative_intents": [
+      "show a diff patch",
+      "stage files",
+      "create a commit"
+    ]
+  },
+  "execution": {
+    "runtime": "mcp_server",
+    "uri": "file://Pool/resources/tools/mcp/mcp.git_status.py",
+    "execution_status": "active"
+  },
+  "utility": {
+    "latency_ms": 300.0,
+    "token_cost_factor": 0.02,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://github.com/modelcontextprotocol/servers/tree/main/src/git",
+    "license": "MIT",
+    "backed_by": "MCP git_status",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:9cc23e685662933e070d6608f40411ab1aa810f6d2db22bc59bdc03a27a5b77a",
+    "local_implementation_uri": "file://Pool/resources/tools/mcp/mcp.git_status.py",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/mcp/_mcplib.py": "sha256:8c39f008bd1fc31f0457e6e08cb42da72eeeebba3dd1bcb51c277a33b35287f3"
+    }
+  },
+  "type_specific": {},
+  "type": {
+    "resource_type": "Tool"
+  },
+  "input_contract": [
+    {
+      "name": "repo_path",
+      "kind": "directory_path",
+      "required": true,
+      "cli_position": 1
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "text",
+    "description": "Working-tree status via MCP git server"
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [
+      {
+        "name": "mcp",
+        "version": "==1.28.1",
+        "required": true
+      },
+      {
+        "name": "mcp-server-git",
+        "version": "==2026.7.10",
+        "required": true
+      }
+    ],
+    "node_packages": [],
+    "system_packages": [
+      {
+        "name": "git",
+        "version": "image-locked",
+        "required": true
+      }
+    ],
+    "commands": [
+      "git",
+      "python"
+    ],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "mcp": {
+      "server_command": "git",
+      "working_directory": "/app",
+      "allowed_roots": [
+        "/app"
+      ]
+    },
+    "python_compatibility": ">=3.11,<4"
+  }
+}

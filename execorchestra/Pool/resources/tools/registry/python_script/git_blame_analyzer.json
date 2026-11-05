@@ -1,0 +1,172 @@
+{
+  "manifest_version": "1.0",
+  "resource_id": "tool.git_blame_analyzer.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Summarize `git blame --line-porcelain` as blamed-line counts grouped by author name",
+    "description": "Runs Git blame for one existing file from that file's directory, scans porcelain output for `author ` records, and returns only a total blamed-line count plus an author-to-line-count mapping ordered by frequency. It is a read-only aggregate, not a full blame report.",
+    "core_primitives": [
+      "run_git_blame_line_porcelain",
+      "count_blame_lines_by_author_name",
+      "summarize_file_authorship_counts"
+    ],
+    "problem_space": "Coarse per-author line-count summarization for one Git-tracked file; not commit-history analysis, responsibility determination, per-line attribution retrieval, repository mutation, or branch cleanup.",
+    "domain_tags": [
+      "version-control",
+      "software-development",
+      "code-analysis"
+    ]
+  },
+  "constraint": {
+    "env_requirements": [
+      "Python >= 3.6",
+      "git"
+    ],
+    "io_signature": "Input: one required existing file path inside a discoverable Git repository; output: JSON with total blamed lines and counts grouped only by porcelain author name, or a Git/path error.",
+    "accepted_inputs": [
+      "an existing file path for which `git blame` can discover a containing repository and produce blame data"
+    ],
+    "output_shape": "Success: {status: \"success\", tool: \"git\", file: string, total_lines: integer, lines_by_author: object}; lines_by_author maps author display names to blamed-line counts in descending `Counter.most_common()` order, and total_lines counts parsed `author ` records. Missing file: {status: \"error\", message: string} and exit 2. Nonzero git blame: {status: \"error\", tool: \"git\", message: string} and exit 1. Missing argument prints usage to stderr and exits 1 without JSON. Missing Git executable, 60-second timeout, or other subprocess exceptions are uncaught and may yield a traceback instead of JSON.",
+    "limitations": [
+      "returns only aggregate counts by author display name and discards commit hashes, emails, timestamps, line numbers, source lines, and per-line attribution",
+      "author names are not canonical identities; identical names can merge and one person using different names can split across keys",
+      "does not analyze repository-wide history, infer code ownership or responsibility, compare revisions, or mutate Git state",
+      "uses the file's parent as `git -C` and an absolute file argument, applies a fixed 60-second timeout, does not truncate output, and does not catch timeout or executable-not-found exceptions"
+    ],
+    "artifact_input": [
+      "file_path"
+    ],
+    "artifact_output": [
+      "json"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "file_path",
+        "kind": "string",
+        "required": true,
+        "cli_position": 1
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "JSON summary containing one file path, total parsed blame lines, and blamed-line counts grouped by author display name, or a path/Git error.",
+      "json_schema": {
+        "description": "Native JSON representation only; no field or task-delivery guarantee.",
+        "type": [
+          "object",
+          "array",
+          "string",
+          "number",
+          "boolean",
+          "null"
+        ]
+      },
+      "native_json_contract_scope": "value_only"
+    }
+  },
+  "routing": {
+    "family": "git-read-only-blame-author-count-summary",
+    "intent_tags": [
+      "summarize blamed line counts by author for one Git file",
+      "get a coarse Git blame authorship distribution"
+    ],
+    "negative_intents": [
+      "retrieve per-line blame details, commits, dates, or author emails",
+      "analyze full Git history or determine definitive code ownership",
+      "delete branches, commit changes, or otherwise mutate a repository"
+    ],
+    "dependency_slots": []
+  },
+  "utility": {
+    "latency_ms": 200,
+    "token_cost_factor": 0.01,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://git-scm.com/",
+    "license": "GPLv2",
+    "backed_by": "wraps git(1) CLI",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:3cf3e42ea3278722849a1bdb7aaebbed1cd3e989f1c44700542e263e055c62d4",
+    "local_implementation_uri": "file://Pool/resources/tools/script/git_blame_analyzer.py",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/script/_sgar_cli.py": "sha256:42368f8d49cb6364ad3aeaac6d0f9602adc12cb29fea49322fd488400698b6b9"
+    }
+  },
+  "type_specific": {
+    "tool": {
+      "tool_kind": "local_script",
+      "language": "python",
+      "deterministic": true
+    }
+  },
+  "memory": {
+    "success_trajectories": [],
+    "failure_reflections": []
+  },
+  "execution": {
+    "runtime": "python_script",
+    "uri": "file://Pool/resources/tools/script/git_blame_analyzer.py",
+    "execution_status": "active"
+  },
+  "type": {
+    "resource_type": "Tool",
+    "resource_tag": [
+      "version-control",
+      "software-development",
+      "code-analysis"
+    ]
+  },
+  "input_contract": [
+    {
+      "name": "file_path",
+      "kind": "string",
+      "required": true,
+      "cli_position": 1
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "json",
+    "description": "JSON summary containing one file path, total parsed blame lines, and blamed-line counts grouped by author display name, or a path/Git error.",
+    "json_schema": {
+      "description": "Native JSON representation only; no field or task-delivery guarantee.",
+      "type": [
+        "object",
+        "array",
+        "string",
+        "number",
+        "boolean",
+        "null"
+      ]
+    },
+    "native_json_contract_scope": "value_only"
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [],
+    "node_packages": [],
+    "system_packages": [
+      {
+        "name": "git",
+        "version": "image-locked",
+        "required": true
+      }
+    ],
+    "commands": [
+      "git"
+    ],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "python_compatibility": ">=3.11,<4"
+  }
+}

@@ -1,0 +1,274 @@
+{
+  "manifest_version": "v2",
+  "resource_id": "tool.mcp.fs_write_file.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Create or overwrite one local text file with supplied complete contents.",
+    "description": "Use when a workflow must materialize a full text artifact at an explicit path. It writes the provided content as a file; it does not perform a matched in-place edit, move a file, list folders, or search the workspace.",
+    "domain_tags": [
+      "filesystem",
+      "file-writing",
+      "artifact-creation"
+    ],
+    "core_primitives": [
+      "write_complete_text_file",
+      "create_text_artifact",
+      "overwrite_file_contents"
+    ],
+    "operation_kinds": [
+      "write_complete_text_file"
+    ],
+    "problem_space": "Create or replace a complete local text artifact at a known path. This is whole-file content mutation, distinct from precise replacement inside an existing file, path relocation, and all read-only filesystem inspection.",
+    "execution_semantics": {
+      "determinism": "deterministic",
+      "side_effects": "declared",
+      "effect_targets": [
+        "task_workspace"
+      ],
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  "constraint": {
+    "io_signature": "Input: destination file path and complete text content. Output: JSON filesystem write result.",
+    "accepted_inputs": [
+      "a writable local destination path within allowed roots",
+      "complete text content to persist"
+    ],
+    "output_shape": "JSON operation result for file creation or overwrite.",
+    "limitations": [
+      "does not require or preserve an old-text match for targeted edits",
+      "does not read, search, move, or list files"
+    ],
+    "materialized_artifact_types": [
+      "plaintext",
+      "markdown",
+      "code",
+      "csv",
+      "json"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "path",
+        "kind": "string",
+        "required": true,
+        "cli_position": 1
+      },
+      {
+        "name": "content",
+        "kind": "string",
+        "required": true,
+        "cli_position": 2
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "Create/overwrite a file via MCP filesystem server",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "const": "success"
+          },
+          "tool": {
+            "type": "string"
+          },
+          "mcp_server": {
+            "type": "string"
+          },
+          "mcp_tool": {
+            "type": "string"
+          },
+          "result": {
+            "type": "object",
+            "properties": {
+              "is_error": {
+                "type": "boolean"
+              },
+              "content": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "required": [
+              "is_error",
+              "content"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "status",
+          "tool",
+          "mcp_server",
+          "mcp_tool",
+          "result"
+        ],
+        "additionalProperties": false
+      },
+      "result_status": {
+        "payload_path": "status",
+        "success_values": [
+          "success"
+        ],
+        "failure_values": [
+          "error"
+        ]
+      }
+    }
+  },
+  "routing": {
+    "family": "filesystem-mutation",
+    "intent_tags": [
+      "write a text file",
+      "create an output artifact",
+      "overwrite a file with content"
+    ],
+    "negative_intents": [
+      "replace exact text in an existing file",
+      "move or rename a file",
+      "read a file"
+    ]
+  },
+  "execution": {
+    "runtime": "mcp_server",
+    "uri": "file://Pool/resources/tools/mcp/mcp.fs_write_file.py",
+    "execution_status": "active"
+  },
+  "utility": {
+    "latency_ms": 300.0,
+    "token_cost_factor": 0.02,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://github.com/modelcontextprotocol/servers/tree/main/src/filesystem",
+    "license": "MIT",
+    "backed_by": "MCP write_file",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:477c2650b0bda018270bb5effe9fea58428e478f4b7fd57a10d74287ba9d1df3",
+    "local_implementation_uri": "file://Pool/resources/tools/mcp/mcp.fs_write_file.py",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/mcp/_mcplib.py": "sha256:8c39f008bd1fc31f0457e6e08cb42da72eeeebba3dd1bcb51c277a33b35287f3"
+    }
+  },
+  "type_specific": {},
+  "type": {
+    "resource_type": "Tool"
+  },
+  "input_contract": [
+    {
+      "name": "path",
+      "kind": "string",
+      "required": true,
+      "cli_position": 1
+    },
+    {
+      "name": "content",
+      "kind": "string",
+      "required": true,
+      "cli_position": 2
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "json",
+    "description": "Create/overwrite a file via MCP filesystem server",
+    "schema": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "const": "success"
+        },
+        "tool": {
+          "type": "string"
+        },
+        "mcp_server": {
+          "type": "string"
+        },
+        "mcp_tool": {
+          "type": "string"
+        },
+        "result": {
+          "type": "object",
+          "properties": {
+            "is_error": {
+              "type": "boolean"
+            },
+            "content": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "is_error",
+            "content"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "status",
+        "tool",
+        "mcp_server",
+        "mcp_tool",
+        "result"
+      ],
+      "additionalProperties": false
+    },
+    "result_status": {
+      "payload_path": "status",
+      "success_values": [
+        "success"
+      ],
+      "failure_values": [
+        "error"
+      ]
+    }
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [
+      {
+        "name": "mcp",
+        "version": "==1.28.1",
+        "required": true
+      }
+    ],
+    "node_packages": [
+      {
+        "name": "@modelcontextprotocol/server-filesystem",
+        "version": "==2026.7.10",
+        "required": true
+      }
+    ],
+    "system_packages": [],
+    "commands": [
+      "mcp-server-filesystem"
+    ],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "mcp": {
+      "server_command": "mcp-server-filesystem",
+      "working_directory": "/app",
+      "allowed_roots": [
+        "/app"
+      ]
+    }
+  }
+}

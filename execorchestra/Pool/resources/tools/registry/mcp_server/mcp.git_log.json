@@ -1,0 +1,177 @@
+{
+  "manifest_version": "v2",
+  "resource_id": "tool.mcp.git_log.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "List recent commits from a local Git repository, optionally limited by count.",
+    "description": "Use to inspect repository revision history as a sequence of commits. It lists history summaries; it does not show a specific commit patch, compare working changes, create commits, or mutate branches.",
+    "domain_tags": [
+      "git",
+      "commit-history",
+      "history-inspection"
+    ],
+    "core_primitives": [
+      "list_recent_commits",
+      "inspect_revision_history",
+      "limit_commit_history"
+    ],
+    "problem_space": "Inspect a chronological list of commits in a known local Git repository. This is history listing, distinct from showing one revision's full patch, reviewing diffs, and all Git mutations."
+  },
+  "constraint": {
+    "io_signature": "Input: local Git repository path and optional maximum commit count. Output: JSON commit-history list.",
+    "accepted_inputs": [
+      "a local directory containing a Git repository",
+      "an optional positive commit-count limit"
+    ],
+    "output_shape": "JSON collection of commit summary records.",
+    "limitations": [
+      "does not show a selected commit's complete patch",
+      "does not alter branches, files, index, or history"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "repo_path",
+        "kind": "string",
+        "required": true,
+        "cli_position": 1
+      },
+      {
+        "name": "max_count",
+        "kind": "string",
+        "required": false,
+        "cli_position": 2
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "Commit log via MCP git server",
+      "json_schema": {
+        "description": "Native JSON representation only; no field or task-delivery guarantee.",
+        "type": [
+          "object",
+          "array",
+          "string",
+          "number",
+          "boolean",
+          "null"
+        ]
+      },
+      "native_json_contract_scope": "value_only"
+    }
+  },
+  "routing": {
+    "family": "git-history-inspection",
+    "intent_tags": [
+      "list recent commits",
+      "show Git log",
+      "inspect commit history"
+    ],
+    "negative_intents": [
+      "show one commit patch",
+      "show working-tree diff",
+      "create a commit"
+    ]
+  },
+  "execution": {
+    "runtime": "mcp_server",
+    "uri": "file://Pool/resources/tools/mcp/mcp.git_log.py",
+    "execution_status": "active"
+  },
+  "utility": {
+    "latency_ms": 300.0,
+    "token_cost_factor": 0.02,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://github.com/modelcontextprotocol/servers/tree/main/src/git",
+    "license": "MIT",
+    "backed_by": "MCP git_log",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:ad4ee03c4a892fabdf17c0329fc9a145dfcec032c0d5ce1f430e66af3068ee78",
+    "local_implementation_uri": "file://Pool/resources/tools/mcp/mcp.git_log.py",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/mcp/_mcplib.py": "sha256:8c39f008bd1fc31f0457e6e08cb42da72eeeebba3dd1bcb51c277a33b35287f3"
+    }
+  },
+  "type_specific": {},
+  "type": {
+    "resource_type": "Tool"
+  },
+  "input_contract": [
+    {
+      "name": "repo_path",
+      "kind": "string",
+      "required": true,
+      "cli_position": 1
+    },
+    {
+      "name": "max_count",
+      "kind": "string",
+      "required": false,
+      "cli_position": 2
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "json",
+    "description": "Commit log via MCP git server",
+    "json_schema": {
+      "description": "Native JSON representation only; no field or task-delivery guarantee.",
+      "type": [
+        "object",
+        "array",
+        "string",
+        "number",
+        "boolean",
+        "null"
+      ]
+    },
+    "native_json_contract_scope": "value_only"
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [
+      {
+        "name": "mcp",
+        "version": "==1.28.1",
+        "required": true
+      },
+      {
+        "name": "mcp-server-git",
+        "version": "==2026.7.10",
+        "required": true
+      }
+    ],
+    "node_packages": [],
+    "system_packages": [
+      {
+        "name": "git",
+        "version": "image-locked",
+        "required": true
+      }
+    ],
+    "commands": [
+      "git",
+      "python"
+    ],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "mcp": {
+      "server_command": "git",
+      "working_directory": "/app",
+      "allowed_roots": [
+        "/app"
+      ]
+    },
+    "python_compatibility": ">=3.11,<4"
+  }
+}

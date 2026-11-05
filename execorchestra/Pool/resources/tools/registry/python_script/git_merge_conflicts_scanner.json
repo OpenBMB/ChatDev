@@ -1,0 +1,172 @@
+{
+  "manifest_version": "1.0",
+  "resource_id": "tool.git_merge_conflicts_scanner.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Search tracked working-tree files for line-leading Git conflict-marker text and return at most 200 matching lines",
+    "description": "Runs a fixed `git grep -nE` pattern for lines beginning with seven `<`, `=`, or `>` marker characters. It reports matching file names and a full match count, truncates marker details to 200 lines, and never resolves or edits conflicts.",
+    "core_primitives": [
+      "grep_tracked_files_for_conflict_markers",
+      "count_line_leading_marker_matches",
+      "list_files_with_marker_text"
+    ],
+    "problem_space": "Heuristic read-only search for unresolved-looking marker text in tracked working-tree files; not Git index conflict-stage detection, merge-state validation, conflict resolution, or repository mutation.",
+    "domain_tags": [
+      "version-control",
+      "software-engineering",
+      "automation-tools"
+    ]
+  },
+  "constraint": {
+    "env_requirements": [
+      "Python >= 3.6",
+      "git executable"
+    ],
+    "io_signature": "Input: one required existing repository path; output: JSON with unique matching files, total marker-line count, and at most the first 200 raw git-grep lines.",
+    "accepted_inputs": [
+      "an existing local Git repository directory whose tracked working-tree files should be searched"
+    ],
+    "output_shape": "After any completed Git process: {status: \"success\", tool: \"git\", target: string, conflicted_files: string[], conflict_marker_count: integer, markers: string[]}; conflicted_files and count use every nonblank stdout line, while markers is truncated to lines[:200]. The Git exit code and stderr are omitted, so grep exit 1 (no matches) and hard Git failures can both appear as success with empty arrays. Non-existing path: {status: \"error\", message: string} and exit 2. Missing argument prints usage to stderr and exits 1 without JSON. Missing Git, 120-second timeout, and other subprocess exceptions are uncaught and may produce a traceback.",
+    "limitations": [
+      "detects only tracked-file lines beginning exactly with `<<<<<<<`, `=======`, or `>>>>>>>`; indented markers and nontracked files are missed, while legitimate matching text can be a false positive",
+      "does not inspect unmerged index stages via `git diff --diff-filter=U` or verify that the repository is in a merge/rebase conflict state",
+      "ignores Git's return code and stderr, so repository or command failures can be indistinguishable from a clean scan",
+      "returns at most 200 marker detail lines although counts/files use all stdout, uses a fixed 120-second timeout, and never edits or resolves files"
+    ],
+    "artifact_input": [
+      "repo_path"
+    ],
+    "artifact_output": [
+      "json"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "repo_path",
+        "kind": "string",
+        "required": true,
+        "cli_position": 1
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "JSON heuristic marker scan with all matching files, total line count, and at most 200 raw grep lines; Git failures are not distinguished from no matches.",
+      "json_schema": {
+        "description": "Native JSON representation only; no field or task-delivery guarantee.",
+        "type": [
+          "object",
+          "array",
+          "string",
+          "number",
+          "boolean",
+          "null"
+        ]
+      },
+      "native_json_contract_scope": "value_only"
+    }
+  },
+  "routing": {
+    "family": "git-read-only-conflict-marker-grep",
+    "intent_tags": [
+      "scan tracked Git files for unresolved conflict marker text",
+      "list files containing line-leading merge marker patterns"
+    ],
+    "negative_intents": [
+      "resolve or edit merge conflicts",
+      "reliably inspect Git unmerged index stages or merge state",
+      "scan untracked files or arbitrary non-Git directories"
+    ],
+    "dependency_slots": []
+  },
+  "utility": {
+    "latency_ms": 100,
+    "token_cost_factor": 0.01,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://git-scm.com",
+    "license": "GPLv2",
+    "backed_by": "",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:4f14150afba9604c389a812fc29ca47f3fe69314d58442407791215bbbecf459",
+    "local_implementation_uri": "file://Pool/resources/tools/script/git_merge_conflicts_scanner.py",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/script/_sgar_cli.py": "sha256:42368f8d49cb6364ad3aeaac6d0f9602adc12cb29fea49322fd488400698b6b9"
+    }
+  },
+  "type_specific": {
+    "tool": {
+      "tool_kind": "local_script",
+      "language": "python",
+      "deterministic": true
+    }
+  },
+  "memory": {
+    "success_trajectories": [],
+    "failure_reflections": []
+  },
+  "execution": {
+    "runtime": "python_script",
+    "uri": "file://Pool/resources/tools/script/git_merge_conflicts_scanner.py",
+    "execution_status": "active"
+  },
+  "type": {
+    "resource_type": "Tool",
+    "resource_tag": [
+      "version-control",
+      "software-engineering",
+      "automation-tools"
+    ]
+  },
+  "input_contract": [
+    {
+      "name": "repo_path",
+      "kind": "string",
+      "required": true,
+      "cli_position": 1
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "json",
+    "description": "JSON heuristic marker scan with all matching files, total line count, and at most 200 raw grep lines; Git failures are not distinguished from no matches.",
+    "json_schema": {
+      "description": "Native JSON representation only; no field or task-delivery guarantee.",
+      "type": [
+        "object",
+        "array",
+        "string",
+        "number",
+        "boolean",
+        "null"
+      ]
+    },
+    "native_json_contract_scope": "value_only"
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [],
+    "node_packages": [],
+    "system_packages": [
+      {
+        "name": "git",
+        "version": "image-locked",
+        "required": true
+      }
+    ],
+    "commands": [
+      "git"
+    ],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "python_compatibility": ">=3.11,<4"
+  }
+}

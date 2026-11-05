@@ -1,0 +1,158 @@
+{
+  "manifest_version": "v2",
+  "resource_id": "tool.mcp.fs_read_multiple.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Read textual contents from several explicitly named local files in one operation.",
+    "description": "Use when a workflow already has a bounded set of file paths and needs all their text together. It reads supplied paths only; it does not discover files, traverse directories, search patterns, or modify content.",
+    "domain_tags": [
+      "filesystem",
+      "multi-file-reading",
+      "source-inspection"
+    ],
+    "core_primitives": [
+      "read_multiple_text_files",
+      "aggregate_known_file_contents",
+      "batch_content_loading"
+    ],
+    "problem_space": "Collect text from several known local files in one call. This is bounded multi-file content access, distinct from one-file reading, recursive traversal, filename/content search, and all writes."
+  },
+  "constraint": {
+    "io_signature": "Input: comma-separated local text-file paths. Output: JSON collection of text contents by path.",
+    "accepted_inputs": [
+      "one or more existing readable local text-file paths within allowed roots"
+    ],
+    "output_shape": "JSON mapping or collection of requested paths and their text contents.",
+    "limitations": [
+      "does not locate files by a pattern or scan a directory",
+      "does not edit files or read arbitrary binary documents"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "paths",
+        "kind": "string",
+        "required": true,
+        "cli_position": 1
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "Read multiple files at once via MCP filesystem server",
+      "json_schema": {
+        "description": "Native JSON representation only; no field or task-delivery guarantee.",
+        "type": [
+          "object",
+          "array",
+          "string",
+          "number",
+          "boolean",
+          "null"
+        ]
+      },
+      "native_json_contract_scope": "value_only"
+    }
+  },
+  "routing": {
+    "family": "filesystem-content-read",
+    "intent_tags": [
+      "read several named files",
+      "load multiple source files",
+      "collect text from known paths"
+    ],
+    "negative_intents": [
+      "search for files",
+      "read one file only",
+      "write or edit files"
+    ]
+  },
+  "execution": {
+    "runtime": "mcp_server",
+    "uri": "file://Pool/resources/tools/mcp/mcp.fs_read_multiple.py",
+    "execution_status": "active"
+  },
+  "utility": {
+    "latency_ms": 300.0,
+    "token_cost_factor": 0.02,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://github.com/modelcontextprotocol/servers/tree/main/src/filesystem",
+    "license": "MIT",
+    "backed_by": "MCP read_multiple_files",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:5895cac71b06b69348b7bf8a7e5f63657e0c2f3ce7be3dac9dede7ba352156a4",
+    "local_implementation_uri": "file://Pool/resources/tools/mcp/mcp.fs_read_multiple.py",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/mcp/_mcplib.py": "sha256:8c39f008bd1fc31f0457e6e08cb42da72eeeebba3dd1bcb51c277a33b35287f3"
+    }
+  },
+  "type_specific": {},
+  "type": {
+    "resource_type": "Tool"
+  },
+  "input_contract": [
+    {
+      "name": "paths",
+      "kind": "string",
+      "required": true,
+      "cli_position": 1
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "json",
+    "description": "Read multiple files at once via MCP filesystem server",
+    "json_schema": {
+      "description": "Native JSON representation only; no field or task-delivery guarantee.",
+      "type": [
+        "object",
+        "array",
+        "string",
+        "number",
+        "boolean",
+        "null"
+      ]
+    },
+    "native_json_contract_scope": "value_only"
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [
+      {
+        "name": "mcp",
+        "version": "==1.28.1",
+        "required": true
+      }
+    ],
+    "node_packages": [
+      {
+        "name": "@modelcontextprotocol/server-filesystem",
+        "version": "==2026.7.10",
+        "required": true
+      }
+    ],
+    "system_packages": [],
+    "commands": [
+      "mcp-server-filesystem"
+    ],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "mcp": {
+      "server_command": "mcp-server-filesystem",
+      "working_directory": "/app",
+      "allowed_roots": [
+        "/app"
+      ]
+    },
+    "python_compatibility": ">=3.11,<4"
+  }
+}

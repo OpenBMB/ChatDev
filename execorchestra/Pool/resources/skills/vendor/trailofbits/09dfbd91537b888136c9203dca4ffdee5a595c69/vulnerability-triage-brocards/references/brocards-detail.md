@@ -1,0 +1,220 @@
+# Brocards for Vulnerability Triage -- Detailed Reference
+
+Expanded explanations, concrete examples, and edge cases for each of the
+7 brocards. Consult this file when a brocard evaluation is ambiguous or
+when documenting a dismissal that requires detailed justification.
+
+Source: William Woodruff, "Brocards for vulnerability triage" (2026).
+
+---
+
+## Brocard 1: No Vulnerability Without a Threat Model
+
+### Principle
+
+A vulnerability report that does not articulate a coherent threat model --
+who the attacker is, what capability they have, how they exploit the
+behavior, and what harm results -- can be dismissed. The burden of proof
+falls on the reporter to connect code behavior to real-world harm.
+
+### Examples
+
+| Scenario | Verdict | Reasoning |
+|----------|---------|-----------|
+| Python API raises exceptions in undocumented edge cases | DISMISS | No exploitation mechanism described; an exception is not inherently harmful without a path from attacker input to that exception causing damage |
+| Hang in a local developer tool | DISMISS | The developer can simply kill the process; no remote attacker, no persistent harm |
+| Heap overflow in a network-facing parser | PASS | Attacker sends crafted input over the network, triggers overflow, achieves code execution |
+
+### Edge Cases
+
+- A report may describe a real code defect without it being a
+  *vulnerability*. Bugs and vulnerabilities are not synonyms. A missing
+  threat model may indicate the report describes a bug, not a security
+  issue.
+- If the reporter provides a partial threat model, request the missing
+  pieces rather than dismissing outright. Issue a NEEDS-MORE-INFO verdict
+  specifying which elements (attacker, capability, exploit mechanism, or
+  impact) are absent.
+
+---
+
+## Brocard 2: No Exploit from the Heavens
+
+### Principle
+
+Reject reports where the attacker capabilities required to trigger the
+vulnerability equal or exceed the vulnerability's impact. The vulnerability
+is redundant -- the attacker already possesses the power the exploit would
+grant.
+
+### Examples
+
+| Scenario | Verdict | Reasoning |
+|----------|---------|-----------|
+| Content manipulation on a web service, but only with active MITM | DISMISS | An active MITM attacker can already inject arbitrary content; the vulnerability adds nothing to their capability |
+| Code execution via ctypes manipulation of CPython object internals | DISMISS | Using ctypes to corrupt memory already requires arbitrary code execution in the Python process |
+| SSRF via user-controlled URL parameter | PASS | The attacker controls a URL string (low capability) but gains internal network access (high impact) -- capability less than impact |
+
+### Edge Cases
+
+- Privilege escalation chains may appear to violate this brocard but do
+  not: an attacker with *limited* access exploiting a vulnerability to
+  gain *elevated* access is valid because the post-exploit capability
+  exceeds the pre-exploit capability.
+- Carefully distinguish between "the attacker can do X" and "the attacker
+  can do X *in this context*." Local code execution in a sandboxed
+  environment is not the same as local code execution with full privileges.
+
+---
+
+## Brocard 3: No Vulnerability Outside of Usage
+
+### Principle
+
+Behavior that *could* occur but does not in actual software usage is not a
+vulnerability. The vulnerable code path must be reachable in practice.
+
+### Examples
+
+| Scenario | Verdict | Reasoning |
+|----------|---------|-----------|
+| Private API with buffer overflow, but the only caller passes a fixed-size buffer | DISMISS | The vulnerable path is never exercised with attacker-controlled data |
+| C function with overflow risk, but all call sites statically verified as safe | DISMISS | No real-world caller triggers the overflow |
+| OpenSSL vulnerability in a function CPython never calls | DISMISS | Upstream vulnerability is not reachable through the downstream API surface |
+| Public API with documented precondition (valid UTF-8), all callers maintain invariant | DISMISS | The invariant holds across all usage; the theoretical violation does not occur |
+| Library function with overflow, used by 200+ downstream packages (not all audited) | PASS | Cannot verify all callers maintain safe usage; at least some may be vulnerable |
+
+### Edge Cases
+
+- For libraries with broad downstream usage, "outside of usage" requires
+  checking representative downstream callers, not just the library's own
+  test suite.
+- Future usage changes may introduce reachability. If the code is a public
+  API with no usage restrictions, consider whether dismissal should include
+  a recommendation to add API guards or documentation (linking to
+  Brocard 5).
+- Unreachable code in the *current* version may become reachable after
+  refactoring. If the codebase is under active development, note this
+  caveat in the triage summary.
+
+---
+
+## Brocard 4: No Vulnerability from Standard Behavior
+
+### Principle
+
+Behavior that results from correct implementation of a specification is not
+a vulnerability in the implementation. The vulnerability, if any, exists in
+the standard itself.
+
+### Examples
+
+| Scenario | Verdict | Reasoning |
+|----------|---------|-----------|
+| HTTP server implements robustness principle per RFC 7230 | DISMISS | The server correctly follows the RFC; report the concern to the standards body |
+| HMAC-MD5 usage reported as "using broken MD5" | DISMISS | MD5 collision resistance is broken, but HMAC-MD5 does not depend on collision resistance; the construction is sound |
+| TLS 1.2 implementation supporting CBC cipher suites | Conditional | If the implementation claims TLS 1.3-only but falls back to 1.2 CBC, the implementation's stricter claim is violated |
+
+### Edge Cases
+
+- **Voluntary strictness exception:** When an implementation advertises
+  stricter behavior than the standard requires (e.g., "we only support
+  TLS 1.3"), failure to enforce that strictness *is* a vulnerability in
+  the implementation, even though the standard permits the behavior.
+  Always check whether the project makes security claims beyond the spec.
+- Standards themselves can be vulnerable. If a brocard-4 dismissal applies,
+  consider whether an advisory should be filed against the standard rather
+  than the implementation.
+
+---
+
+## Brocard 5: No Vulnerability from Documented Behavior
+
+### Principle
+
+Behavior that is explicitly documented -- especially with security
+implications or usage caveats -- cannot be reported as a vulnerability in
+the component that documents it.
+
+### Examples
+
+| Scenario | Verdict | Reasoning |
+|----------|---------|-----------|
+| Python http.server, explicitly marked "not suitable for production" | DISMISS | Documentation explicitly warns against production use |
+| Python serialization module documented as "insecure by design" | DISMISS | The insecurity is intentional and documented |
+| Downstream web app deserializing untrusted user input with an insecure serializer | PASS | The downstream project violates documented guidelines; the vulnerability is in the downstream project |
+| CLI tool with --insecure flag that disables TLS verification | DISMISS | The flag is documented; the user opted in |
+
+### Edge Cases
+
+- Documentation buried in obscure locations (e.g., a footnote in a
+  changelog) provides weaker protection than prominent warnings. If the
+  documentation is not reasonably discoverable, this brocard may not fully
+  apply.
+- "Documented" does not mean "acceptable." A component that documents
+  dangerous behavior without offering a safe alternative may warrant a
+  report requesting a safer default, even if the current behavior is
+  technically documented.
+- Downstream misuse of documented behavior is a valid finding against the
+  downstream project. Always clarify which component the report targets.
+
+---
+
+## Brocard 6: No Cure Worse Than the Disease
+
+### Principle
+
+Reject reports whose remediation would cause more disruption than the
+vulnerability itself. Evaluate the vulnerability's practical severity against
+the fix's cost, disruption, and ecosystem blast radius.
+
+### Examples
+
+| Scenario | Verdict | Reasoning |
+|----------|---------|-----------|
+| ReDoS with negligible practical impact, but fixing it breaks thousands of downstream packages | DISMISS | Remediation disruption far exceeds the vulnerability's marginal impact |
+| [CVE-2026-4539](https://nvd.nist.gov/vuln/detail/CVE-2026-4539) against pygments: unfounded medium-severity report affecting tens of thousands of deps | DISMISS | The report itself caused more harm (forced dependency updates, CI breakage) than the alleged vulnerability |
+| Critical RCE in a widely-used library | PASS | Even if the fix is disruptive, the vulnerability's severity justifies the cost |
+
+### Edge Cases
+
+- This brocard does not excuse ignoring vulnerabilities -- it requires
+  *proportional* response. A low-severity issue may warrant a low-
+  disruption fix (documentation update, deprecation notice) rather than
+  no action.
+- Consider whether the "cure" can be staged: a breaking fix in a major
+  version release is less disruptive than an emergency patch that forces
+  immediate migration.
+- Ecosystem-level thinking is required. A vulnerability in a leaf
+  dependency with 10 users has a different blast radius than the same
+  vulnerability in a package with 100,000 dependents.
+
+---
+
+## Brocard 7: The Report Is Neither Necessary nor Sufficient
+
+### Principle
+
+Formal reports and CVE identifiers do not prove vulnerability existence.
+Conversely, absence of a report does not prove safety. Evaluate technical
+merits independently of report metadata.
+
+### Application
+
+- Strip the CVE number, CVSS score, and reporter's credentials before
+  evaluating. Does the technical description alone justify action?
+- A high CVSS score with a vague description is a red flag, not a green
+  light.
+- Conversely, an informally reported issue without a CVE may be critical.
+  Do not deprioritize findings based on their reporting channel.
+- CVSS is a formula that produces a number; it is not a substitute for
+  contextual analysis. Two vulnerabilities with identical CVSS scores may
+  have wildly different real-world impact depending on deployment context.
+
+### Examples
+
+| Scenario | Verdict | Reasoning |
+|----------|---------|-----------|
+| CVE with CVSS 9.8 but description says "may cause unexpected behavior" | NEEDS-MORE-INFO | High score but vague description; demand specific technical evidence |
+| Informal email describing a concrete exploit chain, no CVE | Evaluate on merits | Lack of formal report does not diminish technical validity |
+| Automated scanner output assigning CVE to a dependency | Verify independently | Scanner output is neither necessary nor sufficient; check if the vulnerable code path is reachable (Brocard 3) |

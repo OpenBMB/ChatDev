@@ -1,0 +1,38 @@
+QuickStart | Excerpt of a recorded Docker run
+
+02:10:45 [Stage] Task planning
+02:10:45 [Planner] Processing query  Write the JSON object {"sum": 42} to a file named answer.json in the task workspace. Compute the sum of 17 and 25 and verify the saved JSON.
+02:11:14 [Notice] [Planner] Strict schema output failed local validation for gpt-6.1-sol; retrying the same schema: planner_wire_v6_payload_invalid
+02:11:43 [Planner] Decomposed into 1 subtasks (attempt 2/2)
+02:11:43 [Planner][task_001] Subtask query  Compute the sum of 17 and 25, write the exact JSON object {"sum": 42} to a file named answer.json in the task workspace, then read back and verify that the saved JSON contains exactly the requested object.
+02:11:43 [Planner][task_001] Expected output  The requested answer.json file containing exactly the JSON object {"sum": 42}.
+  After   none
+02:11:43 [Stage] Candidate retrieval
+02:12:06 [Profiler][task_001] Validated retrieval profile
+  Needed  A workspace-aware execution resource capable of evaluating arithmetic operations, creating and writing exact JSON files within an authorized task workspace, and reading back the saved artifact to verify structure and content consistency.
+  Limits  Must execute task_workspace_mutation by creating the single required file answer.json in the task workspace containing exactly {"sum": 42}, verify that 42 represents the sum of 17 and 25, read back the file to confirm content fidelity, and…
+02:12:07 [Retrieval][task_001] Available to the Composer
+  Model (5)  model.gpt_6_astra.v1, model.deepseek_v4_pro.v1, model.gpt_5_6_sol.v1, model.glm_5_3.v1, model.qwen3_8_flash.v1
+  Tool (10)  tool.python_script_runner.v1, tool.posix_shell.v1, tool.json_jq_query_executor.v1, tool.portable_write_text.v1, tool.archive_zip_extract.v1, tool.mcp.fs_write_file.v1, tool.mcp.fs_create_directory.v1, tool.xlsx2csv.v1, tool.mcp.fs_read_file.v1, tool.docx2text.v1
+  Skill (4)  skill.execorchestra.evidence_synthesis.v1, skill.execorchestra.research_queries.v1, skill.execorchestra.web_navigation.v1, skill.execorchestra.source_verification.v1
+  Agent (3)  agent.documentation_engineer.v1, agent.data_analyst.v1, agent.business_requirements_analyst.v1
+02:12:07 [Stage] Task execution
+02:12:07 [Compiler][task_001] Generating plan; attempt 1
+02:14:37 [Compiler][task_001] Plan accepted; 1 steps
+02:14:37 [Plan][task_001] 1/1  write_and_verify_answer  ·  tool.posix_shell.v1
+  After   none
+  Output  write_and_verify_answer_output (json)
+02:14:37 [Execute][task_001] write_and_verify_answer with tool.posix_shell.v1 (Tool)
+  Task    Run the complete POSIX task program: compute 17 + 25, assert the computed value is 42, write the resulting JSON object to answer.json in the task workspace, read the saved file back, and assert that the read-back value is exactly {"sum": 4…
+02:14:38 [Tool] Success (59 chars) in 190ms
+02:14:38 [Output][task_001] write_and_verify_answer  →  write_and_verify_answer_output
+  Produced  {"status": "success", "stdout": "", "exit_code": 0, "stderr": ""}
+02:14:38 [Artifact][task_001] Generated; awaiting evaluation
+02:14:38 [Artifact][task_001] Accepted; awaiting submission
+02:14:38 [Artifact][task_001] Committed; available to downstream tasks
+02:14:38 [Stage] Final delivery
+02:14:38 [End] Completed
+02:14:38 [Elapsed] 233.1s
+02:14:38 Delivered file: run://final_output.json
+
+Published file (content and SHA-256 checked after the run): {"sum": 42}

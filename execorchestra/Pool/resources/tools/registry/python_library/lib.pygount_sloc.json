@@ -1,0 +1,138 @@
+{
+  "manifest_version": "v2",
+  "resource_id": "tool.lib.pygount_sloc.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Run pygount JSON source-line analysis on one path",
+    "description": "Invokes the pygount CLI with a fixed JSON output format for one supplied path and returns the parsed CLI payload, or a short stderr object when stdout is empty.",
+    "domain_tags": [
+      "swe",
+      "metrics"
+    ],
+    "core_primitives": [
+      "invoke_pygount_cli",
+      "parse_sloc_json_report",
+      "capture_empty-output_stderr"
+    ],
+    "problem_space": "File-backed source line and language metrics as emitted by pygount's built-in JSON report."
+  },
+  "constraint": {
+    "io_signature": "Input: one path argument passed to pygount; output: JSON result containing parsed pygount JSON or an object with up to 200 stderr characters when stdout is empty.",
+    "accepted_inputs": [
+      "a file, directory, or path pattern accepted by the installed pygount CLI"
+    ],
+    "output_shape": "Success is an object with status=\"success\", tool=\"lib.pygount_sloc\", and result as either pygount's parsed JSON report or, when stdout is empty, an object whose stderr string is truncated to 200 characters. A caught subprocess launch, timeout, or nonempty-stdout JSON-decoding exception produces an object with status=\"error\", tool=\"lib.pygount_sloc\", and message as the exception string, then exits with code 1.",
+    "limitations": [
+      "depends on an installed pygount executable and enforces a fixed 60-second subprocess timeout",
+      "passes only --format=json and exposes no encoding, suffix, duplicate, generated-code, or counting configuration",
+      "does not inspect the subprocess return code, so an empty-stdout CLI failure is still wrapped as success with at most 200 stderr characters",
+      "nonempty stdout that is not valid JSON triggers the wrapper's error envelope",
+      "does not normalize or summarize pygount's version-dependent JSON schema"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "path",
+        "kind": "string",
+        "required": true,
+        "cli_position": 1
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "Raw parsed pygount JSON report, or a truncated stderr object when pygount emits no stdout.",
+      "json_schema": {
+        "description": "Native JSON representation only; no field or task-delivery guarantee.",
+        "type": [
+          "object",
+          "array",
+          "string",
+          "number",
+          "boolean",
+          "null"
+        ]
+      },
+      "native_json_contract_scope": "value_only"
+    }
+  },
+  "routing": {
+    "family": "pygount-source-line-reporting",
+    "intent_tags": [
+      "count source lines with pygount",
+      "produce a pygount JSON code metrics report"
+    ],
+    "negative_intents": [
+      "compute cyclomatic complexity or maintainability scores",
+      "configure custom source-counting rules",
+      "receive a normalized per-language summary independent of pygount output"
+    ]
+  },
+  "execution": {
+    "runtime": "python_library",
+    "uri": "file://Pool/resources/tools/lib/lib.pygount_sloc.py",
+    "execution_status": "active"
+  },
+  "utility": {
+    "latency_ms": 200.0,
+    "token_cost_factor": 0.02,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://github.com/roskakori/pygount",
+    "license": "BSD-3",
+    "backed_by": "pygount_sloc",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:368032a6a5af1e8f0261bec5dd4416b437b71ac248e8c46e2881c3771a1b6f2f",
+    "local_implementation_uri": "file://Pool/resources/tools/lib/lib.pygount_sloc.py",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/lib/_liblib.py": "sha256:dcd68e7904232764172e5f646ff97b854f68f7f916180ae32f838a0acf9ccc77"
+    }
+  },
+  "type_specific": {},
+  "type": {
+    "resource_type": "Tool"
+  },
+  "input_contract": [
+    {
+      "name": "path",
+      "kind": "string",
+      "required": true,
+      "cli_position": 1
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "json",
+    "description": "Raw parsed pygount JSON report, or a truncated stderr object when pygount emits no stdout.",
+    "json_schema": {
+      "description": "Native JSON representation only; no field or task-delivery guarantee.",
+      "type": [
+        "object",
+        "array",
+        "string",
+        "number",
+        "boolean",
+        "null"
+      ]
+    },
+    "native_json_contract_scope": "value_only"
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [],
+    "node_packages": [],
+    "system_packages": [],
+    "commands": [],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "python_compatibility": ">=3.11,<4"
+  }
+}

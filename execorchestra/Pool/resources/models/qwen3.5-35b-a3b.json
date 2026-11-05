@@ -1,0 +1,109 @@
+{
+  "resource_id": "qwen3.5-35b-a3b",
+  "type": {
+    "resource_type": "Model",
+    "resource_tag": [
+      "262K Context",
+      ".25",
+      "2",
+      "unknown"
+    ]
+  },
+  "capability": {
+    "summary": "Cost-efficient multimodal generalist for text, reasoning, coding, tool use, and visual understanding.",
+    "core_primitives": [
+      "text reasoning",
+      "code generation",
+      "structured generation",
+      "tool-assisted analysis",
+      "visual understanding"
+    ],
+    "problem_space": "General-purpose multimodal model for text reasoning, code generation, structured generation, tool-assisted analysis, and visual understanding. Accepts text and image input and produces text output. External tools execute outside the model. Current gateway capability and comparative quality require independent Linux verification.",
+    "domain_tags": [
+      "Language",
+      "Software Engineering",
+      "Visual Understanding"
+    ]
+  },
+  "constraint": {
+    "env_requirements": [
+      "OpenAI-Compatible API Endpoint",
+      "Valid API Key (Cloud) or High-Memory GPU with Multimodal Support"
+    ],
+    "io_signature": "Input modalities: text, image | Output modalities: text. Gateway transport support requires verification."
+  },
+  "utility": {
+    "latency_ms": 0,
+    "token_cost_factor": 0,
+    "expected_success_rate": 0
+  },
+  "execution": {
+    "uri": "${base_url}/v1/chat/completions",
+    "model_id": "qwen3.5-35b-a3b"
+  },
+  "memory": {
+    "success_trajectories": [],
+    "failure_reflections": []
+  },
+  "type_specific": {
+    "model": {
+      "profile_version": "model-capabilities-v1",
+      "input_modalities": [
+        "text",
+        "image"
+      ],
+      "output_modalities": [
+        "text"
+      ],
+      "supports": {
+        "tool_calling": true,
+        "json_mode": null,
+        "vision": true,
+        "reasoning": true,
+        "coding": true
+      },
+      "thinking_mode": "hybrid",
+      "native_protocol": "openai_compatible_chat",
+      "documented_context_tokens": 262144,
+      "evidence_status": "provider_documented_not_gateway_verified",
+      "gateway_verification_status": "not_run",
+      "limitations": [],
+      "pricing_rules": {
+        "input_per_m": ".25",
+        "cache_per_m": null,
+        "output_per_m": "2",
+        "source": "https://www.alibabacloud.com/help/en/model-studio/model-pricing",
+        "cache_mode": "implicit",
+        "input_tiers": [],
+        "region": "International Singapore",
+        "cache_supported": false
+      }
+    }
+  },
+  "provenance": {
+    "semantic_review": {
+      "reviewed_at": "2026-09-15",
+      "policy": "model-capabilities-v1",
+      "source_urls": [],
+      "evidence_status": "provider_documented_not_gateway_verified",
+      "task_profile_basis": "Broad task categories are registration metadata, not an empirical ranking or fixed framework role.",
+      "context_policy": "The configured context label is preserved separately from gateway verification."
+    },
+    "model_distinction_review": {
+      "evidence_kind": "user_supplied_focused_protocol_evidence",
+      "interpretation_limit": "The attached local protocol pass establishes point-in-time usability only; Linux health and paired task comparisons determine active retention.",
+      "policy": "model-distinctions-v1",
+      "reviewed_at": "2026-09-15",
+      "evidence_status": "windows_historical_probe_only",
+      "scope": "Broad low-price baseline for the bounded Qwen retention comparison."
+    },
+    "pricing_status": "official_public_price_snapshot",
+    "gateway_verification_status": "windows_historical_probe_only",
+    "pricing_note": "Official reference rates and backend billing rules from the same dated pricebook; capability and gateway evidence unchanged.",
+    "official_pricing": {
+      "snapshot_date": "2026-10-09",
+      "source": "https://www.alibabacloud.com/help/en/model-studio/model-pricing",
+      "pricebook_sha256": "9e9a8248e54f1934d08d5efe68a3998ebce6faa09106f3f2a7ac119bf89a182c"
+    }
+  }
+}

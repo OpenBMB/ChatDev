@@ -1,0 +1,98 @@
+rules:
+  - id: variant-taint-cpp
+    message: "Potential variant: user input flows to dangerous sink"
+    severity: ERROR
+    languages: [c, cpp]
+    mode: taint
+
+    pattern-sources:
+      # Command line
+      - pattern: argv[$IDX]
+      # Standard input
+      - pattern: gets(...)
+      - pattern: fgets($BUF, $SIZE, stdin)
+      - pattern: scanf(...)
+      - pattern: fscanf(...)
+      - pattern: getenv(...)
+      # Network
+      - pattern: recv($SOCK, $BUF, ...)
+      - pattern: recvfrom(...)
+      - pattern: read($FD, $BUF, ...)
+
+    pattern-sinks:
+      # Command injection
+      - pattern: system($SINK)
+      - pattern: popen($SINK, ...)
+      - pattern: execl($SINK, ...)
+      - pattern: execlp($SINK, ...)
+      - pattern: execv($SINK, ...)
+      - pattern: execvp($SINK, ...)
+      # Buffer overflow
+      - pattern: strcpy($DST, $SINK)
+      - pattern: strcat($DST, $SINK)
+      - pattern: sprintf($DST, $FMT, ..., $SINK, ...)
+      - pattern: gets($SINK)
+      # Format string
+      - pattern: printf($SINK)
+      - pattern: fprintf($FILE, $SINK)
+      - pattern: sprintf($BUF, $SINK)
+      - pattern: syslog($PRI, $SINK)
+      # Memory
+      - pattern: malloc($SINK)
+      - pattern: calloc($SINK, ...)
+      - pattern: realloc($PTR, $SINK)
+      - pattern: alloca($SINK)
+      # File operations
+      - pattern: fopen($SINK, ...)
+      - pattern: open($SINK, ...)
+
+    pattern-sanitizers:
+      - pattern: strncpy($DST, $SRC, $N)
+      - pattern: strncat($DST, $SRC, $N)
+      - pattern: snprintf($BUF, $SIZE, ...)
+      - pattern: strlcpy(...)
+      - pattern: strlcat(...)
+
+    paths:
+      exclude:
+        - "**/test/**"
+        - "**/*_test.c"
+        - "**/*_test.cpp"
+
+  - id: unsafe-functions-cpp
+    message: "Use of unsafe function - consider bounded alternative"
+    severity: WARNING
+    languages: [c, cpp]
+    pattern-either:
+      - pattern: gets(...)
+      - pattern: strcpy(...)
+      - pattern: strcat(...)
+      - pattern: sprintf(...)
+      - pattern: vsprintf(...)
+
+  - id: format-string-cpp
+    message: "Potential format string vulnerability"
+    severity: ERROR
+    languages: [c, cpp]
+    patterns:
+      - pattern-either:
+          - pattern: printf($VAR)
+          - pattern: fprintf($F, $VAR)
+          - pattern: sprintf($B, $VAR)
+          - pattern: snprintf($B, $S, $VAR)
+      - pattern-not: printf("...")
+      - pattern-not: fprintf($F, "...")
+      - pattern-not: sprintf($B, "...")
+      - pattern-not: snprintf($B, $S, "...")
+
+  - id: integer-overflow-cpp
+    message: "Potential integer overflow before memory allocation"
+    severity: WARNING
+    languages: [c, cpp]
+    patterns:
+      - pattern: |
+          $SIZE = $X * $Y;
+          ...
+          malloc($SIZE)
+      - pattern: malloc($X * $Y)
+      - pattern: calloc($X * $Y, ...)

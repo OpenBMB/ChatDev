@@ -1,0 +1,158 @@
+{
+  "manifest_version": "v2",
+  "resource_id": "tool.lib.validators_check.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Run one named python-validators check on one string",
+    "description": "Dynamically resolves an attribute from the validators module using the supplied kind, calls it with the value string, and returns the boolean conversion of its result while echoing kind and value.",
+    "domain_tags": [
+      "data",
+      "validation"
+    ],
+    "core_primitives": [
+      "resolve_validator_by_name",
+      "apply_single_value_validator",
+      "coerce_validation_result_to_boolean"
+    ],
+    "problem_space": "Single-string syntax validation through a named callable exposed by the installed python-validators module."
+  },
+  "constraint": {
+    "io_signature": "Inputs: value string and validators-module attribute name; output: JSON echoing kind and value with valid as bool(callable(value)).",
+    "accepted_inputs": [
+      "a string value suitable for the selected python-validators callable",
+      "the name of an installed validators module attribute that is callable with exactly one supplied positional value, defaulting to url when omitted"
+    ],
+    "output_shape": "Success is an object with status=\"success\", tool=\"lib.validators_check\", kind as the selected validators-module attribute name, value as the original input string, and valid as bool(selected_callable(value)). A caught missing-attribute, non-callable attribute, argument, or validator exception produces an object with status=\"error\", tool=\"lib.validators_check\", and message as the exception string, then exits with code 1.",
+    "limitations": [
+      "uses unrestricted getattr on the validators module rather than a fixed allowlist of email, URL, and IP validators",
+      "available kind names and their behavior depend on the installed python-validators version",
+      "attributes that do not exist, are not callable, or require additional arguments use the wrapper's error envelope",
+      "coerces the validator return object with bool and does not expose validation failure details",
+      "checks library-defined syntax only and does not verify DNS, network reachability, mailbox ownership, or resource existence",
+      "echoes the complete input value in the result"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "value",
+        "kind": "string",
+        "required": true,
+        "cli_position": 1
+      },
+      {
+        "name": "kind",
+        "kind": "string",
+        "required": true,
+        "cli_position": 2
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "Echoed validator name and input value with the selected validator's result coerced to a boolean.",
+      "json_schema": {
+        "description": "Native JSON representation only; no field or task-delivery guarantee.",
+        "type": [
+          "object",
+          "array",
+          "string",
+          "number",
+          "boolean",
+          "null"
+        ]
+      },
+      "native_json_contract_scope": "value_only"
+    }
+  },
+  "routing": {
+    "family": "named-single-string-validation",
+    "intent_tags": [
+      "validate one string with a named python-validators check",
+      "check URL email IP or another supported string syntax"
+    ],
+    "negative_intents": [
+      "verify network reachability ownership or resource existence",
+      "validate a structured object or multiple fields together",
+      "return detailed validation errors or normalized values"
+    ]
+  },
+  "execution": {
+    "runtime": "python_library",
+    "uri": "file://Pool/resources/tools/lib/lib.validators_check.py",
+    "execution_status": "active"
+  },
+  "utility": {
+    "latency_ms": 200.0,
+    "token_cost_factor": 0.02,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://github.com/python-validators/validators",
+    "license": "MIT",
+    "backed_by": "validators_check",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:95db13cdaf1ab3452c1ff342ca3564f86dbd2788525f7073d1ac426ddac2f087",
+    "local_implementation_uri": "file://Pool/resources/tools/lib/lib.validators_check.py",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/lib/_liblib.py": "sha256:dcd68e7904232764172e5f646ff97b854f68f7f916180ae32f838a0acf9ccc77"
+    }
+  },
+  "type_specific": {},
+  "type": {
+    "resource_type": "Tool"
+  },
+  "input_contract": [
+    {
+      "name": "value",
+      "kind": "string",
+      "required": true,
+      "cli_position": 1
+    },
+    {
+      "name": "kind",
+      "kind": "string",
+      "required": true,
+      "cli_position": 2
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "json",
+    "description": "Echoed validator name and input value with the selected validator's result coerced to a boolean.",
+    "json_schema": {
+      "description": "Native JSON representation only; no field or task-delivery guarantee.",
+      "type": [
+        "object",
+        "array",
+        "string",
+        "number",
+        "boolean",
+        "null"
+      ]
+    },
+    "native_json_contract_scope": "value_only"
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [
+      {
+        "name": "validators",
+        "version": "==0.34.0",
+        "required": true
+      }
+    ],
+    "node_packages": [],
+    "system_packages": [],
+    "commands": [],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "python_compatibility": ">=3.11,<4"
+  }
+}

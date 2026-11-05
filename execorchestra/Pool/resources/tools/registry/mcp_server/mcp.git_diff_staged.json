@@ -1,0 +1,140 @@
+{
+  "manifest_version": "v2",
+  "resource_id": "tool.mcp.git_diff_staged.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Show the patch between the Git index and the last committed revision.",
+    "description": "Use to review changes that have already been staged for a possible commit. It reports the index diff; it does not show unstaged worktree edits, stage files, create commits, or change repository state.",
+    "domain_tags": [
+      "git",
+      "staged-diff",
+      "change-review"
+    ],
+    "core_primitives": [
+      "inspect_index_diff",
+      "review_staged_patch",
+      "compare_staged_changes"
+    ],
+    "problem_space": "Review the patch formed by staged Git index changes. This is staged-change inspection, distinct from unstaged worktree diff, status summary, commit creation, and staging mutation."
+  },
+  "constraint": {
+    "io_signature": "Input: local Git repository path. Output: JSON or text patch for staged changes.",
+    "accepted_inputs": [
+      "a local directory containing a Git repository"
+    ],
+    "output_shape": "patch representation of index changes relative to HEAD.",
+    "limitations": [
+      "does not include unstaged working-tree edits",
+      "does not stage, commit, or modify repository files"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "repo_path",
+        "kind": "string",
+        "required": true,
+        "cli_position": 1
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "text",
+      "description": "Staged diff via MCP git server"
+    }
+  },
+  "routing": {
+    "family": "git-change-inspection",
+    "intent_tags": [
+      "show staged diff",
+      "review indexed changes",
+      "see what will be committed"
+    ],
+    "negative_intents": [
+      "show unstaged diff",
+      "stage files",
+      "create a commit"
+    ]
+  },
+  "execution": {
+    "runtime": "mcp_server",
+    "uri": "file://Pool/resources/tools/mcp/mcp.git_diff_staged.py",
+    "execution_status": "active"
+  },
+  "utility": {
+    "latency_ms": 300.0,
+    "token_cost_factor": 0.02,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://github.com/modelcontextprotocol/servers/tree/main/src/git",
+    "license": "MIT",
+    "backed_by": "MCP git_diff_staged",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:2392311d601ef19d29c44e50e69da32588c65ed05dfdfff190d60fe4193b8e91",
+    "local_implementation_uri": "file://Pool/resources/tools/mcp/mcp.git_diff_staged.py",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/mcp/_mcplib.py": "sha256:8c39f008bd1fc31f0457e6e08cb42da72eeeebba3dd1bcb51c277a33b35287f3"
+    }
+  },
+  "type_specific": {},
+  "type": {
+    "resource_type": "Tool"
+  },
+  "input_contract": [
+    {
+      "name": "repo_path",
+      "kind": "string",
+      "required": true,
+      "cli_position": 1
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "text",
+    "description": "Staged diff via MCP git server"
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [
+      {
+        "name": "mcp",
+        "version": "==1.28.1",
+        "required": true
+      },
+      {
+        "name": "mcp-server-git",
+        "version": "==2026.7.10",
+        "required": true
+      }
+    ],
+    "node_packages": [],
+    "system_packages": [
+      {
+        "name": "git",
+        "version": "image-locked",
+        "required": true
+      }
+    ],
+    "commands": [
+      "git",
+      "python"
+    ],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "mcp": {
+      "server_command": "git",
+      "working_directory": "/app",
+      "allowed_roots": [
+        "/app"
+      ]
+    },
+    "python_compatibility": ">=3.11,<4"
+  }
+}

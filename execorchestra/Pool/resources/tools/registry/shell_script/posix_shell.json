@@ -1,0 +1,217 @@
+{
+  "manifest_version": "v2",
+  "resource_id": "tool.posix_shell.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Execute an authorized POSIX shell program in the selected task runtime without Python.",
+    "description": "Run a supplied POSIX shell program using the task working directory, environment and installed commands. Supports deterministic inspection and mutations when those commands are available; an adaptive Controller may use repeated observations. The resource itself does not decide task correctness or repair commands.",
+    "domain_tags": [
+      "terminal",
+      "filesystem",
+      "system_administration",
+      "software_engineering"
+    ],
+    "core_primitives": [
+      "execute_shell_commands"
+    ],
+    "operation_kinds": [
+      "execute_shell_commands"
+    ],
+    "execution_semantics": {
+      "determinism": "unknown",
+      "side_effects": "declared",
+      "effect_targets": [
+        "task_workspace"
+      ],
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  "constraint": {
+    "io_signature": "Input: one complete POSIX shell program string. Output: JSON status, exit_code, stdout and stderr for a completed program, including nonzero exits.",
+    "accepted_inputs": [
+      "A POSIX shell program supported by the selected runtime and authorized task."
+    ],
+    "output_shape": "Typed JSON process report. No semantic success is inferred and captured stream content is not rewritten.",
+    "limitations": [
+      "Requires sh in the selected runtime; other commands and dependencies must be inspected or otherwise established.",
+      "Executes with the permissions and network policy of the selected task runtime; it is not a sandbox, rollback facility, or semantic verifier.",
+      "Program literals are not path-mapped. Use the current working directory and authorized runtime input bindings, not host paths or assumed physical workspace roots.",
+      "Does not parse JSON arguments or require Python. The caller must request sufficient observations to check task state and output requirements."
+    ],
+    "artifact_input": [
+      "plaintext"
+    ],
+    "artifact_output": [
+      "json"
+    ],
+    "execution_risk": "high"
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "script",
+        "kind": "string",
+        "required": true,
+        "cli_position": 1,
+        "description": "Complete POSIX shell program, passed as one argument. Use the current task working directory and bound task evidence; do not assume Python, Bash extensions, or other commands are installed."
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "Completed program report with exact UTF-8 stdout/stderr and exit code. Declared error results remain observations; successful execution alone does not prove task correctness.",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "success",
+              "error"
+            ]
+          },
+          "exit_code": {
+            "type": "integer"
+          },
+          "stdout": {
+            "type": "string"
+          },
+          "stderr": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "status",
+          "exit_code",
+          "stdout",
+          "stderr"
+        ],
+        "additionalProperties": false
+      },
+      "result_status": {
+        "payload_path": "status",
+        "success_values": [
+          "success"
+        ],
+        "failure_values": [
+          "error"
+        ]
+      }
+    }
+  },
+  "input_contract": [
+    {
+      "name": "script",
+      "kind": "string",
+      "required": true,
+      "cli_position": 1,
+      "description": "Complete POSIX shell program, passed as one argument. Use the current task working directory and bound task evidence; do not assume Python, Bash extensions, or other commands are installed."
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "json",
+    "description": "Completed program report with exact UTF-8 stdout/stderr and exit code. Declared error results remain observations; successful execution alone does not prove task correctness.",
+    "schema": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": [
+            "success",
+            "error"
+          ]
+        },
+        "exit_code": {
+          "type": "integer"
+        },
+        "stdout": {
+          "type": "string"
+        },
+        "stderr": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "status",
+        "exit_code",
+        "stdout",
+        "stderr"
+      ],
+      "additionalProperties": false
+    },
+    "result_status": {
+      "payload_path": "status",
+      "success_values": [
+        "success"
+      ],
+      "failure_values": [
+        "error"
+      ]
+    }
+  },
+  "routing": {
+    "family": "task-terminal-execution",
+    "intent_tags": [
+      "inspect task runtime",
+      "execute shell commands",
+      "configure task environment"
+    ],
+    "negative_intents": [
+      "execute on the control host",
+      "guarantee commands are installed",
+      "infer success without task verification"
+    ]
+  },
+  "execution": {
+    "runtime": "shell_script",
+    "uri": "file://Pool/resources/tools/native_shell/execute.sh",
+    "execution_status": "active"
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "",
+    "python_packages": [],
+    "node_packages": [],
+    "system_packages": [],
+    "commands": [
+      "sh",
+      "mktemp",
+      "od",
+      "awk",
+      "rm"
+    ],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1"
+  },
+  "utility": {
+    "latency_ms": 0.0,
+    "token_cost_factor": 0.0,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "SGAR native POSIX shell adapter",
+    "license": "internal",
+    "backed_by": "Task runtime POSIX shell",
+    "recognized_public_tool": false,
+    "source_hash": "sha256:abad191b190ce387ebe2f91aa01a6877cebea4724fecb560a040f22d06af02f7",
+    "local_implementation_uri": "file://Pool/resources/tools/native_shell/execute.sh"
+  },
+  "type_specific": {
+    "tool": {
+      "tool_kind": "local_script",
+      "language": "shell",
+      "deterministic": false
+    }
+  },
+  "type": {
+    "resource_type": "Tool"
+  }
+}

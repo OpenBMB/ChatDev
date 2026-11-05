@@ -1,0 +1,170 @@
+{
+  "manifest_version": "1.0",
+  "resource_id": "tool.html_to_markdown_converter.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Convert one UTF-8 HTML file to an ATX-heading Markdown string returned inside JSON",
+    "description": "Reads an existing HTML file, calls python-markdownify with fixed `heading_style=\"ATX\"`, and emits the converted Markdown under the `markdown` key. It does not write a Markdown file or fetch HTML from a URL.",
+    "core_primitives": [
+      "read_utf8_html_file",
+      "convert_html_with_markdownify",
+      "return_atx_markdown_string"
+    ],
+    "problem_space": "In-memory Markdown rendering from one local HTML file using markdownify defaults plus ATX headings; not web fetching, HTML sanitization, DOM extraction, layout preservation, or persistent document conversion.",
+    "domain_tags": [
+      "text-processing",
+      "format-conversion",
+      "programming-tools"
+    ]
+  },
+  "constraint": {
+    "env_requirements": [
+      "Python >= 3.6",
+      "python-markdownify"
+    ],
+    "io_signature": "Input: one required existing UTF-8 HTML file path; output: JSON object containing the converted Markdown string under `markdown` or a structured missing-path error.",
+    "accepted_inputs": [
+      "an existing UTF-8 text file containing HTML accepted by python-markdownify"
+    ],
+    "output_shape": "Success: {status: \"success\", tool: \"markdownify\", target: string, markdown: string}. Non-existing path: {status: \"error\", message: string} and exit 2. Missing argument prints usage to stderr and exits 1 without JSON. File open, UTF-8 decoding, parser, or conversion exceptions are uncaught and may produce a traceback rather than JSON.",
+    "limitations": [
+      "uses markdownify defaults with only heading_style fixed to ATX; callers cannot configure bullets, wrapping, stripping, conversion options, or custom converters",
+      "does not fetch URLs, execute browser rendering, process external resources, or preserve visual layout and CSS presentation",
+      "does not sanitize untrusted HTML or guarantee safe Markdown links/content and should not be treated as a security filter",
+      "reads and returns the entire document in memory without an explicit timeout, size limit, or output truncation and does not write a .md file"
+    ],
+    "artifact_input": [
+      "file_path"
+    ],
+    "artifact_output": [
+      "json"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "file_path",
+        "kind": "string",
+        "required": true,
+        "cli_position": 1
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "JSON object containing the converted ATX-style Markdown string under `markdown`, along with tool and target metadata.",
+      "json_schema": {
+        "description": "Native JSON representation only; no field or task-delivery guarantee.",
+        "type": [
+          "object",
+          "array",
+          "string",
+          "number",
+          "boolean",
+          "null"
+        ]
+      },
+      "native_json_contract_scope": "value_only"
+    }
+  },
+  "routing": {
+    "family": "local-html-file-to-markdown-json",
+    "intent_tags": [
+      "convert a local HTML file to Markdown text",
+      "render HTML as ATX-heading Markdown with markdownify"
+    ],
+    "negative_intents": [
+      "fetch a web page or convert a URL",
+      "sanitize HTML or assess its security",
+      "write a Markdown file or preserve browser layout and CSS"
+    ],
+    "dependency_slots": []
+  },
+  "utility": {
+    "latency_ms": 100,
+    "token_cost_factor": 0.01,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://github.com/matthewwithanm/python-markdownify",
+    "license": "MIT",
+    "backed_by": "markdownify",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:d4108e2f244c3b8f54f720d874e2ed3d7a8355fd9b4c58c58d8cd20ee58f1c09",
+    "local_implementation_uri": "file://Pool/resources/tools/script/html_to_markdown_converter.py",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/script/_sgar_cli.py": "sha256:42368f8d49cb6364ad3aeaac6d0f9602adc12cb29fea49322fd488400698b6b9"
+    }
+  },
+  "type_specific": {
+    "tool": {
+      "tool_kind": "local_script",
+      "language": "python",
+      "deterministic": true
+    }
+  },
+  "memory": {
+    "success_trajectories": [],
+    "failure_reflections": []
+  },
+  "execution": {
+    "runtime": "python_script",
+    "uri": "file://Pool/resources/tools/script/html_to_markdown_converter.py",
+    "execution_status": "active"
+  },
+  "type": {
+    "resource_type": "Tool",
+    "resource_tag": [
+      "text-processing",
+      "format-conversion",
+      "programming-tools"
+    ]
+  },
+  "input_contract": [
+    {
+      "name": "file_path",
+      "kind": "string",
+      "required": true,
+      "cli_position": 1
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "json",
+    "description": "JSON object containing the converted ATX-style Markdown string under `markdown`, along with tool and target metadata.",
+    "json_schema": {
+      "description": "Native JSON representation only; no field or task-delivery guarantee.",
+      "type": [
+        "object",
+        "array",
+        "string",
+        "number",
+        "boolean",
+        "null"
+      ]
+    },
+    "native_json_contract_scope": "value_only"
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [
+      {
+        "name": "markdownify",
+        "version": "==0.14.1",
+        "required": true
+      }
+    ],
+    "node_packages": [],
+    "system_packages": [],
+    "commands": [],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "python_compatibility": ">=3.11,<4"
+  }
+}

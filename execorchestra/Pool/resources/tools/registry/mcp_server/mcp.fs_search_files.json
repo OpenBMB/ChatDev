@@ -1,0 +1,171 @@
+{
+  "manifest_version": "v2",
+  "resource_id": "tool.mcp.fs_search_files.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Find local files or matching text beneath a specified root using a search pattern.",
+    "description": "Use to discover paths or occurrences by applying a pattern below a known workspace root. It searches across a tree; it is not a shallow listing, recursive structure report, direct read of a known file, or filesystem mutation.",
+    "domain_tags": [
+      "filesystem",
+      "file-search",
+      "content-search"
+    ],
+    "core_primitives": [
+      "search_files_by_pattern",
+      "find_matching_paths",
+      "find_matching_content"
+    ],
+    "problem_space": "Discover files or content occurrences under a known local root using a search pattern. This is pattern-based filesystem search, distinct from enumerating all immediate children, rendering a directory tree, or reading an already known path."
+  },
+  "constraint": {
+    "io_signature": "Input: local root path and search pattern. Output: JSON search matches with matching paths or content locations.",
+    "accepted_inputs": [
+      "an existing local root directory within allowed roots",
+      "a filename or text search pattern"
+    ],
+    "output_shape": "JSON list of filesystem search matches.",
+    "limitations": [
+      "does not return a complete directory inventory without a pattern",
+      "does not modify matching files or read an arbitrary file in full"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "path",
+        "kind": "string",
+        "required": true,
+        "cli_position": 1
+      },
+      {
+        "name": "pattern",
+        "kind": "string",
+        "required": true,
+        "cli_position": 2
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "Recursively search files by pattern via MCP filesystem server",
+      "json_schema": {
+        "description": "Native JSON representation only; no field or task-delivery guarantee.",
+        "type": [
+          "object",
+          "array",
+          "string",
+          "number",
+          "boolean",
+          "null"
+        ]
+      },
+      "native_json_contract_scope": "value_only"
+    }
+  },
+  "routing": {
+    "family": "filesystem-search",
+    "intent_tags": [
+      "find files by name",
+      "grep a workspace",
+      "search file contents by pattern"
+    ],
+    "negative_intents": [
+      "list immediate directory entries",
+      "show a recursive tree",
+      "read a known file directly"
+    ]
+  },
+  "execution": {
+    "runtime": "mcp_server",
+    "uri": "file://Pool/resources/tools/mcp/mcp.fs_search_files.py",
+    "execution_status": "active"
+  },
+  "utility": {
+    "latency_ms": 300.0,
+    "token_cost_factor": 0.02,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://github.com/modelcontextprotocol/servers/tree/main/src/filesystem",
+    "license": "MIT",
+    "backed_by": "MCP search_files",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:5a3f0c147055431c81547f0a6bce3266e3b64ce2c3319e1d80fba24bdbdaccd9",
+    "local_implementation_uri": "file://Pool/resources/tools/mcp/mcp.fs_search_files.py",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/mcp/_mcplib.py": "sha256:8c39f008bd1fc31f0457e6e08cb42da72eeeebba3dd1bcb51c277a33b35287f3"
+    }
+  },
+  "type_specific": {},
+  "type": {
+    "resource_type": "Tool"
+  },
+  "input_contract": [
+    {
+      "name": "path",
+      "kind": "string",
+      "required": true,
+      "cli_position": 1
+    },
+    {
+      "name": "pattern",
+      "kind": "string",
+      "required": true,
+      "cli_position": 2
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "json",
+    "description": "Recursively search files by pattern via MCP filesystem server",
+    "json_schema": {
+      "description": "Native JSON representation only; no field or task-delivery guarantee.",
+      "type": [
+        "object",
+        "array",
+        "string",
+        "number",
+        "boolean",
+        "null"
+      ]
+    },
+    "native_json_contract_scope": "value_only"
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [
+      {
+        "name": "mcp",
+        "version": "==1.28.1",
+        "required": true
+      }
+    ],
+    "node_packages": [
+      {
+        "name": "@modelcontextprotocol/server-filesystem",
+        "version": "==2026.7.10",
+        "required": true
+      }
+    ],
+    "system_packages": [],
+    "commands": [
+      "mcp-server-filesystem"
+    ],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "mcp": {
+      "server_command": "mcp-server-filesystem",
+      "working_directory": "/app",
+      "allowed_roots": [
+        "/app"
+      ]
+    },
+    "python_compatibility": ">=3.11,<4"
+  }
+}

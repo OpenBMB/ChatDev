@@ -1,0 +1,172 @@
+{
+  "manifest_version": "1.0",
+  "resource_id": "tool.cors_headers_checker.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Send one fixed preflight-style OPTIONS request and report selected CORS response headers",
+    "description": "Normalizes a scheme-less target to HTTPS, sends an OPTIONS request with a fixed example Origin and requested GET method, then returns the HTTP status plus any of five recognized Access-Control response headers. `cors_enabled` only indicates that at least one such header was present.",
+    "core_primitives": [
+      "send_cors_preflight_style_options_request",
+      "extract_selected_access_control_headers",
+      "report_presence_of_cors_headers"
+    ],
+    "problem_space": "Single-endpoint observation of selected CORS response headers for one fixed Origin/GET probe; not comprehensive CORS policy validation, browser enforcement simulation, vulnerability certification, or file inspection.",
+    "domain_tags": [
+      "web_security",
+      "http",
+      "cors"
+    ]
+  },
+  "constraint": {
+    "env_requirements": [
+      "Python >= 3.6",
+      "requests",
+      "network access to the target URL"
+    ],
+    "io_signature": "Input: one required HTTP(S) URL or scheme-less host/path string; output: JSON with normalized URL, response status, coarse header-presence boolean, and selected CORS headers, or a request error.",
+    "accepted_inputs": [
+      "an absolute http:// or https:// URL",
+      "a scheme-less host or host/path string that should be requested over https://"
+    ],
+    "output_shape": "Successful HTTP exchange: {status: \"success\", tool: \"requests\", url: string, status_code: integer, cors_enabled: boolean, cors_headers: object}; cors_headers contains only present Access-Control-Allow-Origin, -Methods, -Headers, -Credentials, and Access-Control-Max-Age values, and cors_enabled is bool(cors_headers). Request failure: {status: \"error\", tool: \"requests\", url: string, message: string} and exit 1. Missing argument prints usage to stderr and exits 1 without JSON. HTTP error status codes still produce status=\"success\" because raise_for_status is not called.",
+    "limitations": [
+      "uses fixed `Origin: https://example.com` and `Access-Control-Request-Method: GET` headers with no caller customization",
+      "treats the presence of any selected CORS header as cors_enabled and does not judge policy correctness, credential safety, origin reflection, or browser exploitability",
+      "performs only one OPTIONS request with a 20-second Requests timeout; redirects and other Requests defaults are not exposed",
+      "scheme-less input is always prefixed with https:// and malformed URLs are reported only through the request exception"
+    ],
+    "artifact_input": [
+      "url"
+    ],
+    "artifact_output": [
+      "json"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "url",
+        "kind": "string",
+        "required": true,
+        "cli_position": 1
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "JSON report of one fixed OPTIONS probe: normalized URL, HTTP status, selected CORS headers and their coarse presence flag, or a request error.",
+      "json_schema": {
+        "description": "Native JSON representation only; no field or task-delivery guarantee.",
+        "type": [
+          "object",
+          "array",
+          "string",
+          "number",
+          "boolean",
+          "null"
+        ]
+      },
+      "native_json_contract_scope": "value_only"
+    }
+  },
+  "routing": {
+    "family": "http-cors-header-presence-probe",
+    "intent_tags": [
+      "inspect selected CORS headers returned by an endpoint",
+      "send a fixed GET preflight-style OPTIONS probe"
+    ],
+    "negative_intents": [
+      "prove that a CORS policy is secure or exploitable",
+      "test arbitrary origins, methods, headers, or credential scenarios",
+      "inspect HTTP security headers unrelated to CORS"
+    ],
+    "dependency_slots": []
+  },
+  "execution": {
+    "runtime": "python_script",
+    "uri": "file://Pool/resources/tools/script/cors_headers_checker.py",
+    "execution_status": "active"
+  },
+  "utility": {
+    "latency_ms": 50,
+    "token_cost_factor": 0.01,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://requests.readthedocs.io",
+    "license": "Apache-2.0",
+    "backed_by": "CORS header check via requests",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:0576a8c291806c24887c46660eb21db1f7804e778e0d5b1bc49f485a201b68d0",
+    "local_implementation_uri": "file://Pool/resources/tools/script/cors_headers_checker.py",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/script/_sgar_cli.py": "sha256:42368f8d49cb6364ad3aeaac6d0f9602adc12cb29fea49322fd488400698b6b9"
+    }
+  },
+  "type_specific": {
+    "tool": {
+      "tool_kind": "local_script",
+      "language": "python",
+      "deterministic": true
+    }
+  },
+  "memory": {
+    "success_trajectories": [],
+    "failure_reflections": []
+  },
+  "type": {
+    "resource_type": "Tool",
+    "resource_tag": [
+      "web_security",
+      "http",
+      "cors"
+    ]
+  },
+  "input_contract": [
+    {
+      "name": "url",
+      "kind": "string",
+      "required": true,
+      "cli_position": 1
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "json",
+    "description": "JSON report of one fixed OPTIONS probe: normalized URL, HTTP status, selected CORS headers and their coarse presence flag, or a request error.",
+    "json_schema": {
+      "description": "Native JSON representation only; no field or task-delivery guarantee.",
+      "type": [
+        "object",
+        "array",
+        "string",
+        "number",
+        "boolean",
+        "null"
+      ]
+    },
+    "native_json_contract_scope": "value_only"
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [
+      {
+        "name": "requests",
+        "version": "==2.32.3",
+        "required": true
+      }
+    ],
+    "node_packages": [],
+    "system_packages": [],
+    "commands": [],
+    "env_vars": [],
+    "network_required": true,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "python_compatibility": ">=3.11,<4"
+  }
+}

@@ -1,0 +1,172 @@
+{
+  "manifest_version": "1.0",
+  "resource_id": "tool.graphql_schema_validator.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Attempt to build one GraphQL SDL schema and structurally report success or caught GraphQLError syntax/build failures",
+    "description": "Reads an existing UTF-8 SDL file and attempts `graphql.build_schema`. A successful build returns non-introspection type-map names; a caught GraphQLError returns valid=false and exits 1. Other build failures such as TypeError from SDL semantic validation are not caught and produce a traceback instead of the structured validity result.",
+    "core_primitives": [
+      "attempt_graphql_sdl_schema_build",
+      "report_caught_graphqlerror_build_failure",
+      "list_non_introspection_type_names"
+    ],
+    "problem_space": "Best-effort local graphql-core schema build with structured success and GraphQLError reporting; not comprehensive SDL semantic validity checking because TypeError and other exceptions escape, and not query validation, remote endpoint inspection, resolver testing, or schema execution.",
+    "domain_tags": [
+      "graphql",
+      "validation",
+      "schema"
+    ]
+  },
+  "constraint": {
+    "env_requirements": [
+      "Python >= 3.6",
+      "graphql-core"
+    ],
+    "io_signature": "Input: one required existing UTF-8 GraphQL SDL file; output: JSON with valid=true plus type_count/types, or valid=false plus a GraphQLError string.",
+    "accepted_inputs": [
+      "an existing UTF-8 text file containing GraphQL Schema Definition Language accepted by graphql-core build_schema"
+    ],
+    "output_shape": "Valid schema: {status: \"success\", tool: \"graphql-core\", target: string, valid: true, type_count: integer, types: string[]}; types contains every schema.type_map key not beginning `__`. Caught GraphQLError: {status: \"success\", tool: \"graphql-core\", target: string, valid: false, error: string}, followed by exit 1. Non-existing path: {status: \"error\", message: string} and exit 2. Missing argument prints usage to stderr and exits 1 without JSON. File open/UTF-8 decoding errors and non-GraphQLError exceptions are uncaught and may produce a traceback.",
+    "limitations": [
+      "only GraphQLError is caught around build_schema; SDL semantic validation failures raised as TypeError or other exception classes produce an unstructured traceback, so this is not a comprehensive SDL validity validator",
+      "does not validate GraphQL query or mutation documents, variables, resolver implementations, directive runtime behavior, or server responses",
+      "does not perform remote introspection, federation composition, schema diffing, formatting, code generation, or file modification",
+      "the returned type list excludes only names beginning `__` and can include built-in scalar or schema-support types, not solely caller-declared business types",
+      "reads the entire file with UTF-8 and has no explicit timeout, size limit, or output truncation"
+    ],
+    "artifact_input": [
+      "file_path"
+    ],
+    "artifact_output": [
+      "json"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "file_path",
+        "kind": "string",
+        "required": true,
+        "cli_position": 1
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "JSON GraphQL SDL build result with valid/type metadata or a caught GraphQLError; the schema file is not modified.",
+      "json_schema": {
+        "description": "Native JSON representation only; no field or task-delivery guarantee.",
+        "type": [
+          "object",
+          "array",
+          "string",
+          "number",
+          "boolean",
+          "null"
+        ]
+      },
+      "native_json_contract_scope": "value_only"
+    }
+  },
+  "routing": {
+    "family": "graphql-sdl-build-attempt-graphqlerror-reporting",
+    "intent_tags": [
+      "attempt to build GraphQL SDL and report caught GraphQLError failures",
+      "inspect non-introspection types after a successful SDL schema build"
+    ],
+    "negative_intents": [
+      "perform comprehensive GraphQL SDL semantic validation",
+      "validate GraphQL queries operations variables or resolver behavior",
+      "inspect or validate a remote GraphQL endpoint",
+      "format rewrite generate code from or diff a GraphQL schema"
+    ],
+    "dependency_slots": []
+  },
+  "execution": {
+    "runtime": "python_script",
+    "uri": "file://Pool/resources/tools/script/graphql_schema_validator.py",
+    "execution_status": "active"
+  },
+  "utility": {
+    "latency_ms": 100,
+    "token_cost_factor": 0.01,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://github.com/graphql-python/graphql-core",
+    "license": "MIT",
+    "backed_by": "GraphQL SDL validation via graphql-core",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:0236360e8c03b49dbe87f9232b90d04599888a0fb808595819e0470a4aea0419",
+    "local_implementation_uri": "file://Pool/resources/tools/script/graphql_schema_validator.py",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/script/_sgar_cli.py": "sha256:42368f8d49cb6364ad3aeaac6d0f9602adc12cb29fea49322fd488400698b6b9"
+    }
+  },
+  "type_specific": {
+    "tool": {
+      "tool_kind": "local_script",
+      "language": "python",
+      "deterministic": true
+    }
+  },
+  "memory": {
+    "success_trajectories": [],
+    "failure_reflections": []
+  },
+  "type": {
+    "resource_type": "Tool",
+    "resource_tag": [
+      "graphql",
+      "validation",
+      "schema"
+    ]
+  },
+  "input_contract": [
+    {
+      "name": "file_path",
+      "kind": "string",
+      "required": true,
+      "cli_position": 1
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "json",
+    "description": "JSON GraphQL SDL build result with valid/type metadata or a caught GraphQLError; the schema file is not modified.",
+    "json_schema": {
+      "description": "Native JSON representation only; no field or task-delivery guarantee.",
+      "type": [
+        "object",
+        "array",
+        "string",
+        "number",
+        "boolean",
+        "null"
+      ]
+    },
+    "native_json_contract_scope": "value_only"
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [
+      {
+        "name": "graphql-core",
+        "version": "==3.2.5",
+        "required": true
+      }
+    ],
+    "node_packages": [],
+    "system_packages": [],
+    "commands": [],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "python_compatibility": ">=3.11,<4"
+  }
+}

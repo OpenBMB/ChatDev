@@ -1,0 +1,140 @@
+{
+  "manifest_version": "v2",
+  "resource_id": "tool.zotero_translation.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Normalize citation metadata through Zotero Translation Server",
+    "description": "SGAR adapter over upstream Zotero Translation Server identifier and webpage translation APIs.",
+    "domain_tags": [
+      "research",
+      "citation",
+      "metadata"
+    ],
+    "core_primitives": [
+      "resolve_identifier_metadata",
+      "normalize_citation_items",
+      "return_zotero_json"
+    ],
+    "problem_space": "Citation metadata normalization for public webpages and scholarly identifiers; not web search, evidence capture, quote extraction, or source hashing."
+  },
+  "constraint": {
+    "io_signature": "Input public URL or DOI/ISBN/PMID/arXiv identifier; output Zotero JSON items or translator diagnostics.",
+    "accepted_inputs": [
+      "public URL or supported scholarly identifier"
+    ],
+    "output_shape": "JSON normalized citation item envelope.",
+    "limitations": [
+      "requires local/self-hosted translation-server",
+      "translator coverage varies by source",
+      "does not prove source truth or preserve a page snapshot",
+      "public metadata path requires no third-party token"
+    ],
+    "operation_kinds": [
+      "network_metadata_read"
+    ],
+    "artifact_output": [
+      "json"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "identifier",
+        "kind": "string",
+        "required": true,
+        "cli_position": 1
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "Normalized Zotero citation metadata.",
+      "json_schema": {
+        "description": "Native JSON representation only; no field or task-delivery guarantee.",
+        "type": [
+          "object",
+          "array",
+          "string",
+          "number",
+          "boolean",
+          "null"
+        ]
+      },
+      "native_json_contract_scope": "value_only"
+    }
+  },
+  "routing": {
+    "family": "citation-metadata-normalization",
+    "intent_tags": [
+      "resolve DOI metadata",
+      "extract citation metadata",
+      "normalize a webpage citation"
+    ],
+    "negative_intents": [
+      "rank web search results",
+      "capture WARC evidence",
+      "locate an exact quote"
+    ]
+  },
+  "execution": {
+    "runtime": "python_script",
+    "uri": "file://Pool/resources/tools/script/zotero_translation.py",
+    "execution_status": "active"
+  },
+  "utility": {
+    "latency_ms": 1000,
+    "token_cost_factor": 0.02,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://github.com/zotero/translation-server/tree/2.0.3",
+    "version": "2.0.3",
+    "license": "AGPL-3.0",
+    "license_url": "https://github.com/zotero/translation-server/blob/2.0.3/COPYING",
+    "license_sha256": "c97f1925ce31549ed01eb29eec2226f17b9adcb3956669ea204d226a0c746831",
+    "backed_by": "Zotero Translation Server",
+    "recognized_public_tool": true,
+    "native_network_access": true,
+    "credential_class": "NONE",
+    "credential_env_names": [],
+    "third_party_account_required": false,
+    "paid_service_required": false,
+    "source_hash": "sha256:0ff5b89b9ef1f9ee1ea553bdc2e9cf57dd5b41c5ceb3a21ef38631a1459323bc",
+    "local_implementation_uri": "file://Pool/resources/tools/script/zotero_translation.py"
+  },
+  "type_specific": {
+    "tool": {
+      "tool_kind": "rest_api",
+      "deterministic": false
+    }
+  },
+  "memory": {
+    "success_trajectories": [],
+    "failure_reflections": []
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [
+      {
+        "name": "httpx",
+        "version": "==0.28.1",
+        "required": true
+      }
+    ],
+    "node_packages": [],
+    "system_packages": [],
+    "commands": [],
+    "env_vars": [
+      "ZOTERO_TRANSLATION_SERVER_URL"
+    ],
+    "network_required": true,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "python_compatibility": ">=3.11,<4"
+  }
+}

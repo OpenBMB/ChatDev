@@ -1,0 +1,10 @@
+{
+  ucp: {version: ucp.version, status: ucp.status},
+  result: result.products[*].{
+    title: title,
+    price: price_range.min.amount,
+    currency: price_range.min.currency,
+    variant: variants[0].id,
+    buy: variants[0].checkout_url
+  }
+}

@@ -1,0 +1,170 @@
+{
+  "manifest_version": "v2",
+  "resource_id": "tool.lib.shapely_geometry.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Measure area or distance, test the intersects predicate, or return a WKT centroid",
+    "description": "Parses a primary WKT geometry; operation area returns its area, intersects tests the intersects predicate against a second WKT, distance measures to a second WKT, and every other operation value returns the centroid. Direct wrapper invocation defaults an omitted third argument to area, and every result is converted to a string.",
+    "domain_tags": [
+      "geo"
+    ],
+    "core_primitives": [
+      "parse_wkt_geometry",
+      "measure_area_or_distance",
+      "test_intersection",
+      "compute_centroid"
+    ],
+    "problem_space": "Small planar geometry calculations over one or two WKT-encoded Shapely geometries."
+  },
+  "constraint": {
+    "io_signature": "Inputs: primary WKT, optional secondary WKT, and operation; output: JSON echoing operation with result always serialized as a string.",
+    "accepted_inputs": [
+      "a valid WKT geometry for area or centroid calculation",
+      "two valid WKT geometries for intersects or distance operations",
+      "operation area, intersects, or distance; an omitted operation defaults to area in direct wrapper invocation, while any other value selects centroid"
+    ],
+    "output_shape": "Success is an object with status=\"success\", tool=\"lib.shapely_geometry\", operation as the selected or defaulted operation string, and result as a string containing the area number, intersects predicate True/False, distance number, or centroid representation. A caught WKT-parse, missing-secondary-geometry, topology, or geometry-operation exception produces an object with status=\"error\", tool=\"lib.shapely_geometry\", and message as the exception string, then exits with code 1.",
+    "limitations": [
+      "supports exact operations area, intersects, and distance; every unknown operation string silently computes the primary geometry centroid",
+      "direct wrapper invocation defaults an omitted third operation argument to area even though the manifest input contract retains required=true",
+      "requires wkt_b only for intersects and distance and ignores it for area and centroid",
+      "stringifies every result, so numeric values and booleans are not returned with native JSON types",
+      "uses Shapely's planar Cartesian calculations with no CRS metadata, geodesic distance, or coordinate transformation",
+      "invalid WKT, missing secondary geometry for binary operations, and topology errors use the wrapper's error envelope"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "wkt_a",
+        "kind": "string",
+        "required": true,
+        "cli_position": 1
+      },
+      {
+        "name": "wkt_b",
+        "kind": "string",
+        "required": false,
+        "cli_position": 2
+      },
+      {
+        "name": "op",
+        "kind": "string",
+        "required": true,
+        "cli_position": 3
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "Echoed operation and a stringified area, intersection verdict, distance, or centroid result.",
+      "json_schema": {
+        "description": "Native JSON representation only; no field or task-delivery guarantee.",
+        "type": [
+          "object",
+          "array",
+          "string",
+          "number",
+          "boolean",
+          "null"
+        ]
+      },
+      "native_json_contract_scope": "value_only"
+    }
+  },
+  "routing": {
+    "family": "wkt-planar-geometry-calculation",
+    "intent_tags": [
+      "calculate WKT area distance or centroid",
+      "test whether two WKT geometries intersect"
+    ],
+    "negative_intents": [
+      "perform geodesic or CRS-aware measurements",
+      "compute geometry union intersection shapes or buffers",
+      "return numeric or boolean results with native JSON types"
+    ]
+  },
+  "execution": {
+    "runtime": "python_library",
+    "uri": "file://Pool/resources/tools/lib/lib.shapely_geometry.py",
+    "execution_status": "active"
+  },
+  "utility": {
+    "latency_ms": 200.0,
+    "token_cost_factor": 0.02,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://shapely.readthedocs.io/",
+    "license": "BSD-3",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:94940b903579c7bc5304a7381b88a9460ab246fe2546b48209d372f814838129",
+    "local_implementation_uri": "file://Pool/resources/tools/lib/lib.shapely_geometry.py",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/lib/_liblib.py": "sha256:dcd68e7904232764172e5f646ff97b854f68f7f916180ae32f838a0acf9ccc77"
+    }
+  },
+  "type_specific": {},
+  "type": {
+    "resource_type": "Tool"
+  },
+  "input_contract": [
+    {
+      "name": "wkt_a",
+      "kind": "string",
+      "required": true,
+      "cli_position": 1
+    },
+    {
+      "name": "wkt_b",
+      "kind": "string",
+      "required": false,
+      "cli_position": 2
+    },
+    {
+      "name": "op",
+      "kind": "string",
+      "required": true,
+      "cli_position": 3
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "json",
+    "description": "Echoed operation and a stringified area, intersection verdict, distance, or centroid result.",
+    "json_schema": {
+      "description": "Native JSON representation only; no field or task-delivery guarantee.",
+      "type": [
+        "object",
+        "array",
+        "string",
+        "number",
+        "boolean",
+        "null"
+      ]
+    },
+    "native_json_contract_scope": "value_only"
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [
+      {
+        "name": "shapely",
+        "version": "==2.0.6",
+        "required": true
+      }
+    ],
+    "node_packages": [],
+    "system_packages": [],
+    "commands": [],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "python_compatibility": ">=3.11,<4"
+  }
+}

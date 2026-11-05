@@ -1,0 +1,143 @@
+{
+  "manifest_version": "v2",
+  "resource_id": "tool.lib.pandas_describe.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Describe every column in one CSV file with pandas defaults",
+    "description": "Reads a CSV file with pandas.read_csv defaults, runs DataFrame.describe(include='all'), and returns the resulting per-column statistics as a nested dictionary.",
+    "domain_tags": [
+      "data",
+      "statistics"
+    ],
+    "core_primitives": [
+      "read_csv_table",
+      "summarize_all_column_types",
+      "serialize_column_statistics"
+    ],
+    "problem_space": "Quick exploratory summaries of numeric and nonnumeric columns in a single CSV table."
+  },
+  "constraint": {
+    "io_signature": "Input: one CSV file path; output: JSON with describe as a column-oriented nested statistics object.",
+    "accepted_inputs": [
+      "a readable CSV file parseable by pandas.read_csv with its default delimiter, header, encoding, and type inference"
+    ],
+    "output_shape": "Success is an object with status=\"success\", tool=\"lib.pandas_describe\", and describe as a column-keyed object whose values map pandas statistic names to values from DataFrame.describe(include='all'). A caught file-read, CSV-parse, dataframe-summary, or serialization exception produces an object with status=\"error\", tool=\"lib.pandas_describe\", and message as the exception string, then exits with code 1.",
+    "limitations": [
+      "uses fixed pandas.read_csv defaults and exposes no delimiter, encoding, header, dtype, missing-value, or date-parsing options",
+      "include='all' mixes type-specific statistics, so inapplicable cells may serialize as NaN rather than strict JSON null",
+      "does not compute correlations, grouped summaries, custom percentiles, or inferential statistics",
+      "loads the entire CSV into memory",
+      "file access and CSV parsing failures are returned through the wrapper's error envelope"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "csv_path",
+        "kind": "string",
+        "required": true,
+        "cli_position": 1
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "Column-oriented output of pandas describe(include='all') for the loaded CSV.",
+      "json_schema": {
+        "description": "Native JSON representation only; no field or task-delivery guarantee.",
+        "type": [
+          "object",
+          "array",
+          "string",
+          "number",
+          "boolean",
+          "null"
+        ]
+      },
+      "native_json_contract_scope": "value_only"
+    }
+  },
+  "routing": {
+    "family": "csv-column-descriptive-statistics",
+    "intent_tags": [
+      "summarize columns in a CSV file",
+      "get pandas descriptive statistics for all CSV columns"
+    ],
+    "negative_intents": [
+      "group or pivot CSV records",
+      "calculate correlations or statistical tests",
+      "configure nondefault CSV parsing options"
+    ]
+  },
+  "execution": {
+    "runtime": "python_library",
+    "uri": "file://Pool/resources/tools/lib/lib.pandas_describe.py",
+    "execution_status": "active"
+  },
+  "utility": {
+    "latency_ms": 200.0,
+    "token_cost_factor": 0.02,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://pandas.pydata.org/",
+    "license": "BSD-3",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:99311cef00f1b200d67f62c0bb9047d5dd9a8d5d2286d276aacd543745270829",
+    "local_implementation_uri": "file://Pool/resources/tools/lib/lib.pandas_describe.py",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/lib/_liblib.py": "sha256:dcd68e7904232764172e5f646ff97b854f68f7f916180ae32f838a0acf9ccc77"
+    }
+  },
+  "type_specific": {},
+  "type": {
+    "resource_type": "Tool"
+  },
+  "input_contract": [
+    {
+      "name": "csv_path",
+      "kind": "string",
+      "required": true,
+      "cli_position": 1
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "json",
+    "description": "Column-oriented output of pandas describe(include='all') for the loaded CSV.",
+    "json_schema": {
+      "description": "Native JSON representation only; no field or task-delivery guarantee.",
+      "type": [
+        "object",
+        "array",
+        "string",
+        "number",
+        "boolean",
+        "null"
+      ]
+    },
+    "native_json_contract_scope": "value_only"
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [
+      {
+        "name": "pandas",
+        "version": "==2.2.3",
+        "required": true
+      }
+    ],
+    "node_packages": [],
+    "system_packages": [],
+    "commands": [],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "python_compatibility": ">=3.11,<4"
+  }
+}

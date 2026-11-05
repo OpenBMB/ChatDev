@@ -1,0 +1,178 @@
+{
+  "manifest_version": "v2",
+  "resource_id": "tool.api.nager_holidays.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "List public holidays for a country and year",
+    "description": "Fetches Nager.Date PublicHolidays/<year>/<country_code> using required CLI positions year then country_code. HTTP 2xx/3xx responses produce a success envelope; HTTP 4xx/5xx responses produce an error envelope and a non-zero exit; request exceptions also produce an error envelope and a non-zero exit.",
+    "domain_tags": [
+      "public-holidays",
+      "calendar",
+      "travel-planning"
+    ],
+    "core_primitives": [
+      "lookup_public_holidays",
+      "retrieve_country_calendar"
+    ],
+    "problem_space": "Country/year public-holiday reference; not personal calendar scheduling, business closure guarantees, or legal advice."
+  },
+  "constraint": {
+    "io_signature": "Input: year at CLI position 1 and country_code at position 2. Output: shared JSON envelope with url, http_status, and Nager result. HTTP 2xx/3xx responses produce a success envelope; HTTP 4xx/5xx responses produce an error envelope and a non-zero exit; request exceptions also produce an error envelope and a non-zero exit.",
+    "accepted_inputs": [
+      "calendar year string",
+      "ISO-like country code accepted by Nager.Date"
+    ],
+    "output_shape": "HTTP 2xx/3xx: {status: \"success\", tool: string, url: string, http_status: integer, result: object|string}. HTTP 4xx/5xx: {status: \"error\", tool: string, url: string, http_status: integer, result: object|string}, exit 1. Request exception: {status: \"error\", tool: string, message: string}, exit 1.",
+    "limitations": [
+      "fixed GET https://date.nager.at/api/v3/PublicHolidays/<year>/<country_code>",
+      "no subdivision, language, holiday-type, pagination, or date-range input",
+      "wrapper does not locally truncate or normalize the holiday array",
+      "coverage and observed-holiday rules depend on Nager.Date data; no auth, cache, or retry"
+    ],
+    "artifact_output": [
+      "json"
+    ],
+    "execution_risk": "medium",
+    "http_status_semantics": {
+      "success": "HTTP 200-399",
+      "failure": "HTTP 400-599 or request exception",
+      "failure_exit_code": 1
+    }
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "year",
+        "kind": "string",
+        "required": true,
+        "cli_position": 1
+      },
+      {
+        "name": "country_code",
+        "kind": "string",
+        "required": true,
+        "cli_position": 2
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "Shared JSON envelope containing country/year public-holiday records, URL, and HTTP status.",
+      "json_schema": {
+        "description": "Native JSON representation only; no field or task-delivery guarantee.",
+        "type": [
+          "object",
+          "array",
+          "string",
+          "number",
+          "boolean",
+          "null"
+        ]
+      },
+      "native_json_contract_scope": "value_only"
+    }
+  },
+  "routing": {
+    "family": "country-public-holiday-calendar",
+    "intent_tags": [
+      "find public holidays by country and year",
+      "check a country's holiday calendar"
+    ],
+    "negative_intents": [
+      "schedule a personal event",
+      "guarantee an employer or venue closure"
+    ]
+  },
+  "execution": {
+    "runtime": "rest_api",
+    "uri": "file://Pool/resources/tools/api/api.nager_holidays.py",
+    "execution_status": "active",
+    "execution_risk": "medium"
+  },
+  "utility": {
+    "latency_ms": 200.0,
+    "token_cost_factor": 0.02,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://date.nager.at/swagger/index.html",
+    "license": "MIT",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:17c4f8fd9723384dc8201b0fafc7915aaa98a589f529382fe9742a0c7e9365df",
+    "local_implementation_uri": "file://Pool/resources/tools/api/api.nager_holidays.py",
+    "auth_required": false,
+    "auth_evidence": "wrapper_and_shared_adapter_read_no_credentials",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/api/_apilib.py": "sha256:e60bba3d1f3dcd9fcd408042ad7951e52d6ecd66d57cb9a58c249d521c8811a7"
+    }
+  },
+  "type_specific": {
+    "tool": {
+      "tool_kind": "rest_api",
+      "deterministic": false
+    }
+  },
+  "type": {
+    "resource_type": "Tool"
+  },
+  "input_contract": [
+    {
+      "name": "year",
+      "kind": "string",
+      "required": true,
+      "cli_position": 1
+    },
+    {
+      "name": "country_code",
+      "kind": "string",
+      "required": true,
+      "cli_position": 2
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "json",
+    "description": "Shared JSON envelope containing country/year public-holiday records, URL, and HTTP status.",
+    "json_schema": {
+      "description": "Native JSON representation only; no field or task-delivery guarantee.",
+      "type": [
+        "object",
+        "array",
+        "string",
+        "number",
+        "boolean",
+        "null"
+      ]
+    },
+    "native_json_contract_scope": "value_only"
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [
+      {
+        "name": "requests",
+        "version": "==2.32.3",
+        "required": true
+      }
+    ],
+    "node_packages": [],
+    "system_packages": [],
+    "commands": [],
+    "env_vars": [],
+    "network_required": true,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "rest": {
+      "endpoint": "https://date.nager.at/api/v3/PublicHolidays/{a(1)}/{a(2)}",
+      "auth_required": false,
+      "auth_evidence": "wrapper_and_shared_adapter_read_no_credentials",
+      "timeout_seconds": 25,
+      "success_http_status": "200-399"
+    },
+    "python_compatibility": ">=3.11,<4"
+  }
+}

@@ -1,0 +1,144 @@
+{
+  "resource_id": "qwen3.8-flash",
+  "type": {
+    "resource_type": "Model",
+    "resource_tag": [
+      "1M Context",
+      ".15",
+      ".47",
+      ".016"
+    ]
+  },
+  "capability": {
+    "summary": "Hosted vision-language model for coding and document analysis.",
+    "core_primitives": [
+      "code revision",
+      "document interpretation",
+      "visual reasoning",
+      "tool-assisted analysis"
+    ],
+    "problem_space": "Hosted vision-language model for coding and document analysis. Applicable tasks include code revision, document interpretation, visual reasoning, tool-assisted analysis. Accepts text, image input and produces text output. External tools are required to execute programs, browse sources, or modify files; generated instructions alone do not perform those actions.",
+    "domain_tags": [
+      "Language",
+      "Software Engineering",
+      "Visual Understanding"
+    ]
+  },
+  "constraint": {
+    "env_requirements": [
+      "Endpoint exposing the documented model through Chat Completions; gateway mapping unverified",
+      "Valid API key for the selected service or an explicitly configured self-hosted endpoint",
+      "Endpoint and transport support for every requested input and output modality",
+      "Provider-hosted integrations are not automatically available through the configured gateway."
+    ],
+    "io_signature": "Input modalities: text, image | Output modalities: text. Gateway transport support requires verification."
+  },
+  "utility": {
+    "latency_ms": 0,
+    "token_cost_factor": 0,
+    "expected_success_rate": 0
+  },
+  "execution": {
+    "uri": "${base_url}/v1/chat/completions",
+    "model_id": "qwen3.8-flash"
+  },
+  "memory": {
+    "success_trajectories": [],
+    "failure_reflections": []
+  },
+  "provenance": {
+    "reviewed_at": "2026-09-09",
+    "evidence_status": "provider_documented_not_gateway_verified",
+    "integration_status": "source_registered_pending_canonical_review",
+    "source_urls": [
+      "https://help.aliyun.com/en/model-studio/newly-released-models",
+      "https://qwen.ai/blog?id=qwen3.8-flash-next"
+    ],
+    "documented_input_modalities": [
+      "text",
+      "image"
+    ],
+    "documented_output_modalities": [
+      "text"
+    ],
+    "documented_interface_facts": {
+      "version_kind": "service_alias",
+      "thinking_mode": "hybrid",
+      "related_weight_release": "Qwen/Qwen3.8-Flash-Next"
+    },
+    "task_profile_basis": "Neutral candidate task categories based on documented operations; not an empirical model ranking or fixed role assignment.",
+    "pricing_status": "official_public_price_snapshot",
+    "resource_tag_layout": [
+      "context_window",
+      "input_per_million_tokens",
+      "output_per_million_tokens",
+      "cache_read_per_million_tokens"
+    ],
+    "pricing_note": "Official reference rates and backend billing rules from the same dated pricebook; capability and gateway evidence unchanged.",
+    "utility_status": "unmeasured_legacy_zero_placeholders",
+    "gateway_verification_status": "not_run",
+    "configuration_note": "Source capability facts are preserved by the deterministic converter. Runtime and gateway readiness still require independent validation before activation.",
+    "supplier_model_mapping_status": "configured_from_user_screenshot_not_live_verified",
+    "semantic_review": {
+      "reviewed_at": "2026-09-09",
+      "policy": "model-capabilities-v1",
+      "source_urls": [
+        "https://help.aliyun.com/en/model-studio/newly-released-models",
+        "https://qwen.ai/blog?id=qwen3.8-flash-next"
+      ],
+      "evidence_status": "provider_documented_not_gateway_verified",
+      "source_document_sha256": {
+        "https://help.aliyun.com/en/model-studio/newly-released-models": "54b167876961c267e8f9c250e82db663feede5a7479322c8adeda7783aaf6481"
+      },
+      "task_profile_basis": "Task categories derived from documented operations; no empirical quality ranking or fixed framework role.",
+      "context_policy": "Legacy configured limit is preserved separately from documented native context; neither proves the supplier limit."
+    },
+    "official_pricing": {
+      "snapshot_date": "2026-10-09",
+      "source": "https://www.alibabacloud.com/help/en/model-studio/qwen3-8-flash",
+      "pricebook_sha256": "9e9a8248e54f1934d08d5efe68a3998ebce6faa09106f3f2a7ac119bf89a182c"
+    }
+  },
+  "type_specific": {
+    "model": {
+      "profile_version": "model-capabilities-v1",
+      "input_modalities": [
+        "text",
+        "image"
+      ],
+      "output_modalities": [
+        "text"
+      ],
+      "supports": {
+        "tool_calling": true,
+        "json_mode": null,
+        "vision": true,
+        "reasoning": true,
+        "coding": true
+      },
+      "thinking_mode": "hybrid",
+      "native_protocol": "openai_compatible_chat",
+      "documented_context_tokens": null,
+      "evidence_status": "provider_documented_not_gateway_verified",
+      "gateway_verification_status": "not_run",
+      "limitations": [],
+      "documented_interface_facts": {
+        "version_kind": "service_alias",
+        "thinking_mode": "hybrid",
+        "related_weight_release": "Qwen/Qwen3.8-Flash-Next"
+      },
+      "max_output_tokens": null,
+      "pricing_rules": {
+        "input_per_m": ".15",
+        "cache_per_m": ".016",
+        "output_per_m": ".47",
+        "source": "https://www.alibabacloud.com/help/en/model-studio/qwen3-8-flash",
+        "cache_mode": "implicit",
+        "input_tiers": [],
+        "region": "International Singapore",
+        "explicit_cache_per_m": ".016",
+        "cache_write_per_m": ".2"
+      }
+    }
+  }
+}

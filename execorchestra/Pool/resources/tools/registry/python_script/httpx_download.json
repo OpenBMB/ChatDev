@@ -1,0 +1,239 @@
+{
+  "manifest_version": "v2",
+  "resource_id": "tool.httpx_download.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Download a public URL to an exact binary or text file for subsequent Tools or visual/audio models.",
+    "description": "Acquire a public HTTP(S) response with HTTPX and save its exact bytes at an explicit task-workspace path. Returns a compact status, MIME type, size and hash receipt. Actual file effects are registered by the runtime and can be consumed by compatible downstream Tools or a live-verified visual/audio controller.",
+    "core_primitives": [
+      "download_remote_file",
+      "fetch_web_resource"
+    ],
+    "domain_tags": [
+      "web",
+      "file-acquisition",
+      "image",
+      "audio",
+      "document"
+    ],
+    "problem_space": "Acquire already located public images, audio, documents, datasets or source files. Does not find URLs, interpret images, extract page content, transcribe audio, or bypass unavailable websites.",
+    "execution_semantics": {
+      "determinism": "unknown",
+      "side_effects": "declared",
+      "effect_targets": [
+        "task_workspace"
+      ],
+      "modalities": [
+        "file",
+        "image",
+        "audio",
+        "text"
+      ]
+    }
+  },
+  "constraint": {
+    "io_signature": "Input public URL, output_path and optional timeout_ms/max_bytes. Output exact downloaded workspace file plus JSON status/MIME/size/hash receipt.",
+    "accepted_inputs": [
+      "public HTTP(S) URL",
+      "writable task-workspace destination with the correct extension"
+    ],
+    "output_shape": "JSON receipt; downloaded bytes are a file effect, never decoded or embedded in JSON.",
+    "limitations": [
+      "remote endpoint availability is not guaranteed",
+      "no authentication or browser JavaScript",
+      "default response size 20 MiB and timeout 60s can be increased explicitly",
+      "image/audio model consumption still requires a supported format and verified model capability"
+    ],
+    "operation_kinds": [
+      "download_remote_file",
+      "fetch_web_resource"
+    ],
+    "artifact_output": [
+      "json"
+    ],
+    "materialized_artifact_types": [
+      "file",
+      "image",
+      "audio",
+      "plaintext",
+      "code",
+      "pdf"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "url",
+        "kind": "string",
+        "required": true,
+        "cli_position": 1,
+        "description": "Complete HTTP(S) URL as a plain string, without Markdown or surrounding quotes; obtain it from task input or observed discovery and preserve required source/date parameters."
+      },
+      {
+        "name": "output_path",
+        "kind": "string",
+        "required": true,
+        "cli_position": 2,
+        "description": "Workspace-relative destination; preserve the actual content extension for model-media delivery."
+      },
+      {
+        "name": "timeout_ms",
+        "kind": "integer",
+        "required": false,
+        "cli_flag": "--timeout-ms",
+        "default": 60000,
+        "minimum": 1
+      },
+      {
+        "name": "max_bytes",
+        "kind": "integer",
+        "required": false,
+        "cli_flag": "--max-bytes",
+        "default": 20971520,
+        "minimum": 1
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "Exact response bytes are written to output_path; returns only a receipt, not the body. Read or parse the downloaded file with a compatible bound Tool before using its content as evidence.",
+      "json_schema": {
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "status": {
+                "const": "success"
+              },
+              "url": {
+                "type": "string"
+              },
+              "http_status": {
+                "const": 200
+              },
+              "byte_size": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "content_sha256": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              "content_type": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "status",
+              "url",
+              "http_status",
+              "byte_size",
+              "content_sha256",
+              "content_type"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "status": {
+                "const": "error"
+              },
+              "reason_code": {
+                "type": "string"
+              },
+              "http_status": {
+                "type": "integer"
+              }
+            },
+            "required": [
+              "status",
+              "reason_code"
+            ],
+            "additionalProperties": false
+          }
+        ]
+      },
+      "result_status": {
+        "payload_path": "status",
+        "success_values": [
+          "success"
+        ],
+        "failure_values": [
+          "error"
+        ]
+      }
+    }
+  },
+  "routing": {
+    "family": "public-file-download",
+    "intent_tags": [
+      "acquire an image or audio file for model inspection",
+      "download a public document or dataset",
+      "save exact HTTP bytes to the task workspace"
+    ],
+    "negative_intents": [
+      "discover a URL",
+      "interpret image contents",
+      "generate media"
+    ],
+    "dependency_slots": []
+  },
+  "execution": {
+    "runtime": "python_script",
+    "uri": "file://Pool/resources/tools/script/httpx_download.py",
+    "execution_status": "active"
+  },
+  "utility": {
+    "latency_ms": 250,
+    "token_cost_factor": 0.02,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://github.com/encode/httpx/tree/0.28.1",
+    "version": "0.28.1",
+    "license": "BSD-3-Clause",
+    "license_url": "https://github.com/encode/httpx/blob/0.28.1/LICENSE.md",
+    "license_sha256": "4ec59d544f12b5f539a3a716fd321ac58ccd8030b465221f2c880200cdf28d8d",
+    "upstream_artifact": "https://files.pythonhosted.org/packages/source/h/httpx/httpx-0.28.1.tar.gz",
+    "upstream_artifact_sha256": "75e98c5f16b0f35b567856f597f06ff2270a374470a5c2392242528e3e3e42fc",
+    "backed_by": "HTTPX",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:34d16cafadc2c0ab9773c98d0258838af14520299b47495f818bae8bc2a46d1a",
+    "local_implementation_uri": "file://Pool/resources/tools/script/httpx_download.py"
+  },
+  "type_specific": {
+    "tool": {
+      "tool_kind": "local_script",
+      "language": "python",
+      "deterministic": false
+    }
+  },
+  "memory": {
+    "success_trajectories": [],
+    "failure_reflections": []
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [
+      {
+        "name": "httpx",
+        "version": "==0.28.1",
+        "required": true
+      }
+    ],
+    "node_packages": [],
+    "system_packages": [],
+    "commands": [],
+    "env_vars": [],
+    "network_required": true,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "python_compatibility": ">=3.11,<4"
+  }
+}

@@ -1,0 +1,144 @@
+{
+  "manifest_version": "v2",
+  "resource_id": "tool.lib.dateparser_parse.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Parse one natural-language date expression into an ISO timestamp",
+    "description": "Passes one text string to dateparser.parse and returns the parsed datetime as an ISO-8601 string, or null when no date can be recognized.",
+    "domain_tags": [
+      "nlp",
+      "time"
+    ],
+    "core_primitives": [
+      "interpret_date_expression",
+      "resolve_calendar_datetime",
+      "format_iso_timestamp"
+    ],
+    "problem_space": "Single-expression date and time interpretation; not recurring-schedule extraction or timezone conversion configuration."
+  },
+  "constraint": {
+    "io_signature": "Input: one natural-language text string; output: JSON object echoing text and containing parsed as an ISO datetime string or null.",
+    "accepted_inputs": [
+      "a natural-language date or datetime expression",
+      "an ISO-like date string or other text understood by the installed dateparser settings"
+    ],
+    "output_shape": "Success is an object with status=\"success\", tool=\"lib.dateparser_parse\", text as the original input string, and parsed as an ISO-8601 datetime string or null when dateparser recognizes no date. A caught parsing exception produces an object with status=\"error\", tool=\"lib.dateparser_parse\", and message as the exception string, then exits with code 1.",
+    "limitations": [
+      "uses dateparser defaults with no explicit locale, timezone, or relative-base settings",
+      "does not return multiple dates from a longer document",
+      "ambiguous expressions may resolve according to library defaults",
+      "returns null for unrecognized text rather than a ranked set of candidates"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "text",
+        "kind": "string",
+        "required": true,
+        "cli_position": 1
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "ISO-8601 representation of the parsed datetime, or null when unrecognized.",
+      "json_schema": {
+        "description": "Native JSON representation only; no field or task-delivery guarantee.",
+        "type": [
+          "object",
+          "array",
+          "string",
+          "number",
+          "boolean",
+          "null"
+        ]
+      },
+      "native_json_contract_scope": "value_only"
+    }
+  },
+  "routing": {
+    "family": "single-date-expression-parsing",
+    "intent_tags": [
+      "parse a natural-language date string",
+      "convert one date expression to an ISO timestamp"
+    ],
+    "negative_intents": [
+      "extract every date from a document",
+      "calculate date differences or durations",
+      "configure timezone-aware scheduling rules"
+    ]
+  },
+  "execution": {
+    "runtime": "python_library",
+    "uri": "file://Pool/resources/tools/lib/lib.dateparser_parse.py",
+    "execution_status": "active"
+  },
+  "utility": {
+    "latency_ms": 200.0,
+    "token_cost_factor": 0.02,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://github.com/scrapinghub/dateparser",
+    "license": "BSD-3",
+    "backed_by": "dateparser_parse",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:9d39fb980b324a4be118128120e931bc51124f84c78c1025f386cfee59e460d1",
+    "local_implementation_uri": "file://Pool/resources/tools/lib/lib.dateparser_parse.py",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/lib/_liblib.py": "sha256:dcd68e7904232764172e5f646ff97b854f68f7f916180ae32f838a0acf9ccc77"
+    }
+  },
+  "type_specific": {},
+  "type": {
+    "resource_type": "Tool"
+  },
+  "input_contract": [
+    {
+      "name": "text",
+      "kind": "string",
+      "required": true,
+      "cli_position": 1
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "json",
+    "description": "ISO-8601 representation of the parsed datetime, or null when unrecognized.",
+    "json_schema": {
+      "description": "Native JSON representation only; no field or task-delivery guarantee.",
+      "type": [
+        "object",
+        "array",
+        "string",
+        "number",
+        "boolean",
+        "null"
+      ]
+    },
+    "native_json_contract_scope": "value_only"
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [
+      {
+        "name": "dateparser",
+        "version": "==1.2.0",
+        "required": true
+      }
+    ],
+    "node_packages": [],
+    "system_packages": [],
+    "commands": [],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "python_compatibility": ">=3.11,<4"
+  }
+}

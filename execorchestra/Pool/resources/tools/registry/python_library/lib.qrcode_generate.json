@@ -1,0 +1,143 @@
+{
+  "manifest_version": "v2",
+  "resource_id": "tool.lib.qrcode_generate.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Measure the base64 length of a generated QR image",
+    "description": "Generates a QR image in memory from one data string using qrcode defaults, saves it to a byte buffer, base64-encodes those bytes, and returns only the encoded byte-count alongside the original data.",
+    "domain_tags": [
+      "utility",
+      "image"
+    ],
+    "core_primitives": [
+      "encode_data_as_qr",
+      "serialize_qr_to_memory",
+      "measure_base64_encoded_length"
+    ],
+    "problem_space": "Checking whether default QR generation succeeds and measuring the resulting base64 payload length without returning the image payload."
+  },
+  "constraint": {
+    "io_signature": "Input: one data string; output: JSON echoing data and reporting png_base64_len as the length of the base64-encoded in-memory image bytes.",
+    "accepted_inputs": [
+      "a text string whose encoded content fits within a QR code supported by qrcode.make defaults"
+    ],
+    "output_shape": "Success is an object with status=\"success\", tool=\"lib.qrcode_generate\", data as the original input string, and png_base64_len as the integer length of the base64-encoded in-memory image bytes; no image payload is included. A caught QR-capacity, image-generation, serialization, or base64 exception produces an object with status=\"error\", tool=\"lib.qrcode_generate\", and message as the exception string, then exits with code 1.",
+    "limitations": [
+      "does not return, write, or expose the QR image or its base64 data despite the image artifact declaration",
+      "png_base64_len is only a byte-count of the encoded base64 payload, not the payload itself",
+      "uses qrcode.make and image-save defaults with no caller control over version, error correction, box size, border, colors, style, or output path",
+      "echoes the complete input data in the output, which may be unsuitable for sensitive payloads",
+      "oversized data and image-generation or serialization failures use the wrapper's error envelope"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "data",
+        "kind": "string",
+        "required": true,
+        "cli_position": 1
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "Original data and the base64-encoded image length only; no QR image or base64 payload is included.",
+      "json_schema": {
+        "description": "Native JSON representation only; no field or task-delivery guarantee.",
+        "type": [
+          "object",
+          "array",
+          "string",
+          "number",
+          "boolean",
+          "null"
+        ]
+      },
+      "native_json_contract_scope": "value_only"
+    }
+  },
+  "routing": {
+    "family": "qr-generation-size-measurement",
+    "intent_tags": [
+      "measure default QR image base64 size",
+      "check QR generation and report encoded length"
+    ],
+    "negative_intents": [
+      "receive a QR code image or base64 payload",
+      "save a QR code to a file",
+      "customize QR error correction colors or dimensions"
+    ]
+  },
+  "execution": {
+    "runtime": "python_library",
+    "uri": "file://Pool/resources/tools/lib/lib.qrcode_generate.py",
+    "execution_status": "active"
+  },
+  "utility": {
+    "latency_ms": 200.0,
+    "token_cost_factor": 0.02,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://github.com/lincolnloop/python-qrcode",
+    "license": "BSD-3",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:2de0b98190ffaa1b44eb98241efb6cdd9166b958dfa96a011ddf8528d00b0b05",
+    "local_implementation_uri": "file://Pool/resources/tools/lib/lib.qrcode_generate.py",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/lib/_liblib.py": "sha256:dcd68e7904232764172e5f646ff97b854f68f7f916180ae32f838a0acf9ccc77"
+    }
+  },
+  "type_specific": {},
+  "type": {
+    "resource_type": "Tool"
+  },
+  "input_contract": [
+    {
+      "name": "data",
+      "kind": "string",
+      "required": true,
+      "cli_position": 1
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "json",
+    "description": "Original data and the base64-encoded image length only; no QR image or base64 payload is included.",
+    "json_schema": {
+      "description": "Native JSON representation only; no field or task-delivery guarantee.",
+      "type": [
+        "object",
+        "array",
+        "string",
+        "number",
+        "boolean",
+        "null"
+      ]
+    },
+    "native_json_contract_scope": "value_only"
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [
+      {
+        "name": "qrcode",
+        "version": "==8.0",
+        "required": true
+      }
+    ],
+    "node_packages": [],
+    "system_packages": [],
+    "commands": [],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "python_compatibility": ">=3.11,<4"
+  }
+}

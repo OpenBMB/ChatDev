@@ -1,0 +1,117 @@
+{
+  "manifest_version": "v2",
+  "resource_id": "tool.lib.markdown_it_render.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Render one Markdown string to HTML with markdown-it defaults",
+    "description": "Instantiates MarkdownIt with its default preset and renders the supplied Markdown string to an HTML fragment returned under the html field.",
+    "domain_tags": [
+      "docs"
+    ],
+    "core_primitives": [
+      "parse_markdown_tokens",
+      "render_markdown_html",
+      "preserve_default_commonmark_behavior"
+    ],
+    "problem_space": "One-shot Markdown-to-HTML conversion using markdown-it-py's uncustomized parser and renderer."
+  },
+  "constraint": {
+    "io_signature": "Input: one Markdown string; output: wrapper JSON containing the rendered HTML string under html.",
+    "accepted_inputs": [
+      "Markdown or plain text accepted by a default MarkdownIt instance"
+    ],
+    "output_shape": "Success is an object with status=\"success\", tool=\"lib.markdown_it_render\", and html as the complete HTML fragment string rendered by a default MarkdownIt instance. A caught Markdown parsing or rendering exception produces an object with status=\"error\", tool=\"lib.markdown_it_render\", and message as the exception string, then exits with code 1.",
+    "limitations": [
+      "uses a fresh default MarkdownIt instance with no plugins, custom rules, presets, or renderer options supplied by the caller",
+      "does not sanitize the resulting HTML and must not be treated as an XSS-cleaning step",
+      "returns an HTML fragment in a JSON field rather than writing a standalone HTML document or file",
+      "does not expose parsed tokens, source maps, or rendering diagnostics"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "markdown",
+        "kind": "string",
+        "required": true,
+        "cli_position": 1
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "html",
+      "description": "HTML fragment rendered from the input Markdown and returned in the html field."
+    }
+  },
+  "routing": {
+    "family": "markdown-to-html-rendering",
+    "intent_tags": [
+      "render Markdown as HTML",
+      "convert a Markdown string to an HTML fragment"
+    ],
+    "negative_intents": [
+      "sanitize untrusted HTML or Markdown output",
+      "render plugin-specific Markdown extensions",
+      "extract a Markdown syntax tree or token stream"
+    ]
+  },
+  "execution": {
+    "runtime": "python_library",
+    "uri": "file://Pool/resources/tools/lib/lib.markdown_it_render.py",
+    "execution_status": "active"
+  },
+  "utility": {
+    "latency_ms": 200.0,
+    "token_cost_factor": 0.02,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://github.com/executablebooks/markdown-it-py",
+    "license": "MIT",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:b35be237b49386b2998b77c284260721c06a224c1a4fffefb466daabdd74b7d3",
+    "local_implementation_uri": "file://Pool/resources/tools/lib/lib.markdown_it_render.py",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/lib/_liblib.py": "sha256:dcd68e7904232764172e5f646ff97b854f68f7f916180ae32f838a0acf9ccc77"
+    }
+  },
+  "type_specific": {},
+  "type": {
+    "resource_type": "Tool"
+  },
+  "input_contract": [
+    {
+      "name": "markdown",
+      "kind": "string",
+      "required": true,
+      "cli_position": 1
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "html",
+    "description": "HTML fragment rendered from the input Markdown and returned in the html field."
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [
+      {
+        "name": "markdown-it-py",
+        "version": "==3.0.0",
+        "required": true
+      }
+    ],
+    "node_packages": [],
+    "system_packages": [],
+    "commands": [],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "python_compatibility": ">=3.11,<4"
+  }
+}

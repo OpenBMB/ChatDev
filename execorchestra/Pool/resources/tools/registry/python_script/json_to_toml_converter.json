@@ -1,0 +1,179 @@
+{
+  "manifest_version": "1.0",
+  "resource_id": "tool.json_to_toml_converter.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Convert one local JSON object to TOML text in a JSON envelope",
+    "description": "Reads one UTF-8 JSON file, requires its root to be an object, serializes it with tomli-w, and returns the TOML text in the `toml` field without writing a file.",
+    "core_primitives": [
+      "parse_local_json_file",
+      "serialize_json_object_as_toml",
+      "return_toml_text_in_json_envelope"
+    ],
+    "problem_space": "In-memory JSON-object-to-TOML text conversion for a single local file; not TOML file creation, arbitrary JSON-root conversion, TOML parsing, or round-trip preservation.",
+    "domain_tags": [
+      "configuration_management",
+      "data_format_conversion"
+    ]
+  },
+  "constraint": {
+    "env_requirements": [
+      "Python >= 3.6",
+      "tomli-w Python package"
+    ],
+    "io_signature": "Input: required file_path string naming an existing UTF-8 JSON file whose root is an object. Output: a JSON envelope containing TOML text or a structured handled error; the source is not modified and no TOML file is created.",
+    "accepted_inputs": [
+      "an existing UTF-8 JSON file with an object at the document root"
+    ],
+    "output_shape": "Success: {status: \"success\", tool: \"tomli-w\", target: string, toml: string}, exit 0. Missing path: {status: \"error\", message: string}, exit 2. Non-object root: {status: \"error\", message: \"TOML root must be a JSON object\"}, exit 1. JSON syntax failure: {status: \"error\", tool: \"tomli-w\", message: string}, exit 1. Missing argument prints usage to stderr and exits 1 without JSON; unsupported values or read/serialization failures may traceback.",
+    "limitations": [
+      "returns TOML only as a string inside JSON and never creates or modifies a TOML file",
+      "requires a JSON object root; JSON null, arrays, and scalar roots are rejected, while TOML-incompatible nested values may raise an uncaught serialization error",
+      "uses UTF-8 input, has no timeout or output truncation, and does not preserve JSON formatting or comments"
+    ],
+    "artifact_input": [
+      "file_path"
+    ],
+    "artifact_output": [
+      "json"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "file_path",
+        "kind": "file_path",
+        "artifact_types": [
+          "json"
+        ],
+        "extensions": [
+          ".json"
+        ],
+        "required": true,
+        "cli_position": 1
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "JSON envelope containing generated TOML text or a handled conversion error; no output file is written.",
+      "json_schema": {
+        "description": "Native JSON representation only; no field or task-delivery guarantee.",
+        "type": [
+          "object",
+          "array",
+          "string",
+          "number",
+          "boolean",
+          "null"
+        ]
+      },
+      "native_json_contract_scope": "value_only"
+    }
+  },
+  "routing": {
+    "family": "json-object-to-toml-text-conversion",
+    "intent_tags": [
+      "convert a JSON object file to TOML text",
+      "serialize local JSON configuration as TOML"
+    ],
+    "negative_intents": [
+      "write or modify a TOML file",
+      "convert JSON arrays or scalar roots to TOML",
+      "parse TOML or convert TOML to JSON"
+    ],
+    "dependency_slots": []
+  },
+  "execution": {
+    "runtime": "python_script",
+    "uri": "file://Pool/resources/tools/script/json_to_toml_converter.py",
+    "execution_status": "active"
+  },
+  "utility": {
+    "latency_ms": 100,
+    "token_cost_factor": 0.01,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://github.com/hukkin/tomli-w",
+    "license": "MIT",
+    "backed_by": "tomli-w",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:c532eeb68fd666be8b6cf181a76d616b14324b7d2c52f1fd36569d23b3a14614",
+    "local_implementation_uri": "file://Pool/resources/tools/script/json_to_toml_converter.py",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/script/_sgar_cli.py": "sha256:42368f8d49cb6364ad3aeaac6d0f9602adc12cb29fea49322fd488400698b6b9"
+    }
+  },
+  "type_specific": {
+    "tool": {
+      "tool_kind": "local_script",
+      "language": "python",
+      "deterministic": true
+    }
+  },
+  "memory": {
+    "success_trajectories": [],
+    "failure_reflections": []
+  },
+  "type": {
+    "resource_type": "Tool",
+    "resource_tag": [
+      "configuration_management",
+      "data_format_conversion"
+    ]
+  },
+  "input_contract": [
+    {
+      "name": "file_path",
+      "kind": "file_path",
+      "artifact_types": [
+        "json"
+      ],
+      "extensions": [
+        ".json"
+      ],
+      "required": true,
+      "cli_position": 1
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "json",
+    "description": "JSON envelope containing generated TOML text or a handled conversion error; no output file is written.",
+    "json_schema": {
+      "description": "Native JSON representation only; no field or task-delivery guarantee.",
+      "type": [
+        "object",
+        "array",
+        "string",
+        "number",
+        "boolean",
+        "null"
+      ]
+    },
+    "native_json_contract_scope": "value_only"
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [
+      {
+        "name": "tomli_w",
+        "version": "image-locked",
+        "required": true
+      }
+    ],
+    "node_packages": [],
+    "system_packages": [],
+    "commands": [],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "python_compatibility": ">=3.11,<4"
+  }
+}

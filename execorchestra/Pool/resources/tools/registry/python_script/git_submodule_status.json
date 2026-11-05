@@ -1,0 +1,172 @@
+{
+  "manifest_version": "1.0",
+  "resource_id": "tool.git_submodule_status.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Return recursive Git submodule status as unparsed command-line text",
+    "description": "Runs `git -C <repo> submodule status --recursive` for one required existing repository and captures its stdout. It reports nested submodule state text without initializing, updating, syncing, fetching, or modifying submodules.",
+    "core_primitives": [
+      "inspect_recursive_git_submodule_status",
+      "capture_submodule_commit_lines",
+      "preserve_repository_state"
+    ],
+    "problem_space": "Read-only recursive submodule status inspection for one Git repository; not submodule initialization, update, synchronization, cloning, removal, or structured dependency-health validation.",
+    "domain_tags": [
+      "version-control",
+      "software-engineering",
+      "development-tools"
+    ]
+  },
+  "constraint": {
+    "env_requirements": [
+      "Python >= 3.6",
+      "git executable"
+    ],
+    "io_signature": "Input: one required existing Git repository path; output: JSON process envelope with raw recursive `git submodule status` stdout, stderr, and exit code.",
+    "accepted_inputs": [
+      "an existing local Git repository directory whose submodules should be listed recursively"
+    ],
+    "output_shape": "Success: {status: \"success\", tool: \"git\", target: string, exit_code: 0, result: null, stdout: string, stderr: string|null}; stdout contains Git's unparsed recursive submodule lines and may be empty when no submodules exist. Nonzero Git result uses the same keys with status=\"tool_error\" and propagates Git's exit code. Non-existing path, missing executable, or 120-second timeout: {status: \"error\", tool: \"git\", message: string}, exiting 2/3/4. Missing argument prints usage to stderr and exits 1 without JSON.",
+    "limitations": [
+      "returns unparsed Git text with result=null; consumers must interpret leading space, `-`, `+`, or `U` status markers and commit/path text",
+      "always uses `--recursive` and exposes no pathspec, cached, summary, or other Git submodule options",
+      "does not initialize, update, sync, fetch, clone, deinitialize, or repair submodules and does not verify remote availability",
+      "requires Git on PATH, uses a fixed 120-second timeout, and captures output without truncation"
+    ],
+    "artifact_input": [
+      "repo_path"
+    ],
+    "artifact_output": [
+      "json"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "repo_path",
+        "kind": "string",
+        "required": true,
+        "cli_position": 1
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "JSON execution envelope containing raw recursive `git submodule status` text and process metadata; no submodule state is changed.",
+      "json_schema": {
+        "description": "Native JSON representation only; no field or task-delivery guarantee.",
+        "type": [
+          "object",
+          "array",
+          "string",
+          "number",
+          "boolean",
+          "null"
+        ]
+      },
+      "native_json_contract_scope": "value_only"
+    }
+  },
+  "routing": {
+    "family": "git-read-only-recursive-submodule-status",
+    "intent_tags": [
+      "inspect recursive Git submodule status",
+      "list submodule commits and paths without updating them"
+    ],
+    "negative_intents": [
+      "initialize update sync fetch or clone Git submodules",
+      "return parsed submodule status objects or dependency health conclusions",
+      "inspect ordinary branches tags logs or working-tree diffs"
+    ],
+    "dependency_slots": []
+  },
+  "execution": {
+    "runtime": "python_script",
+    "uri": "file://Pool/resources/tools/script/git_submodule_status.py",
+    "execution_status": "active"
+  },
+  "utility": {
+    "latency_ms": 100,
+    "token_cost_factor": 0.01,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://git-scm.com",
+    "license": "GPLv2",
+    "backed_by": "",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:d2c708e174c71f41e21efd399f9686a0bce0d742e1e0a5394034c12cb72f53be",
+    "local_implementation_uri": "file://Pool/resources/tools/script/git_submodule_status.py",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/script/_sgar_cli.py": "sha256:42368f8d49cb6364ad3aeaac6d0f9602adc12cb29fea49322fd488400698b6b9"
+    }
+  },
+  "type_specific": {
+    "tool": {
+      "tool_kind": "local_script",
+      "language": "python",
+      "deterministic": true
+    }
+  },
+  "memory": {
+    "success_trajectories": [],
+    "failure_reflections": []
+  },
+  "type": {
+    "resource_type": "Tool",
+    "resource_tag": [
+      "version-control",
+      "software-engineering",
+      "development-tools"
+    ]
+  },
+  "input_contract": [
+    {
+      "name": "repo_path",
+      "kind": "string",
+      "required": true,
+      "cli_position": 1
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "json",
+    "description": "JSON execution envelope containing raw recursive `git submodule status` text and process metadata; no submodule state is changed.",
+    "json_schema": {
+      "description": "Native JSON representation only; no field or task-delivery guarantee.",
+      "type": [
+        "object",
+        "array",
+        "string",
+        "number",
+        "boolean",
+        "null"
+      ]
+    },
+    "native_json_contract_scope": "value_only"
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [],
+    "node_packages": [],
+    "system_packages": [
+      {
+        "name": "git",
+        "version": "image-locked",
+        "required": true
+      }
+    ],
+    "commands": [
+      "git"
+    ],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "python_compatibility": ">=3.11,<4"
+  }
+}

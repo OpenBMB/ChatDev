@@ -1,0 +1,119 @@
+{
+  "resource_id": "gpt-5.3-codex",
+  "type": {
+    "resource_type": "Model",
+    "resource_tag": [
+      "400K Context",
+      "1.75",
+      "14",
+      ".175"
+    ]
+  },
+  "capability": {
+    "summary": "Coding-oriented reasoning model with a later documented knowledge cutoff.",
+    "core_primitives": [
+      "repository navigation",
+      "multi-file code changes",
+      "debugging",
+      "test implementation",
+      "code review"
+    ],
+    "problem_space": "Coding model for repository changes and tool-assisted software development. Applicable tasks include repository navigation, multi-file code changes, debugging, test implementation, code review. Accepts text, image input and produces text output. External tools are required to execute programs, browse sources, or modify files; generated instructions alone do not perform those actions. Published distinction: The native product is optimized for tool-assisted coding with a 400,000-token context and an August 2025 knowledge cutoff. This identifies documented coverage, not a guaranteed improvement on a particular repository.",
+    "domain_tags": [
+      "Language",
+      "Software Engineering",
+      "Visual Understanding"
+    ]
+  },
+  "constraint": {
+    "env_requirements": [
+      "OpenAI-Compatible API Endpoint",
+      "Valid API Key",
+      "Stable Network Connection"
+    ],
+    "io_signature": "Input modalities: text, image | Output modalities: text. Gateway transport support requires verification."
+  },
+  "utility": {
+    "latency_ms": 0,
+    "token_cost_factor": 0,
+    "expected_success_rate": 0
+  },
+  "execution": {
+    "uri": "${base_url}/v1/chat/completions"
+  },
+  "memory": {
+    "success_trajectories": [],
+    "failure_reflections": []
+  },
+  "type_specific": {
+    "model": {
+      "profile_version": "model-capabilities-v1",
+      "input_modalities": [
+        "text",
+        "image"
+      ],
+      "output_modalities": [
+        "text"
+      ],
+      "supports": {
+        "tool_calling": true,
+        "json_mode": true,
+        "vision": true,
+        "reasoning": true,
+        "coding": true,
+        "structured_outputs": true
+      },
+      "thinking_mode": "reasoning",
+      "native_protocol": "responses_only",
+      "documented_context_tokens": 400000,
+      "evidence_status": "provider_documented_not_gateway_verified",
+      "gateway_verification_status": "not_run",
+      "limitations": [],
+      "max_output_tokens": 128000,
+      "pricing_rules": {
+        "input_per_m": "1.75",
+        "cache_per_m": ".175",
+        "output_per_m": "14",
+        "source": "https://developers.openai.com/api/docs/pricing",
+        "cache_mode": "implicit",
+        "input_tiers": []
+      }
+    }
+  },
+  "provenance": {
+    "semantic_review": {
+      "reviewed_at": "2026-09-09",
+      "policy": "model-capabilities-v1",
+      "source_urls": [
+        "https://developers.openai.com/api/docs/models/gpt-5.3-codex.md"
+      ],
+      "evidence_status": "provider_documented_not_gateway_verified",
+      "source_document_sha256": {
+        "https://developers.openai.com/api/docs/models/gpt-5.3-codex.md": "535f5edd3b7073dcf8efce1f1359d9ff6a79636c4ec61361fc9f962a150c0bbf"
+      },
+      "task_profile_basis": "Task categories derived from documented operations; no empirical quality ranking or fixed framework role.",
+      "context_policy": "Legacy configured limit is preserved separately from documented native context; neither proves the supplier limit."
+    },
+    "model_distinction_review": {
+      "evidence_kind": "provider_documented_design",
+      "source_urls": [
+        "https://developers.openai.com/api/docs/models/gpt-5.3-codex.md"
+      ],
+      "source_document_sha256": {
+        "https://developers.openai.com/api/docs/models/gpt-5.3-codex.md": "3b779189c2a193fbe665b1dfa9ac362dd6d07ab0f680af38976297f42785a325"
+      },
+      "interpretation_limit": "Published task emphasis is non-exclusive. Architecture and product positioning do not establish supplier latency, measured quality, or a fixed framework role.",
+      "policy": "model-distinctions-v1",
+      "reviewed_at": "2026-09-09",
+      "evidence_status": "provider_documented_not_gateway_verified",
+      "scope": "Non-exclusive published task emphasis and architecture; no empirical cross-model quality ordering."
+    },
+    "pricing_status": "official_public_price_snapshot",
+    "pricing_note": "Official reference rates and backend billing rules from the same dated pricebook; capability and gateway evidence unchanged.",
+    "official_pricing": {
+      "snapshot_date": "2026-10-09",
+      "source": "https://developers.openai.com/api/docs/pricing",
+      "pricebook_sha256": "9e9a8248e54f1934d08d5efe68a3998ebce6faa09106f3f2a7ac119bf89a182c"
+    }
+  }
+}

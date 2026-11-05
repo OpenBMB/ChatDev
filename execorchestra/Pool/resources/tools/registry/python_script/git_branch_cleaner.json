@@ -1,0 +1,175 @@
+{
+  "manifest_version": "1.0",
+  "resource_id": "tool.git_branch_cleaner.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Read-only audit of local and remote-tracking branches already merged into the repository's current HEAD",
+    "description": "Runs `git -C <repo> branch -a --merged`, strips Git's current-branch marker from each nonblank output line, and returns the resulting candidate list. Despite the cleaner name, it never deletes, prunes, fetches, or otherwise changes branches or remotes.",
+    "core_primitives": [
+      "list_branches_merged_into_head",
+      "inspect_local_and_remote_tracking_branches",
+      "report_cleanup_candidates_without_mutation"
+    ],
+    "problem_space": "Read-only discovery of branch names Git reports as merged into current HEAD; not branch deletion, remote cleanup, stale-branch age analysis, merged-PR detection, or repository mutation.",
+    "domain_tags": [
+      "git",
+      "version-control",
+      "development-tools"
+    ]
+  },
+  "constraint": {
+    "env_requirements": [
+      "Python 3.6+",
+      "git"
+    ],
+    "io_signature": "Input: repo_path CLI argument, with the script defaulting to `.` when omitted; output: JSON list and count of `git branch -a --merged` lines or a path/Git error.",
+    "accepted_inputs": [
+      "an existing local Git repository directory path",
+      "no CLI argument when the current working directory should be inspected through the declared `.` default"
+    ],
+    "output_shape": "Success: {status: \"success\", tool: \"git\", repo: string, merged_branch_count: integer, merged_branches: string[]}; entries are stripped nonblank lines from `git branch -a --merged` and may include the current local branch, remote-tracking names, and symbolic remote HEAD text. Non-existing repo path: {status: \"error\", message: string} and exit 2. Nonzero Git result: {status: \"error\", tool: \"git\", message: string} and exit 1. Missing Git executable, 30-second timeout, or other subprocess exceptions are uncaught and may produce a traceback instead of JSON.",
+    "limitations": [
+      "despite the cleaner name, this is audit-only and performs no branch deletion, remote deletion, fetch, prune, checkout, or other Git mutation",
+      "merged means reachable from the repository's current HEAD according to `git branch -a --merged`; no target base branch or revision can be selected",
+      "does not exclude the current branch, protected branches, default branches, remote HEAD symbolic entries, or branches by age, ownership, or worktree use",
+      "remote-tracking information may be stale because the wrapper does not fetch or prune; it uses a fixed 30-second timeout and does not catch timeout or executable-not-found exceptions"
+    ],
+    "artifact_input": [
+      "repo_path"
+    ],
+    "artifact_output": [
+      "json"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "repo_path",
+        "kind": "string",
+        "required": false,
+        "default": ".",
+        "cli_position": 1
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "JSON read-only audit containing the count and raw names of local and remote-tracking branches Git reports merged into current HEAD; nothing is deleted.",
+      "json_schema": {
+        "description": "Native JSON representation only; no field or task-delivery guarantee.",
+        "type": [
+          "object",
+          "array",
+          "string",
+          "number",
+          "boolean",
+          "null"
+        ]
+      },
+      "native_json_contract_scope": "value_only"
+    }
+  },
+  "routing": {
+    "family": "git-read-only-merged-branch-audit",
+    "intent_tags": [
+      "list branches already merged into the current Git HEAD",
+      "inspect local and remote-tracking cleanup candidates without deleting them"
+    ],
+    "negative_intents": [
+      "delete, prune, or clean local or remote Git branches",
+      "fetch remotes or refresh remote-tracking branch state",
+      "find stale branches by age or branches merged into a caller-selected base"
+    ],
+    "dependency_slots": []
+  },
+  "utility": {
+    "latency_ms": 100,
+    "token_cost_factor": 0.01,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://git-scm.com/",
+    "license": "GPLv2",
+    "backed_by": "wraps git(1) CLI",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:c49397c04df51d0386c49213ddd9773b33a8d94108e58dfdec4203590985139d",
+    "local_implementation_uri": "file://Pool/resources/tools/script/git_branch_cleaner.py",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/script/_sgar_cli.py": "sha256:42368f8d49cb6364ad3aeaac6d0f9602adc12cb29fea49322fd488400698b6b9"
+    }
+  },
+  "type_specific": {
+    "tool": {
+      "tool_kind": "local_script",
+      "language": "python",
+      "deterministic": true
+    }
+  },
+  "memory": {
+    "success_trajectories": [],
+    "failure_reflections": []
+  },
+  "execution": {
+    "runtime": "python_script",
+    "uri": "file://Pool/resources/tools/script/git_branch_cleaner.py",
+    "execution_status": "active"
+  },
+  "type": {
+    "resource_type": "Tool",
+    "resource_tag": [
+      "git",
+      "version-control",
+      "development-tools"
+    ]
+  },
+  "input_contract": [
+    {
+      "name": "repo_path",
+      "kind": "string",
+      "required": false,
+      "default": ".",
+      "cli_position": 1
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "json",
+    "description": "JSON read-only audit containing the count and raw names of local and remote-tracking branches Git reports merged into current HEAD; nothing is deleted.",
+    "json_schema": {
+      "description": "Native JSON representation only; no field or task-delivery guarantee.",
+      "type": [
+        "object",
+        "array",
+        "string",
+        "number",
+        "boolean",
+        "null"
+      ]
+    },
+    "native_json_contract_scope": "value_only"
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [],
+    "node_packages": [],
+    "system_packages": [
+      {
+        "name": "git",
+        "version": "image-locked",
+        "required": true
+      }
+    ],
+    "commands": [
+      "git"
+    ],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "python_compatibility": ">=3.11,<4"
+  }
+}

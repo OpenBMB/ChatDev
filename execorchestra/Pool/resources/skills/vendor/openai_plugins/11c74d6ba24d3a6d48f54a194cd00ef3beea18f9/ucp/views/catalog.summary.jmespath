@@ -1,0 +1,9 @@
+{
+  ucp: {version: ucp.version, status: ucp.status},
+  result: {
+    count: length(result.products),
+    sellers: result.products[*].variants[0].seller.url | [?@] | sort(@),
+    price_min: min(result.products[*].price_range.min.amount),
+    price_max: max(result.products[*].price_range.max.amount)
+  }
+}

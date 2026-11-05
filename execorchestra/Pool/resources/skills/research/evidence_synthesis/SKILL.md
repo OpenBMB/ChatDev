@@ -1,0 +1,3 @@
+# Synthesize a concise answer from retrieved evidence
+
+Work only from the supplied observations and task inputs. Maintain a compact claim/evidence/URL map. Separate quoted facts, deterministic calculations and model inference. Use tool.python_script_runner.v1 for arithmetic when useful, retaining units and input provenance. Give the direct answer in the requested format, followed by concise supporting citations if permitted. If an essential fact is missing, state that limitation rather than inventing it. Source acquisition remains an explicit tool operation; this Skill itself performs no network requests.

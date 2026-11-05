@@ -1,0 +1,140 @@
+{
+  "manifest_version": "v2",
+  "resource_id": "tool.trafilatura_extract.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Extract main text from local HTML or XML with Trafilatura 2.2.0",
+    "description": "Thin SGAR adapter over upstream Trafilatura that reads one local document and returns txt, Markdown, or Trafilatura JSON extraction.",
+    "domain_tags": [
+      "web",
+      "text_extraction",
+      "document_processing"
+    ],
+    "core_primitives": [
+      "extract_main_text",
+      "remove_web_boilerplate",
+      "serialize_extracted_document"
+    ],
+    "problem_space": "Main-content extraction from already acquired HTML/XML; not URL fetching, web search, browser rendering, evidence capture, or citation verification."
+  },
+  "constraint": {
+    "io_signature": "Input local document path, output format and size bound; output JSON envelope containing extracted text.",
+    "accepted_inputs": [
+      "readable local HTML or XML document no larger than the configured bound"
+    ],
+    "output_shape": "JSON with target, output_format and extracted text.",
+    "limitations": [
+      "never fetches URLs",
+      "does not execute JavaScript",
+      "does not create provenance or citation evidence",
+      "default maximum input is 5 MB"
+    ],
+    "operation_kinds": [
+      "local_read",
+      "text_extraction"
+    ],
+    "artifact_input": [
+      "file_path"
+    ],
+    "artifact_output": [
+      "json"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "input_path",
+        "kind": "string",
+        "required": true,
+        "cli_position": 1
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "Extracted main content from one local document.",
+      "json_schema": {
+        "description": "Native JSON representation only; no field or task-delivery guarantee.",
+        "type": [
+          "object",
+          "array",
+          "string",
+          "number",
+          "boolean",
+          "null"
+        ]
+      },
+      "native_json_contract_scope": "value_only"
+    }
+  },
+  "routing": {
+    "family": "html-main-content-extraction",
+    "intent_tags": [
+      "extract article text from local HTML",
+      "remove web page boilerplate"
+    ],
+    "negative_intents": [
+      "download a URL",
+      "search sources",
+      "produce auditable research evidence"
+    ],
+    "dependency_slots": []
+  },
+  "execution": {
+    "runtime": "python_script",
+    "uri": "file://Pool/resources/tools/script/trafilatura_extract.py",
+    "execution_status": "active"
+  },
+  "utility": {
+    "latency_ms": 100,
+    "token_cost_factor": 0.01,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://github.com/adbar/trafilatura/tree/v2.2.0",
+    "version": "2.2.0",
+    "license": "Apache-2.0",
+    "license_url": "https://github.com/adbar/trafilatura/blob/v2.2.0/LICENSE",
+    "license_sha256": "a6cba85bc92e0cff7a450b1d873c0eaa2e9fc96bf472df0247a26bec77bf3ff9",
+    "upstream_artifact": "https://files.pythonhosted.org/packages/source/t/trafilatura/trafilatura-2.2.0.tar.gz",
+    "upstream_artifact_sha256": "8c2cabb84066465228d03183fb698ce0b1245b81c58140b8ae0de57fddf3aae7",
+    "backed_by": "Trafilatura",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:7a00b5d702a1452e71771a8c99adecb635f44c0b21891c1f07c1faca711b553a",
+    "local_implementation_uri": "file://Pool/resources/tools/script/trafilatura_extract.py"
+  },
+  "type_specific": {
+    "tool": {
+      "tool_kind": "local_script",
+      "language": "python",
+      "deterministic": true
+    }
+  },
+  "memory": {
+    "success_trajectories": [],
+    "failure_reflections": []
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [
+      {
+        "name": "trafilatura",
+        "version": "==2.2.0",
+        "required": true
+      }
+    ],
+    "node_packages": [],
+    "system_packages": [],
+    "commands": [],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "python_compatibility": ">=3.11,<4"
+  }
+}

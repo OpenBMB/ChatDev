@@ -1,0 +1,364 @@
+{
+  "manifest_version": "v2",
+  "resource_id": "tool.pdf_text_extract.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Extract complete text for an explicit page range from a text-bearing PDF.",
+    "description": "Uses pdfplumber to return ordered per-page text for the full document or a caller-selected inclusive page range without silently truncating the selected range.",
+    "domain_tags": [
+      "document-processing",
+      "pdf",
+      "text-extraction"
+    ],
+    "core_primitives": [
+      "extract_complete_pdf_text_range"
+    ],
+    "operation_kinds": [
+      "extract_complete_pdf_text_range"
+    ],
+    "problem_space": "Deterministic text extraction from all or selected PDF pages for downstream search, reasoning, and exact-answer generation.",
+    "execution_semantics": {
+      "determinism": "deterministic",
+      "side_effects": "none",
+      "effect_targets": [],
+      "modalities": [
+        "document",
+        "text"
+      ]
+    }
+  },
+  "constraint": {
+    "io_signature": "Input: PDF path plus optional 1-based inclusive start_page and end_page. Output: typed JSON containing every selected page's complete extracted text.",
+    "accepted_inputs": [
+      "a readable text-bearing PDF supported by pdfplumber",
+      "an optional valid page range"
+    ],
+    "artifact_input": [
+      "pdf",
+      "file"
+    ],
+    "artifact_output": [
+      "json",
+      "text"
+    ],
+    "output_shape": "Success contains page_count, selected range, range_complete=true, and ordered pages [{page,text}]. Invalid ranges or unreadable PDFs return a typed error envelope and non-zero exit.",
+    "limitations": [
+      "does not perform OCR, so image-only pages usually return empty text",
+      "does not preserve layout, coordinates, images, or table structure",
+      "large selected ranges can produce large JSON results; callers should select a narrower range when task evidence permits"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "pdf_path",
+        "kind": "file_path",
+        "artifact_types": [
+          "pdf"
+        ],
+        "extensions": [
+          ".pdf"
+        ],
+        "required": true,
+        "cli_position": 1
+      },
+      {
+        "name": "start_page",
+        "kind": "integer",
+        "required": false,
+        "cli_position": 2
+      },
+      {
+        "name": "end_page",
+        "kind": "integer",
+        "required": false,
+        "cli_position": 3
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "Complete per-page text for the requested inclusive PDF page range.",
+      "json_schema": {
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "status": {
+                "const": "success"
+              },
+              "tool": {
+                "const": "pdfplumber"
+              },
+              "page_count": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "range_start": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "range_end": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "range_complete": {
+                "const": true
+              },
+              "pages": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "page": {
+                      "type": "integer",
+                      "minimum": 1
+                    },
+                    "text": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "page",
+                    "text"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            },
+            "required": [
+              "status",
+              "tool",
+              "page_count",
+              "range_start",
+              "range_end",
+              "range_complete",
+              "pages"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "status": {
+                "const": "error"
+              },
+              "tool": {
+                "const": "pdfplumber"
+              },
+              "message": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "status",
+              "tool",
+              "message"
+            ],
+            "additionalProperties": false
+          }
+        ]
+      },
+      "result_status": {
+        "payload_path": "status",
+        "success_values": [
+          "success"
+        ],
+        "failure_values": [
+          "error"
+        ]
+      }
+    }
+  },
+  "routing": {
+    "family": "pdf-complete-page-range-text-extraction",
+    "intent_tags": [
+      "extract complete text from a PDF",
+      "read a selected PDF page range",
+      "inspect a text-bearing PDF attachment"
+    ],
+    "negative_intents": [
+      "OCR scanned PDF pages",
+      "extract PDF tables with cell structure",
+      "render PDF pages as images"
+    ],
+    "dependency_slots": []
+  },
+  "execution": {
+    "runtime": "python_script",
+    "uri": "file://Pool/resources/tools/script/pdf_text_extract.py",
+    "execution_status": "active"
+  },
+  "utility": {
+    "latency_ms": 250,
+    "token_cost_factor": 0.02,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://github.com/jsvine/pdfplumber",
+    "license": "MIT",
+    "backed_by": "pdfplumber",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:aa47ef0ccebb55d3768a6cd62c417b12eac254f5a00c6d61cd425b3c1d97499f",
+    "local_implementation_uri": "file://Pool/resources/tools/script/pdf_text_extract.py"
+  },
+  "type_specific": {
+    "tool": {
+      "tool_kind": "local_script",
+      "language": "python",
+      "deterministic": true
+    }
+  },
+  "type": {
+    "resource_type": "Tool",
+    "resource_tag": [
+      "document-processing",
+      "pdf",
+      "text-extraction"
+    ]
+  },
+  "input_contract": [
+    {
+      "name": "pdf_path",
+      "kind": "file_path",
+      "artifact_types": [
+        "pdf"
+      ],
+      "extensions": [
+        ".pdf"
+      ],
+      "required": true,
+      "cli_position": 1
+    },
+    {
+      "name": "start_page",
+      "kind": "integer",
+      "required": false,
+      "cli_position": 2
+    },
+    {
+      "name": "end_page",
+      "kind": "integer",
+      "required": false,
+      "cli_position": 3
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "json",
+    "description": "Complete per-page text for the requested inclusive PDF page range.",
+    "json_schema": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "status": {
+              "const": "success"
+            },
+            "tool": {
+              "const": "pdfplumber"
+            },
+            "page_count": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "range_start": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "range_end": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "range_complete": {
+              "const": true
+            },
+            "pages": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "page": {
+                    "type": "integer",
+                    "minimum": 1
+                  },
+                  "text": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "page",
+                  "text"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "status",
+            "tool",
+            "page_count",
+            "range_start",
+            "range_end",
+            "range_complete",
+            "pages"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "status": {
+              "const": "error"
+            },
+            "tool": {
+              "const": "pdfplumber"
+            },
+            "message": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "status",
+            "tool",
+            "message"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "result_status": {
+      "payload_path": "status",
+      "success_values": [
+        "success"
+      ],
+      "failure_values": [
+        "error"
+      ]
+    }
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [
+      {
+        "name": "pdfplumber",
+        "version": "==0.11.4",
+        "required": true
+      }
+    ],
+    "node_packages": [],
+    "system_packages": [],
+    "commands": [],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "python_compatibility": ">=3.11,<4"
+  }
+}

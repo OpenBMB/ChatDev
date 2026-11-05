@@ -1,0 +1,66 @@
+# Pre-commit configuration for Python projects
+# Copy to your repo root as .pre-commit-config.yaml
+#
+# IMPORTANT: Replace all <latest> placeholders with actual versions.
+# Check each linked releases page for current stable versions.
+#
+# Usage:
+#   prek install        # Install git hooks
+#   prek run --all-files  # Run on all files
+#
+# See references/prek.md for more commands.
+
+default_language_version:
+  python: python3.12
+
+repos:
+  # === Code Quality ===
+
+  # Ruff - linting and formatting (replaces black, isort, flake8, pylint)
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: <latest>  # https://github.com/astral-sh/ruff-pre-commit/releases
+    hooks:
+      - id: ruff
+        args: [--fix]
+      - id: ruff-format
+
+  # === General File Checks ===
+  # prek builtin hooks - faster, no external deps
+  - repo: builtin
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-toml
+      - id: check-merge-conflict
+
+  # === Security Hooks ===
+  # See references/security-setup.md for detailed guidance on each hook.
+
+  # Shell script linting - catches unquoted vars, undefined vars, deprecated syntax
+  - repo: https://github.com/koalaman/shellcheck-precommit
+    rev: <latest>  # https://github.com/koalaman/shellcheck-precommit/tags
+    hooks:
+      - id: shellcheck
+        args: [--severity=error]
+
+  # Secret detection - prevents committing API keys, passwords, tokens
+  # Run `detect-secrets scan > .secrets.baseline` before first commit
+  - repo: https://github.com/Yelp/detect-secrets
+    rev: <latest>  # https://github.com/Yelp/detect-secrets/releases
+    hooks:
+      - id: detect-secrets
+        args: [--baseline, .secrets.baseline]
+
+  # GitHub Actions linting - catches syntax errors, invalid refs
+  - repo: https://github.com/rhysd/actionlint
+    rev: <latest>  # https://github.com/rhysd/actionlint/releases
+    hooks:
+      - id: actionlint
+
+  # GitHub Actions security audit - excessive permissions, injection risks
+  - repo: https://github.com/zizmorcore/zizmor-pre-commit
+    rev: <latest>  # https://github.com/zizmorcore/zizmor-pre-commit/releases
+    hooks:
+      - id: zizmor
+        args: [--persona=regular, --min-severity=medium, --min-confidence=medium]

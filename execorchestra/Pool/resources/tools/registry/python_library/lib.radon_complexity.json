@@ -1,0 +1,144 @@
+{
+  "manifest_version": "v2",
+  "resource_id": "tool.lib.radon_complexity.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "List named Python blocks and their cyclomatic complexity",
+    "description": "Reads one source file as text, runs Radon's cc_visit, and returns each discovered block's name and numeric cyclomatic complexity only.",
+    "domain_tags": [
+      "swe",
+      "metrics"
+    ],
+    "core_primitives": [
+      "read_python_source",
+      "visit_complexity_blocks",
+      "extract_name_and_complexity"
+    ],
+    "problem_space": "Minimal cyclomatic-complexity inspection of functions, methods, and classes in one Python source file."
+  },
+  "constraint": {
+    "io_signature": "Input: one Python source file path; output: JSON blocks array whose entries contain only name and complexity.",
+    "accepted_inputs": [
+      "a readable Python source file parseable by Radon's complexity visitor"
+    ],
+    "output_shape": "Success is an object with status=\"success\", tool=\"lib.radon_complexity\", and blocks as an array whose entries each contain name as a string and complexity as Radon's integer cyclomatic-complexity value. A caught file-read, decoding, Python-parse, or complexity-analysis exception produces an object with status=\"error\", tool=\"lib.radon_complexity\", and message as the exception string, then exits with code 1.",
+    "limitations": [
+      "computes cyclomatic complexity only and does not calculate maintainability index despite the original label",
+      "returns no block type, rank, line number, column, closure context, or filename",
+      "duplicate block names can be ambiguous because only name and complexity are retained",
+      "reads exactly one file using Python's default text encoding and does not recurse through directories",
+      "file access, decoding, and Python syntax failures use the wrapper's error envelope"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "path",
+        "kind": "string",
+        "required": true,
+        "cli_position": 1
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "Array of Radon-discovered Python block names with cyclomatic complexity values.",
+      "json_schema": {
+        "description": "Native JSON representation only; no field or task-delivery guarantee.",
+        "type": [
+          "object",
+          "array",
+          "string",
+          "number",
+          "boolean",
+          "null"
+        ]
+      },
+      "native_json_contract_scope": "value_only"
+    }
+  },
+  "routing": {
+    "family": "python-block-cyclomatic-complexity",
+    "intent_tags": [
+      "measure cyclomatic complexity in one Python file",
+      "list Python block names and complexity values"
+    ],
+    "negative_intents": [
+      "calculate maintainability index or Halstead metrics",
+      "analyze an entire directory recursively",
+      "return complexity ranks locations or full block metadata"
+    ]
+  },
+  "execution": {
+    "runtime": "python_library",
+    "uri": "file://Pool/resources/tools/lib/lib.radon_complexity.py",
+    "execution_status": "active"
+  },
+  "utility": {
+    "latency_ms": 200.0,
+    "token_cost_factor": 0.02,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://github.com/rubik/radon",
+    "license": "MIT",
+    "backed_by": "radon_complexity",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:faa2b9204f1e99e8783500f9bd6af08fbadfa0fcd36dd1c62fb003269a47480e",
+    "local_implementation_uri": "file://Pool/resources/tools/lib/lib.radon_complexity.py",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/lib/_liblib.py": "sha256:dcd68e7904232764172e5f646ff97b854f68f7f916180ae32f838a0acf9ccc77"
+    }
+  },
+  "type_specific": {},
+  "type": {
+    "resource_type": "Tool"
+  },
+  "input_contract": [
+    {
+      "name": "path",
+      "kind": "string",
+      "required": true,
+      "cli_position": 1
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "json",
+    "description": "Array of Radon-discovered Python block names with cyclomatic complexity values.",
+    "json_schema": {
+      "description": "Native JSON representation only; no field or task-delivery guarantee.",
+      "type": [
+        "object",
+        "array",
+        "string",
+        "number",
+        "boolean",
+        "null"
+      ]
+    },
+    "native_json_contract_scope": "value_only"
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [
+      {
+        "name": "radon",
+        "version": "==6.0.1",
+        "required": true
+      }
+    ],
+    "node_packages": [],
+    "system_packages": [],
+    "commands": [],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "python_compatibility": ">=3.11,<4"
+  }
+}

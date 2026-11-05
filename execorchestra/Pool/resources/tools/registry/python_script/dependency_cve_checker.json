@@ -1,0 +1,169 @@
+{
+  "manifest_version": "1.0",
+  "resource_id": "tool.dependency_cve_checker.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Audit either an existing Python requirements file or the current environment with pip-audit JSON output",
+    "description": "If the optional argument names an existing path, runs `pip-audit -r <path> -f json`; otherwise runs `pip-audit -f json` against the current Python environment. Known-vulnerability exit code 1 is treated as a completed audit, and no dependency is upgraded or fixed.",
+    "core_primitives": [
+      "audit_python_dependencies_with_pip_audit",
+      "audit_requirements_or_current_environment",
+      "return_pip_audit_native_json"
+    ],
+    "problem_space": "Known-vulnerability lookup for Python dependencies represented by one requirements file or installed in the current runtime; not source-code security scanning, license auditing, dependency updating, or multi-ecosystem CVE analysis.",
+    "domain_tags": [
+      "security-audit",
+      "dependency-management",
+      "python-tools"
+    ]
+  },
+  "constraint": {
+    "env_requirements": [
+      "Python >= 3.6",
+      "pip-audit executable",
+      "access to pip-audit's configured vulnerability data sources and any dependency resolution resources it needs"
+    ],
+    "io_signature": "Input: optional requirements_file path; an existing path selects requirements mode, while omission or a non-existing path selects current-environment mode. Output: JSON wrapper with parsed pip-audit JSON and process metadata or an execution error.",
+    "accepted_inputs": [
+      "an existing pip-compatible requirements file path",
+      "no argument to audit distributions installed in the current Python environment",
+      "a non-existing path, which is silently treated the same as no argument by this wrapper"
+    ],
+    "output_shape": "Completed audit (pip-audit exit 0 or 1): {status: \"success\", tool: \"pip-audit\", target: string|null, exit_code: 0|1, result: object|array|null, stdout: string|null, stderr: string|null}; parsed native JSON is stored in result and stdout is null, while exit 1 means vulnerabilities were found. Other pip-audit exits use the same keys with status=\"tool_error\" and propagate the actual exit code. Missing executable or 300-second timeout: {status: \"error\", tool: \"pip-audit\", message: string}, exiting 3 or 4. The wrapper does not emit a missing-path error because a non-existing optional path selects environment mode.",
+    "limitations": [
+      "audits only Python packages known to pip-audit's configured advisory sources and does not scan application source like Bandit",
+      "does not fix, upgrade, pin, install into the project, or rewrite requirement files",
+      "exposes no pip-audit flags other than fixed JSON output and optional `-r`; it cannot select vulnerability services, formats, aliases, or ignore IDs",
+      "a typo or non-existing requirements path silently audits the current environment instead, and the command has a fixed 300-second timeout"
+    ],
+    "artifact_input": [
+      "file_path"
+    ],
+    "artifact_output": [
+      "json"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "requirements_file",
+        "kind": "string",
+        "required": false,
+        "cli_position": 1
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "JSON execution envelope containing parsed pip-audit findings for an existing requirements file or the current environment, plus target and exit metadata.",
+      "json_schema": {
+        "description": "Native JSON representation only; no field or task-delivery guarantee.",
+        "type": [
+          "object",
+          "array",
+          "string",
+          "number",
+          "boolean",
+          "null"
+        ]
+      },
+      "native_json_contract_scope": "value_only"
+    }
+  },
+  "routing": {
+    "family": "python-pip-audit-known-vulnerability-check",
+    "intent_tags": [
+      "audit Python requirements for known vulnerabilities with pip-audit",
+      "audit the current Python environment for dependency CVEs"
+    ],
+    "negative_intents": [
+      "scan Python source code for Bandit security issues",
+      "upgrade or automatically remediate vulnerable dependencies",
+      "audit npm, Cargo, operating-system, or other non-Python dependencies"
+    ],
+    "dependency_slots": []
+  },
+  "execution": {
+    "runtime": "python_script",
+    "uri": "file://Pool/resources/tools/script/dependency_cve_checker.py",
+    "execution_status": "active"
+  },
+  "utility": {
+    "latency_ms": 200,
+    "token_cost_factor": 0.01,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://github.com/pypa/pip-audit",
+    "license": "Apache-2.0",
+    "backed_by": "pip-audit",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:1e08cda611e6a293cccbf73f662a369bf3bc2fc3f88d11214f8752def83fa273",
+    "local_implementation_uri": "file://Pool/resources/tools/script/dependency_cve_checker.py",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/script/_sgar_cli.py": "sha256:42368f8d49cb6364ad3aeaac6d0f9602adc12cb29fea49322fd488400698b6b9"
+    }
+  },
+  "type_specific": {
+    "tool": {
+      "tool_kind": "local_script",
+      "language": "python",
+      "deterministic": true
+    }
+  },
+  "memory": {
+    "success_trajectories": [],
+    "failure_reflections": []
+  },
+  "type": {
+    "resource_type": "Tool",
+    "resource_tag": [
+      "security-audit",
+      "dependency-management",
+      "python-tools"
+    ]
+  },
+  "input_contract": [
+    {
+      "name": "requirements_file",
+      "kind": "string",
+      "required": false,
+      "cli_position": 1
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "json",
+    "description": "JSON execution envelope containing parsed pip-audit findings for an existing requirements file or the current environment, plus target and exit metadata.",
+    "json_schema": {
+      "description": "Native JSON representation only; no field or task-delivery guarantee.",
+      "type": [
+        "object",
+        "array",
+        "string",
+        "number",
+        "boolean",
+        "null"
+      ]
+    },
+    "native_json_contract_scope": "value_only"
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [],
+    "node_packages": [],
+    "system_packages": [],
+    "commands": [
+      "pip-audit"
+    ],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "python_compatibility": ">=3.11,<4"
+  }
+}

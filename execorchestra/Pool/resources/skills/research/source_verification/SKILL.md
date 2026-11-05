@@ -1,0 +1,3 @@
+# Verify dates, entities and source-to-claim attribution
+
+Prefer original documents and official pages. Bind each claim to a supplied URL, page title and supporting passage. Distinguish publication/event/access dates and keep the date relevant to the question. Verify numerical units and entity identity. Compare independent sources where a conflict matters, without counting syndicated duplicates as corroboration. For PDFs, use tool.httpx_download.v1 then tool.pdf_text_extract.v1 or tool.lib.pdfplumber_extract.v1 on the saved file. Never fabricate source access or citations. Label inaccessible or contradictory evidence as unresolved.

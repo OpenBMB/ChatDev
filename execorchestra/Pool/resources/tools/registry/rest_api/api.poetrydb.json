@@ -1,0 +1,139 @@
+{
+  "manifest_version": "v2",
+  "resource_id": "tool.api.poetrydb.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Retrieve poems by author",
+    "description": "Fetches PoetryDB author results using the required first CLI argument as the URL path value. HTTP 2xx/3xx responses produce a success envelope; HTTP 4xx/5xx responses produce an error envelope and a non-zero exit; request exceptions also produce an error envelope and a non-zero exit.",
+    "domain_tags": [
+      "literature",
+      "poetry"
+    ],
+    "core_primitives": [
+      "lookup_poetry",
+      "retrieve_author_poems"
+    ],
+    "problem_space": "Poetry reference retrieval; not literary criticism, author biography, or title search."
+  },
+  "constraint": {
+    "io_signature": "Input: author at CLI position 1. Output: shared JSON envelope with url, http_status, and PoetryDB result. HTTP 2xx/3xx responses produce a success envelope; HTTP 4xx/5xx responses produce an error envelope and a non-zero exit; request exceptions also produce an error envelope and a non-zero exit.",
+    "accepted_inputs": [
+      "one author path value accepted by PoetryDB"
+    ],
+    "output_shape": "HTTP 2xx/3xx: {status: \"success\", tool: string, url: string, http_status: integer, result: object|string}. HTTP 4xx/5xx: {status: \"error\", tool: string, url: string, http_status: integer, result: object|string}, exit 1. Request exception: {status: \"error\", tool: string, message: string}, exit 1.",
+    "limitations": [
+      "fixed GET https://poetrydb.org/author/<author>",
+      "title is not an accepted input and no second argument is read",
+      "wrapper does not URL-encode, parse, locally truncate, or paginate the result",
+      "no authentication, cache, retry, or guarantee that the author exists"
+    ],
+    "artifact_output": [
+      "json"
+    ],
+    "execution_risk": "medium",
+    "http_status_semantics": {
+      "success": "HTTP 200-399",
+      "failure": "HTTP 400-599 or request exception",
+      "failure_exit_code": 1
+    }
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "author",
+        "kind": "string",
+        "required": true,
+        "cli_position": 1
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "Shared JSON envelope containing PoetryDB author results, URL, and HTTP status."
+    }
+  },
+  "routing": {
+    "family": "poetry-author-lookup",
+    "intent_tags": [
+      "find poems by author",
+      "retrieve PoetryDB author results"
+    ],
+    "negative_intents": [
+      "search poems by title",
+      "write literary criticism or identify plagiarism"
+    ]
+  },
+  "execution": {
+    "runtime": "rest_api",
+    "uri": "file://Pool/resources/tools/api/api.poetrydb.py",
+    "execution_status": "active",
+    "execution_risk": "medium"
+  },
+  "utility": {
+    "latency_ms": 200.0,
+    "token_cost_factor": 0.02,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://github.com/thundercomb/poetrydb",
+    "license": "GPL-3.0",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:d5036831070e779a99d67e00455212863b14b7c8f2aea22ba22f83875145d7c6",
+    "local_implementation_uri": "file://Pool/resources/tools/api/api.poetrydb.py",
+    "auth_required": false,
+    "auth_evidence": "wrapper_and_shared_adapter_read_no_credentials",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/api/_apilib.py": "sha256:e60bba3d1f3dcd9fcd408042ad7951e52d6ecd66d57cb9a58c249d521c8811a7"
+    }
+  },
+  "type_specific": {
+    "tool": {
+      "tool_kind": "rest_api",
+      "deterministic": false
+    }
+  },
+  "type": {
+    "resource_type": "Tool"
+  },
+  "input_contract": [
+    {
+      "name": "author",
+      "kind": "string",
+      "required": true,
+      "cli_position": 1
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "json",
+    "description": "Shared JSON envelope containing PoetryDB author results, URL, and HTTP status."
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [
+      {
+        "name": "requests",
+        "version": "==2.32.3",
+        "required": true
+      }
+    ],
+    "node_packages": [],
+    "system_packages": [],
+    "commands": [],
+    "env_vars": [],
+    "network_required": true,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "rest": {
+      "endpoint": "https://poetrydb.org/author/{a(1)}",
+      "auth_required": false,
+      "auth_evidence": "wrapper_and_shared_adapter_read_no_credentials",
+      "timeout_seconds": 25,
+      "success_http_status": "200-399"
+    }
+  }
+}

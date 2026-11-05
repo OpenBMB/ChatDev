@@ -1,0 +1,169 @@
+{
+  "manifest_version": "1.0",
+  "resource_id": "tool.npm_audit_json_exporter.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Run npm audit --json for one local project and return its report envelope",
+    "description": "Invokes `npm audit --json --prefix <project_dir>` where a directory input is used directly and a file input contributes its parent directory. npm exit codes 0 and 1 are treated as completed audits, and parsed npm JSON is returned in `result`; no report file is exported.",
+    "core_primitives": [
+      "resolve_npm_project_directory",
+      "run_npm_audit_json",
+      "capture_parsed_npm_audit_report"
+    ],
+    "problem_space": "Read-only invocation of npm's dependency advisory audit for a local lockfile-backed project; not vulnerability remediation, package installation, static source scanning, offline CVE lookup, or JSON report-file export.",
+    "domain_tags": [
+      "security-audit",
+      "software-engineering",
+      "dependency-management"
+    ]
+  },
+  "constraint": {
+    "env_requirements": [
+      "Python >= 3.6",
+      "npm executable on PATH",
+      "a usable npm registry/network configuration and a supported lockfile in the resolved project directory"
+    ],
+    "io_signature": "Input: required file_path string naming an existing project directory or file such as package.json; files resolve to their absolute parent directory. Executes `npm audit --json --prefix <dir>`. Output: uniform JSON execution envelope with parsed report in result when npm emits one.",
+    "accepted_inputs": [
+      "an existing npm project directory",
+      "an existing file path whose parent directory is the intended npm project, typically package.json"
+    ],
+    "output_shape": "npm exit 0 or 1: {status: \"success\", tool: \"npm\", target: string, exit_code: 0|1, result: object|array|scalar|null, stdout: string|null, stderr: string|null}. The helper tries to parse stdout first and stderr second; whenever either stream parses as one non-null JSON value, result receives it and stdout is set to null. Thus non-JSON stdout is discarded from the envelope when stderr supplies parseable JSON, while stderr still retains its original text. Other npm exits use status=\"tool_error\" and propagate the exit code. Missing input, executable, or 180-second timeout yields {status: \"error\", tool: \"npm\", message: string}, exiting 2/3/4. Missing argument prints usage to stderr and exits 1 without JSON.",
+    "limitations": [
+      "does not run `npm audit fix`, install packages, modify manifests intentionally, or export a report file; it only invokes npm audit and returns its output",
+      "audit findings and report schema depend on npm version, registry advisory state, lockfile contents, network availability, authentication, and configuration, so results are nondeterministic",
+      "file inputs are not verified to be package.json and simply select their parent directory; npm decides project validity",
+      "uses a fixed 180-second timeout with no output truncation; if stdout is non-JSON but stderr is JSON, stderr is parsed into result and the helper still forces stdout=null, losing the original non-JSON stdout"
+    ],
+    "artifact_input": [
+      "file_path"
+    ],
+    "artifact_output": [
+      "json"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "file_path",
+        "kind": "string",
+        "required": true,
+        "cli_position": 1
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "JSON execution envelope containing npm's parsed audit report when available, raw streams otherwise, and npm exit metadata; no report file is written.",
+      "json_schema": {
+        "description": "Native JSON representation only; no field or task-delivery guarantee.",
+        "type": [
+          "object",
+          "array",
+          "string",
+          "number",
+          "boolean",
+          "null"
+        ]
+      },
+      "native_json_contract_scope": "value_only"
+    }
+  },
+  "routing": {
+    "family": "npm-dependency-advisory-audit",
+    "intent_tags": [
+      "run npm audit and capture its JSON report",
+      "inspect npm lockfile dependencies for registry advisories"
+    ],
+    "negative_intents": [
+      "automatically fix npm vulnerabilities",
+      "install update or remove npm packages",
+      "export an npm audit report file",
+      "scan JavaScript source code for security bugs"
+    ],
+    "dependency_slots": []
+  },
+  "utility": {
+    "latency_ms": 100,
+    "token_cost_factor": 0.01,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://docs.npmjs.com/cli/commands/npm-audit",
+    "license": "Artistic-2.0",
+    "backed_by": "npm audit",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:47c6c5e5128248cc17057d91ef575d22efb7e7d635b0ac229b01a5c4864a8edf",
+    "local_implementation_uri": "file://Pool/resources/tools/script/npm_audit_json_exporter.py",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/script/_sgar_cli.py": "sha256:42368f8d49cb6364ad3aeaac6d0f9602adc12cb29fea49322fd488400698b6b9"
+    }
+  },
+  "type_specific": {
+    "tool": {
+      "tool_kind": "local_script",
+      "language": "python",
+      "deterministic": false
+    }
+  },
+  "memory": {
+    "success_trajectories": [],
+    "failure_reflections": []
+  },
+  "execution": {
+    "runtime": "python_script",
+    "uri": "file://Pool/resources/tools/script/npm_audit_json_exporter.py",
+    "execution_status": "active"
+  },
+  "type": {
+    "resource_type": "Tool",
+    "resource_tag": [
+      "security-audit",
+      "software-engineering",
+      "dependency-management"
+    ]
+  },
+  "input_contract": [
+    {
+      "name": "file_path",
+      "kind": "string",
+      "required": true,
+      "cli_position": 1
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "json",
+    "description": "JSON execution envelope containing npm's parsed audit report when available, raw streams otherwise, and npm exit metadata; no report file is written.",
+    "json_schema": {
+      "description": "Native JSON representation only; no field or task-delivery guarantee.",
+      "type": [
+        "object",
+        "array",
+        "string",
+        "number",
+        "boolean",
+        "null"
+      ]
+    },
+    "native_json_contract_scope": "value_only"
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [],
+    "node_packages": [],
+    "system_packages": [],
+    "commands": [
+      "npm"
+    ],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "python_compatibility": ">=3.11,<4"
+  }
+}

@@ -1,0 +1,174 @@
+{
+  "manifest_version": "1.0",
+  "resource_id": "tool.memory_profiler_exporter.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Run one Python script and report sampled peak RSS, or report this wrapper's RSS",
+    "description": "With an existing script path, launches that file using the current Python interpreter with no forwarded arguments and busy-polls psutil RSS until exit. With no argument or a non-existing path, it reports the wrapper process's current RSS. It exports only a JSON metric envelope, not a profile file.",
+    "core_primitives": [
+      "execute_python_script_subprocess",
+      "sample_child_process_rss",
+      "report_process_memory_metric"
+    ],
+    "problem_space": "Coarse process-RSS observation for one executable Python script or the wrapper itself; not line-by-line profiling, leak detection, child-tree accounting, safe code analysis, or profile-file export.",
+    "domain_tags": [
+      "Python",
+      "performance-optimization",
+      "memory-management"
+    ]
+  },
+  "constraint": {
+    "env_requirements": [
+      "Python >= 3.6",
+      "psutil Python package"
+    ],
+    "io_signature": "Input: optional script_path string at CLI position 1. Existing paths are executed as `[sys.executable, script_path]`; omission or a non-existing path selects current-wrapper RSS mode. Output: JSON envelope with child exit_code and peak_rss_bytes, or current_process_rss_bytes.",
+    "accepted_inputs": [
+      "no argument to measure the wrapper interpreter's current RSS",
+      "an existing Python script path whose code is intentionally authorized to execute without extra arguments"
+    ],
+    "output_shape": "Existing script path after child exit: {status: \"success\", tool: \"psutil\", target: string, exit_code: integer, peak_rss_bytes: integer}, wrapper exits 0 regardless of child exit. No argument or non-existing path: {status: \"success\", tool: \"psutil\", target: null, current_process_rss_bytes: integer}, exit 0. Launch, permission, psutil, or wait failures are uncaught and may traceback; there is no structured timeout error.",
+    "limitations": [
+      "executes arbitrary Python code from an existing path with the wrapper's permissions and inherited working directory/environment; the child may modify files, access the network, or have other side effects",
+      "a non-existing supplied path is not reported as an error and silently falls back to measuring the wrapper process",
+      "samples only the direct process RSS in a busy loop, excludes child processes, provides no timeline or line attribution, and is nondeterministic",
+      "captures but never drains child stdout/stderr, so a verbose child can block on full pipes; there is no timeout, termination policy, output forwarding, or profile-file export"
+    ],
+    "artifact_input": [
+      "file_path"
+    ],
+    "artifact_output": [
+      "json"
+    ],
+    "execution_risk": "high"
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "script_path",
+        "kind": "string",
+        "required": false,
+        "cli_position": 1
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "JSON envelope containing either sampled direct-child peak RSS and exit code or the wrapper process's current RSS; no profile file is exported.",
+      "json_schema": {
+        "description": "Native JSON representation only; no field or task-delivery guarantee.",
+        "type": [
+          "object",
+          "array",
+          "string",
+          "number",
+          "boolean",
+          "null"
+        ]
+      },
+      "native_json_contract_scope": "value_only"
+    }
+  },
+  "routing": {
+    "family": "python-process-rss-measurement",
+    "intent_tags": [
+      "run a Python script and sample its peak RSS",
+      "report the current wrapper process RSS"
+    ],
+    "negative_intents": [
+      "perform line by line Python memory profiling",
+      "detect memory leaks or profile child process trees",
+      "safely inspect Python code without executing it",
+      "export a memory profile file or capture child output"
+    ],
+    "dependency_slots": []
+  },
+  "execution": {
+    "runtime": "python_script",
+    "uri": "file://Pool/resources/tools/script/memory_profiler_exporter.py",
+    "execution_status": "active",
+    "execution_risk": "high"
+  },
+  "utility": {
+    "latency_ms": 100,
+    "token_cost_factor": 0.01,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://github.com/giampaolo/psutil",
+    "license": "BSD",
+    "backed_by": "per-process memory profile via psutil",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:d03fea4a1f1c57fbf27aa254ee3bbfe4f2448c8fff32bdac1cbc410e7fc4879b",
+    "local_implementation_uri": "file://Pool/resources/tools/script/memory_profiler_exporter.py",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/script/_sgar_cli.py": "sha256:42368f8d49cb6364ad3aeaac6d0f9602adc12cb29fea49322fd488400698b6b9"
+    }
+  },
+  "type_specific": {
+    "tool": {
+      "tool_kind": "local_script",
+      "language": "python",
+      "deterministic": false
+    }
+  },
+  "memory": {
+    "success_trajectories": [],
+    "failure_reflections": []
+  },
+  "type": {
+    "resource_type": "Tool",
+    "resource_tag": [
+      "Python",
+      "performance-optimization",
+      "memory-management"
+    ]
+  },
+  "input_contract": [
+    {
+      "name": "script_path",
+      "kind": "string",
+      "required": false,
+      "cli_position": 1
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "json",
+    "description": "JSON envelope containing either sampled direct-child peak RSS and exit code or the wrapper process's current RSS; no profile file is exported.",
+    "json_schema": {
+      "description": "Native JSON representation only; no field or task-delivery guarantee.",
+      "type": [
+        "object",
+        "array",
+        "string",
+        "number",
+        "boolean",
+        "null"
+      ]
+    },
+    "native_json_contract_scope": "value_only"
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [
+      {
+        "name": "psutil",
+        "version": "==6.1.1",
+        "required": true
+      }
+    ],
+    "node_packages": [],
+    "system_packages": [],
+    "commands": [],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "python_compatibility": ">=3.11,<4"
+  }
+}

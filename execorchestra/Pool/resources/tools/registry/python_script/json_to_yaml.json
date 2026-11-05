@@ -1,0 +1,167 @@
+{
+  "manifest_version": "1.0",
+  "resource_id": "tool.json_to_yaml.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Convert one local JSON document to YAML text in a JSON envelope",
+    "description": "Reads one UTF-8 JSON file, parses any valid JSON root, serializes it with PyYAML safe_dump using Unicode and insertion-order keys, and returns the YAML text without writing a file.",
+    "core_primitives": [
+      "parse_local_json_file",
+      "serialize_json_value_as_yaml",
+      "return_yaml_text_in_json_envelope"
+    ],
+    "problem_space": "One-way conversion of a local JSON document into YAML text for downstream consumption; not YAML file creation, YAML parsing, schema validation, or round-trip formatting preservation.",
+    "domain_tags": [
+      "data_format_conversion",
+      "software_development"
+    ]
+  },
+  "constraint": {
+    "env_requirements": [
+      "Python >= 3.6",
+      "PyYAML Python package"
+    ],
+    "io_signature": "Input: required file_path string naming an existing UTF-8 JSON document. Output: JSON envelope with generated YAML text or handled path/JSON syntax error; no file is written.",
+    "accepted_inputs": [
+      "an existing UTF-8 file containing one valid JSON object, array, scalar, or null document"
+    ],
+    "output_shape": "Success: {status: \"success\", tool: \"PyYAML\", target: string, yaml: string}, exit 0. Missing path: {status: \"error\", message: string}, exit 2. Invalid JSON: {status: \"error\", tool: \"PyYAML\", message: string}, exit 1. Missing argument prints usage to stderr and exits 1 without JSON; other file I/O failures may traceback.",
+    "limitations": [
+      "returns YAML as a string inside JSON and never creates or modifies a YAML file",
+      "does not validate against a schema or preserve source JSON whitespace, comments, or exact scalar spelling",
+      "reads UTF-8 with no timeout or output truncation; non-JSON file I/O errors are not converted into the handled error envelope"
+    ],
+    "artifact_input": [
+      "file_path"
+    ],
+    "artifact_output": [
+      "json"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "file_path",
+        "kind": "string",
+        "required": true,
+        "cli_position": 1
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "JSON envelope containing generated YAML text or a handled conversion error; no output file is written.",
+      "json_schema": {
+        "description": "Native JSON representation only; no field or task-delivery guarantee.",
+        "type": [
+          "object",
+          "array",
+          "string",
+          "number",
+          "boolean",
+          "null"
+        ]
+      },
+      "native_json_contract_scope": "value_only"
+    }
+  },
+  "routing": {
+    "family": "json-to-yaml-text-conversion",
+    "intent_tags": [
+      "convert a JSON file to YAML text",
+      "serialize local JSON data as YAML"
+    ],
+    "negative_intents": [
+      "write or modify a YAML file",
+      "parse YAML or convert YAML to JSON",
+      "validate JSON or YAML against a schema"
+    ],
+    "dependency_slots": []
+  },
+  "execution": {
+    "runtime": "python_script",
+    "uri": "file://Pool/resources/tools/script/json_to_yaml.py",
+    "execution_status": "active"
+  },
+  "utility": {
+    "latency_ms": 100,
+    "token_cost_factor": 0.01,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://pyyaml.org",
+    "license": "MIT",
+    "backed_by": "PyYAML",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:401abc3a9a5b6b8ef1b55ae7ec3cbfa118574522c7ebf41c6a50f53e02b53367",
+    "local_implementation_uri": "file://Pool/resources/tools/script/json_to_yaml.py",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/script/_sgar_cli.py": "sha256:42368f8d49cb6364ad3aeaac6d0f9602adc12cb29fea49322fd488400698b6b9"
+    }
+  },
+  "type_specific": {
+    "tool": {
+      "tool_kind": "local_script",
+      "language": "python",
+      "deterministic": true
+    }
+  },
+  "memory": {
+    "success_trajectories": [],
+    "failure_reflections": []
+  },
+  "type": {
+    "resource_type": "Tool",
+    "resource_tag": [
+      "data_format_conversion",
+      "software_development"
+    ]
+  },
+  "input_contract": [
+    {
+      "name": "file_path",
+      "kind": "string",
+      "required": true,
+      "cli_position": 1
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "json",
+    "description": "JSON envelope containing generated YAML text or a handled conversion error; no output file is written.",
+    "json_schema": {
+      "description": "Native JSON representation only; no field or task-delivery guarantee.",
+      "type": [
+        "object",
+        "array",
+        "string",
+        "number",
+        "boolean",
+        "null"
+      ]
+    },
+    "native_json_contract_scope": "value_only"
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [
+      {
+        "name": "PyYAML",
+        "version": "==6.0.2",
+        "required": true
+      }
+    ],
+    "node_packages": [],
+    "system_packages": [],
+    "commands": [],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "python_compatibility": ">=3.11,<4"
+  }
+}

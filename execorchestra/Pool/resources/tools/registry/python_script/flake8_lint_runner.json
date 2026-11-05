@@ -1,0 +1,179 @@
+{
+  "manifest_version": "1.0",
+  "resource_id": "tool.flake8_lint_runner.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Run Flake8 on one Python file or directory and return its raw textual findings in a JSON envelope",
+    "description": "Validates the target path and executes `flake8 <target>` without formatter or fix flags. Flake8 may discover its normal project configuration; findings remain unparsed text in `stdout`, and source files are never modified.",
+    "core_primitives": [
+      "lint_python_with_flake8",
+      "inspect_python_file_or_directory",
+      "capture_flake8_text_diagnostics"
+    ],
+    "problem_space": "Read-only Flake8 style and static lint diagnostics for Python files or directories; not formatting, automatic fixing, Bandit security scanning, Ruff-specific linting, or structured finding normalization.",
+    "domain_tags": [
+      "python",
+      "linting",
+      "code_quality"
+    ]
+  },
+  "constraint": {
+    "env_requirements": [
+      "Python >= 3.6",
+      "flake8"
+    ],
+    "io_signature": "Input: one required existing Python file or directory path; output: JSON process envelope containing Flake8's raw text stdout/stderr and exit code.",
+    "accepted_inputs": [
+      "an existing Python source file path",
+      "an existing directory path for Flake8 traversal"
+    ],
+    "output_shape": "Completed lint (Flake8 exit 0 or 1): {status: \"success\", tool: \"flake8\", target: string, exit_code: 0|1, result: null, stdout: string, stderr: string|null}; exit 0 means no reported violations and exit 1 means findings, whose standard Flake8 lines remain in stdout. Other exits use the same keys with status=\"tool_error\" and propagate the actual exit code. Missing target/executable/120-second timeout: {status: \"error\", tool: \"flake8\", message: string}, exiting 2/3/4. Missing argument prints usage to stderr and exits 1 without JSON.",
+    "limitations": [
+      "does not request native JSON or parse Flake8 lines, so result is null and findings are unstructured stdout text inside the outer JSON envelope",
+      "does not fix, format, or rewrite Python code and offers no caller-selectable Flake8 flags, plugins, ignores, or thresholds",
+      "Flake8's normal configuration discovery and installed plugin set can affect results",
+      "requires `flake8` on PATH, uses a fixed 120-second timeout, and captures output without truncation"
+    ],
+    "artifact_input": [
+      "file_path"
+    ],
+    "artifact_output": [
+      "json"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "target_path",
+        "kind": "path",
+        "artifact_types": [
+          "code"
+        ],
+        "extensions": [
+          ".py"
+        ],
+        "required": true,
+        "cli_position": 1
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "JSON execution envelope with Flake8's exit code and raw unparsed text findings in stdout; result remains null and files are unchanged.",
+      "json_schema": {
+        "description": "Native JSON representation only; no field or task-delivery guarantee.",
+        "type": [
+          "object",
+          "array",
+          "string",
+          "number",
+          "boolean",
+          "null"
+        ]
+      },
+      "native_json_contract_scope": "value_only"
+    }
+  },
+  "routing": {
+    "family": "python-flake8-text-lint-check",
+    "intent_tags": [
+      "lint Python code with Flake8",
+      "collect Flake8 textual diagnostics for a file or directory"
+    ],
+    "negative_intents": [
+      "format Python with Black or automatically fix lint violations",
+      "run Ruff-specific lint rules or return structured Ruff JSON",
+      "scan Python code for Bandit security vulnerabilities"
+    ],
+    "dependency_slots": []
+  },
+  "execution": {
+    "runtime": "python_script",
+    "uri": "file://Pool/resources/tools/script/flake8_lint_runner.py",
+    "execution_status": "active"
+  },
+  "utility": {
+    "latency_ms": 100,
+    "token_cost_factor": 0.01,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://flake8.pycqa.org",
+    "license": "MIT",
+    "backed_by": "Flake8",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:6d109b462254de4a180d41a14a1610fb73c8e64a46f1dc08a8467e57e5079144",
+    "local_implementation_uri": "file://Pool/resources/tools/script/flake8_lint_runner.py",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/script/_sgar_cli.py": "sha256:42368f8d49cb6364ad3aeaac6d0f9602adc12cb29fea49322fd488400698b6b9"
+    }
+  },
+  "type_specific": {
+    "tool": {
+      "tool_kind": "local_script",
+      "language": "python",
+      "deterministic": true
+    }
+  },
+  "memory": {
+    "success_trajectories": [],
+    "failure_reflections": []
+  },
+  "type": {
+    "resource_type": "Tool",
+    "resource_tag": [
+      "python",
+      "linting",
+      "code_quality"
+    ]
+  },
+  "input_contract": [
+    {
+      "name": "target_path",
+      "kind": "path",
+      "artifact_types": [
+        "code"
+      ],
+      "extensions": [
+        ".py"
+      ],
+      "required": true,
+      "cli_position": 1
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "json",
+    "description": "JSON execution envelope with Flake8's exit code and raw unparsed text findings in stdout; result remains null and files are unchanged.",
+    "json_schema": {
+      "description": "Native JSON representation only; no field or task-delivery guarantee.",
+      "type": [
+        "object",
+        "array",
+        "string",
+        "number",
+        "boolean",
+        "null"
+      ]
+    },
+    "native_json_contract_scope": "value_only"
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [],
+    "node_packages": [],
+    "system_packages": [],
+    "commands": [
+      "flake8"
+    ],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "python_compatibility": ">=3.11,<4"
+  }
+}

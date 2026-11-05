@@ -1,0 +1,117 @@
+{
+  "resource_id": "gpt-6.1-sol",
+  "type": {
+    "resource_type": "Model",
+    "resource_tag": [
+      "1050000 Context",
+      "2.0000",
+      "10.0000",
+      "0.1000"
+    ]
+  },
+  "capability": {
+    "summary": "Reasoning model for multi-step analysis, coding, and document work.",
+    "core_primitives": [
+      "document synthesis",
+      "code generation",
+      "reasoning over supplied evidence",
+      "visual document interpretation"
+    ],
+    "problem_space": "Language model for multi-step analysis, coding, and document work. Applicable tasks include document synthesis, code generation, reasoning over supplied evidence, visual document interpretation. Accepts text, image input and produces text output. External tools are required to execute programs, browse sources, or modify files; generated instructions alone do not perform those actions.",
+    "domain_tags": [
+      "Language",
+      "Software Engineering",
+      "Visual Understanding"
+    ]
+  },
+  "constraint": {
+    "env_requirements": [
+      "Authenticated model gateway",
+      "Chat Completions with strict JSON schema for the Planner role"
+    ],
+    "io_signature": "Input modalities: text, image | Output modalities: text. Gateway transport support requires verification."
+  },
+  "utility": {
+    "latency_ms": 0,
+    "token_cost_factor": 0,
+    "expected_success_rate": 0
+  },
+  "execution": {
+    "uri": "${base_url}/v1/chat/completions",
+    "model_id": "gpt-6.1-sol"
+  },
+  "memory": {
+    "success_trajectories": [],
+    "failure_reflections": []
+  },
+  "provenance": {
+    "reviewed_at": "2026-11-02",
+    "source_urls": [
+      "https://developers.openai.com/api/docs/models/gpt-6.1-sol"
+    ],
+    "pricing_status": "standard_public_API_rates",
+    "scope": "control-only Planner; measured capability in separate validated receipt"
+  },
+  "type_specific": {
+    "model": {
+      "profile_version": "model-capabilities-v1",
+      "input_modalities": [
+        "text",
+        "image"
+      ],
+      "output_modalities": [
+        "text"
+      ],
+      "supports": {
+        "tool_calling": true,
+        "json_mode": true,
+        "vision": true,
+        "reasoning": true,
+        "coding": true,
+        "structured_outputs": true
+      },
+      "thinking_mode": "reasoning",
+      "native_protocol": "chat_completions_and_responses",
+      "documented_context_tokens": 1050000,
+      "evidence_status": "provider_documented_not_gateway_verified",
+      "gateway_verification_status": "see_current_control_role_receipt",
+      "limitations": [
+        "Tool calling requires the Responses API. This control role uses strict JSON with no tool calls."
+      ],
+      "max_output_tokens": 128000,
+      "documented_interface_facts": {
+        "max_output_tokens": 128000,
+        "reasoning_effort_values": [
+          "low",
+          "medium",
+          "high",
+          "xhigh",
+          "max"
+        ],
+        "function_calling": true,
+        "structured_outputs": true,
+        "streaming": true,
+        "native_forced_tool_choice": null
+      },
+      "pricing_rules": {
+        "input_per_m": "2",
+        "output_per_m": "10",
+        "cache_per_m": ".1",
+        "cache_write_per_m": "2.5",
+        "cache_write_1h_per_m": "5",
+        "cache_mode": "implicit",
+        "source": "https://developers.openai.com/api/docs/models/gpt-6.1-sol",
+        "input_tiers": [
+          {
+            "above_input_tokens": 272000,
+            "input_per_m": "4",
+            "output_per_m": "15",
+            "cache_per_m": ".2",
+            "cache_write_per_m": "5",
+            "cache_write_1h_per_m": "10"
+          }
+        ]
+      }
+    }
+  }
+}

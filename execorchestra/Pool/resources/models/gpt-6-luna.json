@@ -1,0 +1,124 @@
+{
+  "resource_id": "gpt-6-luna",
+  "type": {
+    "resource_type": "Model",
+    "resource_tag": [
+      "1050000 Context",
+      "0.1000",
+      "0.5000",
+      "0.0100"
+    ]
+  },
+  "capability": {
+    "summary": "Cost-efficient reasoning model for focused analysis, coding, and document work.",
+    "core_primitives": [
+      "document synthesis",
+      "code generation",
+      "reasoning over supplied evidence",
+      "visual document interpretation"
+    ],
+    "problem_space": "Language model for multi-step analysis, coding, and document work. Applicable tasks include document synthesis, code generation, reasoning over supplied evidence, visual document interpretation. Accepts text, image input and produces text output. External tools are required to execute programs, browse sources, or modify files; generated instructions alone do not perform those actions.",
+    "domain_tags": [
+      "Language",
+      "Software Engineering",
+      "Visual Understanding"
+    ]
+  },
+  "constraint": {
+    "env_requirements": [
+      "Endpoint exposing gpt-6-luna through Chat Completions; gateway mapping must be verified",
+      "Valid API key for the configured supplier gateway",
+      "Gateway support for each requested strict structured-output and tool-use feature",
+      "In Chat Completions, GPT-6 Luna function calling requires reasoning_effort=none; use Responses for reasoning with tools.",
+      "Gateway support for exact structured control-role schemas requires live verification."
+    ],
+    "io_signature": "Input modalities: text, image | Output modalities: text. Gateway transport support requires verification."
+  },
+  "utility": {
+    "latency_ms": 0,
+    "token_cost_factor": 0,
+    "expected_success_rate": 0
+  },
+  "execution": {
+    "uri": "${base_url}/v1/chat/completions",
+    "model_id": "gpt-6-luna"
+  },
+  "memory": {
+    "success_trajectories": [],
+    "failure_reflections": []
+  },
+  "provenance": {
+    "reviewed_at": "2026-09-23",
+    "evidence_status": "provider_documented_gateway_role_probed",
+    "integration_status": "source_registered_role_quality_under_evaluation",
+    "exact_role_probe_artifact_sha256": "d7e84f6e276cbbd921bb95176195ae89f1116340a6c4d2ee2b16361b6ec072f6",
+    "source_urls": [
+      "https://developers.openai.com/api/docs/models/gpt-6-luna",
+      "https://developers.openai.com/api/docs/guides/latest-model"
+    ],
+    "pricing_status": "official_standard_short_context",
+    "gateway_verification_status": "historical_only"
+  },
+  "type_specific": {
+    "model": {
+      "profile_version": "model-capabilities-v1",
+      "input_modalities": [
+        "text",
+        "image"
+      ],
+      "output_modalities": [
+        "text"
+      ],
+      "supports": {
+        "tool_calling": true,
+        "json_mode": true,
+        "vision": true,
+        "reasoning": true,
+        "coding": true,
+        "structured_outputs": true
+      },
+      "thinking_mode": "reasoning",
+      "native_protocol": "chat_completions_and_responses",
+      "documented_context_tokens": 1050000,
+      "evidence_status": "provider_documented_not_gateway_verified",
+      "gateway_verification_status": "pending_current_release_probe",
+      "limitations": [
+        "In Chat Completions, GPT-6 Luna function calling requires reasoning_effort=none; use Responses for reasoning with tools.",
+        "Gateway support for exact structured control-role schemas requires live verification."
+      ],
+      "max_output_tokens": 128000,
+      "documented_interface_facts": {
+        "max_output_tokens": 128000,
+        "reasoning_effort_values": [
+          "none",
+          "low",
+          "medium",
+          "high",
+          "xhigh",
+          "max"
+        ],
+        "function_calling": true,
+        "structured_outputs": true,
+        "streaming": true,
+        "native_forced_tool_choice": null
+      },
+      "pricing_rules": {
+        "input_per_m": ".1",
+        "cache_per_m": ".01",
+        "output_per_m": ".5",
+        "cache_write_per_m": ".125",
+        "cache_mode": "implicit",
+        "input_tiers": [
+          {
+            "above_input_tokens": 272000,
+            "input_per_m": ".2",
+            "cache_per_m": ".02",
+            "output_per_m": ".75",
+            "cache_write_per_m": ".25"
+          }
+        ],
+        "source": "https://developers.openai.com/api/docs/models/gpt-6-luna"
+      }
+    }
+  }
+}

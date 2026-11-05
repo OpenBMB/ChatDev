@@ -1,0 +1,63 @@
+rules:
+  - id: variant-taint-go
+    message: "Potential variant: user input flows to dangerous sink"
+    severity: ERROR
+    languages: [go]
+    mode: taint
+
+    pattern-sources:
+      # net/http
+      - pattern: $REQ.URL.Query().Get(...)
+      - pattern: $REQ.FormValue(...)
+      - pattern: $REQ.PostFormValue(...)
+      - pattern: $REQ.Header.Get(...)
+      # Gin
+      - pattern: $CTX.Query(...)
+      - pattern: $CTX.Param(...)
+      - pattern: $CTX.PostForm(...)
+      - pattern: $CTX.GetHeader(...)
+      # Echo
+      - pattern: $CTX.QueryParam(...)
+      - pattern: $CTX.FormValue(...)
+      # os.Args
+      - pattern: os.Args[$IDX]
+      - pattern: os.Getenv(...)
+
+    pattern-sinks:
+      # Command injection
+      - pattern: exec.Command($SINK, ...)
+      - pattern: exec.CommandContext($CTX, $SINK, ...)
+      # SQL injection
+      - pattern: $DB.Query($SINK, ...)
+      - pattern: $DB.QueryRow($SINK, ...)
+      - pattern: $DB.Exec($SINK, ...)
+      # Path traversal
+      - pattern: os.Open($SINK)
+      - pattern: os.OpenFile($SINK, ...)
+      - pattern: os.ReadFile($SINK)
+      - pattern: ioutil.ReadFile($SINK)
+      # Template injection
+      - pattern: template.HTML($SINK)
+
+    pattern-sanitizers:
+      - pattern: strconv.Atoi($X)
+      - pattern: strconv.ParseInt($X, ...)
+      - pattern: filepath.Clean($X)
+      - pattern: filepath.Base($X)
+      - pattern: html.EscapeString($X)
+
+    paths:
+      exclude:
+        - "**/*_test.go"
+        - "**/test/**"
+        - "**/vendor/**"
+
+  - id: variant-pattern-go
+    message: "Suspicious pattern matching known vulnerability"
+    severity: WARNING
+    languages: [go]
+    patterns:
+      - pattern-either:
+          - pattern: exec.Command(...)
+          - pattern: $DB.Query($Q, ...)
+      - pattern-not: exec.Command("...")

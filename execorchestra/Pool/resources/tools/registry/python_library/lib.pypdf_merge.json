@@ -1,0 +1,118 @@
+{
+  "manifest_version": "v2",
+  "resource_id": "tool.lib.pypdf_merge.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Inspect one PDF's page count and metadata preview",
+    "description": "Opens a single PDF path with pypdf PdfReader and returns its page count plus the first 300 characters of the string representation of document metadata; it performs no merge operation.",
+    "domain_tags": [
+      "docs",
+      "pdf"
+    ],
+    "core_primitives": [
+      "open_pdf_reader",
+      "count_pdf_pages",
+      "truncate_metadata_representation"
+    ],
+    "problem_space": "Basic structural inspection of one PDF when page count and a short metadata preview are sufficient."
+  },
+  "constraint": {
+    "io_signature": "Input: one PDF path string despite the plural parameter name; output: JSON with pages integer and metadata string truncated to 300 characters.",
+    "accepted_inputs": [
+      "one readable PDF file path accepted by pypdf PdfReader"
+    ],
+    "output_shape": "Success is an object with status=\"success\", tool=\"lib.pypdf_merge\", pages as the PDF's integer page count, and metadata as the first at most 300 characters of str(PdfReader.metadata). A caught file-open, encryption, PDF-parse, page-access, or metadata exception produces an object with status=\"error\", tool=\"lib.pypdf_merge\", and message as the exception string, then exits with code 1.",
+    "limitations": [
+      "does not merge, split, rotate, rewrite, or output PDFs despite the wrapper name and original label",
+      "accepts exactly one path string; it does not parse a list of pdf_paths",
+      "metadata is flattened with str and truncated to 300 characters rather than returned as structured fields",
+      "returns JSON metadata rather than a PDF artifact even though the manifest artifact_type remains structurally unchanged",
+      "encrypted, malformed, missing, and unreadable PDFs use the wrapper's error envelope"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "pdf_paths",
+        "kind": "string",
+        "required": true,
+        "cli_position": 1
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "JSON-wrapped page count and a 300-character PDF metadata preview; no PDF is created or modified."
+    }
+  },
+  "routing": {
+    "family": "pdf-page-and-metadata-inspection",
+    "intent_tags": [
+      "count pages in one PDF",
+      "preview one PDF's document metadata"
+    ],
+    "negative_intents": [
+      "merge multiple PDF files",
+      "split rotate or rewrite PDF pages",
+      "extract complete structured PDF metadata"
+    ]
+  },
+  "execution": {
+    "runtime": "python_library",
+    "uri": "file://Pool/resources/tools/lib/lib.pypdf_merge.py",
+    "execution_status": "active"
+  },
+  "utility": {
+    "latency_ms": 200.0,
+    "token_cost_factor": 0.02,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://pypdf.readthedocs.io/",
+    "license": "BSD-3",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:e10bfa7e6bc969a58a20d52bf515eb6449f5008dfb333f77885db930f77cbf86",
+    "local_implementation_uri": "file://Pool/resources/tools/lib/lib.pypdf_merge.py",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/lib/_liblib.py": "sha256:dcd68e7904232764172e5f646ff97b854f68f7f916180ae32f838a0acf9ccc77"
+    }
+  },
+  "type_specific": {},
+  "type": {
+    "resource_type": "Tool"
+  },
+  "input_contract": [
+    {
+      "name": "pdf_paths",
+      "kind": "string",
+      "required": true,
+      "cli_position": 1
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "json",
+    "description": "JSON-wrapped page count and a 300-character PDF metadata preview; no PDF is created or modified."
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [
+      {
+        "name": "pypdf",
+        "version": "==5.1.0",
+        "required": true
+      }
+    ],
+    "node_packages": [],
+    "system_packages": [],
+    "commands": [],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1"
+  }
+}

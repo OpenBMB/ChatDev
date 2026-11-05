@@ -1,0 +1,307 @@
+{
+  "manifest_version": "1.0",
+  "resource_id": "tool.docx2text.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Extract nonblank body paragraphs and table cell text from one DOCX into JSON",
+    "execution_semantics": {
+      "determinism": "deterministic",
+      "side_effects": "none",
+      "effect_targets": []
+    },
+    "description": "Opens one existing DOCX with python-docx, joins nonblank top-level document paragraphs with newline characters, and separately returns each table as nested table/row/cell text arrays. The operation is read-only and does not preserve document layout or paragraph/table interleaving.",
+    "core_primitives": [
+      "extract_nonblank_docx_body_paragraphs",
+      "extract_docx_table_cell_text",
+      "serialize_docx_text_as_json"
+    ],
+    "problem_space": "Basic text extraction from DOCX body paragraphs and tables for downstream processing; not layout-preserving conversion, OCR, rich-text rendering, document editing, or complete extraction of every Word content part.",
+    "domain_tags": [
+      "document_processing",
+      "file_io",
+      "text_extraction"
+    ]
+  },
+  "constraint": {
+    "env_requirements": [
+      "Python 3.x",
+      "python-docx"
+    ],
+    "io_signature": "Input: one required existing .docx file path; output: JSON with nonblank body paragraph text, paragraph count, and separately nested table cell strings, or an explicit open/parse error.",
+    "accepted_inputs": [
+      "an existing, readable Office Open XML .docx document supported by python-docx"
+    ],
+    "output_shape": "Success: {status: \"success\", tool: \"python-docx\", target: string, paragraph_count: integer, text: string, tables: string[][][]}; paragraph_count counts only nonblank top-level document paragraphs, text joins them with `\\n`, and tables is indexed as table/row/cell. Missing path: {status: \"error\", message: string} and exit 2. Open or parse failure: {status: \"error\", tool: \"python-docx\", message: string} and exit 1. The declared required input is validated before dispatch; direct CLI invocation without it prints usage and exits 1.",
+    "limitations": [
+      "text excludes blank body paragraphs and table content; table strings are returned only in the separate tables array",
+      "does not preserve the original interleaving of paragraphs and tables, formatting, styles, pagination, images, hyperlinks, or layout",
+      "does not explicitly extract headers, footers, footnotes, comments, tracked-change semantics, text boxes, or embedded-object text",
+      "loads and emits the document without an explicit timeout, size limit, or output truncation and never modifies the DOCX"
+    ],
+    "artifact_input": [
+      "file_path"
+    ],
+    "artifact_output": [
+      "json"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "file_path",
+        "kind": "str",
+        "required": true,
+        "extensions": [
+          ".docx"
+        ],
+        "cli_position": 1
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "JSON object containing target path, nonblank body-paragraph count and joined text, plus table/row/cell strings or a parse error.",
+      "json_schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "oneOf": [
+          {
+            "type": "object",
+            "required": [
+              "status",
+              "tool",
+              "target",
+              "paragraph_count",
+              "text",
+              "tables"
+            ],
+            "properties": {
+              "status": {
+                "const": "success"
+              },
+              "tool": {
+                "const": "python-docx"
+              },
+              "target": {
+                "type": "string"
+              },
+              "paragraph_count": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "text": {
+                "type": "string"
+              },
+              "tables": {
+                "type": "array",
+                "items": {
+                  "type": "array",
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "required": [
+              "status",
+              "message"
+            ],
+            "properties": {
+              "status": {
+                "const": "error"
+              },
+              "tool": {
+                "const": "python-docx"
+              },
+              "message": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          }
+        ]
+      },
+      "result_status": {
+        "payload_path": "status",
+        "success_values": [
+          "success"
+        ],
+        "failure_values": [
+          "error"
+        ]
+      }
+    }
+  },
+  "routing": {
+    "family": "docx-basic-paragraph-and-table-text-extraction",
+    "intent_tags": [
+      "extract body paragraph text from a DOCX",
+      "read DOCX table cell text into nested arrays"
+    ],
+    "negative_intents": [
+      "preserve DOCX formatting, layout, or paragraph-table order",
+      "edit, convert, render, or OCR a Word document",
+      "extract every Word part such as headers, comments, or text boxes"
+    ],
+    "dependency_slots": []
+  },
+  "execution": {
+    "runtime": "python_script",
+    "uri": "file://Pool/resources/tools/script/docx2text.py",
+    "execution_status": "active"
+  },
+  "utility": {
+    "latency_ms": 100,
+    "token_cost_factor": 0.01,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://python-docx.readthedocs.io",
+    "license": "MIT",
+    "backed_by": "DOCX text extraction via python-docx",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:f82efabca2d58ca34f7f7cbf3129c8324c6667316bcddfc54f342f3ca868b56f",
+    "local_implementation_uri": "file://Pool/resources/tools/script/docx2text.py",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/script/_sgar_cli.py": "sha256:42368f8d49cb6364ad3aeaac6d0f9602adc12cb29fea49322fd488400698b6b9"
+    }
+  },
+  "type_specific": {
+    "tool": {
+      "tool_kind": "local_script",
+      "language": "python",
+      "deterministic": true
+    }
+  },
+  "memory": {
+    "success_trajectories": [],
+    "failure_reflections": []
+  },
+  "type": {
+    "resource_type": "Tool",
+    "resource_tag": [
+      "document_processing",
+      "file_io",
+      "text_extraction"
+    ]
+  },
+  "input_contract": [
+    {
+      "name": "file_path",
+      "kind": "str",
+      "required": true,
+      "extensions": [
+        ".docx"
+      ],
+      "cli_position": 1
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "json",
+    "description": "JSON object containing target path, nonblank body-paragraph count and joined text, plus table/row/cell strings or a parse error.",
+    "json_schema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "oneOf": [
+        {
+          "type": "object",
+          "required": [
+            "status",
+            "tool",
+            "target",
+            "paragraph_count",
+            "text",
+            "tables"
+          ],
+          "properties": {
+            "status": {
+              "const": "success"
+            },
+            "tool": {
+              "const": "python-docx"
+            },
+            "target": {
+              "type": "string"
+            },
+            "paragraph_count": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "text": {
+              "type": "string"
+            },
+            "tables": {
+              "type": "array",
+              "items": {
+                "type": "array",
+                "items": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "status",
+            "message"
+          ],
+          "properties": {
+            "status": {
+              "const": "error"
+            },
+            "tool": {
+              "const": "python-docx"
+            },
+            "message": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    },
+    "result_status": {
+      "payload_path": "status",
+      "success_values": [
+        "success"
+      ],
+      "failure_values": [
+        "error"
+      ]
+    }
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [
+      {
+        "name": "python-docx",
+        "version": "==1.1.2",
+        "required": true
+      }
+    ],
+    "node_packages": [],
+    "system_packages": [],
+    "commands": [],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "python_compatibility": ">=3.11,<4"
+  }
+}

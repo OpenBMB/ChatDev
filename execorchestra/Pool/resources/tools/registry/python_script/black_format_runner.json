@@ -1,0 +1,166 @@
+{
+  "manifest_version": "1.0",
+  "resource_id": "tool.black_format_runner.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Check a Python path with Black and return the proposed formatting diff without modifying files",
+    "description": "Runs `black --check --diff <target>` against one existing path. It reports whether Black formatting is already satisfied and emits Black's textual diff, but check mode never applies the formatting.",
+    "core_primitives": [
+      "check_black_format_compliance",
+      "produce_black_format_diff",
+      "preserve_input_files"
+    ],
+    "problem_space": "Read-only Black formatting compliance and diff generation for Python paths; not source rewriting, lint-rule analysis, or security scanning.",
+    "domain_tags": [
+      "python",
+      "code_formatting",
+      "development"
+    ]
+  },
+  "constraint": {
+    "env_requirements": [
+      "Python >= 3.6",
+      "black"
+    ],
+    "io_signature": "Input: one required existing Black-compatible file or directory path; output: a JSON wrapper with Black's check exit code and untruncated textual diff/stdout and stderr.",
+    "accepted_inputs": [
+      "an existing Python source file path accepted by Black",
+      "an existing directory path accepted by Black for recursive format checking"
+    ],
+    "output_shape": "Completed check (Black exit 0 or 1): {status: \"success\", tool: \"black\", target: string, exit_code: 0|1, result: null, stdout: string, stderr: string|null}; exit 0 means already formatted and exit 1 means Black would reformat, with any diff in stdout. Other Black exits use the same keys with status=\"tool_error\" and propagate the actual exit code. Missing path/executable/timeout: {status: \"error\", tool: \"black\", message: string}, exiting 2/3/4. Missing argument prints usage to stderr and exits 1 without JSON.",
+    "limitations": [
+      "despite the runner name, fixed `--check --diff` flags make this check-only and it never writes formatted code",
+      "does not expose Black configuration or flags through manifest inputs; Black may still discover project configuration on its own",
+      "requires `black` on PATH, uses a fixed 120-second timeout, and does not truncate captured stdout or stderr"
+    ],
+    "artifact_input": [
+      "file_path"
+    ],
+    "artifact_output": [
+      "json"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "target_path",
+        "kind": "string",
+        "required": true,
+        "cli_position": 1
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "JSON execution envelope with Black's check exit code, full proposed diff/stdout, stderr, and target; no file is formatted.",
+      "json_schema": {
+        "description": "Native JSON representation only; no field or task-delivery guarantee.",
+        "type": [
+          "object",
+          "array",
+          "string",
+          "number",
+          "boolean",
+          "null"
+        ]
+      },
+      "native_json_contract_scope": "value_only"
+    }
+  },
+  "routing": {
+    "family": "python-black-format-check-only",
+    "intent_tags": [
+      "check whether Python code matches Black formatting",
+      "preview Black formatting changes as a diff"
+    ],
+    "negative_intents": [
+      "apply Black formatting or rewrite Python files",
+      "lint Python with flake8 or Ruff",
+      "scan Python code for Bandit security findings"
+    ],
+    "dependency_slots": []
+  },
+  "utility": {
+    "latency_ms": 100,
+    "token_cost_factor": 0.01,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://black.readthedocs.io",
+    "license": "MIT",
+    "backed_by": "Black formatter",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:edaf826f3182fde712383f78555f645f04359f64e5dbccd2af3156ab249ddc47",
+    "local_implementation_uri": "file://Pool/resources/tools/script/black_format_runner.py",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/script/_sgar_cli.py": "sha256:42368f8d49cb6364ad3aeaac6d0f9602adc12cb29fea49322fd488400698b6b9"
+    }
+  },
+  "type_specific": {
+    "tool": {
+      "tool_kind": "local_script",
+      "language": "python",
+      "deterministic": true
+    }
+  },
+  "memory": {
+    "success_trajectories": [],
+    "failure_reflections": []
+  },
+  "execution": {
+    "runtime": "python_script",
+    "uri": "file://Pool/resources/tools/script/black_format_runner.py",
+    "execution_status": "active"
+  },
+  "type": {
+    "resource_type": "Tool",
+    "resource_tag": [
+      "python",
+      "code_formatting",
+      "development"
+    ]
+  },
+  "input_contract": [
+    {
+      "name": "target_path",
+      "kind": "string",
+      "required": true,
+      "cli_position": 1
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "json",
+    "description": "JSON execution envelope with Black's check exit code, full proposed diff/stdout, stderr, and target; no file is formatted.",
+    "json_schema": {
+      "description": "Native JSON representation only; no field or task-delivery guarantee.",
+      "type": [
+        "object",
+        "array",
+        "string",
+        "number",
+        "boolean",
+        "null"
+      ]
+    },
+    "native_json_contract_scope": "value_only"
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [],
+    "node_packages": [],
+    "system_packages": [],
+    "commands": [
+      "black"
+    ],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "python_compatibility": ">=3.11,<4"
+  }
+}

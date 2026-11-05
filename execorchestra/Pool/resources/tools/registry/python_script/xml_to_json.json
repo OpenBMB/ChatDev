@@ -1,0 +1,186 @@
+{
+  "manifest_version": "1.0",
+  "resource_id": "tool.xml_to_json.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Map one XML document to a simplified JSON element tree",
+    "description": "Parses one local XML file with lxml and returns a simplified recursive element tree containing each element's local tag name, raw attribute mapping, optional stripped direct text, and optional element children. It reports XMLSyntaxError as JSON but is not a lossless XML representation.",
+    "core_primitives": [
+      "parse_local_xml_document",
+      "map_elements_to_json_nodes",
+      "preserve_child_element_order"
+    ],
+    "problem_space": "Simplified structural inspection of one well-formed XML document as JSON. It is not XML Schema/DTD validation, XPath querying, namespace-preserving or round-trip conversion, canonicalization, remote endpoint processing, or a general secure parser for untrusted XML.",
+    "domain_tags": [
+      "data_format",
+      "xml",
+      "json",
+      "conversion"
+    ]
+  },
+  "constraint": {
+    "env_requirements": [
+      "Python >= 3.6",
+      "lxml installed"
+    ],
+    "io_signature": "Input: required file_path string at CLI position 1 naming an existing XML file. Output: JSON envelope with a recursive json node shaped as {tag, attrib, optional text, optional children}; no output file is written.",
+    "accepted_inputs": [
+      "an existing local, well-formed XML document parseable by lxml.etree.parse"
+    ],
+    "output_shape": "Success: {status: \"success\", tool: \"lxml\", target: string, json: {tag: string, attrib: object, text?: string, children?: [node, ...]}}, exit 0. Non-existing path: {status: \"error\", message: string}, exit 2. XMLSyntaxError: {status: \"error\", tool: \"lxml\", message: \"invalid XML: <details>\"}, exit 1. Missing argument prints usage to stderr and exits 1 without JSON. Other I/O, parser, QName, recursion, or serialization exceptions are uncaught and may produce a traceback/non-JSON exit.",
+    "limitations": [
+      "reads and recursively materializes the complete XML tree and complete JSON result in memory; document depth, node count, and result size are unbounded and can amplify memory use",
+      "has no output truncation and no timeout; large or deeply nested documents can consume substantial memory or exhaust recursion",
+      "element namespace URIs/prefixes are discarded from tag names via QName.localname, while namespaced attribute keys may remain in lxml expanded-name form",
+      "drops comments, processing instructions, namespace declarations, child tail text, document metadata, and whitespace-only/direct surrounding text; it is not round-trip lossless",
+      "uses lxml's default parser without explicit entity, DTD, recovery, size, depth, or network-hardening options, so it should not be treated as a hardened untrusted-XML boundary",
+      "only XMLSyntaxError is converted to the documented error envelope; other failures can traceback, and deeply nested XML can exhaust recursion"
+    ],
+    "artifact_input": [
+      "file_path"
+    ],
+    "artifact_output": [
+      "json"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "file_path",
+        "kind": "file_path",
+        "artifact_types": [
+          "xml"
+        ],
+        "extensions": [
+          ".xml"
+        ],
+        "required": true,
+        "cli_position": 1
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "JSON envelope containing a simplified recursive XML element tree (`tag`, `attrib`, optional `text` and `children`) or a handled parse error.",
+      "json_schema": {
+        "description": "Native JSON representation only; no field or task-delivery guarantee.",
+        "type": [
+          "object",
+          "array",
+          "string",
+          "number",
+          "boolean",
+          "null"
+        ]
+      },
+      "native_json_contract_scope": "value_only"
+    }
+  },
+  "routing": {
+    "family": "xml-simplified-element-tree-converter",
+    "intent_tags": [
+      "convert XML elements to a simplified JSON tree",
+      "inspect XML tags attributes text and children as JSON"
+    ],
+    "negative_intents": [
+      "run XPath queries against XML",
+      "validate XML against XSD or DTD",
+      "perform lossless namespace-preserving XML conversion"
+    ],
+    "dependency_slots": []
+  },
+  "execution": {
+    "runtime": "python_script",
+    "uri": "file://Pool/resources/tools/script/xml_to_json.py",
+    "execution_status": "active"
+  },
+  "utility": {
+    "latency_ms": 100,
+    "token_cost_factor": 0.01,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://lxml.de",
+    "license": "BSD",
+    "backed_by": "lxml",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:8cedf1c6edd5ee5342e1a8d98a669419c484a6b5066296d8a2c1a8576cf9100d",
+    "local_implementation_uri": "file://Pool/resources/tools/script/xml_to_json.py",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/script/_sgar_cli.py": "sha256:42368f8d49cb6364ad3aeaac6d0f9602adc12cb29fea49322fd488400698b6b9"
+    }
+  },
+  "type_specific": {
+    "tool": {
+      "tool_kind": "local_script",
+      "language": "python",
+      "deterministic": true
+    }
+  },
+  "memory": {
+    "success_trajectories": [],
+    "failure_reflections": []
+  },
+  "type": {
+    "resource_type": "Tool",
+    "resource_tag": [
+      "data_format",
+      "xml",
+      "json",
+      "conversion"
+    ]
+  },
+  "input_contract": [
+    {
+      "name": "file_path",
+      "kind": "file_path",
+      "artifact_types": [
+        "xml"
+      ],
+      "extensions": [
+        ".xml"
+      ],
+      "required": true,
+      "cli_position": 1
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "json",
+    "description": "JSON envelope containing a simplified recursive XML element tree (`tag`, `attrib`, optional `text` and `children`) or a handled parse error.",
+    "json_schema": {
+      "description": "Native JSON representation only; no field or task-delivery guarantee.",
+      "type": [
+        "object",
+        "array",
+        "string",
+        "number",
+        "boolean",
+        "null"
+      ]
+    },
+    "native_json_contract_scope": "value_only"
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [
+      {
+        "name": "lxml",
+        "version": "==5.3.0",
+        "required": true
+      }
+    ],
+    "node_packages": [],
+    "system_packages": [],
+    "commands": [],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "python_compatibility": ">=3.11,<4"
+  }
+}

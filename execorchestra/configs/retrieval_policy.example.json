@@ -1,0 +1,94 @@
+{
+  "policy_version": "retrieval-policy-v7-pending-release",
+  "active_strategy": "capability_only",
+  "candidate_strategy": "capability_only",
+  "resource_pool_commit": "anonymous-review-snapshot",
+  "profile_version": "typed-constraint-v8",
+  "embedding_model": "Qwen/Qwen3-Embedding-4B",
+  "bge_prefix": "Given an S-GAR subtask, retrieve resources whose declared capabilities and problem space can perform it.",
+  "effective_pool_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+  "index_sha256": {
+    "capability": "0000000000000000000000000000000000000000000000000000000000000000",
+    "constraint": "0000000000000000000000000000000000000000000000000000000000000000",
+    "metadata": "0000000000000000000000000000000000000000000000000000000000000000"
+  },
+  "embedding_candidate_id": null,
+  "embedding_runtime_identity_sha256": null,
+  "index_meta_sha256": null,
+  "index_build_manifest_sha256": null,
+  "release_source_seal_sha256": null,
+  "prompt_registry_sha256": null,
+  "profiler_prompt_sha256": null,
+  "profiler_schema_sha256": null,
+  "control_role_policy_sha256": null,
+  "control_provider_probe_receipt_sha256": null,
+  "type_policies": {
+    "Agent": {
+      "capability_weight": 0.75,
+      "constraint_weight": 0.25,
+      "initial_quota": 3,
+      "compact_quota": 2,
+      "recall_threshold": 0.95
+    },
+    "Model": {
+      "capability_weight": 0.65,
+      "constraint_weight": 0.35,
+      "initial_quota": 5,
+      "compact_quota": 3,
+      "recall_threshold": 0.95
+    },
+    "Resource": {
+      "capability_weight": 0.7,
+      "constraint_weight": 0.3,
+      "initial_quota": 0,
+      "compact_quota": 0,
+      "recall_threshold": 0.95
+    },
+    "Skill": {
+      "capability_weight": 0.85,
+      "constraint_weight": 0.15,
+      "initial_quota": 4,
+      "compact_quota": 2,
+      "recall_threshold": 0.95
+    },
+    "Tool": {
+      "capability_weight": 0.6,
+      "constraint_weight": 0.4,
+      "initial_quota": 10,
+      "compact_quota": 6,
+      "recall_threshold": 0.95
+    }
+  },
+  "compact_total_max": 16,
+  "hyde": {
+    "generation_protocol": "sgar-profiler-generation-policy-v3",
+    "resource_id": "model.gemini_3_8_flash.v1",
+    "api_model_id": "gemini-3.8-flash",
+    "prompt_version": "ideal-resource-profiler-en-v3",
+    "reasoning_effort": "high",
+    "temperature": null,
+    "requested_max_output_tokens": 8192,
+    "truncation_retry_max_output_tokens": 16384,
+    "output_cap_probe_order": [
+      8192,
+      16384
+    ],
+    "max_tokens": 8192,
+    "output_format": "json",
+    "formal_stability_runs": 3,
+    "max_model_attempts": 2,
+    "max_transport_attempts_per_model_attempt": 3,
+    "allow_model_failover": false,
+    "allow_direct_fallback": false,
+    "provider_capability_sha256": null,
+    "response_mode": null
+  },
+  "promotion_thresholds": {
+    "semantic_bundle_coverage": 0.95,
+    "runtime_bundle_coverage": 0.95,
+    "compact_bundle_coverage": 0.9,
+    "top1_accuracy": 0.8,
+    "stability_jaccard": 0.9,
+    "invalid_candidate_occupancy": 0.0
+  }
+}

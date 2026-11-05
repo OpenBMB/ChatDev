@@ -1,0 +1,141 @@
+{
+  "manifest_version": "v2",
+  "resource_id": "tool.api.ip_api_geo.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Retrieve approximate IP geolocation",
+    "description": "Calls ip-api.com/json with an optional IP path value; when omitted, the wrapper requests the root /json endpoint. HTTP 2xx/3xx responses produce a success envelope; HTTP 4xx/5xx responses produce an error envelope and a non-zero exit; request exceptions also produce an error envelope and a non-zero exit.",
+    "domain_tags": [
+      "ip-geolocation",
+      "network-geo"
+    ],
+    "core_primitives": [
+      "geolocate_ip",
+      "retrieve_ip_metadata"
+    ],
+    "problem_space": "Approximate IP geolocation and network metadata; not precise physical tracking, identity resolution, or cybersecurity attribution."
+  },
+  "constraint": {
+    "io_signature": "Input: optional ip at CLI position 1. Output: shared JSON envelope with url, http_status, and ip-api result. HTTP 2xx/3xx responses produce a success envelope; HTTP 4xx/5xx responses produce an error envelope and a non-zero exit; request exceptions also produce an error envelope and a non-zero exit.",
+    "accepted_inputs": [
+      "optional IPv4 or IPv6 address string; omitted value uses the root JSON endpoint"
+    ],
+    "output_shape": "HTTP 2xx/3xx: {status: \"success\", tool: string, url: string, http_status: integer, result: object|string}. HTTP 4xx/5xx: {status: \"error\", tool: string, url: string, http_status: integer, result: object|string}, exit 1. Request exception: {status: \"error\", tool: string, message: string}, exit 1.",
+    "limitations": [
+      "fixed GET http://ip-api.com/json/<ip>, or http://ip-api.com/json when ip is absent",
+      "no fields, language, callback, batch, pagination, or reverse geocoding input",
+      "wrapper does not locally truncate or interpret the API status field",
+      "location is approximate and service license/rate limits apply; no auth, cache, or retry"
+    ],
+    "artifact_output": [
+      "json"
+    ],
+    "execution_risk": "medium",
+    "http_status_semantics": {
+      "success": "HTTP 200-399",
+      "failure": "HTTP 400-599 or request exception",
+      "failure_exit_code": 1
+    }
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "ip",
+        "kind": "string",
+        "required": false,
+        "default": "",
+        "cli_position": 1
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "Shared JSON envelope containing ip-api location/network metadata, URL, and HTTP status."
+    }
+  },
+  "routing": {
+    "family": "ip-address-geolocation",
+    "intent_tags": [
+      "locate an IP approximately",
+      "retrieve IP country and network metadata"
+    ],
+    "negative_intents": [
+      "track a person's exact location",
+      "identify an attacker or verify identity from an IP"
+    ]
+  },
+  "execution": {
+    "runtime": "rest_api",
+    "uri": "file://Pool/resources/tools/api/api.ip_api_geo.py",
+    "execution_status": "active",
+    "execution_risk": "medium"
+  },
+  "utility": {
+    "latency_ms": 200.0,
+    "token_cost_factor": 0.02,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://ip-api.com/docs",
+    "license": "non-commercial-free",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:6e6796fd3381b978ea6b79d99303f5cb791713b10cd1dbdd73ba654d2118415d",
+    "local_implementation_uri": "file://Pool/resources/tools/api/api.ip_api_geo.py",
+    "auth_required": false,
+    "auth_evidence": "wrapper_and_shared_adapter_read_no_credentials",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/api/_apilib.py": "sha256:e60bba3d1f3dcd9fcd408042ad7951e52d6ecd66d57cb9a58c249d521c8811a7"
+    }
+  },
+  "type_specific": {
+    "tool": {
+      "tool_kind": "rest_api",
+      "deterministic": false
+    }
+  },
+  "type": {
+    "resource_type": "Tool"
+  },
+  "input_contract": [
+    {
+      "name": "ip",
+      "kind": "string",
+      "required": false,
+      "default": "",
+      "cli_position": 1
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "json",
+    "description": "Shared JSON envelope containing ip-api location/network metadata, URL, and HTTP status."
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [
+      {
+        "name": "requests",
+        "version": "==2.32.3",
+        "required": true
+      }
+    ],
+    "node_packages": [],
+    "system_packages": [],
+    "commands": [],
+    "env_vars": [],
+    "network_required": true,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "rest": {
+      "endpoint": null,
+      "auth_required": false,
+      "auth_evidence": "wrapper_and_shared_adapter_read_no_credentials",
+      "timeout_seconds": 25,
+      "success_http_status": "200-399"
+    }
+  }
+}

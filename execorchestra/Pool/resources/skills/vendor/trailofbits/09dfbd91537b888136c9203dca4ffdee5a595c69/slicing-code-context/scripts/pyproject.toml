@@ -1,0 +1,15 @@
+[project]
+name = "trailmark-context-slicer"
+version = "0.0.0"
+requires-python = ">=3.12"
+dependencies = ["trailmark>=0.5,<0.6"]
+
+[dependency-groups]
+dev = ["pytest>=9", "ruff>=0.14,<1"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.pytest.ini_options]
+testpaths = ["test_build_slice_packet.py"]

@@ -1,0 +1,61 @@
+rules:
+  - id: variant-taint-java
+    message: "Potential variant: user input flows to dangerous sink"
+    severity: ERROR
+    languages: [java]
+    mode: taint
+
+    pattern-sources:
+      # Servlet
+      - pattern: (HttpServletRequest $REQ).getParameter(...)
+      - pattern: (HttpServletRequest $REQ).getHeader(...)
+      - pattern: (HttpServletRequest $REQ).getCookies()
+      - pattern: (HttpServletRequest $REQ).getQueryString()
+      - pattern: (HttpServletRequest $REQ).getInputStream()
+      # Spring
+      - pattern: "@RequestParam $TYPE $VAR"
+      - pattern: "@PathVariable $TYPE $VAR"
+      - pattern: "@RequestBody $TYPE $VAR"
+
+    pattern-sinks:
+      # Command injection
+      - pattern: Runtime.getRuntime().exec($SINK, ...)
+      - pattern: new ProcessBuilder($SINK, ...)
+      # SQL injection
+      - pattern: (Statement $S).executeQuery($SINK)
+      - pattern: (Statement $S).executeUpdate($SINK)
+      - pattern: (Statement $S).execute($SINK)
+      - pattern: (Connection $C).prepareStatement($SINK)
+      # Path traversal
+      - pattern: new File($SINK)
+      - pattern: new FileInputStream($SINK)
+      - pattern: new FileOutputStream($SINK)
+      - pattern: Paths.get($SINK, ...)
+      # XXE
+      - pattern: (DocumentBuilder $DB).parse($SINK)
+      # Deserialization
+      - pattern: (ObjectInputStream $OIS).readObject()
+
+    pattern-sanitizers:
+      - pattern: Integer.parseInt($X)
+      - pattern: Integer.valueOf($X)
+      - pattern: StringEscapeUtils.escapeHtml4($X)
+      - pattern: ESAPI.encoder().encodeForSQL(...)
+
+    paths:
+      exclude:
+        - "**/test/**"
+        - "**/*Test.java"
+
+  - id: variant-pattern-java
+    message: "Suspicious pattern matching known vulnerability"
+    severity: WARNING
+    languages: [java]
+    patterns:
+      - pattern-either:
+          - pattern: Runtime.getRuntime().exec(...)
+          - pattern: new ProcessBuilder(...)
+      - pattern-inside: |
+          $RET $METHOD(..., HttpServletRequest $REQ, ...) {
+            ...
+          }

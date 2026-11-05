@@ -1,0 +1,168 @@
+{
+  "manifest_version": "1.0",
+  "resource_id": "tool.dotenv_to_json_converter.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Parse one dotenv file with python-dotenv defaults and return its key/value mapping inside JSON",
+    "description": "Reads an existing dotenv file through `dotenv_values(path)`, converts the parsed mapping to a dictionary, and emits it under the `json` key with a key count. The tool returns data only; it neither creates a .json file nor mutates the process environment.",
+    "core_primitives": [
+      "parse_dotenv_with_python_dotenv_defaults",
+      "serialize_environment_mapping_as_json",
+      "count_parsed_dotenv_keys"
+    ],
+    "problem_space": "Read-only conversion of one dotenv configuration into an in-memory JSON mapping; not environment loading, secret redaction, schema validation, encrypted secret management, or JSON file generation.",
+    "domain_tags": [
+      "configuration_management",
+      "file_processing"
+    ]
+  },
+  "constraint": {
+    "env_requirements": [
+      "Python >= 3.6",
+      "python-dotenv"
+    ],
+    "io_signature": "Input: one required existing dotenv-format file path; output: JSON envelope containing the parsed key/value object and key count, with a structured missing-path error only.",
+    "accepted_inputs": [
+      "an existing text file in syntax accepted by python-dotenv's dotenv_values default parser"
+    ],
+    "output_shape": "Success: {status: \"success\", tool: \"python-dotenv\", target: string, key_count: integer, json: object}; values are strings or null according to python-dotenv parsing. Missing path: {status: \"error\", message: string} and exit 2. Missing argument prints usage to stderr and exits 1 without JSON. Parsing, decoding, permission, or other exceptions are not caught and may produce a traceback with a nonzero exit instead of JSON.",
+    "limitations": [
+      "uses python-dotenv defaults, including its normal quoting, expansion/interpolation, duplicate-key, and valueless-key behavior, with no parser options exposed",
+      "returns secret values in plaintext JSON with no masking, allowlist, encryption, or sensitivity detection",
+      "does not write a JSON artifact, update the source dotenv file, or load values into os.environ",
+      "has no explicit timeout, size limit, or output truncation and does not wrap parser exceptions"
+    ],
+    "artifact_input": [
+      "file_path"
+    ],
+    "artifact_output": [
+      "json"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "file_path",
+        "kind": "string",
+        "required": true,
+        "cli_position": 1
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "JSON envelope containing the python-dotenv parsed key/value mapping and key count; no JSON file or environment mutation is produced.",
+      "json_schema": {
+        "description": "Native JSON representation only; no field or task-delivery guarantee.",
+        "type": [
+          "object",
+          "array",
+          "string",
+          "number",
+          "boolean",
+          "null"
+        ]
+      },
+      "native_json_contract_scope": "value_only"
+    }
+  },
+  "routing": {
+    "family": "dotenv-to-in-memory-json-mapping",
+    "intent_tags": [
+      "parse a dotenv file into a JSON key-value mapping",
+      "inspect dotenv values and parsed key count"
+    ],
+    "negative_intents": [
+      "create or write a JSON file on disk",
+      "load dotenv values into the process environment",
+      "redact, encrypt, rotate, or validate secrets"
+    ],
+    "dependency_slots": []
+  },
+  "utility": {
+    "latency_ms": 100,
+    "token_cost_factor": 0.01,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://github.com/theskumar/python-dotenv",
+    "license": "BSD",
+    "backed_by": "python-dotenv",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:b552c6b50b7b99a5e19b57ccb88554f50efb7924a6e0594a42168f919e60fdf1",
+    "local_implementation_uri": "file://Pool/resources/tools/script/dotenv_to_json_converter.py",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/script/_sgar_cli.py": "sha256:42368f8d49cb6364ad3aeaac6d0f9602adc12cb29fea49322fd488400698b6b9"
+    }
+  },
+  "type_specific": {
+    "tool": {
+      "tool_kind": "local_script",
+      "language": "python",
+      "deterministic": true
+    }
+  },
+  "memory": {
+    "success_trajectories": [],
+    "failure_reflections": []
+  },
+  "execution": {
+    "runtime": "python_script",
+    "uri": "file://Pool/resources/tools/script/dotenv_to_json_converter.py",
+    "execution_status": "active"
+  },
+  "type": {
+    "resource_type": "Tool",
+    "resource_tag": [
+      "configuration_management",
+      "file_processing"
+    ]
+  },
+  "input_contract": [
+    {
+      "name": "file_path",
+      "kind": "string",
+      "required": true,
+      "cli_position": 1
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "json",
+    "description": "JSON envelope containing the python-dotenv parsed key/value mapping and key count; no JSON file or environment mutation is produced.",
+    "json_schema": {
+      "description": "Native JSON representation only; no field or task-delivery guarantee.",
+      "type": [
+        "object",
+        "array",
+        "string",
+        "number",
+        "boolean",
+        "null"
+      ]
+    },
+    "native_json_contract_scope": "value_only"
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [
+      {
+        "name": "python-dotenv",
+        "version": "==1.0.1",
+        "required": true
+      }
+    ],
+    "node_packages": [],
+    "system_packages": [],
+    "commands": [],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "python_compatibility": ">=3.11,<4"
+  }
+}

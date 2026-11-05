@@ -1,0 +1,153 @@
+{
+  "manifest_version": "v2",
+  "resource_id": "tool.api.wikipedia.summary.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Fetch a localized Wikipedia article summary",
+    "description": "Calls the language-specific MediaWiki REST summary endpoint for one URL-quoted page title. HTTP 2xx/3xx responses produce a success envelope; HTTP 4xx/5xx responses produce an error envelope and a non-zero exit; request exceptions also produce an error envelope and a non-zero exit.",
+    "domain_tags": [
+      "knowledge",
+      "search"
+    ],
+    "core_primitives": [
+      "lookup_wikipedia_summary",
+      "select_language_wiki_endpoint"
+    ],
+    "problem_space": "Encyclopedic article-summary retrieval; not authoritative fact verification, full-page scraping, or general web search."
+  },
+  "constraint": {
+    "io_signature": "Input: page title and optional language code; output: JSON envelope containing http_status and the MediaWiki summary response or HTTP error body. HTTP 2xx/3xx responses produce a success envelope; HTTP 4xx/5xx responses produce an error envelope and a non-zero exit; request exceptions also produce an error envelope and a non-zero exit.",
+    "accepted_inputs": [
+      "one Wikipedia page title",
+      "optional language subdomain code; wrapper default en"
+    ],
+    "output_shape": "HTTP 2xx/3xx: {status: \"success\", tool: string, url: string, http_status: integer, result: object|string}. HTTP 4xx/5xx: {status: \"error\", tool: string, url: string, http_status: integer, result: object|string}, exit 1. Request exception: {status: \"error\", tool: string, message: string}, exit 1.",
+    "limitations": [
+      "fixed GET https://<lang>.wikipedia.org/api/rest_v1/page/summary/<URL-quoted-title>; no revision, extract length, or page-content option",
+      "only requests.RequestException becomes status=error",
+      "HTTP 2xx/3xx responses produce a success envelope; HTTP 4xx/5xx responses produce an error envelope and a non-zero exit; request exceptions also produce an error envelope and a non-zero exit.",
+      "wrapper URL-quotes the title but does not locally parse or truncate the response",
+      "no auth, cache, or retry; language domain and current article content determine the result"
+    ],
+    "artifact_output": [
+      "json"
+    ],
+    "execution_risk": "medium",
+    "http_status_semantics": {
+      "success": "HTTP 200-399",
+      "failure": "HTTP 400-599 or request exception",
+      "failure_exit_code": 1
+    }
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "title",
+        "kind": "string",
+        "required": true,
+        "cli_position": 1
+      },
+      {
+        "name": "lang",
+        "kind": "string",
+        "required": false,
+        "cli_position": 2
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "JSON envelope containing the selected-language Wikipedia summary object, URL, and HTTP status."
+    }
+  },
+  "routing": {
+    "family": "localized-wikipedia-summary",
+    "intent_tags": [
+      "get a Wikipedia article summary",
+      "look up an encyclopedic page by title and language"
+    ],
+    "negative_intents": [
+      "scrape the full Wikipedia article",
+      "search arbitrary websites or verify facts against primary sources"
+    ]
+  },
+  "execution": {
+    "runtime": "rest_api",
+    "uri": "file://Pool/resources/tools/api/api.wikipedia.summary.py",
+    "execution_status": "active",
+    "execution_risk": "medium"
+  },
+  "utility": {
+    "latency_ms": 200.0,
+    "token_cost_factor": 0.02,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://www.mediawiki.org/wiki/API:REST_API",
+    "license": "CC-BY-SA",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:6d7372532aeb73f112eccb0b1a23ee0df615d65424c068aec7d374eb1f821992",
+    "local_implementation_uri": "file://Pool/resources/tools/api/api.wikipedia.summary.py",
+    "auth_required": false,
+    "auth_evidence": "wrapper_and_shared_adapter_read_no_credentials",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/api/_apilib.py": "sha256:e60bba3d1f3dcd9fcd408042ad7951e52d6ecd66d57cb9a58c249d521c8811a7"
+    }
+  },
+  "type_specific": {
+    "tool": {
+      "tool_kind": "rest_api",
+      "deterministic": false
+    }
+  },
+  "type": {
+    "resource_type": "Tool"
+  },
+  "input_contract": [
+    {
+      "name": "title",
+      "kind": "string",
+      "required": true,
+      "cli_position": 1
+    },
+    {
+      "name": "lang",
+      "kind": "string",
+      "required": false,
+      "cli_position": 2
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "json",
+    "description": "JSON envelope containing the selected-language Wikipedia summary object, URL, and HTTP status."
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [
+      {
+        "name": "requests",
+        "version": "==2.32.3",
+        "required": true
+      }
+    ],
+    "node_packages": [],
+    "system_packages": [],
+    "commands": [],
+    "env_vars": [],
+    "network_required": true,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "rest": {
+      "endpoint": "https://{lang}.wikipedia.org/api/rest_v1/page/summary/{urllib.parse.quote(a(1))}",
+      "auth_required": false,
+      "auth_evidence": "wrapper_and_shared_adapter_read_no_credentials",
+      "timeout_seconds": 25,
+      "success_http_status": "200-399"
+    }
+  }
+}

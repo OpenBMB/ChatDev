@@ -1,0 +1,152 @@
+{
+  "manifest_version": "1.0",
+  "resource_id": "tool.coqc_compile_runner.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Compile a Coq .v source file into its .vo proof artifact",
+    "description": "Runs the task-container coqc compiler on one Coq source file and reports the deterministic compiled artifact.",
+    "core_primitives": [
+      "compile_coq_source",
+      "verify_coq_proof_artifact"
+    ],
+    "operation_kinds": [
+      "compile_coq_source"
+    ],
+    "problem_space": "Deterministic Coq source compilation and proof checking; not proof synthesis or theorem repair.",
+    "domain_tags": [
+      "formal_verification",
+      "coq",
+      "deterministic_compilation"
+    ]
+  },
+  "constraint": {
+    "io_signature": "Input: one task-container .v source path and optional sibling .vo output path. Output: JSON status envelope with compiler streams, exit code, latency, and produced_files.",
+    "accepted_inputs": [
+      "one existing .v file inside the task container",
+      "optional sibling .vo output path"
+    ],
+    "output_shape": "{status: ok|failed|timeout, source_path: string, output_path: string, produced_files: [string], exit_code: integer, stdout: string, stderr: string, latency_ms: integer}",
+    "limitations": [
+      "requires coqc in the task image",
+      "does not synthesize or edit source",
+      "does not access host paths",
+      "maximum compiler invocation is 180 seconds"
+    ],
+    "artifact_input": [
+      "coq_source"
+    ],
+    "artifact_output": [
+      "file"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "source_path",
+        "kind": "file_path",
+        "required": true,
+        "extensions": [
+          ".v"
+        ],
+        "cli_position": 1
+      },
+      {
+        "name": "output_path",
+        "kind": "file_path",
+        "required": false,
+        "extensions": [
+          ".vo"
+        ],
+        "cli_position": 2
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "file",
+      "description": "Deterministically compiled Coq .vo proof artifact.",
+      "schema_hint": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "produced_files": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "status",
+          "produced_files"
+        ],
+        "additionalProperties": true
+      }
+    }
+  },
+  "routing": {
+    "family": "deterministic-formal-compilation",
+    "intent_tags": [
+      "compile Coq proof",
+      "run coqc",
+      "type check Coq source",
+      "produce vo artifact"
+    ],
+    "negative_intents": [
+      "write Coq source",
+      "synthesize proof tactics",
+      "compile Python or C source"
+    ],
+    "dependency_slots": []
+  },
+  "execution": {
+    "runtime": "python_script",
+    "runtime_scope": "task_container",
+    "uri": "file://Pool/resources/tools/script/coqc_compile_runner.py",
+    "execution_status": "active",
+    "execution_risk": "low"
+  },
+  "utility": {
+    "latency_ms": 1000,
+    "token_cost_factor": 0.0,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "Coq reference compiler",
+    "license": "LGPL-compatible",
+    "backed_by": "coqc",
+    "recognized_public_tool": true,
+    "auth_required": false,
+    "local_implementation_uri": "file://Pool/resources/tools/script/coqc_compile_runner.py",
+    "source_hash": "sha256:f092b1786e28c5ae22bfc2260a3c2de275348d8a1d74b1c6e628fc943882f164"
+  },
+  "type_specific": {
+    "tool": {
+      "tool_kind": "local_script",
+      "language": "python",
+      "deterministic": true
+    }
+  },
+  "memory": {
+    "success_trajectories": [],
+    "failure_reflections": []
+  },
+  "runtime_requirements": {
+    "runtime_profile": "task-container",
+    "python": "==3.11.9",
+    "python_packages": [],
+    "node_packages": [],
+    "system_packages": [],
+    "commands": [],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "task-image-provided",
+    "python_compatibility": ">=3.11,<4"
+  }
+}

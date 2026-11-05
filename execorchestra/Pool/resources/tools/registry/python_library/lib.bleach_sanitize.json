@@ -1,0 +1,119 @@
+{
+  "manifest_version": "v2",
+  "resource_id": "tool.lib.bleach_sanitize.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Sanitize an HTML string with Bleach's default allowlist",
+    "description": "Passes one caller-supplied HTML string to bleach.clean and returns sanitized HTML with disallowed markup removed or escaped according to the installed Bleach defaults.",
+    "domain_tags": [
+      "security",
+      "web"
+    ],
+    "core_primitives": [
+      "sanitize_html_string",
+      "remove_disallowed_markup",
+      "preserve_allowed_html"
+    ],
+    "problem_space": "In-memory cleanup of untrusted HTML before rendering; not a browser, crawler, or policy authoring tool."
+  },
+  "constraint": {
+    "io_signature": "Input: one HTML string; output: JSON object containing clean with the sanitized HTML string.",
+    "accepted_inputs": [
+      "a string containing HTML or plain text",
+      "untrusted markup that should be filtered by Bleach defaults"
+    ],
+    "output_shape": "Success is an object with status=\"success\", tool=\"lib.bleach_sanitize\", and clean as the sanitized HTML string returned by bleach.clean. A caught sanitization or input exception produces an object with status=\"error\", tool=\"lib.bleach_sanitize\", and message as the exception string, then exits with code 1.",
+    "limitations": [
+      "uses the installed Bleach default policy; tags and attributes are not configurable through this wrapper",
+      "does not parse or return a structured DOM",
+      "does not guarantee protection for non-HTML contexts such as JavaScript or CSS"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "html",
+        "kind": "string",
+        "required": true,
+        "cli_position": 1
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "html",
+      "description": "Sanitized HTML string produced by Bleach's installed default policy."
+    }
+  },
+  "routing": {
+    "family": "html-security-sanitization",
+    "intent_tags": [
+      "sanitize untrusted HTML before rendering",
+      "remove unsafe markup from an HTML string"
+    ],
+    "negative_intents": [
+      "extract text or fields from HTML",
+      "validate arbitrary security policies",
+      "sanitize JavaScript or CSS source code"
+    ]
+  },
+  "execution": {
+    "runtime": "python_library",
+    "uri": "file://Pool/resources/tools/lib/lib.bleach_sanitize.py",
+    "execution_status": "active"
+  },
+  "utility": {
+    "latency_ms": 200.0,
+    "token_cost_factor": 0.02,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://github.com/mozilla/bleach",
+    "license": "Apache-2.0",
+    "backed_by": "bleach_sanitize",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:83bc35698a6b466152c5c628eb3f80044fedca9cec7d9da064fe60df84d745c6",
+    "local_implementation_uri": "file://Pool/resources/tools/lib/lib.bleach_sanitize.py",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/lib/_liblib.py": "sha256:dcd68e7904232764172e5f646ff97b854f68f7f916180ae32f838a0acf9ccc77"
+    }
+  },
+  "type_specific": {},
+  "type": {
+    "resource_type": "Tool"
+  },
+  "input_contract": [
+    {
+      "name": "html",
+      "kind": "string",
+      "required": true,
+      "cli_position": 1
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "html",
+    "description": "Sanitized HTML string produced by Bleach's installed default policy."
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [
+      {
+        "name": "bleach",
+        "version": "==6.2.0",
+        "required": true
+      }
+    ],
+    "node_packages": [],
+    "system_packages": [],
+    "commands": [],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "python_compatibility": ">=3.11,<4"
+  }
+}

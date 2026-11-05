@@ -1,0 +1,286 @@
+{
+  "manifest_version": "v2",
+  "resource_id": "tool.mcp.git_create_branch.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "execution_semantics": {
+      "side_effects": "declared",
+      "effect_targets": [
+        "task_workspace"
+      ]
+    },
+    "summary": "Create a named Git branch in a specified local repository.",
+    "description": "Use when a repository needs a new named branch for an isolated line of work. It creates branch metadata only; it does not list branches, commit changes, stage files, or inspect history.",
+    "domain_tags": [
+      "git",
+      "branch-creation",
+      "version-control"
+    ],
+    "core_primitives": [
+      "create_named_branch",
+      "initialize_feature_branch",
+      "branch_repository_history"
+    ],
+    "problem_space": "Create a named branch in a known local Git repository. This is branch mutation, distinct from inspecting existing branches, staging changes, creating commits, or viewing history."
+  },
+  "constraint": {
+    "io_signature": "Input: local Git repository path and new branch name. Output: JSON mutation invocation receipt.",
+    "accepted_inputs": [
+      "a local directory containing a Git repository",
+      "a valid new branch name"
+    ],
+    "output_shape": "JSON invocation receipt with status, operation, and completed; a failed operation includes error_code. Verify the requested workspace state separately.",
+    "limitations": [
+      "does not list or switch existing branches",
+      "does not stage files or create a commit"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "repo_path",
+        "kind": "string",
+        "required": true,
+        "cli_position": 1
+      },
+      {
+        "name": "branch_name",
+        "kind": "string",
+        "required": true,
+        "cli_position": 2
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "MCP-confirmed mutation invocation receipt; the requested final state must be checked separately.",
+      "schema": {
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "operation": {
+                "type": "string"
+              },
+              "status": {
+                "const": "success"
+              },
+              "completed": {
+                "const": true
+              }
+            },
+            "required": [
+              "status",
+              "operation",
+              "completed"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "operation": {
+                "type": "string"
+              },
+              "status": {
+                "const": "error"
+              },
+              "completed": {
+                "const": false
+              },
+              "error_code": {
+                "enum": [
+                  "mcp_operation_failed",
+                  "mcp_transport_failure"
+                ]
+              },
+              "error_type": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "status",
+              "operation",
+              "completed",
+              "error_code"
+            ],
+            "additionalProperties": false
+          }
+        ]
+      },
+      "result_status": {
+        "payload_path": "status",
+        "success_values": [
+          "success"
+        ],
+        "failure_values": [
+          "error"
+        ]
+      }
+    }
+  },
+  "routing": {
+    "family": "git-branch-mutation",
+    "intent_tags": [
+      "create a Git branch",
+      "start a feature branch",
+      "make a named branch"
+    ],
+    "negative_intents": [
+      "list existing branches",
+      "commit changes",
+      "show git history"
+    ]
+  },
+  "execution": {
+    "runtime": "mcp_server",
+    "uri": "file://Pool/resources/tools/mcp/mcp.git_create_branch.py",
+    "execution_status": "active"
+  },
+  "utility": {
+    "latency_ms": 300.0,
+    "token_cost_factor": 0.02,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://github.com/modelcontextprotocol/servers/tree/main/src/git",
+    "license": "MIT",
+    "backed_by": "MCP git_create_branch",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:1260444d2658fc7f3870346a0e7d72459e960278fbf979a7709c84fe49ae1090",
+    "local_implementation_uri": "file://Pool/resources/tools/mcp/mcp.git_create_branch.py",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/mcp/_mcplib.py": "sha256:8c39f008bd1fc31f0457e6e08cb42da72eeeebba3dd1bcb51c277a33b35287f3",
+      "file://Pool/resources/tools/mcp/_mcp_mutation.py": "sha256:52c9a7780710e30ad44233af885b4ea4145a04d8b9efa40c25916c7b96a939d5"
+    }
+  },
+  "type_specific": {},
+  "type": {
+    "resource_type": "Tool"
+  },
+  "input_contract": [
+    {
+      "name": "repo_path",
+      "kind": "string",
+      "required": true,
+      "cli_position": 1
+    },
+    {
+      "name": "branch_name",
+      "kind": "string",
+      "required": true,
+      "cli_position": 2
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "json",
+    "description": "MCP-confirmed mutation invocation receipt; the requested final state must be checked separately.",
+    "schema": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "operation": {
+              "type": "string"
+            },
+            "status": {
+              "const": "success"
+            },
+            "completed": {
+              "const": true
+            }
+          },
+          "required": [
+            "status",
+            "operation",
+            "completed"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "operation": {
+              "type": "string"
+            },
+            "status": {
+              "const": "error"
+            },
+            "completed": {
+              "const": false
+            },
+            "error_code": {
+              "enum": [
+                "mcp_operation_failed",
+                "mcp_transport_failure"
+              ]
+            },
+            "error_type": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "status",
+            "operation",
+            "completed",
+            "error_code"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "result_status": {
+      "payload_path": "status",
+      "success_values": [
+        "success"
+      ],
+      "failure_values": [
+        "error"
+      ]
+    }
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [
+      {
+        "name": "mcp",
+        "version": "==1.28.1",
+        "required": true
+      },
+      {
+        "name": "mcp-server-git",
+        "version": "==2026.7.10",
+        "required": true
+      }
+    ],
+    "node_packages": [],
+    "system_packages": [
+      {
+        "name": "git",
+        "version": "image-locked",
+        "required": true
+      }
+    ],
+    "commands": [
+      "git",
+      "python"
+    ],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "mcp": {
+      "server_command": "git",
+      "working_directory": "/app",
+      "allowed_roots": [
+        "/app"
+      ]
+    },
+    "python_compatibility": ">=3.11,<4"
+  }
+}

@@ -1,0 +1,253 @@
+{
+  "manifest_version": "v2",
+  "resource_id": "tool.browser_read_page.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Read a public web page with JavaScript rendering, readable text and navigable links",
+    "description": "Job-scoped Playwright Chromium reader; returns paginated evidence with final URL, title and retrieval timestamp.",
+    "domain_tags": [
+      "web",
+      "research",
+      "navigation"
+    ],
+    "core_primitives": [
+      "render_web_page",
+      "extract_readable_text",
+      "enumerate_links"
+    ],
+    "problem_space": "Public website reading and multi-page navigation; not autonomous research, unrestricted JavaScript or login automation."
+  },
+  "constraint": {
+    "io_signature": "URL and optional text/link offsets -> JSON text chunk, links, source metadata and continuation offsets.",
+    "accepted_inputs": [
+      "public HTTP(S) URL"
+    ],
+    "output_shape": "paginated JSON page evidence",
+    "limitations": [
+      "requires job-scoped browser service",
+      "no login or CAPTCHA bypass",
+      "pages over 250000 text characters are explicitly marked truncated",
+      "snapshots retained for at most 40 URLs per session"
+    ],
+    "operation_kinds": [
+      "network_read"
+    ],
+    "artifact_output": [
+      "json"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "url",
+        "kind": "string",
+        "required": true,
+        "cli_position": 1
+      },
+      {
+        "name": "text_offset",
+        "kind": "integer",
+        "required": false,
+        "cli_flag": "--text-offset",
+        "continuation_from": "next_text_offset",
+        "description": "For the same URL, pass next_text_offset to read the next text chunk."
+      },
+      {
+        "name": "link_offset",
+        "kind": "integer",
+        "required": false,
+        "cli_flag": "--link-offset",
+        "continuation_from": "next_link_offset",
+        "description": "For the same URL, pass next_link_offset to read the next set of links."
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "Readable page evidence and followable links with explicit pagination.",
+      "json_schema": {
+        "type": "object",
+        "properties": {
+          "requested_url": {
+            "type": "string"
+          },
+          "final_url": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "fetched_at": {
+            "type": "string"
+          },
+          "page_id": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          },
+          "status": {
+            "const": "success"
+          },
+          "tool": {
+            "const": "browser_read_page"
+          },
+          "http_status": {
+            "type": "integer"
+          },
+          "rendered": {
+            "const": true
+          },
+          "content_truncated": {
+            "type": "boolean"
+          },
+          "links_truncated": {
+            "type": "boolean"
+          },
+          "links": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "url": {
+                  "type": "string"
+                },
+                "text": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "url",
+                "text"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "text_offset": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "link_offset": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "total_text_chars": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "total_links": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "next_text_offset": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "next_link_offset": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "requested_url",
+          "final_url",
+          "title",
+          "fetched_at",
+          "page_id",
+          "text",
+          "status",
+          "tool",
+          "http_status",
+          "rendered",
+          "content_truncated",
+          "links_truncated",
+          "links",
+          "text_offset",
+          "link_offset",
+          "total_text_chars",
+          "total_links",
+          "next_text_offset",
+          "next_link_offset"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "routing": {
+    "family": "public-web-browser",
+    "intent_tags": [
+      "read webpage",
+      "follow website links",
+      "extract web evidence"
+    ],
+    "negative_intents": [
+      "perform web search",
+      "execute arbitrary JavaScript",
+      "authenticate to private site"
+    ]
+  },
+  "execution": {
+    "runtime": "python_script",
+    "uri": "file://Pool/resources/tools/script/browser_read_page.py",
+    "execution_status": "active"
+  },
+  "utility": {
+    "latency_ms": 1000,
+    "token_cost_factor": 0.02,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "project-authored adapter; Playwright backend",
+    "version": "1",
+    "backed_by": "Playwright",
+    "native_network_access": true,
+    "credential_class": "LOCAL_SERVICE",
+    "credential_env_names": [
+      "SGAR_BROWSER_TOKEN"
+    ],
+    "third_party_account_required": false,
+    "paid_service_required": false,
+    "source_hash": "sha256:87607f0877aeb5afd0ae65c69022c84f5a669a4e0b9b54a2d8130a9a935d09c6",
+    "local_implementation_uri": "file://Pool/resources/tools/script/browser_read_page.py"
+  },
+  "type_specific": {
+    "tool": {
+      "tool_kind": "rest_api",
+      "deterministic": false
+    }
+  },
+  "memory": {
+    "success_trajectories": [],
+    "failure_reflections": []
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [
+      {
+        "name": "httpx",
+        "version": "==0.28.1",
+        "required": true
+      }
+    ],
+    "node_packages": [],
+    "system_packages": [],
+    "commands": [],
+    "env_vars": [
+      "SGAR_BROWSER_BASE_URL",
+      "SGAR_BROWSER_TOKEN"
+    ],
+    "network_required": true,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "python_compatibility": ">=3.11,<4"
+  }
+}

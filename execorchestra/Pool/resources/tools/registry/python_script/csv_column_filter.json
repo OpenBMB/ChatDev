@@ -1,0 +1,184 @@
+{
+  "manifest_version": "1.0",
+  "resource_id": "tool.csv_column_filter.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Project an input CSV to named columns and return the resulting CSV text inside JSON",
+    "description": "Reads one CSV file with pandas defaults, splits the required `columns_to_filter` string on commas, trims and drops empty tokens, verifies every resulting column name exists, and returns the selected columns in their requested order as in-memory CSV text. It does not write an output file or filter rows.",
+    "core_primitives": [
+      "read_csv_with_pandas_defaults",
+      "project_named_csv_columns",
+      "serialize_projected_rows_as_csv_text"
+    ],
+    "problem_space": "Exact-name column projection from one local CSV into returned CSV text; not row filtering, data cleansing, aggregation, format conversion to structured JSON rows, or persistent file rewriting.",
+    "domain_tags": [
+      "data-processing",
+      "CSV",
+      "tools"
+    ]
+  },
+  "constraint": {
+    "env_requirements": [
+      "Python >= 3.6",
+      "pandas"
+    ],
+    "io_signature": "Input: one required CSV file path plus required columns_to_filter: string containing exact column names separated by commas (for example `name,email,age`); output: JSON containing selected-column CSV text and metadata or a precise error.",
+    "accepted_inputs": [
+      "an existing CSV file readable by pandas.read_csv with default options",
+      "one comma-separated string of exact column names, such as `name,email,age`; the script applies split(',') and trims each token"
+    ],
+    "output_shape": "Success: {status: \"success\", tool: \"pandas\", target: string, kept_columns: string[], row_count: integer, csv: string}; csv includes a header and all input rows for only the requested columns. Missing requested columns: {status: \"error\", tool: \"pandas\", message: string, available: string[]} and exit 1. Read/parse/serialization exception: {status: \"error\", tool: \"pandas\", message: string} and exit 1. Missing file: {status: \"error\", message: string} and exit 2. Fewer than two arguments prints usage to stderr and exits 1 without JSON.",
+    "limitations": [
+      "filters columns only and never filters rows, evaluates predicates, aggregates values, or modifies the source file",
+      "uses pandas.read_csv defaults with no delimiter, encoding, dtype, quoting, header, NA, or chunking options",
+      "loads the entire CSV and generated output into memory and applies no timeout or output truncation",
+      "column matching is exact after trimming comma-separated tokens; an empty effective list is allowed and produces a zero-column CSV representation"
+    ],
+    "artifact_input": [
+      "file_path"
+    ],
+    "artifact_output": [
+      "json",
+      "csv"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "file_path",
+        "kind": "file_path",
+        "artifact_types": [
+          "csv"
+        ],
+        "extensions": [
+          ".csv"
+        ],
+        "required": true,
+        "cli_position": 1
+      },
+      {
+        "name": "columns_to_filter",
+        "kind": "string",
+        "required": true,
+        "description": "Comma-separated exact column names; the script splits this single string on commas, trims tokens, and ignores empty tokens.",
+        "cli_position": 2
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "JSON transport envelope containing selected column names, row count, and the projected dataset as an embedded CSV string, or explicit read/column errors.",
+      "semantic_output": {
+        "artifact_type": "csv",
+        "payload_path": "csv",
+        "description": "On a success envelope, the csv field is the projected CSV artifact consumed by downstream steps and produced_files aliases."
+      }
+    }
+  },
+  "routing": {
+    "family": "csv-column-projection-to-embedded-csv",
+    "intent_tags": [
+      "keep selected columns from a CSV file",
+      "return a CSV column projection as text in JSON"
+    ],
+    "negative_intents": [
+      "filter CSV rows by values or conditions",
+      "write a filtered CSV file to disk",
+      "convert CSV rows into a JSON array or perform analytics"
+    ],
+    "dependency_slots": []
+  },
+  "utility": {
+    "latency_ms": 100,
+    "token_cost_factor": 0.01,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://pandas.pydata.org",
+    "license": "BSD",
+    "backed_by": "CSV column projection via pandas",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:591e42b841b5d2ce5dee2d31e12443ef09e338a5a539508d5ce3edd37ca3fb0f",
+    "local_implementation_uri": "file://Pool/resources/tools/script/csv_column_filter.py",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/script/_sgar_cli.py": "sha256:42368f8d49cb6364ad3aeaac6d0f9602adc12cb29fea49322fd488400698b6b9"
+    }
+  },
+  "type_specific": {
+    "tool": {
+      "tool_kind": "local_script",
+      "language": "python",
+      "deterministic": true
+    }
+  },
+  "memory": {
+    "success_trajectories": [],
+    "failure_reflections": []
+  },
+  "execution": {
+    "runtime": "python_script",
+    "uri": "file://Pool/resources/tools/script/csv_column_filter.py",
+    "execution_status": "active"
+  },
+  "type": {
+    "resource_type": "Tool",
+    "resource_tag": [
+      "data-processing",
+      "CSV",
+      "tools"
+    ]
+  },
+  "input_contract": [
+    {
+      "name": "file_path",
+      "kind": "file_path",
+      "artifact_types": [
+        "csv"
+      ],
+      "extensions": [
+        ".csv"
+      ],
+      "required": true,
+      "cli_position": 1
+    },
+    {
+      "name": "columns_to_filter",
+      "kind": "string",
+      "required": true,
+      "description": "Comma-separated exact column names; the script splits this single string on commas, trims tokens, and ignores empty tokens.",
+      "cli_position": 2
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "json",
+    "description": "JSON transport envelope containing selected column names, row count, and the projected dataset as an embedded CSV string, or explicit read/column errors.",
+    "semantic_output": {
+      "artifact_type": "csv",
+      "payload_path": "csv",
+      "description": "On a success envelope, the csv field is the projected CSV artifact consumed by downstream steps and produced_files aliases."
+    }
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [
+      {
+        "name": "pandas",
+        "version": "==2.2.3",
+        "required": true
+      }
+    ],
+    "node_packages": [],
+    "system_packages": [],
+    "commands": [],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "python_compatibility": ">=3.11,<4"
+  }
+}

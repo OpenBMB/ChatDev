@@ -1,0 +1,132 @@
+{
+  "manifest_version": "v2",
+  "resource_id": "tool.lib.pygments_highlight.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Generate an 800-character Pygments HTML highlight preview",
+    "description": "Looks up a Pygments lexer by language alias, highlights one code string with the default HtmlFormatter, and returns only the first 800 characters of the generated HTML.",
+    "domain_tags": [
+      "swe",
+      "docs"
+    ],
+    "core_primitives": [
+      "resolve_lexer_by_alias",
+      "render_syntax_highlight_html",
+      "truncate_html_preview"
+    ],
+    "problem_space": "Short HTML previews of syntax-highlighted source code for a caller-specified Pygments lexer alias."
+  },
+  "constraint": {
+    "io_signature": "Inputs: source-code string and language alias; output: wrapper JSON with at most 800 characters of Pygments HTML under html.",
+    "accepted_inputs": [
+      "source code or text as a string",
+      "a lexer alias recognized by Pygments get_lexer_by_name, defaulting to python when omitted"
+    ],
+    "output_shape": "Success is an object with status=\"success\", tool=\"lib.pygments_highlight\", and html as the first at most 800 characters of the default HtmlFormatter output. A caught lexer-lookup or highlighting exception produces an object with status=\"error\", tool=\"lib.pygments_highlight\", and message as the exception string, then exits with code 1.",
+    "limitations": [
+      "hard-truncates generated HTML at 800 characters, which can cut through tags and produce an invalid or incomplete fragment",
+      "uses the default HtmlFormatter with no caller-selectable style, line numbers, wrapping, or formatting options",
+      "does not include a generated CSS stylesheet; default output relies on Pygments CSS class names",
+      "when supplied, language must be a lexer alias recognized by Pygments; direct wrapper invocation defaults an omitted language to python, although the manifest input contract retains required=true",
+      "unknown aliases and highlighting failures use the wrapper's error envelope"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "code",
+        "kind": "string",
+        "required": true,
+        "cli_position": 1
+      },
+      {
+        "name": "language",
+        "kind": "string",
+        "required": true,
+        "cli_position": 2
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "html",
+      "description": "First 800 characters of default Pygments HtmlFormatter output; truncation may leave incomplete HTML."
+    }
+  },
+  "routing": {
+    "family": "syntax-highlight-html-preview",
+    "intent_tags": [
+      "preview syntax-highlighted code as HTML",
+      "highlight code using a Pygments language alias"
+    ],
+    "negative_intents": [
+      "generate a complete large highlighted document",
+      "auto-detect the programming language",
+      "return a standalone styled HTML page or CSS stylesheet"
+    ]
+  },
+  "execution": {
+    "runtime": "python_library",
+    "uri": "file://Pool/resources/tools/lib/lib.pygments_highlight.py",
+    "execution_status": "active"
+  },
+  "utility": {
+    "latency_ms": 200.0,
+    "token_cost_factor": 0.02,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://pygments.org/",
+    "license": "BSD-2",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:e6f1c4a6b082b6e888c4fb47b10493dae10aa72320aea1f9cd5d4bafe20a4c86",
+    "local_implementation_uri": "file://Pool/resources/tools/lib/lib.pygments_highlight.py",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/lib/_liblib.py": "sha256:dcd68e7904232764172e5f646ff97b854f68f7f916180ae32f838a0acf9ccc77"
+    }
+  },
+  "type_specific": {},
+  "type": {
+    "resource_type": "Tool"
+  },
+  "input_contract": [
+    {
+      "name": "code",
+      "kind": "string",
+      "required": true,
+      "cli_position": 1
+    },
+    {
+      "name": "language",
+      "kind": "string",
+      "required": true,
+      "cli_position": 2
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "html",
+    "description": "First 800 characters of default Pygments HtmlFormatter output; truncation may leave incomplete HTML."
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [
+      {
+        "name": "pygments",
+        "version": "==2.18.0",
+        "required": true
+      }
+    ],
+    "node_packages": [],
+    "system_packages": [],
+    "commands": [],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "python_compatibility": ">=3.11,<4"
+  }
+}

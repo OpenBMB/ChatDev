@@ -1,0 +1,173 @@
+{
+  "manifest_version": "1.0",
+  "resource_id": "tool.go_test_runner.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Run the default recursive `go test ./...` command from one Go project path",
+    "description": "Uses a supplied directory as the working directory or an existing file's parent, then compiles and executes tests for all recursively matched Go packages. It captures raw stdout/stderr and treats only Go exit code 0 as success.",
+    "core_primitives": [
+      "run_recursive_go_tests",
+      "select_go_project_working_directory",
+      "capture_go_test_process_output"
+    ],
+    "problem_space": "Default recursive Go package test execution; not coverage collection, test-result parsing, single-test selection, formatting, static analysis, or arbitrary Go command execution.",
+    "domain_tags": [
+      "golang",
+      "testing",
+      "automation"
+    ]
+  },
+  "constraint": {
+    "env_requirements": [
+      "Python >= 3.6",
+      "go"
+    ],
+    "io_signature": "Input: one required existing Go project directory or file whose parent becomes cwd; output: JSON process envelope with actual Go exit code and full raw stdout/stderr.",
+    "accepted_inputs": [
+      "an existing Go module or package directory from which `go test ./...` can run",
+      "an existing file path whose parent directory should be used as the Go test working directory"
+    ],
+    "output_shape": "Passing run: {status: \"success\", tool: \"go\", target: string, exit_code: 0, result: null, stdout: string, stderr: string|null}. Failed tests, compilation failures, or other nonzero Go results use the same keys with status=\"tool_error\" and propagate Go's actual exit code. Non-existing input, missing Go executable, or 300-second timeout: {status: \"error\", tool: \"go\", message: string}, exiting 2/3/4. Missing argument prints usage to stderr and exits 1 without JSON.",
+    "limitations": [
+      "always runs `go test ./...` with no package selection, test name filter, count, race, tags, timeout, verbosity, JSON, or passthrough flags",
+      "does not enable coverage or parse tests into structured cases; result is null and output remains raw stdout/stderr",
+      "a supplied file is not tested individually and only selects its parent as cwd",
+      "executes project code and compilation, may populate Go caches or trigger test-defined side effects, uses a fixed 300-second timeout, and does not truncate output"
+    ],
+    "artifact_input": [
+      "proj_dir"
+    ],
+    "artifact_output": [
+      "json"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "proj_dir",
+        "kind": "string",
+        "required": true,
+        "cli_position": 1
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "JSON process envelope for recursive `go test ./...`, containing target, actual exit code, and full raw stdout/stderr without coverage metrics.",
+      "json_schema": {
+        "description": "Native JSON representation only; no field or task-delivery guarantee.",
+        "type": [
+          "object",
+          "array",
+          "string",
+          "number",
+          "boolean",
+          "null"
+        ]
+      },
+      "native_json_contract_scope": "value_only"
+    }
+  },
+  "routing": {
+    "family": "go-default-recursive-test-runner",
+    "intent_tags": [
+      "run all recursive Go package tests",
+      "execute the default go test ./... command"
+    ],
+    "negative_intents": [
+      "collect Go test coverage or generate a coverprofile",
+      "run a selected Go test or pass custom test flags",
+      "format lint build or statically inspect Go source without running tests"
+    ],
+    "dependency_slots": []
+  },
+  "execution": {
+    "runtime": "python_script",
+    "uri": "file://Pool/resources/tools/script/go_test_runner.py",
+    "execution_status": "active"
+  },
+  "utility": {
+    "latency_ms": 100,
+    "token_cost_factor": 0.01,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://go.dev",
+    "license": "BSD",
+    "backed_by": "go test",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:55b67312ed3f9297e50dab3941409c5079e2aaaf44a4e147cd6ac915849242fa",
+    "local_implementation_uri": "file://Pool/resources/tools/script/go_test_runner.py",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/script/_sgar_cli.py": "sha256:42368f8d49cb6364ad3aeaac6d0f9602adc12cb29fea49322fd488400698b6b9"
+    }
+  },
+  "type_specific": {
+    "tool": {
+      "tool_kind": "local_script",
+      "language": "python",
+      "deterministic": false
+    }
+  },
+  "memory": {
+    "success_trajectories": [],
+    "failure_reflections": []
+  },
+  "type": {
+    "resource_type": "Tool",
+    "resource_tag": [
+      "golang",
+      "testing",
+      "automation"
+    ]
+  },
+  "input_contract": [
+    {
+      "name": "proj_dir",
+      "kind": "string",
+      "required": true,
+      "cli_position": 1
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "json",
+    "description": "JSON process envelope for recursive `go test ./...`, containing target, actual exit code, and full raw stdout/stderr without coverage metrics.",
+    "json_schema": {
+      "description": "Native JSON representation only; no field or task-delivery guarantee.",
+      "type": [
+        "object",
+        "array",
+        "string",
+        "number",
+        "boolean",
+        "null"
+      ]
+    },
+    "native_json_contract_scope": "value_only"
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [],
+    "node_packages": [],
+    "system_packages": [
+      {
+        "name": "go1.22.5",
+        "version": "image-locked",
+        "required": true
+      }
+    ],
+    "commands": [
+      "go"
+    ],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "python_compatibility": ">=3.11,<4"
+  }
+}

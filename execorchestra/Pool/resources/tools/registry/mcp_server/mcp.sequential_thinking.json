@@ -1,0 +1,157 @@
+{
+  "manifest_version": "v2",
+  "resource_id": "tool.mcp.sequential_thinking.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Record a bounded, explicit sequence of reasoning steps for one supplied problem statement.",
+    "description": "Use when a workflow needs a structured thought trace to decompose, revise, or check a reasoning process. It organizes supplied reasoning through sequential steps; it does not execute code, inspect local files, retrieve external data, or guarantee factual grounding.",
+    "domain_tags": [
+      "reasoning",
+      "problem-decomposition",
+      "thought-tracing"
+    ],
+    "core_primitives": [
+      "decompose_problem",
+      "record_reasoning_step",
+      "revise_thought_sequence"
+    ],
+    "problem_space": "Structure a bounded sequence of explicit reasoning steps for an already supplied problem. This is deliberation support, distinct from deterministic computation, code execution, filesystem access, web research, or external-data retrieval."
+  },
+  "constraint": {
+    "io_signature": "Input: one problem or thought string. Output: JSON sequential-thinking record.",
+    "accepted_inputs": [
+      "a textual problem statement or intermediate reasoning step"
+    ],
+    "output_shape": "JSON thought record with step position and continuation state.",
+    "limitations": [
+      "does not execute tools, code, or mathematical solvers",
+      "does not retrieve files, web content, APIs, or independent evidence"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "problem",
+        "kind": "string",
+        "required": true,
+        "cli_position": 1
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "Structured step-by-step reasoning (MCP)",
+      "json_schema": {
+        "description": "Native JSON representation only; no field or task-delivery guarantee.",
+        "type": [
+          "object",
+          "array",
+          "string",
+          "number",
+          "boolean",
+          "null"
+        ]
+      },
+      "native_json_contract_scope": "value_only"
+    }
+  },
+  "routing": {
+    "family": "reasoning-structure",
+    "intent_tags": [
+      "break a problem into reasoning steps",
+      "maintain a sequential thought trace",
+      "revise an analysis step"
+    ],
+    "negative_intents": [
+      "run code or a solver",
+      "search external information",
+      "read local files"
+    ]
+  },
+  "execution": {
+    "runtime": "mcp_server",
+    "uri": "file://Pool/resources/tools/mcp/mcp.sequential_thinking.py",
+    "execution_status": "active"
+  },
+  "utility": {
+    "latency_ms": 200.0,
+    "token_cost_factor": 0.02,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://github.com/modelcontextprotocol/servers/tree/main/src/sequentialthinking",
+    "license": "MIT",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:5d44e859b5a63b8e19ae7c5d25869a1a92bc41e4527effeeab4aed1b07481fa7",
+    "local_implementation_uri": "file://Pool/resources/tools/mcp/mcp.sequential_thinking.py",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/mcp/_mcplib.py": "sha256:8c39f008bd1fc31f0457e6e08cb42da72eeeebba3dd1bcb51c277a33b35287f3"
+    }
+  },
+  "type_specific": {},
+  "type": {
+    "resource_type": "Tool"
+  },
+  "input_contract": [
+    {
+      "name": "problem",
+      "kind": "string",
+      "required": true,
+      "cli_position": 1
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "json",
+    "description": "Structured step-by-step reasoning (MCP)",
+    "json_schema": {
+      "description": "Native JSON representation only; no field or task-delivery guarantee.",
+      "type": [
+        "object",
+        "array",
+        "string",
+        "number",
+        "boolean",
+        "null"
+      ]
+    },
+    "native_json_contract_scope": "value_only"
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [
+      {
+        "name": "mcp",
+        "version": "==1.28.1",
+        "required": true
+      }
+    ],
+    "node_packages": [
+      {
+        "name": "@modelcontextprotocol/server-sequential-thinking",
+        "version": "==2026.7.4",
+        "required": true
+      }
+    ],
+    "system_packages": [],
+    "commands": [
+      "mcp-server-sequential-thinking"
+    ],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "mcp": {
+      "server_command": "mcp-server-sequential-thinking",
+      "working_directory": "/app",
+      "allowed_roots": [
+        "/app"
+      ]
+    },
+    "python_compatibility": ">=3.11,<4"
+  }
+}

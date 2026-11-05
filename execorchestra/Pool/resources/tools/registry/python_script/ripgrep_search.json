@@ -1,0 +1,148 @@
+{
+  "manifest_version": "v2",
+  "resource_id": "tool.ripgrep_search.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Search file contents with ripgrep 15.2.0 under explicit bounds",
+    "description": "Thin SGAR adapter that invokes upstream ripgrep JSON output for read-only regex search rooted at one existing file or directory.",
+    "domain_tags": [
+      "repository",
+      "search",
+      "file_io"
+    ],
+    "core_primitives": [
+      "regex_content_search",
+      "filter_search_paths",
+      "return_line_matches"
+    ],
+    "problem_space": "Fast bounded content search in local trees; not file mutation, shell execution, semantic search, or filesystem discovery outside the supplied root."
+  },
+  "constraint": {
+    "io_signature": "Input pattern, existing root and optional glob/type/context/match bounds; output structured matches with path, line and text.",
+    "accepted_inputs": [
+      "ripgrep-compatible regular expression",
+      "existing local file or directory"
+    ],
+    "output_shape": "JSON match array, truncation flag and upstream exit code.",
+    "limitations": [
+      "honors ripgrep default ignore and binary policies",
+      "maximum 10000 returned matches",
+      "60-second timeout",
+      "read-only but may expose sensitive text within the authorized root"
+    ],
+    "operation_kinds": [
+      "local_read",
+      "content_search"
+    ],
+    "artifact_input": [
+      "file_path"
+    ],
+    "artifact_output": [
+      "json"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "pattern",
+        "kind": "string",
+        "required": true,
+        "cli_position": 1
+      },
+      {
+        "name": "root",
+        "kind": "string",
+        "required": true,
+        "cli_position": 2
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "Bounded structured ripgrep matches.",
+      "json_schema": {
+        "description": "Native JSON representation only; no field or task-delivery guarantee.",
+        "type": [
+          "object",
+          "array",
+          "string",
+          "number",
+          "boolean",
+          "null"
+        ]
+      },
+      "native_json_contract_scope": "value_only"
+    }
+  },
+  "routing": {
+    "family": "repository-content-search",
+    "intent_tags": [
+      "search source files for text or regex",
+      "locate matching lines in a repository"
+    ],
+    "negative_intents": [
+      "modify files",
+      "semantic vector search",
+      "execute matching code"
+    ],
+    "dependency_slots": []
+  },
+  "execution": {
+    "runtime": "python_script",
+    "uri": "file://Pool/resources/tools/script/ripgrep_search.py",
+    "execution_status": "active"
+  },
+  "utility": {
+    "latency_ms": 50,
+    "token_cost_factor": 0.01,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://github.com/BurntSushi/ripgrep/tree/15.2.0",
+    "version": "15.2.0",
+    "license": "Unlicense",
+    "license_url": "https://github.com/BurntSushi/ripgrep/blob/15.2.0/UNLICENSE",
+    "license_sha256": "7e12e5df4bae12cb21581ba157ced20e1986a0508dd10d0e8a4ab9a4cf94e85c",
+    "upstream_release": "https://github.com/BurntSushi/ripgrep/releases/tag/15.2.0",
+    "backed_by": "ripgrep",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:88d9961b19d5361727e9e4313731a68e737a5eb1b3b13a8a1b4fd30ace45a471",
+    "local_implementation_uri": "file://Pool/resources/tools/script/ripgrep_search.py"
+  },
+  "type_specific": {
+    "tool": {
+      "tool_kind": "local_script",
+      "language": "python",
+      "deterministic": true
+    }
+  },
+  "memory": {
+    "success_trajectories": [],
+    "failure_reflections": []
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [],
+    "node_packages": [],
+    "system_packages": [
+      {
+        "name": "ripgrep-15.2.0",
+        "version": "image-locked",
+        "required": true
+      }
+    ],
+    "commands": [
+      "rg"
+    ],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "python_compatibility": ">=3.11,<4"
+  }
+}

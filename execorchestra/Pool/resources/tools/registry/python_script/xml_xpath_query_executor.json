@@ -1,0 +1,184 @@
+{
+  "manifest_version": "1.0",
+  "resource_id": "tool.xml_xpath_query_executor.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Run one lxml XPath expression against one local XML file",
+    "description": "Parses a local XML document with lxml, evaluates one XPath expression without caller-supplied namespace bindings or variables, normalizes list items to strings (serializing element nodes), and returns the matches in a JSON envelope.",
+    "core_primitives": [
+      "parse_local_xml_for_xpath",
+      "evaluate_single_lxml_xpath",
+      "normalize_xpath_values_to_strings"
+    ],
+    "problem_space": "One-off XPath selection or scalar evaluation over an existing local XML document. It is distinct from XML-to-JSON tree conversion and is not XSLT, XSD/DTD validation, namespace-aware query configuration, remote XML querying, XML mutation, or a hardened untrusted-XML service.",
+    "domain_tags": [
+      "XML",
+      "XPath",
+      "data_processing"
+    ]
+  },
+  "constraint": {
+    "env_requirements": [
+      "Python >= 3.6",
+      "lxml installed"
+    ],
+    "io_signature": "Input: required file_path string at CLI position 1 and required xpath_query string at position 2. Output: JSON envelope with xpath, match_count, and a list of string-normalized results; element results are serialized XML strings.",
+    "accepted_inputs": [
+      "an existing local, well-formed XML file plus one lxml-supported XPath expression requiring no external namespace map or variables"
+    ],
+    "output_shape": "Success: {status: \"success\", tool: \"lxml\", target: string, xpath: string, match_count: integer, matches: [string, ...]}, exit 0. Node-set/list results yield one normalized string per item; element nodes use etree.tostring(..., encoding=\"unicode\").strip(), while non-elements use str(). A scalar XPath result is wrapped as one string, so match_count is 1 even for false/empty-string/numeric scalars. Non-existing path: {status: \"error\", message: string}, exit 2. XMLSyntaxError or XPathError: {status: \"error\", tool: \"lxml\", message: string}, exit 1. Missing arguments print usage to stderr and exit 1 without JSON; other exceptions may traceback.",
+    "limitations": [
+      "parses the complete XML document and materializes the complete XPath result list and normalized strings in memory; input, match count, subtree size, and result size are unbounded with possible memory amplification",
+      "has no output truncation and no timeout; broad XPath expressions or large documents can produce very large results or run without a time limit",
+      "passes no namespace-prefix mapping, variables, extension-function policy, or smart-string options; prefixed queries fail unless resolvable without caller configuration, so namespace-heavy XML may require local-name() expressions",
+      "all results lose native XPath types: booleans, numbers, and strings become strings, scalar results always become a one-item matches list, and element serialization may include subtree markup and tail text",
+      "uses lxml's default XML parser without explicit entity, DTD, recovery, size, depth, or network-hardening settings; do not treat it as a hardened untrusted-XML boundary",
+      "does not modify XML, return source-node locations, convert the whole document to JSON, or catch non-XMLSyntaxError/non-XPathError failures"
+    ],
+    "artifact_input": [
+      "file_path"
+    ],
+    "artifact_output": [
+      "json"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "file_path",
+        "kind": "string",
+        "required": true,
+        "cli_position": 1
+      },
+      {
+        "name": "xpath_query",
+        "kind": "string",
+        "required": true,
+        "cli_position": 2
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "JSON envelope containing the XPath expression, string-normalized matches, and match count, or a handled XML/XPath error.",
+      "json_schema": {
+        "description": "Native JSON representation only; no field or task-delivery guarantee.",
+        "type": [
+          "object",
+          "array",
+          "string",
+          "number",
+          "boolean",
+          "null"
+        ]
+      },
+      "native_json_contract_scope": "value_only"
+    }
+  },
+  "routing": {
+    "family": "xml-lxml-single-xpath-query",
+    "intent_tags": [
+      "run an XPath expression on a local XML file",
+      "extract XML nodes or scalar values with lxml XPath"
+    ],
+    "negative_intents": [
+      "convert an entire XML document to JSON",
+      "validate XML with XSD or DTD",
+      "supply XPath namespace bindings or mutate XML"
+    ],
+    "dependency_slots": []
+  },
+  "execution": {
+    "runtime": "python_script",
+    "uri": "file://Pool/resources/tools/script/xml_xpath_query_executor.py",
+    "execution_status": "active"
+  },
+  "utility": {
+    "latency_ms": 100,
+    "token_cost_factor": 0.01,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://lxml.de",
+    "license": "BSD",
+    "backed_by": "XPath query over XML via lxml",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:2b38d53d77e0b721314e11c49623b1ff8abe9a6063297807118dbdb21703d0c6",
+    "local_implementation_uri": "file://Pool/resources/tools/script/xml_xpath_query_executor.py",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/script/_sgar_cli.py": "sha256:42368f8d49cb6364ad3aeaac6d0f9602adc12cb29fea49322fd488400698b6b9"
+    }
+  },
+  "type_specific": {
+    "tool": {
+      "tool_kind": "local_script",
+      "language": "python",
+      "deterministic": true
+    }
+  },
+  "memory": {
+    "success_trajectories": [],
+    "failure_reflections": []
+  },
+  "type": {
+    "resource_type": "Tool",
+    "resource_tag": [
+      "XML",
+      "XPath",
+      "data_processing"
+    ]
+  },
+  "input_contract": [
+    {
+      "name": "file_path",
+      "kind": "string",
+      "required": true,
+      "cli_position": 1
+    },
+    {
+      "name": "xpath_query",
+      "kind": "string",
+      "required": true,
+      "cli_position": 2
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "json",
+    "description": "JSON envelope containing the XPath expression, string-normalized matches, and match count, or a handled XML/XPath error.",
+    "json_schema": {
+      "description": "Native JSON representation only; no field or task-delivery guarantee.",
+      "type": [
+        "object",
+        "array",
+        "string",
+        "number",
+        "boolean",
+        "null"
+      ]
+    },
+    "native_json_contract_scope": "value_only"
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [
+      {
+        "name": "lxml",
+        "version": "==5.3.0",
+        "required": true
+      }
+    ],
+    "node_packages": [],
+    "system_packages": [],
+    "commands": [],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "python_compatibility": ">=3.11,<4"
+  }
+}

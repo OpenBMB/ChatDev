@@ -1,0 +1,172 @@
+{
+  "manifest_version": "1.0",
+  "resource_id": "tool.shellcheck_runner.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Run ShellCheck JSON diagnostics on one local shell script",
+    "description": "Executes exactly `shellcheck -f json <file>` and returns ShellCheck's parsed diagnostic array in a JSON execution envelope. Exit codes 0 and 1 are treated as completed scans; the script is not modified.",
+    "core_primitives": [
+      "invoke_shellcheck_json_scan",
+      "capture_shellcheck_diagnostics",
+      "report_shellcheck_exit_status"
+    ],
+    "problem_space": "Read-only ShellCheck diagnostics for one shell script using fixed JSON output; not shell execution, formatting, automatic fixes, security proof, arbitrary ShellCheck option forwarding, or multi-file project orchestration.",
+    "domain_tags": [
+      "shell",
+      "linting",
+      "dev_tools"
+    ]
+  },
+  "constraint": {
+    "env_requirements": [
+      "Python >= 3.6",
+      "shellcheck executable on PATH"
+    ],
+    "io_signature": "Input: required file_path string naming an existing shell script. Executes `shellcheck -f json <file>` with inherited cwd. Output: JSON envelope with parsed ShellCheck diagnostics, exit code, and raw stream metadata.",
+    "accepted_inputs": [
+      "an existing shell script file supported by the installed ShellCheck version"
+    ],
+    "output_shape": "ShellCheck exit 0 or 1: {status: \"success\", tool: \"shellcheck\", target: string, exit_code: 0|1, result: array|JSON value|null, stdout: string|null, stderr: string|null}; normal native JSON is placed in result with stdout=null. Other exits use status=\"tool_error\" and propagate the exit code. Missing file, executable, or 120-second timeout: {status: \"error\", tool: \"shellcheck\", message: string}, exiting 2/3/4. Missing argument prints usage to stderr and exits 1 without JSON.",
+    "limitations": [
+      "does not execute the shell script, apply fixes, rewrite files, or guarantee runtime correctness or security",
+      "accepts one existing shell-script file; a directory or a multi-file project target is outside this wrapper's input boundary",
+      "passes only fixed `-f json`; no shell dialect, severity, enable/disable code, external-source, source-path, or exclusion options are exposed",
+      "uses a fixed 120-second timeout and no output truncation; when stderr rather than stdout parses as JSON, the helper still suppresses stdout"
+    ],
+    "artifact_input": [
+      "file_path"
+    ],
+    "artifact_output": [
+      "json"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "file_path",
+        "kind": "string",
+        "required": true,
+        "cli_position": 1
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "JSON execution envelope containing parsed ShellCheck diagnostics, exit code, and captured streams; the source file is unchanged.",
+      "json_schema": {
+        "description": "Native JSON representation only; no field or task-delivery guarantee.",
+        "type": [
+          "object",
+          "array",
+          "string",
+          "number",
+          "boolean",
+          "null"
+        ]
+      },
+      "native_json_contract_scope": "value_only"
+    }
+  },
+  "routing": {
+    "family": "shell-shellcheck-json-lint",
+    "intent_tags": [
+      "lint a shell script with ShellCheck",
+      "get JSON ShellCheck diagnostics for one file"
+    ],
+    "negative_intents": [
+      "execute or format a shell script",
+      "automatically fix ShellCheck findings",
+      "lint Python JavaScript CSS or compile code"
+    ],
+    "dependency_slots": []
+  },
+  "execution": {
+    "runtime": "python_script",
+    "uri": "file://Pool/resources/tools/script/shellcheck_runner.py",
+    "execution_status": "active"
+  },
+  "utility": {
+    "latency_ms": 100,
+    "token_cost_factor": 0.01,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://www.shellcheck.net",
+    "license": "GPLv3",
+    "backed_by": "ShellCheck",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:17f515ba3c69885492490337db32ad4cd2d7c4b93db6b280bb11fedf352d480f",
+    "local_implementation_uri": "file://Pool/resources/tools/script/shellcheck_runner.py",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/script/_sgar_cli.py": "sha256:42368f8d49cb6364ad3aeaac6d0f9602adc12cb29fea49322fd488400698b6b9"
+    }
+  },
+  "type_specific": {
+    "tool": {
+      "tool_kind": "local_script",
+      "language": "python",
+      "deterministic": true
+    }
+  },
+  "memory": {
+    "success_trajectories": [],
+    "failure_reflections": []
+  },
+  "type": {
+    "resource_type": "Tool",
+    "resource_tag": [
+      "shell",
+      "linting",
+      "dev_tools"
+    ]
+  },
+  "input_contract": [
+    {
+      "name": "file_path",
+      "kind": "string",
+      "required": true,
+      "cli_position": 1
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "json",
+    "description": "JSON execution envelope containing parsed ShellCheck diagnostics, exit code, and captured streams; the source file is unchanged.",
+    "json_schema": {
+      "description": "Native JSON representation only; no field or task-delivery guarantee.",
+      "type": [
+        "object",
+        "array",
+        "string",
+        "number",
+        "boolean",
+        "null"
+      ]
+    },
+    "native_json_contract_scope": "value_only"
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [],
+    "node_packages": [],
+    "system_packages": [
+      {
+        "name": "shellcheck",
+        "version": "image-locked",
+        "required": true
+      }
+    ],
+    "commands": [
+      "shellcheck"
+    ],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "python_compatibility": ">=3.11,<4"
+  }
+}

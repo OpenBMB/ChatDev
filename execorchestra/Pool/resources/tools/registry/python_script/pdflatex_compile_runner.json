@@ -1,0 +1,150 @@
+{
+  "manifest_version": "1.0",
+  "resource_id": "tool.pdflatex_compile_runner.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Compile one LaTeX source file with pdflatex inside the task container",
+    "description": "Runs the task-container pdflatex compiler on one .tex source and reports the deterministic PDF and log artifacts.",
+    "core_primitives": [
+      "compile_latex_document",
+      "verify_latex_build_artifact"
+    ],
+    "operation_kinds": [
+      "compile_latex_document"
+    ],
+    "problem_space": "Deterministic LaTeX source compilation and log production; not document editing, synonym selection, or layout repair.",
+    "domain_tags": [
+      "latex",
+      "deterministic_compilation",
+      "document_build"
+    ]
+  },
+  "constraint": {
+    "io_signature": "Input: one task-container .tex source path and optional sibling output directory. Output: JSON status envelope with compiler streams, exit code, latency, and produced PDF/log files.",
+    "accepted_inputs": [
+      "one existing .tex file inside the task container",
+      "optional source-directory output path"
+    ],
+    "output_shape": "{status: ok|failed|timeout, source_path: string, output_path: string, produced_files: [string], exit_code: integer, stdout: string, stderr: string, latency_ms: integer}",
+    "limitations": [
+      "requires pdflatex in the task image",
+      "does not edit or synthesize LaTeX source",
+      "does not access host paths",
+      "maximum compiler invocation is 300 seconds"
+    ],
+    "artifact_input": [
+      "latex_source"
+    ],
+    "artifact_output": [
+      "file"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "source_path",
+        "kind": "file_path",
+        "required": true,
+        "extensions": [
+          ".tex"
+        ],
+        "cli_position": 1
+      },
+      {
+        "name": "output_dir",
+        "kind": "directory_path",
+        "required": false,
+        "cli_position": 2
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "file",
+      "description": "Deterministically compiled LaTeX PDF and compiler log.",
+      "schema_hint": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "produced_files": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "status",
+          "produced_files"
+        ],
+        "additionalProperties": true
+      }
+    }
+  },
+  "routing": {
+    "family": "deterministic-latex-compilation",
+    "intent_tags": [
+      "compile LaTeX document",
+      "run pdflatex",
+      "build PDF from tex source",
+      "check LaTeX compilation"
+    ],
+    "negative_intents": [
+      "edit LaTeX source",
+      "repair overfull hboxes",
+      "synthesize synonym replacements"
+    ],
+    "dependency_slots": []
+  },
+  "execution": {
+    "runtime": "shell_script",
+    "runtime_scope": "task_container",
+    "uri": "file://Pool/resources/tools/script/pdflatex_compile_runner.sh",
+    "execution_status": "active",
+    "execution_risk": "low"
+  },
+  "utility": {
+    "latency_ms": 3000,
+    "token_cost_factor": 0.0,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "LaTeX reference compiler",
+    "license": "LPPL-compatible",
+    "backed_by": "pdflatex",
+    "recognized_public_tool": true,
+    "auth_required": false,
+    "local_implementation_uri": "file://Pool/resources/tools/script/pdflatex_compile_runner.sh",
+    "source_hash": "sha256:05db2bed02233899127c0e57f9fee1242a844b17aa418dd489cc48d1b4a036ba"
+  },
+  "type_specific": {
+    "tool": {
+      "tool_kind": "local_script",
+      "language": "python",
+      "deterministic": true
+    }
+  },
+  "memory": {
+    "success_trajectories": [],
+    "failure_reflections": []
+  },
+  "runtime_requirements": {
+    "runtime_profile": "task-container",
+    "runtime_kind": "shell_script",
+    "python_packages": [],
+    "node_packages": [],
+    "system_packages": [],
+    "commands": [
+      "sh",
+      "pdflatex"
+    ],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "docker_image": "task-image-provided"
+  }
+}

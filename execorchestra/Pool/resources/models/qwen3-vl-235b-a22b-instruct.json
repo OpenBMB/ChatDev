@@ -1,0 +1,115 @@
+{
+  "resource_id": "qwen3-vl-235b-a22b-instruct",
+  "type": {
+    "resource_type": "Model",
+    "resource_tag": [
+      "131K Context",
+      ".4",
+      "1.6",
+      "unknown"
+    ]
+  },
+  "capability": {
+    "summary": "Vision-language direct-response instruction model with a sparse-expert architecture.",
+    "core_primitives": [
+      "document OCR",
+      "chart interpretation",
+      "visual grounding",
+      "video question answering",
+      "visual reasoning"
+    ],
+    "problem_space": "Vision-language model for visual grounding and document understanding. Applicable tasks include document OCR, chart interpretation, visual grounding, video question answering, visual reasoning. Accepts text, image, video input and produces text output. External tools are required to execute programs, browse sources, or modify files; generated instructions alone do not perform those actions. Published distinction: The published architecture is sparse-expert, with 235 billion total and 22 billion active parameters. This is the direct-response instruction edition for text and visual tasks; model size and edition do not establish actual supplier latency or accuracy.",
+    "domain_tags": [
+      "Language",
+      "Software Engineering",
+      "Visual Understanding"
+    ]
+  },
+  "constraint": {
+    "env_requirements": [
+      "OpenAI-Compatible API Endpoint",
+      "Valid API Key (Cloud) or High-Memory GPU with Multimodal Support"
+    ],
+    "io_signature": "Input modalities: text, image, video | Output modalities: text. Gateway transport support requires verification."
+  },
+  "utility": {
+    "latency_ms": 0,
+    "token_cost_factor": 0,
+    "expected_success_rate": 0
+  },
+  "execution": {
+    "uri": "${base_url}/v1/chat/completions",
+    "model_id": "qwen3-vl-235b-a22b-instruct"
+  },
+  "memory": {
+    "success_trajectories": [],
+    "failure_reflections": []
+  },
+  "type_specific": {
+    "model": {
+      "profile_version": "model-capabilities-v1",
+      "input_modalities": [
+        "text",
+        "image",
+        "video"
+      ],
+      "output_modalities": [
+        "text"
+      ],
+      "supports": {
+        "tool_calling": null,
+        "json_mode": null,
+        "vision": true,
+        "reasoning": true,
+        "coding": true
+      },
+      "thinking_mode": "non_thinking",
+      "native_protocol": "openai_compatible_chat",
+      "documented_context_tokens": 262144,
+      "evidence_status": "provider_documented_not_gateway_verified",
+      "gateway_verification_status": "not_run",
+      "limitations": [],
+      "pricing_rules": {
+        "input_per_m": ".4",
+        "cache_per_m": null,
+        "output_per_m": "1.6",
+        "source": "https://www.alibabacloud.com/help/en/model-studio/model-pricing",
+        "cache_mode": "implicit",
+        "input_tiers": [],
+        "region": "International Singapore",
+        "cache_supported": false
+      }
+    }
+  },
+  "provenance": {
+    "semantic_review": {
+      "reviewed_at": "2026-09-15",
+      "policy": "model-capabilities-v1",
+      "source_urls": [
+        "https://huggingface.co/Qwen/Qwen3-VL-235B-A22B-Instruct"
+      ],
+      "evidence_status": "provider_documented_not_gateway_verified",
+      "task_profile_basis": "Task categories derive from documented operations; no empirical quality ranking or fixed framework role.",
+      "context_policy": "The configured context label is preserved separately from documented native context; neither proves the supplier limit."
+    },
+    "model_distinction_review": {
+      "evidence_kind": "documented_architecture_and_mode",
+      "source_urls": [
+        "https://huggingface.co/Qwen/Qwen3-VL-235B-A22B-Instruct"
+      ],
+      "interpretation_limit": "Published task emphasis is non-exclusive. Architecture and product positioning do not establish supplier latency, measured quality, or a fixed framework role.",
+      "policy": "model-distinctions-v1",
+      "reviewed_at": "2026-09-15",
+      "evidence_status": "provider_documented_not_gateway_verified",
+      "scope": "Non-exclusive published task emphasis and architecture; no empirical cross-model quality ordering."
+    },
+    "pricing_status": "official_public_price_snapshot",
+    "gateway_verification_status": "windows_historical_probe_only",
+    "pricing_note": "Official reference rates and backend billing rules from the same dated pricebook; capability and gateway evidence unchanged.",
+    "official_pricing": {
+      "snapshot_date": "2026-10-09",
+      "source": "https://www.alibabacloud.com/help/en/model-studio/model-pricing",
+      "pricebook_sha256": "9e9a8248e54f1934d08d5efe68a3998ebce6faa09106f3f2a7ac119bf89a182c"
+    }
+  }
+}

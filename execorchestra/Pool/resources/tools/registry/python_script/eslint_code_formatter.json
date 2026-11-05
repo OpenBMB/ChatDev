@@ -1,0 +1,155 @@
+{
+  "manifest_version": "1.0",
+  "resource_id": "tool.eslint_code_formatter.v1",
+  "resource_type": "Tool",
+  "status": "inactive",
+  "capability": {
+    "summary": "Inactive legacy alias that duplicates eslint_checker exactly and is retained only for compatibility metadata",
+    "description": "This misnamed legacy resource invokes the same `eslint -f json --no-config-lookup --config <cfg> <file>` command as eslint_checker and adds no capability. It is inactive and excluded from ordinary indexing; if invoked directly, it remains read-only and returns the same ESLint diagnostics without formatting or fixing code.",
+    "core_primitives": [
+      "identify_legacy_duplicate_eslint_wrapper",
+      "inspect_deprecated_formatter_alias_metadata",
+      "preserve_legacy_output_contract_reference"
+    ],
+    "problem_space": "Compatibility metadata for an inactive, misnamed duplicate of eslint_checker; not a selectable linting or formatting capability and not a distinct implementation.",
+    "domain_tags": [
+      "JavaScript",
+      "code-quality",
+      "development-tools"
+    ]
+  },
+  "constraint": {
+    "env_requirements": [
+      "Python >= 3.6",
+      "eslint executable",
+      "an ESLint config at SGAR_ESLINT_CONFIG or /opt/eslint.config.mjs"
+    ],
+    "io_signature": "Input: one required existing file path accepted by the configured ESLint; output: JSON envelope containing parsed lint diagnostics and process metadata, never formatted source code.",
+    "accepted_inputs": [
+      "an existing JavaScript or TypeScript source file supported by the selected ESLint configuration"
+    ],
+    "output_shape": "Completed lint (ESLint exit 0 or 1): {status: \"success\", tool: \"eslint\", target: string, exit_code: 0|1, result: array|object|null, stdout: string|null, stderr: string|null}; parsed native JSON diagnostics are in result and stdout becomes null. Other ESLint exits use the same keys with status=\"tool_error\" and propagate the actual exit code. Missing file/executable/120-second timeout: {status: \"error\", tool: \"eslint\", message: string}, exiting 2/3/4. Missing argument prints usage to stderr and exits 1 without JSON. No success or failure shape contains a formatted_code key.",
+    "limitations": [
+      "inactive legacy alias excluded from ordinary index construction and routing; use eslint_checker for the identical supported read-only lint behavior",
+      "duplicates eslint_checker flags, configuration selection, exit handling, timeout, and output shape exactly, so it provides no separate capability",
+      "the formatter name is misleading: direct invocation does not return formatted source, produce a diff, apply fixes, or modify files",
+      "retained only for compatibility metadata and must not be selected for ordinary lint, formatting, or fix requests"
+    ],
+    "artifact_input": [
+      "file_path"
+    ],
+    "artifact_output": [
+      "json"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "file_path",
+        "kind": "string",
+        "required": true,
+        "cli_position": 1
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "JSON envelope of read-only ESLint diagnostics and exit metadata; despite the resource name, it contains no formatted code and causes no file writes."
+    }
+  },
+  "routing": {
+    "family": "inactive-legacy-duplicate-eslint-alias",
+    "intent_tags": [
+      "identify legacy duplicate ESLint wrapper",
+      "inspect deprecated formatter alias metadata"
+    ],
+    "negative_intents": [
+      "run ordinary JavaScript or TypeScript lint checks",
+      "format, rewrite, or automatically fix JavaScript or TypeScript code",
+      "return formatted source code or a formatting diff",
+      "select a distinct capability instead of the supported eslint_checker duplicate"
+    ],
+    "dependency_slots": []
+  },
+  "execution": {
+    "runtime": "python_script",
+    "uri": "file://Pool/resources/tools/script/eslint_code_formatter.py",
+    "execution_status": "inactive"
+  },
+  "utility": {
+    "latency_ms": 100,
+    "token_cost_factor": 0.01,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://eslint.org",
+    "license": "MIT",
+    "backed_by": "ESLint",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:6736f21bf535602b170b79ef67a83033a429f088e69bb16e868f2c074b406de0",
+    "local_implementation_uri": "file://Pool/resources/tools/script/eslint_code_formatter.py",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/script/_sgar_cli.py": "sha256:42368f8d49cb6364ad3aeaac6d0f9602adc12cb29fea49322fd488400698b6b9"
+    }
+  },
+  "type_specific": {
+    "tool": {
+      "tool_kind": "local_script",
+      "language": "python",
+      "deterministic": true
+    }
+  },
+  "memory": {
+    "success_trajectories": [],
+    "failure_reflections": []
+  },
+  "type": {
+    "resource_type": "Tool",
+    "resource_tag": [
+      "JavaScript",
+      "code-quality",
+      "development-tools"
+    ]
+  },
+  "input_contract": [
+    {
+      "name": "file_path",
+      "kind": "string",
+      "required": true,
+      "cli_position": 1
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "json",
+    "description": "JSON envelope of read-only ESLint diagnostics and exit metadata; despite the resource name, it contains no formatted code and causes no file writes."
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [],
+    "node_packages": [
+      {
+        "name": "eslint",
+        "version": "==10.0.1",
+        "required": true
+      },
+      {
+        "name": "prettier",
+        "version": "==3.9.6",
+        "required": true
+      }
+    ],
+    "system_packages": [],
+    "commands": [
+      "eslint",
+      "prettier"
+    ],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1"
+  }
+}

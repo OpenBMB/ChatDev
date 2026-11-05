@@ -1,0 +1,156 @@
+{
+  "manifest_version": "v2",
+  "resource_id": "tool.lib.jsonschema_validate.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Validate one JSON file against one JSON Schema file",
+    "description": "Loads an instance and schema from separate JSON files, calls jsonschema.validate, and reports either valid=true or valid=false with the first validation error message.",
+    "domain_tags": [
+      "data",
+      "validation"
+    ],
+    "core_primitives": [
+      "load_json_instance",
+      "load_json_schema",
+      "validate_instance_against_schema"
+    ],
+    "problem_space": "Binary conformance checking of one file-backed JSON instance against one file-backed JSON Schema."
+  },
+  "constraint": {
+    "io_signature": "Inputs: instance JSON file path and schema JSON file path; output: JSON result with valid boolean and, on instance validation failure, an error message.",
+    "accepted_inputs": [
+      "a readable file containing any valid JSON instance",
+      "a readable file containing a JSON Schema accepted by the installed jsonschema library"
+    ],
+    "output_shape": "A conforming instance produces an object with status=\"success\", tool=\"lib.jsonschema_validate\", and valid=true. A jsonschema.ValidationError is also a success object with the same tool, valid=false, and error as the validation message. Any other caught file, JSON, schema, or library exception produces an object with status=\"error\", tool=\"lib.jsonschema_validate\", and message as the exception string, then exits with code 1.",
+    "limitations": [
+      "reports only the first validation failure selected by jsonschema.validate, not a complete iterable of all errors",
+      "does not expose validation paths, schema paths, contexts, or structured error metadata",
+      "schema draft selection and format behavior follow the installed jsonschema library and the schema's declarations",
+      "invalid schemas, malformed JSON, missing files, and other non-ValidationError failures use the wrapper's error envelope rather than valid=false"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "instance_path",
+        "kind": "string",
+        "required": true,
+        "cli_position": 1
+      },
+      {
+        "name": "schema_path",
+        "kind": "string",
+        "required": true,
+        "cli_position": 2
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "Validation verdict with valid boolean and an error message only when the JSON instance fails schema validation.",
+      "json_schema": {
+        "description": "Native JSON representation only; no field or task-delivery guarantee.",
+        "type": [
+          "object",
+          "array",
+          "string",
+          "number",
+          "boolean",
+          "null"
+        ]
+      },
+      "native_json_contract_scope": "value_only"
+    }
+  },
+  "routing": {
+    "family": "json-schema-instance-validation",
+    "intent_tags": [
+      "validate a JSON file against JSON Schema",
+      "check one JSON instance for schema conformance"
+    ],
+    "negative_intents": [
+      "infer a schema from sample JSON",
+      "collect every JSON Schema validation error",
+      "validate inline JSON strings without files"
+    ]
+  },
+  "execution": {
+    "runtime": "python_library",
+    "uri": "file://Pool/resources/tools/lib/lib.jsonschema_validate.py",
+    "execution_status": "active"
+  },
+  "utility": {
+    "latency_ms": 200.0,
+    "token_cost_factor": 0.02,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://python-jsonschema.readthedocs.io/",
+    "license": "MIT",
+    "backed_by": "jsonschema_validate",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:5708a52b3ec5e6e2f073427ef3de2fef8eabe5dfc7dfb236600f5c23b0334635",
+    "local_implementation_uri": "file://Pool/resources/tools/lib/lib.jsonschema_validate.py",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/lib/_liblib.py": "sha256:dcd68e7904232764172e5f646ff97b854f68f7f916180ae32f838a0acf9ccc77"
+    }
+  },
+  "type_specific": {},
+  "type": {
+    "resource_type": "Tool"
+  },
+  "input_contract": [
+    {
+      "name": "instance_path",
+      "kind": "string",
+      "required": true,
+      "cli_position": 1
+    },
+    {
+      "name": "schema_path",
+      "kind": "string",
+      "required": true,
+      "cli_position": 2
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "json",
+    "description": "Validation verdict with valid boolean and an error message only when the JSON instance fails schema validation.",
+    "json_schema": {
+      "description": "Native JSON representation only; no field or task-delivery guarantee.",
+      "type": [
+        "object",
+        "array",
+        "string",
+        "number",
+        "boolean",
+        "null"
+      ]
+    },
+    "native_json_contract_scope": "value_only"
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [
+      {
+        "name": "jsonschema",
+        "version": "==4.23.0",
+        "required": true
+      }
+    ],
+    "node_packages": [],
+    "system_packages": [],
+    "commands": [],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "python_compatibility": ">=3.11,<4"
+  }
+}

@@ -1,0 +1,72 @@
+rules:
+  - id: variant-taint-analysis
+    message: >-
+      Potential variant: user-controlled data flows to dangerous sink.
+      Original bug: [DESCRIBE_ORIGINAL_BUG]
+    severity: ERROR
+    languages: [python]
+    mode: taint
+
+    pattern-sources:
+      # Flask
+      - pattern: request.args.get(...)
+      - pattern: request.args[...]
+      - pattern: request.form.get(...)
+      - pattern: request.form[...]
+      - pattern: request.json
+      - pattern: request.data
+      # Django (uncomment if needed)
+      # - pattern: request.GET.get(...)
+      # - pattern: request.POST.get(...)
+      # General
+      - pattern: os.environ.get(...)
+      - pattern: input(...)
+
+    pattern-sinks:
+      # Command injection
+      - pattern: os.system($SINK)
+      - pattern: os.popen($SINK)
+      - pattern: subprocess.call($SINK, ...)
+      - pattern: subprocess.run($SINK, ...)
+      - pattern: subprocess.Popen($SINK, ...)
+      # Code execution
+      - pattern: eval($SINK)
+      - pattern: exec($SINK)
+      # SQL (uncomment if needed)
+      # - pattern: $CURSOR.execute($SINK)
+      # Path traversal (uncomment if needed)
+      # - pattern: open($SINK, ...)
+
+    pattern-sanitizers:
+      - pattern: shlex.quote(...)
+      - pattern: os.path.basename(...)
+      - pattern: int(...)
+      - pattern: sanitize(...)
+      - pattern: escape(...)
+      - pattern: validate(...)
+
+    paths:
+      exclude:
+        - "*_test.py"
+        - "test_*.py"
+        - "tests/"
+        - "**/test/**"
+
+    metadata:
+      category: security
+      confidence: HIGH
+
+  # Simple pattern matching variant (non-taint)
+  - id: variant-pattern-match
+    message: "Suspicious pattern matching known vulnerability signature"
+    severity: WARNING
+    languages: [python]
+    patterns:
+      - pattern-either:
+          - pattern: dangerous_func($USER_DATA)
+          - pattern: risky_operation(..., $USER_DATA, ...)
+      - pattern-not: dangerous_func("...")
+    paths:
+      exclude:
+        - "tests/"
+        - "*_test.py"

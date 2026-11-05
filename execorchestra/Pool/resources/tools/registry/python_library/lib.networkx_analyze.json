@@ -1,0 +1,156 @@
+{
+  "manifest_version": "v2",
+  "resource_id": "tool.lib.networkx_analyze.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Compute degree or betweenness centrality on an undirected graph",
+    "description": "Builds an unweighted undirected NetworkX Graph from a JSON edge list, then returns degree centrality when metric is exactly degree and betweenness centrality for every other metric value.",
+    "domain_tags": [
+      "graph",
+      "data"
+    ],
+    "core_primitives": [
+      "construct_undirected_graph",
+      "compute_degree_centrality",
+      "compute_betweenness_centrality"
+    ],
+    "problem_space": "Basic node-centrality scoring and graph size reporting for a JSON-encoded undirected edge list."
+  },
+  "constraint": {
+    "io_signature": "Inputs: JSON edge-list string and metric string; output: JSON with echoed metric, node and edge counts, and a node-to-centrality result map.",
+    "accepted_inputs": [
+      "a JSON array of edge tuples accepted by NetworkX Graph.add_edges_from",
+      "metric value degree for degree centrality, or any other string to select betweenness centrality"
+    ],
+    "output_shape": "Success is an object with status=\"success\", tool=\"lib.networkx_analyze\", metric as the echoed selector string, nodes and edges as integer graph counts, and result as an object mapping node identifiers to numeric centrality scores. A caught edge-JSON, graph-construction, centrality, or serialization exception produces an object with status=\"error\", tool=\"lib.networkx_analyze\", and message as the exception string, then exits with code 1.",
+    "limitations": [
+      "always constructs an undirected simple Graph, collapsing parallel edges and not preserving directed semantics",
+      "supports only degree centrality and betweenness centrality; it does not calculate paths despite the original broad label",
+      "any metric other than the exact string degree silently selects betweenness centrality instead of being rejected",
+      "the wrapper defaults a missing metric argument to degree even though the manifest declares it required",
+      "does not expose graph mutation, components, path queries, or configurable centrality parameters"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "edges_json",
+        "kind": "string",
+        "required": true,
+        "cli_position": 1
+      },
+      {
+        "name": "metric",
+        "kind": "string",
+        "required": true,
+        "cli_position": 2
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "Graph size and node centrality scores for an undirected graph, using degree or betweenness selection.",
+      "json_schema": {
+        "description": "Native JSON representation only; no field or task-delivery guarantee.",
+        "type": [
+          "object",
+          "array",
+          "string",
+          "number",
+          "boolean",
+          "null"
+        ]
+      },
+      "native_json_contract_scope": "value_only"
+    }
+  },
+  "routing": {
+    "family": "undirected-graph-centrality-analysis",
+    "intent_tags": [
+      "compute node degree centrality",
+      "compute node betweenness centrality from an edge list"
+    ],
+    "negative_intents": [
+      "find shortest paths between graph nodes",
+      "analyze directed or multigraph edge semantics",
+      "compute arbitrary NetworkX metrics by name"
+    ]
+  },
+  "execution": {
+    "runtime": "python_library",
+    "uri": "file://Pool/resources/tools/lib/lib.networkx_analyze.py",
+    "execution_status": "active"
+  },
+  "utility": {
+    "latency_ms": 200.0,
+    "token_cost_factor": 0.02,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://networkx.org/",
+    "license": "BSD-3",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:284077ce18c2d4fa6497df136f10a70fe2e097690099ec144908f8646441af81",
+    "local_implementation_uri": "file://Pool/resources/tools/lib/lib.networkx_analyze.py",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/lib/_liblib.py": "sha256:dcd68e7904232764172e5f646ff97b854f68f7f916180ae32f838a0acf9ccc77"
+    }
+  },
+  "type_specific": {},
+  "type": {
+    "resource_type": "Tool"
+  },
+  "input_contract": [
+    {
+      "name": "edges_json",
+      "kind": "string",
+      "required": true,
+      "cli_position": 1
+    },
+    {
+      "name": "metric",
+      "kind": "string",
+      "required": true,
+      "cli_position": 2
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "json",
+    "description": "Graph size and node centrality scores for an undirected graph, using degree or betweenness selection.",
+    "json_schema": {
+      "description": "Native JSON representation only; no field or task-delivery guarantee.",
+      "type": [
+        "object",
+        "array",
+        "string",
+        "number",
+        "boolean",
+        "null"
+      ]
+    },
+    "native_json_contract_scope": "value_only"
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [
+      {
+        "name": "networkx",
+        "version": "==3.4.2",
+        "required": true
+      }
+    ],
+    "node_packages": [],
+    "system_packages": [],
+    "commands": [],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "python_compatibility": ">=3.11,<4"
+  }
+}

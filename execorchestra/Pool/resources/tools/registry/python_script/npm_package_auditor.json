@@ -1,0 +1,143 @@
+{
+  "manifest_version": "1.0",
+  "resource_id": "tool.npm_package_auditor.v1",
+  "resource_type": "Tool",
+  "status": "inactive",
+  "capability": {
+    "summary": "Inspect metadata for an inactive legacy alias of npm_audit_json_exporter",
+    "description": "Inactive legacy manifest retained for compatibility metadata only. Its bundled script is behaviorally identical to npm_audit_json_exporter and must not be selected as a normal npm audit capability.",
+    "core_primitives": [
+      "identify_legacy_duplicate_npm_wrapper",
+      "inspect_inactive_alias_metadata"
+    ],
+    "problem_space": "Compatibility inspection of an inactive, exactly duplicated npm-audit wrapper manifest; ordinary npm advisory audits route to active npm_audit_json_exporter instead.",
+    "domain_tags": [
+      "npm",
+      "security-audit",
+      "dependency-management"
+    ]
+  },
+  "constraint": {
+    "env_requirements": [
+      "Python >= 3.6",
+      "npm executable on PATH",
+      "a usable npm registry/network configuration and a supported lockfile in the resolved project directory"
+    ],
+    "io_signature": "Input: required file_path string naming an existing project directory or file; files resolve to their absolute parent directory. Executes `npm audit --json --prefix <dir>`. Output: JSON execution envelope with parsed npm report when available.",
+    "accepted_inputs": [
+      "an existing npm project directory",
+      "an existing file path whose parent directory is the intended npm project, typically package.json"
+    ],
+    "output_shape": "Retained legacy execution contract: npm exit 0 or 1 yields {status: \"success\", tool: \"npm\", target: string, exit_code: 0|1, result: JSON value|null, stdout: string|null, stderr: string|null}. The helper tries stdout then stderr; if stdout is non-JSON but stderr is one JSON document, result contains parsed stderr and stdout is still set to null. Other npm exits use status=\"tool_error\" and propagate the exit code. Missing input, executable, or 180-second timeout yields {status: \"error\", tool: \"npm\", message: string}, exiting 2/3/4. This inactive alias is excluded from normal indexing.",
+    "limitations": [
+      "inactive legacy duplicate retained only for metadata compatibility; use active npm_audit_json_exporter for ordinary audits",
+      "provides no distinct audit, package, license, policy, compliance, remediation, or source-analysis behavior",
+      "the retained helper parses stdout first and stderr second, and suppresses stdout whenever either stream parses as JSON; therefore non-JSON stdout can be lost when stderr contains JSON",
+      "legacy execution results depend on npm, registry, lockfile, network, authentication, and configuration and remain nondeterministic"
+    ],
+    "artifact_input": [
+      "file_path"
+    ],
+    "artifact_output": [
+      "json"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "file_path",
+        "kind": "string",
+        "required": true,
+        "cli_position": 1
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "JSON execution envelope containing npm's parsed audit report when available, raw streams otherwise, and npm exit metadata."
+    }
+  },
+  "routing": {
+    "family": "legacy-duplicate-npm-audit-alias-metadata",
+    "intent_tags": [
+      "identify legacy duplicate npm audit wrapper",
+      "inspect deprecated npm package auditor alias metadata"
+    ],
+    "negative_intents": [
+      "run a normal npm dependency audit",
+      "automatically fix npm vulnerabilities",
+      "perform package license policy or compliance auditing",
+      "scan JavaScript source code for security bugs"
+    ],
+    "dependency_slots": []
+  },
+  "execution": {
+    "runtime": "python_script",
+    "uri": "file://Pool/resources/tools/script/npm_package_auditor.py",
+    "execution_status": "inactive"
+  },
+  "utility": {
+    "latency_ms": 200,
+    "token_cost_factor": 0.01,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://docs.npmjs.com/cli/commands/npm-audit",
+    "license": "Artistic-2.0",
+    "backed_by": "npm audit",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:55985317f79f114b8ff226bfb2906e0c87cef6ae22df0a0f59f91e503d17ba23",
+    "local_implementation_uri": "file://Pool/resources/tools/script/npm_package_auditor.py",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/script/_sgar_cli.py": "sha256:42368f8d49cb6364ad3aeaac6d0f9602adc12cb29fea49322fd488400698b6b9"
+    }
+  },
+  "type_specific": {
+    "tool": {
+      "tool_kind": "local_script",
+      "language": "python",
+      "deterministic": false
+    }
+  },
+  "memory": {
+    "success_trajectories": [],
+    "failure_reflections": []
+  },
+  "type": {
+    "resource_type": "Tool",
+    "resource_tag": [
+      "npm",
+      "security-audit",
+      "dependency-management"
+    ]
+  },
+  "input_contract": [
+    {
+      "name": "file_path",
+      "kind": "string",
+      "required": true,
+      "cli_position": 1
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "json",
+    "description": "JSON execution envelope containing npm's parsed audit report when available, raw streams otherwise, and npm exit metadata."
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [],
+    "node_packages": [],
+    "system_packages": [],
+    "commands": [
+      "npm"
+    ],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1"
+  }
+}

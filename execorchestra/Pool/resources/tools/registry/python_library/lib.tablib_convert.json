@@ -1,0 +1,158 @@
+{
+  "manifest_version": "v2",
+  "resource_id": "tool.lib.tablib_convert.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Preview the first 800 units of a Tablib export",
+    "description": "Reads one input file as UTF-8 text, lets Tablib load the dataset with format inference, exports it to a requested format defaulting to JSON, and returns only the first 800 characters or bytes under output.",
+    "domain_tags": [
+      "data",
+      "conversion"
+    ],
+    "core_primitives": [
+      "load_utf8_tabular_text",
+      "infer_tablib_input_format",
+      "export_and_truncate_dataset"
+    ],
+    "problem_space": "Short previews of Tablib dataset exports from UTF-8 text-based tabular inputs."
+  },
+  "constraint": {
+    "io_signature": "Inputs: UTF-8 text input path and Tablib export-format name; output: JSON with output containing only the first 800 exported characters or bytes.",
+    "accepted_inputs": [
+      "a UTF-8 text file whose format Tablib Dataset.load can infer",
+      "an export format identifier supported by the installed Tablib format registry"
+    ],
+    "output_shape": "Success is an object with status=\"success\", tool=\"lib.tablib_convert\", and output as the first at most 800 characters of a text export or, for binary exporters, the shared JSON emitter's string representation of the first at most 800 bytes. A caught UTF-8 read, input-format detection, dataset-load, or export exception produces an object with status=\"error\", tool=\"lib.tablib_convert\", and message as the exception string, then exits with code 1.",
+    "limitations": [
+      "does not write a converted file and returns only the first 800 units of the export despite the file artifact declaration",
+      "always opens input as UTF-8 text, so binary source formats such as XLSX cannot be loaded correctly by this wrapper",
+      "does not accept an explicit input format and relies on Tablib's automatic detection",
+      "binary export formats yield sliced bytes that the shared JSON emitter stringifies rather than returning a usable binary artifact",
+      "the wrapper defaults a missing target format to json even though the manifest declares it required",
+      "decoding, format detection, import, and export errors use the wrapper's error envelope"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "input_path",
+        "kind": "string",
+        "required": true,
+        "cli_position": 1
+      },
+      {
+        "name": "to",
+        "kind": "string",
+        "required": true,
+        "cli_position": 2
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "At-most-800-unit preview of a Tablib export; no converted file is written or returned.",
+      "json_schema": {
+        "description": "Native JSON representation only; no field or task-delivery guarantee.",
+        "type": [
+          "object",
+          "array",
+          "string",
+          "number",
+          "boolean",
+          "null"
+        ]
+      },
+      "native_json_contract_scope": "value_only"
+    }
+  },
+  "routing": {
+    "family": "tablib-export-preview",
+    "intent_tags": [
+      "preview a Tablib dataset export",
+      "convert UTF-8 tabular text and inspect the beginning"
+    ],
+    "negative_intents": [
+      "produce a complete converted dataset file",
+      "load a binary spreadsheet input",
+      "return usable binary XLSX or ODS export bytes"
+    ]
+  },
+  "execution": {
+    "runtime": "python_library",
+    "uri": "file://Pool/resources/tools/lib/lib.tablib_convert.py",
+    "execution_status": "active"
+  },
+  "utility": {
+    "latency_ms": 200.0,
+    "token_cost_factor": 0.02,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://tablib.readthedocs.io/",
+    "license": "MIT",
+    "backed_by": "tablib_convert",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:85c7cbd716e1bb0d77f7f3ac56c0107b5eb95fc61b3824bda1af62cb8d143241",
+    "local_implementation_uri": "file://Pool/resources/tools/lib/lib.tablib_convert.py",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/lib/_liblib.py": "sha256:dcd68e7904232764172e5f646ff97b854f68f7f916180ae32f838a0acf9ccc77"
+    }
+  },
+  "type_specific": {},
+  "type": {
+    "resource_type": "Tool"
+  },
+  "input_contract": [
+    {
+      "name": "input_path",
+      "kind": "string",
+      "required": true,
+      "cli_position": 1
+    },
+    {
+      "name": "to",
+      "kind": "string",
+      "required": true,
+      "cli_position": 2
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "json",
+    "description": "At-most-800-unit preview of a Tablib export; no converted file is written or returned.",
+    "json_schema": {
+      "description": "Native JSON representation only; no field or task-delivery guarantee.",
+      "type": [
+        "object",
+        "array",
+        "string",
+        "number",
+        "boolean",
+        "null"
+      ]
+    },
+    "native_json_contract_scope": "value_only"
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [
+      {
+        "name": "tablib",
+        "version": "==3.7.0",
+        "required": true
+      }
+    ],
+    "node_packages": [],
+    "system_packages": [],
+    "commands": [],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "python_compatibility": ">=3.11,<4"
+  }
+}

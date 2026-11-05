@@ -1,0 +1,157 @@
+{
+  "manifest_version": "v2",
+  "resource_id": "tool.lib.phonenumbers_parse.v1",
+  "resource_type": "Tool",
+  "status": "active",
+  "capability": {
+    "summary": "Parse one phone number and report validity, region, and E.164 form",
+    "description": "Parses a phone-number string with an optional region defaulting to US, then returns libphonenumber's validity verdict, inferred region code, and E.164 formatting.",
+    "domain_tags": [
+      "nlp",
+      "reference"
+    ],
+    "core_primitives": [
+      "parse_regional_phone_number",
+      "validate_phone_number",
+      "format_phone_number_e164"
+    ],
+    "problem_space": "Normalization and basic validity checking for a single phone-number string using libphonenumber metadata."
+  },
+  "constraint": {
+    "io_signature": "Inputs: phone-number string and optional region code defaulting to US; output: JSON with valid boolean, inferred country/region code, and E.164 string.",
+    "accepted_inputs": [
+      "an international phone number including a country calling code",
+      "a national-format phone number paired with a libphonenumber region code, or US when omitted"
+    ],
+    "output_shape": "Success is an object with status=\"success\", tool=\"lib.phonenumbers_parse\", valid as a boolean, country as the inferred region-code string or null, and e164 as the parsed number's E.164-formatted string. A caught number-parse, region, or formatting exception produces an object with status=\"error\", tool=\"lib.phonenumbers_parse\", and message as the exception string, then exits with code 1.",
+    "limitations": [
+      "defaults missing region context to US, which can misinterpret national-format numbers from other regions",
+      "reports is_valid_number only and does not expose possible-number status, number type, carrier, timezone, or geocoding",
+      "may return an E.164 representation even when valid is false if parsing itself succeeds",
+      "does not verify ownership, reachability, or whether a number is currently assigned",
+      "unparseable numbers and invalid region inputs use the wrapper's error envelope"
+    ]
+  },
+  "io": {
+    "input_contract": [
+      {
+        "name": "number",
+        "kind": "string",
+        "required": true,
+        "cli_position": 1
+      },
+      {
+        "name": "region",
+        "kind": "string",
+        "required": false,
+        "cli_position": 2
+      }
+    ],
+    "output_contract": {
+      "artifact_type": "json",
+      "description": "Phone-number validity, inferred region code, and E.164-formatted representation.",
+      "json_schema": {
+        "description": "Native JSON representation only; no field or task-delivery guarantee.",
+        "type": [
+          "object",
+          "array",
+          "string",
+          "number",
+          "boolean",
+          "null"
+        ]
+      },
+      "native_json_contract_scope": "value_only"
+    }
+  },
+  "routing": {
+    "family": "phone-number-parsing-and-normalization",
+    "intent_tags": [
+      "validate and normalize a phone number",
+      "format one phone number as E.164"
+    ],
+    "negative_intents": [
+      "verify that a phone number is active or owned",
+      "look up carrier timezone or geographic descriptions",
+      "extract every phone number from free-form text"
+    ]
+  },
+  "execution": {
+    "runtime": "python_library",
+    "uri": "file://Pool/resources/tools/lib/lib.phonenumbers_parse.py",
+    "execution_status": "active"
+  },
+  "utility": {
+    "latency_ms": 200.0,
+    "token_cost_factor": 0.02,
+    "expected_success_rate": 0.5,
+    "successes": 0,
+    "attempts": 0,
+    "evidence_status": "unobserved"
+  },
+  "provenance": {
+    "source": "https://github.com/daviddrysdale/python-phonenumbers",
+    "license": "Apache-2.0",
+    "backed_by": "phonenumbers_parse",
+    "recognized_public_tool": true,
+    "source_hash": "sha256:8cb8d5281dc85b62bee22a79c895b796bf4a7044269a10c7dc5357ddc843948b",
+    "local_implementation_uri": "file://Pool/resources/tools/lib/lib.phonenumbers_parse.py",
+    "supporting_source_hashes": {
+      "file://Pool/resources/tools/lib/_liblib.py": "sha256:dcd68e7904232764172e5f646ff97b854f68f7f916180ae32f838a0acf9ccc77"
+    }
+  },
+  "type_specific": {},
+  "type": {
+    "resource_type": "Tool"
+  },
+  "input_contract": [
+    {
+      "name": "number",
+      "kind": "string",
+      "required": true,
+      "cli_position": 1
+    },
+    {
+      "name": "region",
+      "kind": "string",
+      "required": false,
+      "cli_position": 2
+    }
+  ],
+  "output_contract": {
+    "artifact_type": "json",
+    "description": "Phone-number validity, inferred region code, and E.164-formatted representation.",
+    "json_schema": {
+      "description": "Native JSON representation only; no field or task-delivery guarantee.",
+      "type": [
+        "object",
+        "array",
+        "string",
+        "number",
+        "boolean",
+        "null"
+      ]
+    },
+    "native_json_contract_scope": "value_only"
+  },
+  "runtime_requirements": {
+    "runtime_profile": "sgar-runtime",
+    "python": "==3.11.9",
+    "python_packages": [
+      {
+        "name": "phonenumbers",
+        "version": "==8.13.52",
+        "required": true
+      }
+    ],
+    "node_packages": [],
+    "system_packages": [],
+    "commands": [],
+    "env_vars": [],
+    "network_required": false,
+    "install_policy": "never",
+    "max_auto_heals": 0,
+    "docker_image": "sgar-runtime:rc1",
+    "python_compatibility": ">=3.11,<4"
+  }
+}
