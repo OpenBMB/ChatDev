@@ -3,6 +3,7 @@
 import asyncio
 import base64
 import binascii
+import concurrent.futures
 from dataclasses import dataclass
 import inspect
 import logging
@@ -10,7 +11,7 @@ import mimetypes
 import os
 import threading
 from pathlib import Path
-from typing import Any, Dict, List, Mapping, Sequence
+from typing import Any, Coroutine, Dict, List, Mapping, Sequence
 
 from fastmcp import Client
 from fastmcp.client.client import CallToolResult as FastMcpCallToolResult
@@ -28,6 +29,26 @@ from utils.function_manager import FUNCTION_CALLING_DIR, FunctionManager
 logger = logging.getLogger(__name__)
 
 DEFAULT_MCP_HTTP_TIMEOUT = 10.0
+
+
+def _run_coroutine_sync(coro: Coroutine[Any, Any, Any]) -> Any:
+    """Run *coro* to completion from synchronous code.
+
+    Uses ``asyncio.run()`` when the current thread has no event loop. When a
+    loop is already running here (e.g. ``get_tool_specs()`` called from a
+    FastAPI handler, an async test, or an embedded async runtime), run the
+    coroutine on a fresh loop inside a worker thread so the caller's loop is
+    left untouched instead of crashing with
+    "RuntimeError: asyncio.run() cannot be called from a running event loop".
+    """
+    try:
+        asyncio.get_running_loop()
+    except RuntimeError:
+        return asyncio.run(coro)
+    with concurrent.futures.ThreadPoolExecutor(
+        max_workers=1, thread_name_prefix="mcp-sync-bridge"
+    ) as pool:
+        return pool.submit(asyncio.run, coro).result()
 
 
 @dataclass
@@ -195,7 +216,7 @@ class ToolManager:
         cache_key = f"remote:{config.cache_key()}"
         tools = self._mcp_tool_cache.get(cache_key)
         if tools is None:
-            tools = asyncio.run(
+            tools = _run_coroutine_sync(
                 self._fetch_mcp_tools_http(
                     config.server,
                     headers=config.headers,
@@ -224,7 +245,7 @@ class ToolManager:
         cache_key = f"stdio:{launch_key}"
         tools = self._mcp_tool_cache.get(cache_key)
         if tools is None:
-            tools = asyncio.run(self._fetch_mcp_tools_stdio(config, launch_key))
+            tools = _run_coroutine_sync(self._fetch_mcp_tools_stdio(config, launch_key))
             self._mcp_tool_cache[cache_key] = tools
 
         specs: List[ToolSpec] = []
