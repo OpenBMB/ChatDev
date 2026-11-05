@@ -1,10 +1,15 @@
 <div align="center">
-  <h1>ExecOrchestra</h1>
-  <p><strong>Heterogeneous Resource Routing and Orchestration</strong></p>
+  <p>
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="execorchestra/docs/assets/wordmark-dark.svg">
+      <img src="execorchestra/docs/assets/wordmark-light.svg" width="440" alt="ExecOrchestra">
+    </picture>
+  </p>
+  <h3>Heterogeneous Resource Routing and Orchestration</h3>
   <p>Coordinate tools, models, skills, and agents through executable plans.</p>
   <p>
-    <a href="#quick-start"><img src="execorchestra/docs/assets/nav-start-en.svg" height="28" alt="Quick start"></a>
-    <a href="execorchestra/docs/SERVICES.md"><img src="execorchestra/docs/assets/nav-services-en.svg" height="28" alt="Models and services"></a>
+    <a href="#quick-start"><img src="execorchestra/docs/assets/nav-start-en.svg" height="28" alt="Quick start"></a>&nbsp;
+    <a href="execorchestra/docs/SERVICES.md"><img src="execorchestra/docs/assets/nav-services-en.svg" height="28" alt="Models and services"></a>&nbsp;
     <a href="#documentation"><img src="execorchestra/docs/assets/nav-docs-en.svg" height="28" alt="Documentation"></a>
   </p>
   <p><strong>English</strong> · <a href="README-zh.md">简体中文</a></p>

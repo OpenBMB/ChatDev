@@ -1,10 +1,15 @@
 <div align="center">
-  <h1>ExecOrchestra</h1>
-  <p><strong>异构资源路由与编排系统</strong></p>
+  <p>
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="execorchestra/docs/assets/wordmark-dark.svg">
+      <img src="execorchestra/docs/assets/wordmark-light.svg" width="440" alt="ExecOrchestra">
+    </picture>
+  </p>
+  <h3>异构资源路由与编排系统</h3>
   <p>让工具、模型、技能和智能体按计划协作完成任务。</p>
   <p>
-    <a href="#quick-start"><img src="execorchestra/docs/assets/nav-start-zh.svg" height="28" alt="快速开始"></a>
-    <a href="execorchestra/docs/SERVICES.md"><img src="execorchestra/docs/assets/nav-services-zh.svg" height="28" alt="模型与服务"></a>
+    <a href="#quick-start"><img src="execorchestra/docs/assets/nav-start-zh.svg" height="28" alt="快速开始"></a>&nbsp;
+    <a href="execorchestra/docs/SERVICES.md"><img src="execorchestra/docs/assets/nav-services-zh.svg" height="28" alt="模型与服务"></a>&nbsp;
     <a href="#documentation"><img src="execorchestra/docs/assets/nav-docs-zh.svg" height="28" alt="项目文档"></a>
   </p>
   <p><a href="README.md">English</a> · <strong>简体中文</strong></p>
