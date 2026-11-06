@@ -1,0 +1,8 @@
+FROM mcr.microsoft.com/playwright/python:v1.64.1-noble
+
+RUN python -m pip install --no-cache-dir playwright==1.64.1 fastapi==0.162.0 uvicorn==0.54.0
+WORKDIR /app
+COPY scripts/research_browser.py .
+ENV PYTHONDONTWRITEBYTECODE=1
+USER pwuser
+CMD ["python", "-c", "import uvicorn; from research_browser import build_app; uvicorn.run(build_app('/tmp/snapshots'), host='0.0.0.0', port=8002, access_log=False)"]

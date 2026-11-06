@@ -122,9 +122,6 @@ In `sgar_mvp/config/embedding_release.json`, set `runtime.api_endpoint_url` to t
    - `LLM_BASE_URL` / `LLM_API_KEY`: Your OpenAI-compatible model gateway and its access key.
    - `SGAR_EMBEDDING_API_KEY`: The embedding endpoint key. For local deployment, choose a private nonempty value; the service and client load the same `.env`.
 
-   Web research additionally needs `SEARXNG_BASE_URL`, `SGAR_BROWSER_BASE_URL`, and `SGAR_BROWSER_TOKEN`. Leave unrelated optional keys blank.
-
-
 2. **Load configuration into the framework terminal**
 
    ```bash
@@ -187,15 +184,13 @@ bash scripts/run.sh \
 The terminal displays each stage, selected resources, intermediate outputs, and delivery status. The same readable trace is saved to `<new-run-directory>/progress.log`. Check `run_manifest.json` for completion status and `delivery_manifest.json` for the delivered file path (`delivery_locator`, relative to the run directory).
 
 <details>
-<summary>Optional: run the bundled minimal example</summary>
+<summary>Optional: run an example (XBench case 157)</summary>
 
 ```bash
-RUN_DIR="runs/quickstart-$(date -u +%Y%m%dT%H%M%SZ)"
-bash scripts/run.sh --query-file examples/task.txt \
-  --public-input-root examples --run-dir "$RUN_DIR"
+bash scripts/run_xbench_demo.sh
 ```
 
-This file-generation example computes `17 + 25` and delivers `answer.json` containing `{"sum": 42}`. The setup above covers all required first-run preparation; the separate example guide adds detailed output verification.
+This XBench DeepSearch-2510 task asks for the name of a coauthor of an XBench paper. The example shows how ExecOrchestra searches the web, checks the paper's author list, and delivers an answer with source links. [Example details](execorchestra/docs/XBENCH_DEMO.md)
 
 </details>
 
@@ -222,5 +217,32 @@ This file-generation example computes `17 + 25` and delivers `answer.json` conta
 | [Environment & services](execorchestra/docs/SETUP.md) · [Model configuration](execorchestra/docs/SERVICES.md) | Local settings, model gateways, embeddings and tool dependencies. |
 | [Benchmark evaluation](execorchestra/docs/BENCHMARKS.md) | GAIA and Terminal-Bench entry points and scoring. |
 | [Resource catalog](execorchestra/Pool/resources/) · [Framework source](execorchestra/sgar_mvp/src/) | Resource declarations, orchestration and execution logic. |
+| [Third-party notices](execorchestra/THIRD_PARTY.md)| All involved content from other sources in this project. |
 
-[Third-party notices](execorchestra/THIRD_PARTY.md)
+## 👥 Contributors
+
+<table>
+  <tr>
+    <td align="center"><a href="https://github.com/TL-Z"><img src="https://avatars.githubusercontent.com/u/180140482?s=128" width="64" height="64" alt="TL-Z"></a><br><sub><a href="https://github.com/TL-Z">TL-Z</a></sub></td>
+    <td align="center"><a href="https://github.com/WilsonWukz"><img src="https://avatars.githubusercontent.com/u/111402789?s=128" width="64" height="64" alt="WilsonWukz"></a><br><sub><a href="https://github.com/WilsonWukz">WilsonWukz</a></sub></td>
+    <td align="center"><a href="https://github.com/ffcosmos"><img src="https://avatars.githubusercontent.com/u/124543994?s=128" width="64" height="64" alt="ffcosmos"></a><br><sub><a href="https://github.com/ffcosmos">ffcosmos</a></sub></td>
+    <td align="center"><a href="https://github.com/Wuuu-uu"><img src="https://avatars.githubusercontent.com/u/131836892?s=128" width="64" height="64" alt="Wuuu-uu"></a><br><sub><a href="https://github.com/Wuuu-uu">Wuuu-uu</a></sub></td>
+    <td align="center"><a href="https://github.com/hendrick-wang"><img src="https://avatars.githubusercontent.com/u/226936813?s=128" width="64" height="64" alt="hendrick-wang"></a><br><sub><a href="https://github.com/hendrick-wang">hendrick-wang</a></sub></td>
+     <td align="center"><a href="https://github.com/huatl98"><img src="https://avatars.githubusercontent.com/u/208472723?s=128" width="64" height="64" alt="huatl98"></a><br><sub><a href="https://github.com/huatl98">huatl98</a></sub></td>
+     <td align="center"><a href="https://github.com/inwt2333"><img src="https://avatars.githubusercontent.com/u/66510496?s=128" width="64" height="64" alt="inwt2333"></a><br><sub><a href="https://github.com/inwt2333">inwt2333</a></sub></td>
+    <td align="center"><a href="https://github.com/LLLLLLsk0231"><img src="https://avatars.githubusercontent.com/u/265002950?s=128" width="64" height="64" alt="LLLLLLsk0231"></a><br><sub><a href="https://github.com/LLLLLLsk0231">LLLLLLsk0231</a></sub></td>
+  </tr>
+  <tr>
+    <td align="center"><a href="https://github.com/cuixitong"><img src="https://avatars.githubusercontent.com/u/231887978?s=128" width="64" height="64" alt="cuixitong"></a><br><sub><a href="https://github.com/cuixitong">cuixitong</a></sub></td>
+    <td align="center"><a href="https://github.com/qianc62"><img src="https://avatars.githubusercontent.com/u/48988402?s=128" width="64" height="64" alt="qianc62"></a><br><sub><a href="https://github.com/qianc62">qianc62</a></sub></td>
+  </tr>
+</table>
+
+## 🤝 Acknowledgments
+
+<a href="https://www.shlab.org.cn/">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="execorchestra/docs/assets/shanghai-ai-laboratory.webp">
+    <img src="execorchestra/docs/assets/shanghai-ai-laboratory.png" width="210" alt="Shanghai Artificial Intelligence Laboratory">
+  </picture>
+</a>

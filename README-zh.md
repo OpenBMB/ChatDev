@@ -124,8 +124,6 @@ python -m scripts.download_embedding --tokenizer-only
    - `LLM_BASE_URL` / `LLM_API_KEY`：OpenAI-compatible 模型网关地址及访问密钥。
    - `SGAR_EMBEDDING_API_KEY`：向量接口密钥；本地部署时自行设置非空的私有值，服务端和客户端读取同一份 `.env`。
 
-   网页研究任务还需填写 `SEARXNG_BASE_URL`、`SGAR_BROWSER_BASE_URL` 和 `SGAR_BROWSER_TOKEN`，不涉及的可选密钥留空。
-
 2. **在框架终端加载配置**
 
    ```bash
@@ -190,15 +188,13 @@ bash scripts/run.sh \
 终端逐步展示执行阶段、所选资源、中间产物和交付状态，同步保存在 `<new-run-directory>/progress.log`。`run_manifest.json` 记录完成状态，`delivery_manifest.json` 中的 `delivery_locator` 指向最终交付文件，路径相对于运行目录。
 
 <details>
-<summary>可选：运行内置的最小示例</summary>
+<summary>可选：运行示例（XBench 157）</summary>
 
 ```bash
-RUN_DIR="runs/quickstart-$(date -u +%Y%m%dT%H%M%SZ)"
-bash scripts/run.sh --query-file examples/task.txt \
-  --public-input-root examples --run-dir "$RUN_DIR"
+bash scripts/run_xbench_demo.sh
 ```
 
-该文件生成示例计算 `17 + 25`，交付内容为 `{"sum": 42}` 的 `answer.json`。上面的流程已包含首次运行所需的全部准备步骤；单独的示例指南用于进一步核验输出。
+这道 XBench DeepSearch-2510 中的题目要求查找一篇 XBench 论文的合著者。示例展示 ExecOrchestra 如何搜索网页、核对论文署名，并交付附有来源链接的答案。[示例详情](execorchestra/docs/XBENCH_DEMO.md)
 
 </details>
 
@@ -225,5 +221,32 @@ bash scripts/run.sh --query-file examples/task.txt \
 | [环境与服务](execorchestra/docs/SETUP.md) · [模型配置](execorchestra/docs/SERVICES.md) | 本地配置、模型网关、向量服务和工具依赖。 |
 | [基准评测](execorchestra/docs/BENCHMARKS.md) | GAIA、Terminal-Bench 的运行入口和评分流程。 |
 | [资源目录](execorchestra/Pool/resources/) · [框架源码](execorchestra/sgar_mvp/src/) | 资源声明、编排实现和执行逻辑。 |
+| [第三方声明](execorchestra/THIRD_PARTY.md)| 本项目内涉及到所有其他来源的内容。 |
 
-[第三方声明](execorchestra/THIRD_PARTY.md)
+## 👥 贡献者
+
+<table>
+  <tr>
+    <td align="center"><a href="https://github.com/TL-Z"><img src="https://avatars.githubusercontent.com/u/180140482?s=128" width="64" height="64" alt="TL-Z"></a><br><sub><a href="https://github.com/TL-Z">TL-Z</a></sub></td>
+    <td align="center"><a href="https://github.com/WilsonWukz"><img src="https://avatars.githubusercontent.com/u/111402789?s=128" width="64" height="64" alt="WilsonWukz"></a><br><sub><a href="https://github.com/WilsonWukz">WilsonWukz</a></sub></td>
+    <td align="center"><a href="https://github.com/ffcosmos"><img src="https://avatars.githubusercontent.com/u/124543994?s=128" width="64" height="64" alt="ffcosmos"></a><br><sub><a href="https://github.com/ffcosmos">ffcosmos</a></sub></td>
+    <td align="center"><a href="https://github.com/Wuuu-uu"><img src="https://avatars.githubusercontent.com/u/131836892?s=128" width="64" height="64" alt="Wuuu-uu"></a><br><sub><a href="https://github.com/Wuuu-uu">Wuuu-uu</a></sub></td>
+    <td align="center"><a href="https://github.com/hendrick-wang"><img src="https://avatars.githubusercontent.com/u/226936813?s=128" width="64" height="64" alt="hendrick-wang"></a><br><sub><a href="https://github.com/hendrick-wang">hendrick-wang</a></sub></td>
+     <td align="center"><a href="https://github.com/huatl98"><img src="https://avatars.githubusercontent.com/u/208472723?s=128" width="64" height="64" alt="huatl98"></a><br><sub><a href="https://github.com/huatl98">huatl98</a></sub></td>
+     <td align="center"><a href="https://github.com/inwt2333"><img src="https://avatars.githubusercontent.com/u/66510496?s=128" width="64" height="64" alt="inwt2333"></a><br><sub><a href="https://github.com/inwt2333">inwt2333</a></sub></td>
+    <td align="center"><a href="https://github.com/LLLLLLsk0231"><img src="https://avatars.githubusercontent.com/u/265002950?s=128" width="64" height="64" alt="LLLLLLsk0231"></a><br><sub><a href="https://github.com/LLLLLLsk0231">LLLLLLsk0231</a></sub></td>
+  </tr>
+  <tr>
+    <td align="center"><a href="https://github.com/cuixitong"><img src="https://avatars.githubusercontent.com/u/231887978?s=128" width="64" height="64" alt="cuixitong"></a><br><sub><a href="https://github.com/cuixitong">cuixitong</a></sub></td>
+    <td align="center"><a href="https://github.com/qianc62"><img src="https://avatars.githubusercontent.com/u/48988402?s=128" width="64" height="64" alt="qianc62"></a><br><sub><a href="https://github.com/qianc62">qianc62</a></sub></td>
+  </tr>
+</table>
+
+## 🤝 致谢
+
+<a href="https://www.shlab.org.cn/">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="execorchestra/docs/assets/shanghai-ai-laboratory.webp">
+    <img src="execorchestra/docs/assets/shanghai-ai-laboratory.png" width="210" alt="上海人工智能实验室">
+  </picture>
+</a>
