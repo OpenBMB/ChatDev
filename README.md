@@ -9,8 +9,8 @@
   <p>Coordinate tools, models, skills, and agents through executable plans.</p>
   <p>
     <a href="#quick-start"><img src="execorchestra/docs/assets/nav-start-en.svg" height="28" alt="Quick start"></a>&nbsp;
-    <a href="execorchestra/docs/SERVICES.md"><img src="execorchestra/docs/assets/nav-services-en.svg" height="28" alt="Models and services"></a>&nbsp;
-    <a href="#documentation"><img src="execorchestra/docs/assets/nav-docs-en.svg" height="28" alt="Documentation"></a>
+    <a href="#documentation"><img src="execorchestra/docs/assets/nav-docs-en.svg" height="28" alt="Documentation"></a>&nbsp;
+    <a href="https://huggingface.co/datasets/Some-thy/CoEvoke"><img src="execorchestra/docs/assets/nav-hugging-face.svg" height="28" alt="View CoEvoke on Hugging Face"></a>
   </p>
   <p><strong>English</strong> · <a href="README-zh.md">简体中文</a></p>
 </div>
@@ -206,6 +206,18 @@ This XBench DeepSearch-2510 task asks for the name of a coauthor of an XBench pa
 | `experiment_report.md` | Read the run report. Benchmark answer grading is a separate step. |
 
 </details>
+
+## 🤗 Related Dataset
+
+**CoEvoke** (https://huggingface.co/datasets/Some-thy/CoEvoke) captures multi-agent collaboration across software engineering, mathematical reasoning, natural-language logical reasoning, and logic-grid puzzles. Each episode records agent messages, tool interactions, and intermediate review decisions, providing trajectory examples for analyzing coordination and training agents to work together.
+
+| Source | Parent trajectories | Canonical tasks | Single-loop | Adjacent double-loop | Total episodes |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| SWE (`swe_oracle`) | 1,763 | 1,763 | 3,315 | 1,552 | 4,867 |
+| DeepMath (`deepmath`) | 923 | 831 | 1,656 | 733 | 2,389 |
+| ProofWriter (`proofwriter`) | 1,392 | 1,096 | 2,315 | 923 | 3,238 |
+| ZebraLogic (`zebra`) | 489 | 440 | 905 | 416 | 1,321 |
+| **Total** | **4,567** | **4,130** | **8,191** | **3,624** | **11,815** |
 
 <a id="documentation"></a>
 

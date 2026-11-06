@@ -9,8 +9,8 @@
   <p>让工具、模型、技能和智能体按计划协作完成任务。</p>
   <p>
     <a href="#quick-start"><img src="execorchestra/docs/assets/nav-start-zh.svg" height="28" alt="快速开始"></a>&nbsp;
-    <a href="execorchestra/docs/SERVICES.md"><img src="execorchestra/docs/assets/nav-services-zh.svg" height="28" alt="模型与服务"></a>&nbsp;
-    <a href="#documentation"><img src="execorchestra/docs/assets/nav-docs-zh.svg" height="28" alt="项目文档"></a>
+    <a href="#documentation"><img src="execorchestra/docs/assets/nav-docs-zh.svg" height="28" alt="项目文档"></a>&nbsp;
+    <a href="https://huggingface.co/datasets/Some-thy/CoEvoke"><img src="execorchestra/docs/assets/nav-hugging-face.svg" height="28" alt="在 Hugging Face 查看 CoEvoke"></a>
   </p>
   <p><a href="README.md">English</a> · <strong>简体中文</strong></p>
 </div>
@@ -210,6 +210,18 @@ bash scripts/run_xbench_demo.sh
 | `experiment_report.md` | 本次运行的报告。基准测试另有独立的答案评分环节。 |
 
 </details>
+
+## 🤗 相关数据集
+
+**CoEvoke** (https://huggingface.co/datasets/Some-thy/CoEvoke) 收录了软件工程、数学推理、自然语言逻辑推理和逻辑网格谜题中的多智能体协作片段。每条片段保留智能体间的消息、工具交互和中间评审结果，可用于分析协作过程，也可作为训练智能体协同完成任务的轨迹样本。
+
+| 来源 | 母轨迹 | 去重任务 | 单轮片段 | 相邻双轮片段 | 片段合计 |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| SWE (`swe_oracle`) | 1,763 | 1,763 | 3,315 | 1,552 | 4,867 |
+| DeepMath (`deepmath`) | 923 | 831 | 1,656 | 733 | 2,389 |
+| ProofWriter (`proofwriter`) | 1,392 | 1,096 | 2,315 | 923 | 3,238 |
+| ZebraLogic (`zebra`) | 489 | 440 | 905 | 416 | 1,321 |
+| **合计** | **4,567** | **4,130** | **8,191** | **3,624** | **11,815** |
 
 <a id="documentation"></a>
 
