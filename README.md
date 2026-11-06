@@ -60,8 +60,8 @@ A plan gives the model as much control as the subtask calls for:
 1. **Clone the repository**
 
    ```bash
-   git clone -b execorchestra --single-branch https://github.com/TL-Z/ExecOrchestra.git
-   cd ExecOrchestra
+   git clone -b execorchestra --single-branch https://github.com/OpenBMB/ChatDev.git
+   cd ChatDev
    cd execorchestra
    ```
 2. **Set the environment and install dependencies**
@@ -111,7 +111,7 @@ In `sgar_mvp/config/embedding_release.json`, set `runtime.api_endpoint_url` to t
 
 1. **Fill in API endpoints and keys**
 
-   Edit `ExecOrchestra/execorchestra/.env`. Replace the values below with your own; the file contains grouped comments for required and optional settings.
+   Edit `ChatDev/execorchestra/.env`. Replace the values below with your own; the file contains grouped comments for required and optional settings.
 
    ```dotenv
    LLM_BASE_URL="https://your-gateway.example/v1"
@@ -137,7 +137,7 @@ In `sgar_mvp/config/embedding_release.json`, set `runtime.api_endpoint_url` to t
 
 1. **(Optional) Start the local embedding service** 
 
-   For local deployment, open a **second terminal** in `ExecOrchestra/execorchestra`. On a dedicated GPU server, choose an available GPU and run:
+   For local deployment, open a **second terminal** in `ChatDev/execorchestra`. On a dedicated GPU server, choose an available GPU and run:
 
    ```bash
    conda activate execorchestra-embedding

@@ -1,6 +1,6 @@
 # Models and services
 
-Run these commands from the project directory (`ExecOrchestra/execorchestra`) after installing the host environment
+Run these commands from the project directory (`ChatDev/execorchestra`) after installing the host environment
 and running `python -m scripts.prepare_release init`. Keep all service credentials
 in `.env`, and export them with `set -a; source .env; set +a` in each shell.
 Use shell-compatible values; quote values containing spaces or shell characters.
@@ -65,7 +65,7 @@ python -m scripts.download_embedding --tokenizer-only
 
 ### Start the local service
 
-After configuration, open a separate terminal at the project directory (`ExecOrchestra/execorchestra`). Set a
+After configuration, open a separate terminal at the project directory (`ChatDev/execorchestra`). Set a
 private, nonempty `SGAR_EMBEDDING_API_KEY` in `.env` and use an NVIDIA GPU
 supporting BF16. On a dedicated GPU server, start the prepared service with:
 

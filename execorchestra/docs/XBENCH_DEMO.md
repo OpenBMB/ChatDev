@@ -1,7 +1,7 @@
 # XBench web research example
 
 XBench DeepSearch-2510 case 157 exercises search, page reading, and answer
-delivery. Run this command from `ExecOrchestra/execorchestra` once the framework
+delivery. Run this command from `ChatDev/execorchestra` once the framework
 environment, Docker runtime image, model gateway, and embedding service are
 ready. The command handles the resource preparation needed for this example.
 [Quick Start](../../README.md#quick-start)

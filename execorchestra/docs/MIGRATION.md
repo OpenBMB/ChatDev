@@ -1,7 +1,7 @@
 # Migration verification
 
 Use the `execorchestra` branch layout for a new server. Run project commands
-from `ExecOrchestra/execorchestra`; this document adds migration checks to the
+from `ChatDev/execorchestra`; this document adds migration checks to the
 [README installation path](../../README.md#quick-start).
 
 ## What this revision contains
@@ -25,8 +25,8 @@ workstation model relay and experimental search relay are not default dependenci
 Clone the branch and record its commit identity:
 
 ```bash
-git clone -b execorchestra --single-branch https://github.com/TL-Z/ExecOrchestra.git
-cd ExecOrchestra/execorchestra
+git clone -b execorchestra --single-branch https://github.com/OpenBMB/ChatDev.git
+cd ChatDev/execorchestra
 git status --short
 git rev-parse HEAD
 python3.11 scripts/verify_contents.py

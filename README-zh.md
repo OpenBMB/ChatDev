@@ -61,8 +61,8 @@
 1. **克隆项目仓库**
 
    ```bash
-   git clone -b execorchestra --single-branch https://github.com/TL-Z/ExecOrchestra.git
-   cd ExecOrchestra
+   git clone -b execorchestra --single-branch https://github.com/OpenBMB/ChatDev.git
+   cd ChatDev
    cd execorchestra
    ```
 
@@ -113,7 +113,7 @@ python -m scripts.download_embedding --tokenizer-only
 
 1. **填写 API 地址与密钥**
 
-   编辑 `ExecOrchestra/execorchestra/.env`，将以下值替换为自己的配置。文件内已按必填项和可选项分组添加注释。
+   编辑 `ChatDev/execorchestra/.env`，将以下值替换为自己的配置。文件内已按必填项和可选项分组添加注释。
 
    ```dotenv
    LLM_BASE_URL="https://your-gateway.example/v1"
@@ -139,7 +139,7 @@ python -m scripts.download_embedding --tokenizer-only
 
 1. **（可选）启动本地向量服务**
 
-   本地部署时，在 `ExecOrchestra/execorchestra` 中打开**第二个终端**。使用独立 GPU 服务器时，选择可用 GPU 并执行：
+   本地部署时，在 `ChatDev/execorchestra` 中打开**第二个终端**。使用独立 GPU 服务器时，选择可用 GPU 并执行：
 
    ```bash
    conda activate execorchestra-embedding

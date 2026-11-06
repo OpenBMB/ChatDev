@@ -11,7 +11,7 @@ a BF16-capable NVIDIA GPU. Model IDs and service contracts are described in
 
 ## 1. Create the framework environment
 
-With Conda installed, run from `ExecOrchestra/execorchestra`:
+With Conda installed, run from `ChatDev/execorchestra`:
 
 ```bash
 conda create -n execorchestra python=3.11 -y
