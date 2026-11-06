@@ -229,9 +229,9 @@ This XBench DeepSearch-2510 task asks for the name of a coauthor of an XBench pa
     <td align="center" width="112"><a href="https://github.com/Wuuu-uu"><img src="https://avatars.githubusercontent.com/u/131836892?s=128" width="72" height="72" alt="Wuuu-uu"></a><br><sub><a href="https://github.com/Wuuu-uu">Wuuu-uu</a></sub></td>
     <td align="center" width="112"><a href="https://github.com/hendrick-wang"><img src="https://avatars.githubusercontent.com/u/226936813?s=128" width="72" height="72" alt="hendrick-wang"></a><br><sub><a href="https://github.com/hendrick-wang">hendrick-wang</a></sub></td>
     <td align="center" width="112"><a href="https://github.com/huatl98"><img src="https://avatars.githubusercontent.com/u/208472723?s=128" width="72" height="72" alt="huatl98"></a><br><sub><a href="https://github.com/huatl98">huatl98</a></sub></td>
+    <td align="center" width="112"><a href="https://github.com/inwt2333"><img src="https://avatars.githubusercontent.com/u/66510496?s=128" width="72" height="72" alt="inwt2333"></a><br><sub><a href="https://github.com/inwt2333">inwt2333</a></sub></td>
   </tr>
   <tr>
-    <td align="center" width="112"><a href="https://github.com/inwt2333"><img src="https://avatars.githubusercontent.com/u/66510496?s=128" width="72" height="72" alt="inwt2333"></a><br><sub><a href="https://github.com/inwt2333">inwt2333</a></sub></td>
     <td align="center" width="112"><a href="https://github.com/LLLLLLsk0231"><img src="https://avatars.githubusercontent.com/u/265002950?s=128" width="72" height="72" alt="LLLLLLsk0231"></a><br><sub><a href="https://github.com/LLLLLLsk0231">LLLLLLsk0231</a></sub></td>
     <td align="center" width="112"><a href="https://github.com/cuixitong"><img src="https://avatars.githubusercontent.com/u/231887978?s=128" width="72" height="72" alt="cuixitong"></a><br><sub><a href="https://github.com/cuixitong">cuixitong</a></sub></td>
     <td align="center" width="112"><a href="https://github.com/qianc62"><img src="https://avatars.githubusercontent.com/u/48988402?s=128" width="72" height="72" alt="qianc62"></a><br><sub><a href="https://github.com/qianc62">qianc62</a></sub></td>
