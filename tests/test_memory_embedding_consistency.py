@@ -100,6 +100,57 @@ class TestSimpleMemoryRetrieveMixedDimensions:
         )
         assert results == []
 
+    def test_non_positive_top_k_returns_empty(self):
+        """SimpleMemory.retrieve returns empty list when top_k <= 0 without error."""
+        store = _make_store()
+        memory = SimpleMemory(store)
+        memory.embedding = _make_embedding(dim=768)
+        memory.contents = [_make_memory_item("a", 768)]
+
+        query = MemoryContentSnapshot(text="test query")
+        assert memory.retrieve("tester", query, top_k=0, similarity_threshold=-1.0) == []
+        assert memory.retrieve("tester", query, top_k=-1, similarity_threshold=-1.0) == []
+
+
+class TestFileMemoryRetrieveValidation:
+
+    def test_file_memory_non_positive_top_k_returns_empty(self):
+        """FileMemory.retrieve returns empty list when top_k <= 0 without error."""
+        from runtime.node.agent.memory.file_memory import FileMemory
+
+        file_cfg = MagicMock()
+        file_cfg.index_path = None
+        file_cfg.embedding = None
+        store = MagicMock()
+        store.name = "file_store"
+        store.as_config.return_value = file_cfg
+
+        mem = FileMemory(store)
+        mem.embedding = _make_embedding(dim=768)
+        mem.contents = [_make_memory_item("doc1", 768)]
+
+        query = MemoryContentSnapshot(text="search")
+        assert mem.retrieve("tester", query, top_k=0, similarity_threshold=-1.0) == []
+        assert mem.retrieve("tester", query, top_k=-1, similarity_threshold=-1.0) == []
+
+    def test_file_memory_missing_embedding_returns_empty(self):
+        """FileMemory.retrieve returns empty list safely when embedding is None."""
+        from runtime.node.agent.memory.file_memory import FileMemory
+
+        file_cfg = MagicMock()
+        file_cfg.index_path = None
+        file_cfg.embedding = None
+        store = MagicMock()
+        store.name = "file_store"
+        store.as_config.return_value = file_cfg
+
+        mem = FileMemory(store)
+        mem.embedding = None
+        mem.contents = [_make_memory_item("doc1", 768)]
+
+        query = MemoryContentSnapshot(text="search")
+        assert mem.retrieve("tester", query, top_k=5, similarity_threshold=-1.0) == []
+
 
 class TestOpenAIEmbeddingDynamicFallback:
 

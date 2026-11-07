@@ -97,7 +97,7 @@ class SimpleMemory(MemoryBase):
         top_k: int,
         similarity_threshold: float,
     ) -> List[MemoryItem]:
-        if self.count_memories() == 0 or not self.embedding:
+        if self.count_memories() == 0 or not self.embedding or top_k <= 0:
             return []
         
         # Build an optimized query for retrieval

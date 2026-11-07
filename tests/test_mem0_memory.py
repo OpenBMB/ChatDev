@@ -125,6 +125,14 @@ class TestMem0MemoryRetrieve:
         assert results == []
         client.search.assert_not_called()
 
+    def test_retrieve_non_positive_top_k_returns_empty(self):
+        """top_k <= 0 returns empty list without calling API."""
+        memory, client = _make_mem0_memory(agent_id="a1")
+        query = MemoryContentSnapshot(text="test")
+        assert memory.retrieve("writer", query, top_k=0, similarity_threshold=-1.0) == []
+        assert memory.retrieve("writer", query, top_k=-1, similarity_threshold=-1.0) == []
+        client.search.assert_not_called()
+
     def test_retrieve_api_error_returns_empty(self):
         """API errors are caught and return empty list."""
         memory, client = _make_mem0_memory(agent_id="a1")
