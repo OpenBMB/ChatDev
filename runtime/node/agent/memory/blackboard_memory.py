@@ -65,10 +65,10 @@ class BlackboardMemory(MemoryBase):
         top_k: int,
         similarity_threshold: float,
     ) -> List[MemoryItem]:
-        if not self.contents:
+        if not self.contents or top_k <= 0:
             return []
 
-        if top_k <= 0 or top_k >= len(self.contents):
+        if top_k >= len(self.contents):
             return list(self.contents)
 
         return list(self.contents[-top_k:])
