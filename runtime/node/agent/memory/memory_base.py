@@ -3,6 +3,7 @@
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional
 import time
+import uuid
 
 from entity.configs import MemoryAttachmentConfig, MemoryStoreConfig
 from entity.configs.node.memory import FileMemoryConfig, SimpleMemoryConfig
@@ -22,8 +23,12 @@ class MemoryContentSnapshot:
         return {"text": self.text, "blocks": self.blocks}
 
     @classmethod
-    def from_dict(cls, payload: Dict[str, Any] | None) -> "MemoryContentSnapshot | None":
+    def from_dict(cls, payload: Dict[str, Any] | str | None) -> "MemoryContentSnapshot | None":
         if not payload:
+            return None
+        if isinstance(payload, str):
+            return cls(text=payload, blocks=[])
+        if not isinstance(payload, dict):
             return None
         text = payload.get("text", "")
         blocks = payload.get("blocks") or []
@@ -34,11 +39,12 @@ class MemoryContentSnapshot:
         if message is None:
             return None
         if isinstance(message, Message):
+            role_value = message.role.value if hasattr(message.role, "value") else str(message.role)
             return cls(
                 text=message.text_content(),
                 blocks=[
                     {
-                        "role": message.role.value,
+                        "role": role_value,
                         "block": block.to_dict(include_data=True),
                     }
                     for block in message.blocks()
@@ -55,14 +61,20 @@ class MemoryContentSnapshot:
         parts: List[str] = []
         blocks: List[Dict[str, Any]] = []
         for message in messages:
-            parts.append(f"({message.role.value}) {message.text_content()}")
-            for block in message.blocks():
-                blocks.append(
-                    {
-                        "role": message.role.value,
-                        "block": block.to_dict(include_data=True),
-                    }
-                )
+            if isinstance(message, Message):
+                role_value = message.role.value if hasattr(message.role, "value") else str(message.role)
+                parts.append(f"({role_value}) {message.text_content()}")
+                for block in message.blocks():
+                    blocks.append(
+                        {
+                            "role": role_value,
+                            "block": block.to_dict(include_data=True),
+                        }
+                    )
+            elif isinstance(message, str):
+                parts.append(message)
+            else:
+                parts.append(str(message))
         return cls(text="\n\n".join(parts), blocks=blocks)
 
     def to_message_blocks(self) -> List[MessageBlock]:
@@ -84,7 +96,7 @@ class MemoryContentSnapshot:
             if not isinstance(block_data, dict):
                 continue
             attachment = block_data.get("attachment")
-            if attachment:
+            if isinstance(attachment, dict):
                 attachments.append(
                     {
                         "role": payload.get("role"),
@@ -144,8 +156,9 @@ class MemoryItem:
 
     @classmethod
     def from_dict(cls, payload: Dict[str, Any]) -> "MemoryItem":
+        item_id = payload.get("id") or f"mem_{uuid.uuid4().hex}"
         return cls(
-            id=payload["id"],
+            id=item_id,
             content_summary=payload.get("content_summary", ""),
             metadata=payload.get("metadata") or {},
             embedding=payload.get("embedding"),
@@ -256,8 +269,9 @@ class MemoryManager:
             if not memory:
                 continue
             items = memory.retrieve(agent_role, query, attachment.top_k, attachment.similarity_threshold)
+            query_text = query.text if (query and hasattr(query, "text") and query.text) else ""
             for item in items:
-                combined_score = self._score_memory(item, query.text)
+                combined_score = self._score_memory(item, query_text)
                 results.append((attachment.name, item, combined_score))
 
         if not results:
@@ -290,15 +304,16 @@ class MemoryManager:
     def _score_memory(self, memory_item: MemoryItem, query: str) -> float:
         current_time = time.time()
         age_hours = (current_time - (memory_item.timestamp or current_time)) / 3600
-        time_decay = max(0.1, 1.0 - age_hours / (24 * 30))
-        length = len(memory_item.content_summary)
+        time_decay = max(0.1, 1.0 - max(0.0, age_hours) / (24 * 30))
+        summary = memory_item.content_summary or ""
+        length = len(summary)
         if length < 20:
             length_factor = 0.5
         elif length > 200:
             length_factor = 0.8
         else:
             length_factor = 1.0
-        query_words = set(query.lower().split())
-        content_words = set(memory_item.content_summary.lower().split())
+        query_words = set((query or "").lower().split())
+        content_words = set(summary.lower().split())
         relevance = len(query_words & content_words) / len(query_words) if query_words else 0.0
         return 0.7 * time_decay * length_factor + 0.3 * relevance
