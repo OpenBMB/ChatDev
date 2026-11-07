@@ -113,7 +113,7 @@ class FileMemory(MemoryBase):
         Returns:
             List of MemoryItem with file chunks
         """
-        if self.count_memories() == 0:
+        if self.count_memories() == 0 or not self.embedding or top_k <= 0:
             return []
 
         # Generate query embedding

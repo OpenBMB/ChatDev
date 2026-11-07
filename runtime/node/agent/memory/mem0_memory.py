@@ -108,7 +108,7 @@ class Mem0Memory(MemoryBase):
         Uses the filters dict to scope by user_id, agent_id, or both
         (via OR filter). The SDK returns {"memories": [...]}.
         """
-        if not query.text.strip():
+        if top_k <= 0 or not query.text.strip():
             return []
 
         try:
