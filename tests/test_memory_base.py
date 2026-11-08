@@ -8,7 +8,6 @@ from runtime.node.agent.memory.memory_base import (
     MemoryContentSnapshot,
     MemoryItem,
     MemoryManager,
-    MemoryRetrievalResult,
 )
 
 
@@ -135,8 +134,10 @@ class TestMemoryItem:
 class DummyMemory:
     def __init__(self, items):
         self.items = items
+        self.retrieve_calls = 0
 
     def retrieve(self, agent_role, query, top_k, similarity_threshold):
+        self.retrieve_calls += 1
         return self.items[:top_k]
 
 
@@ -150,22 +151,19 @@ class DummyAttachmentConfig:
 
 
 class TestMemoryManager:
-    def test_retrieve_with_none_query(self):
+    def test_retrieve_with_none_query_skips_memory_stores(self):
         item = MemoryItem(id="m1", content_summary="Item 1", metadata={})
         dummy_store = DummyMemory([item])
         attachment = DummyAttachmentConfig(name="main_store")
         manager = MemoryManager(attachments=[attachment], stores={"main_store": dummy_store})
 
-        # Calling retrieve with query=None should safely score and format without raising AttributeError
         result = manager.retrieve(
             agent_role="assistant",
             query=None,
             current_stage=AgentExecFlowStage.GEN_STAGE,
         )
-        assert result is not None
-        assert isinstance(result, MemoryRetrievalResult)
-        assert len(result.items) == 1
-        assert "Item 1" in result.formatted_text
+        assert result is None
+        assert dummy_store.retrieve_calls == 0
 
     def test_score_memory_with_future_timestamp(self):
         manager = MemoryManager(attachments=[], stores={})

@@ -256,9 +256,12 @@ class MemoryManager:
     def retrieve(
         self,
         agent_role: str,
-        query: MemoryContentSnapshot,
+        query: MemoryContentSnapshot | None,
         current_stage: AgentExecFlowStage,
     ) -> MemoryRetrievalResult | None:
+        if query is None:
+            return None
+
         results: List[tuple[str, MemoryItem, float]] = []
         for attachment in self.attachments:
             if attachment.retrieve_stage and current_stage not in attachment.retrieve_stage:
