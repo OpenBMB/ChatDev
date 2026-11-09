@@ -61,7 +61,8 @@ class FunctionManager:
                     continue
                     
                 module = importlib.util.module_from_spec(spec)
-                spec.loader.exec_module(module)
+                # Tool reloads must see edits even when timestamp/size-based bytecode is still valid.
+                exec(compile(file.read_bytes(), str(file), "exec"), module.__dict__)
 
                 current_file = file.resolve()
                 # Get all functions defined in the module
