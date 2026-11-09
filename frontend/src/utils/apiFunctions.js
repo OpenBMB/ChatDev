@@ -1,6 +1,32 @@
 
 const apiUrl = (path) => path
 
+// Install trusted Python code using a process-local session token. Fetch a fresh
+// token for each upload so backend restarts do not require a page refresh.
+export async function uploadLocalTool(filename, content, overwrite = false) {
+  const session = await fetch(apiUrl('/api/tools/local/session'), {
+    headers: { 'X-ChatDev-Local': '1' },
+    cache: 'no-store',
+  })
+  if (!session.ok) {
+    throw new Error(`Local tool session failed: ${session.status}`)
+  }
+  const { token } = await session.json()
+  const response = await fetch(apiUrl('/api/tools/local'), {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-ChatDev-Tool-Token': token,
+    },
+    body: JSON.stringify({ filename, content, overwrite }),
+  })
+  const data = await response.json()
+  if (!response.ok) {
+    throw new Error(data.detail || `Tool upload failed: ${response.status}`)
+  }
+  return data
+}
+
 const addYamlSuffix = (filename) => {
   const trimmed = (filename || '').trim()
   if (!trimmed) {

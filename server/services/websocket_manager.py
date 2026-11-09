@@ -178,9 +178,8 @@ class WebSocketManager:
         which spins up a *new* event loop, causing ``RuntimeError: … attached to a
         different loop`` or silent delivery failures.
 
-        The fix: always schedule the coroutine on the loop that owns the sockets
-        via ``asyncio.run_coroutine_threadsafe`` and wait for the result with a
-        short timeout so the caller knows if delivery failed.
+        Worker threads submit to the owner loop and wait with a short timeout.
+        Calls from the owner loop schedule a task without blocking that loop.
         """
         loop = self._owner_loop
         if loop is None or loop.is_closed():
@@ -188,6 +187,14 @@ class WebSocketManager:
                 "Cannot send sync message to %s: owner event loop unavailable",
                 session_id,
             )
+            return
+
+        try:
+            current_loop = asyncio.get_running_loop()
+        except RuntimeError:
+            current_loop = None
+        if current_loop is loop:
+            loop.create_task(self.send_message(session_id, message))
             return
 
         future = asyncio.run_coroutine_threadsafe(
