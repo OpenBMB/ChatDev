@@ -246,6 +246,13 @@ class Message:
     keep: bool = False
     preserve_role: bool = False
 
+    def __post_init__(self) -> None:
+        if isinstance(self.role, str) and not isinstance(self.role, MessageRole):
+            try:
+                self.role = MessageRole(self.role.lower())
+            except (ValueError, AttributeError):
+                pass
+
     def with_content(self, content: MessageContent) -> "Message":
         """Return a shallow copy with updated content."""
         return Message(
@@ -320,8 +327,9 @@ class Message:
 
     def to_dict(self, include_data: bool = True) -> Dict[str, Any]:
         """Return a JSON-serializable representation."""
+        role_value = self.role.value if hasattr(self.role, "value") else str(self.role)
         payload = {
-            "role": self.role.value,
+            "role": role_value,
         }
         if isinstance(self.content, list):
             payload["content"] = [

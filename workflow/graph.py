@@ -621,7 +621,7 @@ class GraphExecutor:
                 else:
                     for idx, msg in enumerate(output_messages):
                         output_text += f"===== OUTPUT {idx} =====\n\n" + msg.text_content() + "\n\n"
-                output_role = unified_output.role.value
+                output_role = unified_output.role.value if hasattr(unified_output.role, "value") else str(unified_output.role)
                 output_source = unified_output.metadata.get("source")
             else:
                 output_text = ""

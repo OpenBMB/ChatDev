@@ -18,8 +18,9 @@ class ModelResponse:
 
     def to_dict(self) -> dict:
         """Return a simple dict representation for compatibility."""
+        role_value = self.message.role.value if hasattr(self.message.role, "value") else str(self.message.role)
         payload = {
-            "role": self.message.role.value,
+            "role": role_value,
         }
         if isinstance(self.message.content, list):
             payload["content"] = [

@@ -306,7 +306,7 @@ class OpenAIProvider(ModelProvider):
 
     def _serialize_message_for_chat(self, message: Message) -> Dict[str, Any]:
         """Convert internal Message to standard Chat Completions schema."""
-        role_value = message.role.value
+        role_value = message.role.value if hasattr(message.role, "value") else str(message.role)
         blocks = message.blocks()
         if not blocks or message.role == MessageRole.TOOL:
             content = message.text_content()
@@ -439,7 +439,7 @@ class OpenAIProvider(ModelProvider):
 
     def _serialize_message_for_responses(self, message: Message) -> Dict[str, Any]:
         """Convert internal Message to Responses input schema."""
-        role_value = message.role.value
+        role_value = message.role.value if hasattr(message.role, "value") else str(message.role)
         content_blocks = self._serialize_content_blocks(message)
         payload: Dict[str, Any] = {
             "role": role_value,

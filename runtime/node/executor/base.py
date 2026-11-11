@@ -113,8 +113,9 @@ class NodeExecutor(ABC):
         parts: list[str] = []
         for message in inputs:
             source = message.metadata.get("source", "UNKNOWN")
+            role_val = message.role.value if hasattr(message.role, "value") else str(message.role)
             parts.append(
-                f"=== INPUT FROM {source} ({message.role.value}) ===\n\n{message.text_content()}"
+                f"=== INPUT FROM {source} ({role_val}) ===\n\n{message.text_content()}"
             )
         return "\n\n".join(parts)
 
