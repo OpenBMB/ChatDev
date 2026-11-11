@@ -74,7 +74,7 @@ def load_subgraph_config(file_path: str, *, parent_source: str | None = None) ->
 
     payload = _SUBGRAPH_CACHE[resolved_path]
     graph_dict = deepcopy(payload["graph"])
-    vars_dict = dict(payload["vars"])
+    vars_dict = deepcopy(payload["vars"])
     return graph_dict, vars_dict, str(resolved_path)
 
 
