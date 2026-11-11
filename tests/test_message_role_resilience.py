@@ -1,8 +1,9 @@
 """Unit tests for Message role coercion and string-role resilience across executors and providers."""
 
 
-from entity.messages import Message, MessageRole
+from entity.messages import Message, MessageRole, deserialize_messages, serialize_messages
 from runtime.edge.conditions.base import EdgeConditionManager
+from runtime.node.agent.memory.memory_base import MemoryContentSnapshot
 from runtime.node.agent.providers.openai_provider import OpenAIProvider
 from runtime.node.agent.providers.response import ModelResponse
 from runtime.node.executor.base import NodeExecutor
@@ -53,12 +54,26 @@ class TestMessageToDictResilience:
         payload = msg.to_dict()
         assert payload["role"] == "user"
         assert payload["content"] == "test"
+        restored = Message.from_dict(payload)
+        assert restored.role == MessageRole.USER
+        assert restored.content == "test"
 
-    def test_to_dict_with_string_role(self):
+    def test_to_dict_and_from_dict_with_string_role(self):
         msg = Message(role="custom_agent", content="action")
         payload = msg.to_dict()
         assert payload["role"] == "custom_agent"
         assert payload["content"] == "action"
+
+        # Symmetry: from_dict and serialize/deserialize preserve custom roles
+        restored = Message.from_dict(payload)
+        assert restored.role == "custom_agent"
+        assert restored.content == "action"
+
+        serialized = serialize_messages([msg])
+        deserialized = deserialize_messages(serialized)
+        assert len(deserialized) == 1
+        assert deserialized[0].role == "custom_agent"
+        assert deserialized[0].content == "action"
 
 
 class TestModelResponseToDictResilience:
@@ -105,9 +120,11 @@ class TestOpenAIProviderSerializationResilience:
         assert chat_payload_enum["role"] == "user"
         assert chat_payload_enum["content"] == "hello"
 
+        # Custom roles map to user with role name preserved in name field
         msg_custom = Message(role="critic", content="check")
         chat_payload_custom = provider._serialize_message_for_chat(msg_custom)
-        assert chat_payload_custom["role"] == "critic"
+        assert chat_payload_custom["role"] == "user"
+        assert chat_payload_custom["name"] == "critic"
         assert chat_payload_custom["content"] == "check"
 
     def test_serialize_message_for_responses(self):
@@ -118,6 +135,24 @@ class TestOpenAIProviderSerializationResilience:
         resp_payload_enum = provider._serialize_message_for_responses(msg_enum)
         assert resp_payload_enum["role"] == "user"
 
+        # Custom roles map to user with role name preserved in name field
         msg_custom = Message(role="critic", content="check")
         resp_payload_custom = provider._serialize_message_for_responses(msg_custom)
-        assert resp_payload_custom["role"] == "critic"
+        assert resp_payload_custom["role"] == "user"
+        assert resp_payload_custom["name"] == "critic"
+
+
+class TestMemorySnapshotResilience:
+    def test_from_message_with_string_role(self):
+        msg = Message(role="evaluator", content="evaluation text")
+        snapshot = MemoryContentSnapshot.from_message(msg)
+        assert snapshot is not None
+        assert snapshot.text == "evaluation text"
+
+    def test_from_messages_with_string_role(self):
+        msg1 = Message(role=MessageRole.USER, content="user prompt")
+        msg2 = Message(role="reviewer", content="review text")
+        snapshot = MemoryContentSnapshot.from_messages([msg1, msg2])
+        assert snapshot is not None
+        assert "(user) user prompt" in snapshot.text
+        assert "(reviewer) review text" in snapshot.text

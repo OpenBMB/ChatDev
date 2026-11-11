@@ -356,7 +356,10 @@ class Message:
         role_value = data.get("role")
         if not role_value:
             raise ValueError("message dict missing role")
-        role = MessageRole(role_value)
+        try:
+            role = MessageRole(role_value.lower() if isinstance(role_value, str) else role_value)
+        except (ValueError, AttributeError):
+            role = role_value
         content = data.get("content")
         if isinstance(content, list):
             converted: List[MessageBlock] = []
