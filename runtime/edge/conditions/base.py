@@ -232,5 +232,6 @@ class EdgeConditionManager(Generic[TConfig], ABC):
 
     def _describe_payload(self, payload: Any) -> str:
         if isinstance(payload, Message):
-            return f"message:{payload.role.value}"
+            role_val = payload.role.value if hasattr(payload.role, "value") else str(payload.role)
+            return f"message:{role_val}"
         return type(payload).__name__

@@ -34,11 +34,12 @@ class MemoryContentSnapshot:
         if message is None:
             return None
         if isinstance(message, Message):
+            role_value = message.role.value if hasattr(message.role, "value") else str(message.role)
             return cls(
                 text=message.text_content(),
                 blocks=[
                     {
-                        "role": message.role.value,
+                        "role": role_value,
                         "block": block.to_dict(include_data=True),
                     }
                     for block in message.blocks()
@@ -55,14 +56,20 @@ class MemoryContentSnapshot:
         parts: List[str] = []
         blocks: List[Dict[str, Any]] = []
         for message in messages:
-            parts.append(f"({message.role.value}) {message.text_content()}")
-            for block in message.blocks():
-                blocks.append(
-                    {
-                        "role": message.role.value,
-                        "block": block.to_dict(include_data=True),
-                    }
-                )
+            if isinstance(message, Message):
+                role_value = message.role.value if hasattr(message.role, "value") else str(message.role)
+                parts.append(f"({role_value}) {message.text_content()}")
+                for block in message.blocks():
+                    blocks.append(
+                        {
+                            "role": role_value,
+                            "block": block.to_dict(include_data=True),
+                        }
+                    )
+            elif isinstance(message, str):
+                parts.append(message)
+            else:
+                parts.append(str(message))
         return cls(text="\n\n".join(parts), blocks=blocks)
 
     def to_message_blocks(self) -> List[MessageBlock]:

@@ -306,7 +306,13 @@ class OpenAIProvider(ModelProvider):
 
     def _serialize_message_for_chat(self, message: Message) -> Dict[str, Any]:
         """Convert internal Message to standard Chat Completions schema."""
-        role_value = message.role.value
+        role_value = message.role.value if hasattr(message.role, "value") else str(message.role)
+        fallback_name = message.name
+        if role_value not in ("system", "user", "assistant", "tool", "developer"):
+            if not fallback_name:
+                fallback_name = role_value
+            role_value = "user"
+
         blocks = message.blocks()
         if not blocks or message.role == MessageRole.TOOL:
             content = message.text_content()
@@ -317,8 +323,8 @@ class OpenAIProvider(ModelProvider):
             "role": role_value,
             "content": content,
         }
-        if message.name:
-            payload["name"] = message.name
+        if fallback_name:
+            payload["name"] = fallback_name
         if message.tool_call_id:
             payload["tool_call_id"] = message.tool_call_id
         if message.tool_calls:
@@ -439,14 +445,20 @@ class OpenAIProvider(ModelProvider):
 
     def _serialize_message_for_responses(self, message: Message) -> Dict[str, Any]:
         """Convert internal Message to Responses input schema."""
-        role_value = message.role.value
+        role_value = message.role.value if hasattr(message.role, "value") else str(message.role)
+        fallback_name = message.name
+        if role_value not in ("system", "user", "assistant", "developer"):
+            if not fallback_name:
+                fallback_name = role_value
+            role_value = "user"
+
         content_blocks = self._serialize_content_blocks(message)
         payload: Dict[str, Any] = {
             "role": role_value,
             "content": content_blocks,
         }
-        if message.name:
-            payload["name"] = message.name
+        if fallback_name:
+            payload["name"] = fallback_name
         if message.tool_call_id:
             payload["tool_call_id"] = message.tool_call_id
         return payload
