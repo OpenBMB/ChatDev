@@ -208,6 +208,8 @@ class PythonNodeExecutor(NodeExecutor):
         content_lines = ["==CODE EXECUTION FAILED==", error_text]
         if exit_code is not None:
             content_lines.append(f"exit_code={exit_code}")
+        if stdout:
+            content_lines.append(f"stdout:\n{stdout}")
         if stderr:
             content_lines.append(f"stderr:\n{stderr}")
 

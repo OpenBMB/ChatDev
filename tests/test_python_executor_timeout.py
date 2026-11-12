@@ -59,10 +59,8 @@ def test_python_executor_timeout_preserves_stdout_and_stderr(
     assert msg.role == MessageRole.ASSISTANT
     assert "==CODE EXECUTION FAILED==" in msg.content
     assert "Script did not finish within 1s" in msg.content
+    assert "stdout:\npartial stdout line\n" in msg.content
     assert "stderr:\npartial stderr diagnostic\n" in msg.content
-    assert (
-        "partial stdout line" not in msg.content
-    )  # stdout should not leak into stderr content section
 
     assert msg.metadata["stderr"] == "partial stderr diagnostic\n"
     assert msg.metadata["stdout"] == "partial stdout line\n"
