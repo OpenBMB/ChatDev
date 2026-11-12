@@ -77,6 +77,7 @@ class PythonNodeExecutor(NodeExecutor):
             error_text=error_text,
             exit_code=result.exit_code,
             stderr=result.stderr,
+            stdout=result.stdout,
             script_path=script_path,
         )]
 
@@ -144,10 +145,23 @@ class PythonNodeExecutor(NodeExecutor):
                 timeout=config.timeout_seconds,
             )
         except subprocess.TimeoutExpired as exc:
+            stdout_raw = (
+                exc.stdout if exc.stdout is not None else getattr(exc, "output", None)
+            )
+            stdout = (
+                stdout_raw.decode(config.encoding, errors="replace")
+                if stdout_raw
+                else ""
+            )
+            stderr = (
+                exc.stderr.decode(config.encoding, errors="replace")
+                if exc.stderr
+                else ""
+            )
             return _ExecutionResult(
                 success=False,
-                stdout="",
-                stderr=exc.stdout.decode(config.encoding, errors="replace") if exc.stdout else "",
+                stdout=stdout,
+                stderr=stderr,
                 exit_code=None,
                 error=f"Script did not finish within {config.timeout_seconds}s",
             )
@@ -176,6 +190,7 @@ class PythonNodeExecutor(NodeExecutor):
         error_text: str,
         exit_code: int | None = None,
         stderr: str | None = None,
+        stdout: str | None = None,
         script_path: Path | None = None,
     ) -> Message:
         metadata = {
@@ -187,10 +202,14 @@ class PythonNodeExecutor(NodeExecutor):
             metadata["exit_code"] = exit_code
         if stderr:
             metadata["stderr"] = stderr
+        if stdout:
+            metadata["stdout"] = stdout
 
         content_lines = ["==CODE EXECUTION FAILED==", error_text]
         if exit_code is not None:
             content_lines.append(f"exit_code={exit_code}")
+        if stdout:
+            content_lines.append(f"stdout:\n{stdout}")
         if stderr:
             content_lines.append(f"stderr:\n{stderr}")
 
