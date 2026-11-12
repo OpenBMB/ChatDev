@@ -170,11 +170,8 @@ class CycleManager:
             if _predecessor_id in cycle_nodes:
                 return False
             for _edge_link in _predecessor.iter_outgoing_edges():
-                if _edge_link.target.id == node_id:
-                    if _edge_link.trigger:
-                        return True
-                    else:
-                        return False
+                if _edge_link.target.id == node_id and _edge_link.trigger:
+                    return True
             return False
 
         for node_id in cycle_nodes:
