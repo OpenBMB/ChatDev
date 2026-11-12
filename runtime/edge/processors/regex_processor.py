@@ -57,10 +57,13 @@ class RegexEdgePayloadProcessor(EdgePayloadProcessor[RegexEdgeProcessorConfig]):
         values: List[str] = []
         for match in matches:
             group = self.config.group
-            if group is None:
-                value = match.group(0)
-            else:
-                value = match.group(group)
+            try:
+                if group is None:
+                    value = match.group(0)
+                else:
+                    value = match.group(group)
+            except IndexError:
+                continue
             if value is None:
                 continue
             if self.config.template:
