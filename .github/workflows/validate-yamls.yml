@@ -23,6 +23,12 @@ jobs:
   validate:
     name: Validate YAML Configuration Files
     runs-on: ubuntu-latest
+    # Dummy values so ${VAR} placeholders resolve; validation never calls a model.
+    env:
+      BASE_URL: http://ci.invalid/v1
+      API_KEY: ci-dummy
+      MODEL_NAME: ci-dummy
+      MEM0_API_KEY: ci-dummy
     
     steps:
       - name: Checkout repository

@@ -1,5 +1,7 @@
 """Utilities for loading, validating design_0.4.0 workflows."""
 
+import argparse
+import sys
 from pathlib import Path
 from typing import Any, Dict, Optional
 
@@ -119,3 +121,20 @@ def check_config(yaml_content: Any) -> str:
         return str(e)
 
     return ""
+
+
+def main(argv: list[str] | None = None) -> int:
+    """CLI ``python -m check.check --path <yaml>``: 0 if ``load_config`` accepts the workflow, else 1."""
+    parser = argparse.ArgumentParser(description="Validate a workflow design file with load_config.")
+    parser.add_argument("--path", type=Path, required=True, help="Path to the workflow YAML.")
+    args = parser.parse_args(argv)
+    try:
+        load_config(args.path)  # prints "Workflow OK." on success
+    except (DesignError, ConfigError) as exc:
+        print(exc)
+        return 1
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
