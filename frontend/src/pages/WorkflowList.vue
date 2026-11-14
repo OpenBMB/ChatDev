@@ -16,6 +16,10 @@
         />
       </div>
 
+      <button class="btn generate-btn" @click="showGenerateModal = true" :title="$t('workflow_generate.button_title')">
+        {{ $t('workflow_generate.button') }}
+      </button>
+
       <button class="btn create-btn" @click="openFormGenerator" :title="$t('workflow_list.create')">
         <span>{{ $t('workflow_list.create') }}</span>
         <span class="plus-icon">+</span>
@@ -74,6 +78,13 @@
         @submit="handleFormGeneratorSubmit"
       />
     </Teleport>
+    <Teleport to="body">
+      <GenerateWorkflowModal
+        v-if="showGenerateModal"
+        @close="showGenerateModal = false"
+        @created="handleGenerated"
+      />
+    </Teleport>
   </div>
 </template>
 
@@ -83,6 +94,7 @@ import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { fetchWorkflowsWithDesc } from '../utils/apiFunctions.js'
 import FormGenerator from '../components/FormGenerator.vue'
+import GenerateWorkflowModal from '../components/GenerateWorkflowModal.vue'
 
 const router = useRouter()
 const { t } = useI18n()
@@ -102,6 +114,7 @@ const loading = ref(false)
 const error = ref(null)
 
 const showFormGenerator = ref(false)
+const showGenerateModal = ref(false)
 const searchQuery = ref('')
 
 const loadWorkflows = async () => {
@@ -193,6 +206,12 @@ const handleFormGeneratorSubmit = async (payload) => {
   }
 
   const fileName = graphId.endsWith('.yaml') ? graphId : `${graphId}.yaml`
+  goToWorkflowView(fileName)
+}
+
+const handleGenerated = async (fileName) => {
+  showGenerateModal.value = false
+  await loadWorkflows()
   goToWorkflowView(fileName)
 }
 </script>
@@ -349,6 +368,40 @@ const handleFormGeneratorSubmit = async (payload) => {
   font-size: 16px;
   font-weight: 700;
   line-height: 1;
+}
+
+/* Secondary action next to Create: same shape, outlined instead of gradient */
+.generate-btn {
+  margin-left: auto;
+  min-height: 40px;
+  padding: 10px 14px;
+  flex-shrink: 0;
+  white-space: nowrap;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 15px;
+  border: 1px solid rgba(160, 196, 255, 0.5);
+  background: rgba(255, 255, 255, 0.05);
+  color: #f2f2f2;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+/* Two buttons share the narrow header now; the search box shrinks instead */
+.create-btn {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.generate-btn:hover {
+  background: rgba(160, 196, 255, 0.12);
+  border-color: #a0c4ff;
+}
+
+.generate-btn:focus-visible,
+.create-btn:focus-visible {
+  outline: 2px solid #a0c4ff;
+  outline-offset: 2px;
 }
 
 /* File List Styles */

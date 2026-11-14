@@ -63,10 +63,10 @@ export async function postYaml(filename, content) {
           success: true,
           message: 'YAML file saved successfully!'
         }
-      } else if (data.detail) {
+      } else if (data.detail || data.error?.message) {
         return {
           success: false,
-          detail: data.detail
+          detail: data.detail || data.error.message
         }
       } else {
         return {
@@ -79,7 +79,8 @@ export async function postYaml(filename, content) {
       console.error('Error saving YAML file:', errorData)
       return {
         success: false,
-        message: `Error saving YAML file: ${errorData.message || response.statusText}`
+        status: response.status,
+        message: `Error saving YAML file: ${errorData.error?.message || errorData.detail || errorData.message || response.statusText}`
       }
     }
   } catch (error) {
@@ -89,6 +90,23 @@ export async function postYaml(filename, content) {
       message: 'API error'
     }
   }
+}
+
+// Run yaml_instance/workflow_designer.yaml on a plain-language description and return its YAML output.
+// `signal` aborts the request; the server-side run still finishes.
+export async function generateWorkflowYaml(description, signal) {
+  const response = await fetch(apiUrl('/api/workflow/run'), {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ yaml_file: 'workflow_designer.yaml', task_prompt: description }),
+    signal
+  })
+  const data = await response.json().catch(() => ({}))
+  if (!response.ok) {
+    const detail = data.error?.message || data.detail?.message || data.detail || data.message || response.statusText
+    throw new Error(typeof detail === 'string' ? detail : JSON.stringify(detail))
+  }
+  return data.final_message || ''
 }
 
 export async function updateYaml(filename, content) {

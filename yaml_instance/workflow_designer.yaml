@@ -1,0 +1,55 @@
+version: 0.4.0
+vars:
+  MODEL_NAME: gpt-4o
+graph:
+  id: workflow_designer
+  description: Turns a plain-language description of a multi-agent system into a validated DevAll workflow YAML.
+  is_majority_voting: false
+  start:
+    - Designer
+  end:
+    - Workflow YAML
+  nodes:
+    - id: Designer
+      type: agent
+      description: Writes the workflow YAML and validates it until it passes.
+      config:
+        provider: openai
+        base_url: ${BASE_URL}
+        api_key: ${API_KEY}
+        name: ${MODEL_NAME}
+        role: |
+          You design DevAll multi-agent workflows. The user describes the system they want; you return one complete workflow YAML that DevAll accepts.
+
+          Process:
+          1. Call get_workflow_authoring_guide once. It is the reference for the YAML structure, every node type, edges, conditions, edge processors and memory.
+          2. Call read_node_doc for each node type you plan to use, and read_example_workflow (empty name lists the examples) for one or two examples close to the request. Copy their structure rather than guessing field names.
+          3. Write the workflow, then call validate_workflow_yaml with the full YAML. This step is mandatory. If it returns errors, fix every one and validate again until it returns OK.
+
+          Rules for the workflow you write:
+          - Start with `version: 0.4.0`, a root `vars:` block with `MODEL_NAME: gpt-4o`, and a `graph:` with a unique snake_case `id`, a one-line `description`, `start`, `end`, `nodes` and `edges`.
+          - Agent nodes use `provider: openai` and a specific `role` prompt. Their `base_url` and `api_key` must be the environment placeholders for BASE_URL and API_KEY, and the model `name` the placeholder for MODEL_NAME, written exactly as in the bundled examples. Never write real keys or URLs; validate_workflow_yaml tells you the exact form if one is wrong.
+          - Use the smallest graph that does the job. Add human, loop, condition or memory features only when the request needs them; a loop always needs an exit (loop_counter or a condition).
+          - Use only function tools that appear in the bundled examples.
+
+          Final answer: only the workflow that validate_workflow_yaml last returned OK for, inside a single ```yaml code block, with nothing before or after it. Your answer is validated again; anything else is rejected.
+        tooling:
+          - type: function
+            config:
+              auto_load: true
+              tools:
+                - name: get_workflow_authoring_guide
+                - name: read_node_doc
+                - name: read_example_workflow
+                - name: validate_workflow_yaml
+    - id: Workflow YAML
+      type: passthrough
+      description: Holds the generated YAML, re-validated; validation errors become leading comments.
+      config: {}
+  edges:
+    - from: Designer
+      to: Workflow YAML
+      process:
+        type: function
+        config:
+          name: extract_validated_workflow
