@@ -1,5 +1,6 @@
 """Edge payload processor configuration dataclasses."""
 
+import re
 from dataclasses import dataclass, field, fields, replace
 from typing import Any, Dict, Mapping, Type, TypeVar, cast
 
@@ -190,6 +191,36 @@ class RegexEdgeProcessorConfig(EdgeProcessorTypeConfig):
             default_value=default_value,
             path=path,
         )
+
+    def validate(self) -> None:
+        try:
+            flags = 0
+            if not self.case_sensitive:
+                flags |= re.IGNORECASE
+            if self.multiline:
+                flags |= re.MULTILINE
+            if self.dotall:
+                flags |= re.DOTALL
+            compiled = re.compile(self.pattern, flags)
+        except re.error as exc:
+            raise ConfigError(
+                f"Invalid regular expression pattern: {exc}",
+                extend_path(self.path, "pattern"),
+            ) from exc
+
+        if self.group is not None:
+            if isinstance(self.group, int):
+                if self.group < 0 or self.group > compiled.groups:
+                    raise ConfigError(
+                        f"Capture group index {self.group} is out of bounds (pattern has {compiled.groups} capture groups)",
+                        extend_path(self.path, "group"),
+                    )
+            elif isinstance(self.group, str):
+                if self.group not in compiled.groupindex:
+                    raise ConfigError(
+                        f"Capture group name '{self.group}' not found in pattern (valid named groups: {list(compiled.groupindex.keys())})",
+                        extend_path(self.path, "group"),
+                    )
 
     def display_label(self) -> str:
         return f"regex({self.pattern})"
