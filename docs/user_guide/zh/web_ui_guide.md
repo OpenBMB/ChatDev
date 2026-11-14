@@ -20,6 +20,9 @@
 - 浏览 `yaml_instance/` 目录下的工作流
 - 预览 YAML 配置内容
 - 选择工作流进入执行或编辑
+- **生成 (Generate)**：用自然语言描述工作流，由智能体编写 YAML（见下文）
+
+**生成工作流**：“生成”会使用服务器的 `BASE_URL`、`API_KEY` 以及工作流自身的 `MODEL_NAME`（默认 `gpt-4o`）运行 `yaml_instance/workflow_designer.yaml`。设计器通过函数工具阅读编写指南、节点文档和内置示例，并用与保存接口相同的校验检查生成的 YAML。它的校验还要求每个智能体节点使用 `${BASE_URL}`、`${API_KEY}` 和 `${MODEL_NAME}` 占位符，并拒绝任何疑似 API 密钥的内容。结果显示在可编辑的预览中；**保存并打开**会将其写入 `yaml_instance/<名称>.yaml` 并在工作台中打开。若 YAML 仍未通过校验，错误会以注释形式列在顶部；结构错误同样会阻止保存。也可以在命令行运行：`echo "你的描述" | uv run python run.py --path yaml_instance/workflow_designer.yaml --name designer`。
 
 ### 2.3 启动页 (Launch View)
 

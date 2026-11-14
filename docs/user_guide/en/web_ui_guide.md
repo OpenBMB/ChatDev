@@ -20,6 +20,9 @@ View and manage all available workflow YAML files.
 - Browse workflows in `yaml_instance/` directory
 - Preview YAML configuration content
 - Select workflow to execute or edit
+- **Generate**: describe a workflow in plain language and an agent writes the YAML (see below)
+
+**Generating a workflow**: Generate runs `yaml_instance/workflow_designer.yaml` with the server's `BASE_URL`, `API_KEY` and its `MODEL_NAME` (default `gpt-4o`). The designer reads the authoring guide, node docs and bundled examples through function tools, then validates its YAML with the same check the save route uses. Its validator also requires every agent node to use the `${BASE_URL}`, `${API_KEY}` and `${MODEL_NAME}` placeholders and rejects anything that looks like an API key. The result opens in an editable preview; **Save and open** writes it to `yaml_instance/<name>.yaml` and opens it in the workbench. If the YAML still fails validation, the errors are listed as comments at the top; schema errors also block saving. The same workflow runs headless: `echo "your description" | uv run python run.py --path yaml_instance/workflow_designer.yaml --name designer`.
 
 ### 2.3 Launch View
 
