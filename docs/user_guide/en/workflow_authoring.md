@@ -93,6 +93,7 @@ Further reading: `docs/user_guide/en/field_specs.md` (field catalog), `docs/user
 | `literal` | Emits a fixed text payload whenever triggered and discards inputs.                                                                                                           | `content`, `role` (`user`/`assistant`) | [literal.md](nodes/literal.md) |
 | `loop_counter` | Guard node that limits loop iterations before releasing downstream edges.                                                                                                    | `max_iterations`, `reset_on_emit`, `message` | [loop_counter.md](nodes/loop_counter.md) |
 | `loop_timer` | Guard node that limits loop duration before releasing downstream edges.                                                                                                      | `max_duration`, `duration_unit`, `reset_on_emit`, `message`, `passthrough` | [loop_timer.md](nodes/loop_timer.md) |
+| `template` | Formats the latest input message with a sandboxed Jinja2 template; no LLM call.                                                                                              | `template` | [template.md](nodes/template.md) |
 
 Fetch the full schema via `POST /api/config/schema` or inspect the dataclasses inside `entity/configs/`.
 
@@ -137,6 +138,7 @@ The Gemini Provider supports multi-modal input (images/video/audio are automatic
 - Structure mirrors `condition` (`type + config`). Built-ins include:
   - `regex_extract`: Python regex with optional `group`, `mode` (`replace_content`, `metadata`, `data_block`), `multiple`, and `on_no_match` (`pass`, `default`, `drop`).
   - `function`: calls helpers under `functions/edge_processor/`. The handler signature is `def foo(payload: Message, **kwargs) -> Message | None`. Note: The Processor interface is now standardized, and `kwargs` includes `context: ExecutionContext`, allowing access to the current execution context.
+  - `template`: renders a Jinja2 `template` over the payload (`{{ input }}`, plus `fromjson`/`tojson` filters). See [template.md](nodes/template.md#template-edge-processor).
 - Example:
   ```yaml
   - from: reviewer

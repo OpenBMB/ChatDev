@@ -89,7 +89,6 @@ class TemplateNodeExecutor(NodeExecutor):
         # Build template context
         template_context = {
             "input": input_text,
-            "environment": getattr(self.context, "environment", {}),
         }
 
         # Render template

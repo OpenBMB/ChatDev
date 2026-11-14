@@ -76,7 +76,6 @@ class TemplateEdgePayloadProcessor(EdgePayloadProcessor[TemplateEdgeProcessorCon
         # Build template context
         template_context = {
             "input": input_text,
-            "environment": getattr(context, "environment", {}),
             "extracted": input_text,  # Default to input if no prior extraction
         }
 

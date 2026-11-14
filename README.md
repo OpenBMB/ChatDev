@@ -278,6 +278,7 @@ The project is organized into a modular structure:
 Relevant reference documentation:
 *   **Getting Started**: [Start Guide](./docs/user_guide/en/index.md)
 *   **Core Modules**: [Workflow Authoring](./docs/user_guide/en/workflow_authoring.md), [Memory](./docs/user_guide/en/modules/memory.md), and [Tooling](./docs/user_guide/en/modules/tooling/index.md)
+*   **Node Types**: [Node Type Cheatsheet](./docs/user_guide/en/workflow_authoring.md#3-node-type-cheatsheet), e.g. the [Template node](./docs/user_guide/en/nodes/template.md) for Jinja2 formatting without an LLM call
 
 ---
 

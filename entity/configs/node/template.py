@@ -37,6 +37,6 @@ class TemplateNodeConfig(BaseConfig):
             display_name="Jinja2 Template",
             type_hint="text",
             required=True,
-            description="Jinja2 template string for formatting output. Available context: {{ input }} (latest message content), {{ environment }} (execution environment variables).",
+            description="Jinja2 template string for formatting output. Available context: {{ input }} (latest message content).",
         ),
     }

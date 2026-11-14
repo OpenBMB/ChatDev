@@ -79,8 +79,6 @@ graph:
       config:
         template: |
           {{ input | upper | center(38) }}  
-
-          Status at: {{ environment.run_id | default('N/A') }}
       description: Creates formatted status banner
       context_window: 0
       log_output: true
