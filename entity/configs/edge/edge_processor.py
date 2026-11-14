@@ -44,8 +44,6 @@ class EdgeProcessorTypeConfig(BaseConfig):
         return _serialize_config(self)
 
 
-
-
 _NO_MATCH_DESCRIPTIONS = {
     "pass": "Leave the payload untouched when no match is found.",
     "default": "Apply default_value (or empty string) if nothing matches.",
@@ -117,7 +115,6 @@ class RegexEdgeProcessorConfig(EdgeProcessorTypeConfig):
             description="Whether to collect all matches instead of only the first.",
             advance=True,
         ),
-
         "template": ConfigFieldSpec(
             name="template",
             display_name="Output Template",
@@ -152,7 +149,9 @@ class RegexEdgeProcessorConfig(EdgeProcessorTypeConfig):
     }
 
     @classmethod
-    def from_dict(cls, data: Mapping[str, Any], *, path: str) -> "RegexEdgeProcessorConfig":
+    def from_dict(
+        cls, data: Mapping[str, Any], *, path: str
+    ) -> "RegexEdgeProcessorConfig":
         mapping = require_mapping(data, path)
         pattern = require_str(mapping, "pattern", path, allow_empty=False)
         group_value = mapping.get("group")
@@ -166,14 +165,19 @@ class RegexEdgeProcessorConfig(EdgeProcessorTypeConfig):
                 else:
                     group_normalized = group_value
             else:
-                raise ConfigError("group must be str or int", extend_path(path, "group"))
+                raise ConfigError(
+                    "group must be str or int", extend_path(path, "group")
+                )
         multiple = optional_bool(mapping, "multiple", path, default=False)
         case_sensitive = optional_bool(mapping, "case_sensitive", path, default=True)
         multiline = optional_bool(mapping, "multiline", path, default=False)
         dotall = optional_bool(mapping, "dotall", path, default=False)
         on_no_match = optional_str(mapping, "on_no_match", path) or "pass"
         if on_no_match not in {"pass", "default", "drop"}:
-            raise ConfigError("on_no_match must be pass, default or drop", extend_path(path, "on_no_match"))
+            raise ConfigError(
+                "on_no_match must be pass, default or drop",
+                extend_path(path, "on_no_match"),
+            )
 
         template = optional_str(mapping, "template", path)
         default_value = optional_str(mapping, "default_value", path)
@@ -230,18 +234,26 @@ class FunctionEdgeProcessorConfig(EdgeProcessorTypeConfig):
         descriptions = {}
         for name in names:
             meta = metadata.get(name)
-            descriptions[name] = (meta.description if meta else None) or "No description provided."
+            descriptions[name] = (
+                meta.description if meta else None
+            ) or "No description provided."
 
         specs["name"] = replace(
             name_spec,
             enum=names or None,
-            enum_options=enum_options_from_values(names, descriptions, preserve_label_case=True) if names else None,
+            enum_options=enum_options_from_values(
+                names, descriptions, preserve_label_case=True
+            )
+            if names
+            else None,
             description=description,
         )
         return specs
 
     @classmethod
-    def from_dict(cls, data: Mapping[str, Any], *, path: str) -> "FunctionEdgeProcessorConfig":
+    def from_dict(
+        cls, data: Mapping[str, Any], *, path: str
+    ) -> "FunctionEdgeProcessorConfig":
         mapping = require_mapping(data, path)
         name = require_str(mapping, "name", path, allow_empty=False)
         return cls(name=name, path=path)
@@ -251,6 +263,37 @@ class FunctionEdgeProcessorConfig(EdgeProcessorTypeConfig):
 
     def to_external_value(self) -> Any:
         return {"name": self.name}
+
+
+@dataclass
+class TemplateEdgeProcessorConfig(EdgeProcessorTypeConfig):
+    """Configuration for Jinja2 template-based payload processors."""
+
+    template: str = ""
+
+    FIELD_SPECS = {
+        "template": ConfigFieldSpec(
+            name="template",
+            display_name="Template String",
+            type_hint="str",
+            required=True,
+            description="Jinja2 template string for transforming edge payloads.",
+        )
+    }
+
+    @classmethod
+    def from_dict(
+        cls, data: Mapping[str, Any], *, path: str
+    ) -> "TemplateEdgeProcessorConfig":
+        mapping = require_mapping(data, path)
+        template = require_str(mapping, "template", path, allow_empty=False)
+        return cls(template=template, path=path)
+
+    def display_label(self) -> str:
+        return "template"
+
+    def to_external_value(self) -> Any:
+        return {"template": self.template}
 
 
 TProcessorConfig = TypeVar("TProcessorConfig", bound=EdgeProcessorTypeConfig)
@@ -288,12 +331,18 @@ class EdgeProcessorConfig(BaseConfig):
         processor_type = require_str(mapping, "type", path)
         config_payload = mapping.get("config")
         if config_payload is None:
-            raise ConfigError("processor config is required", extend_path(path, "config"))
+            raise ConfigError(
+                "processor config is required", extend_path(path, "config")
+            )
         try:
             schema = get_edge_processor_schema(processor_type)
         except SchemaLookupError as exc:
-            raise ConfigError(f"unknown processor type '{processor_type}'", extend_path(path, "type")) from exc
-        processor_config = schema.config_cls.from_dict(config_payload, path=extend_path(path, "config"))
+            raise ConfigError(
+                f"unknown processor type '{processor_type}'", extend_path(path, "type")
+            ) from exc
+        processor_config = schema.config_cls.from_dict(
+            config_payload, path=extend_path(path, "config")
+        )
         return cls(type=processor_type, config=processor_config, path=path)
 
     @classmethod
@@ -310,11 +359,15 @@ class EdgeProcessorConfig(BaseConfig):
         if type_spec:
             registrations = iter_edge_processor_schemas()
             names = list(registrations.keys())
-            descriptions = {name: schema.summary for name, schema in registrations.items()}
+            descriptions = {
+                name: schema.summary for name, schema in registrations.items()
+            }
             specs["type"] = replace(
                 type_spec,
                 enum=names,
-                enum_options=enum_options_from_values(names, descriptions, preserve_label_case=True),
+                enum_options=enum_options_from_values(
+                    names, descriptions, preserve_label_case=True
+                ),
             )
         return specs
 
@@ -327,7 +380,9 @@ class EdgeProcessorConfig(BaseConfig):
             "config": self.config.to_external_value(),
         }
 
-    def as_config(self, expected_type: Type[TProcessorConfig]) -> TProcessorConfig | None:
+    def as_config(
+        self, expected_type: Type[TProcessorConfig]
+    ) -> TProcessorConfig | None:
         config = self.config
         if isinstance(config, expected_type):
             return cast(TProcessorConfig, config)
