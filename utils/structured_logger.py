@@ -162,7 +162,7 @@ class StructuredLogger:
 
 # Global logger instances
 _server_logger = None
-_workflow_logger = None
+_workflow_loggers: dict[str, StructuredLogger] = {}
 
 
 def get_server_logger() -> StructuredLogger:
@@ -177,11 +177,17 @@ def get_server_logger() -> StructuredLogger:
 
 
 def get_workflow_logger(name: str = 'workflow') -> StructuredLogger:
-    """Get a workflow logger instance."""
-    global _workflow_logger
-    if _workflow_logger is None:
+    """Get the workflow logger dedicated to ``name``.
+
+    Loggers are cached per name: every workflow run owns a ``workflow_id`` and
+    needs its own logger and ``logs/<name>.log`` file. A single global instance
+    made every later run log under the first run's name and file.
+    """
+    logger = _workflow_loggers.get(name)
+    if logger is None:
         log_file = os.getenv('WORKFLOW_LOG_FILE', f'logs/{name}.log')
         log_level_str = os.getenv('LOG_LEVEL', 'INFO').upper()
         log_level = LogLevel[log_level_str]
-        _workflow_logger = StructuredLogger(name, log_level, log_file)
-    return _workflow_logger
+        logger = StructuredLogger(name, log_level, log_file)
+        _workflow_loggers[name] = logger
+    return logger
