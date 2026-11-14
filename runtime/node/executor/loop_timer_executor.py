@@ -103,7 +103,9 @@ class LoopTimerNodeExecutor(NodeExecutor):
             )
             return []
 
-        if config.reset_on_emit and not timer_state["emitted"]:
+        if config.reset_on_emit:
+            # Restart the countdown for every release so the node keeps emitting
+            # at most once per ``max_duration`` window.
             timer_state["start_time"] = current_time
 
         timer_state["emitted"] = True
