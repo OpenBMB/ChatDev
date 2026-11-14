@@ -5,8 +5,11 @@ import shutil
 import signal
 import subprocess
 import time
-from pathlib import Path
+from pathlib import Path, PureWindowsPath
 from functions.function_calling.file import FileToolContext
+from utils.code_execution import require_unsafe_code_execution
+from utils.exceptions import SecurityError, ValidationError
+from utils.workspace_paths import validate_path_component
 
 def uppercase_payload(data: str, _context: Dict[str, Any]) -> str:
     """Return an uppercase copy of the payload text."""
@@ -23,6 +26,7 @@ def code_save_and_run(data: str, _context: Dict[str, Any]) -> str:
     ```
     Repeated for multiple files.
     """
+    require_unsafe_code_execution("code_save_and_run")
     # Parse matches first
     pattern = re.compile(r"(?P<filename>[^\n]+)\n```(?:python)?\n(?P<code>.*?)\n```", re.DOTALL)
     matches = list(pattern.finditer(data))
@@ -32,6 +36,37 @@ def code_save_and_run(data: str, _context: Dict[str, Any]) -> str:
 
     ctx = FileToolContext(_context)
     workspace_root = ctx.workspace_root
+
+    # Validate every target before deleting any existing workspace files.
+    files_to_save = []
+    attachments_root = workspace_root / "attachments"
+    if attachments_root.is_symlink():
+        raise SecurityError("The attachments directory must not be a symbolic link")
+    attachments_root = attachments_root.resolve()
+    for match in matches:
+        filename = match.group("filename").strip()
+        relative_path = Path(filename.replace("\\", "/"))
+        if not filename or relative_path.is_absolute() or PureWindowsPath(filename).drive:
+            raise SecurityError("Code filenames must be relative paths inside the workspace")
+        try:
+            for part in relative_path.parts:
+                validate_path_component(part, field="filename")
+            file_path = ctx.resolve_under_workspace(relative_path)
+            # resolve() preserves case aliases on some filesystems; compare directory identities too.
+            is_attachment_alias = attachments_root.exists() and any(
+                ancestor.exists() and ancestor.samefile(attachments_root)
+                for ancestor in (file_path, *file_path.parents)
+            )
+        except (ValueError, OSError, RuntimeError, ValidationError) as exc:
+            raise SecurityError(f"Invalid code filename: {filename}") from exc
+        if (
+            file_path == workspace_root
+            or relative_path.parts[0] == "attachments"
+            or file_path.is_relative_to(attachments_root)
+            or is_attachment_alias
+        ):
+            raise SecurityError("Code files must not replace the workspace or modify attachments")
+        files_to_save.append((filename, file_path, match.group("code")))
     
     # 1. Clear workspace
     if workspace_root.exists():
@@ -39,18 +74,18 @@ def code_save_and_run(data: str, _context: Dict[str, Any]) -> str:
             if item.name == "attachments":
                  continue
             
-            if item.is_dir():
+            if item.is_symlink():
+                item.unlink()
+            elif attachments_root.exists() and item.samefile(attachments_root):
+                continue
+            elif item.is_dir():
                 shutil.rmtree(item)
             else:
                 item.unlink()
     
     saved_code_blocks = []
-    for match in matches:
-        filename = match.group("filename").strip()
-        code = match.group("code")
-        
+    for filename, file_path, code in files_to_save:
         # Save to file
-        file_path = workspace_root / filename
         # Ensure parent dirs exist if filename contains path separators
         file_path.parent.mkdir(parents=True, exist_ok=True)
         file_path.write_text(code, encoding="utf-8")
@@ -67,28 +102,19 @@ def code_save_and_run(data: str, _context: Dict[str, Any]) -> str:
         env = os.environ.copy()
         env["PYTHONUNBUFFERED"] = "1"
 
-        if os.name == 'nt':
-            command = f"cd {workspace_root} && dir && uv run main.py"
-            process = subprocess.Popen(
-                command,
-                shell=True,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                creationflags=subprocess.CREATE_NEW_PROCESS_GROUP,
-                env=env
-            )
-        else:
-             
-            command = "uv run main.py"
-            process = subprocess.Popen(
-                command,
-                shell=True,
-                cwd=str(workspace_root),
-                preexec_fn=os.setsid,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                env=env
-            )
+        process_options = (
+            {"creationflags": subprocess.CREATE_NEW_PROCESS_GROUP}
+            if os.name == "nt"
+            else {"start_new_session": True}
+        )
+        process = subprocess.Popen(
+            ["uv", "run", "main.py"],
+            cwd=str(workspace_root),
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            env=env,
+            **process_options,
+        )
             
         try:
             stdout, stderr = process.communicate(timeout=3)

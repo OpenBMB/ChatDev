@@ -12,6 +12,8 @@ from fastapi import UploadFile
 
 from entity.messages import MessageBlock, MessageBlockType
 from utils.attachments import AttachmentStore, AttachmentRecord
+from utils.exceptions import SecurityError, ValidationError
+from utils.workspace_paths import resolve_workspace_path, session_directory_name
 
 
 class AttachmentService:
@@ -60,6 +62,7 @@ class AttachmentService:
         return candidate
 
     async def save_upload_file(self, session_id: str, upload: UploadFile) -> AttachmentRecord:
+        self._session_attachments_path(session_id, create=False)
         filename = self._safe_upload_filename(upload.filename)
         temp_dir = Path(tempfile.mkdtemp(prefix="mac_upload_"))
         temp_path = temp_dir / filename
@@ -122,9 +125,52 @@ class AttachmentService:
         store = self.get_attachment_store(session_id)
         return store.export_manifest()
 
+    def resolve_uploaded_paths(self, session_id: str, attachments: List[str]) -> List[str]:
+        """Accept only registered uploads belonging to the specified session."""
+        root = self._session_attachments_path(session_id, create=False)
+        if root is None:
+            raise SecurityError("Attachment upload session does not exist")
+        manifest = root / "attachments_manifest.json"
+        if manifest.is_symlink():
+            raise SecurityError("Attachment manifest must not be a symbolic link")
+        store = AttachmentStore(root)
+        uploaded = {}
+        for attachment_id in store.export_manifest():
+            record = store.get(attachment_id)
+            if (
+                record.extra.get("origin") == "web_upload"
+                and record.extra.get("session_id") == session_id
+                and record.ref.local_path
+            ):
+                uploaded[attachment_id] = Path(record.ref.local_path)
+
+        paths = []
+        for value in attachments:
+            try:
+                source = uploaded.get(value)
+                if source is None:
+                    requested = Path(value).expanduser().resolve()
+                    source = next((path for path in uploaded.values() if path.resolve() == requested), None)
+                if source is None:
+                    raise SecurityError("Attachment must reference a registered upload in attachment_session_id")
+                resolved = source.resolve()
+                if source.is_symlink() or not resolved.is_relative_to(root) or not resolved.is_file():
+                    raise SecurityError("Attachment source must stay inside its upload session")
+                paths.append(str(resolved))
+            except (OSError, RuntimeError, ValueError) as exc:
+                raise SecurityError("Invalid uploaded attachment source") from exc
+        return paths
+
     def _session_attachments_path(self, session_id: str, *, create: bool = True) -> Optional[Path]:
-        session_dir_name = session_id if session_id.startswith("session_") else f"session_{session_id}"
-        path = self.attachments_root / session_dir_name / "code_workspace" / "attachments"
+        session_dir_name = session_directory_name(session_id)
+        current = self.attachments_root
+        for part in (session_dir_name, "code_workspace", "attachments"):
+            current = current / part
+            if current.is_symlink():
+                raise ValidationError("Upload session paths must not contain symbolic links", field="session_id")
+        path = resolve_workspace_path(
+            self.attachments_root, session_dir_name, "code_workspace", "attachments"
+        )
         if create:
             path.mkdir(parents=True, exist_ok=True)
             return path

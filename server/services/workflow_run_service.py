@@ -11,6 +11,7 @@ from entity.enums import LogLevel
 from utils.exceptions import ValidationError, WorkflowCancelledError
 from utils.structured_logger import get_server_logger, LogType
 from utils.task_input import TaskInputBuilder
+from utils.workspace_paths import session_directory_name
 from workflow.graph_context import GraphContext
 
 from server.services.attachment_service import AttachmentService
@@ -148,7 +149,7 @@ class WorkflowRunService:
             design = load_config(yaml_path)
             graph_config = GraphConfig.from_definition(
                 design.graph,
-                name=f"session_{session_id}",
+                name=session_directory_name(session_id),
                 output_root=WARE_HOUSE_DIR,
                 source_path=str(yaml_path),
                 vars=design.vars,

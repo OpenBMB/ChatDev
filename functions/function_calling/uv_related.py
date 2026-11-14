@@ -6,6 +6,8 @@ import subprocess
 from pathlib import Path
 from typing import Any, Dict, List, Mapping, Sequence
 
+from utils.code_execution import require_unsafe_code_execution
+
 _SAFE_PACKAGE_RE = re.compile(r"^[A-Za-z0-9_.\-+=<>!\[\],@:/]+$")
 _DEFAULT_TIMEOUT = float(os.getenv("LIB_INSTALL_TIMEOUT", "120"))
 _OUTPUT_SNIPPET_LIMIT = 240
@@ -156,6 +158,7 @@ def _run_uv_command(
     env: Dict[str, str] | None = None,
     timeout: float | None = None,
 ) -> Dict[str, Any]:
+    require_unsafe_code_execution("uv command")
     timeout_value = _DEFAULT_TIMEOUT if timeout is None else timeout
     env_vars = None if env is None else {**os.environ, **env}
     try:

@@ -11,6 +11,7 @@ import asyncio
 import base64
 import json
 import traceback
+from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional, Sequence
 
 from entity.configs import Node
@@ -34,6 +35,8 @@ from runtime.node.agent.memory.memory_base import (
 from runtime.node.agent import ThinkingPayload
 from runtime.node.agent import ModelProvider, ProviderRegistry, ModelResponse
 from runtime.node.agent.skills import AgentSkillManager
+from utils.exceptions import SecurityError, ValidationError
+from utils.workspace_paths import resolve_workspace_path, validate_path_component
 from tenacity import Retrying, retry_if_exception, stop_after_attempt, wait_random_exponential
 
 
@@ -164,6 +167,8 @@ class AgentNodeExecutor(NodeExecutor):
                 source=node.id,
             )]
             
+        except SecurityError:
+            raise
         except Exception as e:
             traceback.print_exc()
             error_msg = f"[Node: {node.id}] Error calling model: {str(e)}"
@@ -1079,6 +1084,8 @@ class AgentNodeExecutor(NodeExecutor):
                 continue
             try:
                 self._persist_single_attachment(store, block, node_id)
+            except SecurityError:
+                raise
             except Exception as exc:
                 raise RuntimeError(f"Failed to persist attachment '{attachment.name or attachment.attachment_id}': {exc}") from exc
 
@@ -1086,6 +1093,14 @@ class AgentNodeExecutor(NodeExecutor):
         attachment = block.attachment
         if attachment is None:
             return
+        attachment.mime_type = attachment.mime_type or self._guess_mime_from_data_uri(attachment.data_uri)
+        try:
+            validate_path_component(node_id, field="node_id")
+            if attachment.attachment_id:
+                validate_path_component(attachment.attachment_id, field="attachment_id")
+            filename = validate_path_component(self._make_generated_filename(attachment), field="attachment name")
+        except ValidationError as exc:
+            raise SecurityError(f"Invalid generated attachment path: {exc}") from exc
         if attachment.remote_file_id and not attachment.data_uri and not attachment.local_path:
             record = store.register_remote_file(
                 remote_file_id=attachment.remote_file_id,
@@ -1102,21 +1117,31 @@ class AgentNodeExecutor(NodeExecutor):
         if workspace_root is None or not node_id:
             raise RuntimeError("Workspace or node context missing for attachment persistence")
 
-        target_dir = workspace_root / "generated" / node_id
-        target_dir.mkdir(parents=True, exist_ok=True)
-
-        inferred_mime = attachment.mime_type or self._guess_mime_from_data_uri(attachment.data_uri)
-        attachment.mime_type = inferred_mime
+        workspace_root = Path(workspace_root).resolve()
+        try:
+            target_path = resolve_workspace_path(workspace_root, "generated", node_id, filename)
+            current = workspace_root
+            for part in ("generated", node_id, filename):
+                current = current / part
+                if current.is_symlink():
+                    raise SecurityError("Generated attachment paths must not contain symbolic links")
+        except (ValidationError, OSError, RuntimeError) as exc:
+            raise SecurityError(f"Invalid generated attachment path: {exc}") from exc
 
         data_bytes = self._decode_data_uri(attachment.data_uri) if attachment.data_uri else None
-        target_path = None
-
         if data_bytes is None and attachment.local_path:
-            target_path = target_dir / (attachment.name or self._make_generated_filename(attachment))
+            try:
+                source = Path(attachment.local_path).resolve()
+                if not source.is_relative_to(workspace_root) or not source.is_file():
+                    raise SecurityError("Generated attachment source must stay inside the workspace")
+            except (OSError, RuntimeError, ValueError) as exc:
+                raise SecurityError("Invalid generated attachment source") from exc
+            target_path.parent.mkdir(parents=True, exist_ok=True)
             import shutil
-            shutil.copy2(attachment.local_path, target_path)
+            if source != target_path:
+                shutil.copy2(source, target_path)
         elif data_bytes is not None:
-            target_path = target_dir / (attachment.name or self._make_generated_filename(attachment))
+            target_path.parent.mkdir(parents=True, exist_ok=True)
             with open(target_path, "wb") as handle:
                 handle.write(data_bytes)
         else:

@@ -10,6 +10,7 @@ import yaml
 
 from entity.configs import Node
 from entity.graph_config import GraphConfig
+from utils.workspace_paths import resolve_workspace_path, validate_path_component
 
 
 class GraphContext:
@@ -60,12 +61,14 @@ class GraphContext:
         self.cycle_execution_order: List[Dict[str, Any]] = []
         
         # Output directory
+        validate_path_component(config.name, field="session_name")
         timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
         fixed_output_dir = bool(config.metadata.get("fixed_output_dir"))
         if fixed_output_dir or "session_" in config.name:
-            self.directory = config.output_root / config.name
+            directory_name = config.name
         else:
-            self.directory = config.output_root / f"{config.name}_{timestamp}"
+            directory_name = f"{config.name}_{timestamp}"
+        self.directory = resolve_workspace_path(config.output_root, directory_name)
         self.directory.mkdir(parents=True, exist_ok=True)
         # Voting mode flag
         self.is_majority_voting: bool = config.is_majority_voting

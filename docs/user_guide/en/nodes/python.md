@@ -2,6 +2,16 @@
 
 The Python node is used to execute Python scripts or inline code within workflows, implementing custom data processing, API calls, file operations, and other logic. Scripts are executed in the shared `code_workspace/` directory and can access workflow context data.
 
+Code execution is disabled by default. For trusted workflows, set
+`MAC_ALLOW_UNSAFE_CODE_EXECUTION=1` in the server process environment (or the
+deployment `.env` file) and restart the service. Workflow `vars`, node `env`, and
+tool arguments cannot enable this permission. The same setting controls
+`code_save_and_run`, `execute_code`, uv tools (including package installation),
+Manim scripts, and local MCP server processes; remote MCP is unaffected.
+Enabling execution grants the backend user's permissions and is not a sandbox.
+The path restrictions on `code_save_and_run` remain active when execution is enabled:
+filenames must stay within the workspace and must not modify `attachments/`.
+
 ## Configuration
 
 | Field | Type | Required | Default | Description |

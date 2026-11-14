@@ -74,7 +74,21 @@ nodes:
 3. 若函数依赖额外第三方库，可在仓库 `requirements.txt`/`pyproject.toml` 中声明，或在函数内调用 `install_python_packages`（同目录提供）动态安装。
 4. 运行 `python -m tools.export_design_template ...` 以刷新前端枚举。
 
-## 6. 调试与排错
+## 6. 本地 API 安装
+
+后端和前端开发服务器默认仅监听 `127.0.0.1`。通过 API 上传工具时，先向
+`GET /api/tools/local/session` 发送请求头 `X-ChatDev-Local: 1`，再将返回的
+`token` 放入 `POST /api/tools/local` 的 `X-ChatDev-Tool-Token` 请求头。
+前端可直接调用 `frontend/src/utils/apiFunctions.js` 中的 `uploadLocalTool()`，
+它会自动完成这两个步骤，无需登录。令牌在后端进程重启后失效，不要记录或分享它。
+
+两个接口均检查本地连接和 Host；浏览器 Origin 默认仅允许
+`http://localhost:5173` 和 `http://127.0.0.1:5173`。更换前端端口时，
+在后端通过 `CORS_ALLOW_ORIGINS` 配置完整来源地址（逗号分隔，不支持 `*`）。
+上传的 Python 代码仍在服务器进程内执行，请仅安装自己信任的代码。
+
+## 7. 调试与排错
+
 - 若前端/CLI 报告 “function 'xxx' not found”，检查函数名称与文件是否位于 `MAC_FUNCTIONS_DIR`（默认 `functions/function_calling/`）。
 - `function_catalog` 加载失败时，`FunctionToolEntryConfig.field_specs()` 会在描述中提示错误，请先修复函数语法或依赖。
 - 工具运行超时会向 Agent 返回异常文本；可通过 `timeout` 扩大限额，或在函数内部自行捕获并返回友好错误。

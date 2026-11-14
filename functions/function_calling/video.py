@@ -4,6 +4,7 @@ from pathlib import Path
 import ast
 import subprocess
 import tempfile
+from utils.code_execution import require_unsafe_code_execution
 
 def _get_class_names(py_file: str) -> list[str]:
     file_path = Path(py_file)
@@ -16,6 +17,7 @@ def render_manim(
     quality: str = "h",
     preview: bool = True,
 ) -> Path:
+    require_unsafe_code_execution("render_manim")
     output_dir = Path.cwd() / "media" 
     print("Clearing media folder:", output_dir)
     shutil.rmtree(output_dir, ignore_errors=True)

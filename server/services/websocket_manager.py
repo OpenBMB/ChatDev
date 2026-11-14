@@ -8,13 +8,15 @@ import traceback
 import uuid
 from typing import Any, Dict, Optional
 
-from fastapi import WebSocket
+from fastapi import WebSocket, WebSocketException
 
 from server.services.message_handler import MessageHandler
 from server.services.attachment_service import AttachmentService
 from server.services.session_execution import SessionExecutionController
 from server.services.session_store import WorkflowSessionStore, SessionStatus
 from server.services.workflow_run_service import WorkflowRunService
+from utils.exceptions import ValidationError
+from utils.workspace_paths import validate_path_component
 
 
 def _json_default(value):
@@ -68,6 +70,11 @@ class WebSocketManager:
         )
 
     async def connect(self, websocket: WebSocket, session_id: Optional[str] = None) -> str:
+        if session_id:
+            try:
+                validate_path_component(session_id, field="session_id")
+            except ValidationError as exc:
+                raise WebSocketException(code=1008, reason=str(exc)) from exc
         await websocket.accept()
         # Capture the event loop that owns the WebSocket connections so that
         # worker threads can safely schedule sends via run_coroutine_threadsafe.
@@ -171,9 +178,8 @@ class WebSocketManager:
         which spins up a *new* event loop, causing ``RuntimeError: … attached to a
         different loop`` or silent delivery failures.
 
-        The fix: always schedule the coroutine on the loop that owns the sockets
-        via ``asyncio.run_coroutine_threadsafe`` and wait for the result with a
-        short timeout so the caller knows if delivery failed.
+        Worker threads submit to the owner loop and wait with a short timeout.
+        Calls from the owner loop schedule a task without blocking that loop.
         """
         loop = self._owner_loop
         if loop is None or loop.is_closed():
@@ -181,6 +187,14 @@ class WebSocketManager:
                 "Cannot send sync message to %s: owner event loop unavailable",
                 session_id,
             )
+            return
+
+        try:
+            current_loop = asyncio.get_running_loop()
+        except RuntimeError:
+            current_loop = None
+        if current_loop is loop:
+            loop.create_task(self.send_message(session_id, message))
             return
 
         future = asyncio.run_coroutine_threadsafe(

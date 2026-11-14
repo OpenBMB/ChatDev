@@ -9,7 +9,7 @@ export default defineConfig(({ mode }) => {
   return {
     plugins: [vue()],
     server: {
-      host: true,
+      host: '127.0.0.1',
       proxy: {
         '/api': {
           target: target,
