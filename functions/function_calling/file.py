@@ -797,6 +797,10 @@ def _read_text_content(path: Path, encoding: str) -> tuple[str, str]:
 
     raw = path.read_bytes()
     for candidate in _candidate_encodings():
+        if candidate == "utf-8-sig" and not raw.startswith(_UTF8_BOM):
+            # "utf-8-sig" happily decodes BOM-less UTF-8 too; reporting it as the
+            # file encoding makes the write path prepend a BOM the file never had.
+            continue
         try:
             return raw.decode(candidate), candidate
         except UnicodeDecodeError:
@@ -827,6 +831,7 @@ def _candidate_encodings() -> List[str]:
 
 
 _LINE_BREAK_RE = re.compile(r"\r\n|\r|\n")
+_UTF8_BOM = b"\xef\xbb\xbf"
 
 
 def _detect_newline(text: str) -> str:
