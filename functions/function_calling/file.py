@@ -584,7 +584,9 @@ def apply_text_edits(
         rendered += newline_style
 
     target.parent.mkdir(parents=True, exist_ok=True)
-    target.write_text(rendered, encoding=used_encoding)
+    # newline="" keeps the rendered line breaks byte-for-byte: the default text
+    # mode would translate "\n" to os.linesep and turn "\r\n" into "\r\r\n".
+    target.write_text(rendered, encoding=used_encoding, newline="")
     stat = target.stat()
     return {
         "path": ctx.to_workspace_relative(target),
@@ -793,7 +795,9 @@ def search_in_files(
 
 def _read_text_content(path: Path, encoding: str) -> tuple[str, str]:
     if encoding != "auto":
-        return path.read_text(encoding=encoding), encoding
+        # Read bytes directly so that "\r\n" survives: text mode translates
+        # line breaks before newline detection and the edit round-trip.
+        return path.read_bytes().decode(encoding), encoding
 
     raw = path.read_bytes()
     for candidate in _candidate_encodings():
