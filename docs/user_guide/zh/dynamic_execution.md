@@ -271,6 +271,6 @@ edges:
 
 ## 9. 相关文档
 
-- [边配置指南](../edges.md)
-- [工作流编排指南](../workflow_authoring.md)
-- [Agent 节点配置](../nodes/agent.md)
+- [边条件与触发机制](execution_logic.md)
+- [工作流编排指南](workflow_authoring.md)
+- [Agent 节点配置](nodes/agent.md)
