@@ -2,6 +2,7 @@
 
 from unittest.mock import MagicMock
 
+import pytest
 from entity.messages import MessageBlock, MessageBlockType
 from utils.human_prompt import (
     CliPromptChannel,
@@ -37,16 +38,13 @@ def test_cli_prompt_channel_normal_response():
     assert result.blocks[0].text == "approved"
 
 
-def test_cli_prompt_channel_eof_handling():
+def test_cli_prompt_channel_eof_propagation():
     def raise_eof(_):
         raise EOFError("stdin closed")
 
     channel = CliPromptChannel(input_func=raise_eof)
-    result = channel.request(node_id="human_1", task="Review document")
-    assert result.text == ""
-    assert result.blocks is not None
-    assert len(result.blocks) == 1
-    assert result.blocks[0].text == ""
+    with pytest.raises(EOFError):
+        channel.request(node_id="human_1", task="Review document")
 
 
 def test_sanitize_response():

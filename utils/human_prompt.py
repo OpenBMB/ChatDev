@@ -6,6 +6,7 @@ from dataclasses import dataclass, field
 from typing import Any, Protocol
 
 from entity.messages import MessageBlock, MessageBlockType, MessageContent
+
 from utils.log_manager import LogManager
 
 
@@ -59,10 +60,7 @@ class CliPromptChannel:
         header.append(task)
         header.append("=== Your response: ===")
         prompt = "\n".join(header) + "\n"
-        try:
-            response = self.input_func(prompt)
-        except EOFError:
-            response = ""
+        response = self.input_func(prompt)
         return PromptResult(
             text=response or "",
             blocks=[MessageBlock.text_block(response or "")],
