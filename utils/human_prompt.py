@@ -1,8 +1,9 @@
 """Human-in-the-loop prompt service with pluggable channels."""
 
 import threading
+from collections.abc import Callable
 from dataclasses import dataclass, field
-from typing import Any, Callable, Dict, List, Optional, Protocol
+from typing import Any, Protocol
 
 from entity.messages import MessageBlock, MessageBlockType, MessageContent
 from utils.log_manager import LogManager
@@ -12,12 +13,14 @@ from utils.log_manager import LogManager
 class PromptResult:
     """Typed result returned from prompt channels."""
 
-    text: str
-    blocks: Optional[List[MessageBlock]] = None
-    metadata: Dict[str, Any] = field(default_factory=dict)
+    text: str = ""
+    blocks: list[MessageBlock] | None = None
+    metadata: dict[str, Any] = field(default_factory=dict)
 
     def as_message_content(self) -> MessageContent:
-        return self.blocks if self.blocks is not None else self.text
+        if self.blocks is not None:
+            return self.blocks
+        return self.text or ""
 
 
 class PromptChannel(Protocol):
@@ -28,8 +31,8 @@ class PromptChannel(Protocol):
         *,
         node_id: str,
         task: str,
-        inputs: Optional[str] = None,
-        metadata: Optional[Dict[str, Any]] = None,
+        inputs: str | None = None,
+        metadata: dict[str, Any] | None = None,
     ) -> PromptResult:
         """Collect user feedback and return the structured response."""
 
@@ -45,8 +48,8 @@ class CliPromptChannel:
         *,
         node_id: str,
         task: str,
-        inputs: Optional[str] = None,
-        metadata: Optional[Dict[str, Any]] = None,
+        inputs: str | None = None,
+        metadata: dict[str, Any] | None = None,
     ) -> PromptResult:
         header = ["===== HUMAN INPUT REQUIRED ====="]
         if inputs:
@@ -56,9 +59,12 @@ class CliPromptChannel:
         header.append(task)
         header.append("=== Your response: ===")
         prompt = "\n".join(header) + "\n"
-        response = self.input_func(prompt)
+        try:
+            response = self.input_func(prompt)
+        except EOFError:
+            response = ""
         return PromptResult(
-            text=response,
+            text=response or "",
             blocks=[MessageBlock.text_block(response or "")],
         )
 
@@ -71,7 +77,7 @@ class HumanPromptService:
         *,
         log_manager: LogManager,
         channel: PromptChannel,
-        session_id: Optional[str] = None,
+        session_id: str | None = None,
     ) -> None:
         self._log_manager = log_manager
         self._channel = channel
@@ -83,8 +89,8 @@ class HumanPromptService:
         node_id: str,
         task_description: str,
         *,
-        inputs: Optional[str] = None,
-        metadata: Optional[Dict[str, Any]] = None,
+        inputs: str | None = None,
+        metadata: dict[str, Any] | None = None,
     ) -> PromptResult:
         """Request human input through the configured channel."""
 
@@ -92,14 +98,13 @@ class HumanPromptService:
         if self._session_id and "session_id" not in meta:
             meta["session_id"] = self._session_id
 
-        with self._lock:
-            with self._log_manager.human_timer(node_id):
-                raw_result = self._channel.request(
-                    node_id=node_id,
-                    task=task_description,
-                    inputs=inputs,
-                    metadata=meta,
-                )
+        with self._lock, self._log_manager.human_timer(node_id):
+            raw_result = self._channel.request(
+                node_id=node_id,
+                task=task_description,
+                inputs=inputs,
+                metadata=meta,
+            )
 
         prompt_result = self._normalize_result(raw_result)
         sanitized_text = self._sanitize_response(prompt_result.text)
@@ -120,27 +125,31 @@ class HumanPromptService:
 
     @staticmethod
     def _sanitize_response(response: Any) -> str:
+        if response is None:
+            return ""
         text = response if isinstance(response, str) else str(response)
         return text.encode("utf-8", errors="ignore").decode("utf-8", errors="ignore")
 
     def _normalize_result(self, raw_result: PromptResult | str | Any) -> PromptResult:
         if isinstance(raw_result, PromptResult):
             return raw_result
+        if raw_result is None:
+            return PromptResult(text="", blocks=[MessageBlock.text_block("")])
         text = self._sanitize_response(raw_result)
         return PromptResult(text=text, blocks=[MessageBlock.text_block(text)])
 
     def _normalize_blocks(
         self,
-        blocks: Optional[List[MessageBlock]],
+        blocks: list[MessageBlock] | None,
         fallback_text: str,
-    ) -> List[MessageBlock]:
+    ) -> list[MessageBlock]:
         if not blocks:
-            return [MessageBlock.text_block(fallback_text)]
-        normalized: List[MessageBlock] = []
+            return [MessageBlock.text_block(fallback_text or "")]
+        normalized: list[MessageBlock] = []
         for block in blocks:
             dup = block.copy()
-            if dup.type is MessageBlockType.TEXT and dup.text is not None:
-                dup.text = self._sanitize_response(dup.text)
+            if dup.type is MessageBlockType.TEXT:
+                dup.text = self._sanitize_response(dup.text) if dup.text is not None else ""
             normalized.append(dup)
         return normalized
 
