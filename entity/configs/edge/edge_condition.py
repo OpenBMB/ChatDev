@@ -1,5 +1,6 @@
 """Edge condition configuration models."""
 
+import re
 from dataclasses import dataclass, field, fields, replace
 from typing import Any, Dict, Mapping, Type, TypeVar, cast
 
@@ -190,6 +191,17 @@ class KeywordEdgeConditionConfig(EdgeConditionTypeConfig):
             default=False if default_value is None else bool(default_value),
             path=path,
         )
+
+    def validate(self) -> None:
+        flags = 0 if self.case_sensitive else re.IGNORECASE
+        for pattern in self.regex_patterns:
+            try:
+                re.compile(pattern, flags)
+            except re.error as exc:
+                raise ConfigError(
+                    f"Invalid regular expression pattern '{pattern}': {exc}",
+                    extend_path(self.path, "regex"),
+                ) from exc
 
     def display_label(self) -> str:
         return f"keyword(any={len(self.any_keywords)}, none={len(self.none_keywords)}, regex={len(self.regex_patterns)})"

@@ -2,6 +2,7 @@
 
 import re
 
+from entity.configs.base import ConfigError, extend_path
 from entity.configs.edge.edge_condition import KeywordEdgeConditionConfig
 from .base import ConditionFactoryContext
 from .base import EdgeConditionManager
@@ -9,7 +10,12 @@ from ...node.executor import ExecutionContext
 
 
 class KeywordEdgeConditionManager(EdgeConditionManager[KeywordEdgeConditionConfig]):
-    def __init__(self, config: KeywordEdgeConditionConfig, ctx: ConditionFactoryContext, execution_context: ExecutionContext) -> None:
+    def __init__(
+        self,
+        config: KeywordEdgeConditionConfig,
+        ctx: ConditionFactoryContext,
+        execution_context: ExecutionContext,
+    ) -> None:
         super().__init__(config, ctx, execution_context)
         self.any_keywords = list(config.any_keywords)
         self.none_keywords = list(config.none_keywords)
@@ -23,7 +29,18 @@ class KeywordEdgeConditionManager(EdgeConditionManager[KeywordEdgeConditionConfi
         else:
             self.processed_any = [kw.lower() for kw in self.any_keywords]
             self.processed_none = [kw.lower() for kw in self.none_keywords]
-        self.compiled_regex = [re.compile(pattern, lowered_regex_flags) for pattern in self.regex_patterns]
+        try:
+            self.compiled_regex = [
+                re.compile(pattern, lowered_regex_flags)
+                for pattern in self.regex_patterns
+            ]
+        except re.error as exc:
+            raise ConfigError(
+                f"Invalid regular expression pattern: {exc}",
+                extend_path(config.path, "regex")
+                if hasattr(config, "path")
+                else "regex",
+            ) from exc
         self.label = f"keyword(any={len(self.any_keywords)}, none={len(self.none_keywords)}, regex={len(self.regex_patterns)})"
         self.metadata = {
             "any": self.any_keywords,
@@ -34,6 +51,8 @@ class KeywordEdgeConditionManager(EdgeConditionManager[KeywordEdgeConditionConfi
         }
 
     def _evaluate(self, data: str) -> bool:
+        if data is None:
+            data = ""
         haystack = data if self.case_sensitive else data.lower()
         for keyword in self.processed_none:
             if keyword and keyword in haystack:
@@ -45,7 +64,7 @@ class KeywordEdgeConditionManager(EdgeConditionManager[KeywordEdgeConditionConfi
             if pattern.search(data):
                 return True
         if self.any_keywords or self.regex_patterns:
-            return False
+            return self.default_value
         return True
 
     def process(
