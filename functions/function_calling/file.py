@@ -114,9 +114,11 @@ def describe_available_files(
     """
 
     max_depth = 8
+    if limit <= 0:
+        raise ValueError("limit must be positive")
     ctx = FileToolContext(_context)
     entries: List[Dict[str, Any]] = []
-    total_limit = max(1, limit)
+    total_limit = limit
 
     # # Attachment store (user uploads or files registered via load_file)
     # for attachment_id, record in ctx.attachment_store.list_records().items():
@@ -148,15 +150,13 @@ def describe_available_files(
         if len(entries) >= total_limit:
             break
         abs_path = (ctx.workspace_root / entry.path).resolve()
-        workspace_path = Path(entry.path)
-        # session_path = ctx.to_session_relative(abs_path)
         entries.append(
             {
                 "id": entry.path,
                 "name": Path(entry.path).name,
                 "source": "workspace",
-                "path": workspace_path,
-                "absolute_path": abs_path,
+                "path": Path(entry.path).as_posix(),
+                "absolute_path": str(abs_path),
                 "type": entry.type,
                 "size": entry.size,
                 "depth": entry.depth,
