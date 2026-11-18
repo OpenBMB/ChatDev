@@ -728,8 +728,14 @@ def search_in_files(
 ) -> Dict[str, Any]:
     """Search workspace files and return structured matches."""
 
+    if not pattern:
+        raise ValueError("pattern cannot be empty")
     if max_results <= 0:
         raise ValueError("max_results must be positive")
+    if before_context < 0:
+        raise ValueError("before_context must be non-negative")
+    if after_context < 0:
+        raise ValueError("after_context must be non-negative")
 
     ctx = FileToolContext(_context)
     include_patterns = _normalize_globs(globs) or ["**/*"]
@@ -743,7 +749,10 @@ def search_in_files(
         flags = re.MULTILINE
         if not case_sensitive:
             flags |= re.IGNORECASE
-        compiled_regex = re.compile(pattern, flags)
+        try:
+            compiled_regex = re.compile(pattern, flags)
+        except re.error as exc:
+            raise ValueError(f"Invalid regular expression pattern '{pattern}': {exc}") from exc
 
     for candidate in _iter_candidate_files(
         ctx.workspace_root,
