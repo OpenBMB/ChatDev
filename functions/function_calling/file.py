@@ -98,9 +98,24 @@ class FileToolContext:
 
 
 def _check_attachments_not_modified(path: str) -> None:
-    parts = Path(os.path.normpath(str(path)).replace("\\", "/").lstrip("/")).parts
+    raw = str(path).replace("\\", "/")
+    if raw.startswith("attachments"):
+        raise ValueError("Modifications to the attachments directory are not allowed")
+    parts = Path(os.path.normpath(raw).lstrip("/")).parts
     if parts and parts[0] == "attachments":
         raise ValueError("Modifications to the attachments directory are not allowed")
+
+
+def _check_target_not_attachments(ctx: FileToolContext, target: Path) -> None:
+    rel = ctx.to_workspace_relative(target)
+    if rel:
+        parts = Path(rel).parts
+        if parts and parts[0] == "attachments":
+            raise ValueError("Modifications to the attachments directory are not allowed")
+    if hasattr(ctx, "attachment_store") and ctx.attachment_store and hasattr(ctx.attachment_store, "root"):
+        att_root = ctx.attachment_store.root.resolve()
+        if target == att_root or att_root in target.parents:
+            raise ValueError("Modifications to the attachments directory are not allowed")
 
 
 def describe_available_files(
@@ -254,6 +269,7 @@ def create_folder(
 
     ctx = FileToolContext(_context)
     target = ctx.resolve_under_workspace(path)
+    _check_target_not_attachments(ctx, target)
 
     if target.exists() and not target.is_dir():
         raise ValueError("Target exists and is not a directory")
@@ -288,6 +304,7 @@ def delete_path(
 
     ctx = FileToolContext(_context)
     target = ctx.resolve_under_workspace(path)
+    _check_target_not_attachments(ctx, target)
     if target == ctx.workspace_root:
         raise ValueError("Cannot delete the workspace root directory")
 
@@ -392,6 +409,7 @@ def save_file(
 
     ctx = FileToolContext(_context)
     target = ctx.resolve_under_workspace(path)
+    _check_target_not_attachments(ctx, target)
     if target.exists() and target.is_dir():
         raise ValueError("Target path points to a directory")
     target.parent.mkdir(parents=True, exist_ok=True)
@@ -570,6 +588,7 @@ def apply_text_edits(
 
     ctx = FileToolContext(_context)
     target = ctx.resolve_under_workspace(path)
+    _check_target_not_attachments(ctx, target)
     if not target.exists() or not target.is_file():
         raise FileNotFoundError(f"File not found: {path}")
 
@@ -621,6 +640,8 @@ def rename_path(
     destination = ctx.resolve_under_workspace(dst)
     _check_attachments_not_modified(src)
     _check_attachments_not_modified(dst)
+    _check_target_not_attachments(ctx, source)
+    _check_target_not_attachments(ctx, destination)
 
     if source == ctx.workspace_root:
         raise ValueError("Cannot rename the workspace root directory")
@@ -662,6 +683,7 @@ def copy_path(
     source = ctx.resolve_under_workspace(src)
     destination = ctx.resolve_under_workspace(dst)
     _check_attachments_not_modified(dst)
+    _check_target_not_attachments(ctx, destination)
 
     if destination == ctx.workspace_root:
         raise ValueError("Cannot overwrite the workspace root directory")
@@ -702,6 +724,8 @@ def move_path(
     destination = ctx.resolve_under_workspace(dst)
     _check_attachments_not_modified(src)
     _check_attachments_not_modified(dst)
+    _check_target_not_attachments(ctx, source)
+    _check_target_not_attachments(ctx, destination)
 
     if source == ctx.workspace_root:
         raise ValueError("Cannot move the workspace root directory")

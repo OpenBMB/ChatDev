@@ -66,6 +66,42 @@ def test_attachments_guard_rejects_mutations(tmp_path: Path, blocked_path: str) 
         move_path("other.txt", blocked_path, _context=context)
 
 
+def test_attachments_guard_rejects_resolved_traversal(tmp_path: Path) -> None:
+    context = _make_context(tmp_path)
+    err_msg = "Modifications to the attachments directory are not allowed"
+    workspace_name = tmp_path.name
+    traversal_path = f"attachments/../../{workspace_name}/attachments/file.txt"
+    traversal_path2 = f"./attachments/../../{workspace_name}/attachments/file.txt"
+
+    for path in (traversal_path, traversal_path2):
+        with pytest.raises(ValueError, match=err_msg):
+            create_folder(path, _context=context)
+
+        with pytest.raises(ValueError, match=err_msg):
+            delete_path(path, _context=context)
+
+        with pytest.raises(ValueError, match=err_msg):
+            save_file(path, "payload", _context=context)
+
+        with pytest.raises(ValueError, match=err_msg):
+            apply_text_edits(path, start_line=1, replacement="test", _context=context)
+
+        with pytest.raises(ValueError, match=err_msg):
+            rename_path(path, "other.txt", _context=context)
+
+        with pytest.raises(ValueError, match=err_msg):
+            rename_path("other.txt", path, _context=context)
+
+        with pytest.raises(ValueError, match=err_msg):
+            copy_path("other.txt", path, _context=context)
+
+        with pytest.raises(ValueError, match=err_msg):
+            move_path(path, "other.txt", _context=context)
+
+        with pytest.raises(ValueError, match=err_msg):
+            move_path("other.txt", path, _context=context)
+
+
 def test_attachments_guard_allows_safe_paths(tmp_path: Path) -> None:
     context = _make_context(tmp_path)
 
