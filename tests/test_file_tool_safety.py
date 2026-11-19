@@ -1,7 +1,6 @@
 from pathlib import Path
 
 import pytest
-
 from functions.function_calling.file import (
     apply_text_edits,
     copy_path,
