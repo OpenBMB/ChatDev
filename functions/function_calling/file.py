@@ -98,8 +98,10 @@ class FileToolContext:
 
 
 def _check_attachments_not_modified(path: str) -> None:
-    if path.startswith("attachments"):
+    parts = Path(os.path.normpath(str(path)).replace("\\", "/").lstrip("/")).parts
+    if parts and parts[0] == "attachments":
         raise ValueError("Modifications to the attachments directory are not allowed")
+
 
 def describe_available_files(
     *,
@@ -286,6 +288,8 @@ def delete_path(
 
     ctx = FileToolContext(_context)
     target = ctx.resolve_under_workspace(path)
+    if target == ctx.workspace_root:
+        raise ValueError("Cannot delete the workspace root directory")
 
     if not target.exists():
         if missing_ok:
@@ -383,6 +387,8 @@ def save_file(
 
     if mode not in {"overwrite", "append"}:
         raise ValueError("mode must be either 'overwrite' or 'append'")
+
+    _check_attachments_not_modified(path)
 
     ctx = FileToolContext(_context)
     target = ctx.resolve_under_workspace(path)
@@ -560,12 +566,12 @@ def apply_text_edits(
 ) -> Dict[str, Any]:
     """Apply ordered line edits with newline and encoding preservation."""
 
+    _check_attachments_not_modified(path)
+
     ctx = FileToolContext(_context)
     target = ctx.resolve_under_workspace(path)
     if not target.exists() or not target.is_file():
         raise FileNotFoundError(f"File not found: {path}")
-
-    _check_attachments_not_modified(path)
 
     normalized = _normalize_edits(_build_single_edit(start_line, end_line, replacement))
     original_text, used_encoding = _read_text_content(target, encoding)
@@ -616,6 +622,11 @@ def rename_path(
     _check_attachments_not_modified(src)
     _check_attachments_not_modified(dst)
 
+    if source == ctx.workspace_root:
+        raise ValueError("Cannot rename the workspace root directory")
+    if destination == ctx.workspace_root:
+        raise ValueError("Cannot overwrite the workspace root directory")
+
     if not source.exists():
         raise FileNotFoundError(f"Source does not exist: {src}")
     if source == destination:
@@ -651,6 +662,9 @@ def copy_path(
     source = ctx.resolve_under_workspace(src)
     destination = ctx.resolve_under_workspace(dst)
     _check_attachments_not_modified(dst)
+
+    if destination == ctx.workspace_root:
+        raise ValueError("Cannot overwrite the workspace root directory")
 
     if not source.exists():
         raise FileNotFoundError(f"Source does not exist: {src}")
@@ -688,6 +702,11 @@ def move_path(
     destination = ctx.resolve_under_workspace(dst)
     _check_attachments_not_modified(src)
     _check_attachments_not_modified(dst)
+
+    if source == ctx.workspace_root:
+        raise ValueError("Cannot move the workspace root directory")
+    if destination == ctx.workspace_root:
+        raise ValueError("Cannot overwrite the workspace root directory")
 
     if not source.exists():
         raise FileNotFoundError(f"Source does not exist: {src}")
