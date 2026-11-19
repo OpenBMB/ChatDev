@@ -99,8 +99,6 @@ class FileToolContext:
 
 def _check_attachments_not_modified(path: str) -> None:
     raw = str(path).replace("\\", "/")
-    if raw.startswith("attachments"):
-        raise ValueError("Modifications to the attachments directory are not allowed")
     parts = Path(os.path.normpath(raw).lstrip("/")).parts
     if parts and parts[0] == "attachments":
         raise ValueError("Modifications to the attachments directory are not allowed")

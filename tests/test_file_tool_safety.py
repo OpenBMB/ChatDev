@@ -110,6 +110,11 @@ def test_attachments_guard_allows_safe_paths(tmp_path: Path) -> None:
     assert res["path"] == "safe_attachments.txt"
     assert (tmp_path / "safe_attachments.txt").read_text(encoding="utf-8") == "content"
 
+    # Filename starting with 'attachments' but not inside attachments directory
+    res2 = save_file("attachments_backup.txt", "backup content", _context=context)
+    assert res2["path"] == "attachments_backup.txt"
+    assert (tmp_path / "attachments_backup.txt").read_text(encoding="utf-8") == "backup content"
+
 
 def test_delete_path_rejects_workspace_root(tmp_path: Path) -> None:
     context = _make_context(tmp_path)
