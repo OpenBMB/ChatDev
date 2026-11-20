@@ -1,5 +1,6 @@
 """Tests for memory embedding dimension consistency."""
 from unittest.mock import MagicMock, patch
+import pytest
 from runtime.node.agent.memory.memory_base import MemoryContentSnapshot, MemoryItem
 from runtime.node.agent.memory.simple_memory import SimpleMemory
 
@@ -102,6 +103,54 @@ class TestSimpleMemoryRetrieveMixedDimensions:
 
 
 class TestOpenAIEmbeddingDynamicFallback:
+
+    @pytest.mark.parametrize(
+        ("text", "max_length"), [("word " * 25, 20), ("文" * 41, 20), ("abc", 1)]
+    )
+    def test_chunked_embedding_respects_input_length(self, text, max_length):
+        from runtime.node.agent.memory.embedding import OpenAIEmbedding
+
+        cfg = MagicMock()
+        cfg.base_url = "https://embedding.example.test/v1"
+        cfg.api_key = "test"
+        cfg.model = "test-model"
+        cfg.params = {"max_length": max_length, "use_chunking": True}
+        embedding = OpenAIEmbedding(cfg)
+        sent = []
+        chunk_limit = max(1, max_length // 2)
+
+        def create(**kwargs):
+            chunk = kwargs["input"]
+            sent.append(chunk)
+            if len(chunk) > chunk_limit:
+                raise ValueError("Input exceeds the configured chunk size")
+            response = MagicMock()
+            response.data = [MagicMock(embedding=[0.25, 0.75])]
+            return response
+
+        with patch.object(embedding.client.embeddings, "create", side_effect=create):
+            result = embedding.get_embedding(text)
+
+        assert result == [0.25, 0.75]
+        assert len(sent) > 1
+        assert all(0 < len(chunk) <= chunk_limit for chunk in sent)
+
+    @pytest.mark.parametrize("text", ["a" * 25, "aaaa。bbbbbbbbbb", "short"])
+    def test_sentence_chunks_stay_within_limit(self, text):
+        from runtime.node.agent.memory.embedding import OpenAIEmbedding
+
+        cfg = MagicMock()
+        cfg.base_url = "https://embedding.example.test/v1"
+        cfg.api_key = "test"
+        cfg.model = "test-model"
+        cfg.params = {}
+        embedding = OpenAIEmbedding(cfg)
+
+        chunks = embedding._chunk_text(text, max_length=10)
+
+        assert chunks
+        assert all(0 < len(chunk) <= 10 for chunk in chunks)
+        assert "".join(chunks) == text
 
     def test_fallback_uses_model_dimension_after_success(self):
         """After a successful call the fallback dimension MUST match the model."""
