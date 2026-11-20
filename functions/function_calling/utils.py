@@ -8,13 +8,25 @@ from datetime import UTC, datetime
 DEFAULT_MAX_WAIT_SECONDS = float(os.getenv("MAX_WAIT_SECONDS", "300"))
 
 
-def wait(seconds: float, max_seconds: float = DEFAULT_MAX_WAIT_SECONDS) -> str:
+def _get_max_wait_ceiling() -> float:
+    """Retrieve the server-configured maximum wait ceiling."""
+    raw = os.getenv("MAX_WAIT_SECONDS", "")
+    if raw:
+        try:
+            val = float(raw)
+            if not (math.isnan(val) or math.isinf(val) or val < 0):
+                return val
+        except (ValueError, TypeError):
+            pass
+    return DEFAULT_MAX_WAIT_SECONDS
+
+
+def wait(seconds: float, *, _max_seconds: float | None = None) -> str:
     """
     Wait for a specified number of seconds.
 
     Args:
         seconds (float): The number of seconds to wait. Must be non-negative and finite.
-        max_seconds (float): Maximum allowed wait time in seconds. Defaults to 300 seconds.
 
     Returns:
         str: Confirmation message indicating the duration waited.
@@ -43,15 +55,16 @@ def wait(seconds: float, max_seconds: float = DEFAULT_MAX_WAIT_SECONDS) -> str:
     if val < 0:
         raise ValueError(f"Wait duration must be non-negative, got {seconds}")
 
-    if max_seconds is not None:
-        if isinstance(max_seconds, bool) or not isinstance(max_seconds, (int, float)):
-            raise TypeError("max_seconds must be a number")
-        if math.isnan(max_seconds) or math.isinf(max_seconds) or max_seconds < 0:
-            raise ValueError("max_seconds must be a non-negative finite number")
-        if val > max_seconds:
-            raise ValueError(
-                f"Wait duration of {val}s exceeds the maximum limit of {max_seconds}s"
-            )
+    ceiling = _get_max_wait_ceiling() if _max_seconds is None else _max_seconds
+    if isinstance(ceiling, bool) or not isinstance(ceiling, (int, float)):
+        raise TypeError("_max_seconds must be a number")
+    if math.isnan(ceiling) or math.isinf(ceiling) or ceiling < 0:
+        raise ValueError("_max_seconds must be a non-negative finite number")
+
+    if val > ceiling:
+        raise ValueError(
+            f"Wait duration of {val}s exceeds the maximum limit of {ceiling}s"
+        )
 
     time.sleep(val)
     display_sec = int(val) if val.is_integer() else val

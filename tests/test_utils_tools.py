@@ -92,21 +92,26 @@ def test_wait_exceeds_max_seconds() -> None:
         wait(300.1)
 
     with pytest.raises(ValueError, match="exceeds the maximum limit of 5"):
-        wait(5.5, max_seconds=5)
+        wait(5.5, _max_seconds=5)
+
+    with patch.dict("os.environ", {"MAX_WAIT_SECONDS": "10"}), pytest.raises(
+        ValueError, match="exceeds the maximum limit of 10"
+    ):
+        wait(10.5)
 
 
 def test_wait_invalid_max_seconds() -> None:
-    with pytest.raises(TypeError, match="max_seconds must be a number"):
-        wait(1, max_seconds="invalid")
+    with pytest.raises(TypeError, match="_max_seconds must be a number"):
+        wait(1, _max_seconds="invalid")  # type: ignore[arg-type]
 
-    with pytest.raises(TypeError, match="max_seconds must be a number"):
-        wait(1, max_seconds=True)
+    with pytest.raises(TypeError, match="_max_seconds must be a number"):
+        wait(1, _max_seconds=True)  # type: ignore[arg-type]
 
-    with pytest.raises(ValueError, match="max_seconds must be a non-negative finite number"):
-        wait(1, max_seconds=-1)
+    with pytest.raises(ValueError, match="_max_seconds must be a non-negative finite number"):
+        wait(1, _max_seconds=-1)
 
-    with pytest.raises(ValueError, match="max_seconds must be a non-negative finite number"):
-        wait(1, max_seconds=float("nan"))
+    with pytest.raises(ValueError, match="_max_seconds must be a non-negative finite number"):
+        wait(1, _max_seconds=float("nan"))
 
 
 def test_get_current_time_format_and_defaults() -> None:
@@ -145,6 +150,9 @@ def test_function_catalog_integration() -> None:
     assert wait_meta is not None
     assert "seconds" in wait_meta.parameters_schema.get("properties", {})
     assert "seconds" in wait_meta.parameters_schema.get("required", [])
+    # Ensure ceiling parameter is not exposed to model tool arguments
+    assert "max_seconds" not in wait_meta.parameters_schema.get("properties", {})
+    assert "_max_seconds" not in wait_meta.parameters_schema.get("properties", {})
 
     time_meta = catalog.get("get_current_time")
     assert time_meta is not None
