@@ -48,14 +48,17 @@ def _read_csv(content: bytes) -> pd.DataFrame:
         detected = chardet.detect(content)
         encoding = detected.get("encoding") or encoding
     try:
-        return pd.read_csv(BytesIO(content), encoding=encoding)
+        # Keep every cell as text: dtype inference turns an "id" column into
+        # numbers, which rewrites identifiers ("1" -> "1.0" when another row is
+        # empty, "001" -> "1") before they reach the batch runner.
+        return pd.read_csv(BytesIO(content), encoding=encoding, dtype=str)
     except Exception as exc:
         raise ValidationError(f"Failed to read CSV: {exc}", field="file")
 
 
 def _read_excel(content: bytes) -> pd.DataFrame:
     try:
-        return pd.read_excel(BytesIO(content))
+        return pd.read_excel(BytesIO(content), dtype=str)
     except Exception as exc:
         raise ValidationError(f"Failed to read Excel file: {exc}", field="file")
 
