@@ -55,11 +55,15 @@ def wait(seconds: float, *, _max_seconds: float | None = None) -> str:
     if val < 0:
         raise ValueError(f"Wait duration must be non-negative, got {seconds}")
 
-    ceiling = _get_max_wait_ceiling() if _max_seconds is None else _max_seconds
-    if isinstance(ceiling, bool) or not isinstance(ceiling, (int, float)):
-        raise TypeError("_max_seconds must be a number")
-    if math.isnan(ceiling) or math.isinf(ceiling) or ceiling < 0:
-        raise ValueError("_max_seconds must be a non-negative finite number")
+    configured_ceiling = _get_max_wait_ceiling()
+    if _max_seconds is None:
+        ceiling = configured_ceiling
+    else:
+        if isinstance(_max_seconds, bool) or not isinstance(_max_seconds, (int, float)):
+            raise TypeError("_max_seconds must be a number")
+        if math.isnan(_max_seconds) or math.isinf(_max_seconds) or _max_seconds < 0:
+            raise ValueError("_max_seconds must be a non-negative finite number")
+        ceiling = min(configured_ceiling, _max_seconds)
 
     if val > ceiling:
         raise ValueError(

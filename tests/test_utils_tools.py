@@ -91,6 +91,9 @@ def test_wait_exceeds_max_seconds() -> None:
     with pytest.raises(ValueError, match="exceeds the maximum limit of 300"):
         wait(300.1)
 
+    with pytest.raises(ValueError, match="exceeds the maximum limit of 300"):
+        wait(300.1, _max_seconds=3600)
+
     with pytest.raises(ValueError, match="exceeds the maximum limit of 5"):
         wait(5.5, _max_seconds=5)
 
