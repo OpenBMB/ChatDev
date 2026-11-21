@@ -181,7 +181,13 @@ class Node(BaseConfig):
         description = optional_str(mapping, "description", path)
         # keep_context = bool(mapping.get("keep_context", False))
         log_output = bool(mapping.get("log_output", True))
-        context_window = int(mapping.get("context_window", 0))
+        try:
+            context_window = int(mapping.get("context_window", 0))
+        except (TypeError, ValueError) as exc:
+            raise ConfigError(
+                "context_window must be an integer",
+                extend_path(path, "context_window"),
+            ) from exc
         input_value = ensure_list(mapping.get("input"))
         output_value = ensure_list(mapping.get("output"))
 
