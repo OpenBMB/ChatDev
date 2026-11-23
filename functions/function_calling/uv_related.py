@@ -3,8 +3,9 @@
 import os
 import re
 import subprocess
+from collections.abc import Mapping, Sequence
 from pathlib import Path
-from typing import Any, Dict, List, Mapping, Sequence
+from typing import Any
 
 from utils.code_execution import require_unsafe_code_execution
 
@@ -24,7 +25,9 @@ def _trim_output_preview(stdout: str, stderr: str) -> str | None:
     return f"{preview_source[:_OUTPUT_SNIPPET_LIMIT].rstrip()}... [truncated]"
 
 
-def _build_timeout_message(step: str | None, timeout_value: float, stdout: str, stderr: str) -> str:
+def _build_timeout_message(
+    step: str | None, timeout_value: float, stdout: str, stderr: str
+) -> str:
     """Create a descriptive timeout error message with optional output preview."""
 
     label = "uv command"
@@ -40,7 +43,7 @@ def _build_timeout_message(step: str | None, timeout_value: float, stdout: str, 
 class WorkspaceCommandContext:
     """Resolve the workspace root from the injected runtime context."""
 
-    def __init__(self, ctx: Dict[str, Any] | None):
+    def __init__(self, ctx: dict[str, Any] | None):
         if ctx is None:
             raise ValueError("_context is required for uv tools")
         self.workspace_root = self._require_workspace(ctx.get("python_workspace_root"))
@@ -50,24 +53,44 @@ class WorkspaceCommandContext:
     def _require_workspace(raw_path: Any) -> Path:
         if raw_path is None:
             raise ValueError("python_workspace_root missing from _context")
-        path = Path(raw_path).expanduser().resolve()
+        raw_str = str(raw_path).strip()
+        if not raw_str:
+            raise ValueError("python_workspace_root cannot be empty")
+        path = Path(raw_str).expanduser().resolve()
         path.mkdir(parents=True, exist_ok=True)
         return path
 
     def resolve_under_workspace(self, relative_path: str | Path) -> Path:
         candidate = Path(relative_path)
-        absolute = candidate if candidate.is_absolute() else self.workspace_root / candidate
+        absolute = (
+            candidate if candidate.is_absolute() else self.workspace_root / candidate
+        )
         absolute = absolute.expanduser().resolve()
-        if self.workspace_root not in absolute.parents and absolute != self.workspace_root:
+        if (
+            self.workspace_root not in absolute.parents
+            and absolute != self.workspace_root
+        ):
             raise ValueError("script path is outside workspace root")
         return absolute
 
 
-def _validate_packages(packages: Sequence[str]) -> List[str]:
-    normalized: List[str] = []
-    for pkg in packages:
+def _validate_packages(packages: Sequence[str] | str | None) -> list[str]:
+    if packages is None:
+        raise ValueError("at least one package is required")
+    if isinstance(packages, str):
+        raw = packages.strip()
+        if not raw:
+            raise ValueError("package names cannot be empty")
+        items = [p.strip() for p in re.split(r"[\s,]+", raw) if p.strip()]
+    elif isinstance(packages, Sequence):
+        items = list(packages)
+    else:
+        raise TypeError("packages must be a string or a sequence of strings")
+
+    normalized: list[str] = []
+    for pkg in items:
         if not isinstance(pkg, str):
-            raise ValueError("package entries must be strings")
+            raise TypeError("package entries must be strings")
         stripped = pkg.strip()
         if not stripped:
             raise ValueError("package names cannot be empty")
@@ -85,7 +108,7 @@ def _coerce_timeout_seconds(timeout_seconds: Any) -> float | None:
     if timeout_seconds is None:
         return None
     if isinstance(timeout_seconds, bool):
-        raise ValueError("timeout_seconds must be a number")
+        raise TypeError("timeout_seconds must be a number")
     if isinstance(timeout_seconds, (int, float)):
         value = float(timeout_seconds)
     elif isinstance(timeout_seconds, str):
@@ -100,20 +123,20 @@ def _coerce_timeout_seconds(timeout_seconds: Any) -> float | None:
         except ValueError as exc:
             raise ValueError("timeout_seconds must be a number") from exc
     else:
-        raise ValueError("timeout_seconds must be a number")
+        raise TypeError("timeout_seconds must be a number")
 
     if value <= 0:
         raise ValueError("timeout_seconds must be positive")
     return value
 
 
-def _validate_flag_args(args: Sequence[str] | None) -> List[str]:
-    normalized: List[str] = []
+def _validate_flag_args(args: Sequence[str] | None) -> list[str]:
+    normalized: list[str] = []
     if not args:
         return normalized
     for arg in args:
         if not isinstance(arg, str):
-            raise ValueError("extra args must be strings")
+            raise TypeError("extra args must be strings")
         stripped = arg.strip()
         if not stripped:
             raise ValueError("extra args cannot be empty")
@@ -123,13 +146,20 @@ def _validate_flag_args(args: Sequence[str] | None) -> List[str]:
     return normalized
 
 
-def _validate_args(args: Sequence[str] | None) -> List[str]:
-    normalized: List[str] = []
+def _validate_args(args: Sequence[str] | str | None) -> list[str]:
+    normalized: list[str] = []
     if not args:
         return normalized
-    for arg in args:
+    if isinstance(args, str):
+        items = [a.strip() for a in args.split() if a.strip()]
+    elif isinstance(args, Sequence):
+        items = list(args)
+    else:
+        raise TypeError("args must be a string or a sequence of strings")
+
+    for arg in items:
         if not isinstance(arg, str):
-            raise ValueError("args entries must be strings")
+            raise TypeError("args entries must be strings")
         stripped = arg.strip()
         if not stripped:
             raise ValueError("args entries cannot be empty")
@@ -137,27 +167,36 @@ def _validate_args(args: Sequence[str] | None) -> List[str]:
     return normalized
 
 
-def _validate_env(env: Mapping[str, str] | None) -> Dict[str, str]:
+def _validate_env(env: Mapping[str, Any] | str | None) -> dict[str, str]:
     if env is None:
         return {}
-    result: Dict[str, str] = {}
+    if isinstance(env, str):
+        import json
+
+        try:
+            parsed = json.loads(env)
+            if isinstance(parsed, Mapping):
+                env = parsed
+        except (json.JSONDecodeError, ValueError):
+            pass
+    if not isinstance(env, Mapping):
+        raise TypeError("environment variable mapping required")
+    result: dict[str, str] = {}
     for key, value in env.items():
-        if not isinstance(key, str) or not key:
+        if not isinstance(key, str) or not key.strip():
             raise ValueError("environment variable keys must be non-empty strings")
-        if not isinstance(value, str):
-            raise ValueError("environment variable values must be strings")
-        result[key] = value
+        result[key.strip()] = str(value)
     return result
 
 
 def _run_uv_command(
-    cmd: List[str],
+    cmd: list[str],
     workspace_root: Path,
     *,
     step: str | None = None,
-    env: Dict[str, str] | None = None,
+    env: dict[str, str] | None = None,
     timeout: float | None = None,
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     require_unsafe_code_execution("uv command")
     timeout_value = _DEFAULT_TIMEOUT if timeout is None else timeout
     env_vars = None if env is None else {**os.environ, **env}
@@ -201,17 +240,25 @@ def _run_uv_command(
 
 
 def install_python_packages(
-    packages: Sequence[str],
+    packages: Sequence[str] | str,
     *,
     upgrade: bool = False,
+    timeout_seconds: float | None = None,
     # extra_args: Sequence[str] | None = None,
-    _context: Dict[str, Any] | None = None,
-) -> Dict[str, Any]:
+    _context: dict[str, Any] | None = None,
+) -> dict[str, Any]:
     """Install Python packages inside the workspace using uv add."""
 
     ctx = WorkspaceCommandContext(_context)
     safe_packages = _validate_packages(packages)
-    cmd: List[str] = ["uv", "add"]
+    timeout = _coerce_timeout_seconds(timeout_seconds)
+
+    if isinstance(upgrade, str):
+        upgrade = upgrade.strip().lower() in ("true", "1", "yes")
+    elif isinstance(upgrade, (int, float)):
+        upgrade = bool(upgrade)
+
+    cmd: list[str] = ["uv", "add"]
     if upgrade:
         cmd.append("--upgrade")
 
@@ -220,7 +267,7 @@ def install_python_packages(
     #     cmd.extend(flags)
 
     cmd.extend(safe_packages)
-    result = _run_uv_command(cmd, ctx.workspace_root, step="uv add")
+    result = _run_uv_command(cmd, ctx.workspace_root, step="uv add", timeout=timeout)
     # result["workspace_root"] = str(ctx.workspace_root)
     return result
 
@@ -229,41 +276,56 @@ def init_python_env(
     *,
     # recreate: bool = False,
     python_version: str | None = None,
+    timeout_seconds: float | None = None,
     # lock_args: Sequence[str] | None = None,
     # venv_args: Sequence[str] | None = None,
-    _context: Dict[str, Any] | None = None,
-) -> Dict[str, Any]:
-    """Run uv lock and uv venv inside the workspace."""
+    _context: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    """Run uv init, uv venv, and uv lock inside the workspace."""
 
     ctx = WorkspaceCommandContext(_context)
-    steps: List[Dict[str, Any]] = []
+    steps: list[dict[str, Any]] = []
+    timeout = _coerce_timeout_seconds(timeout_seconds)
 
-    lock_cmd: List[str] = ["uv", "lock"]
-    # lock_cmd.extend(_validate_flag_args(lock_args))
-    lock_result = _run_uv_command(lock_cmd, ctx.workspace_root, step="uv lock")
-    steps.append(lock_result)
-    if lock_result["returncode"] != 0:
+    pyproject = ctx.workspace_root / "pyproject.toml"
+    if not pyproject.exists():
+        init_cmd: list[str] = ["uv", "init", "--bare", "--no-workspace"]
+        init_result = _run_uv_command(
+            init_cmd, ctx.workspace_root, step="uv init", timeout=timeout
+        )
+        steps.append(init_result)
+        if init_result["returncode"] != 0:
+            return {
+                "workspace_root": str(ctx.workspace_root),
+                "steps": steps,
+            }
+
+    venv_cmd: list[str] = ["uv", "venv"]
+    # if recreate:
+    #     venv_cmd.append("--recreate")
+    # venv_cmd.extend(_validate_flag_args(venv_args))
+    if python_version is not None:
+        python_spec = str(python_version).strip()
+        if not python_spec:
+            raise ValueError("python argument cannot be empty")
+        venv_cmd.extend(["--python", python_spec])
+
+    venv_result = _run_uv_command(
+        venv_cmd, ctx.workspace_root, step="uv venv", timeout=timeout
+    )
+    steps.append(venv_result)
+    if venv_result["returncode"] != 0:
         return {
             "workspace_root": str(ctx.workspace_root),
             "steps": steps,
         }
 
-    venv_cmd: List[str] = ["uv", "venv"]
-    # if recreate:
-    #     venv_cmd.append("--recreate")
-    # venv_cmd.extend(_validate_flag_args(venv_args))
-    if python_version is not None:
-        python_spec = python_version.strip()
-        if not python_spec:
-            raise ValueError("python argument cannot be empty")
-        venv_cmd.extend(["--python", python_spec])
-
-    venv_result = _run_uv_command(venv_cmd, ctx.workspace_root, step="uv venv")
-    steps.append(venv_result)
-
-    init_cmd: List[str] = ["uv", "init", "--bare", "--no-workspace"]
-    init_result = _run_uv_command(init_cmd, ctx.workspace_root, step="uv init")
-    steps.append(init_result)
+    lock_cmd: list[str] = ["uv", "lock"]
+    # lock_cmd.extend(_validate_flag_args(lock_args))
+    lock_result = _run_uv_command(
+        lock_cmd, ctx.workspace_root, step="uv lock", timeout=timeout
+    )
+    steps.append(lock_result)
 
     return {
         "workspace_root": str(ctx.workspace_root),
@@ -278,8 +340,8 @@ def uv_run(
     args: Sequence[str] | None = None,
     env: Mapping[str, str] | None = None,
     timeout_seconds: float | None = None,
-    _context: Dict[str, Any] | None = None,
-) -> Dict[str, Any]:
+    _context: dict[str, Any] | None = None,
+) -> dict[str, Any]:
     """Execute uv run for a module or script inside the workspace root."""
 
     ctx = WorkspaceCommandContext(_context)
@@ -290,7 +352,7 @@ def uv_run(
     if has_module == has_script:
         raise ValueError("Provide exactly one of module or script")
 
-    cmd: List[str] = ["uv", "run"]
+    cmd: list[str] = ["uv", "run"]
     if has_module:
         module_name = module.strip()
         if not module_name:
