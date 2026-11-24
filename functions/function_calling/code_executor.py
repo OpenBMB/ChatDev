@@ -1,4 +1,5 @@
 import contextlib
+import math
 import os
 import subprocess
 import sys
@@ -42,9 +43,11 @@ def execute_code(
             timeout_seconds = float(stripped_timeout)
         else:
             timeout_seconds = float(time_out)
+        if not math.isfinite(timeout_seconds):
+            return "Setup error: time_out must be a positive number"
         if timeout_seconds <= 0:
             return "Setup error: time_out must be positive"
-    except (ValueError, TypeError):
+    except (ValueError, TypeError, OverflowError):
         return "Setup error: time_out must be a positive number"
 
     def __get_workspace() -> Path:

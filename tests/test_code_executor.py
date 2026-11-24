@@ -92,6 +92,26 @@ def test_execute_code_invalid_timeout(monkeypatch):
         execute_code("print(1)", time_out=-5)
         == "Setup error: time_out must be positive"
     )
+    assert (
+        execute_code("print(1)", time_out="inf")
+        == "Setup error: time_out must be a positive number"
+    )
+    assert (
+        execute_code("print(1)", time_out="-inf")
+        == "Setup error: time_out must be a positive number"
+    )
+    assert (
+        execute_code("print(1)", time_out="nan")
+        == "Setup error: time_out must be a positive number"
+    )
+    assert (
+        execute_code("print(1)", time_out=float("inf"))
+        == "Setup error: time_out must be a positive number"
+    )
+    assert (
+        execute_code("print(1)", time_out=10**1000)
+        == "Setup error: time_out must be a positive number"
+    )
 
 
 def test_execute_code_timeout_expired(tmp_path, monkeypatch):
