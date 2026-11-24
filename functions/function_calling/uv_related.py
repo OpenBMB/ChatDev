@@ -74,6 +74,29 @@ class WorkspaceCommandContext:
         return absolute
 
 
+def _split_package_specs(raw: str) -> list[str]:
+    """Split package string on commas or whitespace while preserving commas inside brackets."""
+    items: list[str] = []
+    current: list[str] = []
+    in_bracket = False
+    for char in raw:
+        if char == "[":
+            in_bracket = True
+            current.append(char)
+        elif char == "]":
+            in_bracket = False
+            current.append(char)
+        elif char in (",", " ", "\t", "\n", "\r") and not in_bracket:
+            if current:
+                items.append("".join(current).strip())
+                current = []
+        else:
+            current.append(char)
+    if current:
+        items.append("".join(current).strip())
+    return [item for item in items if item]
+
+
 def _validate_packages(packages: Sequence[str] | str | None) -> list[str]:
     if packages is None:
         raise ValueError("at least one package is required")
@@ -81,7 +104,7 @@ def _validate_packages(packages: Sequence[str] | str | None) -> list[str]:
         raw = packages.strip()
         if not raw:
             raise ValueError("package names cannot be empty")
-        items = [p.strip() for p in re.split(r"[\s,]+", raw) if p.strip()]
+        items = _split_package_specs(raw)
     elif isinstance(packages, Sequence):
         items = list(packages)
     else:
@@ -240,7 +263,7 @@ def _run_uv_command(
 
 
 def install_python_packages(
-    packages: Sequence[str] | str,
+    packages: Sequence[str],
     *,
     upgrade: bool = False,
     timeout_seconds: float | None = None,

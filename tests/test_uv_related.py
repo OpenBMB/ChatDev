@@ -1,3 +1,4 @@
+import inspect
 from unittest.mock import Mock, patch
 
 import pytest
@@ -11,6 +12,7 @@ from functions.function_calling.uv_related import (
     install_python_packages,
     uv_run,
 )
+from utils.function_catalog import _annotation_to_schema
 
 
 def test_validate_packages_string_coercion():
@@ -20,10 +22,20 @@ def test_validate_packages_string_coercion():
         "numpy",
         "pandas",
     ]
+    assert _validate_packages("requests[security,socks], pytest>=7.0") == [
+        "requests[security,socks]",
+        "pytest>=7.0",
+    ]
     assert _validate_packages(["requests>=2.0.0", "click"]) == [
         "requests>=2.0.0",
         "click",
     ]
+
+
+def test_install_packages_annotation_schema():
+    param = inspect.signature(install_python_packages).parameters["packages"]
+    schema = _annotation_to_schema(param.annotation)
+    assert schema == {"type": "array", "items": {"type": "string"}}
 
 
 def test_validate_packages_errors():
