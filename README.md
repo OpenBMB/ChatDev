@@ -51,7 +51,7 @@ See our paper in [Multi-Agent Collaboration via Evolving Orchestration](https://
   <img src='./assets/ier.png' width=220>
   </p>
 
-• January 25, 2024: We have integrated Experiential Co-Learning Module into ChatDev. Please see the [Experiential Co-Learning Guide](wiki.md#co-tracking).
+• January 25, 2024: We have integrated Experiential Co-Learning Module into ChatDev. Please see the [Experiential Co-Learning Guide](https://github.com/OpenBMB/ChatDev/blob/chatdev1.0/wiki.md#co-tracking).
 
 • December 28, 2023: We present Experiential Co-Learning, an innovative approach where instructor and assistant agents accumulate shortcut-oriented experiences to effectively solve new tasks, reducing repetitive errors and enhancing efficiency.  Check out our preprint paper at https://arxiv.org/abs/2312.17025 and this technique will soon be integrated into ChatDev.
   <p align="center">
@@ -67,24 +67,24 @@ See our paper in [Multi-Agent Collaboration via Evolving Orchestration](https://
   <img src='./assets/increment.png' width=700>
   </p>
 
-• October 26, 2023: ChatDev is now supported with Docker for safe execution (thanks to contribution from [ManindraDeMel](https://github.com/ManindraDeMel)). Please see [Docker Start Guide](wiki.md#docker-start).
+• October 26, 2023: ChatDev is now supported with Docker for safe execution (thanks to contribution from [ManindraDeMel](https://github.com/ManindraDeMel)). Please see [Docker Start Guide](https://github.com/OpenBMB/ChatDev/blob/chatdev1.0/wiki.md#docker-start).
   <p align="center">
   <img src='./assets/docker.png' width=400>
   </p>
   
-• September 25, 2023: The **Git** mode is now available, enabling the programmer <img src='visualizer/static/figures/programmer.png' height=20> to utilize Git for version control. To enable this feature, simply set ``"git_management"`` to ``"True"`` in ``ChatChainConfig.json``. See [guide](wiki.md#git-mode).
+• September 25, 2023: The **Git** mode is now available, enabling the programmer <img src='visualizer/static/figures/programmer.png' height=20> to utilize Git for version control. To enable this feature, simply set ``"git_management"`` to ``"True"`` in ``ChatChainConfig.json``. See [guide](https://github.com/OpenBMB/ChatDev/blob/chatdev1.0/wiki.md#git-mode).
   <p align="center">
   <img src='./assets/github.png' width=600>
   </p>
 
 • September 20, 2023: The **Human-Agent-Interaction** mode is now available! You can get involved with the ChatDev team by playing the role of reviewer <img src='visualizer/static/figures/reviewer.png' height=20> and making suggestions to the programmer <img src='visualizer/static/figures/programmer.png' height=20>;
-  try ``python3 run.py --task [description_of_your_idea] --config "Human"``. See [guide](wiki.md#human-agent-interaction) and [example](WareHouse/Gomoku_HumanAgentInteraction_20230920135038).
+  try ``python3 run.py --task [description_of_your_idea] --config "Human"``. See [guide](https://github.com/OpenBMB/ChatDev/blob/chatdev1.0/wiki.md#human-agent-interaction) and [example](https://github.com/OpenBMB/ChatDev/tree/chatdev1.0/WareHouse/Gomoku_HumanAgentInteraction_20230920135038).
   <p align="center">
   <img src='./assets/Human_intro.png' width=600>
   </p>
 
 • September 1, 2023: The **Art** mode is available now! You can activate the designer agent <img src='visualizer/static/figures/designer.png' height=20> to generate images used in the software;
-  try ``python3 run.py --task [description_of_your_idea] --config "Art"``. See [guide](wiki.md#art) and [example](WareHouse/gomokugameArtExample_THUNLP_20230831122822).
+  try ``python3 run.py --task [description_of_your_idea] --config "Art"``. See [guide](https://github.com/OpenBMB/ChatDev/blob/chatdev1.0/wiki.md#art) and [example](https://github.com/OpenBMB/ChatDev/tree/chatdev1.0/WareHouse/gomokugameArtExample_THUNLP_20230831122822).
   
 • August 28, 2023: The system is publicly available.
 
@@ -277,7 +277,7 @@ The project is organized into a modular structure:
 
 Relevant reference documentation:
 *   **Getting Started**: [Start Guide](./docs/user_guide/en/index.md)
-*   **Core Modules**: [Workflow Authoring](./docs/user_guide/en/workflow_authoring.md), [Memory](./docs/user_guide/en/modules/memory.md), and [Tooling](./docs/user_guide/en/modules/tooling/index.md)
+*   **Core Modules**: [Workflow Authoring](./docs/user_guide/en/workflow_authoring.md), [Memory](./docs/user_guide/en/modules/memory.md), and [Tooling](./docs/user_guide/en/modules/tooling/README.md)
 
 ---
 
